@@ -395,6 +395,7 @@
 - 정렬 · 상호작용 혼합 · 코팅: `hersey1975_ordered_mixing_concept` · `egermann1983_ordered_vs_interactive_mixture_nomenclature` · `pfeffer2001_dry_particle_coating_engineered_particulates` · `otani2025_dem_se_dispersion_aggregation_compression`.
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` · `chandratilleke2012_particle_scale_mixing_index` · `jadidi2023_dem_batch_solid_mixers_review`.
 - 같은 축 · 다른 그룹 (이 논문보다 앞선 건식 점착 드럼 DEM · 2026-11-23 카드): `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` — B. Chaudhuri, A. Mehrotra, F.J. Muzzio, M.S. Tomassone, Powder Technol. 165 (2006) 105–114 (정사각 우물 상수 힘 · 쌍 점착 자유 변수 (기하평균과 맞는 런은 K_rb = K_rr = 0 뿐) · 중간 점착 K_bb 50 의 반대 다섯 = 이 논문 '절대 점착 세기가 따로 효과' 와 같은 쪽 · 12.5–30 rpm 회전 효과 — 그 카드 §3-8 · §3-9).
+- 같은 그룹 전단 판 (이 논문 ref [16] · 2026-11-23 카드): `li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram` — H. Li, J. McCarthy, *"Cohesive particle mixing and segregation under shear"*, Powder Technol. 164 (2006) 58–64 (전단이 무게보다 클 때의 힘 척도 = Bagnold 충돌력으로 나눈 충돌 수 Co · 액체 다리 · 동적 상태도).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

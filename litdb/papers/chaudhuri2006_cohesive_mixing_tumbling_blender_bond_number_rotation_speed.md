@@ -447,6 +447,7 @@
 - 결합 규칙 · 점착 측정 (G2): `begat2004_cohesive_adhesive_balance_afm_colloid_probe` · `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` · `vanoss1988_lifshitz_vdw_acid_base_interfacial` · `deng2021_mechanical_surface_energy_tester_bond_number`.
 - 혼합 지수 · 드럼 혼합 DEM: `lacey1954_particle_mixing_theory_index` · `chandratilleke2012_particle_scale_mixing_index` · `chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing` · `hare2026_dem_pept_dry_mixing_nmc622_eirich`.
 - 정렬 · 상호작용 혼합 · 코팅 (G1 의 '덮임' 쪽): `hersey1975_ordered_mixing_concept` · `pfeffer2001_dry_particle_coating_engineered_particulates` · `otani2025_dem_se_dispersion_aggregation_compression`.
+- 같은 해 · 다른 그룹의 전단 (회전 세기) 판 (액체 다리 · 실험 · 2026-11-23 카드): `li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram` — H. Li, J.J. McCarthy, *"Cohesive particle mixing and segregation under shear"*, Powder Technol. 164 (2006) 58–64 (충돌 수 Co 로 고른 동적 상태도 · 느린 전단에서 더 섞이는 쌍 — 이 논문의 '빠른 회전이 낫다' 와 영역이 다름).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

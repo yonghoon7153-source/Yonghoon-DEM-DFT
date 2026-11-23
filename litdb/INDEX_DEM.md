@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 367편 · 생성 2026-11-23
+> digest 368편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -69,7 +69,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (92편)
+## 접촉역학 · 소성 (DEM 이론) (93편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -121,6 +121,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens` | 순수 Li₆PS₅Cl (NEI) 을 누른 채 (in situ · 76.2 → 510 MPa) 싱크로트론 μ-CT + EIS 로 본 '냉간 소결' — 큰 (2 차) 입자 파쇄 · 입자 개수 · 형상 · 기하 tortuosity · 30 분 유지 · 76.2 MPa 로 감압 · 저온 EIS + DRT 로 벌크 ↔ 입계 분리  | experiment (in situ μ-CT + EIS 가압 셀 · 저온 EIS DRT/CNLS impeda | 2026-11-12 | 🖼 64 |
 | `li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy` | 액체 다리로 점착한 이원 구슬의 혼합 ↔ 분리를 '쌍별 입상 Bond 수 위계' 로 가른다 — Bo_g,12 > {Bo_g,11 · Bo_g,22} 이면 점착이 분리를 줄이고 (M 상) 같은 쌍 하나라도 더 크면 점착이 분리를 키운다 (E 상) · 상태도 축 = 크기비 R1/R2 × 젖음비 cos θ1/cos θ2 (밀도 | experiment + analytical pair-force theory (pairwise granular | 2026-11-23 | 🖼 20 |
 | `li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation` | 액체 다리 점착 이원 구슬의 혼합 ↔ 분리 상태도 — 쌍별 입상 Bond 수의 비 ℜ1 = Bo_g11/Bo_g12 · ℜ2 = Bo_g22/Bo_g12 (식 3–6) 로 M 상 (둘 다 < 1 · 점착이 분리를 줄임) 과 E 상 (하나라도 > 1 · 점착이 분리를 키움) 의 경계를 식 7–8 로 인쇄 · 상태도 축 =  | experiment + DEM + analytical pair-force theory (pairwise gr | 2026-11-23 | 🖼 39 |
+| `li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram` | 액체 다리 점착 이원 구슬의 혼합 ↔ 분리를 '전단' 에서 가른다 — 무게 대신 Bagnold 충돌력으로 나눈 충돌 수 Co = F_c/F_Bg (식 2–3 · (ρR⁴)_e = 충돌에 더 휘둘리는 쪽) 의 쌍 비 ℜ1 = Co11/Co12 · ℜ2 = Co22/Co12 (식 4–11 · 밀도비 세 구간) 로 그린 동적  | experiment + analytical pair-force theory (binary capillary  | 2026-11-23 | 🖼 45 |
 | `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` | 탄소 인터레이어 ↔ LPSCl 계면의 박리 인성 Γ 가 anode-free 전지의 Li 석출 위치를 정한다 — lamination(제조 압착)압 100 → 400 MPa 에서 Γ 9 → 41 J m⁻² · 문턱 ≈10 J m⁻² · 180° peel + tape 소성굽힘 보정 — Liao · Zeng · Mulla · M | exp (180° peel 박리시험 + tape 소성굽힘 보정 해석 · adhesive/cohesive fa | 2026-09-23 | 🖼 17 |
 | `lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior` | DEM 계산 속도를 위해 입자 강성 (전단탄성률 G) 을 낮추면 벌크 거동이 어디서부터 바뀌나 — EDEM Hertz–Mindlin 3D 구 · G 10⁴–10¹¹ Pa 스윕: 구–벽 충돌 힘 ∝ G^0.40 · 접촉 시간 ∝ G^−0.40 [판독] · 50 kg 블록 낙하 벌크 강성 'linear correlation' | DEM (EDEM commercial · built-in Hertz–Mindlin with Tsuji-typ | 2026-11-12 | 🖼 40 |
 | `luding2008_cohesive_frictional_contact_models` | 점착·마찰 분말의 접촉모델 (인장 가능 LAW) — Luding (Granular Matter 2008) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 5 |
