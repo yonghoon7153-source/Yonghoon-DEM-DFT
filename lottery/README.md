@@ -42,6 +42,14 @@ lottery/webapp/lotto.sh
 
 운영 주소는 **https://lotto.bmlwork.kr** (Cloudflare Pages, push 마다 자동 배포) — 연결 절차는 `webapp/README.md` 의 "배포".
 
+## 매주 자동 갱신
+
+예약 작업이 **매주 일요일 09:48 (한국 시간)** 새 클라우드 세션을 열어 `python lottery/weekly_update.py` 를 돌린다
+(연금 목요일·로또 토요일 추첨이 끝난 뒤). 스크립트가 받기 → 새 회차가 있으면 분석(약 7분) → 테스트까지 하고,
+종료 코드가 0 일 때만 세션이 `lottery/data` · `lottery/results` · `lottery/RESULTS.md` 를 커밋해 이 브랜치에 push 한다
+→ Cloudflare Pages 가 다시 빌드한다. 새 회차가 없으면(3) 받은 파일을 되돌리고 아무것도 커밋하지 않는다.
+받기·검증 실패(1)나 분석·테스트 실패(2)는 커밋하지 않고 보고만 한다 — 예약 세션은 코드를 고치지 않는다.
+
 ## 쓰지 않는 것
 
 당첨 확률을 올린다는 주장. 이 프로젝트의 모든 결과는 "과거 번호로 미래 번호를 맞힐 수 없다"와

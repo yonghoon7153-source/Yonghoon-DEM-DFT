@@ -93,6 +93,8 @@ pip install -r lottery/webapp/requirements.txt && python3 lottery/webapp/freeze.
 
 ## 데이터 갱신
 
+매주 일요일 예약 작업이 `lottery/weekly_update.py` 로 자동 갱신한다 (`lottery/README.md` 의 "매주 자동 갱신"). 손으로 하려면:
+
 ```bash
 python lottery/fetch_data.py       # 동행복권에서 받기 — 요청 2번, 검증 실패 시 기존 파일 보존
 python lottery/build_results.py    # 분석 다시 (약 6~8분)
