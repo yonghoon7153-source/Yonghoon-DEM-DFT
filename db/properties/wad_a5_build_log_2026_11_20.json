@@ -258,5 +258,14 @@
     "커밋": "c14d52abb (도구 · 시험) · 이 커밋 (묶음 · 빌드 기록 ⑬)",
     "다음": "Codex 편지 ER (kb/reviews/codex_ER_prompt_wad_a5_eq_fixes_2026_11_23.md · 영어 · §1b 그대로 · 관문 하나를 앞에) → 사용자 발송 → GO 뒤 zip · handoff · 운영 안내",
     "by": "claude · 2026-11-23 (대피 세션 fork)"
+  },
+  "⑬b_메인_검증_2026_11_23": {
+    "누가": "메인 세션 (작업자 끝난 뒤 · 작업자 커밋 c14d52abb · cc3873047 · 7774652d3 · 47fbaec9b 를 fast-forward 로 받음)",
+    "재빌드": "python3 tools/wad/build_a5_vasp_package.py --build --out <새 폴더> → rc 0 · diff -r 로 db/inputs/wad_a5_vasp_2026_11_20 와 0 차이 (바이트 같음) · MANIFEST.sha256 sha256 8e295baea495de906bddb172f14e30a1fe2d58cd93775ddee783c95c0ce0db5d",
+    "자체시험": "python3 tools/wad/build_a5_vasp_package.py --selftest → ✅ 266/266 · rc 0 · ✗ 0 (이 컨테이너 · 작업자와 따로)",
+    "도구_sha256": "edd9666cd1ade0e6951d405f00cf40f828953b7835119a96de997c0176ca89c1 (빌드 기록 ⑬ 과 같음)",
+    "편지": "kb/reviews/codex_ER_prompt_wad_a5_eq_fixes_2026_11_23.md (발송 대기 · 사용자) · 보내는 글 (영어) 만 뺀 사본을 사용자에게 줌 — 한글 줄 0 · W 값 0 (grep)",
+    "정리": "작업자 worktree · 가지 지움 (미커밋 0 · HEAD 가 대피 브랜치에 들어 있음) · /tmp 의 옛 시험 폴더 6 개 (11-15 li2s-3 · 11-23 a5 영수증 시험 · 약 1.8 GB) 지움 → 디스크 여유 13 GB",
+    "안_한_것": "돌연변이 191 전체를 메인에서 다시 돌리지 않았다 (작업자: 첫 판 186 + 떼어 낸 5 = 5/5 · 편지에 그대로 적힘)"
   }
 }
