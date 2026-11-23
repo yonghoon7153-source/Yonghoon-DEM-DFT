@@ -1,0 +1,106 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "setting": 2,
+  "gate": "U6(a)",
+  "grid_cells": [
+    12,
+    16
+  ],
+  "arms": {
+    "8": {
+      "phi_m_at_target": 0.9450900127843758,
+      "height_at_target": 0.5797184311670229,
+      "reference_area": 0.38484510006474965,
+      "box_area_at_target": 0.40720470522266844,
+      "pressure_bracket_MPa": [
+        1.1977947094077899,
+        1.2005880621846263
+      ],
+      "step_bracket": [
+        2735,
+        2736
+      ],
+      "elapsed_seconds": 148.4068963699974,
+      "operator_elapsed_seconds": 149,
+      "budget_seconds": 1800,
+      "max_floor_penetration_code": 0.0,
+      "trace_sha256": "0b8912adf24e6fca836210563bbfc3fee961d74b3b7b898f0bbbcc36d2b679ec"
+    },
+    "12": {
+      "phi_m_at_target": 0.9951632940752458,
+      "height_at_target": 0.5505489428567624,
+      "reference_area": 0.38484510006474965,
+      "box_area_at_target": 0.38671552935678405,
+      "pressure_bracket_MPa": [
+        1.1995856254215318,
+        1.201201333276218
+      ],
+      "step_bracket": [
+        5079,
+        5080
+      ],
+      "elapsed_seconds": 402.45897392590996,
+      "operator_elapsed_seconds": 403,
+      "budget_seconds": 3600,
+      "max_floor_penetration_code": 3.885780586188048e-16,
+      "trace_sha256": "627a488910a3c1b260f30211624b2b5dd6949dcb012b7f72f56036a75aeaa43c"
+    },
+    "16": {
+      "phi_m_at_target": 0.9910339251990935,
+      "height_at_target": 0.5528429305918184,
+      "reference_area": 0.3848451000647496,
+      "box_area_at_target": 0.38832686780872433,
+      "pressure_bracket_MPa": [
+        1.199958377922801,
+        1.200872540376179
+      ],
+      "step_bracket": [
+        6670,
+        6671
+      ],
+      "elapsed_seconds": 895.1607021889649,
+      "operator_elapsed_seconds": 895,
+      "budget_seconds": 5400,
+      "max_floor_penetration_code": 0.0,
+      "trace_sha256": "7508fe658e67414781ed2304e123d31c8bb53623095fe3071b072aa05d0a716c"
+    },
+    "24": {
+      "phi_m_at_target": 1.0043866578470217,
+      "height_at_target": 0.5454932074639611,
+      "reference_area": 0.38484510006474965,
+      "box_area_at_target": 0.3831642894278326,
+      "pressure_bracket_MPa": [
+        1.1997149388015353,
+        1.200127696051583
+      ],
+      "step_bracket": [
+        10496,
+        10497
+      ],
+      "elapsed_seconds": 3002.944842695957,
+      "operator_elapsed_seconds": 3019,
+      "budget_seconds": 14400,
+      "max_floor_penetration_code": 8.326672684688674e-17,
+      "trace_sha256": "18470cdfd6464462b54bfe3e60c7f821c8a02eb3f2863a6585877d6ab1eeff24"
+    }
+  },
+  "status": "PASS",
+  "absolute_delta": 0.0041293688761523395,
+  "threshold": 0.005,
+  "margin": 0.0008706311238476606,
+  "selected_setting": 2,
+  "release": "eb3d7cc5520e46cc8ce50f2c821c9de1c99b7112",
+  "source_manifest_sha256": "7d698c085e250be40fd7d2bfdad7ae84233ddaa847bed4939d69d0ac343834b3",
+  "registered_reader_sha256": "512fa5cbad8319cf0cff0ef2f800ad5cb00f91cdf8ce806ee6768fd3742dac7c",
+  "return_tar_sha256": "882c078ba22efab1699773b1c657996933aa2b87b34c8058c62a6a5860f8a0af",
+  "screen_sha256": "711488b61bf077172335d60de019ca06f7004de4a118f8c15d70268c84b6758c",
+  "registered_target_MPa": 1.2,
+  "new_model_runs": 0,
+  "timeouts_this_return": 0,
+  "automatic_retries": 0,
+  "seconds_total": 4448.971415180829,
+  "operator_seconds_total": 4466,
+  "u6_qualified": false,
+  "stage3_go": false,
+  "three_dimensional_go": false
+}
