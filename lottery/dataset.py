@@ -13,12 +13,13 @@ DataError 로 멈춘다 (fail-closed) — 분석은 검증을 통과한 레코�
     가격 구간별로 2% 안에서 맞는다 — 판매액 필드와 확률 공식을 동시에 검증한다.
   - 1등 자동/수동/반자동 구분은 262회부터 기록 (그 전은 0,0,0 → None 으로 둔다)
   - 연금: 1..N 회차 연속, 전부 목요일·7일 간격, 조 1..5, 1등·보너스 6자리 숫자 문자열
+새로 받은 목록은 이에 더해 이미 가진 목록을 그대로 이어 가야 한다 (history_changes — fetch_data.py 가 적용).
 """
 from __future__ import annotations
 
 import datetime as dt
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from math import comb
 from pathlib import Path
 
@@ -180,6 +181,25 @@ def parse_pension(raw: bytes) -> list[PensionDraw]:
     if errors:
         raise DataError("\n".join(errors))
     return out
+
+
+def history_changes(old: list, new: list, label: str) -> list[str]:
+    """새 목록이 옛 목록을 그대로 이어 가는지. 회차가 줄었거나 옛 회차 값이 바뀌었으면 그 내용을 돌려준다.
+
+    끝이 잘린 목록(캐시·장애)이나 과거 값이 바뀐 목록은 위의 형식 검증을 통과하지만, 그대로 받으면
+    분석과 배포가 그 값을 쓴다 (자체 리뷰 A1·A2). 두 목록 모두 1..N 연속으로 검증된 뒤라 i 번째 = i+1 회.
+    """
+    problems = []
+    if new[-1].round < old[-1].round:
+        problems.append(f"{label}: 최신 회차가 {old[-1].round}회 → {new[-1].round}회로 줄었다 (잘린 목록)")
+    changed = [(o, n) for o, n in zip(old, new) if o != n]
+    for o, n in changed[:10]:
+        diff = ", ".join(f"{f.name} {getattr(o, f.name)} → {getattr(n, f.name)}"
+                         for f in fields(o) if getattr(o, f.name) != getattr(n, f.name))
+        problems.append(f"{label} {o.round}회가 바뀌었다: {diff}")
+    if len(changed) > 10:
+        problems.append(f"{label}: 그 밖에 {len(changed) - 10}개 회차가 더 바뀌었다")
+    return problems
 
 
 def load_lotto(raw_dir: Path = RAW_DIR) -> list[LottoDraw]:

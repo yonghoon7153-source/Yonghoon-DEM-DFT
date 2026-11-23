@@ -10,7 +10,9 @@
 
 받은 응답 bytes 는 그대로 data/raw/ 에 저장하고 MANIFEST.json 에 URL · 받은 시각(UTC) ·
 sha256 · 크기 · 레코드 수를 적는다. 새 응답이 dataset.py 검증을 통과하지 못하면 기존
-파일을 하나도 건드리지 않고 실패한다.
+파일을 하나도 건드리지 않고 실패한다. 이미 가진 목록보다 회차가 줄었거나 옛 회차 값이 바뀐
+응답도 같다 (dataset.history_changes) — 공식 정정이 맞다고 사람이 확인했을 때만
+`--allow-history-change` 로 받는다. 주간 작업(weekly_update.py)은 이 플래그를 쓰지 않는다.
 """
 from __future__ import annotations
 
@@ -33,6 +35,7 @@ SOURCES = {  # raw 파일 이름 → (URL, Referer)
     "pension720.json": (f"{BASE}/pt720/selectPstPt720WnList.do", f"{BASE}/pt720/result"),
 }
 PARSERS = {"lotto645.json": dataset.parse_lotto, "pension720.json": dataset.parse_pension}
+LABELS = {"lotto645.json": "로또", "pension720.json": "연금"}
 HEADERS = {"User-Agent": "lottery-stats/1.0", "Accept": "application/json",
            "X-Requested-With": "XMLHttpRequest"}
 DATA_DIR = dataset.ROOT / "data"
@@ -79,6 +82,8 @@ def write_csvs(lotto: list[dataset.LottoDraw], pension: list[dataset.PensionDraw
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--offline", action="store_true", help="네트워크 없이 기존 raw 로 CSV 만 재생성")
+    ap.add_argument("--allow-history-change", action="store_true",
+                    help="회차가 줄었거나 옛 회차 값이 바뀐 응답도 받는다 (공식 정정을 사람이 확인한 뒤에만)")
     args = ap.parse_args()
     raw_dir = dataset.RAW_DIR
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -88,7 +93,15 @@ def main() -> int:
         for name, (url, referer) in SOURCES.items():
             body = _get(url, referer)
             fetched[name] = (url, body, PARSERS[name](body))  # 검증 실패 시 여기서 중단
-        now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+        if not args.allow_history_change:
+            problems = [p for name, (_, _, recs) in fetched.items() if (raw_dir / name).exists()
+                        for p in dataset.history_changes(PARSERS[name]((raw_dir / name).read_bytes()),
+                                                         recs, LABELS[name])]
+            if problems:
+                raise dataset.DataError(
+                    "받은 목록이 가진 기록을 그대로 이어 가지 않는다 — 아무 파일도 바꾸지 않았다. "
+                    "공식 정정이 맞다고 확인했으면 --allow-history-change 로 다시 받는다.\n" + "\n".join(problems))
+        now =dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
         manifest = {"source": "동행복권 dhlottery.co.kr (공식)", "fetched_at_utc": now, "files": {}}
         for name, (url, body, recs) in fetched.items():
             _atomic_write(raw_dir / name, body)

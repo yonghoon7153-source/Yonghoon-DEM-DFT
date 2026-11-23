@@ -49,6 +49,8 @@ lottery/webapp/lotto.sh
 종료 코드가 0 일 때만 세션이 `lottery/data` · `lottery/results` · `lottery/RESULTS.md` 를 커밋해 이 브랜치에 push 한다
 → Cloudflare Pages 가 다시 빌드한다. 새 회차가 없으면(3) 받은 파일을 되돌리고 아무것도 커밋하지 않는다.
 받기·검증 실패(1)나 분석·테스트 실패(2)는 커밋하지 않고 보고만 한다 — 예약 세션은 코드를 고치지 않는다.
+받은 목록이 가진 기록보다 회차가 줄었거나 옛 회차 값이 바뀌었으면 받기 단계가 파일을 쓰기 전에 거부한다(1).
+공식 정정이 맞다고 확인했으면 사람이 `python lottery/fetch_data.py --allow-history-change` 로 받는다.
 
 ## 쓰지 않는 것
 

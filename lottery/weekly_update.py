@@ -7,8 +7,9 @@
 종료 코드 0 이면 예약 작업이 lottery/data · lottery/results · lottery/RESULTS.md 를 커밋해
 claude/lottery-site 에 push 하고, Cloudflare Pages 가 lotto.bmlwork.kr 을 다시 빌드한다.
 새 회차가 없으면 받은 파일을 원래대로 되돌린다 (받은 시각만 바뀐 MANIFEST 로 빈 커밋을 만들지 않는다).
-받기가 검증에 걸리면(fetch_data.py 는 그때 기존 파일을 건드리지 않는다) 종료 코드 1,
-분석이나 테스트가 실패하면 2 — 둘 다 커밋하지 말고 사람에게 알린다.
+받기가 검증에 걸리면 종료 코드 1 — 가진 목록보다 회차가 줄었거나 옛 회차 값이 바뀐 응답도
+여기 든다 (fetch_data.py 가 파일을 쓰기 전에 거부한다). 분석이나 테스트가 실패하면 2.
+둘 다 커밋하지 말고 사람에게 알린다.
 """
 from __future__ import annotations
 
@@ -45,9 +46,11 @@ def main() -> int:
     shutil.copytree(DATA, backup / "data")
     try:
         if _run(["fetch_data.py"], "받기") != 0:
-            print("받기 실패 — 원본 검증에 걸렸거나 접속 실패. 기존 파일은 그대로다.")
+            print("받기 실패 — 접속 실패, 원본 검증 실패, 또는 회차가 줄었거나 옛 회차가 바뀐 응답"
+                  " (위 메시지). 사람이 확인한다.")
             return 1
         after = _latest()
+        # fetch_data.py 가 회차가 줄거나 옛 회차가 바뀐 응답을 거부하므로 여기서 바뀌었다 = 늘었다 (A1·A2)
         new = {k: (before[k], after[k]) for k in after if after[k] != before[k]}
         if not new and not args.force:
             shutil.rmtree(DATA)
