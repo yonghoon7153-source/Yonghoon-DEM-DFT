@@ -52,3 +52,17 @@ def test_bar_charts_start_at_zero():
     v = C.view()
     for key in ("freq_chart", "carry_chart", "gap_chart", "sum_chart", "ddpm_chart", "pop_chart", "manual_chart"):
         assert any(g["zero"] for g in v[key]["grid"]), key
+
+
+def test_static_site_for_cloudflare_pages_matches_app(client, tmp_path, monkeypatch):
+    """freeze.py 의 dist/ (Cloudflare Pages 출력): 화면 전부 + 404 + API, `_headers` CSP 가 app.py 와 같다."""
+    import freeze
+    monkeypatch.setattr(freeze, "DIST", tmp_path / "dist")
+    out = freeze.build_site(client)
+    names = {p.name for p in out.iterdir()}
+    assert {"index.html", "make.html", "random.html", "ml.html", "people.html", "pension.html", "data.html",
+            "all.html", "404.html", "favicon.svg", "_headers", "api", "static"} <= names
+    csp = client.get("/").headers["Content-Security-Policy"]
+    assert f"Content-Security-Policy: {csp}\n" in (out / "_headers").read_text(encoding="utf-8")
+    assert (out / "static" / "fonts" / "OFL-Pretendard.txt").exists()  # OFL: 폰트와 라이선스를 같이 배포
+    assert (out / "make.html").read_bytes() == client.get("/make").data

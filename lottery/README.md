@@ -40,6 +40,8 @@ python -m pytest lottery/tests -q
 lottery/webapp/lotto.sh
 ```
 
+운영 주소는 **https://lotto.bmlwork.kr** (Cloudflare Pages, push 마다 자동 배포) — 연결 절차는 `webapp/README.md` 의 "배포".
+
 ## 쓰지 않는 것
 
 당첨 확률을 올린다는 주장. 이 프로젝트의 모든 결과는 "과거 번호로 미래 번호를 맞힐 수 없다"와

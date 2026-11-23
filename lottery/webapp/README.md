@@ -53,15 +53,42 @@ python3 lottery/webapp/app.py      # http://127.0.0.1:5070  (WEBAPP_HOST / WEBAP
 본체 앱(5057)과 포트가 겹치지 않아 같이 띄울 수 있다. `--share` 는 본체 `bms --share` 와 같은 경계
 (인증 없음, 사설망에서 잠깐)다.
 
-### 서버 없이 보기 — 정적 내보내기
+## 배포 — `https://lotto.bmlwork.kr`
+
+정적 사이트로 내보내 **Cloudflare Pages** 에 올린다. 서버·터널이 없다 — nihonchizu 브랜치의
+`nihoncheese.bmlwork.kr` 과 같은 방식이다 (그쪽 ADR 0004). `bmlwork.kr` 은 bml 의 도메인이고 같은
+Cloudflare 계정 DNS 에 있어서 서브도메인 CNAME 이 자동으로 들어간다 (서브도메인은 추가 비용 없음).
+
+`freeze.py` 가 Flask 화면을 그대로 파일로 쓴다 — `dist/` (Pages 출력) 와 `export/` (claude.ai 아티팩트용 한 장):
 
 ```bash
-python3 lottery/webapp/freeze.py   # → lottery/webapp/export/ (index.html · artifact.html · api/ · fonts/)
-python3 -m http.server -d lottery/webapp/export 8000
+pip install -r lottery/webapp/requirements.txt && python3 lottery/webapp/freeze.py
 ```
 
-`index.html` 은 완전한 문서, `artifact.html` 은 claude.ai 아티팩트 규약(껍데기 태그 없음)에 맞춘 같은 내용이다.
-`export/` 는 파생물이라 git 에 넣지 않는다.
+- `dist/` — 화면마다 한 파일(`/make` → `make.html`, Pages 가 확장자 없는 주소로 서빙), `404.html`, `/static`,
+  `/api/*.json`, `_headers`. `_headers` 의 CSP 는 `app.py` 와 **같은 값**이다 (`tests/test_webapp.py` 가 고정) —
+  인라인 스크립트가 없어서 `script-src 'self'` 그대로 간다.
+- 로컬에서 Pages 와 같은 동작(확장자 없는 주소 · `_headers` · 404)을 보려면 `npx wrangler pages dev lottery/webapp/dist`.
+  2026-11-23 wrangler 3.114.17 로 확인: `/make` 200, `/make.html` → 308 `/make`, 없는 주소 404, CSP 헤더 적용,
+  CSP 아래에서 생성기·⌘K 동작, 콘솔 오류 0.
+
+대시보드에서 한 번만 연결한다 (nihoncheese 와 같은 순서):
+
+1. Cloudflare → **Compute → Workers & Pages → Create application** → 맨 아래 **Continue to Pages**
+   (위의 Connect GitHub 는 Workers 용) → **Import an existing Git repository** → `yonghoon7153-source/Yonghoon-DEM-DFT`.
+2. 프로젝트 이름 `lotto` (pages.dev 주소가 이미 있으면 `bml-lotto` 등 — 실제 주소는 아래 사용자 도메인이다) ·
+   Production branch **`claude/lottery-site`** · Framework preset **None** ·
+   Build command **`pip install -r lottery/webapp/requirements.txt && python3 lottery/webapp/freeze.py`** ·
+   Build output directory **`lottery/webapp/dist`** · Root directory 비움 · 환경변수 없음
+   (빌드 로그에 python 이 없다고 나오면 환경변수 `PYTHON_VERSION=3.12`).
+3. 만든 뒤 **Settings → Build → Branch control → Preview branch: None**. 이 저장소의 다른 브랜치(bml·dft·nihonchizu 등)는
+   다른 프로젝트라, 켜 두면 거기 push 할 때마다 미리보기 빌드가 돌고 실패 표시가 붙는다.
+4. 프로젝트 → **Custom domains → Set up a custom domain → `lotto.bmlwork.kr` → Activate domain**.
+   https 인증서가 붙기까지 몇 분 걸린다 (그동안 `ERR_SSL_VERSION_OR_CIPHER_MISMATCH`).
+5. 이후 `claude/lottery-site` 에 push 할 때마다 자동 배포.
+
+`export/` 와 `dist/` 는 파생물이라 git 에 넣지 않는다. 서버 없이 한 장짜리를 보려면
+`python3 -m http.server -d lottery/webapp/export 8000`.
 
 ## 데이터 갱신
 
@@ -70,4 +97,5 @@ python lottery/fetch_data.py       # 동행복권에서 받기 — 요청 2번, 
 python lottery/build_results.py    # 분석 다시 (약 6~8분)
 ```
 
-서버는 `analysis.json` 의 mtime 을 요청마다 확인하므로 새로고침만 하면 된다.
+로컬 서버는 `analysis.json` 의 mtime 을 요청마다 확인하므로 새로고침만 하면 된다.
+`lotto.bmlwork.kr` 은 바뀐 `data/`·`results/` 를 커밋해 `claude/lottery-site` 에 push 하면 Pages 가 다시 빌드한다.
