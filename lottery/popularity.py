@@ -88,6 +88,18 @@ def _blocked_oof(X: np.ndarray, y: np.ndarray, k: int = 5) -> np.ndarray:
     return pred
 
 
+def binomial_quasi(success: np.ndarray, failure: np.ndarray, X: np.ndarray):
+    """이항 GLM (성공·실패 횟수) + 과분산 척도 φ = Pearson χ²/잔차 자유도 (quasi-binomial) — 모델 C.
+
+    statsmodels 0.15 의 fit(scale="X2") 는 2열 응답에서 척도를 시행 수를 뺀 비율 잔차로 계산해, 순수 이항
+    자료에서도 φ ≈ 0.12 (참값 1) 를 내고 표준오차를 약 3배 작게 만든다 (자체 리뷰 F1). 그래서 척도 1 로
+    한 번 적합한 뒤 시행 수를 반영한 pearson_chi2 로 φ 를 구해, 그 척도로 다시 적합한다.
+    """
+    y, fam = np.column_stack([success, failure]), sm.families.Binomial()
+    first = sm.GLM(y, X, family=fam).fit()
+    return sm.GLM(y, X, family=fam).fit(scale=first.pearson_chi2 / first.df_resid)
+
+
 def fit(lotto: list[dataset.LottoDraw]) -> dict:
     allL = lotto
     L = [d for d in allL if d.round >= FIRST_ROUND]
@@ -139,7 +151,7 @@ def fit(lotto: list[dataset.LottoDraw]) -> dict:
     rr = np.array([d.round for d in L])[mask]
     tz = (rr - rr.mean()) / rr.std()
     Xc = np.column_stack([np.ones(mask.sum()), s[mask], tz, tz ** 2])
-    glm_c = sm.GLM(np.column_stack([man, aut]), Xc, family=sm.families.Binomial()).fit(scale="X2")
+    glm_c = binomial_quasi(man, aut, Xc)
     qs = np.quantile(s[mask], [0, .2, .4, .6, .8, 1])
     qb = np.clip(np.searchsorted(qs, s[mask], side="right") - 1, 0, 4)
     manual_by_s = [{"s_mid": float(s[mask][qb == b].mean()),
@@ -190,7 +202,7 @@ def fit(lotto: list[dataset.LottoDraw]) -> dict:
         "manual_model": {
             "n_draws": int(mask.sum()), "manual": int(man.sum()), "auto": int(aut.sum()),
             "delta1": float(glm_c.params[1]), "delta1_se": float(glm_c.bse[1]),
-            "delta1_p": float(glm_c.pvalues[1]), "by_s": manual_by_s},
+            "delta1_p": float(glm_c.pvalues[1]), "scale": float(glm_c.scale), "by_s": manual_by_s},
         "score": {  # 사이트 JS 가 그대로 쓴다
             "beta": beta5.tolist(), "theta": theta5.tolist(), "pattern_names": list(PATTERNS),
             "center": center, "gamma0": g0, "gamma1": g1, "latest_numbers": latest.tolist(),
