@@ -639,7 +639,7 @@
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Predicting the impact of adhesive forces on particle mixing and segregation · Subject:  · Author: Isabel Figueroa; Hongming Li; Joseph McCarthy · DOI: 10.1016/j.powtec.2009.06.002 · PDF 10 쪽",
   "model": "",
   "dup": "papers/ 에서 DOI `10.1016/j.powtec.2009.06.002` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
-  "note": ""
+  "note": "- 꼭 뽑을 것 (공백 검사): 점착력 영향 예측 모델 (무차원 수 · 쌍별) · 혼합 / 분리 결과 · 실험 · DEM · Li–McCarthy (N-112) 와의 관계.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.\n- 1저자 11-23: 3 순위에서 앞당겨 먼저 읽는다 (읽은 뒤 대기 순위에서 뺀다)."
  },
  "N-111": {
   "nn": "",
@@ -649,7 +649,7 @@
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Prediction of powder flow performance using a multi-component granular Bond number · Subject:  · Author:  · DOI: 10.1016/j.powtec.2015.08.031 · PDF 11 쪽",
   "model": "",
   "dup": "papers/ 에서 DOI `10.1016/j.powtec.2015.08.031` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
-  "note": ""
+  "note": "- 꼭 뽑을 것 (공백 검사): 다성분 granular Bond 수 정의 (혼합물의 Bo 를 성분별 Bo 에서 만드는 식) · 흐름 예측 검증 · 우리 AM + SE 혼합물 Bo 계산에 쓸 수 있는지.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.\n- 1저자 11-23: 3 순위에서 앞당겨 먼저 읽는다 (읽은 뒤 대기 순위에서 뺀다)."
  },
  "N-113": {
   "nn": "",
@@ -659,7 +659,7 @@
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: PII: 0032-5910(80)85023-6 · Subject:  · Author:  · DOI: [미확인] · PDF 4 쪽",
   "model": "",
   "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
-  "note": ""
+  "note": "- 꼭 뽑을 것 (공백 검사): ordered (규칙) ↔ random (무작위) adhesion 정의 · 혼합 균질도 지표 · 점착이 균질도를 높이는 조건 · egermann1983 · hersey1975 카드와 서로 '🔗 관련 카드'.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.\n- 1저자 11-23: 3 순위에서 앞당겨 먼저 읽는다 (읽은 뒤 대기 순위에서 뺀다)."
  },
  "N-115": {
   "nn": "",
@@ -699,7 +699,7 @@
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: 10.1063/1.166390 · PDF 12 쪽",
   "model": "",
   "dup": "papers/ 에서 DOI `10.1063/1.166390` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
-  "note": ""
+  "note": "- 꼭 뽑을 것 (공백 검사): 회전 믹서 카오스 혼합 (흐름 층 · 주기 · 회전 속도 · 충전율) · 혼합 지표 · 우리 드럼 (회전 수 · 충전율) 대조.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.\n- 1저자 11-23: 3 순위에서 앞당겨 먼저 읽는다 (읽은 뒤 대기 순위에서 뺀다)."
  },
  "N-119": {
   "nn": "",
@@ -784,14 +784,14 @@
   "note": ""
  },
  "N-112-1": {
-  "nn": "",
+  "nn": "149",
   "kind": "후보 표 N-112 의 첫째 논문 (PRL 2003) 한 편",
   "status_prefix": "N-112 첫째\t대피\t",
   "pdf": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
   "bib": "Hongming Li, J. J. McCarthy, \"Controlling Cohesive Particle Mixing and Segregation\", Physical Review Letters 90, 184301 (2003) (Received 18 December 2002; published 8 May 2003), DOI 10.1103/PhysRevLett.90.184301 (PDF 4 쪽 · 첫 쪽에서 확인). 후보 표 N-112 는 두 편 (PRL 2003 · PRE 2005) 이고 제목이 카드에 없었다 — 이 카드는 첫째만 다룬다. 둘째 (Phys. Rev. E 71, 021305 (2005) \"Phase diagrams for cohesive particle mixing and segregation\") 는 다른 에이전트가 따로 카드를 만든다 → '🔗 관련 카드' 에 서지 한 줄 (slug 가 정본에 있으면 그 slug).",
   "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
   "dup": "papers/ 에 DOI 10.1103/PhysRevLett.90.184301 grep 0 건 (jarray2019 가 'Li & McCarthy PRL 90, 184301' 로 인용) → 카드 없음 — 시작할 때 `ls litdb/papers | grep -i mccarthy` · `grep -l 184301` 로 한 번 더 확인",
-  "note": "- 의도 = 믿싱 (점착): '점착으로 분리 조절 · 점착 혼합 상태도 (Bo 축)' (jarray2019 L322). 입상 Bond 수의 정의 (쌍별 Bo_ij) · 상태도의 축 · 혼합 ↔ 분리 경계 식 · 실험 (습윤 · 입자 크기 · 밀도 · 접촉각) 을 식 번호별 크롭과 표로. 우리 쪽 대응 = 믹서 3 상 (AM_P · AM_S · SE) 쌍별 Bo · 논지 문서의 γ_A/γ_S 판가름 — 액체 다리 (습윤) 점착이지 건식 vdW 가 아니라는 한계를 머리 요약에."
+  "note": "- 의도 = 믿싱 (점착): '점착으로 분리 조절 · 점착 혼합 상태도 (Bo 축)' (jarray2019 L322). 입상 Bond 수의 정의 (쌍별 Bo_ij) · 상태도의 축 · 혼합 ↔ 분리 경계 식 · 실험 (습윤 · 입자 크기 · 밀도 · 접촉각) 을 식 번호별 크롭과 표로. 우리 쪽 대응 = 믹서 3 상 (AM_P · AM_S · SE) 쌍별 Bo · 논지 문서의 γ_A/γ_S 판가름 — 액체 다리 (습윤) 점착이지 건식 vdW 가 아니라는 한계를 머리 요약에.\n- 꼭 뽑을 것 (공백 검사 주인공): 쌍별 응집 수 (granular Bond 수) 정의 · '다른 쌍 끌림 ↔ 같은 쌍 끌림' 비교 규칙 · 혼합 / 분리 판정 지표 · 상태도 축 · 실험 (구슬 재료 · 크기 · 밀도 · 물기) · 드럼 (지름 · 회전 · 충전) · 우리 기준 (기하평균으로 다른 쌍 점착이 두 표면 에너지로 정해짐 · 크기 인자) 과 같은지 다른지를 산술로 대조.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.\n- 1저자 11-23: 3 순위에서 앞당겨 먼저 읽는다 (읽은 뒤 대기 순위에서 뺀다)."
  },
  "N-112-2": {
   "nn": "",
@@ -801,7 +801,7 @@
   "bib": "Hongming Li, J. J. McCarthy, \"Phase diagrams for cohesive particle mixing and segregation\", Physical Review E 71, 021305 (2005) (Received 30 April 2004; published 28 February 2005), DOI 10.1103/PhysRevE.71.021305 (PDF 8 쪽 · 첫 쪽에서 확인). 후보 표 N-112 의 둘째 논문 — 첫째 (PRL 90, 184301 (2003) \"Controlling Cohesive Particle Mixing and Segregation\") 는 다른 에이전트가 따로 카드를 만든다 → '🔗 관련 카드' 에 서지 한 줄 (slug 가 정본에 있으면 그 slug · 서로 가리키게).",
   "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
   "dup": "papers/ 에 DOI 10.1103/PhysRevE.71.021305 grep 0 건 → 카드 없음 — 시작할 때 `ls litdb/papers | grep -i mccarthy` 로 한 번 더 확인 (첫째 논문 카드가 먼저 생겼을 수 있다)",
-  "note": "- 의도 = 믹싱 (점착): 입자 수준 점착 모델 · 상태도 (혼합 / 분리 상) · 경계가 역학 · 표면 성질로 정해지는 식. 식을 번호별로 자르고 상태도 그림마다 축 · 조건 · 판독값을 표로. 우리 쪽 대응 = 믹서 쌍별 Bo · 결합 규칙 (D2 기하평균) · dev-bo · dev-u 탐색 — 습윤 (액체 다리) 계라는 한계를 머리 요약에. 2D / 3D · 실험 장치 (회전 드럼) 를 분명히."
+  "note": "- 의도 = 믹싱 (점착): 입자 수준 점착 모델 · 상태도 (혼합 / 분리 상) · 경계가 역학 · 표면 성질로 정해지는 식. 식을 번호별로 자르고 상태도 그림마다 축 · 조건 · 판독값을 표로. 우리 쪽 대응 = 믹서 쌍별 Bo · 결합 규칙 (D2 기하평균) · dev-bo · dev-u 탐색 — 습윤 (액체 다리) 계라는 한계를 머리 요약에. 2D / 3D · 실험 장치 (회전 드럼) 를 분명히.\n- 꼭 뽑을 것 (공백 검사 주인공): 상태도 축 정의와 경계식 · 검증 (실험 · DEM) · 회전 속도 효과 · 다룬 Bo 범위 · 우리 B1 · B2 (Bo_SE 0.21 → 21) 가 이 상태도에서 어디인지 (카드 산술 · 표지) · 2003 PRL (N-112 첫째) 과 서로 '🔗 관련 카드'.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.\n- 1저자 11-23: 3 순위에서 앞당겨 먼저 읽는다 (읽은 뒤 대기 순위에서 뺀다)."
  },
  "N-114": {
   "nn": "",
@@ -1392,5 +1392,111 @@
   "dup": "정본에 이 논문 카드 없음 (DOI 10.1038/s41565-026-02327-6 · 'Four-dimensional X-ray nano-holotomography' git grep 0 건 · 2026-11-23). 'Vanpeene' 는 korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens 카드 · INDEX.md · reading/batch_61 에 나온다 → 그 인용이 이 논문인지 (다른 Vanpeene 논문인지) 대조해 정독 출력에 적는다 (그 카드는 고치지 않는다).",
   "note": "- 꼭 뽑을 것: 시료 (흑연 : Si 비 · 바인더 · 도전재 · 두께 · 기공률 · 셀 꼴 · 전해질) · 측정 (빔라인 · 에너지 · 화소 크기 · 시야 · 스캔 시간 · 중단-operando 절차 · 충방전 조건) · DVC (요소 크기 · 변위 정확도 · 변형률 정의) · 정량값 (입자 · 전극 부피 변화 · 변형률 장 · 기공률 · 두께 변화 · 균열 · 박리) · 식 번호별 크롭.\n- 보충 영상 6 개 (avi) = ffprobe 로 길이 · 해상도 → ffmpeg 로 정지 화면 (처음 · 가운데 · 끝) 을 뽑아 직접 보고, SI 의 영상 설명과 맞춰 '영상 S? = 무엇' 을 카드에 · 영상마다 대표 정지 화면 한두 장을 figures/<slug>/vid_S?_t??s.png 로 (figures.json 손 크롭 관례) · 영상 파일은 커밋하지 않는다.\n- 원자료 xlsx 6 개 = openpyxl 로 열어 어느 그림의 원자료인지 적고, 카드의 숫자는 그림 판독 대신 원자료에서 ([원자료 MOESM?] 표지) · xlsx 는 커밋하지 않는다.\n- 자세한 분석 절에서 견줄 자리 (값은 정본 카드에서 옮긴다): 사이클 화학기계 (입자 팽창 · 접촉 개구 · 균열 · 박리) · DEM 반경 진동 선례 카드 · DEM ↔ MPM 연계 (입자 형태 변형) · 측정 해상도 ↔ 우리 복셀 격자.\n- 액체 전해질 LIB 흑연–Si 음극이라 우리 (황화물 고체전해질 양극) 와 다른 점을 한정어로.",
   "nn": "148"
+ },
+ "N-150": {
+  "pdf": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+  "si": [],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표 6 절 (우선순위 4 · 1저자 11-23 업로드 · 믹서 논지) — 점착 × 회전 속도 → 혼합 속도 (점착이 커지면 혼합 속도가 올랐다 내려감 · 다른 크기 이원계는 같은 · 다른 크기 쌍 힘의 상대 크기로 혼합 무늬가 달라짐 · 점착 혼합은 빠른 회전이 낫다 — 초록) = 우리 '점착 × rpm 지도' 의 가장 가까운 선례 (G1 · G4 반례 후보)",
+  "bib": "B. Chaudhuri, A. Mehrotra, F.J. Muzzio, M.S. Tomassone — Cohesive effects in powder mixing in a tumbling blender — Powder Technol. 165 (2006) 105–114 (첫 쪽 · DOI 10.1016/j.powtec.2006.04.001 = 검색 · 원문에서 확인)",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
+  "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'Cohesive effects in powder mixing' 0 건 · 2026-11-23). 'Chaudhuri' 는 jadidi2023_dem_batch_solid_mixers_review · jarray2019_cohesion_driven_mixing_segregation_drum 카드에 나온다 → 그 인용이 이 논문인지 대조",
+  "note": "- 꼭 뽑을 것: 점착 모델 (정사각 우물 퍼텐셜 · 세기 · 거리) 과 무차원 점착 수 · 마찰 · 이원계 (같은 크기 · 다른 크기 · 크기비 · 밀도) · 드럼 (지름 · 충전율 · 회전 속도) · 혼합 지표 정의 · 실험 영상 대조 방법 · '점착이 커지면 혼합 속도 증가 → 감소' 의 전환 수치 · '같은 · 다른 크기 쌍 힘의 상대 크기' 에 따른 혼합 무늬 (= 점착 대비) · 회전 속도 효과 수치.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
+  "nn": ""
+ },
+ "N-151": {
+  "pdf": "8ebd695c-Cohesive_particle_mixing_and_segregation_under_shear.pdf",
+  "si": [],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표 6 절 (우선순위 4 · 1저자 11-23 업로드 · 믹서 논지) — 전단 셀 · 액교 점착 혼합 · 분리 상태도 (어떤 조건에서는 느린 전단이 더 잘 섞음 — 초록) = 3 순위 N-112 (PRL 2003 · PRE 2005) 의 전단 판 · rpm 축 해석",
+  "bib": "H. Li, J.J. McCarthy — Cohesive particle mixing and segregation under shear — Powder Technol. 164 (2006) 58–64 (첫 쪽 · DOI 10.1016/j.powtec.2005.12.018 = 검색 · 원문에서 확인)",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
+  "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'mixing and segregation under shear' 0 건 · 2026-11-23). 같은 저자 N-112 (2003 · 2005) 는 3 순위 대기 → 같은 날 카드가 되면 서로 '🔗 관련 카드'",
+  "note": "- 꼭 뽑을 것: 전단 셀 기하 (환형 · 지름 · 높이) · 입자 (재료 · 크기 · 밀도) · 액교 점착 (액량 · 표면장력 · 접촉각) · 쌍별 점착 수 정의 (같은 쌍 ↔ 다른 쌍) · 상태도 축과 경계식 · 전단 속도 효과 ('느린 전단이 더 섞임' 의 조건 · 수치) · 정적 이론 (2003 · 2005) 을 전단으로 늘린 식.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
+  "nn": ""
+ },
+ "N-152": {
+  "pdf": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+  "si": [],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표 6 절 (우선순위 4 · 1저자 11-23 업로드 · 믹서 논지) — 콜로이드 탐침 AFM 으로 잰 점착 · 응집 비 (CAB) 로 16 제형의 혼합물 성능을 예측한 약학 선례 (Begat 2004 I · II 후속) = 우리 G2 ('잰 점착 비 → 결과 예측') 를 '전지 · 황화물 복합 양극' 으로 좁혀야 하는 근거 · 우리 AFM 측정 설계 (SE 탐침 · NCM · 코팅 NCM 기판) 의 본",
+  "bib": "M.D. Jones, H. Harris, J.C. Hooton, J. Shur, G.S. King, C.A. Mathoulin, K. Nichol, T.L. Smith, M.L. Dawson, A.R. Ferrie, R. Price — An investigation into the relationship between carrier-based dry powder inhalation performance and formulation cohesive–adhesive force balances — Eur. J. Pharm. Biopharm. 69 (2008) 496–507 (첫 쪽 · DOI = 원문에서)",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
+  "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'cohesive–adhesive force balances' · 'carrier-based dry powder' 0 건 · 2026-11-23). 같은 방법 = begat2004_cohesive_adhesive_balance_afm_colloid_probe · begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery 카드 → '🔗 관련 카드'",
+  "note": "- 꼭 뽑을 것: CAB 측정 (탐침 입자 · 기판 결정 면 · 표면 거칠기 · 습도 · 힘 곡선 수 · 스프링 상수 · 하중) · CAB 비 정의 (F_adh / F_coh · 기울기) · 16 제형 (약물 · 담체 · 비율 · 혼합 조건) · 성능 지표 (미세입자 분율 · 방출량) · 상관 꼴과 최적 ('약간 응집' 쪽) · 한계 (거칠기 · 접촉 면적 · 크기 차) · 우리 AFM (같은 SE 탐침으로 SE–SE · SE–NCM · SE–코팅 NCM) 에 옮길 절차.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
+  "nn": ""
+ },
+ "N-153": {
+  "pdf": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+  "si": [],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표 6 절 (우선순위 4 · 1저자 11-23 업로드 · 믹서 논지) — 드럼에서 점착 (액교) × 회전 속도 × 충전율을 DEM 으로 (점착은 대체로 혼합을 낮춤 · 64 % 충전에서는 마른 입자가 가장 나쁨 — 하이라이트) = 우리 드럼과 같은 꼴의 공정 축 선례 (G4 일부 후보)",
+  "bib": "P.Y. Liu, R.Y. Yang, A.B. Yu — DEM study of the transverse mixing of wet particles in rotating drums — Chem. Eng. Sci. 86 (2013) 99–107 (첫 쪽 · DOI 10.1016/j.ces.2012.06.015 = 검색 · 원문에서 확인)",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
+  "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'transverse mixing of wet particles' 0 건 · 2026-11-23). 같은 그룹 (Yu · Yang) 카드가 정본에 있으면 대조",
+  "note": "- 꼭 뽑을 것: DEM 힘 모델 (접촉 · 액교 힘 식 · 파단 거리) · 입자 (크기 · 개수 · 물성) · 드럼 (지름 · 길이 · 회전 속도 · Froude 수 · 충전율) · 표면장력 범위 (무차원화) · 혼합 지수 정의 (Lacey 등) · 혼합 시간 · 순환 주기 모델 식 · 회전 속도 × 점착 결과 표 · 우리 드럼 (Froude · 충전율) 위치 대조.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
+  "nn": ""
+ },
+ "N-154": {
+  "pdf": "da8a833e-The_transverse_motion_of_solids_in_rotating_cylinders_forms_of_motion_and_transition_behavior.pdf",
+  "si": [],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표 6 절 (우선순위 4 · 1저자 11-23 업로드 · 믹서 논지) — 드럼 운동 꼴 (미끄럼 · 출렁 · 무너짐 · 구름 · 폭포 · 던짐 · 원심) 경계를 Froude 수 · 충전율 · 벽 마찰로 가르는 지도 = rpm 축을 무차원으로 정하는 기준 · 우리 드럼이 어느 꼴인지",
+  "bib": "J. Mellmann — The transverse motion of solids in rotating cylinders — forms of motion and transition behavior — Powder Technol. 118 (2001) 251–270 (첫 쪽 · DOI 10.1016/S0032-5910(00)00402-2 = 검색 · 원문에서 확인)",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
+  "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'Mellmann' · 'transverse motion of solids' 0 건 · 2026-11-23)",
+  "note": "- 꼭 뽑을 것: 운동 꼴마다 경계식 (Froude · 충전율 · 벽 마찰 · 입자/드럼 지름비 · 내부 마찰각 · 정 · 동 안식각) · Bed Behavior Diagram 의 숫자 (그림 판독) · 검증 실험 (드럼 크기 · 재료) · 규모 늘림 기준 · 우리 드럼 (지름 · 회전 수 · 충전율 — 리포 문서에서 옮김) 을 이 지도에 놓으면 어느 꼴인지 (카드 산술 · 표지).\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
+  "nn": ""
+ },
+ "N-155": {
+  "pdf": "8f6e1608-Numerical_simulation_of_mechanofusion_system.pdf",
+  "si": [],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표 6 절 (우선순위 4 · 1저자 11-23 업로드 · 믹서 논지) — 코팅 장치 (메카노퓨전) DEM 의 첫 선례 (2D · Walton–Braun 탄소성 · 점착 없음 · host 만) = 코팅 과정 DEM 구현 시도 (1저자 11-23 Q3) 의 출발점",
+  "bib": "W. Chen, R.N. Dave, R. Pfeffer, O. Walton — Numerical simulation of Mechanofusion system — Powder Technol. 146 (2004) 121–136 (첫 쪽 · DOI 10.1016/j.powtec.2004.07.014 = 검색 · 원문에서 확인)",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
+  "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'Mechanofusion system' 0 건 · 2026-11-23). 메카노퓨전 실험 카드 = kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact · kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable (DEM Rocky · 점착 없음) → '🔗 관련 카드'",
+  "note": "- 꼭 뽑을 것: 장치 기하 (챔버 지름 · 안쪽 조각 · 긁개 · 틈) · DEM (Walton–Braun 식 · 2D · 입자 크기 · 개수 · 물성 · 시간 간격) · 회전 속도 · 채움 · 에너지 (운동 · 회전) · 충돌 압력 · 안쪽 조각 힘 · 실험 대조 · 무엇이 없나 (게스트 입자 · 점착 · 막 형성) — 우리 코팅 과정 구현에 옮길 점 · 빠진 점.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
+  "nn": ""
+ },
+ "N-156": {
+  "pdf": "1db10fd7-Numerical_simulation_of_dry_particle_coating_processes_by_the_discrete_element_method.pdf",
+  "si": [],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표 6 절 (우선순위 4 · 1저자 11-23 업로드 · 믹서 논지) — 메카노퓨전 · Hybridizer · 자기 보조 충돌 코팅 (MAIC) 세 장치 DEM 비교 (충돌 에너지 · 빈도) = 코팅 과정 DEM 에서 어느 장치를 흉내 낼지 고르는 근거 (Q3)",
+  "bib": "R. Dave, W. Chen, A. Mujumdar, W. Wang, R. Pfeffer — Numerical simulation of dry particle coating processes by the discrete element method — Adv. Powder Technol. 14 (4) (2003) 449–470 (첫 쪽 · DOI 10.1163/156855203769710672 = 검색 · 원문에서 확인)",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
+  "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'dry particle coating processes' 0 건 · 2026-11-23). 같은 그룹 N-155 (Chen 2004) 와 서로 '🔗 관련 카드' · Hybridizer 실험 = kawaguchi2017 · kawaguchi2018 카드",
+  "note": "- 꼭 뽑을 것: 세 장치 각각의 기하 · 운전 조건 · DEM 모델 (2D/3D · 접촉 · 점착 여부 · 게스트 입자 다룸 여부) · 충돌 에너지 · 충돌 빈도 · 결과 비교 · 실험과 대조 · 서로 다른 점 (장치별 응력 꼴) · 우리 코팅 과정 구현에 고를 장치와 그 근거.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
+  "nn": ""
+ },
+ "N-157": {
+  "pdf": "51798ed2-From_symmetry_breaking_in_the_bulk_to_phase_transitions_at_the_surface_a_quantum-mechanical_exploration_of_Li6PS5Cl_argyrodite_superionic_conductor.pdf",
+  "si": [
+   "e1feaccc-Sup_From_symmetry_breaking_in_the_bulk_to_phase_transitions_at_the_surface_a_quantum-mechanical_exploration_of_Li6PS5Cl_argyrodite_superionic_conductor.pdf"
+  ],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표 6 절 (우선순위 4 · 1저자 11-23 업로드 · 믹서 논지) — LPSCl 면별 표면 에너지 · Wulff 꼴 (PBE0 · 슬랩) = 점착 비 기준의 γ_SE 사전값 (pustorino2025 카드가 이미 0.10–0.50 J/m² 를 줌 → 대조 · 보강 성격)",
+  "bib": "M. D'Amore, L.E. Daga, R. Rocca, M.F. Sgroi, N.L. Marana, S.M. Casassa, L. Maschio, A.M. Ferrari — From symmetry breaking in the bulk to phase transitions at the surface: a quantum-mechanical exploration of Li6PS5Cl argyrodite superionic conductor — Phys. Chem. Chem. Phys. 24 (2022) 22978 (첫 쪽 · 쪽 끝 · DOI 10.1039/D2CP03599E = 원문에서 확인) + ESI 11 쪽",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
+  "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'From symmetry breaking' 0 건 · 2026-11-23). pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament 카드가 ref 50 (D'Amore · E 30.7 · G 12.5 GPa) 로 인용 → 같은 논문인지 대조 · '🔗 관련 카드'",
+  "note": "- 꼭 뽑을 것: 계산 (CRYSTAL · PBE0 · 기저 · k 점 · 슬랩 두께 · 진공) · 대칭 깨짐 (모델 1–4 · ESI) · 면 (Miller) 별 표면 에너지 (J/m² · 종결 · 화학량론 여부) · Wulff 꼴 · 표면 전하 · 정전 퍼텐셜 · pustorino2025 카드 값 (대칭 슬랩 면당 0.10 · 0.37 · 화학량론 벽개 0.47–0.50 J/m²) 과 정의 (면당 · 두 면) 를 맞춰 대조 · 우리 γ_SE 사전값으로 쓸 수 있는지 (조건 · 한정어).\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
+  "nn": ""
  }
 }
