@@ -1,0 +1,572 @@
+{
+  "release": "35099db02148c1a5dc2581f880e0adbf28c0368d",
+  "source_sha256": "29723077bab89d14d024f95e13986b4791eefc95c3ae31496107270b8f8f6727",
+  "baseline_sha256": "1f680f4f255910bb2c93ce7e2edea004c89b4177fb3a4b8af93bd59edeab209e",
+  "lid_sha256": "34ba6abab29c1c05661002aa7d6f946f60b78770c0aacd7ad6f5d3fc652212e5",
+  "candidate_sha256": "cdd3ff1dcdbe02dcb6493a4112a0136076883f2179c33f322e2287c0ffdfb14e",
+  "fixed_reference_MPa": 0.6636991102836952,
+  "status": "MATCHED_PREFIX_COMPLETE",
+  "label": "DEVELOPMENT_ONLY",
+  "u6_qualified": false,
+  "stage3_go": false,
+  "three_dimensional_go": false,
+  "convention": "Upward is positive. Whole-system delta Py is inferred from signed walls. A null floor/abs(lid) ratio has a zero denominator. MPa equivalents use 10 J/(width dt).",
+  "old_grid_lid": {
+    "pressure_union": {
+      "samples": 1139,
+      "peak": {
+        "step_F24": 1138,
+        "displacement_diameters": 0.17013028877254088,
+        "F12_MPa": 0.24110266925725715,
+        "F24_MPa": 0.1439041187796617,
+        "signed_gap_MPa": 0.09719855047759546
+      },
+      "fixed_reference_percent": 14.644972242926222,
+      "first_above": {
+        "step_F24": 930,
+        "displacement_diameters": 0.13903441876842115,
+        "F12_MPa": 0.04055630355276699,
+        "F24_MPa": 0.0070877818191811956,
+        "signed_gap_MPa": 0.03346852173358579
+      },
+      "anchors": [
+        {
+          "step_F24": 930,
+          "displacement_diameters": 0.13903441876842115,
+          "F12_MPa": 0.04055630355276699,
+          "F24_MPa": 0.0070877818191811956,
+          "signed_gap_MPa": 0.03346852173358579
+        },
+        {
+          "step_F24": 1138,
+          "displacement_diameters": 0.17013028877254088,
+          "F12_MPa": 0.24110266925725715,
+          "F24_MPa": 0.1439041187796617,
+          "signed_gap_MPa": 0.09719855047759546
+        }
+      ],
+      "max_abs_gap_MPa": 0.09719855047759546
+    },
+    "fixed_landmarks": [
+      {
+        "displacement_D": 0.13903441876842115,
+        "time_code": 0.6963737751086629,
+        "native_steps": {
+          "F12": {
+            "steps": [
+              465,
+              465
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 4.266222472042147e-06,
+            "lid_signed_J": -1.7091390816624925e-05,
+            "inferred_whole_delta_Py_J": -1.2825168344582777e-05,
+            "floor_over_abs_lid": 0.24961236436606202,
+            "floor_equivalent_MPa": 0.040556303552766994,
+            "lid_signed_equivalent_MPa": -0.16247714193071897,
+            "inferred_whole_delta_Py_equivalent_MPa": -0.12192083837795196,
+            "native_bottom_pressure_MPa": 0.04055630355276699,
+            "since_initial_inferred_whole_delta_Py_J": -0.006436909475521088
+          },
+          "F24": {
+            "steps": [
+              930,
+              930
+            ],
+            "duration_code": 0.000748789005493186,
+            "floor_J": 3.727910512675355e-07,
+            "lid_signed_J": -7.5387073480787236e-06,
+            "inferred_whole_delta_Py_J": -7.165916296811188e-06,
+            "floor_over_abs_lid": 0.04945026170335994,
+            "floor_equivalent_MPa": 0.007087781819181196,
+            "lid_signed_equivalent_MPa": -0.14333153304019036,
+            "inferred_whole_delta_Py_equivalent_MPa": -0.13624375122100918,
+            "native_bottom_pressure_MPa": 0.0070877818191811956,
+            "since_initial_inferred_whole_delta_Py_J": -0.006110434258464279
+          }
+        },
+        "F12_minus_F24_native": {
+          "floor_equivalent_MPa": 0.0334685217335858,
+          "lid_signed_equivalent_MPa": -0.019145608890528604,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.014322912843057214
+        },
+        "identical_window": {
+          "F12": {
+            "steps": [
+              465,
+              465
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 4.266222472042147e-06,
+            "lid_signed_J": -1.7091390816624925e-05,
+            "inferred_whole_delta_Py_J": -1.2825168344582777e-05,
+            "floor_over_abs_lid": 0.24961236436606202,
+            "floor_equivalent_MPa": 0.040556303552766994,
+            "lid_signed_equivalent_MPa": -0.16247714193071897,
+            "inferred_whole_delta_Py_equivalent_MPa": -0.12192083837795196,
+            "native_bottom_pressure_MPa": 0.04055630355276699,
+            "since_initial_inferred_whole_delta_Py_J": -0.006436909475521088
+          },
+          "F24": {
+            "steps": [
+              929,
+              930
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 7.342203222793357e-07,
+            "lid_signed_J": -1.5117075460050578e-05,
+            "inferred_whole_delta_Py_J": -1.4382855137771241e-05,
+            "floor_over_abs_lid": 0.048568939423477564,
+            "floor_equivalent_MPa": 0.006979772494310975,
+            "lid_signed_equivalent_MPa": -0.14370856306854107,
+            "inferred_whole_delta_Py_equivalent_MPa": -0.13672879057423007
+          },
+          "F12_minus_F24": {
+            "floor_equivalent_MPa": 0.03357653105845602,
+            "lid_signed_equivalent_MPa": -0.018768578862177893,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.014807952196278104
+          }
+        }
+      },
+      {
+        "displacement_D": 0.17013028877254088,
+        "time_code": 0.8521218882512457,
+        "native_steps": {
+          "F12": {
+            "steps": [
+              569,
+              569
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 2.5362213405774743e-05,
+            "lid_signed_J": -1.5289362950831982e-05,
+            "inferred_whole_delta_Py_J": 1.0072850454942761e-05,
+            "floor_over_abs_lid": 1.658814267627458,
+            "floor_equivalent_MPa": 0.24110266925725743,
+            "lid_signed_equivalent_MPa": -0.14534639227699547,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.09575627698026197,
+            "native_bottom_pressure_MPa": 0.24110266925725715,
+            "since_initial_inferred_whole_delta_Py_J": -0.006420435177387983
+          },
+          "F24": {
+            "steps": [
+              1138,
+              1138
+            ],
+            "duration_code": 0.000748789005493186,
+            "floor_J": 7.568823235559997e-06,
+            "lid_signed_J": -7.0489216240421255e-06,
+            "inferred_whole_delta_Py_J": 5.199016115178716e-07,
+            "floor_over_abs_lid": 1.0737561912654292,
+            "floor_equivalent_MPa": 0.14390411877966158,
+            "lid_signed_equivalent_MPa": -0.1340193611457267,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.009884757633934866,
+            "native_bottom_pressure_MPa": 0.1439041187796617,
+            "since_initial_inferred_whole_delta_Py_J": -0.006836798629416891
+          }
+        },
+        "F12_minus_F24_native": {
+          "floor_equivalent_MPa": 0.09719855047759585,
+          "lid_signed_equivalent_MPa": -0.011327031131268761,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.0858715193463271
+        },
+        "identical_window": {
+          "F12": {
+            "steps": [
+              569,
+              569
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 2.5362213405774743e-05,
+            "lid_signed_J": -1.5289362950831982e-05,
+            "inferred_whole_delta_Py_J": 1.0072850454942761e-05,
+            "floor_over_abs_lid": 1.658814267627458,
+            "floor_equivalent_MPa": 0.24110266925725743,
+            "lid_signed_equivalent_MPa": -0.14534639227699547,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.09575627698026197,
+            "native_bottom_pressure_MPa": 0.24110266925725715,
+            "since_initial_inferred_whole_delta_Py_J": -0.006420435177387983
+          },
+          "F24": {
+            "steps": [
+              1137,
+              1138
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 1.5115375890939662e-05,
+            "lid_signed_J": -1.4050668114413008e-05,
+            "inferred_whole_delta_Py_J": 1.0647077765266542e-06,
+            "floor_over_abs_lid": 1.075776309557443,
+            "floor_equivalent_MPa": 0.14369240633006272,
+            "lid_signed_equivalent_MPa": -0.1335708967128821,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.010121509617180603
+          },
+          "F12_minus_F24": {
+            "floor_equivalent_MPa": 0.09741026292719471,
+            "lid_signed_equivalent_MPa": -0.011775495564113364,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.08563476736308137
+          }
+        }
+      }
+    ],
+    "at_candidate_peak_native": {
+      "displacement_D": 0.15667534502075808,
+      "time_code": 0.7847308777568589,
+      "native_steps": {
+        "F12": {
+          "steps": [
+            524,
+            524
+          ],
+          "duration_code": 0.001497578010986372,
+          "floor_J": 1.724510538023533e-05,
+          "lid_signed_J": -1.4427746386962575e-05,
+          "inferred_whole_delta_Py_J": 2.817358993272753e-06,
+          "floor_over_abs_lid": 1.1952736704478406,
+          "floor_equivalent_MPa": 0.16393840995954742,
+          "lid_signed_equivalent_MPa": -0.13715554354855286,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.026782866410994564,
+          "native_bottom_pressure_MPa": 0.16393840995954728,
+          "since_initial_inferred_whole_delta_Py_J": -0.006711272225411944
+        },
+        "F24": {
+          "steps": [
+            1048,
+            1048
+          ],
+          "duration_code": 0.000748789005493186,
+          "floor_J": 3.641565621335821e-06,
+          "lid_signed_J": -7.073676100862048e-06,
+          "inferred_whole_delta_Py_J": -3.432110479526227e-06,
+          "floor_over_abs_lid": 0.5148052539318324,
+          "floor_equivalent_MPa": 0.0692361646463884,
+          "lid_signed_equivalent_MPa": -0.1344900117424914,
+          "inferred_whole_delta_Py_equivalent_MPa": -0.06525384709610298,
+          "native_bottom_pressure_MPa": 0.06923616464638838,
+          "since_initial_inferred_whole_delta_Py_J": -0.006756684525068056
+        }
+      },
+      "F12_minus_F24_native": {
+        "floor_equivalent_MPa": 0.09470224531315902,
+        "lid_signed_equivalent_MPa": -0.0026655318060614663,
+        "inferred_whole_delta_Py_equivalent_MPa": 0.09203671350709754
+      },
+      "identical_window": {
+        "F12": {
+          "steps": [
+            524,
+            524
+          ],
+          "duration_code": 0.001497578010986372,
+          "floor_J": 1.724510538023533e-05,
+          "lid_signed_J": -1.4427746386962575e-05,
+          "inferred_whole_delta_Py_J": 2.817358993272753e-06,
+          "floor_over_abs_lid": 1.1952736704478406,
+          "floor_equivalent_MPa": 0.16393840995954742,
+          "lid_signed_equivalent_MPa": -0.13715554354855286,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.026782866410994564,
+          "native_bottom_pressure_MPa": 0.16393840995954728,
+          "since_initial_inferred_whole_delta_Py_J": -0.006711272225411944
+        },
+        "F24": {
+          "steps": [
+            1047,
+            1048
+          ],
+          "duration_code": 0.001497578010986372,
+          "floor_J": 7.243846208725738e-06,
+          "lid_signed_J": -1.4175982719628701e-05,
+          "inferred_whole_delta_Py_J": -6.932136510902963e-06,
+          "floor_over_abs_lid": 0.5109942888612289,
+          "floor_equivalent_MPa": 0.06886270644718948,
+          "lid_signed_equivalent_MPa": -0.13476218413448957,
+          "inferred_whole_delta_Py_equivalent_MPa": -0.06589947768730008
+        },
+        "F12_minus_F24": {
+          "floor_equivalent_MPa": 0.09507570351235795,
+          "lid_signed_equivalent_MPa": -0.0023933594140632952,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.09268234409829464
+        }
+      }
+    }
+  },
+  "new_material_lid": {
+    "pressure_union": {
+      "samples": 1139,
+      "peak": {
+        "step_F24": 1048,
+        "displacement_diameters": 0.15667534502075808,
+        "F12_MPa": 0.203580623712413,
+        "F24_MPa": 0.0716850529114536,
+        "signed_gap_MPa": 0.1318955708009594
+      },
+      "fixed_reference_percent": 19.87279608444574,
+      "first_above": {
+        "step_F24": 877,
+        "displacement_diameters": 0.13111095189237143,
+        "F12_MPa": 0.03373268381188396,
+        "F24_MPa": 0.0,
+        "signed_gap_MPa": 0.03373268381188396
+      },
+      "anchors": [
+        {
+          "step_F24": 930,
+          "displacement_diameters": 0.13903441876842115,
+          "F12_MPa": 0.07681657998471127,
+          "F24_MPa": 0.005873414353581523,
+          "signed_gap_MPa": 0.07094316563112975
+        },
+        {
+          "step_F24": 1138,
+          "displacement_diameters": 0.17013028877254088,
+          "F12_MPa": 0.25130278916647103,
+          "F24_MPa": 0.15527747556774812,
+          "signed_gap_MPa": 0.0960253135987229
+        }
+      ],
+      "max_abs_gap_MPa": 0.1318955708009594
+    },
+    "fixed_landmarks": [
+      {
+        "displacement_D": 0.13903441876842115,
+        "time_code": 0.6963737751086629,
+        "native_steps": {
+          "F12": {
+            "steps": [
+              465,
+              465
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 8.080534739311552e-06,
+            "lid_signed_J": -1.6730824021390057e-05,
+            "inferred_whole_delta_Py_J": -8.650289282078505e-06,
+            "floor_over_abs_lid": 0.482972908505925,
+            "floor_equivalent_MPa": 0.07681657998471127,
+            "lid_signed_equivalent_MPa": -0.15904945936272719,
+            "inferred_whole_delta_Py_equivalent_MPa": -0.0822328793780159,
+            "native_bottom_pressure_MPa": 0.07681657998471127,
+            "since_initial_inferred_whole_delta_Py_J": -0.007060995568632674
+          },
+          "F24": {
+            "steps": [
+              930,
+              930
+            ],
+            "duration_code": 0.000748789005493186,
+            "floor_J": 3.089198238969542e-07,
+            "lid_signed_J": -7.655977365179124e-06,
+            "inferred_whole_delta_Py_J": -7.34705754128217e-06,
+            "floor_over_abs_lid": 0.040350148539098574,
+            "floor_equivalent_MPa": 0.005873414353581524,
+            "lid_signed_equivalent_MPa": -0.145561158167492,
+            "inferred_whole_delta_Py_equivalent_MPa": -0.13968774381391047,
+            "native_bottom_pressure_MPa": 0.005873414353581523,
+            "since_initial_inferred_whole_delta_Py_J": -0.006524203712372907
+          }
+        },
+        "F12_minus_F24_native": {
+          "floor_equivalent_MPa": 0.07094316563112975,
+          "lid_signed_equivalent_MPa": -0.013488301195235197,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.057454864435894565
+        },
+        "identical_window": {
+          "F12": {
+            "steps": [
+              465,
+              465
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 8.080534739311552e-06,
+            "lid_signed_J": -1.6730824021390057e-05,
+            "inferred_whole_delta_Py_J": -8.650289282078505e-06,
+            "floor_over_abs_lid": 0.482972908505925,
+            "floor_equivalent_MPa": 0.07681657998471127,
+            "lid_signed_equivalent_MPa": -0.15904945936272719,
+            "inferred_whole_delta_Py_equivalent_MPa": -0.0822328793780159,
+            "native_bottom_pressure_MPa": 0.07681657998471127,
+            "since_initial_inferred_whole_delta_Py_J": -0.007060995568632674
+          },
+          "F24": {
+            "steps": [
+              929,
+              930
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 6.006961994538971e-07,
+            "lid_signed_J": -1.531826674841378e-05,
+            "inferred_whole_delta_Py_J": -1.4717570548959884e-05,
+            "floor_over_abs_lid": 0.03921437126795691,
+            "floor_equivalent_MPa": 0.0057104423333985575,
+            "lid_signed_equivalent_MPa": -0.14562116256763014,
+            "inferred_whole_delta_Py_equivalent_MPa": -0.13991072023423157
+          },
+          "F12_minus_F24": {
+            "floor_equivalent_MPa": 0.07110613765131271,
+            "lid_signed_equivalent_MPa": -0.01342829679509705,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.05767784085621566
+          }
+        }
+      },
+      {
+        "displacement_D": 0.17013028877254088,
+        "time_code": 0.8521218882512457,
+        "native_steps": {
+          "F12": {
+            "steps": [
+              569,
+              569
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 2.643519040225061e-05,
+            "lid_signed_J": -1.6498904698837543e-05,
+            "inferred_whole_delta_Py_J": 9.936285703413067e-06,
+            "floor_over_abs_lid": 1.6022391113098038,
+            "floor_equivalent_MPa": 0.25130278916647103,
+            "lid_signed_equivalent_MPa": -0.15684474769875964,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.09445804146771138,
+            "native_bottom_pressure_MPa": 0.25130278916647103,
+            "since_initial_inferred_whole_delta_Py_J": -0.00676186643821222
+          },
+          "F24": {
+            "steps": [
+              1138,
+              1138
+            ],
+            "duration_code": 0.000748789005493186,
+            "floor_J": 8.167019644766248e-06,
+            "lid_signed_J": -7.082736977943124e-06,
+            "inferred_whole_delta_Py_J": 1.0842826668231241e-06,
+            "floor_over_abs_lid": 1.1530880887148243,
+            "floor_equivalent_MPa": 0.15527747556774812,
+            "lid_signed_equivalent_MPa": -0.1346622839030562,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.020615191664691935,
+            "native_bottom_pressure_MPa": 0.15527747556774812,
+            "since_initial_inferred_whole_delta_Py_J": -0.007313771184365817
+          }
+        },
+        "F12_minus_F24_native": {
+          "floor_equivalent_MPa": 0.0960253135987229,
+          "lid_signed_equivalent_MPa": -0.022182463795703433,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.07384284980301944
+        },
+        "identical_window": {
+          "F12": {
+            "steps": [
+              569,
+              569
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 2.643519040225061e-05,
+            "lid_signed_J": -1.6498904698837543e-05,
+            "inferred_whole_delta_Py_J": 9.936285703413067e-06,
+            "floor_over_abs_lid": 1.6022391113098038,
+            "floor_equivalent_MPa": 0.25130278916647103,
+            "lid_signed_equivalent_MPa": -0.15684474769875964,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.09445804146771138,
+            "native_bottom_pressure_MPa": 0.25130278916647103,
+            "since_initial_inferred_whole_delta_Py_J": -0.00676186643821222
+          },
+          "F24": {
+            "steps": [
+              1137,
+              1138
+            ],
+            "duration_code": 0.001497578010986372,
+            "floor_J": 1.6310121002170294e-05,
+            "lid_signed_J": -1.4165920693912759e-05,
+            "inferred_whole_delta_Py_J": 2.144200308257535e-06,
+            "floor_over_abs_lid": 1.1513632861984693,
+            "floor_equivalent_MPa": 0.15505009939853034,
+            "lid_signed_equivalent_MPa": -0.1346665307615195,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.020383568637010838
+          },
+          "F12_minus_F24": {
+            "floor_equivalent_MPa": 0.09625268976794069,
+            "lid_signed_equivalent_MPa": -0.022178216937240147,
+            "inferred_whole_delta_Py_equivalent_MPa": 0.07407447283070054
+          }
+        }
+      }
+    ],
+    "at_candidate_peak_native": {
+      "displacement_D": 0.15667534502075808,
+      "time_code": 0.7847308777568589,
+      "native_steps": {
+        "F12": {
+          "steps": [
+            524,
+            524
+          ],
+          "duration_code": 0.001497578010986372,
+          "floor_J": 2.141517238187742e-05,
+          "lid_signed_J": -1.6407954315565947e-05,
+          "inferred_whole_delta_Py_J": 5.007218066311473e-06,
+          "floor_over_abs_lid": 1.305170161374792,
+          "floor_equivalent_MPa": 0.20358062371241303,
+          "lid_signed_equivalent_MPa": -0.1559801394003467,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.047600484312066337,
+          "native_bottom_pressure_MPa": 0.203580623712413,
+          "since_initial_inferred_whole_delta_Py_J": -0.007130005941802017
+        },
+        "F24": {
+          "steps": [
+            1048,
+            1048
+          ],
+          "duration_code": 0.000748789005493186,
+          "floor_J": 3.770368066735566e-06,
+          "lid_signed_J": -7.562638378394287e-06,
+          "inferred_whole_delta_Py_J": -3.7922703116587215e-06,
+          "floor_over_abs_lid": 0.4985519441875121,
+          "floor_equivalent_MPa": 0.0716850529114536,
+          "lid_signed_equivalent_MPa": -0.14378652765717004,
+          "inferred_whole_delta_Py_equivalent_MPa": -0.07210147474571645,
+          "native_bottom_pressure_MPa": 0.0716850529114536,
+          "since_initial_inferred_whole_delta_Py_J": -0.007206451634103369
+        }
+      },
+      "F12_minus_F24_native": {
+        "floor_equivalent_MPa": 0.13189557080095943,
+        "lid_signed_equivalent_MPa": -0.012193611743176652,
+        "inferred_whole_delta_Py_equivalent_MPa": 0.11970195905778278
+      },
+      "identical_window": {
+        "F12": {
+          "steps": [
+            524,
+            524
+          ],
+          "duration_code": 0.001497578010986372,
+          "floor_J": 2.141517238187742e-05,
+          "lid_signed_J": -1.6407954315565947e-05,
+          "inferred_whole_delta_Py_J": 5.007218066311473e-06,
+          "floor_over_abs_lid": 1.305170161374792,
+          "floor_equivalent_MPa": 0.20358062371241303,
+          "lid_signed_equivalent_MPa": -0.1559801394003467,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.047600484312066337,
+          "native_bottom_pressure_MPa": 0.203580623712413,
+          "since_initial_inferred_whole_delta_Py_J": -0.007130005941802017
+        },
+        "F24": {
+          "steps": [
+            1047,
+            1048
+          ],
+          "duration_code": 0.001497578010986372,
+          "floor_J": 7.497559344133935e-06,
+          "lid_signed_J": -1.512740959302149e-05,
+          "inferred_whole_delta_Py_J": -7.629850248887555e-06,
+          "floor_over_abs_lid": 0.49562744355072375,
+          "floor_equivalent_MPa": 0.07127459823257348,
+          "lid_signed_equivalent_MPa": -0.14380680319466424,
+          "inferred_whole_delta_Py_equivalent_MPa": -0.07253220496209074
+        },
+        "F12_minus_F24": {
+          "floor_equivalent_MPa": 0.13230602547983955,
+          "lid_signed_equivalent_MPa": -0.01217333620568245,
+          "inferred_whole_delta_Py_equivalent_MPa": 0.12013268927415707
+        }
+      }
+    }
+  }
+}
