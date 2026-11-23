@@ -1,0 +1,252 @@
+{
+  "arms": {
+    "F12": {
+      "elapsed_seconds": 396.3128616430331,
+      "first_positive_MPa": 6.942136254170839e-05,
+      "first_positive_diameters": 0.12438348001648003,
+      "first_positive_step": 416,
+      "samples": 5044,
+      "terminal_MPa": 1.2006213270378114,
+      "terminal_diameters": 1.5078506964497818,
+      "terminal_step": 5043,
+      "trace_sha256": "e54f7e4683f0fcf5cc05693b049d51f57f1445b7eeb5e21eb12dad8696b36838"
+    },
+    "F16": {
+      "elapsed_seconds": 837.9071122120367,
+      "first_positive_MPa": 0.0010217695670213624,
+      "first_positive_diameters": 0.12759771657940622,
+      "first_positive_step": 569,
+      "samples": 6590,
+      "terminal_MPa": 1.2007072706903696,
+      "terminal_diameters": 1.4775770730082693,
+      "terminal_step": 6589,
+      "trace_sha256": "6f2920b606b851b218fb6356e7bdb3d5ad9f79667d7f5744203c84bc8528b8c8"
+    },
+    "F24": {
+      "elapsed_seconds": 2820.960087421001,
+      "first_positive_MPa": 0.0008808899698593586,
+      "first_positive_diameters": 0.1346989368928464,
+      "first_positive_step": 901,
+      "samples": 10408,
+      "terminal_MPa": 1.2009460446748992,
+      "terminal_diameters": 1.5558399958311397,
+      "terminal_step": 10407,
+      "trace_sha256": "25445d62cc848f4aca5b73802cd3295c3c9dcfc9be7435fcb7b340c883842d6b"
+    },
+    "F8": {
+      "elapsed_seconds": 170.73331916506868,
+      "first_positive_MPa": 0.005268269252256317,
+      "first_positive_diameters": 0.11705801064050947,
+      "first_positive_step": 261,
+      "samples": 2720,
+      "terminal_MPa": 1.2026533941729116,
+      "terminal_diameters": 1.219466402036572,
+      "terminal_step": 2719,
+      "trace_sha256": "d0a657cd8f68cd5f3eaf08887deb8c13dfcd96bd186d4226a60ac573383b3f92"
+    }
+  },
+  "fine_sha256": "c1506ea6fb6f16181fe36e85e76043101380b75c9cf435b2811a5b53b761d673",
+  "four_grid_common_end_diameters": 1.219466402036572,
+  "label": "DEVELOPMENT_ONLY",
+  "native_curve_crosscheck": "MATCH",
+  "pair_domains": {
+    "F12_F24": {
+      "common": {
+        "count_above": 3235,
+        "fine_peak_percent": 18.213898480715596,
+        "first_above": {
+          "coarse_MPa": 0.04055630355276699,
+          "displacement_code": 0.013903441876842115,
+          "displacement_diameters": 0.13903441876842115,
+          "fine_MPa": 0.0070877818191811956,
+          "raw_gap_MPa": 0.03346852173358579
+        },
+        "fixed_percent": 27.87206781134064,
+        "largest": {
+          "coarse_MPa": 1.2006213270378114,
+          "displacement_code": 0.15078506964497818,
+          "displacement_diameters": 1.5078506964497818,
+          "fine_MPa": 1.0156346609562754,
+          "raw_gap_MPa": 0.18498666608153602
+        },
+        "max_abs_MPa": 0.18498666608153602,
+        "samples": 10087
+      },
+      "end_diameters": 1.5078506964497818,
+      "fine_peak_MPa": 1.0156346609562754,
+      "jointly_positive": {
+        "count_above": 3235,
+        "fine_peak_percent": 18.213898480715596,
+        "first_above": {
+          "coarse_MPa": 0.04055630355276699,
+          "displacement_code": 0.013903441876842115,
+          "displacement_diameters": 0.13903441876842115,
+          "fine_MPa": 0.0070877818191811956,
+          "raw_gap_MPa": 0.03346852173358579
+        },
+        "fixed_percent": 27.87206781134064,
+        "largest": {
+          "coarse_MPa": 1.2006213270378114,
+          "displacement_code": 0.15078506964497818,
+          "displacement_diameters": 1.5078506964497818,
+          "fine_MPa": 1.0156346609562754,
+          "raw_gap_MPa": 0.18498666608153602
+        },
+        "max_abs_MPa": 0.18498666608153602,
+        "samples": 9186
+      },
+      "pair": "F12_F24"
+    },
+    "F8_F16": {
+      "common": {
+        "count_above": 3574,
+        "fine_peak_percent": 78.18745646109464,
+        "first_above": {
+          "coarse_MPa": 0.03333489265756345,
+          "displacement_code": 0.01269249693918173,
+          "displacement_diameters": 0.1269249693918173,
+          "fine_MPa": 0.0,
+          "raw_gap_MPa": 0.03333489265756345
+        },
+        "fixed_percent": 79.51136377314984,
+        "largest": {
+          "coarse_MPa": 1.2026533941729116,
+          "displacement_code": 0.1219466402036572,
+          "displacement_diameters": 1.219466402036572,
+          "fine_MPa": 0.6749371802360837,
+          "raw_gap_MPa": 0.5277162139368279
+        },
+        "max_abs_MPa": 0.5277162139368279,
+        "samples": 5439
+      },
+      "end_diameters": 1.219466402036572,
+      "fine_peak_MPa": 0.6749371802360837,
+      "jointly_positive": {
+        "count_above": 3571,
+        "fine_peak_percent": 78.18745646109464,
+        "first_above": {
+          "coarse_MPa": 0.03592880809325087,
+          "displacement_code": 0.012759771657940622,
+          "displacement_diameters": 0.12759771657940622,
+          "fine_MPa": 0.0010217695670213624,
+          "raw_gap_MPa": 0.03490703852622951
+        },
+        "fixed_percent": 79.51136377314984,
+        "largest": {
+          "coarse_MPa": 1.2026533941729116,
+          "displacement_code": 0.1219466402036572,
+          "displacement_diameters": 1.219466402036572,
+          "fine_MPa": 0.6749371802360837,
+          "raw_gap_MPa": 0.5277162139368279
+        },
+        "max_abs_MPa": 0.5277162139368279,
+        "samples": 4870
+      },
+      "pair": "F8_F16"
+    }
+  },
+  "pairs_on_four_grid_domain": {
+    "F12_F24": {
+      "common": {
+        "count_above": 2276,
+        "fine_peak_percent": 15.2942260819596,
+        "first_above": {
+          "coarse_MPa": 0.04055630355276699,
+          "displacement_code": 0.013903441876842115,
+          "displacement_diameters": 0.13903441876842115,
+          "fine_MPa": 0.0070877818191811956,
+          "raw_gap_MPa": 0.03346852173358579
+        },
+        "fixed_percent": 14.644972242926222,
+        "largest": {
+          "coarse_MPa": 0.24110266925725715,
+          "displacement_code": 0.01701302887725409,
+          "displacement_diameters": 0.17013028877254088,
+          "fine_MPa": 0.1439041187796617,
+          "raw_gap_MPa": 0.09719855047759546
+        },
+        "max_abs_MPa": 0.09719855047759546,
+        "samples": 8158
+      },
+      "end_diameters": 1.219466402036572,
+      "fine_peak_MPa": 0.6355244780397658,
+      "jointly_positive": {
+        "count_above": 2276,
+        "fine_peak_percent": 15.2942260819596,
+        "first_above": {
+          "coarse_MPa": 0.04055630355276699,
+          "displacement_code": 0.013903441876842115,
+          "displacement_diameters": 0.13903441876842115,
+          "fine_MPa": 0.0070877818191811956,
+          "raw_gap_MPa": 0.03346852173358579
+        },
+        "fixed_percent": 14.644972242926222,
+        "largest": {
+          "coarse_MPa": 0.24110266925725715,
+          "displacement_code": 0.01701302887725409,
+          "displacement_diameters": 0.17013028877254088,
+          "fine_MPa": 0.1439041187796617,
+          "raw_gap_MPa": 0.09719855047759546
+        },
+        "max_abs_MPa": 0.09719855047759546,
+        "samples": 7257
+      },
+      "pair": "F12_F24"
+    },
+    "F8_F16": {
+      "common": {
+        "count_above": 3574,
+        "fine_peak_percent": 78.18745646109464,
+        "first_above": {
+          "coarse_MPa": 0.03333489265756345,
+          "displacement_code": 0.01269249693918173,
+          "displacement_diameters": 0.1269249693918173,
+          "fine_MPa": 0.0,
+          "raw_gap_MPa": 0.03333489265756345
+        },
+        "fixed_percent": 79.51136377314984,
+        "largest": {
+          "coarse_MPa": 1.2026533941729116,
+          "displacement_code": 0.1219466402036572,
+          "displacement_diameters": 1.219466402036572,
+          "fine_MPa": 0.6749371802360837,
+          "raw_gap_MPa": 0.5277162139368279
+        },
+        "max_abs_MPa": 0.5277162139368279,
+        "samples": 5439
+      },
+      "end_diameters": 1.219466402036572,
+      "fine_peak_MPa": 0.6749371802360837,
+      "jointly_positive": {
+        "count_above": 3571,
+        "fine_peak_percent": 78.18745646109464,
+        "first_above": {
+          "coarse_MPa": 0.03592880809325087,
+          "displacement_code": 0.012759771657940622,
+          "displacement_diameters": 0.12759771657940622,
+          "fine_MPa": 0.0010217695670213624,
+          "raw_gap_MPa": 0.03490703852622951
+        },
+        "fixed_percent": 79.51136377314984,
+        "largest": {
+          "coarse_MPa": 1.2026533941729116,
+          "displacement_code": 0.1219466402036572,
+          "displacement_diameters": 1.219466402036572,
+          "fine_MPa": 0.6749371802360837,
+          "raw_gap_MPa": 0.5277162139368279
+        },
+        "max_abs_MPa": 0.5277162139368279,
+        "samples": 4870
+      },
+      "pair": "F8_F16"
+    }
+  },
+  "prior_sha256": "aa0f2ad7126a65654975de6a741a58b49c57a5cc84c42983b226ddca15212b65",
+  "receipt_replay": "MATCH",
+  "reference_MPa": 0.6636991102836952,
+  "release": "e8e2f2535aa12b9fb089d714e1325d862cb1161b",
+  "screen_sha256": "4013a5e5d39bb06675d1427e5f4a67ca2cffeffd237f2a4c0cc06df23787b007",
+  "stage3_go": false,
+  "threshold_MPa": 0.03318495551418476,
+  "u6_qualified": false
+}

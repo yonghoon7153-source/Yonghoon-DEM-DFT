@@ -1,0 +1,144 @@
+{
+  "full_tar_sha256": "aa0f2ad7126a65654975de6a741a58b49c57a5cc84c42983b226ddca15212b65",
+  "fine_tar_sha256": "c1506ea6fb6f16181fe36e85e76043101380b75c9cf435b2811a5b53b761d673",
+  "label": "DEVELOPMENT_ONLY",
+  "common_all": {
+    "samples": 11098,
+    "end_displacement_diameters": 1.219466402036572,
+    "pressures_at_end_MPa": {
+      "8": 1.2026533941729116,
+      "12": 0.6333096828990168,
+      "16": 0.6749371802360837,
+      "24": 0.6332732974299271
+    },
+    "pair_maxima": {
+      "F8-F16": {
+        "signed_at_peak_MPa": 0.5277162139368279,
+        "u_at_peak_diameters": 1.219466402036572,
+        "fixed_reference_pct": 79.51136377314984,
+        "signed_edge_MPa": 0.5277162139368279,
+        "edge_pressures_MPa": [
+          1.2026533941729116,
+          0.6749371802360837
+        ]
+      },
+      "F12-F24": {
+        "signed_at_peak_MPa": 0.09719855047759546,
+        "u_at_peak_diameters": 0.17013028877254088,
+        "fixed_reference_pct": 14.644972242926222,
+        "signed_edge_MPa": 3.638546908968365e-05,
+        "edge_pressures_MPa": [
+          0.6333096828990168,
+          0.6332732974299271
+        ]
+      },
+      "F8-F12": {
+        "signed_at_peak_MPa": 0.5693437112738948,
+        "u_at_peak_diameters": 1.219466402036572,
+        "fixed_reference_pct": 85.78340733808298,
+        "signed_edge_MPa": 0.5693437112738948,
+        "edge_pressures_MPa": [
+          1.2026533941729116,
+          0.6333096828990168
+        ]
+      },
+      "F12-F16": {
+        "signed_at_peak_MPa": 0.04290594839297443,
+        "u_at_peak_diameters": 0.15831983814597606,
+        "fixed_reference_pct": 6.4646686620740645,
+        "signed_edge_MPa": -0.04162749733706694,
+        "edge_pressures_MPa": [
+          0.6333096828990168,
+          0.6749371802360837
+        ]
+      },
+      "F16-F24": {
+        "signed_at_peak_MPa": 0.061259616117211674,
+        "u_at_peak_diameters": 0.16616855533451602,
+        "fixed_reference_pct": 9.230028361952531,
+        "signed_edge_MPa": 0.04166388280615663,
+        "edge_pressures_MPa": [
+          0.6749371802360837,
+          0.6332732974299271
+        ]
+      }
+    },
+    "time_or_displacement_averaged_pressure_MPa": {
+      "8": 0.452189692978998,
+      "12": 0.3608656228697129,
+      "16": 0.361157187993829,
+      "24": 0.33843248123908615
+    }
+  },
+  "memo_reference_fractions": {
+    "0.84": {
+      "u_diameters": 0.5017271973653661,
+      "pressure_MPa": {
+        "8": 0.3655621246897983,
+        "12": 0.3378568568701618,
+        "16": 0.324838530435355,
+        "24": 0.27476004356761397
+      }
+    },
+    "0.9": {
+      "u_diameters": 0.9365574350820169,
+      "pressure_MPa": {
+        "8": 0.6198830861985226,
+        "12": 0.48977425558906174,
+        "16": 0.4921965289909917,
+        "24": 0.4528779814567493
+      }
+    },
+    "0.95": {
+      "u_diameters": 1.2569586628732325,
+      "pressure_MPa": {
+        "8": null,
+        "12": 0.6562967761165299,
+        "16": 0.7069064310412274,
+        "24": 0.6491774429392895
+      }
+    }
+  },
+  "upper_geometric_row_at_candidate_snapshots": {
+    "first_fixed_exceed": {
+      "u_diameters": 0.13903441876842115,
+      "upper_plate_y": 0.8385146344346708,
+      "grids": {
+        "12": {
+          "native_step": 465,
+          "pressure_MPa": 0.04055630355276699,
+          "first_geometrically_eligible_row": 101,
+          "first_eligible_y": 0.8416666666666667,
+          "offset_diameters": 0.03152032231995894
+        },
+        "24": {
+          "native_step": 930,
+          "pressure_MPa": 0.0070877818191811956,
+          "first_geometrically_eligible_row": 202,
+          "first_eligible_y": 0.8416666666666667,
+          "offset_diameters": 0.03152032231995894
+        }
+      }
+    },
+    "largest_in_four_grid_overlap": {
+      "u_diameters": 0.17013028877254088,
+      "upper_plate_y": 0.8354050474342588,
+      "grids": {
+        "12": {
+          "native_step": 569,
+          "pressure_MPa": 0.24110266925725715,
+          "first_geometrically_eligible_row": 101,
+          "first_eligible_y": 0.8416666666666667,
+          "offset_diameters": 0.06261619232407867
+        },
+        "24": {
+          "native_step": 1138,
+          "pressure_MPa": 0.1439041187796617,
+          "first_geometrically_eligible_row": 201,
+          "first_eligible_y": 0.8375,
+          "offset_diameters": 0.02094952565741215
+        }
+      }
+    }
+  }
+}
