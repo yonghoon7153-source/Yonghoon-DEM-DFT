@@ -1,0 +1,221 @@
+# 믹서 문헌 매트릭스 — 제외 목록 (2026-11-23)
+
+- 기준: 정본 `origin/claude/friendly-meitner-lldvar` @ `a65bbdb24` (litdb/papers/ = `d0b7bfb88` 과 같음)
+- 후보 = 브리프 후보 30 + 키워드 grep (본문 182 카드 · 머리 / 제목 164 카드) + 브리프가 짚은 제외 후보 + 큐 (status.tsv · queue.json · S8_candidates.md)
+- 넣은 것 = matrix.json 76 행 (카드 53 · 제목 23) · 아래 = 뺀 카드 202 + 큐 3
+- 한 줄 = `slug` — 이유 (부류 이유는 같은 글 · 개별 이유는 따로 적음) · 키워드 grep 은 '코팅 · 점착 · cohesion · 혼합' 같은 낱말이 한 번만 나와도 걸리므로 대부분은 우연 일치다
+- 재검토로 넣은 것: `sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking` (S8 N-79 '믹싱 · 측정' · 황화물 SE 분포 결과)
+
+## A. 브리프가 짚은 제외 후보 (확인 결과)
+
+- `bares2021_soft_rigid_mix_experiment_dic_proceedings` — [브리프 제외 후보 · 확인] 무른 + 단단한 2D 원기둥 혼합물의 일축 압축만 — 혼합 과정 없음
+- `berkenkemper2023_compressibility_descriptors_binary_mixtures_deformation` — [브리프 제외 후보 · 확인] 변형이 다른 이원 분말의 압축 서술자만 — 혼합 과정 없음
+- `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd` — [브리프 제외 후보 · 확인] 강체 + 무른 입자 혼합물의 등방 압밀만 — 혼합 과정 없음
+- `cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd` — [브리프 제외 후보 · 확인] 무른 오각형 입자 압밀 미시역학 — 혼합 과정 없음
+- `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` — [브리프 제외 후보 · 확인] 무른 + 강체 혼합물 압밀 학회 단편 — 혼합 과정 없음
+- `haruyama2017_cation_mixing_co_diffusion_lco_lps` — [브리프 제외 후보 · 확인] 'cation mixing' = LCO/LPS 계면의 양이온 자리 섞임 · Co 확산 (계산) — 분말 혼합 아님
+- `lee2024_multicomponent_argyrodite_mixed_oxidation_mtp` — [브리프 제외 후보 · 확인] 'mixed oxidation state' = 다성분 아지로다이트의 화학 조성 설계 — 분말 혼합 아님
+- `lee2025_halide_segregation_uhs_mixing_li_chalcogen_assb` — [브리프 제외 후보 · 확인] 2000 rpm 원심 혼합의 기계화학 결과 (아지로다이트 → LiX 나노상 편석 · 카드 L25) = 혼합의 화학적 결과 · 칼코겐 (S/Se/Te) 양극 — 입자 분포 · SE 피복 ↔ 응집 · 점착 축이 아님 (고강도 혼합의 다른 대가로 gap_check G3 에 한 줄)
+- `yano2024_eepa_binary_mixture_plasticity_compression_dem` — [브리프 제외 후보 · 확인] 소성이 다른 두 성분 혼합 분말의 단축 압축 DEM (S8 N-25) — 혼합 과정 없음
+
+## B. 정본 카드 (grep 후보 중 뺀 것)
+
+- `han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `kang2025_bollard_anchored_binder_dry_electrode` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `koo2026_swcnt_sheath_thick_electrode` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `lee2025_dual_fibrous_ptfe_dry_electrode` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `lee2026_li_underlayer_primer_free_dry_prelithiated_thick_anode` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `matthews2024_ptfe_nanofibril_network` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `schmitt2026_chemomech_stability_dry_cathode_separator_sheets` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `wang2026_dryprocess_thick_cathode_failure_ncm94` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `yoo2026_porosity_gradient_dry_electrode` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane` — 건식 전극 (PTFE 섬유화 · 시트 · 막) — 분말 혼합은 고정 단계 · 혼합 변수 · SE 분산 · 점착 대비 결과 없음
+- `liu2025_dry_processing_high_energy_li_batteries_review` — 건식 전극 리뷰 — 혼합을 공정 단계 하나로만 다룸 (황화물 ASSB 혼합 · 코팅을 핵심으로 다룬 mun2025 는 행으로 넣음)
+- `ai2011_rolling_resistance_contact_models_dem` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `boschpadros2014_dem_liggghts_msc_thesis` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `chung2008_dem_parameters_bulk_behaviour_confined_compression` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `coetzee2017_dem_calibration_review` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `paulick2015_elastic_particle_properties_dem_review` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `shenouda2020_dem_metal_powder_am_liggghts_tutorial` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `wensrich2012_rolling_friction_shape_contact_eccentricity_dem` — DEM 방법 · 접촉 매개변수 · 보정 · 강성 환산 · 흐름 시험 — 혼합 · 분리 결과 없음
+- `dmt1975_adhesion_contact_deformation` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `johnson1971_jkr_surface_energy_contact_elastic_solids` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `luding2008_cohesive_frictional_contact_models` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `pasha2014_linear_elastoplastic_adhesive_contact` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `thakur2014_eepa_adhesive_elastoplastic_dem` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `thorntonning1998_adhesive_elastoplastic_contact` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `thorntonyin1991_oblique_impact_elastic_spheres_adhesion` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `zunker2024_bulk_elastic_partII` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `zunker2024_mdr_contact_model_partI` — 접촉 · 점착 접촉 법칙의 원전 (JKR · DMT · 점착 탄소성 · EEPA · MDR) — 혼합 결과 없음 (점착 모델의 출처일 뿐)
+- `geldart2006_powder_flowability_angle_of_repose_tester` — 벌크 유동성 · 점착 분말 이론 / 시험 (안식각 · Hausner 비 · 항복) — 점착을 입자 쌍 수준으로 재지 않고 혼합 결과와 잇지 않음 (믹서 D3 앵커 맥락 · 같은 부류의 N-116 은 코디네이터 지시로만 제목 행)
+- `grey1969_hausner_ratio_metal_powders` — 벌크 유동성 · 점착 분말 이론 / 시험 (안식각 · Hausner 비 · 항복) — 점착을 입자 쌍 수준으로 재지 않고 혼합 결과와 잇지 않음 (믹서 D3 앵커 맥락 · 같은 부류의 N-116 은 코디네이터 지시로만 제목 행)
+- `molerus1975_theory_of_yield_cohesive_powders` — 벌크 유동성 · 점착 분말 이론 / 시험 (안식각 · Hausner 비 · 항복) — 점착을 입자 쌍 수준으로 재지 않고 혼합 결과와 잇지 않음 (믹서 D3 앵커 맥락 · 같은 부류의 N-116 은 코디네이터 지시로만 제목 행)
+- `fowkes1964_attractive_forces_interfaces_dispersion` — 표면 에너지 · 계면 분산력 이론 / 계산 = γ 입력값 출처 — 혼합 연구 아님
+- `garcia2017_nmc111_surface_energy_wulff_dft` — 표면 에너지 · 계면 분산력 이론 / 계산 = γ 입력값 출처 — 혼합 연구 아님
+- `kim2012_lno_lco_surface_energy_morphology_dft` — 표면 에너지 · 계면 분산력 이론 / 계산 = γ 입력값 출처 — 혼합 연구 아님
+- `maurer2015_mbd_adsorbates_metal_surfaces` — 표면 에너지 · 계면 분산력 이론 / 계산 = γ 입력값 출처 — 혼합 연구 아님
+- `vanoss1988_lifshitz_vdw_acid_base_interfacial` — 표면 에너지 · 계면 분산력 이론 / 계산 = γ 입력값 출처 — 혼합 연구 아님
+- `benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `bouvard2000_hard_soft_powder_densification` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `cantor2020_compaction_model_highly_deformable_particles` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `cho2026_pore_network_homogeneity_powder_compacted_se_separator` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `cottrino2013_insitu_xct_granulated_alumina_die_compaction` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `german2014_coordination_number_powder_densification` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `heck2026_densification_sulfide_se_binder_scalable` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `kakar1967_deformation_theory_hot_pressing` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `martinbouvard2003_dem_composite_cold_compaction` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `vu2019_soft_grain_compression_beyond_jamming_dic` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `yano2023_eepa_bimodal_size_plasticity_compression_dem` — 압밀 · 충전 · 치밀화만 (혼합 뒤 단계) — 혼합 과정 · SE 분산 결과 없음
+- `du2025_dem_fem_force_chain_collector_damage_calendering` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `duquesnoy2020_calendering_ml_mesostructure_generator` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `ge2022_xct_initial_structure_dem_calendering_nmc333` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `he2026_dem_calendering_inhomogeneity_areal_density` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `kollenda2024_time_sensitivity_calendered_electrode_springback_storage` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `lippke2023_dem_drying_structure_formation_lib` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `lyu2025_3d_dem_drying_calendering_lib` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `lyu2026_two_layer_gradient_electrode_calendering_dem_fem` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `meyer2017_calendering_compaction_resistance_line_load_exponential_model` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `meyer2018_calendering_process_model_active_material_mass_loading` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811` — 캘린더링 · 습식 슬러리 제조 / 건조 모델 — 건식 분말 혼합 아님
+- `bardenhagen2000_mpm_granular_multibody_frictional_contact` — MPM · 연속체 수치 기법 — 혼합 무관
+- `bardenhagen2001_mpm_improved_contact_granular_stress_waves` — MPM · 연속체 수치 기법 — 혼합 무관
+- `bardenhagen2005_mpm_foam_densification_simulation` — MPM · 연속체 수치 기법 — 혼합 무관
+- `homel2017_mpm_field_gradient_partitioning_fracture_self_contact` — MPM · 연속체 수치 기법 — 혼합 무관
+- `nguyen2017_mpm_bpm_deformable_particle_compaction` — MPM · 연속체 수치 기법 — 혼합 무관
+- `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` — MPM · 연속체 수치 기법 — 혼합 무관
+- `sulsky1994_mpm_particle_method_history_dependent_materials` — MPM · 연속체 수치 기법 — 혼합 무관
+- `asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `chen2011_percolation_micromodel_composite_electrode` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `cronau2021_stack_pressure_ionic_conductivity` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `cronk2026_lis_positive_electrode_geometry_fem` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `froboese2019_microstructure_ionic_conductivity_assb_electrode` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `kato2018_thick_electrode_assb_cycle_tortuosity` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `landesfeind2016_tortuosity_eis_electrodes_separators` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `landesfeind2018_tortuosity_impedance_vs_tomography` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `minnmann2021_jes_charge_transport_bottlenecks` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `minnmann2024_microstructure_porosity_visualization` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `miss2026_pressure_tortuosity_composite_cathode_coating` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `morasch2018_binder_gradient_impedance_tortuosity` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `otani2023_ionic_conductivity_path_resistance_separation_model` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `thorat2009_quantifying_tortuosity_porous_liion` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `tian2017_contact_area_loss_assb_simulation` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni` — 전도도 · tortuosity · 미세구조 측정 / 모델 (혼합 고정) — 혼합 공정 · 점착 변수 없음
+- `beutl2024_round_robin_coin_cell_sulfide_assb` — 복합 양극 조성 · 입경 · 셀 성능 / 재현성 (혼합 고정) — 혼합을 변수로 두지 않음
+- `doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density` — 복합 양극 조성 · 입경 · 셀 성능 / 재현성 (혼합 고정) — 혼합을 변수로 두지 않음
+- `oh2026_bimodal_composite_cathode` — 복합 양극 조성 · 입경 · 셀 성능 / 재현성 (혼합 고정) — 혼합을 변수로 두지 않음
+- `park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics` — 복합 양극 조성 · 입경 · 셀 성능 / 재현성 (혼합 고정) — 혼합을 변수로 두지 않음
+- `strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation` — 복합 양극 조성 · 입경 · 셀 성능 / 재현성 (혼합 고정) — 혼합을 변수로 두지 않음
+- `aykol2014_cathode_coating_thermodynamics` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `aykol2016_ht_cathode_coating_design` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `bong2023_linbo3_thickness_uniformity_ncm523` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `cha2024_dualcompatible_halide_ncm_lpscl_interface` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `deng2026_polysulfate_layer_moisture_oxidation_lpsc` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `honrao2021_interpretable_ml_sse_anode_coatings` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `hu2024_amorphous_lif_coating_lco_lpscl_interface` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `kim2025_lto_pald_conformal_coating_nca` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `kim2026_hts_li3sc2po43_coating_midni_ncm` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `nisar2021_cathode_coating_review_critical_thickness` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `nolan2021_garnet_cathode_coating` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `oh2026_carbon_coating_siox_ion_electron_balance` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `qian2025_lipo2f2_coating_stable_cei` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `qian2026_decanoate_coating_lpscl_moisture_interface` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `sundar2025_oxide_coating_screening_lpscl` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `xiao2019_cathode_coating_screening` — 화학 · 산화물 · 기상 코팅 (용액 · ALD · 열처리 · 계산 스크리닝) — 건식 입자 혼합 코팅 아님
+- `ahn2026_cej_agno3_pvp_li3n_anodefree` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `cronk2026_lis_cathode_interphase_chemistry` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `he2026_cryo4dstem_chloride_migration_moisture_argyrodite` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `jung2019_cathode_electrolyte_chemical_reaction_sulfide_assb` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `kang2026_site_specific_customized_se_dendrite_tolerant_li_metal` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `kim2026_electrolyte_interfacial_reactivity_alloying_anode_pulverization` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `kraft2017_lattice_polarizability_argyrodite_Li6PS5X` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `lee2023_sicspe_digitaltwin_assb` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `li2026_mci_vs_sei_na3ps4_na_mlip_md` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `liu2022_cl_crystallization_interface_argyrodite` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `luo2022_cryotem_li_dendrite_sulfide_interphase` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `morgan2021_anion_disorder_superionic_mechanism_li6ps5x` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `park2026_oxygen_induced_li_intercage_conduction` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `rao2025_iodide_argyrodite` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `schlem2020_li3mcl6_cation_site_disorder` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `son2025_fivevolt_assb` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `tron2023_lpscl_ccd_ambient_pressure` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `wang2022_two_parameter_space_dendrite_constriction` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `wang2025_miec_tis2_lps_three_phase_interface_lis_assb` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `xu2026_offstoich_composite_lpsc_highvoltage` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `yang2025_lao_dualdoping_argyrodite_lacl3` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `zhou2019_solvent_engineered_argyrodite_li6ps5x_conductivity` — SE · 전극 화학 · 계면 반응 · 합성 · 전기화학 — 혼합 무관
+- `han2025_icep_binder_ultrahigh_loading_ncm811` — 바인더 소재 · 전극 성능 — 분말 혼합 · 점착 대비 결과 없음
+- `han2025_icep_conductive_elastic_binder` — 바인더 소재 · 전극 성능 — 분말 혼합 · 점착 대비 결과 없음
+- `jeong2025_tough_adhesive_binder_shield_ncm811` — 바인더 소재 · 전극 성능 — 분말 혼합 · 점착 대비 결과 없음
+- `benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `benhadjali2026_oneway_chemomech_stress_stack_pressure_3d_assb_cathode` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `bucci2017_chemomech_failure_assb_cycling_czm` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `dang2019_nmc111_secondary_particle_flat_punch_fracture_strength` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `so2021_dem_fabrication_degradation_ductile_particles` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `trevisanello2021_sc_pc_ncm_cracking_diffusion` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `vanpeene2026_4d_nano_holotomography_dvc_graphite_silicon_chemomechanics` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` — 기계 · 파괴 · 화학기계 모델 — 혼합 무관
+- `banerjee2020_interfaces_interphases_assb_review` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `famprikis2019_fundamentals_inorganic_sse` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `gandla2026_layered_cathode_degradation_diagnostics_review` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `janek2016_solid_future_battery_development` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `miao2023_role_of_interfaces_solid_state_batteries` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `nosrati2026_anion_engineering_sulfide_se_review` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `wang2025_ai_ecosystems_electrolyte_interface_ssb` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `wu2026_asslsb_li2s_reaction_mechanisms_engineering_review` — 일반 리뷰 · 전망 — 혼합 · 코팅 결과 없음
+- `puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups` — 21 그룹 셀 재현성 — 혼합은 같은 처방 (손 막자 70 : 30 · 카드 L22) · 혼합을 변수로 두지 않음
+- `choi2025_mlip_cu_taxn_interfacial_adhesion` — Cu / 비정질 TaN 계면 접착 (MLIP · 배선) — 분말 혼합 무관
+- `haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem` — JKR 점착의 강성 연화 환산 규칙 (S8 N-48) — DEM 방법 · 혼합 결과 없음
+- `nam2026_dpe_microstructure_review` — LIB 건식 전극 미세구조 리뷰 — 혼합은 4 단계 공정 중 하나 (카드 L178) · 황화물 SE · 점착 대비 · 혼합 결과 지표 없음 (mun2025 는 ASSB 혼합 · 코팅 중심이라 넣음)
+- `liu2024_sc_ni90_sulfur_coating_sulfide_assb` — S 분말 막자 혼합 뒤 150 °C N₂ 열처리 = 열 · 화학 황화 피막 (카드 L142) — 건식 입자 혼합 코팅 아님
+- `cronau2022_wet_milling_particle_size_ionic_conductivity` — SE 단독 습식 밀링 (입경 ↔ σ) — 복합체 혼합 아님
+- `lei2026_se_particle_size_effects_review` — SE 입도 리뷰 — 입도 제어 합성 · 밀링 중심 · 복합체 혼합 공정 · 점착 변수 없음
+- `yano2026_se_psd_width_ionic_tortuosity_dem` — SE 입도 폭 → 압밀 침대 이온 tortuosity (DEM) — 혼합 과정 없음
+- `kang2026_multiscale_inverse_design_ptfe_fibrillation_dry_electrode` — 건식 PTFE 섬유화의 AM 입경 의존 (2D FEM + GPR 역설계) — 혼합기 rpm · 시간 미기재 (카드 L38) · 분말 분포 · 점착 축 없음
+- `zhang2026_dryprocess_electrode_architecture_cell_level` — 건식 후막 VGCF–PTFE 전단 결합 → 도전망 — 혼합기 기종 · rpm 미보고 (카드 L169) · SE 없음 · 분말 혼합 결과 아님
+- `onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset` — 균일 구 무작위 느슨 충전 (S8 N-60 · 출발 침대 대조용) — 혼합 아님
+- `bzox_dry_zro2x_nmc_shell_coating_sulfide_assb` — 껍데기 · 중복 — 카드 첫 줄 '→ superseded by choi2026_bzox_dry_zro2x_nmc_shell_coating.md' (그 정본 카드는 행으로 넣음)
+- `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` — 냉간분무 증착 DEM — 혼합 · 코팅 장치 아님 (증착 공정)
+- `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` — 무른 + 단단한 입자 혼합물의 압밀만 (브리프가 짚은 압밀 전용 이원 혼합 부류) — 혼합 과정 없음
+- `chouchane2021_innov_webapp_stochastic_generation_meshing` — 미세구조 생성 · 메싱 웹앱 — 혼합 무관
+- `wang2026_umlff_review_softening_forgetting_longrange` — 범용 기계학습 원자간 힘장 리뷰 — 혼합 무관
+- `park2026_ceramic_pp_separator` — 세라믹 코팅 PP 분리막 — 혼합 무관
+- `hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode` — 습식 시트의 온간 등방 가압 · 공극 (XCT) — 건식 혼합 아님
+- `lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging` — 우리 랩 카드 · 미세균열 내성 이중층 양극 화학기계 설계 — 혼합 무관
+- `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` — 음극 탄소 인터레이어 ↔ LPSCl 박리 인성과 Li 석출 위치 — 분말 혼합 · 점착 대비 아님
+- `shi2019_high_am_loading_particle_size_assb` — 입경비 λ 로 충전 · 퍼콜레이션 (DEM 압밀) — 혼합 과정 없음
+- `morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem` — 점착 CFD-DEM 유동층에서 강성 선택 (S8 N-49) — 유동화 · 혼합 아님
+- `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` — 점착 DEM 보정 (원통 인양 · 안식각) 만 — 혼합 결과 없음 · 같은 보정 부류는 혼합 결과가 있는 alizadeh2018 · lischka2025 행이 대표
+- `duquesnoy2023_ml_multiobjective_manufacturing_optimization` — 제조 공정 ML 다목적 최적화 (물리 시뮬 합성 데이터) — 건식 분말 혼합 · 점착 변수 없음
+
+## C. 아직 카드가 없는 큐 항목 (뺀 것)
+
+- N-119 · Oguchi & Tamatani 1986, J. Electrochem. Soc. 133, 841–847 · 'Contact electrification in inorganic binary compounds' (S8 L155 · status.tsv L126) — 카드 전 · 제목 기준 — 무기 이원 화합물의 접촉 대전 측정 (matsusaka2010 L341 인용) — 혼합 · 피복 결과 아님 · 대전에 의한 벽 부착 맥락은 matsusaka2010 행이 대표
+- N-120 · Yoshida et al. 2003, Powder Technol. 135/136, 23–34 · 'Estimation of electrostatic charge distribution of flowing toner particles in contact with metals' (S8 L156 · status.tsv L127) — 카드 전 · 제목 기준 — 금속과 닿아 흐르는 토너 입자의 대전 분포 추정 (S8: '믹서 DEM 에 대전을 넣는 구현 선례') — 혼합 결과 · 점착 대비 아님
+- N-157 · D'Amore et al. 2022, Phys. Chem. Chem. Phys. 24, 22978 · Li6PS5Cl 면별 표면 에너지 · Wulff 꼴 (S8 L293 · status.tsv L157) — 카드 전 · 제목 기준 — γ_SE 입력값 출처 (PBE0 슬랩) — 혼합 연구 아님 (SURF 부류 · 같은 이유로 garcia2017 · kim2012 제외)

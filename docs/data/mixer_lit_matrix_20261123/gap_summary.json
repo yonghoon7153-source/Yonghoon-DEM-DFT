@@ -1,0 +1,239 @@
+[
+ {
+  "id": "G1",
+  "claim": "AM–SE 표면의 점착 대비를 설계 변수로 써서 SE-on-AM 피복 ↔ SE–SE 응집을 예측한 연구는 없다",
+  "verdict": "weakened",
+  "verdict_note": null,
+  "verdict_reason": "쓰인 대로는 'AM–SE' 라는 재료 이름 덕에만 선다.  개념 — 손님–숙주 접착 ÷ 손님 자기 응집 이 숙주 표면에 고르게 붙음 ↔ 손님끼리 덩어리 를 가른다 — 은 약학 운반체 혼합에서 이미 수로 이름 붙고 (Λ₁₂ · CAB) 결과와 대조됐다.  전지 쪽에는 부분 반례만 있다.",
+  "strongest_counterexample": {
+   "slug": "begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery",
+   "line_ref": "L29–L30",
+   "summary_ko": "약학 · Λ₁₂ = 접착 ÷ 자기 응집이 '운반체 위 고른 분포 ↔ 덩어리' 를 가름",
+   "also": []
+  },
+  "narrowed_wording": "황화물 SE 복합 양극의 건식 혼합에서, 같은 SE 탐침으로 잰 AM–SE 접착 ÷ SE–SE 응집 비가 'SE 가 AM 을 덮는가 ↔ SE 끼리 뭉치는가' 를 가르는 경계를 점착 크기 × 회전 속도 위에서 입자 수준으로 그리고 그 비를 측정 입력으로 쓴 연구는 없다 — 같은 꼴의 수 (CAB · Λ₁₂) 는 약학 운반체 혼합에 (Begat 2004 Part I · II), 쌍별 점착에 따른 혼합 ↔ 분리는 모델 입상계에 (Jarray 2019 · Li–McCarthy 2003 / 2005 [카드 전]) 이미 있다.",
+  "pending_cards": [
+   {
+    "slug": "N-112-1",
+    "in_summary_table": true,
+    "note_ko": "Li & McCarthy 2003 PRL — 쌍별 점착으로 혼합 ↔ 분리를 '조절' (점착 대비를 설계 변수로 쓴 꼴) · 액체 다리 (습윤) 점착 · 카드 작성 중 (status.tsv L118)"
+   },
+   {
+    "slug": "N-112-2",
+    "in_summary_table": true,
+    "note_ko": "Li & McCarthy 2005 PRE — 점착 혼합 · 분리 상태도 · 경계가 역학 · 표면 성질로 정해지는 식"
+   },
+   {
+    "slug": "N-110",
+    "in_summary_table": true,
+    "note_ko": "Figueroa · Li · McCarthy 2009 — 제목 자체가 '점착력 → 혼합 · 분리 예측'"
+   },
+   {
+    "slug": "N-150",
+    "in_summary_table": true,
+    "note_ko": "Chaudhuri 2006 — 같은 쌍 ↔ 다른 쌍 힘의 대비로 혼합 무늬가 달라짐"
+   },
+   {
+    "slug": "N-152",
+    "in_summary_table": false,
+    "note_ko": "Jones 2008 — AFM CAB 로 16 제형 (약학)"
+   },
+   {
+    "slug": "N-113",
+    "in_summary_table": false,
+    "note_ko": "Egermann 1980 — 제목 = PDF 파일명 'Effects of adhesion on mixing homogeneity part I'"
+   }
+  ],
+  "source": {
+   "file": "gap_check.md",
+   "section_lines": [
+    20,
+    48
+   ],
+   "verdict_line": 22,
+   "narrowed_line": 48,
+   "summary_table_line": 13,
+   "candidate_lines": [
+    39,
+    44
+   ]
+  }
+ },
+ {
+  "id": "G2",
+  "claim": "점착을 독립 측정 (AFM · IGC · 접촉각) 하고 그것으로 혼합 결과를 런 전에 예측한 연구는 없다",
+  "verdict": "broken",
+  "verdict_note": "(분야를 한정하지 않으면) — 전지 · 황화물로 좁히면 holds",
+  "verdict_reason": "약학은 AFM · 표면 에너지 (IGC) · 원심 탈착으로 잰 점착에서 혼합 결과를 예측했다.  전지 쪽 가장 가까운 것은 사후 상관이다.",
+  "strongest_counterexample": {
+   "slug": "begat2004_cohesive_adhesive_balance_afm_colloid_probe",
+   "line_ref": "L22",
+   "summary_ko": "AFM 비로 혼합 결과 예측",
+   "also": [
+    {
+     "slug": "begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery",
+     "line_ref": "L30",
+     "summary_ko": "실제 혼합으로 대조"
+    }
+   ]
+  },
+  "narrowed_wording": "전지 — 황화물 SE 복합 양극 — 에서 AM · SE 쌍의 점착을 독립 측정 (같은 SE 탐침 AFM · IGC · 접촉각) 하고 그 값을 혼합 런 전에 등록해 혼합 결과 (SE 피복 ↔ SE–SE 응집) 를 예측 · 검증한 연구는 없다 — 약학 운반체 혼합에는 측정 → 예측 선례가 있고 (Begat 2004 · Jones 2008 [카드 전] · Ahfat 1997 [카드 인용]), 전지 쪽 가장 가까운 것은 AFM-FS W_ad 와 잔류 SE 의 사후 상관이다 (Lee 2026 · 실리콘 탐침 · 5 조성).",
+  "pending_cards": [
+   {
+    "slug": "N-152",
+    "in_summary_table": true,
+    "note_ko": "Jones 2008 — 콜로이드 탐침 AFM 으로 잰 점착 · 응집 비 (CAB) 로 16 제형 성능 예측 (결과가 흡입 성능인지 혼합 균질도인지 카드 전 미확인)"
+   },
+   {
+    "slug": "N-110",
+    "in_summary_table": false,
+    "note_ko": "Figueroa 2009 — 제목의 'Predicting' (측정 입력 → 사전 예측인지 미확인)"
+   },
+   {
+    "slug": "N-111",
+    "in_summary_table": false,
+    "note_ko": "Capece 2015 — 다성분 Bond 수로 흐름 예측 (측정 입력 → 사전 예측인지 미확인)"
+   },
+   {
+    "slug": "N-112-1",
+    "in_summary_table": false,
+    "note_ko": "Li & McCarthy 2003 — queue 메모의 실험 (습윤 · 접촉각) (측정 입력 → 사전 예측인지 미확인)"
+   }
+  ],
+  "source": {
+   "file": "gap_check.md",
+   "section_lines": [
+    52,
+    71
+   ],
+   "verdict_line": 54,
+   "narrowed_line": 71,
+   "summary_table_line": 14,
+   "candidate_lines": [
+    69,
+    70
+   ]
+  }
+ },
+ {
+  "id": "G3",
+  "claim": "황화물 복합체 혼합의 회전 속도 최적을 입자 수준에서 SE 탈응집 ↔ SE 벽 손실 (또는 비슷한) 상충으로 설명한 연구는 없다",
+  "verdict": "weakened",
+  "verdict_note": null,
+  "verdict_reason": "그 상충 자체는 황화물 복합체에서 실험으로 이미 관찰 · 해석됐다 (Hayakawa 2022).  쓰인 대로 남는 것은 입자 수준 (DEM) 설명 과 내부 최적 두 요소다.",
+  "strongest_counterexample": {
+   "slug": "hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode",
+   "line_ref": "L31 · L34 · L36 · L102",
+   "summary_ko": "황화물 · 칼날 rpm ↑ = SE 가 AM 에 더 붙고 벽 부착 손실도 커짐",
+   "also": []
+  },
+  "narrowed_wording": "황화물 복합 양극 건식 혼합에서 회전 세기를 올리면 SE 탈응집 (AM 위 부착) 과 SE 벽 부착 손실이 함께 커진다는 관찰은 있다 (Hayakawa 2022 · 모델 물질 Kawaguchi 2017) — 그러나 두 효과를 입자 수준 (점착 DEM) 에서 함께 풀어 회전 세기의 내부 최적을 예측한 연구는 없다 (기존 혼합기 DEM = 할라이드 · 단조 · 벽 손실 없음: Frankenberg 2024 · Kissel 2026).",
+  "pending_cards": [
+   {
+    "slug": "N-150",
+    "in_summary_table": true,
+    "note_ko": "Chaudhuri 2006 — 점착 × 회전 속도 → 혼합 속도 (점착이 커지면 혼합 속도가 올랐다 내려감)"
+   },
+   {
+    "slug": "N-153",
+    "in_summary_table": true,
+    "note_ko": "Liu · Yang · Yu 2013 — 점착 (액교) × 회전 속도 × 충전율 DEM"
+   },
+   {
+    "slug": "N-151",
+    "in_summary_table": false,
+    "note_ko": "Li & McCarthy 2006 — 어떤 조건에서는 느린 전단이 더 잘 섞음"
+   }
+  ],
+  "source": {
+   "file": "gap_check.md",
+   "section_lines": [
+    75,
+    98
+   ],
+   "verdict_line": 77,
+   "narrowed_line": 98,
+   "summary_table_line": 15,
+   "candidate_lines": [
+    93,
+    96
+   ]
+  }
+ },
+ {
+  "id": "G4",
+  "claim": "SE 물질 사이에 옮겨 쓸 수 있는 공정 × 재료 지도 (회전 세기 × 점착 / Bond) 는 없다",
+  "verdict": "weakened",
+  "verdict_note": null,
+  "verdict_reason": "점착 (Bo · Co) × 회전 세기 지도는 모델 입상계에서 이미 그려졌다 (카드 수준 = 무차원 수 · 상태도 · 카드 전 = Li–McCarthy · Chaudhuri · Liu).  쓰인 대로 남는 것은 SE 물질 사이의 전이 와 'SE-on-AM 피복 ↔ SE–SE 응집' 결과 축.",
+  "strongest_counterexample": {
+   "slug": "nase2001_granular_bond_collision_number_wet_cohesion",
+   "line_ref": "L31",
+   "summary_ko": "Co = 점착 γ × 회전 ω 한 무차원 수",
+   "also": [
+    {
+     "slug": "jarray2019_cohesion_driven_mixing_segregation_drum",
+     "line_ref": "L144",
+     "summary_ko": "Bo_g 상태도"
+    }
+   ]
+  },
+  "narrowed_wording": "점착 (Bo · Co) × 회전 세기 지도는 모델 입상계 (유리구 · 습윤 액교) 에서 그려졌다 (Nase 2001 Co · Jarray 2019 Bo_g 상태도 · Li–McCarthy 2003 / 2005 · Chaudhuri 2006 · Liu 2013 [카드 전]) — 실측 점착이 다른 황화물 SE 물질들 사이에 옮겨 쓸 수 있는 회전 세기 × 점착 지도를 'SE-on-AM 피복 ↔ SE–SE 응집' 결과 축으로 세운 연구는 없다.",
+  "pending_cards": [
+   {
+    "slug": "N-112-2",
+    "in_summary_table": true,
+    "note_ko": "Li & McCarthy 2005 PRE — 점착 혼합 · 분리 상태도 (회전 드럼) = '공정 × 재료 지도' 꼴에 가장 가까움"
+   },
+   {
+    "slug": "N-112-1",
+    "in_summary_table": false,
+    "note_ko": "Li & McCarthy 2003 PRL — 점착 혼합 상태도 (Bo 축)"
+   },
+   {
+    "slug": "N-110",
+    "in_summary_table": false,
+    "note_ko": "Figueroa 2009 — 점착력 → 혼합 · 분리 예측"
+   },
+   {
+    "slug": "N-150",
+    "in_summary_table": true,
+    "note_ko": "Chaudhuri 2006 — '점착 × rpm 지도' 의 가장 가까운 선례"
+   },
+   {
+    "slug": "N-153",
+    "in_summary_table": false,
+    "note_ko": "Liu 2013 — 드럼과 같은 꼴의 공정 축 선례 (G4 일부 후보)"
+   },
+   {
+    "slug": "N-151",
+    "in_summary_table": false,
+    "note_ko": "Li & McCarthy 2006 — 전단 × 점착 상태도"
+   },
+   {
+    "slug": "N-154",
+    "in_summary_table": false,
+    "note_ko": "Mellmann 2001 — Froude 수 · 충전율 · 벽 마찰로 가르는 드럼 운동 지도 (점착 축 없음)"
+   },
+   {
+    "slug": "N-111",
+    "in_summary_table": false,
+    "note_ko": "Capece 2015 — 다성분 Bond 수 · 흐름"
+   }
+  ],
+  "source": {
+   "file": "gap_check.md",
+   "section_lines": [
+    102,
+    123
+   ],
+   "verdict_line": 104,
+   "narrowed_line": 123,
+   "summary_table_line": 16,
+   "candidate_lines": [
+    117,
+    121
+   ]
+  }
+ }
+]

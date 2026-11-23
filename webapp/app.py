@@ -5791,6 +5791,70 @@ def mixer_devlog():
     return render_template('mixer.html', active='mixer', entries=_mixer_devlog_entries())
 
 
+# ─────────────────────────  믹서 문헌 지도 (/mixer/lit)  ─────────────────────────
+#  1저자 11-23 Q4 — 믹서 원고의 문제 정의 · 공백 주장 G1–G4 근거인 문헌 매트릭스를 웹앱에서 본다 (읽기 전용 · 개발 자료 ·
+#  예비 판정).  자료 = docs/data/mixer_lit_matrix_20261123/ (matrix.json · gap_summary.json · 원문 gap_check.md · excluded.md ·
+#  README.md).  여기는 읽기만 — 라벨 · 빈칸 지도 · 거르기는 템플릿 (templates/mixer_literature.html) 몫이다 (화면을 고쳐도
+#  이 파일 = 봉인 32 의 지문이 바뀌지 않게).  /mixer 와 같은 관문: 화면으로 나가는 글은 ledger_view.redact 를 파싱 **전에**
+#  지난다.  자료가 없거나 깨져도 200 + 안내 (빈 화면 · 500 을 만들지 않는다) · 회귀 webapp/test_mixer_lit_page.py.
+_MIXER_LIT_DIR = 'docs/data/mixer_lit_matrix_20261123'
+
+
+def _mixer_lit_data(folder=None):
+    """→ dict(ok, notice, meta, rows, gaps, gap_notice, redacted, data_dir).  folder = 시험용 절대 경로 (없으면 리포 기준
+    _MIXER_LIT_DIR).  matrix.json 이 없거나 깨지면 ok=False + notice · gap_summary.json 만 없거나 깨지면 gap_notice (표는 그대로)."""
+    out = dict(ok=False, notice='', meta={}, rows=[], gaps=[], gap_notice='', redacted=False,
+               data_dir=folder or _MIXER_LIT_DIR)
+
+    def _read(name):
+        with open(os.path.join(base, name), encoding='utf-8') as f:
+            raw = f.read()
+        txt = ledger_view.redact(raw)
+        out['redacted'] = out['redacted'] or txt != raw
+        return json.loads(txt)
+    try:
+        base = folder or _repo_path(_MIXER_LIT_DIR)
+        mx = _read('matrix.json')
+    except FileNotFoundError:
+        out['notice'] = f'자료 파일이 없다 — {out["data_dir"]}/matrix.json'
+        return out
+    except (OSError, ValueError) as e:      # 리포 밖 경로 (_repo_path) · 깨진 JSON · 인코딩
+        out['notice'] = f'자료를 읽지 못했다 — {type(e).__name__}: {e}'
+        return out
+    if not (isinstance(mx, dict) and isinstance(mx.get('meta'), dict) and isinstance(mx.get('rows'), list)):
+        out['notice'] = 'matrix.json 꼴이 다르다 — meta (객체) · rows (목록) 가 있어야 한다'
+        return out
+    rows = [r for r in mx['rows'] if isinstance(r, dict)]
+    if len(rows) != len(mx['rows']):
+        out['notice'] = f'객체가 아닌 행 {len(mx["rows"]) - len(rows)} 개를 뺐다'
+    out.update(ok=True, meta=mx['meta'], rows=rows)
+    try:
+        gaps = _read('gap_summary.json')
+    except FileNotFoundError:
+        out['gap_notice'] = '공백 요약 (gap_summary.json) 이 없다 — 원문은 gap_check.md'
+        return out
+    except (OSError, ValueError) as e:
+        out['gap_notice'] = f'공백 요약을 읽지 못했다 — {type(e).__name__}: {e}'
+        return out
+    if isinstance(gaps, list) and all(isinstance(g, dict) and g.get('id') for g in gaps):
+        out['gaps'] = gaps
+    else:
+        out['gap_notice'] = 'gap_summary.json 꼴이 다르다 — id 가 있는 객체의 목록이어야 한다'
+    return out
+
+
+@app.route('/mixer/lit')
+def mixer_literature():
+    """믹서 문헌 지도 — 공백 주장 G1–G4 (예비) · 빈칸 지도 (연구 꼴 × 점착 처리) · 거르는 표 (읽기 전용)."""
+    d = _mixer_lit_data()
+    try:
+        return render_template('mixer_literature.html', active='mixer', **d)
+    except Exception as e:                  # noqa: BLE001 — 자료 꼴이 템플릿 기대와 달라도 500 대신 안내
+        return render_template('mixer_literature.html', active='mixer',
+                               **dict(d, ok=False, meta={}, rows=[], gaps=[], gap_notice='',
+                                      notice=f'자료를 화면에 그리지 못했다 — {type(e).__name__}: {e}'))
+
+
 #  "침대 보기" 탭 (1저자 비준 2026-09-30) — 보기 전용 · 판정은 3D 칸 M 으로만.  경로 · 맹검 잠금 · 덤프 관문은
 #  webapp/mixer_bed.py 한 곳에 있다 (회귀 webapp/test_mixer_bed_view.py).  읽기만 하고 subprocess 는 없다.
 @app.route('/api/mixer/runs')

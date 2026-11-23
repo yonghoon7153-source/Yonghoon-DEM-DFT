@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+{% set active = "mixer" %}
+{% block title %}믹서 문헌 지도 — DEM/MPM Analyzer{% endblock %}
+
+{#  1저자 11-23 Q4 — 믹서 원고의 문제 정의 · 공백 근거 (G1–G4) 를 보이는 읽기 전용 화면.  자료 = docs/data/mixer_lit_matrix_20261123/.
+    라벨 · 빈칸 지도 · 거르기는 여기 (app.py 는 봉인 32 라 읽기만 한다) · 회귀 webapp/test_mixer_lit_page.py.
+    글은 자료에서 그대로 — 판정 · 숫자를 여기에 베끼지 않는다 (자료를 고치면 화면이 같이 바뀐다). #}
+{%- set ST_ORDER = ['method_comparison', 'one_factor_sweep', 'multi_factor_doe', 'process_window', 'dem_model',
+                    'dem_validation', 'mechanism_theory', 'definition_index', 'review', 'coating_effect'] -%}
+{%- set ST_LABEL = {'method_comparison': '방법 비교', 'one_factor_sweep': '한 인자 스윕', 'multi_factor_doe': '다인자 실험 설계',
+                    'process_window': '공정 창', 'dem_model': 'DEM 모델', 'dem_validation': 'DEM 검증',
+                    'mechanism_theory': '기전 · 이론', 'definition_index': '지수 · 용어 정의', 'review': '리뷰',
+                    'coating_effect': '코팅 효과'} -%}
+{%- set AH_LABEL = {'none': '다루지 않음', 'contact_model_calibrated': 'DEM 보정', 'measured_input': '독립 측정',
+                    'coating_as_proxy': '코팅 = 대리', 'theory_parameter': '가정 파라미터', 'not_applicable': '해당 없음'} -%}
+{%- set MM_LABEL = {'none': '없음', 'lacey': 'Lacey 지수', 'utilization_proxy': '이용률 대리', 'sem_edx_qualitative': 'SEM/EDX 정성',
+                    'coverage_xps': '피복 (XPS)', 'coverage_image': '피복 (영상)'} -%}
+{%- set GV_LABEL = {'contradicts': '반례', 'partial': '부분', 'supports': '공백 사례', 'unrelated': '무관'} -%}
+{%- set CV_LABEL = {'holds': '쓰인 대로 선다', 'weakened': '좁혀야 선다', 'broken': '쓰인 대로는 무너진다'} -%}
+{%- set GIDS = ['G1', 'G2', 'G3', 'G4'] -%}
+{%- set LEG = meta.get('legend') if meta.get('legend') is mapping else {} -%}
+{%- set ADH_DESC = LEG.get('adhesion_handling') if LEG.get('adhesion_handling') is mapping else {} -%}
+{%- set GV_DESC = LEG.get('gap_verdict') if LEG.get('gap_verdict') is mapping else {} -%}
+{%- set AH_BASE = (ADH_DESC.keys()|list) if ADH_DESC else ['none', 'contact_model_calibrated', 'measured_input', 'coating_as_proxy',
+                                                           'theory_parameter', 'not_applicable'] -%}
+{%- set ST_KEYS = ST_ORDER + (rows|map(attribute='study_type')|reject('in', ST_ORDER)|unique|list) -%}
+{%- set AH_KEYS = AH_BASE + (rows|map(attribute='adhesion_handling')|reject('in', AH_BASE)|unique|list) -%}
+{%- set n_card = rows|selectattr('card', 'equalto', 'canon')|list|length -%}
+{%- set n_pre = rows|length - n_card -%}
+{%- set BY = {} -%}{%- for r in rows %}{% set _ = BY.update({r.slug: r}) %}{% endfor -%}
+
+{% block content %}
+<style>
+  .lit-wrap { max-width:1280px; }
+  .lit-crumb { font-size:12.5px; margin:0 0 6px; }
+  .lit-lead { font-size:14px; line-height:1.65; margin:6px 0 10px; max-width:880px; }
+  .lit-pill { display:inline-block; padding:2px 9px; border-radius:999px; font-size:12px; font-weight:600;
+              border:1px solid var(--border,#2a2d3e); white-space:nowrap; vertical-align:middle; }
+  .lit-pill.warn { border-color:rgba(251,191,36,.55); background:rgba(251,191,36,.12); color:var(--yellow,#fbbf24); }
+  .lit-notice { margin:10px 0; padding:10px 14px; border-radius:10px; border:1px solid rgba(248,113,113,.55);
+                background:rgba(248,113,113,.10); font-size:13.5px; line-height:1.55; overflow-wrap:anywhere; }
+  .lit-meta { display:flex; flex-wrap:wrap; gap:6px 18px; font-size:12.5px; color:var(--dim,#7c8194); margin:4px 0 8px; }
+  .lit-meta code, .lit-foot code { overflow-wrap:anywhere; font-family:var(--mono,monospace); }
+  .lit-note { font-size:12.5px; color:var(--dim,#7c8194); line-height:1.6; max-width:920px; margin:4px 0; }
+  .lit-wrap details { font-size:12.5px; margin:6px 0 0; max-width:920px; }
+  .lit-wrap details summary { cursor:pointer; color:var(--accent,#6c8cff); }
+  .lit-wrap details p { color:var(--dim,#7c8194); line-height:1.6; margin:6px 0; overflow-wrap:anywhere; }
+  .lit-sec { margin:24px 0; }
+  .lit-sec h2 { font-size:17px; margin:0 0 8px; display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; }
+  .lit-sec h2 small { font-size:12px; font-weight:400; color:var(--dim,#7c8194); }
+  .lit-gaps { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap:14px; }
+  .lit-gap { background:var(--card,#1c1f2e); border:1px solid var(--border,#2a2d3e); border-top:3px solid var(--border,#2a2d3e);
+             border-radius:12px; padding:14px 16px; font-size:13px; line-height:1.55; min-width:0; }
+  .lit-gap[data-verdict="weakened"] { border-top-color:var(--yellow,#fbbf24); }
+  .lit-gap[data-verdict="broken"] { border-top-color:var(--red,#f87171); }
+  .lit-gap[data-verdict="holds"] { border-top-color:var(--green,#34d399); }
+  .lit-gap-head { display:flex; flex-wrap:wrap; gap:6px 8px; align-items:center; }
+  .lit-gid { font:700 15px/1 var(--mono,monospace); color:var(--accent,#6c8cff); }
+  .lit-verdict { padding:2px 9px; border-radius:6px; font-size:12px; font-weight:700; border:1px solid var(--border,#2a2d3e); }
+  .lit-verdict.v-weakened { color:var(--yellow,#fbbf24); border-color:rgba(251,191,36,.6); background:rgba(251,191,36,.10); }
+  .lit-verdict.v-broken { color:var(--red,#f87171); border-color:rgba(248,113,113,.6); background:rgba(248,113,113,.10); }
+  .lit-verdict.v-holds { color:var(--green,#34d399); border-color:rgba(52,211,153,.6); background:rgba(52,211,153,.10); }
+  .lit-claim { margin:8px 0 4px; font-weight:600; }
+  .lit-vnote { margin:4px 0; padding:6px 10px; border-radius:8px; background:rgba(248,113,113,.08); font-size:12.5px; }
+  .lit-reason { margin:4px 0 6px; color:var(--dim,#7c8194); font-size:12.5px; }
+  .lit-gap h4 { font-size:12px; margin:10px 0 4px; color:var(--dim,#7c8194); font-weight:600; }
+  .lit-gap ul { padding-left:18px; margin:0; }
+  .lit-gap li { margin:3px 0; overflow-wrap:anywhere; }
+  .lit-gap li.top::marker { color:var(--yellow,#fbbf24); }
+  .lit-narrow { margin:0; padding:8px 12px; border-left:3px solid var(--accent,#6c8cff); background:rgba(108,140,255,.08);
+                border-radius:0 8px 8px 0; font-size:12.5px; }
+  .lit-dim { color:var(--dim,#7c8194); font-size:11.5px; }
+  .lit-lref { font:600 11.5px/1.4 var(--mono,monospace); color:var(--dim,#7c8194); }
+  code.lit-slug, code.lit-nslug, code.lit-pslug { font:11.5px/1.45 var(--mono,monospace); background:rgba(127,127,127,.16);
+              padding:1px 5px; border-radius:4px; overflow-wrap:anywhere; word-break:break-all; }
+  .lit-btn { margin-top:10px; border:1px solid var(--border,#2a2d3e); background:transparent; color:inherit; padding:5px 11px;
+             border-radius:8px; cursor:pointer; font-size:12.5px; font-weight:600; }
+  .lit-btn:hover { border-color:var(--accent,#6c8cff); }
+  /* 넓은 표는 이 틀 안에서만 가로로 민다 — contain:inline-size = 표의 최소 폭이 바깥 (flex 본문) 으로 번지지 않게 (폰 폭에서 쪽 전체 가로 스크롤 방지) */
+  .lit-gridwrap, .lit-tablewrap { overflow-x:auto; contain:inline-size; border:1px solid var(--border,#2a2d3e); border-radius:12px; }
+  .lit-grid { border-collapse:collapse; font-size:12.5px; }
+  .lit-grid th, .lit-grid td { border-bottom:1px solid var(--border,#2a2d3e); padding:5px 8px; text-align:center; }
+  .lit-grid thead th { font-weight:600; color:var(--dim,#7c8194); vertical-align:bottom; }
+  .lit-grid tbody th, .lit-grid tfoot th { text-align:left; white-space:nowrap; }
+  .lit-rowh, .lit-colh { border:0; background:transparent; color:inherit; cursor:pointer; font:inherit; padding:2px 4px; border-radius:6px; }
+  .lit-rowh:hover, .lit-colh:hover { color:var(--accent,#6c8cff); }
+  .lit-colh, .lit-grid thead th { white-space:nowrap; }
+  .lit-cell { min-width:36px; padding:4px 8px; border-radius:6px; border:1px solid var(--border,#2a2d3e); color:var(--text,#e4e6f0);
+              background:rgba(108,140,255, min(.55, calc(.06 + var(--n, 0) * .045))); cursor:pointer;
+              font:600 12.5px/1 var(--mono,monospace); }
+  .lit-cell.zero { background:transparent; border-style:dashed; color:var(--dim,#7c8194); }
+  .lit-cell.on { outline:2px solid var(--accent,#6c8cff); outline-offset:1px; }
+  .lit-sum { color:var(--dim,#7c8194); font:600 12px/1 var(--mono,monospace); }
+  .lit-filters { display:flex; flex-wrap:wrap; gap:8px 12px; align-items:flex-end; margin:0 0 10px; }
+  .lit-filters label { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--dim,#7c8194); min-width:0; }
+  .lit-filters .input { padding:5px 8px; font-size:12.5px; max-width:100%; }
+  .lit-filters .grow { flex:1 1 160px; }
+  .lit-filters .grow .input { width:100%; }
+  .lit-filters .lit-btn { margin-top:0; }
+  .lit-count { font:600 12.5px/1.8 var(--mono,monospace); color:var(--dim,#7c8194); }
+  .lit-table { border-collapse:collapse; min-width:1560px; font-size:12.5px; line-height:1.5; }
+  .lit-table th, .lit-table td { border-bottom:1px solid var(--border,#2a2d3e); padding:8px 10px; vertical-align:top; text-align:left; }
+  .lit-table thead th { background:rgba(108,140,255,.10); white-space:nowrap; font-weight:600; }
+  .lit-table thead th small { font-weight:400; color:var(--dim,#7c8194); }
+  .lit-table tr[hidden] { display:none; }
+  .lit-table tr.lit-row[data-card="none"] { background:rgba(251,191,36,.045); }
+  .lit-table ul { padding-left:16px; margin:0; } .lit-table li { margin:2px 0; }
+  .lit-table .c-paper { min-width:180px; } .lit-table .c-sys { min-width:190px; } .lit-table .c-proc { min-width:230px; }
+  .lit-table .c-st { min-width:96px; } .lit-table .c-var { min-width:210px; } .lit-table .c-adh { min-width:210px; }
+  .lit-table .c-mix { min-width:150px; } .lit-table .c-dem { min-width:190px; } .lit-table .c-key { min-width:340px; }
+  .lit-table .c-ref { min-width:220px; } .lit-table .c-g { min-width:104px; }
+  .lit-title { font-size:11.5px; color:var(--dim,#7c8194); margin-top:3px; font-style:italic; }
+  .lit-su { font-size:11.5px; margin-top:3px; color:var(--dim,#7c8194); }
+  .lit-su.on { color:var(--green,#34d399); }
+  .lit-ah { display:inline-block; padding:1px 7px; border-radius:6px; font-size:11.5px; font-weight:600; border:1px solid var(--border,#2a2d3e); }
+  .lit-ah.ah-measured_input { color:var(--green,#34d399); border-color:rgba(52,211,153,.55); }
+  .lit-ah.ah-contact_model_calibrated { color:var(--accent,#6c8cff); border-color:rgba(108,140,255,.55); }
+  .lit-ah.ah-theory_parameter { color:var(--yellow,#fbbf24); border-color:rgba(251,191,36,.55); }
+  .lit-pre { display:inline-block; padding:1px 7px; border-radius:6px; font-size:11.5px; font-weight:700; white-space:nowrap;
+             color:var(--yellow,#fbbf24); border:1px dashed rgba(251,191,36,.7); background:rgba(251,191,36,.10); }
+  .lit-refs { font-size:11px; color:var(--dim,#7c8194); margin-top:4px; overflow-wrap:anywhere; }
+  .gb { display:inline-block; margin:1px 2px 2px 0; padding:1px 6px; border-radius:6px; font-size:11px; font-weight:600;
+        white-space:nowrap; border:1px solid var(--border,#2a2d3e); cursor:help; }
+  .gb-contradicts { color:var(--red,#f87171); border-color:rgba(248,113,113,.6); background:rgba(248,113,113,.12); }
+  .gb-partial { color:var(--yellow,#fbbf24); border-color:rgba(251,191,36,.6); background:rgba(251,191,36,.10); }
+  .gb-supports { color:var(--accent,#6c8cff); border-color:rgba(108,140,255,.55); background:rgba(108,140,255,.10); }
+  .gb-unrelated { color:var(--dim,#7c8194); opacity:.75; }
+  .lit-foot { margin:26px 0 8px; padding-top:12px; border-top:1px solid var(--border,#2a2d3e); font-size:12px;
+              color:var(--dim,#7c8194); line-height:1.6; }
+</style>
+
+<div class="lit-wrap">
+  <div class="lit-crumb"><a href="/mixer">← 믹서 (개발 이력 · 침대 보기)</a></div>
+  <h1>&#x1F4DA; 믹서 문헌 지도</h1>
+  <p class="lit-lead">
+    믹서 원고의 <b>문제 정의</b>와 <b>공백 근거</b> (G1–G4) 를 한 표로 본다 — 1저자 11-23 Q4 (문헌 매트릭스를 웹앱에서 보인다).
+    읽기 전용 · 계산 없음 · <span class="lit-pill warn">개발 자료 · 예비 판정</span>
+  </p>
+  {% if notice %}<div class="lit-notice">⚠ {{ notice }}</div>{% endif %}
+
+  {% if ok %}
+  <div class="lit-meta">
+    <span title="{{ meta.get('ref_note', '') }}">litdb 정본 기준 커밋 <code>{{ meta.get('ref_sha', '') }}</code></span>
+    <span>{{ rows|length }} 행 = 카드 {{ n_card }} · 카드 전 {{ n_pre }}</span>
+    {% if meta.get('date') %}<span>만든 날 {{ meta.get('date') }}</span>{% endif %}
+    {% if redacted %}<span>⟨인용금지 가림 적용⟩</span>{% endif %}
+  </div>
+  <p class="lit-note">
+    카드 행 = litdb 정본 카드 — 숫자는 카드에 인쇄된 그대로 ([인쇄] · [판독] · [카드 산술] 표지도 그대로).
+    <span class="lit-pre">카드 전</span> 행 = 아직 카드가 없는 큐 항목 — 제목 · 후보 표 설명으로만 분류했다 (원문 · 카드로 확인하지 않음).
+    N-110 · N-112 · N-150–N-153 카드가 나오면 판정이 더 좁아질 수 있다.
+  </p>
+  <details>
+    <summary>포함 · 제외 규칙과 표지</summary>
+    {% if meta.get('inclusion_rule') %}<p>{{ meta.get('inclusion_rule') }}</p>{% endif %}
+    {% if LEG.get('labels') %}<p>{{ LEG.get('labels') }}</p>{% endif %}
+    {% if LEG.get('title_rows') %}<p>{{ LEG.get('title_rows') }}</p>{% endif %}
+    <p>뺀 카드와 이유 = <code>{{ data_dir }}/excluded.md</code> · 공백 검사 원문 = <code>{{ data_dir }}/gap_check.md</code></p>
+  </details>
+
+  <section class="lit-sec" id="lit-gaps">
+    <h2>공백 주장 G1–G4 <span class="lit-pill warn">예비 판정</span>
+      <small>holds = 쓰인 대로 선다 · weakened = 좁혀야 선다 · broken = 쓰인 대로는 무너진다 (gap_check.md 판정 그대로)</small></h2>
+    {% if gap_notice %}<div class="lit-notice">⚠ {{ gap_notice }}</div>{% endif %}
+    <div class="lit-gaps">
+    {% for g in gaps %}
+      {%- set ce = g.strongest_counterexample if g.strongest_counterexample is mapping else {} -%}
+      <article class="lit-gap" id="gap-{{ g.id }}" data-verdict="{{ g.verdict }}">
+        <div class="lit-gap-head">
+          <b class="lit-gid">{{ g.id }}</b>
+          <span class="lit-verdict v-{{ g.verdict }}">{{ g.verdict }} · {{ CV_LABEL.get(g.verdict, '') }}</span>
+          <span class="lit-pill warn">예비</span>
+        </div>
+        <p class="lit-claim">“{{ g.claim }}”</p>
+        {% if g.verdict_note %}<p class="lit-vnote">판정 원문 (분야 한정): {{ g.verdict }} {{ g.verdict_note }}</p>{% endif %}
+        {% if g.verdict_reason %}<p class="lit-reason">{{ g.verdict_reason }}</p>{% endif %}
+        <h4>가장 강한 반례 (카드)</h4>
+        <ul>
+          {% for x in [ce] + (ce.get('also') or []) %}
+          <li><code class="lit-slug">{{ x.slug }}</code> <span class="lit-lref">{{ x.line_ref }}</span> — {{ x.summary_ko }}</li>
+          {% endfor %}
+        </ul>
+        <h4>좁힌 문장 (권고)</h4>
+        <blockquote class="lit-narrow">{{ g.narrowed_wording }}</blockquote>
+        <h4>판정을 바꿀 수 있는 카드 전 후보 <span class="lit-dim">(노란 점 = 요약 표에 오른 것)</span></h4>
+        <ul>
+          {% for p in (g.pending_cards or []) %}
+          {%- set pr = BY.get(p.slug) -%}
+          <li{% if p.in_summary_table %} class="top"{% endif %}><code class="lit-pslug" title="{{ pr.title if pr else '' }}">{{ p.slug }}</code> — {{ p.note_ko }}</li>
+          {% endfor %}
+        </ul>
+        <button type="button" class="lit-btn" data-gap="{{ g.id }}">표에서 {{ g.id }} 반례 · 부분 행만 보기</button>
+      </article>
+    {% endfor %}
+    </div>
+  </section>
+
+  <section class="lit-sec" id="lit-gridsec">
+    <h2>빈칸 지도 <small>연구 꼴 × 점착 처리 · 칸 = 행 수 · 점선 칸 = 이 서랍에 없는 조합 · 칸 · 머리를 누르면 아래 표가 걸러진다</small></h2>
+    <div class="lit-gridwrap">
+    <table class="lit-grid">
+      <thead><tr><th>연구 꼴 \ 점착 처리</th>
+        {% for ah in AH_KEYS %}<th title="{{ ADH_DESC.get(ah, '') }}"><button type="button" class="lit-colh" data-ah="{{ ah }}">{{ AH_LABEL.get(ah, ah) }}</button></th>{% endfor %}
+        <th>합</th></tr></thead>
+      <tbody>
+      {% for st in ST_KEYS %}
+        {%- set srows = rows|selectattr('study_type', 'equalto', st)|list -%}
+        <tr><th><button type="button" class="lit-rowh" data-st="{{ st }}">{{ ST_LABEL.get(st, st) }}</button></th>
+        {% for ah in AH_KEYS %}
+          {%- set cell = srows|selectattr('adhesion_handling', 'equalto', ah)|list -%}
+          {%- set npc = cell|rejectattr('card', 'equalto', 'canon')|list|length -%}
+          <td><button type="button" class="lit-cell{% if not cell %} zero{% endif %}" data-st="{{ st }}" data-ah="{{ ah }}" style="--n:{{ cell|length }}" title="{{ ST_LABEL.get(st, st) }} × {{ AH_LABEL.get(ah, ah) }} — 카드 {{ cell|length - npc }} · 카드 전 {{ npc }}">{{ cell|length }}</button></td>
+        {% endfor %}
+        <td class="lit-sum">{{ srows|length }}</td></tr>
+      {% endfor %}
+      </tbody>
+      <tfoot><tr><th>합</th>
+        {% for ah in AH_KEYS %}<td class="lit-sum">{{ rows|selectattr('adhesion_handling', 'equalto', ah)|list|length }}</td>{% endfor %}
+        <td class="lit-sum">{{ rows|length }}</td></tr></tfoot>
+    </table>
+    </div>
+  </section>
+
+  <section class="lit-sec" id="lit-table">
+    <h2>문헌 표 <small>행 순서 = matrix.json · G 표지에 마우스를 올리면 판정 이유</small></h2>
+    <div class="lit-filters">
+      <label>연구 꼴 <select id="f-study" class="input"><option value="">전체</option>
+        {% for st in ST_KEYS %}<option value="{{ st }}">{{ ST_LABEL.get(st, st) }}</option>{% endfor %}</select></label>
+      <label>점착 처리 <select id="f-adh" class="input"><option value="">전체</option>
+        {% for ah in AH_KEYS %}<option value="{{ ah }}">{{ AH_LABEL.get(ah, ah) }}</option>{% endfor %}</select></label>
+      <label>황화물 SE <select id="f-sulfide" class="input"><option value="">전체</option><option value="1">있음</option><option value="0">없음</option></select></label>
+      <label>DEM <select id="f-dem" class="input"><option value="">전체</option><option value="1">있음</option><option value="0">없음</option></select></label>
+      <label>카드 <select id="f-card" class="input"><option value="">전체</option><option value="canon">정본 카드</option><option value="none">카드 전 (제목만)</option></select></label>
+      <label>공백 <select id="f-gap" class="input"><option value="">전체</option>
+        {% for gid in GIDS %}<option value="{{ gid }}">{{ gid }} 반례 · 부분</option>{% endfor %}</select></label>
+      <label class="grow">찾기 <input id="f-q" class="input" type="search" placeholder="저자 · 장치 · 결과 낱말"></label>
+      <button type="button" class="lit-btn" id="f-reset">거르기 풀기</button>
+      <span class="lit-count" id="lit-count">{{ rows|length }} / {{ rows|length }} 행</span>
+    </div>
+    <div class="lit-tablewrap">
+    <table class="lit-table">
+      <thead><tr>
+        <th>논문 <small>1저자 · 연도 · 학술지</small></th>
+        <th>계 (AM / SE)</th>
+        <th>장치</th>
+        <th>연구 꼴</th>
+        <th>바꾼 변수 (수준)</th>
+        <th>점착 처리</th>
+        <th>혼합 지표</th>
+        <th>DEM</th>
+        <th>핵심 결과</th>
+        <th>근거</th>
+        <th>G1–G4</th>
+      </tr></thead>
+      <tbody>
+      {% for r in rows %}
+        {%- set sysd = r.system if r.system is mapping else {} -%}
+        {%- set su = r.sulfide_se if r.sulfide_se is mapping else {} -%}
+        {%- set gd = r.gap if r.gap is mapping else {} -%}
+        {%- set mm = (r.mixing_metric or '')|string -%}
+        <tr class="lit-row" data-slug="{{ r.slug }}" data-card="{{ r.card }}" data-st="{{ r.study_type }}" data-ah="{{ r.adhesion_handling }}"
+            data-sulfide="{{ 1 if su.get('value') else 0 }}" data-dem="{{ 1 if r.dem else 0 }}"
+            {%- for gid in GIDS %} data-g{{ loop.index }}="{{ (gd.get(gid) or {}).get('verdict', '') }}"{% endfor %}>
+          <td class="c-paper"><b>{{ r.first_author }}</b> {{ r.year }}
+            <div class="lit-dim">{{ r.venue }}</div>
+            {% if r.title %}<div class="lit-title">{{ r.title }}</div>{% endif %}</td>
+          <td class="c-sys">
+            <div><b>AM</b> {{ sysd.get('am', '') }}</div>
+            <div><b>SE</b> {{ sysd.get('se', '') }}</div>
+            {% if sysd.get('other') %}<div class="lit-dim">그 밖 {{ sysd.get('other') }}</div>{% endif %}
+            <div class="lit-su{% if su.get('value') %} on{% endif %}">황화물 SE {{ '있음' if su.get('value') else '없음' }}{% if su.get('which') %} · {{ su.get('which') }}{% endif %}</div></td>
+          <td class="c-proc">{{ r.process }}</td>
+          <td class="c-st">{{ ST_LABEL.get(r.study_type, r.study_type) }}</td>
+          <td class="c-var">
+            {% if r.varied %}<ul>{% for v in r.varied %}<li><b>{{ v.variable }}</b> ({{ v.levels }})</li>{% endfor %}</ul>
+            {% else %}<span class="lit-dim">—</span>{% endif %}
+            {% if r.fixed_key %}<div class="lit-dim">고정: {{ r.fixed_key }}</div>{% endif %}</td>
+          <td class="c-adh"><span class="lit-ah ah-{{ r.adhesion_handling }}" title="{{ ADH_DESC.get(r.adhesion_handling, '') }}">{{ AH_LABEL.get(r.adhesion_handling, r.adhesion_handling) }}</span>
+            {% if r.adhesion_note %}<div class="lit-dim">{{ r.adhesion_note }}</div>{% endif %}</td>
+          <td class="c-mix">{% if mm.startswith('other') %}기타{% if ':' in mm %} · {{ mm.split(':', 1)[1] }}{% endif %}{% else %}{{ MM_LABEL.get(mm, mm) }}{% endif %}
+            {% if r.mixing_metric_note %}<div class="lit-dim">{{ r.mixing_metric_note }}</div>{% endif %}</td>
+          <td class="c-dem">
+            {% if r.dem is mapping %}
+            <div><b>{{ r.dem.get('code', '') }}</b></div>
+            <div>접촉 모델: {{ r.dem.get('contact_model', '') }}</div>
+            <div>점착 모델: {{ r.dem.get('adhesion_model', '') }}</div>
+            <div class="lit-dim">입자 묶기: {{ r.dem.get('coarse_graining', '') }}</div>
+            <div class="lit-dim">검증 대상: {{ r.dem.get('validated_against', '') }}</div>
+            {% else %}<span class="lit-dim">—</span>{% endif %}</td>
+          <td class="c-key">{{ r.key_finding }}
+            {% if r.outcome_metrics %}<div class="lit-dim">결과 지표: {{ r.outcome_metrics|join(' · ') }}</div>{% endif %}</td>
+          <td class="c-ref">
+            {% if r.card == 'canon' %}<code class="lit-slug">{{ r.slug }}</code>
+            {% else %}<span class="lit-pre">카드 전</span> <code class="lit-nslug">{{ r.slug }}</code>
+            <div class="lit-dim">제목 · 후보 표 설명 기준 (원문 · 카드 확인 전)</div>{% endif %}
+            {% if r.card_refs %}<div class="lit-refs">{{ r.card_refs|join(' · ') }}</div>{% endif %}</td>
+          <td class="c-g">
+            {%- for gid in GIDS -%}
+            {%- set gv = gd.get(gid) if gd.get(gid) is mapping else {} -%}
+            {%- set v = gv.get('verdict', '') -%}
+            <span class="gb gb-{{ v }}" data-g="{{ gid }}" data-v="{{ v }}" title="{{ gid }} {{ v }} — {{ GV_DESC.get(v, '') }}{% if gv.get('reason') %} · {{ gv.get('reason') }}{% endif %}">{{ gid }} {{ GV_LABEL.get(v, v) }}</span>
+            {%- endfor -%}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </section>
+  {% endif %}
+
+  <footer class="lit-foot">
+    자료: <code>{{ data_dir }}/</code> — matrix.json · matrix.tsv · gap_summary.json · gap_check.md (G1–G4 원문) · excluded.md (뺀 것) ·
+    설명 <code>{{ data_dir }}/README.md</code>.  읽기 전용 · 이 화면은 계산하지 않는다 · 문헌 판정은 예비다.
+  </footer>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tr.lit-row'));
+  if (!rows.length) return;
+  function byId(id) { return document.getElementById(id); }
+  var F = {st: byId('f-study'), ah: byId('f-adh'), su: byId('f-sulfide'), dem: byId('f-dem'),
+           card: byId('f-card'), gap: byId('f-gap'), q: byId('f-q')};
+  var cells = Array.prototype.slice.call(document.querySelectorAll('.lit-cell'));
+  function apply() {
+    var q = F.q.value.trim().toLowerCase(), n = 0;
+    rows.forEach(function (tr) {
+      var d = tr.dataset, ok = true;
+      if (F.st.value && d.st !== F.st.value) ok = false;
+      if (ok && F.ah.value && d.ah !== F.ah.value) ok = false;
+      if (ok && F.su.value && d.sulfide !== F.su.value) ok = false;
+      if (ok && F.dem.value && d.dem !== F.dem.value) ok = false;
+      if (ok && F.card.value && d.card !== F.card.value) ok = false;
+      if (ok && F.gap.value) {
+        var v = d['g' + F.gap.value.slice(1)];
+        ok = (v === 'contradicts' || v === 'partial');
+      }
+      if (ok && q) ok = tr.textContent.toLowerCase().indexOf(q) >= 0;
+      tr.hidden = !ok;
+      if (ok) n++;
+    });
+    byId('lit-count').textContent = n + ' / ' + rows.length + ' 행';
+    cells.forEach(function (b) {
+      b.classList.toggle('on', !!F.st.value && !!F.ah.value && b.dataset.st === F.st.value && b.dataset.ah === F.ah.value);
+    });
+  }
+  function clearAll() { Object.keys(F).forEach(function (k) { F[k].value = ''; }); }
+  function toTable() { var t = byId('lit-table'); if (t && t.scrollIntoView) t.scrollIntoView({behavior: 'smooth', block: 'start'}); }
+  Object.keys(F).forEach(function (k) { F[k].addEventListener(k === 'q' ? 'input' : 'change', apply); });
+  byId('f-reset').addEventListener('click', function () { clearAll(); apply(); });
+  cells.forEach(function (b) {
+    b.addEventListener('click', function () { clearAll(); F.st.value = b.dataset.st; F.ah.value = b.dataset.ah; apply(); toTable(); });
+  });
+  document.querySelectorAll('.lit-rowh').forEach(function (b) {
+    b.addEventListener('click', function () { clearAll(); F.st.value = b.dataset.st; apply(); toTable(); });
+  });
+  document.querySelectorAll('.lit-colh').forEach(function (b) {
+    b.addEventListener('click', function () { clearAll(); F.ah.value = b.dataset.ah; apply(); toTable(); });
+  });
+  document.querySelectorAll('.lit-btn[data-gap]').forEach(function (b) {
+    b.addEventListener('click', function () { clearAll(); F.gap.value = b.dataset.gap; apply(); toTable(); });
+  });
+  apply();
+})();
+</script>
+{% endblock %}
