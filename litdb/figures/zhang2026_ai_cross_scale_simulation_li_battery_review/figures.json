@@ -1,0 +1,749 @@
+{
+ "slug": "zhang2026_ai_cross_scale_simulation_li_battery_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-23",
+ "sources": [
+  "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Multiscale behaviors in lithium battery systems, spanning from micro- to macroscales.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    560.0,
+    362.1
+   ],
+   "w": 2145,
+   "h": 1283,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.377,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Representative workflow and computational efficiency of a hybrid AIMD−machine learning potential (HAML) approach for accelerating atomistic simulations of lithium metal interfaces. (a) Workflow of the hybrid AIMD combined with machine learning potential (HAML) approach. Reprinted in part (adapted) from ref 48. Copyright © 2025 The Author(s). Published by Springer Nature. Licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). (b) Computational efficiency comparison between HAML and AIMD. Reprinted in part (adapted) from ref 48. Copyright © 2025 The Author(s). Published by Springer Nature. Licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    297.5,
+    387.5
+   ],
+   "w": 1051,
+   "h": 1389,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Machine learning strategies for efficient atomistic modeling of lithium copper interfaces. (a) Active learning workflow for constructing the LiCu-NNIP model. Reprinted in part (adapted) from ref 49. Copyright © 2022 Wiley-VCH GmbH. (b) MLP simulations of lithium adsorption on Cu surfaces. Reprinted in part (adapted) from ref 49. Copyright © 2022 Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    337.8
+   ],
+   "w": 2151,
+   "h": 1182,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. NEP model for lithiation in Si−C core−shell anodes. Built via direct sampling to reduce training data while preserving diversity and validated against forces and diffusivities. Reprinted in part (adapted) from ref 51. Copyright © 2026 American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    376.5,
+    561.5,
+    658.6
+   ],
+   "w": 2151,
+   "h": 1177,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.114,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. MLPs enabled atomistic investigation of lithium metal behavior during deposition and cycling. (a) Homogeneous Li deposition and surface self-healing mechanism revealed by large-scale molecular dynamics simulations. Reprinted in part (adapted) from ref 26. Copyright © 2022 The Authors. Advanced Science published by Wiley-VCH GmbH. (b) Inhomogeneous Li deposition and bulk self-healing process involving structural reconstruction of lithium metal. Reprinted in part (adapted) from ref 26. Copyright © 2022 The Authors. Advanced Science published by Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    693.7
+   ],
+   "w": 2151,
+   "h": 2665,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.617,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Li homogeneous deposition on the Cu surfaces with the different indices and the results of SSA. Reprinted in part (adapted) from ref 62. Copyright © 2022 Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    333.1
+   ],
+   "w": 2151,
+   "h": 1162,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.647,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Initial reaction processes at the Li metal anode and LiPF6-based EC/DMC electrolyte interface simulated using the QMTP framework. Reprinted in part (adapted) from ref 63. Copyright © 2025 The Author(s).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    359.9
+   ],
+   "w": 2151,
+   "h": 1274,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.748,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Large-scale interfacial reaction simulation enabled by the on-the-fly machine-learning molecular dynamics (OTF-MLMD) strategy. Reprinted in part (adapted) from ref 60. Copyright © 2025 Science Press and Dalian Institute of Chemical Physics, Chinese Academy of Sciences. Published by Elsevier B.V. and Science Press.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    472.5
+   ],
+   "w": 2151,
+   "h": 1743,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.736,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Off-lattice on-the-fly kinetic Monte Carlo framework for modeling SEI formation. (a) Workflow of the OTF-KMC method with dynamic construction of local reaction events during simulations. Reprinted in part (adapted) with permission from ref 75. Copyright © 2026, American Chemical Society. (b) Iterative MLP training workflow involving training, exploration, and labeling stages. Reprinted in part (adapted) with permission from ref 75. Copyright © 2026, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    597.8
+   ],
+   "w": 2151,
+   "h": 2265,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.719,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 12,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Active learning-driven first-principles-informed phase-field framework bridging microscale thermodynamics and mesoscale phase- transition dynamics in cathode materials. (a) Workflow integrating first-principles calculations, statistical mechanics, machine learning, and continuum phase-field modeling across atomic to continuum scales. Reprinted in part (adapted) with permission from ref 81. Copyright © 2024 Elsevier Ltd. All rights reserved, including those for text and data mining, AI training, and similar technologies. (b) Active learning workflow for training the integrable deep neural network (IDNN), including exploration, training, and iterative model refinement, together with active learning curves at different temperatures. Reprinted in part (adapted) with permission from ref 81. Copyright © 2024 Elsevier Ltd. All rights reserved, including those for text and data mining",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    445.4
+   ],
+   "w": 2151,
+   "h": 1630,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 13,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Schematic illustration of the CGMD-BO framework, where coarse-graining transforms the discrete chemical species space into a continuous CG parameter space, followed by BO-guided CGMD simulations for iterative electrolyte optimization. Reprinted in part (adapted) with permission from ref 88. Copyright © 2020, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    303.3
+   ],
+   "w": 2151,
+   "h": 1038,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.51,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 14,
+   "file": "fig_12.png",
+   "caption": "Figure 12. CGMD-BO framework for solid-state polymer electrolyte design. (a) Effect of anion-related coarse-grained parameters on lithium conductivity. Reprinted in part (adapted) with permission from ref 88. Copyright © 2020, American Chemical Society. (b) Effects of secondary-site and polymer-backbone-chain parameters on lithium conductivity. Reprinted in part (adapted) with permission from ref 88. Copyright © 2020, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    715.3
+   ],
+   "w": 2151,
+   "h": 2755,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.684,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 16,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Outline of the framework developed by Asheri et al. Reprinted in part (adapted) with permission from ref 100. Copyright © 2023 Elsevier B.V. All rights reserved.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    320.3
+   ],
+   "w": 2151,
+   "h": 1109,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.787,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 17,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Machine-learned surrogate model for accelerating phase-field based microstructure evolution predictions. Reprinted in part (adapted) with permission from ref 101. Copyright © 2021, This is a U.S. Government work and not under copyright protection in the US; foreign copyright protection may apply.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    410.8
+   ],
+   "w": 2151,
+   "h": 1486,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.735,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 18,
+   "file": "fig_15.png",
+   "caption": "Figure 15. AI-driven image-based and surrogate model frameworks for bridging battery microstructure evolution and macroscopic performance prediction. (a) Framework of SROM for fire propagation of lithium-ion batteries in an energy storage system. Reprinted in part (adapted) with permission from ref 103. Copyright © 2023 Elsevier Ltd. All rights reserved. (b) Digital twin workflow and ML surrogate for 3D field prediction in new geometries. Reprinted in part (adapted) with permission from ref 105. Copyright © 2023 The Authors. Published by Elsevier B.V.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    616.2
+   ],
+   "w": 2151,
+   "h": 2342,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.637,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 20,
+   "file": "fig_16.png",
+   "caption": "Figure 16. AI based approaches for bridging electrode microstructure and battery performance across length and time scales. (a) Schematic of the developed deep learning method. Reprinted in part (adapted) with permission from ref 107. Copyright © 2023 Published by Elsevier B.V. (b) Schematic representation of the framework, starting from the 3D microstructure data reconstruction from DEM data, to train a CNN over a time series. After training, the model performance is assessed through evaluation and electrode functional metrics. Reprinted in part (adapted) with permission from ref 108. Copyright © 2024 The Authors. Advanced Energy Materials published by Wiley - VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    715.3
+   ],
+   "w": 2151,
+   "h": 2755,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.553,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 22,
+   "file": "fig_17.png",
+   "caption": "Figure 17. Physics-informed machine learning frameworks for interpretable battery degradation modeling and SOH prediction. (a) Framework of the PIML-based multifidelity model for battery SOH estimation. Reprinted in part (adapted) with permission from ref 111. Copyright © 2022 Elsevier Ltd. All rights reserved. (b) The structure of the proposed PINN. Reprinted in part (adapted) with permission from ref 112. Copyright © 2024, The Author(s).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    558.2
+   ],
+   "w": 2151,
+   "h": 2100,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.736,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 23,
+   "file": "fig_18.png",
+   "caption": "Figure 18. Flowchart of the PIFNN training scheme and secondary “training”. Reprinted in part (adapted) with permission from ref 114. Copyright © 2024 Elsevier Ltd. All rights reserved.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    412.7
+   ],
+   "w": 2151,
+   "h": 1494,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.786,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 25,
+   "file": "fig_19.png",
+   "caption": "Figure 19. A framework for semisupervised deep generative model with ML-optimized active learning from experiments and simulations. Reprinted in part (adapted) with permission from ref 124. Copyright © 2019 The Authors. Published by Elsevier B.V.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    326.5
+   ],
+   "w": 2151,
+   "h": 1135,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 25,
+   "file": "fig_20.png",
+   "caption": "Figure 20. Schematic overview of the electro-thermal framework including a second-order ECM as part of a switchable cell, an analytical heat generation model considering cell and electronics, and the coupling to a thermal model. Reprinted in part (adapted) with permission from ref 127. Copyright © 2023 Elsevier Ltd. All rights reserved.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    355.5,
+    561.5,
+    629.5
+   ],
+   "w": 2151,
+   "h": 1142,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.737,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f21",
+   "kind": "figure",
+   "label": "21",
+   "page": 27,
+   "file": "fig_21.png",
+   "caption": "Figure 21. Differentiable Modeling and Optimization of Chemical Mixtures with DiffMix. Reprinted in part (adapted) with permission from ref 138. Copyright © 2024, The Author(s).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    341.9
+   ],
+   "w": 2151,
+   "h": 1199,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.851,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f22",
+   "kind": "figure",
+   "label": "22",
+   "page": 28,
+   "file": "fig_22.png",
+   "caption": "Figure 22. Multiscale extension of the generative inverse-design framework for electrolyte formulation. Reprinted in part (adapted) with permission from ref 140. Copyright © 2026, The Author(s), under exclusive license to Springer Nature Limited.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    343.6
+   ],
+   "w": 2151,
+   "h": 1206,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.691,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f23",
+   "kind": "figure",
+   "label": "23",
+   "page": 29,
+   "file": "fig_23.png",
+   "caption": "Figure 23. Visualization of the embeddings of SMI-TED-IC formulations in the generated and literature data sets with UMAP. Reprinted in part (adapted) with permission from ref 141. Copyright © 2025, The Author(s).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    312.4
+   ],
+   "w": 2151,
+   "h": 1076,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.886,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f24",
+   "kind": "figure",
+   "label": "24",
+   "page": 30,
+   "file": "fig_24.png",
+   "caption": "Figure 24. Data-driven identification and validation of electrolyte composition for lithium metal battery performance. (a) Schematic of the identification of the ensemble optimal feature space for electrolyte design across three target properties. (b) Electrochemical performance evaluation of four electrolyte formulations. Reprinted in part (adapted) with permission from ref 144. Copyright © 2025 The Author(s). Advanced Science published by Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    551.0
+   ],
+   "w": 2151,
+   "h": 2070,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.861,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f25",
+   "kind": "figure",
+   "label": "25",
+   "page": 33,
+   "file": "fig_25.png",
+   "caption": "Figure 25. Data-driven multiscale electrolyte discovery through hierarchical databases and molecular representations. (a) It illustrates molecular- descriptor-based design frameworks (direct and hierarchical) and the overall workflow combining high-throughput MD simulations, OEDB construction, web-based GUI, and LLM-based agent interaction. (b) It presents t-SNE projections of MD-derived solution-structure descriptors. Reprinted in part (adapted) with permission from ref 158. Copyright © 2026, The Author(s).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    715.3
+   ],
+   "w": 2151,
+   "h": 2755,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.697,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f26",
+   "kind": "figure",
+   "label": "26",
+   "page": 34,
+   "file": "fig_26.png",
+   "caption": "Figure 26. Assigning the electrolyte score and screening promising electrolytes. Reprinted in part (adapted) with permission from ref 159. Copyright © 2025 American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    111.5,
+    561.5,
+    534.3
+   ],
+   "w": 2151,
+   "h": 1763,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.769,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f27",
+   "kind": "figure",
+   "label": "27",
+   "page": 35,
+   "file": "fig_27.png",
+   "caption": "Figure 27. Description of the Formulation Graph Convolution Network (F-GCN) model for 3-component formulations. Reprinted in part (adapted) with permission from ref 161. Copyright © 2023 The Authors. Published by American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    275.5
+   ],
+   "w": 2151,
+   "h": 922,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.909,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f28",
+   "kind": "figure",
+   "label": "28",
+   "page": 36,
+   "file": "fig_28.png",
+   "caption": "Figure 28. Schematic illustration of the LLMB agent. Reprinted in part (adapted) with permission from ref 168. Copyright © 2026 The Authors. Published by American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    715.3
+   ],
+   "w": 2151,
+   "h": 2755,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.779,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f29",
+   "kind": "figure",
+   "label": "29",
+   "page": 38,
+   "file": "fig_29.png",
+   "caption": "Figure 29. CHAIN: Integrated Framework. Reprinted in part (adapted) with permission from ref 171. Copyright © 2020 Elsevier Inc.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    568.5
+   ],
+   "w": 2151,
+   "h": 2143,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.499,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f30",
+   "kind": "figure",
+   "label": "30",
+   "page": 39,
+   "file": "fig_30.png",
+   "caption": "Figure 30. Framework of the proposed end-cloud collaboration SOH estimation system. Reprinted in part (adapted) with permission from ref 173. Copyright © 2024 Elsevier B.V. All rights reserved.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    300.0
+   ],
+   "w": 2151,
+   "h": 1024,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "f31",
+   "kind": "figure",
+   "label": "31",
+   "page": 39,
+   "file": "fig_31.png",
+   "caption": "Figure 31. BDA architecture for multiscale simulation with the current EACOMP product matrix.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    329.5,
+    560.0,
+    661.8
+   ],
+   "w": 2145,
+   "h": 1386,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.622,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f32",
+   "kind": "figure",
+   "label": "32",
+   "page": 40,
+   "file": "fig_32.png",
+   "caption": "Figure 32. Illustrative BDA workflow linking design variables, atomistic calculations, particle and interface models, electrode homogenization, and cell- level predictions. Each arrow identifies the information passed to the next stage. Bottom-up transfer supplies constitutive relations; state feedback updates their state-dependent inputs; experimental feedback informs parameter calibration and the next design. Model branches are selected according to the relevant chemistry. The diagram represents a proposed workflow and does not imply that every coupling has already been implemented or experimentally validated in one platform.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    335.0
+   ],
+   "w": 2151,
+   "h": 1170,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.532,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "f33",
+   "kind": "figure",
+   "label": "33",
+   "page": 42,
+   "file": "fig_33.png",
+   "caption": "Figure 33. Three key future directions toward reliable, transferable, and engineering-ready AI-driven cross-scale simulation frameworks.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    190.5
+   ],
+   "w": 2151,
+   "h": 568,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.546,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Systematic Comparison of Representative Machine Learning Potential (MLP) Frameworks",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    601.4,
+    794.9
+   ],
+   "w": 2259,
+   "h": 2992,
+   "dpi": 273,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 32,
+   "file": "tab_2.png",
+   "caption": "Table 2. Representative Databases and Data Resources for Computational Materials Science",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    55.7,
+    560.5,
+    264.9
+   ],
+   "w": 2143,
+   "h": 872,
+   "dpi": 300,
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "blank": 0.836,
+   "caption_fixed": "2026-11-23 curator: caption = PDF 텍스트에서 다시 뽑음 (본문 넘침 제거 · 쪽 넘김 캡션 이어붙임). 크롭 PNG 는 그대로."
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  }
+ ]
+}
