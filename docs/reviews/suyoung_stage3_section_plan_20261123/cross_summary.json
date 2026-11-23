@@ -1,0 +1,299 @@
+{
+  "all_crossed_corners_available": true,
+  "label": "DEVELOPMENT_ONLY",
+  "native_diagonal_checked": true,
+  "paired": [
+    {
+      "all_corners_available": true,
+      "contrasts": {
+        "compression_minus_one_MPa": {
+          "interaction": 0.33106303015613525,
+          "native_F8_minus_F16": 1.2012629952445253,
+          "state_F8_minus_F16_on_F16_target": -0.47789354404558493,
+          "state_F8_minus_F16_on_F8_target": -0.14683051388944968,
+          "target_F8_minus_F16_at_F16_state": 1.348093509133975,
+          "target_F8_minus_F16_at_F8_state": 1.6791565392901102
+        },
+        "stress_MPa": {
+          "interaction": 0.0188927868708972,
+          "native_F8_minus_F16": 0.03183711121209756,
+          "state_F8_minus_F16_on_F16_target": 0.013058549863582288,
+          "state_F8_minus_F16_on_F8_target": 0.03195133673447949,
+          "target_F8_minus_F16_at_F16_state": -0.00011422552238192843,
+          "target_F8_minus_F16_at_F8_state": 0.01877856134851527
+        },
+        "unit_yx": {
+          "interaction": 0.0016129187578051275,
+          "native_F8_minus_F16": 1.4810995273231674e-15,
+          "state_F8_minus_F16_on_F16_target": 6.603722966678702e-15,
+          "state_F8_minus_F16_on_F8_target": 0.0016129187578117312,
+          "target_F8_minus_F16_at_F16_state": -0.0016129187578102502,
+          "target_F8_minus_F16_at_F8_state": -5.122623439355534e-15
+        },
+        "unit_yy": {
+          "interaction": -0.33106303015613525,
+          "native_F8_minus_F16": -1.2012629952445253,
+          "state_F8_minus_F16_on_F16_target": 0.47789354404558493,
+          "state_F8_minus_F16_on_F8_target": 0.14683051388944968,
+          "target_F8_minus_F16_at_F16_state": -1.348093509133975,
+          "target_F8_minus_F16_at_F8_state": -1.6791565392901102
+        },
+        "yx": {
+          "interaction": -2.3788993016700053e-06,
+          "native_F8_minus_F16": 7.835072598184236e-19,
+          "state_F8_minus_F16_on_F16_target": 7.853975226144722e-19,
+          "state_F8_minus_F16_on_F8_target": -2.37889930166922e-06,
+          "target_F8_minus_F16_at_F16_state": 2.3788993016700036e-06,
+          "target_F8_minus_F16_at_F8_state": -1.890262796048522e-21
+        },
+        "yy": {
+          "interaction": 0.018895165770198872,
+          "native_F8_minus_F16": 0.03183711121209756,
+          "state_F8_minus_F16_on_F16_target": 0.013058549863582288,
+          "state_F8_minus_F16_on_F8_target": 0.03195371563378116,
+          "target_F8_minus_F16_at_F16_state": -0.00011660442168359882,
+          "target_F8_minus_F16_at_F8_state": 0.01877856134851527
+        }
+      },
+      "corners": [
+        {
+          "positive_support_keys": 82,
+          "requested_keys": 82,
+          "source_cells": 8,
+          "source_step": 269,
+          "status": "OK",
+          "target_cells": 8,
+          "target_step": 269,
+          "unsupported_keys": 0,
+          "values": {
+            "compression_minus_one_MPa": 4.1012534794434155,
+            "stress_MPa": 0.04296098877540595,
+            "unit_yx": -5.069037405416206e-16,
+            "unit_yy": -4.1012534794434155,
+            "yx": 1.6477379899413433e-18,
+            "yy": 0.04296098877540595
+          }
+        },
+        {
+          "positive_support_keys": 84,
+          "requested_keys": 91,
+          "source_cells": 8,
+          "source_step": 269,
+          "status": "OK",
+          "target_cells": 16,
+          "target_step": 538,
+          "unsupported_keys": 7,
+          "values": {
+            "compression_minus_one_MPa": 2.4220969401533052,
+            "stress_MPa": 0.024182427426890682,
+            "unit_yx": 4.615719698813914e-15,
+            "unit_yy": -2.4220969401533052,
+            "yx": 1.6496282527373918e-18,
+            "yy": 0.024182427426890682
+          }
+        },
+        {
+          "positive_support_keys": 82,
+          "requested_keys": 82,
+          "source_cells": 16,
+          "source_step": 538,
+          "status": "OK",
+          "target_cells": 8,
+          "target_step": 269,
+          "unsupported_keys": 0,
+          "values": {
+            "compression_minus_one_MPa": 4.248083993332865,
+            "stress_MPa": 0.011009652040926465,
+            "unit_yx": -0.0016129187578122382,
+            "unit_yy": -4.248083993332865,
+            "yx": 2.378899301670868e-06,
+            "yy": 0.011007273141624795
+          }
+        },
+        {
+          "positive_support_keys": 91,
+          "requested_keys": 91,
+          "source_cells": 16,
+          "source_step": 538,
+          "status": "OK",
+          "target_cells": 16,
+          "target_step": 538,
+          "unsupported_keys": 0,
+          "values": {
+            "compression_minus_one_MPa": 2.89999048419889,
+            "stress_MPa": 0.011123877563308394,
+            "unit_yx": -1.988003267864788e-15,
+            "unit_yy": -2.89999048419889,
+            "yx": 8.642307301229196e-19,
+            "yy": 0.011123877563308394
+          }
+        }
+      ],
+      "steps": [
+        269,
+        538
+      ],
+      "timing": {
+        "common_end_time": 0.604272727433001,
+        "common_end_u": 0.012064599564098444,
+        "incoming_time": {
+          "8": 0.6020263604165215,
+          "16": 0.6031495439247613
+        },
+        "incoming_u": {
+          "8": 0.01201974975159259,
+          "16": 0.012042174657845517
+        }
+      }
+    },
+    {
+      "all_corners_available": true,
+      "contrasts": {
+        "compression_minus_one_MPa": {
+          "interaction": 0.33068091671228217,
+          "native_F8_minus_F16": 1.2024640728947706,
+          "state_F8_minus_F16_on_F16_target": -0.4766660524337736,
+          "state_F8_minus_F16_on_F8_target": -0.1459851357214914,
+          "target_F8_minus_F16_at_F16_state": 1.348449208616262,
+          "target_F8_minus_F16_at_F8_state": 1.6791301253285442
+        },
+        "stress_MPa": {
+          "interaction": 0.019662460563377615,
+          "native_F8_minus_F16": 0.033303225573529716,
+          "state_F8_minus_F16_on_F16_target": 0.013692834917055599,
+          "state_F8_minus_F16_on_F8_target": 0.033355295480433214,
+          "target_F8_minus_F16_at_F16_state": -5.2069906903495083e-05,
+          "target_F8_minus_F16_at_F8_state": 0.01961039065647412
+        },
+        "unit_yx": {
+          "interaction": 0.0016134011405477934,
+          "native_F8_minus_F16": 3.1584316473753265e-15,
+          "state_F8_minus_F16_on_F16_target": 5.021939759658131e-15,
+          "state_F8_minus_F16_on_F8_target": 0.0016134011405528155,
+          "target_F8_minus_F16_at_F16_state": -0.001613401140549657,
+          "target_F8_minus_F16_at_F8_state": -1.8635081122828046e-15
+        },
+        "unit_yy": {
+          "interaction": -0.33068091671228217,
+          "native_F8_minus_F16": -1.2024640728947706,
+          "state_F8_minus_F16_on_F16_target": 0.4766660524337736,
+          "state_F8_minus_F16_on_F8_target": 0.1459851357214914,
+          "target_F8_minus_F16_at_F16_state": -1.348449208616262,
+          "target_F8_minus_F16_at_F8_state": -1.6791301253285442
+        },
+        "yx": {
+          "interaction": -2.470888005944069e-06,
+          "native_F8_minus_F16": -1.0104222824249773e-18,
+          "state_F8_minus_F16_on_F16_target": -1.1866405491238467e-18,
+          "state_F8_minus_F16_on_F8_target": -2.4708880059452557e-06,
+          "target_F8_minus_F16_at_F16_state": 2.470888005944245e-06,
+          "target_F8_minus_F16_at_F8_state": 1.762182666988694e-19
+        },
+        "yy": {
+          "interaction": 0.01966493145138356,
+          "native_F8_minus_F16": 0.033303225573529716,
+          "state_F8_minus_F16_on_F16_target": 0.013692834917055599,
+          "state_F8_minus_F16_on_F8_target": 0.03335776636843916,
+          "target_F8_minus_F16_at_F16_state": -5.454079490943911e-05,
+          "target_F8_minus_F16_at_F8_state": 0.01961039065647412
+        }
+      },
+      "corners": [
+        {
+          "positive_support_keys": 82,
+          "requested_keys": 82,
+          "source_cells": 8,
+          "source_step": 270,
+          "status": "OK",
+          "target_cells": 8,
+          "target_step": 270,
+          "unsupported_keys": 0,
+          "values": {
+            "compression_minus_one_MPa": 4.102902921911899,
+            "stress_MPa": 0.044882013736305015,
+            "unit_yx": 9.570438394382352e-16,
+            "unit_yy": -4.102902921911899,
+            "yx": -1.4108077165095904e-18,
+            "yy": 0.044882013736305015
+          }
+        },
+        {
+          "positive_support_keys": 84,
+          "requested_keys": 91,
+          "source_cells": 8,
+          "source_step": 270,
+          "status": "OK",
+          "target_cells": 16,
+          "target_step": 540,
+          "unsupported_keys": 7,
+          "values": {
+            "compression_minus_one_MPa": 2.423772796583355,
+            "stress_MPa": 0.025271623079830895,
+            "unit_yx": 2.8205519517210398e-15,
+            "unit_yy": -2.423772796583355,
+            "yx": -1.5870259832084598e-18,
+            "yy": 0.025271623079830895
+          }
+        },
+        {
+          "positive_support_keys": 82,
+          "requested_keys": 82,
+          "source_cells": 16,
+          "source_step": 540,
+          "status": "OK",
+          "target_cells": 8,
+          "target_step": 270,
+          "unsupported_keys": 0,
+          "values": {
+            "compression_minus_one_MPa": 4.2488880576333905,
+            "stress_MPa": 0.011526718255871801,
+            "unit_yx": -0.0016134011405518583,
+            "unit_yy": -4.2488880576333905,
+            "yx": 2.470888005943845e-06,
+            "yy": 0.011524247367865857
+          }
+        },
+        {
+          "positive_support_keys": 91,
+          "requested_keys": 91,
+          "source_cells": 16,
+          "source_step": 540,
+          "status": "OK",
+          "target_cells": 16,
+          "target_step": 540,
+          "unsupported_keys": 0,
+          "values": {
+            "compression_minus_one_MPa": 2.9004388490171285,
+            "stress_MPa": 0.011578788162775296,
+            "unit_yx": -2.2013878079370913e-15,
+            "unit_yy": -2.9004388490171285,
+            "yx": -4.003854340846131e-19,
+            "yy": 0.011578788162775296
+          }
+        }
+      ],
+      "steps": [
+        270,
+        540
+      ],
+      "timing": {
+        "common_end_time": 0.6065190944494806,
+        "common_end_u": 0.012109449376604409,
+        "incoming_time": {
+          "8": 0.604272727433001,
+          "16": 0.6053959109412408
+        },
+        "incoming_u": {
+          "8": 0.012064599564098444,
+          "16": 0.012087024470351482
+        }
+      }
+    }
+  ],
+  "scope": "fixed source state, target grid and saved target mask; algebraic projections only",
+  "selection": "original target mask; equal output displacement; source snapshots are incoming",
+  "stage3_go": false,
+  "status": "DEVELOPMENT_FROZEN_CROSS_OBSERVED",
+  "stress_unit": "one tensile-positive solver stress; positive upward wall-pressure response in MPa",
+  "u6_qualified": false
+}
