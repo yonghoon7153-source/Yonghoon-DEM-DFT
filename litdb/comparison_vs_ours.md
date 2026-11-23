@@ -14,6 +14,9 @@
 |---|---|---|---|
 | **[Banerjee20Rev]** ⭐⭐ **참고문헌 허브 (341 편)** · ★ [혁주] 요청서가 인용한 Banerjee 2019 *ACS AMI* 그림 두 장의 **재수록본** (`Fig. 18a` NCA–LPSCl · LNO–LPSCl 혼합 곡선 · `Fig. 17` 코팅 표) · ⛔ **리뷰 (계산 0 · 실험 0) — 수치는 전부 2 차 소환** · 우리 값과 같은 양일 때만 대조 행 (§B① · §B③) · 나머지는 위치 · 감사 행 (§C · §D · §E) | **Abhik Banerjee**⊥ · **Xuefeng Wang**⊥ (공동 1저자) · C. Fang · E. A. Wu · **Y. Shirley Meng\*** (UCSD) 2020 ***Chem. Rev.* 120, 6878–6933** (DOI 10.1021/acs.chemrev.0c00101) — "**Interfaces and Interphases in All-Solid-State Batteries with Inorganic Solid Electrolytes**" · `xiao2020` 이 *서지 미확정* 으로 남긴 UCSD 리뷰가 이 편 · `Fig. 18a` 세로축 **eV/f.u. (f.u. 정의 없음)** · `Fig. 17` 창 칸 = [Zhu15] SI · σ/띠틈 칸 = [Xiao19] Table 2 (Li₂ZrO₃ 는 σ · 띠틈 칸에만) · **ref 번호 오류 9 곳 · 중복 3 쌍** · 본문↔그림 불일치 (응력 +0.6 MPa ↔ 0.06 MPa · NiS ↔ Ni₃S₄ · LiPON 창 · LTO 두께 비단조) | ✅ `papers/banerjee2020_interfaces_interphases_assb_review.md` (2026-11-17 · 그림 34 장 중 19 장 실독 · 참고문헌 341 편 litdb 대조 = 부록 R · litdb 자기 digest 21 편) | **[외부]** 리뷰 (자체 계산 0 · 자체 실험 0) |
 | **[Hu26LYZC]** 🔧🔴 **방법 감사 (흡착 체류시간 · 표면 NEB · 겉보기 CV 개시) + 양극 작동창 실례 (할라이드판 · 2.8–4.3 V vs Li)** · ⛔ **할라이드 Li₂.₄Yb₀.₄Zr₀.₆Cl₆ — A–D 물성 4축에 행을 만들지 않는다** (§J-81 · §B 행만) | **Huan Hu**/**Zhixuan Yu** (공동1)/…/**Jianyu Huang\***/**Guobao Xu\*** 2026 ***ACS Nano* ASAP** (DOI 10.1021/acsnano.6c15117) — "Interphase-Adaptive Chloride Solid Electrolyte Enables High-Performance All-Solid-State Lithium Batteries" | ✅ `papers/hu2026_interphase_adaptive_yb_chloride_se.md` (2026-11-16 · 크롭 46 장 중 그림 13 장 실독) | exp + DFT + FEM (할라이드 \| NCM83 · 🔧 §J-81) |
+| **[Lin26PLiS]** 🔧🔴 **리뷰 판정 (보고 규약 반례 · P–S/P–O 화학 연결)** · ⛔ **액체 전해질 Li–S 양극 숙주 · 분리막 리뷰 · 자체 계산 0 · 자체 실험 0 · 계산 조건 0 줄 (PBE 1 회) — A–D 물성 4축 진입 금지** (§J-85 에만) · ⚠ 같은 Tiangong 그룹 짝 리뷰 `[Luo26Sep]` | **Ruixin Lin**†/**Fan Zhang**† (공동 1)/**Nanping Deng\***/**Shaoju Li\***/Yun Luo/**Weimin Kang\*** (Tiangong Univ. · Quanzhou Vocational & Technical Univ.) 2026 ***J. Mater. Chem. A*** (Advance Article · DOI 10.1039/d6ta06590b · 게재 2026-11-19 · 34 쪽 · 그림 9 · 표 2 · refs 128 · SI 없음) — "**Research on the preparation and application of multifunctional P-doped compounds in lithium–sulfur batteries**". 🔑 재수록 그림–본문 어긋남 18 (`Fig. 8f` 방향 반대 · `Fig. 5i` 색 막대 오독 포함) · `Fig. 8e1` PS₄³⁻ 띠 (본문 0 회) | ✅ `papers/lin2026_p_doped_compounds_li_s_review.md` (2026-11-23 · 그림 9/9 실독 · 확대 13 패널) — 리뷰 판정 **§J-85** | 리뷰 (외부) · 자체 계산 0 · 2차 인용 |
+| **[Zhang26AIMS]** 🔧🔴 **리뷰 판정 — AI 교차척도 모사 지도 (MLP · kMC · 위상장 · CGMD → 대리 · PINN · P2D → 역설계 · BDA) · ⛔ 자체 계산 0 · 자체 실험 0 → 수치 전부 2 차 소환 · A–D 물성 4축 진입 금지** (§J-7 블록 · §J-86 · §H 제안 행) · ⭐ §2.5 UQ 세 실천 · §4.4 인계 정의 경고 (추적자 D ≠ 화학 D̃ · NE ≠ 측정 σ · 계면에너지 ≠ 파괴저항) · 🔴 우리 계 유일 자리 (`Fig. 2` HAML Li\|LPSC) = `[Lai]` 반증 주장 재전파 · 본문 ↔ 그림 불일치 6 · ⚠ 자기 그룹 · 원본 그림 10/33 · ⚠ `[Zhang npj]` · `[Zhang26PI3]` · `[Zhang26ODry]` 와 다른 그룹 · 다른 편 | **Qiliang Zhang**#/**Juntao Zhao**#/**Hanming Li**#/P. Chen/**Genming Lai\***/Z. Liu/J. Li/R. Zhang/C. Fang/F. Rong/Y. Zuo/**Jiaxin Zheng\***/**Bo Xu\***/**Chuying Ouyang\*** (북경대 심천대학원 · EACOMP · 21C-LAB · 장시사범대) 2026 ***ACS Nano* ASAP** (DOI 10.1021/acsnano.6c15838 · 접수 2026-08-17 · 수락 11-12 · 49 쪽 · 그림 33 · 표 2 · 참고문헌 184 · SI 없음) — "**AI-Driven Cross-Scale Simulation of Lithium Batteries**" | ✅ `papers/zhang2026_ai_cross_scale_simulation_li_battery_review.md` (2026-11-23 · 그림 16/33 실독 · figures.json 캡션 29 개 교정 · 원 digest `[Lai]` · `[Galvez24]` 대조) — 리뷰 판정 **§J-86** | 리뷰 (외부) · 자체 계산 0 · 2차 인용 · 방법 지도 |
+| **[Sun26EMGap]** 🔧🔴 **리뷰 판정 (Account · 자기 그룹 작업 요약) — Raman 'GPa 응력' 의 화학 교락 · 식 4 (비주변 Nernst) = 우리 B② 구속 ESW 와 같은 1 차 꼴 · SOS–SOC 크기 검산 · R2D η_mech 모형 의존** · ⭐ Raman 셀 Li\|LPSC\|NCM83 · ≈2.5–4.2 V = 우리 셀 형식·작동창 · ⛔ **탄성 수치 0 · Raman '응력' 은 탄성 상수가 아님 — C 축에 값 행을 만들지 않는다** (§B② · §B③ · §C ⛔ 행 · §E · §J-87) | **Zhe-Tao Sun**§/**Minfan Qian**§/Jincheng Zhong/**Shou-Hang Bo\*** (SJTU Future Battery Research Center · § 공동 1저자) 2026 ***Acc. Chem. Res.* ASAP** (DOI 10.1021/acs.accounts.6c00669 · 투고 2026-08-17 · 수락 2026-10-29 · 11 쪽 · 그림 8 · 참고문헌 49 · SI 없음) — "**Critical Gaps in Understanding Solid-State Battery Interfaces from an Electromechanical Perspective**". 재수록: refs 1 (R2D *PRL* 2025) · 3 (Nonambient Thermodynamics *ACS Energy Lett.* 2025) · 4 (DAC 보정 응력 지도 *Cell Rep. Phys. Sci.* 2022) · 26 (Hard–Soft Pairing *ACS Energy Lett.* 2024) | ✅ `papers/sun2026_ssb_interface_electromechanical_gaps_account.md` (2026-11-23 · 그림 8/8 실독 + 확대 4 · 식 렌더 대조 · 인용 제목 수준 감사) — 리뷰 판정 **§J-87** | Account (외부) · 새 자료 0 · 원자 계산 0 · exp + 연속체 재수록 |
 | **[Liu26LiInS]** 🔧🔴 **방법 반례 — '일함수 차 → 내장 전기장 (BIEF)' 논증의 DFT 근거 감사 (극성 Li₂S 슬랩 · ELF ≠ 전하이동 · AIMD 관측창 · 흡착 배위 미확인 · Tafel 옴 직선)** · ⚠ Li\|LPSC (= comp1 조성) 음극 계면 실험 — §E 2 행 · ⛔ 일함수 · 흡착 · i₀ 값은 우리 값 옆에 두지 않는다 · ⚠ `[Liu26InLSPS]` · `[Liu26Sn]` 과 다른 그룹 · 다른 계 | **Chong Liu**/Ruoyu Wang/Dewen Wang/Liyun Zhao/Taiguang Li/Tenghui Wang/Butian Chen/**Tianran Zhang\***/**Xiangfeng Liu\*** (University of Chinese Academy of Sciences, Beijing · **외부**) 2026 ***Nat. Commun.* 17, 7190** (DOI 10.1038/s41467-026-74049-1 · OA CC BY-NC-ND 4.0 · 접수 2025-08-27 · 게재 2026-06-05) — "Li-In-S composite foil with built-in electric fields to stabilize Li/Li₆PS₅Cl interface for long-life all-solid-state batteries" | ✅ `papers/liu2026_li_in_s_composite_foil_built_in_field_li_lpscl.md` (2026-11-23 · 크롭 5 장 전부 실독 · 재크롭 4 · 벡터 · 픽셀 판독 · SI 미입수) | exp 주 + DFT/AIMD 보조 (VASP · PBE) · §E · 🔧 §J-82 |
 | **[Kansara26Rev]** 🔧🔴 **리뷰 판정 — 실험–계산 통합 ('닫힌 고리' DFT → ML → 다중척도 → 연속체 → 실험) · ⛔ 자체 계산 0 · 자체 실험 0 → 수치 전부 2 차 소환 · A–D 물성 4축에는 같은 양일 때만 방향·규약 행 (§B① · §C)** · ⭐ LPSCl grand-potential 창 세 번째 문헌 점 (`Fig. 4d` · Wang 2025 재수록) · 🔴 인용 번호 · 저자명 · 그림 짝 어긋남 30건 안팎 · 'LPSCl 산화 → Li₂S' 화학 오류 | **Shivam Kansara**†/**Om Trivedi**†/**Seungwon Lee**†/R. Maheta/H. Park/S. Xiong/D. Bresser/**Dan Zhou\***/**Sanjeev K. Gupta\***/**P. N. Gajjar\***/**Jang-Yeon Hwang\*** (한양대 에너지공학 · St. Xavier's · KUST · HIU/KIT · USTB · Gujarat Univ.) 2026 ***J. Mater. Chem. A* 14, 29613–29654** (DOI 10.1039/d6ta02406h · 게재 2026-06-17 · refs 199 (185 = 192 중복) · 그림 15 · 표 3 · SI 미보유) — "**Integration of experimental insights and computational modeling for all-solid-state batteries**". 🔑 'best practice' 를 표방하나 k점 · 컷오프 · 의사퍼텐셜 · vdW · SQS · 시드 · Haven · MSD 창 · 셀 이완 정책 **0 회** ('uncertainty' 26 회 · 실제 오차막대 0) | ✅ `papers/kansara2026_experiment_computation_integration_assb_review.md` (2026-11-23 · 그림 11/15 실독 · 확대 재렌더 4곳 · 원 digest 12편 대조) — 리뷰 판정 **§J-83** | 리뷰 (외부) · 자체 계산 0 · 2차 인용 · 방법 지도 |
 | **[Pandey26MX]** 🔧🔴 **리뷰 판정 (금속성 인터레이어 축 명명 · 인용 감사 사례)** · ⛔ **리뷰 · 자체 계산 0 · 자체 실험 0 · MXene 충전재 고분자 · 금속 음극 · 다가 이온 (황화물 본문 5 회 · Li₆PS₅Cl 0 회) — A–D 물성 4축 진입 금지** (§B③ · §E 행 · §J-84) | Raghvendra Pandey/Anuja Dhingra/Ravinshu/Hera Tarique/Sumanta Sahoo/**Rajesh Kumar\*** (Delhi Univ. · NSUT · Gachon Univ. · TU Darmstadt) 2026 ***The Chemical Record* e70267** (DOI 10.1002/tcr.70267 · 수락 2026-10-16 · 33 쪽 · 그림 19 · 표 4 · 참고문헌 166 = 고유 165 · SI 없음) — "**Two-Dimensional MXenes for Ion-Conducting Interfaces in Solid-State Energy Storage Systems**". MXene 세 역할 (충전재 · 계면층 · 다가 이온 숙주) · 황화물 SE 1차 사례 = Ti₃C₂Tₓ → Li₂TiO₃ 전환 코팅 [107] 하나 · 🔑 금속성 인터레이어 ↔ '전자 차단 계면상' 미정리 · 인용 제목 수준 어긋남 다수 | ✅ `papers/pandey2026_mxene_ion_conducting_interfaces_ssb_review.md` (2026-11-23 · 그림 11/19 실독 · 손 크롭 3 · 인용 ↔ 목록 전수) — 리뷰 판정 **§J-84** | 리뷰 (외부) · 자체 계산 0 · 2차 인용 |
@@ -626,6 +629,8 @@
 ## B. 산화안정성 — **4축 분리 (축 명명 없이 말하면 틀림)**
 | 축 | 우위 | 출처 | 우리 값 / 재현 |
 |---|---|---|---|
+| **B② 🆕 (2026-11-23) 비주변 Nernst (식 4: σ_h(V̄_CAM − V̄_SE)/F) = 우리 구속 ESW 와 같은 1 차 꼴 — 그런데 그들이 잰 응력 부호는 충전 중 LPSC *인장* (창을 좁히는 쪽)** | (우위 아님 — **꼴 대조 + 부호 단서**) | **[Sun26EMGap]** p. F 식 (2)–(4) · 저자 자인 이상화 5 개 · `Fig. 3` (Raman · 압축 전용 보정을 인장으로 외삽 · 0–1.5 GPa) · 크기 ≈10.4 mV / (GPa · cm³ mol⁻¹) (우리 산수) · V̄ 값 n/a | 우리 `constrained_esw.py` φ_ox(K) = φ_ox0 + K_eff·ΔV/n_e (K_eff ↔ −σ_h · 값은 `constrained_esw_*.json` · 레지스트리 미등록) · 산화 개시 2.14 V (LiS₄ 포함 · Li-rich facet) / 2.256 V (GG) / 다음 2.36 V 를 창 아래 끝 2.5 V 위로 올리려면 전자당 34.7 / 23.5 / 13.5 kJ mol⁻¹ (1 GPa 면 ΔV/n_e ≈35 / 24 / 14 cm³ mol⁻¹) ⇒ ✓ **'창 전체 산화 구간' 은 그들 응력 크기 · 부호에서 그대로** · ⚠ **B② 를 양극 계면 근거로 쓸 때 응력 부호 (압축 가정) 를 같은 문장에** · 우리 압력 어림 규칙 (P²V/2B · 2 차) 은 다른 양 |
+| **B③ 🆕 (2026-11-23) Li\|LPSC\|NCM83 첫 사이클 (≈2.5–4.2 V · 우리 셀 창과 같은 틀) 의 LPSC PS₄³⁻ Raman 띠 적색편이를 '인장 응력 0–1.5 GPa' 로 읽은 지도 — 화학 (CEI) 교락 미분리** | (우위 아님 — **측정 해석 감사**) | **[Sun26EMGap]** `Fig. 2` · `Fig. 3` · `Fig. 4` (ref 3 재수록 · κ 5.393 cm⁻¹ GPa⁻¹ → 1 cm⁻¹ ≙ 185 MPa) · 영상 점 `figure-read ≈` 2.55 / 3.78 / 4.2 / 3.69 / 2.5 V · 방전 끝에도 '인장' 잔류 · 레이저 · 맞춤 조건 n/a · 같은 띠의 화학 이동 litdb 소환 −3 ~ −10 cm⁻¹ (`[Chen24SCL]` 비가역 −3 · `[Cronk26]` −5.4 ~ −7 · `[He26Cl4D]` −8 · −10) = 0.6–1.9 GPa 환산 | 다섯 점 전부 우리 개시 (2.14 / 2.256 V) 위 · ②–④ 는 SCl 3.326 V 위 ⇒ 평형상이 P₂S₇ (P–S–P) · S · Cl 산물 = PS₄³⁻ 아래쪽 띠 → 분리 안 된 단일 피크 맞춤이면 '인장' 으로 읽힘 · ⛔ **우리 CEI 서술에 '계면이 기계적으로 당겨진다' 의 측정 근거로 쓰지 않는다** ('PS₄³⁻ 띠 이동 (응력 + 화학)' 으로만) |
 | **B① 🆕 (2026-11-23) LPSCl grand-potential 창의 세 번째 문헌 점 — 본문 '1.8–2.0 V' · `Fig. 4d` figure-read 환원 ≈1.79 / 산화 ≈1.99 · 2단 ≈2.38 · 3단 ≈3.26–3.35 V · 첫 산화 산물 LiCl + LiS₄ + Li₃PS₄ (LiS₄ 포함 상 집합) · 같은 편 LPSC E_hull +19 meV/atom** | (우위 아님 — **규약 대조**) | **[Kansara26Rev]** `Fig. 4b–d` · p. 29622 (ref 81 = C.-M. Wang 2025 *J. Power Sources* 640, 236719 — litdb 미보유 · **2차 소환**) | 우리 baseline: 환원 한계 **1.717 V** (Li 교환 0) · 산화 개시 **2.256 V** (GG set) / **2.14 V** (LiS₄ 포함 · grand-potential 경계의 Li-rich facet 규약) · 이후 **2.385** · **3.326 V** ⇒ 2·3단은 같은 자리 · 첫 두 끝만 어긋남 (+0.07 / −0.15 V). *우리 산수 (가설)*: LPSC 준안정 0.019 × 13 = **0.247 eV/f.u.** 를 hull 로 내리지 않으면 1.717 + 0.247/5 = **1.77** · 2.14 − 0.247/1.75 = **2.00 V** → 두 끝이 한 매개변수로 맞는다 (원문 미확보 · 미검증 · [Zhu15] 2.01 · [Wang26IF] 산화 2.30 은 이 가설 밖). ⚠ `HZ-esw-reduction-limit-label` · `HZ-esw-reduction-limit-facet-convention` (CONDITIONAL) — 창 폭 1.014 V 금지 · 규약 병기 |
 | **B③ 🆕 (2026-11-23) MXene → Li₂TiO₃ 전환 코팅 (LiCoO₂ · 황화물 전고체 · "up to 4.5 V") — [Pandey26MX] 리뷰의 유일한 황화물 SE 1차 사례 · 계면을 지킨 것은 MXene 이 아니라 절연 Li₂TiO₃ · [혁주] LZO (Li₂ZrO₃) 와 같은 Li₂MO₃ 계열** | (우위 아님 — **코팅 계보 · 2 차 소환**) | **[Pandey26MX]** p.12 ← ref [107] Wang *Chin. Chem. Lett.* 35, 108776 (2024): Ti₃C₂Tₓ 를 LiCoO₂ 위에서 500 °C in situ Li₂TiO₃ 로 전환 · 초기 138.8 mAh g⁻¹ · 0.2 C 100 사이클 86.2 % (SE 조성 · 코팅 두께 리뷰 미기재 · 원전 litdb 미보유) · 같은 물질 계산값 **[Kim26HTS]** `Table S1` Li₂TiO₃ 산화 한계 3.68 V · 환원 한계 0.50 V · ΔE_rxn(NCM523) 0 · ΔE_rxn(LPSCl) −60.12 meV/atom (MP-PBE · 그 논문 규약) | 우리 계산 없음 · '4.5 V 안정' 은 [Kim26HTS] 산화 한계 (3.68 V) 위 운용이라 동역학 보호로 읽는다 [추정] · 우리 셀 작동창 2.5–4.25 V 의 윗부분도 그 한계 위 · [혁주] 트랙 혼합 반응에너지와 같은 규약으로 다시 내기 전에는 같은 표에 놓지 않는다 |
 | **B③ 🆕 (2026-11-17) [혁주] 요청서가 인용한 'Banerjee 2019 혼합 반응에너지 그림' 의 재수록 — 세로축 eV/f.u. (f.u. 정의 없음) · 우리 meV/atom 과 같은 축에 놓지 않는다** | (우위 아님 — **단위 · 정규화 감사**) | **[Banerjee20Rev]** `Fig. 18a` (ref 51 재수록): NCA–LPSCl 최소 figure-read ≈ −21 eV/f.u. @ x ≈ 0.37 · LNO–LPSCl ≈ −1.3 eV/f.u. @ x ≈ 0.5–0.6 · 산물 주석 Li₃PO₄ · LiCl · Ni₃S₄ · NCA 충전 상태 미표기 · AIMD 그림 없음 (본문 한 줄). *우리 산수*: LNO 곡선을 혼합 화학식단위 (LPSCl 13 + LiNbO₃ 5 원자) 로 읽으면 −0.14 ~ −0.16 eV/atom = 같은 원전 `Fig. 17` E_rxn^SE(LiNbO₃) −0.16 과 맞고, 같은 읽기로 NCA 곡선은 ≈ −2.2 eV/atom (문헌 범위의 3–7 배) ⇒ NCA 쪽 f.u. 가 더 크다 (추정) — 두 곡선 깊이 비 ≈ 16 배를 반응성 비로 읽지 않는다 | [혁주] stage 1 (`hyeokju_lzo_stage1_reactivity_card_2026_11_16.json` `결과_2026_11_16` · MP GGA/GGA+U · pymatgen · 닫힌계 · 0 K · 혼합물 원자당) — ⛔ 카드 §5b *"우리 값과 Banerjee 2019 (LiNbO₃ 코팅) 값을 같은 축에서 비교"* 금지 그대로. 각자 축 안의 순서만 같은 방향: 문헌 LNO–LPSCl ≪ NCA–LPSCl · 우리 LZO–LPSCl −92 ≪ NCA_y–LPSCl −377 ~ −696 meV/atom (y 1.0 → 0.2 · 이름 추정 조성). 산물 클래스 일치 (TM 황화물 + Li₃PO₄ + LiCl) · Ni 황화물 화학량 다름 (실측 Ni₃S₄ · 우리 Ni₃S₂) |
@@ -845,6 +850,7 @@
 ## C. 기계적 물성 — *값이 functional·정의 의존*
 | 주장 | 출처 | 우리 | 비고 |
 |---|---|---|---|
+| ⛔ **🆕 (2026-11-23) Raman 으로 환산한 LPSC 국소 '정수압 응력' (지도 0–1.5 GPa · 최대 1.2 GPa) 과 Hard–Soft Pairing 의 G · V̄ 손잡이 — 우리 E_VRH · B₀ 옆에 같은 양으로 놓지 않는다 (탄성 수치 0)** | **[Sun26EMGap]** `Fig. 3` · `Fig. 4b` · `Fig. 6` · p. F–G (χ = (G_SSE/G_anode)/(V̄_SSE/V̄_anode) — 본문 식이 `Fig. 6a` 판정과 반대) | comp1 **E_VRH 22.06** (`elastic-dft-relaxedion-comp1comp2-v1`) · modelc **27.66 GPa** (`elastic-dft-relaxedion-modelc-standalone`) · comp1 **B₀ 26.233** · modelc **21.71 GPa** (`b0-dft-bm3-v1`) · G · SE 쪽 V̄_Li 는 레지스트리 없음 | 다른 양 (국소 응력 추정 vs 0 K 탄성 상수) · GPa 정수압 인장 ↔ litdb K_Ic 0.17–0.69 MPa m^½ 면 1 GPa 임계 결함 ≈9–150 nm (우리 산수) · Eshelby 고립 입자면 기지 정수압 0 · χ 계산엔 G 등록 + V̄_Li^SE 가 먼저 (후보) |
 | **🆕 (2026-11-23) ML 탄성 대리모형 (CGCNN) 오차 — G_VRH MAE 9.3–9.7 · K_VRH MAE 13.6–14.2 GPa — 는 황화물 SE 탄성값과 같은 자릿수 (§J-23 [WangZeierYou25] 결론의 두 번째 문헌 점)** | **[Kansara26Rev]** `Fig. 12e–h` · p. 29641 (ref 130 = Choi 2021 *ACS AMI* 13, 42590 — 원전 미독 · 2차) | comp1 relaxed-ion **E_VRH 22.06** · EOS **B₀ 26.23 GPa** (레지스트리 canonical) · G_VRH 8.13 GPa (`elastic.json` · 레지스트리 미등록) | 값 비교가 아니라 **오차 스케일 대 물성 스케일** — K MAE ≈ 우리 B₀ 의 52–54 % · G MAE > 우리 G ⇒ 이 계에서 ML 탄성은 relaxed-ion DFT 를 대체 못 한다 (방향만) |
 | ⛔ **🆕 (2026-11-23) '복합양극 영률 21.75 (BR) / 25.09 GPa (PVdF-CTFE)' (DFT · NCM712 + LPSCl + Super C + 바인더 적층 모형 · VRH) 를 우리 `E_VRH` 옆에 놓지 않는다 — comp1 22.06 과 숫자만 우연히 가깝다** | **[Kansara26Rev]** `Fig. 11d` (ref 155 = Jeong 2024 *Energy Storage Mater.* 73, 103855 · 리뷰 저자 셋 공저 · 원전 미독) | — (부인 선언) | 적층 슬랩 (진공 포함 여부 미기재) 의 VRH 는 균질 결정 가정 밖 · NCM (같은 리뷰가 옮긴 Mücke DFT E ≈ 188–221 GPa) 을 품은 복합체가 LPSCl 단독만큼 무르다 = 무엇을 잰 값인지 정의가 없다 · 같은 그림 `Fig. 11c` 결합에너지 9.016 eV 는 흡착 ≳ 2 eV 규율 대상 (배위 미확인) |
 | **🆕 (2026-11-23) '계면 물질 영률 > 6 GPa 면 덴드라이트 억제' (액체계 SEI 문헌 ref 39) 를 음극 포일 AFM 영률 (Li-In-S 7.2 vs Li 2.4 GPa) 에 적용** | **[Liu26LiInS]** `Fig. 3h,i` (색막대 ±5 / ±10 GPa — 음수 눈금 · 평균 산출법 미기재) | LPSCl E_VRH comp1 22.06 · modelc 27.66 GPa (PBE · relaxed-ion · canonical) | SE 자체가 이미 '문턱' 의 ≈4 배인데 같은 논문 Li\|LPSC 대칭셀이 0.5 mA cm⁻² 에서 단락 → 6 GPa 문턱은 황화물 SSB 의 지배 기준이 아니다 · 음극 영률 ≠ SE 영률 · 값 비교 아님 |
@@ -1067,6 +1073,7 @@
 ## E. 환원 / 음극(Li 금속) 계면 — **⚠ Cl-rich 유불리 문헌 충돌 (자리 점유가 변수)**
 | 주장 | 출처 | 우리 | 일치 |
 |---|---|---|---|
+| **🆕 (2026-11-23) R2D (2D 위상장 + FEM) — Li\|LPSC 쪽 Li 가 SE 입계로 돌출 · Y 형 삼중점 'jump nucleation' 이 단락을 앞당김 · 그물형 입계는 억제 / Hard–Soft Pairing: 세라믹 전해질엔 고모듈러스 합금 음극 (Li₃Sn 평탄 · Li₀.₆In 빠른 열화)** | **[Sun26EMGap]** `Fig. 8a,b` (ref 1 · 축척 · 물성 n/a) · `Fig. 6` (ref 26) | 환원 한계 **1.717 V** (Li 교환 0 의 가장자리 · comp1 = modelc) — R2D 에 계면상 (SEI) 화학 없음 (Account 서술 기준) · Ag–C 인터레이어 crack 문서 (위치 `docs/collab/agc_interlayer_crack_calc_2026_11_16.html`) 의 '균열을 따라 오르는 Ag · Li' 관찰과 기하가 닮음 | △ 정성 — 입계 물성은 모델 입력 · 응력 크기 검산: 1.717 V 를 응력으로 메우려면 전자당 ≈166 kJ mol⁻¹ (1 GPa 면 166 cm³ mol⁻¹) → **GPa 응력으로 환원 열역학 판정 안 뒤집힘** |
 | **🆕 (2026-11-23) Li₂S + LixIn 복합 포일이 Li\|LPSC 계면 환원을 줄인다 — 사이클 뒤 LPSC 면 XPS 환원 P (130.2 · 131.2 eV) · Li₃P (128.2) 는 Li 쪽에만 · TOF-SIMS 사이클 전 대비 LiS⁻ 2.6× · LiP⁻ 3.7× (Li) vs 1.3× · 1.9× (Li-In-S) (figure-read · 픽셀) · 대칭셀 CCD 4 vs 0.5 mA cm⁻² (10 MPa · n = 1) — ⚠ 같은 논문 DFT 서사는 산물을 'Li₂S 와 P₂S₅' 로 · Raman 486 cm⁻¹ 을 'Li₂Sₙ (S–S)' 로 적는다** | **[Liu26LiInS]** `Fig. 2b,c` · `Fig. 3a–e` · `Fig. 4g` 설명문 | comp1 grand-potential 환원 계단 (`esw_lis4excluded.json`): 가장자리 1.717 V (Li 교환 0) → 1.242 V 5 Li₂S + LiCl + P → … → 0 V Li₃P + 5 Li₂S + LiCl (8 Li/f.u.) · CBM = P–S σ* (`kb/concepts/se_redox_frontier.md` 3 장 ②) · `sei_products.json` Li₃P conductor-LEAK / Li₂S marginal | ✅ XPS 산물 (Li₂S · 환원 P · Li₃P) = 우리 계단 / ❌ 'P₂S₅' 는 환원 산물이 아니다 (P⁵⁺ 그대로 · 계단에 없음) · 'Li₂Sₙ' 은 0 V 산물 아님 ([Zeng22Cl] 행과 같은 판정) / ⚠ 억제의 원인 미분리 — 포일에 Li 금속이 남아 Fermi 준위 0 V · LixIn (≲0.6 V) 도 1.717 V 아래 → 열역학 구동력은 그대로, 보호는 동역학 (전자 절연 Li₂S 피복) 쪽 |
 | **🆕 (2026-11-23) 금속성 LixIn 을 *일부러* 음극에 넣고 'Li₂S 와 짝지으면 일함수 차 내장 전기장이 전자를 가둬 무해' 라고 주장 — DFT 일함수 Li₂S 3.78 / LixIn 3.48 eV 의 Li₂S 는 진공 두 면이 ≈3.9 eV 다른 극성 슬랩의 낮은 쪽 값 (반대 면 ≈7.7 eV · 슬랩 안 ≈0.3 V/Å 기울기 · figure-read) · 근거는 ELF 뿐 · 실제 계면 Δρ / 전위 없음 · Li₂S\|LixIn 계면은 HRTEM 에 없다** | **[Liu26LiInS]** `Fig. 4e,f,h,i` · `Fig. 4j–l` (KPFM) · `Fig. 1h–j` | cascade 축 ③ (Li 금속 쪽) R2 등급 ⓑ 금속성 → **F1_Li 위험 표시** (In₂O₃ 도핑 → In 금속성 ⓑ · `cascade_axis_li_readout_2026_11_05.json` · `D-2026-11-04-cascade-axis-li-anode`) | ⚠ 평가 방향이 반대 — 단 반증이 아니다 (LixIn 단독 · Li₂S 단독 대조 없음 · 기전 계산 미달) → F1_Li 유지. In 계 Li 계면 장수명 사례 둘째 ([Liu26InLSPS] In 계면 농축) — 공통 후보 = Li–In 혼합전도 골격 · 접촉 (기하), BIEF 아님 |
 | **🆕 (2026-11-23) 금속성 (전자전도) 인터레이어는 Li/황화물 계면의 전자 차단층이 아니다 — MXene 리뷰의 '인터레이어 = 계면 저항 ↓ · 덴드라이트 억제' 는 Li 금속/무기 SSE 1차 근거 0 (제목 수준) · 리뷰 스스로 '전자 차단 MXene 유래 계면상' 을 단서로 단다** | **[Pandey26MX]** `Fig. 10` (실독 — 석출 화살표 · 덴드라이트가 Li 바깥 면 · 전자 경로 없음) · `Table 3` (인용 [108–110] 이 그 행의 계와 안 맞음) · p.4 · p.11 · p.20 단서 문장 · 창 문헌 [Zhu15] · [Schw21] (LPSCl 환원 개시 ≈1.7 V vs Li) · 전자전도 인터레이어 실례 `spencerjolly2023_ag_graphite_interlayer_operando_xrd` · `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` (석출 위치 = 접착 인성) | 환원 가장자리 = 문헌 경계와 같은 자리 (`our_dft_baseline.md` 2026-09-22 정정 절 — 값은 거기서만 · `HZ-esw-reduction-limit-label` 라벨 규율) · Li₃P conductor-LEAK (§E 맨 위 행) | ✅ 방향 일치 (정성 — 0 V 는 창 밖 · 전자전도 층은 반응 면을 옮긴다) · 정량 비교 없음 |
@@ -1248,6 +1255,7 @@
 ## H. ⚠️ 우리가 아직 못 하는 것 (정직 목록 → 향후)
 | gap | 누가 필요로 함 | 보강책 |
 |---|---|---|
+| **🔴 우리 MLIP-MD 수송값은 DEM · 연속체 입력으로 *그대로 넘길 수 없다* — 추적자 D\* 이지 화학 D̃ 가 아니고 σ 는 Haven = 1 NE 다** (2026-11-23 신설) | **[Zhang26AIMS]** §4.4 Step 2 — *"Tracer diffusivities obtained from atomic trajectories are not automatically interchangeable with chemical diffusion coefficients in continuum equations … an uncorrelated Nernst−Einstein estimate should not be substituted directly for the measured conductivity"* · DEM · 연속체 (P2D · MPM 수송) 협업이 요구하는 입력 | 넘길 때는 **계 간 상대차 + 멀티시드 판정**으로만 (현 정책 그대로) · 절대 입력이 필요하면 열역학 인자와 Haven 비를 따로 재야 한다 (§J-31 `[Marc17NE]` — 우리 H_R 미결) · 지금 넘길 수 있는 가장 직접적인 절대량은 탄성 (E_VRH · B₀ canonical · 조성 간 CONDITIONAL `HZ-elastic-cross-composition`) |
 | **🔴 E_hull 문턱 판정이 DB 판본에 묶인다 — 같은 Li₆PS₅Cl 이 +19 meV/atom (Wang 2025 · [Kansara26Rev] p. 29622) vs 83 meV/atom ([Zhu15] Table S1) 로 HT 스크리닝 문턱 40–50 meV/atom 의 양쪽에 걸린다** (2026-11-23 신설) | **[Kansara26Rev]** §3.1 이 E_hull ≤ 0.050 · > 0.040 eV/atom 문턱을 판본 언급 없이 권한다 · 우리 도구도 `e_above_hull` 을 정렬 키로 쓴 이력 (CLAUDE.md '조용히 틀린 경로') · 준안정 SE 의 혼합 반응 에너지에 자기 분해 몫이 섞인다 (`Fig. 9a` LPSC\|Al₂O₃ 가 x = 0 에서 이미 ≈ −19 meV/atom) | ① `e_above_hull` 을 쓰는 곳에서 MP 판본 · 보정 체계 · hull 기준을 행마다 남기는지 점검 (이번 세션 미확인) ② 문턱은 같은 판본 안 상대 순위로만 ③ interface_reactivity 최소값 인용 때 SE 자기 분해 몫을 같이 적는 안 검토 |
 | **🔴🔴 ⭐⭐ 우리 음극 서사에 *시간축* 이 없다 — 그리고 "SEI = 결정성 부동태층" 이라는 우리 그림이 문헌 기준으로 과하다** (2026-09-22 신설) | **[Chaney24SEI]** 가 눈금을 준다: SEI 는 **비정질로 먼저 생기고**(α ∝ log t, Butler–Volmer Δη 제한) **결정화는 별개의 느린 2단계**이며, 실온 10 ns 에도 **결정화도 ≈70 %·비정질 입계 ≈29 % 잔존**. 우리 음극 자산은 `anode_interface_b2o3.json`(grand-potential 산물표) **한 장뿐**이고 그것은 **④단계 이후의 평형 세계만** 말한다 — **초기 수백 ps 의 과리튬화 비정질상은 상도 전자구조도 아무도 계산 안 했다** | ① **표기부터**: 우리 갭 판정에 **"상분리 가정 하"** 라벨을 붙인다(무료·즉시) ② **문헌 공백을 우리가 딴다**: `Li₁₄PS₅Cl` antifluorite 고용체를 **SQS + fixed-occ nscf** 로 — ⚠ **보고량 카드(`kb/templates/estimand_card.md`) 먼저**, 배열 앙상블 집계 규칙을 결과 보기 전에 선언 ③ **계면 MD 능력 자체가 0 이다** — 우리 MLIP-MD 는 **벌크·조성고정·200 ps** 라 반응하는 계면을 돌린 적이 없다. 시작한다면 **앙상블을 NPT 로** 잡는다(✎ 반응 순부피 **−19 %**, NVT 면 그 수축이 응력으로 갇힌다) ④ ⛔ **이 편에서 두께·σ·Ea 를 가져올 수 없다 — 0건이다.** 두께 축의 눈금은 여전히 **우리도 문헌도 없다**(`[Wang22Res]` 0회 · `[Chaney24SEI]` 0회) |
 | **🔴 ⭐ 짧은 MD 의 "무반응·안정" 판정에 *관측창* 이 붙어 있지 않다 — 장벽이 없을 때의 홉 수 검산** (2026-10-05 신설) | **[Kim26BiSEI]** 이 5 ps · 298 K AIMD 에서 TEGDME 분해가 안 보인 것을 "TEGDME 안정" 의 근거로 쓴다 — 그 창은 Ea ≲0.10 eV 반응만 본다 (ν₀ 10¹³ s⁻¹ 가정 · `hop_check`). 셀 시간척(C/3 반쪽 ≈3 h · 30 h 유지)은 ≈1.0–1.07 eV 까지 본다 (우리 산수). 우리 T3 계획(UMA 반응 MD · 350 K · ≥20 ns)도 ≈0.37 eV (50 ns ≈0.40) 까지만 본다 | ① "X ns 동안 Y 가 안 생겼다" 문장마다 Ea_max = kT·ln(ν₀t) 한 줄 (반응 자리 n 개면 + kT·ln n) — `D-2026-09-27` 홉 수 검산의 거울상 (제안 · 결정 아님 · 트랙 = 우리 DFT 기준선, 사용자 1저자) ② 실측 속도 지표(정전위 유지 누설전류)를 협업 요청 목록에 — 면적 정규화 · 합금/분해 평탄 전위 회피 · 셀 반복 조건과 함께 · ⛔ 이 편의 Na 계 수치는 옮기지 않는다 |
@@ -3298,6 +3306,19 @@ energy" 를 잘못 부른 것**). ⇒ **2026년 계면 전문 종설이 슬랩 �
 ⛔ 인용 금지 — 장난감 수치 (He · Li⁺ 의 1 GTO · 6-31G · PBE 사다리) 를 기준값으로 · `Table 1` entry 3 (−2.3012 · α 0.769 — 재현 안 됨) · HFVWN (α 0.750 · −2.4504 — 재현 안 됨) · "HF 한계의 96 %" 를 정확도 근거로. 가져갈 것 — QE 네 줄의 읽는 법 · eband ≠ one-electron · `SLA` = Slater (α ⅔) 해독 · 자기상호작용 크기 감각 (2/N) · "기저 수렴 = 그 범함수의 답" 한 줄.
 
 <sub>> 📎 2026-11-23 신설 — `litdb/papers/baseden2014_dft_by_hand_helium_atom.md` §6 (재현) · §7 (QE 대응) · §10 (정오표) 요약. 크롭 3 장 (그림 1 + 표 2) 전부 실독 · 표 2 장 손 재크롭.</sub>
+
+**[Zhang26AIMS] `zhang2026_ai_cross_scale_simulation_li_battery_review` — AI 교차척도 모사 지도 리뷰 (*ACS Nano* 2026 ASAP): 가져올 것은 사례가 아니라 '인계 규율' 문장 · 우리 계 유일 자리는 반증된 주장의 재전파 · ⛔ 물성 4축 진입 금지** (2026-11-23 신설)
+
+| 항목 | [Zhang26AIMS] (원문 위치) | 우리 | 판정 |
+|---|---|---|---|
+| 원자 D → 연속체 | 추적자 D ≠ 화학 D̃ (열역학 인자 · 상관) · 비상관 NE ≠ 측정 σ (§4.4 Step 2) | Haven = 1 NE · σ 절대값 금지 · Ea 계 간 상대차만 | **같은 선** — 우리 MD 수송값은 DEM · 연속체 절대 입력이 아니다 (§H 제안 행) |
+| 매개변수 UQ | UQ 와 함께 추출 · 상관 유지 · 민감도 · 방법 / 경계 / 영향 보고 (§2.5) | 원장 `uncertainty_kind` · `finite_duration` · `n_seed` · `prohibitions` — 모델 축 0 (§J-18) | 통계 축은 우리가 더 구체 · 모델 축은 빈칸 |
+| 역학 입력 | 탄성 넘김 · 계면에너지만으로 파괴저항 못 정함 (§4.4 Step 2–3) | E_VRH · B₀ canonical (조성 간 CONDITIONAL `HZ-elastic-cross-composition`) · W_ad ↔ G_c 분리 (`comparison_vs_ours_DEM.md` §I) | 같은 선 |
+| tortuosity | 수송 정의 tortuosity · 고체 내부 확산 이중 보정 금지 (Step 4) | `comparison_vs_ours_DEM.md` §J tortuosity 정의 묶음 | 같은 선 |
+| 기록 형식 | 단위 · 상태 변수 · 불확실도 · 출처 · 모델 판 (`Fig. 32` 각주) · 리튬화 상태 · 온도 · 압력 (Step 2) | registry — 온도는 `method_id` 문자열 안 · 압력 · 리튬화 상태 칸 0 | 작은 진짜 공백 |
+| 계면 반응 MLP-MD 사례 | γ · σ_f · 외삽 오차 게이트는 있으나 MD 조건 · 시드 · 관측창 본문 0 | 사전 힘 검증 (MD-0) · 시드 · 관측창 (`D-2026-10-05-md-observation-window`) · UMA '모른다' 신호 없음 (§J-5) | 리뷰 사례로는 같은 양 비교 불가 · 우리 빈칸 = epistemic 신호 |
+
+<sub>> 📎 2026-11-23 신설 — `litdb/papers/zhang2026_ai_cross_scale_simulation_li_battery_review.md` §6 (교차척도 분해) · §12 (인용 금지) · J 절은 §J-86</sub>
 
 #### 🔧 방법 원전 — 시드 · 독립궤적 · MSD 오차 추정
 
@@ -7535,6 +7556,84 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 | 인용 감사 | 그림–본문 어긋남 6 · 제목 수준 인용 어긋남 10 건 이상 ([38] · [43] · [50] · [56] · [60] · [61–65] · [72] · [86–90] · [108–112] · [122] · [129–131] · [155–160]) · [6] = [25] | 리뷰를 거쳐 값을 옮기지 않는다는 규율의 사례 (§J-68 `[Alharbi26UCSE]` 와 같은 꼴) | 🔴 |
 
 ⛔ 인용 금지 — 이 리뷰의 수치 · 귀속 전부. 필요하면 원전에서: [107] Wang *Chin. Chem. Lett.* 35, 108776 (2024) · [14] Narayanasamy *Mater. Today Energy* 37, 101405 (2023) · [145] Huang & Mochalin *Inorg. Chem.* 58, 1958 (2019) — 셋 다 litdb 미보유.
+
+### J-85. 🔧🔴 **리뷰 판정 — [Lin26PLiS] 액체 Li–S 'P 도핑' 리뷰 (*J. Mater. Chem. A* 2026 · DOI 10.1039/d6ta06590b): 'P–S 고정' 의 끝은 티오인산 (리뷰가 안 읽은 자기 그림 `Fig. 8e1` 의 PS₄³⁻) · P 는 O 를 문다 · 재수록 그림–본문 어긋남 18 (방향 반대 · 색 막대 오독 포함) · 흡착 배위 · 홉 수 · 띠틈 규율의 분야 규모 반례 2호** (2026-11-23 신설)
+
+> 📎 출처: `papers/lin2026_p_doped_compounds_li_s_review.md` (그림 9/9 실독 · 확대 13 패널 · 표 2 장 PDF 텍스트 전사). ⛔ 액체 전해질 Li–S 양극 숙주 · 분리막/중간층 리뷰 · 자체 계산 · 실험 0 · 계산 조건 0 줄 (PBE 1 회) — A–D 물성 4축에 행을 만들지 않는다. 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사 + 화학 연결만. 같은 그룹 짝 리뷰 `[Luo26Sep]` (§J-67).
+
+| 서술 | 리뷰의 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| 'P–S 결합이 LiPS 를 잡는다' (틀의 핵심) | 정성 · XPS · 재수록 `Fig. 8e1` 에 PS₄³⁻ 띠 (figure-read ≈ 415–418 cm⁻¹ · 첫 방전부터 · 본문 0 회) | P–S 결합을 끝까지 만들면 티오인산 = 우리 SE 음이온 · `[Cronk26]` 계면상 카드 Raman 418–420 cm⁻¹ 와 같은 자리 → '촉매 P' 의 작동 상태는 티오인산일 수 있다 · 환원 쪽은 `se_redox_frontier.md` §3 (P–S σ\* → Li₂S + P → Li₃P) | 🔵 화학 연결 (읽기 틀) · 원전 [127] 확인 전 인용 금지 |
+| 'P 는 전기음성도가 높다' (10 회) | Pauling 2.19 (리뷰 인쇄) | C 2.55 · S 2.58 보다 낮다 · 같은 리뷰가 '강한 전자 주개' 6 회 · XPS 주성분 P–O (`Fig. 6b1` · `Fig. 8d2`) = 산소 친화 — 우리 B₂O₃ 모델 O-on-P 와 같은 방향 | 🔴 화학 오류 · 기전 문장으로 옮기지 않는다 |
+| 흡착 ≳ 2 eV | `Fig. 3a2` 2.4–4.2 · `Fig. 3d` WP ≈ 2.4–4.8 · Li −2.25 eV (두 물질에 같은 수) | 구조 비공개 → 배위 미확인 · 기준 상태 미기재 · `Fig. 3d` 에선 P@C 가 N@C 보다 다섯 종 모두 약하다 | 🔴 `D-2026-10-05-adsorption-site-coordination` 분야 규모 반례 2호 (1호 `[Luo26Sep]`) |
+| 율속 '장벽' (`Fig. 8f`) | 본문 'Ni 쪽이 훨씬 낮다' | 그림은 V +2.81 < Ni +3.49 eV (반응 ΔG) · 장벽으로 읽으면 298 K 1 h N ≈ 1.1×10⁻³¹ / 3.4×10⁻⁴³ (ν₀ 10¹³ s⁻¹ 가정 · `hop_check`) | 🔴 방향 반대 + 홉 수 모순 (`D-2026-09-27-barrier-hop-count`) |
+| '% 장벽 감소' | −10–18 % [64] · > 30 % [75] | 절대값 없음 → 홉 수 검산 불가 | 🟡 보고 규약 결함 |
+| 'NbP–LiNO₃ 0.5 vs PC–LiNO₃ 0.1 eV' | 상호작용 에너지로 서술 | 그림 속 0.5 / −0.1 eV 는 정전위 색 막대 양 끝 · (i2) 에 에너지 없음 | 🔴 정의 오독 |
+| HOMO–LUMO · d-band center | 0.018–0.273 eV · −0.672 / −1.279 eV | 스미어링 폭 안 · 적분 창 미기재 · d-band center ≠ 전도도 | 🟡 띠틈 · 평균 지표 규율 반례 |
+| 전고체 전망 (4) | 'P 도핑 재료 = 고체 쪽 촉매 중간층 · 이온전도 첨가제' (인용 0) | Li–S 작동창 (figure-read ≈ 1.7–2.8 V) 은 LPSCl grand-potential 창 (환원 가장자리 1.717 V · 산화 개시 2.256 V GG set / 2.14 V LiS₄ 포함 Li-rich facet — `HZ-esw-reduction-limit-label` · `HZ-esw-reduction-limit-facet-convention` CONDITIONAL) 의 양쪽을 넘는다 → 전자전도성 첨가물은 SE 분해에 전자를 대는 길도 된다 [우리 해석] | 🟡 근거 없는 전망 — 고체 축 근거로 쓰지 않는다 |
+
+⛔ 인용 금지:
+- 리뷰의 흡착 · ΔG · HOMO/LUMO · d-band center · % 장벽 수치 전부 (2차 인용 · 조건 0 줄)
+- `Fig. 8f` 를 'Ni 우위' 로 읽는 것
+- 'P 는 전기음성' 이라는 기전 문장
+- 표 1 · 2 의 '용량' 열 (첫 용량 / 남은 용량 혼재 — 이론 용량 1675 를 넘는 역산 3 행)
+- 리뷰의 Li₂S '분해 장벽' 을 우리 Li₂S 벌크 V_Li NEB (`HZ-sei-neb-li2s-cc-cellconv`) 옆에 두는 것
+
+후속 (전부 litdb 미보유): [127] Zhao *Small Methods* 8, 2300610 (2023) PS₄³⁻ 원 해석 · [128] Xia *J. Colloid Interface Sci.* 630, 317 (2023) 사다리 · [64] Chen *Molecules* 29, 2746 (2024).
+
+### J-86. 🔧🔴 **리뷰 판정 — [Zhang26AIMS] AI 교차척도 모사 리뷰 (*ACS Nano* 2026 ASAP · DOI 10.1021/acsnano.6c15838): '척도를 잇는' 사례 20 중 진짜 교차척도 7 · 넘긴 양의 UQ 0 · 우리 계 유일 자리는 `[Lai]` 반증 주장의 재전파 · 가져올 것은 §2.5 · §4.4 의 인계 규율 문장** (2026-11-23 신설)
+
+> digest `papers/zhang2026_ai_cross_scale_simulation_li_battery_review.md` (그림 16/33 실독 · 원 digest `[Lai]` · `[Galvez24]` 대조). ⛔ 자체 계산 0 · 실험 0 — 수치는 전부 2차.
+
+**무엇인가.** MLP · AI-kMC · AI 위상장 · AI-CGMD (미시→메조) → 대리 · ROM · 영상 end-to-end · PINN · ML 보강 P2D (메조→거시) → 서술자 · 역설계 · 데이터 · LLM · 클라우드–엣지 · BDA 를 184 편으로 훑는다. MLP 절 그림 7 중 5 장이 저자 그룹 작업이고 `Fig. 31` 은 소속 기업 제품군 도식이다.
+
+**'척도를 잇는다' 의 실체 (digest §6).** 사례 20 중 아래 척도 출력이 위 척도 방정식의 입력이 되는 것은 7 (MSM D · DP→kMC 장벽 · OTF-KMC · 반응망 kMC · IDNN 자유에너지 → 위상장 · Asheri 적분점 구성 대리 · ML 보강 P2D) — 나머지 12 는 한 척도 안의 계산기 교체 (MLP · PF · 전기화학 · DEM 대리) 이고 SROM · sP2D 는 ML 이 없다. 위로 넘어가는 것은 매개변수나 구성 함수뿐 · 경계조건은 Asheri 의 아래 방향 J_s 하나 · 상태 되먹임은 `Fig. 32` 제안에만. 진짜 교차척도 7 의 넘긴 양 불확실도 0 — 리뷰 자신의 §2.5 'UQ 세 실천' 이 요구하는 항목이다.
+
+**가져올 것 넷.**
+1. §2.5 UQ 세 실천 — §J-18 두 축 분리의 필드 쪽 표현 (통계 축은 우리가 더 구체 · 모델 축은 우리가 비어 있음).
+2. §4.4 Step 2 — 추적자 D ≠ 화학 D̃ · 비상관 NE ≠ 측정 σ = 우리 'σ 절대값 금지' 의 외부 근거이자 DEM · 연속체 인계의 한계 (§H 제안 행).
+3. §4.4 Step 3–4 — 계면에너지 ≠ 파괴저항 (`comparison_vs_ours_DEM.md` §I W_ad ↔ G_c) · tortuosity 이중 보정 금지 (같은 파일 §J).
+4. `Fig. 32` 기록 형식 각주 — 우리 원장에 압력 · 리튬화 상태 칸이 없다는 작은 공백을 드러낸다.
+
+**인용 금지 (digest §12).** 'Se/F/O 도핑이 Li|LPSCl 계면 반응을 가속 · 더 안정한 SEI' (`[Lai]` 반증 · 관측창 300 K · 1.03 ns · n = 1: 기대 사건 1 ≈ 0.24 eV (검출 63 %) · 95 % 검출 ≈ 0.21 eV) · HAML '10–20 배' (그림 13–30 배 · 원 표 값으로) · LiCu-NNIP 'EOS · 탄성 재현' · Si@C '≈4 nm 껍질 · ≤1 %' (그림 축 Å) · NMC 암염 '전자 전도 증가' (원전 미대조) · 리뷰가 옮긴 CE · σ 순위.
+
+**인용 위생.** 본문 ↔ 그림 불일치 6 (`Fig. 2b` · `Fig. 3b` · `Fig. 4` · `Fig. 8` · `Fig. 13` · `Fig. 16b`) · `Table 1` CHGNet 'equivariant' 분류 (우리 판단) · ref 36 · 47 배치 · 'Wheatley' ↔ ref 89 'Wheatle' · MD 조건 0 줄 · 황화물 SE 0 · UMA · Orb · SevenNet · MatterSim 0 — 황화물 계산 지도는 `[Phuthi26Persp]` · `[Dutra25Rev]` · `[Jain26Rev]` · `[Wu26MLIF]` 쪽.
+
+### J-87. 🔧🔴 **리뷰 판정 — [Sun26EMGap] 전기-기계 Account (*Acc. Chem. Res.* 2026 ASAP): Raman 'GPa 응력' 은 압축 보정의 인장 외삽 + 화학 교락 · 식 4 = 우리 B② 구속 ESW 와 같은 1 차 꼴 · SOS–SOC 크기는 식 4 로 안 나온다 · R2D η_mech 은 모형 의존 · 인용 제목 수준 감사** (2026-11-23 신설)
+
+> 📎 출처: `papers/sun2026_ssb_interface_electromechanical_gaps_account.md` (논문 에이전트 2026-11-23 · 그림 8/8 실독 + 확대 4 · 식 렌더 대조 · 인용 원전 미독 → 제목 수준 감사).
+> ⛔ **Account — 새 자료 0 · 원자 계산 0 · 탄성 수치 0. A–D 물성 4축에 값 행을 만들지 않는다** (§B② · §B③ · §C ⛔ · §E 행만). 수치는 전부 자기 논문 (refs 1 · 3 · 4 · 26) 재수록.
+
+**J-87-a. 논증 사슬**
+
+| 단계 | 근거 | 실제로 잰 양 | 판정 |
+|---|---|---|---|
+| ① 계면은 GPa 정수압을 'routinely' | `Fig. 2`–`Fig. 4` | PS₄³⁻ 띠 위치 → 압축 0–2 GPa 보정 직선 → 인장 0–1.5 GPa | △ 띠 이동은 사실 · 응력 귀속 미분리 |
+| ② 충전 → LPSC 인장 · 방전 → 되돌림 | `Fig. 3` | 5 점 · 방전 끝 '인장' 잔류 | △ 부분 가역 · 다섯 점 전부 우리 산화 구간 |
+| ③ 인장 → 탈리튬 억제 (SOS–SOC) | `Fig. 4` | Rs 0.66 vs 0.93 (보정 최대 0.88 @ 4.2 V) | △ 상관만 · SOC 차 ≈0.6–0.7 V 상당은 식 4 (1 GPa · ≲0.2 V) 로 안 나옴 → 접촉 손실이 더 간단 |
+| ④ > 5000 m/s → 먼 입자까지 | 미출판 | — | ✗ 도착 시간 ≠ 영향 범위 (정적장 r⁻³) |
+| ⑤ 식 4 비주변 Nernst | 식 (2)–(4) | σ_h ΔV̄/F · 이상화 5 개 자인 | ✓ 1 차 기준선 · 우리 B② 와 같은 꼴 |
+| ⑥ Hard–Soft Pairing (χ) | `Fig. 6` | 안정 지도 | △ 본문 χ 식이 (a) 와 반대 판정 · 곡선 범례 없음 |
+| ⑦ R2D: η_mech ±100–110 mV ≫ 4 mV · 첫 방전 84.8 % | `Fig. 8a` | 2D 모형 내부 · 기계 끄기 대조 없음 | △ 3D 완전결합 문헌 (Ben Hadjali 2026) ≈2.3 mV — 50 배 |
+
+**J-87-b. 우리 규칙 적용**
+- 홉 수 검산 (`D-2026-09-27-barrier-hop-count`): 장벽 수치 0 (`Fig. 1d` 는 a.u.) → 해당 없음. 관측창 (`D-2026-10-05-md-observation-window`): MD 0 → 해당 없음. 흡착 배위수: 흡착값 0 → 해당 없음.
+- 작동창 (2.5–4.25 V): Raman 셀 ≈2.5–4.2 V 같은 틀 · 다섯 영상 점 전부 우리 개시 (2.14 / 2.256 V) 위 · ②–④ 는 SCl 3.326 V 위.
+- 압력 어림 규칙 (P²V/2B): 2 차 · 셀 잔류 압력 보정 (1 GPa 에서 1.9–2.8 meV/atom) — 반응 1 차 항 (1 GPa · 1 cm³ mol⁻¹ 당 10.4 meV / Li) 과 다른 양 · 서로 대신하지 못한다.
+
+**J-87-c. 가져올 것 (후보 · 결정 아님)**
+1. **식 4 크기 한 줄** — 10.4 mV × (σ/GPa) × (ΔV̄/cm³ mol⁻¹). 우리 열역학 판정 (산화 개시 대 창 아래 끝 · Ag–C Ag₂S 경계 · Li 쪽 환원) 이 'GPa 응력이면 바뀌나' 를 물을 때 차수 검산으로.
+2. **평균 응력 정리 자기무모순 검사** — 국소 응력 지도 (Raman · DEM 출력) 의 부피 평균이 경계 견인력 (적층압) 과 맞는지. 적층압 셀에서 넓은 영역 GPa 인장은 반례 신호.
+3. **Raman PS₄³⁻ 띠 이동은 '응력 + 화학' 으로 이름 붙인다** — 우리 작동창 안에서는 산화 산물 (P–S–P · S · Cl) 띠가 아래쪽에 있다.
+4. **빈칸 둘** — SE 쪽 V̄_Li (식 4 · χ 의 입력) · G 레지스트리 등록 (χ 계산 전제). 하려면 보고량 카드부터 (트랙 = 우리 DFT 기준선 · 사용자 결정).
+
+**J-87-d. ⛔ 인용 금지**
+- 'LPSC 안 GPa 급 응력' 을 측정된 응력으로 (방법 · 교락 단서 없이).
+- Raman '응력' 을 우리 E_VRH · B₀ 옆에.
+- η_mech ≈ ±100–110 mV · 첫 방전 84.8 % 를 '기계 용량 손실의 크기' 로.
+- 본문 χ 식으로 안정 판정 계산.
+- '탄성파 > 5000 m/s → 먼 입자 억제' 를 기전으로 · 미출판 탄성동역학 (Huamei Li et al.).
+- '1 GPa → 10 kJ/mol ≈ 10 %' 를 반응 지정 없이 (3.7–3.8 V 양극 반응이면 ≈3 %).
 
 ---
 
