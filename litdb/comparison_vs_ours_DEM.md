@@ -1258,6 +1258,12 @@
 > · 우리 쪽: 랩 표준 (순수 SE 10–13 % · 1.64 g/cm³) 과 다른 문헌 값 — 판정 · 맞춤에 안 쓴다 · AM 96 wt% 침대가 300 MPa 에서 빈 곳 ≈20 % = '소성 흐름 없는 단단한 골격 바닥 ≈20 %' 표현과 자릿수만 같다 (PTFE · CB 변형 · 파쇄 · 2 단 이력 · Carver · 뺀 뒤 포함 — 단단한 구 실험 아님) · 겉보기 P_y GPa 급 = [Park22] (Al₂O₃ 68 vol% + LPSCl · ≈1.1–1.9 GPa) 와 같은 자릿수 → AM 많은 복합에 순수 SE P_y (138 MPa) 하나를 쓰지 않는다 · 가져올 것 = 단계 0 등록 칸 (분모 = 성분 이론 밀도 합 · 압력 이력 · 측정 상태)
 > · ⛔ 압력 목록 · 다이 · 유지 · 시료 수 · 오차 · '압밀 상수' 값 미인쇄 · 90 / 140 MPa 가 롤 압력인지 프레스로 흉내 낸 것인지 [미확인] · 값 전이 금지 (액체 LIB · NCA · PTFE).
 
+> 2026-11-23 추가 — `cho2026_pore_network_homogeneity_powder_compacted_se_separator` [Cho26PN] (H.-R. Cho · H.-J. Kim · … · S.-K. Jung, ChemRxiv 10.26434/chemrxiv.15009882/v2 (2026-10-08 게시) · **동료 심사 전 원고** · 실험 + 이미지 기반 선형 탄성 FEM · DEM · MPM 없음) — **상용 argyrodite 분말 셋의 순수 SE 펠릿 기공 (3 PSD × 110 · 220 · 330 · 440 MPa · 표 S1 · 펠릿 5 개 평균 ± SD)**.  ⛔ 측정 상태 = **누른 뒤 · 다이 안 (꺼내지 않음) · 하중은 뺀 뒤 (그림 S2 사진 · 프레스 밖)** · 분모 = Li₆PS₅Cl 진밀도 **1.64 g/cm³** (출처 인용 없음 · 분말 조성 · 실제 밀도 미측정) · 200 mg · ⌀13 mm PEEK · 2 분 유지 · 두께는 범위 0.9–1.3 mm 만 인쇄 · 가압 중 · 꺼낸 뒤 값 없음.
+> · 값 [인쇄 표 S1]: 넓은 PSD (BD · D50 ≈9.9 µm [판독]) 13.78 / 7.88 / 4.94 / 1.73 % · SE-2 21.84 / 13.84 / 8.04 / 3.69 % · 좁은 PSD (ND · D50 ≈1.6 µm [판독]) 23.75 / 15.82 / 9.28 / 6.19 % (110 / 220 / 330 / 440 MPa) — 같은 분모 · 같은 상태에서 **PSD 만으로 기공이 2–4 배** (440 MPa 3.6 배).  300 MPa 보간 [카드 산술] ND ≈10.7–11.1 · SE-2 ≈9.3–9.6 · BD ≈5.6–5.7 % · Heckel (원문은 안 함 · 누른 뒤 밀도) P_y ≈164 · 187 · 241 MPa (R² 0.964–0.997).
+> · ★ 평균 ≠ 국소: 440 MPa BD 펠릿 1.73 % ↔ FIB-SEM 국소 8.129 % (공간 SD ≈4.4 %p [판독]) · ND 6.19 ↔ 6.752 % (≈1.6 %p) — 저자 *"these local values should not be interpreted as direct substitutes for pellet-averaged porosity"* (p.7) · 국소 Er (나노압입 지도 110 점) 의 HI = IQR/중앙값 BD 0.74 → 0.24 ↔ ND 0.16 → 0.04 (110 → 440 MPa [판독]).
+> · 우리 쪽: 랩 표준 (순수 SE 10–13 % · 1.64 g/cm³) 과 **같은 분모 · 같은 상태 이름의 다른 문헌 값** — 판정 · 맞춤에 안 쓴다 · 가져올 것 = ① 단계 0 등록 칸에 **분말 PSD (D10 · D50 · D90)** 를 더한다 (같은 압력에서 PSD 만으로 2–4 배) ② 단계 4 결과 전 대조 (PSD 꼬리표 · '누른 뒤 다이 안' 꼬리표) ③ 공극망 균일성 지표 (z 투영 국소 기공 지도 SD · Moran's I · 공통 백분위 문턱) 를 DEM · MPM 침대 출력에 — ε 하나로는 BD 가 '가장 치밀' 인데 국소로는 가장 고르지 않다 · BD 1.73 % 는 단단한 구 바닥 (~20 %) 아래 = 소성 흐름 쪽 증거 (frame [1] · [2]).
+> · ⛔ 원고 · 심사 전 · 지도는 조건마다 펠릿 하나 · BD ↔ ND 는 D50 · PSD 폭 · 기공이 함께 바뀐 비교 · 같은 D50 · 같은 기공 3D 비교 (그림 5) 는 판독 관찰 (5a 좁은 PSD 곡선 없음 · 5d ≈ 그림 S6) 로 입력 [미확인] — 숫자 인용 보류.
+
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 
 > ⭐ **2026-11-10 추가 — [Kato16] 후막 · 셀 수준 지표의 *정의 사례* 넷 (`papers/kato2016_high_power_assb_lsipscl_superionic.md` §3d · §3g · §3i · §7g — DFT 트랙 digest · LGPS 형 SE · 우리 DEM 기준값은 이 브랜치에 아직 없다).**
@@ -3409,6 +3415,10 @@
 > 2026-11-23 추가 — `sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint` [Sun26FFF] (ChemRxiv 2026 · 동료 심사 전 · 계산만) — **무른 상 = 연속체 (SPH 점성 유체 BC) · 단단한 상 = 이산 고체 구 (AM 반지름 5 µm)** 로 나눈 입자 모델 (LAMMPS RHEO · 쌍의 하나라도 유체면 유체 상호작용 · 고체 접촉과 결합은 따로 더함 · p.10) — 우리 MPM scaffold (SE 연속체 + AM 고정 강체) 와 같은 나눔인데 AM 이 움직인다.
 > · 무른 상의 '고화' = 가정한 냉각 상태 θ (*"an assumed cooling rule rather than a temperature calculated from the energy conservation"* p.13) → 점도 최대 10 배 (η₀ 0.01 → 0.1 Pa s [카드 산술]) + BC–BC · BC–AM 결합 (k 2 pg µs⁻² = 2 mN/m [카드 산술] · 끊김 변형률 0.25 · *"not calibrated against electrical contact resistance or macroscopic mechanical strength"* p.15) · 압력 · 소성 · AM 모양 변화 없음 · 실험에 맞춘 값 0.
 > · 우리 쪽: 후보 A (MPM 강체 AM + SE 한 속도장) 의 meshfree 판 선례로만 · ⛔ 300 MPa 압밀 · 하중 몫 · SE 소성 흐름에 쓸 숫자 없음.
+
+> 2026-11-23 추가 — `cho2026_pore_network_homogeneity_powder_compacted_se_separator` [Cho26PN] — **FIB-SEM 단면 기반 2D 평면변형 · 선형 탄성 · 접합 계면 FEM (COMSOL 6.3 · Sn 리튬화 → 화학 변형 단방향) 의 분리막 응력 집중**: 공통 (BD + ND 모음) P90 넘는 von Mises 면적 BD ≈14.4 ↔ ND ≈4.8 % · 기공 경계 0–0.1 µm 칸 P95 ≈12.7 ↔ ≈7.7 GPa [판독] · 같은 D50 (1.584 µm) · 같은 기공 (6.752 %) GrainGeo 3D (복셀 0.2 µm · 20 MPa) 고응력 부피 몫 P90 ≈6.8 ↔ ≈13.7 % [판독] · 실험 = 100 사이클 뒤 BD 분리막 균열 · 음극 계면 박리 (유지율 63.1 ↔ 94.6 %).
+> · 우리 쪽: MPM 응력장 후처리에 옮길 정의 = 공통 (pooled) P90 · P95 문턱 몫 · 기공 경계 거리 칸 (0–0.1 · 0.1–0.3 · 0.3–0.5 µm) 평균 · P95 · 인장 정수압 (σ_h > 0) 몫 · 후보 A′-0 (분리 가능한 접촉) 의 동기 — 이 모형은 모든 계면을 접합해 실험의 박리를 못 낸다 (원문 스스로 *"indicators of mechanically vulnerable regions rather than as direct predictions of fracture"* p.12) · U6 반례: GrainGeo 공극 봉우리 0.3 µm = 1.5 칸.
+> · ⛔ 응력 크기 = 선형 탄성 · 접합 · 2D 의 값 (꼬리 ≈100 GPa 계급 [판독 그림 S20]) — SE 압입 경도 (440 MPa ≈2.2–2.7 GPa [판독]) 보다 크다 · 우리 MPM (σ_y 0.30 GPa) 이면 잘린다 → 상대 비교만 · 두 분리막에 같은 E (BD Er 33.13 GPa · 그림 1i 판독 ≈31.0 과 어긋남) · 소성 · 파괴 · 탈압 없음.
 
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →

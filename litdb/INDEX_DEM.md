@@ -2,13 +2,13 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 360편 · 생성 2026-11-23
+> digest 361편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
 (open_items #7). 축을 나누고 생성으로 바꿔 그 구멍을 닫는다.
 
-## SE 입도 효과 · size effect (24편)
+## SE 입도 효과 · size effect (25편)
 
 > 묶음 경계 = `tools/litdb/build_index.py` 의 `SIZE_EFFECT_SLUGS` (명시 slug 집합 — 낱말로 묶지 않는다). 이 표는 DEM 축만 싣는다.
 > 같은 집합의 **SE 축** 카드 5편은 `INDEX.md` § "SE 입도 효과 (size effect)" 에 있다.
@@ -17,6 +17,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 |---|---|---|---|---|
 | `bazzoun2025_dem_parameter_sensitivity_assb_cathode` | DEM 파라미터 민감도 분석 + 캘리브레이션 — 냉간가압 ASSB 양극 미세구조 (Bazzoun & Piruzjam, Electrochim. Acta 2025) | DEM | 2026-06-26 | — |
 | `bazzoun2026_dem_fem_rnm_ionic` | DEM-기반 미세구조 생성 + FEM·RNM으로 복합 양극 이온전도도 평가 — Bazzoun (J. Power Sources 2026) | DEM+FEM+RNM | 2026-06-23 | 🖼 13 |
+| `cho2026_pore_network_homogeneity_powder_compacted_se_separator` | 분말을 눌러 만든 argyrodite 황화물 SE 분리막 — 입도 분포 (PSD) 가 넓으면 (BD) 더 치밀해도 (440 MPa 기공 1.73 % ↔ 좁은 ND 6.19 %) 공극이 뭉쳐 남고 (FIB-SEM 국소 기공 8.129 ↔ 6.752 %) 국소 탄성률 · 경도가 넓게 흩어지며 (나노압입 지도 HI_Er · 낮 | experiment + image-based linear-elastic FEM (ChemRxiv prepri | 2026-11-23 | 🖼 81 |
 | `faka2026_particle_size_consolidation_strain_lpscl` | 입경 분포 (D50 4 · 11 · 20 · 40 µm, AMG) 가 Li₆PS₅Cl 압밀 · 격자 변형 · σ_ion 에 미치는 영향 — in situ 가압 EIS (0.1 → 1.5 GPa → 다시 내림) · in-die Heckel · 실험실 / 싱크로트론 XRD (Williamson–Hall · Stephens)  | experiment + DEM (in situ 가압 EIS · in-die Heckel · XRD/PDF/N | 2026-10-13 | 🖼 31 |
 | `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` | 유성 볼밀로 단결정 NCM83–LPSCl 복합양극을 만들 때 "얼마나 세게 · 얼마나 오래" 가 미세구조를 정한다 — 볼 DEM (Rocky 2024) 으로 충돌 에너지 E_col · 빈도 f_col · 비에너지 E_m 을 구하고 공정–구조–성능을 잇는다: 에너지 ↑ = LPSCl 분쇄 + NCM–LPSCl 융합 응집체  | exp + DEM (유성 볼밀 공정 매개변수 · 볼만 푼 Rocky DEM → E_col · f_col ·  | 2026-10-13 | 🖼 26 |
 | `jeong2024_operando_densification_chemomechanics_se_size_composite_cathode` | SE 입경 (Li₆PS₅Cl ≈1 µm vs 3–5 µm) 이 NCM811 복합 양극 (70 : 27.5 : 2.5 wt%) 의 치밀화 · 화학–역학 · 활물질 이용률에 주는 영향 — 싱크로트론 micro-CT 기공 11 vs 16 vol % (압력 뺀 뒤 · 분할 · 복셀 0.92 µm) · 다이 안 재압축 (370 M | experiment + continuum model (synchrotron micro-CT 3D 분할 por | 2026-11-12 | 🖼 54 |
