@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-23 · managed-files: 644
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-23 · managed-files: 645
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 435건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 436건)
 - 2026-11-23 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-23 · `kb/reviews/codex_EO_reply_wad_a5_en_fixes_2026_11_23.md` — EO 회신 — W_ad a5 묶음 (EN 고침) 확인: NO-GO (P0 1 · P1 4 · P2 1) — EN 의 재시작 모순 · 잘못된 행 머리는 막힘 · c2 첫 전자 반복행이 SDA: 에서 잘려도 1 행으로 세어 c1 보조 채택 · 영수증 판독 불일치 · 시작 기록 잡 이름 · 중단 시간 상한 · 장부 ↔ 보존 폴더 부분 복구 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 없음) · NO-…
 - 2026-11-23 · `kb/reviews/codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` — EP 프롬프트 — W_ad a5 묶음 Codex EO (NO-GO) 재승인 조건 ①–④ 고침 확인: 완전한 전자행 계수 · 영수증 · 시작 기록 일치 판독 · 중단 시간 · 상한 · 장부 ↔ 보존 폴더 (+ P2 끝 기록 시도 ID) — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
@@ -17,6 +17,7 @@
 - 2026-11-23 · `kb/reviews/codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md` — ER 회신 — W_ad a5 묶음 (EQ 고침 · 트리 관문 하나) 확인: NO-GO — EQ 반례 (남의 killed.json · 완료 반송본 옆 과거 복구 · 잘린 종료 기록 · 재포장 .part) 는 막힘 · 필수 칸 · UTF-8 · 장부 순서 GO · 범위 안 지적: 준비 폴더 이름으로 옮긴 중단 c1 을 러너가 지움 · 마지막 단 종결 (final.json OK · A5 WAVECAR 삭제) 이 검사보다 먼저 · 첫 행 콜론 한 바이트 손상 ('SDA;' · 'SDA') 이 0 스텝 · attempt.json 648,001 → 48,001 한 자리 유실 (이력 행과 대조 안 함) · 기록 명령 둘 겹침 (잠금 없음) · 중간 반송본 전자행 7 개 후퇴 · 확정 영수증 UNKNOWN 후퇴 · 종료 기록 job/stage/attempt · POTCAR.sha256 대조 없음 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…
 - 2026-11-23 · `kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` — ES 프롬프트 — W_ad a5 묶음 Codex ER (NO-GO) 고침 확인: 같은 트리 관문 위에 — 준비 폴더의 실행 기록 보존 · 끝 기록 · WAVECAR 지우기 전 관문 · 0 스텝은 0 행으로 설명될 때만 · 이력 줄 벽시계 = 끝 기록 · 기록 명령 · 포장 배타 잠금 · 중간 반송본 대비 관측 사실 후퇴 거부 · 끝 기록 잡 · 변형 · stage · POTCAR 해시 — 업체 발송 GO 여부 · 발송 대기 (사용자) · 기준 cc3873047 (ER 가 본 묶음 …
 - 2026-11-23 · `kb/reports/weekly_2026_11_22.md` — 주간 정리 2026-11-16 ~ 11-22 (주간보고 초안) · 초안 (2026-11-23 · 도는 계산은 마지막 보고 기준 — ga…
+- 2026-11-23 · `kb/projects/handoff_2026_11_23_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-20 를 friendly 로 · fast-forward (2026-11-23) · litdb 정리 세션 · 로컬 웹앱 · W_ad ES 편지는 본 세션에서 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…
 - 2026-11-22 · `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부 · 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 …
 - 2026-11-22 · `kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` — EN 회신 — W_ad a5 묶음 (EM 고침) 확인: NO-GO (P0 1 · P1 3 · P2 1 · P3 1) — EM 의 기존 반례는 막힘 · c2 재시작 실패 뒤 스케줄러 끊김을 --killed 경로가 놓쳐 c1 보조 채택 · 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-G…
 - 2026-11-22 · `kb/reviews/codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md` — EO 프롬프트 — W_ad a5 묶음 Codex EN (NO-GO · P0 1 · P1 3 · P2 1 · P3 1) 고침 확인: 끊긴 단의 원문 검사 · killed.json 대조 · 중단 영수증 · 시작점 유실 · 옛 반송 묶음 — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
@@ -26,7 +27,6 @@
 - 2026-11-20 · `kb/projects/handoff_2026_11_20_evacuation.md` — 대피 인계 — 2026-11-20 (friendly 세션 사용 한도 → 서브 세션 · 머지 때 충돌 0 · W_ad 은 a5 고침 이어하기 · [혁주] MD-1 판독) · 진행
 - 2026-11-20 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…
 - 2026-11-17 · `kb/projects/handoff_2026_11_17_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-12 를 friendly 로 · fast-forward (2026-11-17) · litdb 정리 세션 · 로컬 웹앱 맞추기 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…
-- 2026-11-16 · `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 쪽별 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑 · 검토 완료 · 전달 여부는 사용자 몫
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -528,7 +528,7 @@
 - `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안)  (2026-11-09 · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…)
 - `kb/reports/weekly_2026_11_22.md` — 주간 정리 2026-11-16 ~ 11-22 (주간보고 초안)  (2026-11-23 · 초안 (2026-11-23 · 도는 계산은 마지막 보고 기준 — ga…)
 
-## projects/ (63)
+## projects/ (64)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -559,6 +559,7 @@
 - `kb/projects/handoff_2026_11_12_evacuation.md` — 대피 인계 — 2026-11-12 (friendly 세션 토큰 소진 → 서브 세션 · 머지 때 충돌 0 설계 · b2o3 8 단계 gabia · li2s-3 2 단계 kgy 진행 중)  (2026-11-12 · 진행)
 - `kb/projects/handoff_2026_11_17_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-12 를 friendly 로 · fast-forward (2026-11-17) · litdb 정리 세션 · 로컬 웹앱 맞추기  (2026-11-17 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…)
 - `kb/projects/handoff_2026_11_20_evacuation.md` — 대피 인계 — 2026-11-20 (friendly 세션 사용 한도 → 서브 세션 · 머지 때 충돌 0 · W_ad 은 a5 고침 이어하기 · [혁주] MD-1 판독)  (2026-11-20 · 진행)
+- `kb/projects/handoff_2026_11_23_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-20 를 friendly 로 · fast-forward (2026-11-23) · litdb 정리 세션 · 로컬 웹앱 · W_ad ES 편지는 본 세션에서  (2026-11-23 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28)  (2026-10-28 · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다)
 - `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획  (2026-11-22 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…)
@@ -707,4 +708,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 610개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 636개 (정본 목록: litdb/INDEX.md)
