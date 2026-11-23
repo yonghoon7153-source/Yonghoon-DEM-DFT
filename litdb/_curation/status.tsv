@@ -113,7 +113,7 @@ N-106	대피	차례 기다림		PDF 받음 (+SI 1) · Walther 2020 Chem Mater 32 
 N-107	대피	차례 기다림		PDF 받음 (+SI 1) · Chouchane 2024 ACS Energy Lett 9 1480 (+ 참고 저장소 LESCOpenAccess/Codes-and-Data · 읽기 전용)
 N-108	대피	차례 기다림		PDF 받음 (+SI 1) · Rosner Adv Funct Mater 36 e18517 (표 2025 · PDF 문서 정보 2026 — 에이전트가 첫 쪽에서 확인)
 N-109	대피	차례 기다림		PDF 받음 (+SI 1) · Strauss 2020 RSC Adv 10 1114
-N-110	대피	도는 중		PDF 받음 · Figueroa 2009 Powder Technol 195 203 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사) · 시작 11-23 23:43 KST
+N-110	대피	끝	figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram · 9ae5c425f	정독 151 · 새 카드 · 399 줄 · 크롭 63 (식 32) · 의도 대조 일부 · ★ 기하평균 결합 규칙의 반데르발스 쌍별 Bond 수 · M 상 위 경계 = 논지 §2-3 문턱 (AM_P 0.309 · AM_S 0.391) 과 같은 식 → 논지 산술은 이 논문 식의 재유도로 인용 · DEM 만 (실험 없음 · 크기비 0.5–0.85) · 공백 검사 G1 반례 / 덮임 일부 · G2 없음 · G3 없음 · G4 일부
 N-111	대피	차례 기다림		PDF 받음 · Capece 2015 Powder Technol 286 561 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사)
 N-112 첫째	대피	끝	li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy · 7bfb6e2f4	정독 149 · 새 카드 · 392 줄 · 크롭 20 · 의도 대조 일부 (상태도 축 = R1/R2 × cosθ 비 · Bo 축 아님) · 공백 검사 G1 반례 (섞임↔분리) / 일부 (덮임↔뭉침) · G2 반례 (정성 · 접촉각) · G3 없음 · G4 일부 · 혼합쌍 규칙별 문턱 min 0.556 / 기하평균 0.309 / 산술 0.111 · 카드 문제 jarray2019 L322
 N-112 둘째	대피	끝	li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation · 69b5bf668	정독 150 · 새 카드 · 480 줄 · 크롭 39 (식 10) · 의도 대조 일부 · 공백 검사 G1 반례 (섞임↔분리 · 11/11 + DEM 2) / 덮임↔뭉침 일부 · G2 반례 (접촉각 → ℜ → 상 · 힘 측정 없음) · G3 없음 · G4 일부 (재료 축만 · 크기비 0.25 까지) · 우리 산술 B-U = E · B-C = M · SE/AM_P 크기비 0.111 = 검증 밖 · 카드 문제 jarray2019 L322 일부
@@ -147,7 +147,7 @@ U-1123-2	대피	끝	cho2026_pore_network_homogeneity_powder_compacted_se_separat
 U-1123-3	대피	끝	tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond · aa6164933	정독 146 · 최종판 보강 · 카드 362 → 518 줄 · 크롭 55 (다시 자름 12 = 표 2 + 식 10 · 근거 문단 19 새로) · 최종판 = Pre-proof 와 내용 같음 (서지 · 쪽 배치 · CRediT 오기만) · SS316 E_b 오기 그대로 · 의도 대조 = 채움
 U-1123-4	대피	끝	zhang2026_mixing_sequence_shear_speed_ptfe_fibrillation_dry_graphite_anode · 1dd4bb54e	정독 147 · 새 카드 · 399 줄 · 크롭 50 (다시 자름 6 · 식 0 = 원문에 식 없음 · 근거 문단 20 · 판독 118 행) · Journal Pre-proof · 원문 문제 = SI 표 S2 행 이름 뒤바뀜 · 섬유 지름 · 길이 숫자 없음 · 의도 대조 = 일부
 U-1123-5	대피	끝	vanpeene2026_4d_nano_holotomography_dvc_graphite_silicon_chemomechanics · 9084f1279	정독 148 · 새 카드 · 433 줄 · 크롭 77 (그림 · 표 34 · 식 11 · 근거 문단 20 · 영상 정지 12) · 원자료 xlsx 6 대조 · 본문 숫자 ↔ 원자료 어긋남 19 항 (카드 §11) · 의도 대조 = 일부 (거의 채움)
-N-150	대피	차례 기다림		PDF 받음 · Powder Technol. 165 (2006) 105–114 · 4 순위 (1저자 11-23 업로드 · 믹서 논지)
+N-150	대피	도는 중		PDF 받음 · Powder Technol. 165 (2006) 105–114 · 4 순위 (1저자 11-23 업로드 · 믹서 논지) · 시작 11-24 00:30 KST
 N-151	대피	차례 기다림		PDF 받음 · Powder Technol. 164 (2006) 58–64 · 4 순위 (1저자 11-23 업로드 · 믹서 논지)
 N-152	대피	차례 기다림		PDF 받음 · Eur. J. Pharm. Biopharm. 69 (2008) 496–507 · 4 순위 (1저자 11-23 업로드 · 믹서 논지)
 N-153	대피	차례 기다림		PDF 받음 · Chem. Eng. Sci. 86 (2013) 99–107 · 4 순위 (1저자 11-23 업로드 · 믹서 논지)
