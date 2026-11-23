@@ -1,0 +1,7 @@
+# 분석 (fetch_data.py 는 표준 라이브러리만 쓴다). 2026-11-23 에 이 판본들로 돌렸다.
+numpy>=2.0
+scipy>=1.11
+scikit-learn>=1.5
+statsmodels>=0.14
+pytest>=8
+# 웹앱은 webapp/requirements.txt (flask)

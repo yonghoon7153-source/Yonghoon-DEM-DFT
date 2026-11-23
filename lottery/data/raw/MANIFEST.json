@@ -1,0 +1,22 @@
+{
+  "source": "동행복권 dhlottery.co.kr (공식)",
+  "fetched_at_utc": "2026-11-23T04:24:46+00:00",
+  "files": {
+    "lotto645.json": {
+      "url": "https://www.dhlottery.co.kr/lt645/selectPstLt645Info.do?srchStrLtEpsd=1&srchEndLtEpsd=9999",
+      "sha256": "3c4b8ad07a3cf03c5c57e50c8d72a711735e0bf09c2df768a96a2fde1990dcd1",
+      "bytes": 758346,
+      "records": 1251,
+      "latest_round": 1251,
+      "latest_date": "2026-11-21"
+    },
+    "pension720.json": {
+      "url": "https://www.dhlottery.co.kr/pt720/selectPstPt720WnList.do",
+      "sha256": "7830b2c51799374e9ffe384ae696731f124312bc32ed97cebae31aaba8b51ba5",
+      "bytes": 32100,
+      "records": 342,
+      "latest_round": 342,
+      "latest_date": "2026-11-19"
+    }
+  }
+}

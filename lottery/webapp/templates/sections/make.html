@@ -1,0 +1,77 @@
+{% import "_macros.html" as M %}
+{% set S = V.S %}
+<header class="phead">
+  <p class="eyebrow">도구 · 수동 구매용</p>
+  <h1>번호 만들기</h1>
+  <p class="lead">로또는 <b>사람들이 덜 고르는 조합</b>을 고르면 1등이 됐을 때 나눠 가질 사람이 적어 받는 돈의 기대값이
+    커진다(당첨 확률은 모든 조합이 같다). 연금복권은 당첨금이 고정이라 어떤 번호든 똑같다. 추첨은 브라우저의 암호 난수로
+    하고, 고른 번호는 어디에도 저장하거나 보내지 않는다.</p>
+</header>
+
+<div class="maker panel" id="maker" data-score-url="{{ score_url }}">
+  <div class="seg mk-game" role="group" aria-label="게임">
+    <button type="button" class="seg-b is-on" data-game="lotto" aria-pressed="true">로또 6/45</button>
+    <button type="button" class="seg-b" data-game="pension" aria-pressed="false">연금복권720+</button>
+  </div>
+
+  <div id="lotto-panel" class="mk-panel">
+    <div class="mk-row">
+      <div class="mk-ctl"><span class="mk-l">고르는 방식</span>
+        <div class="seg" role="group" aria-label="방식" id="mode-seg">
+          <button type="button" class="seg-b is-on" data-mode="unpopular" aria-pressed="true">비인기 조합</button>
+          <button type="button" class="seg-b" data-mode="random" aria-pressed="false">완전 무작위</button>
+          <button type="button" class="seg-b" data-mode="ddpm" aria-pressed="false">확산 모델 (실험)</button>
+        </div>
+      </div>
+      <label class="mk-ctl" id="pct-ctl"><span class="mk-l">인기도 기준</span>
+        <select id="pct-sel">
+          <option value="10">인기 하위 10% 안에서</option>
+          <option value="20" selected>인기 하위 20% 안에서</option>
+          <option value="30">인기 하위 30% 안에서</option>
+        </select></label>
+      <label class="mk-ctl"><span class="mk-l">게임 수 (한 장 최대 5게임)</span>
+        <select id="lotto-count">{% for k in range(1, 6) %}<option value="{{ k }}"{% if k == 5 %} selected{% endif %}>{{ k }}게임</option>{% endfor %}</select></label>
+    </div>
+    <p class="note mk-help" id="mode-help">전체 8,145,060개 조합 중 사람들이 덜 고르는 쪽에서 무작위로 고른다. 과거 1등 조합, 같은 간격 수열, 4개 이상 연속 번호처럼 따라 사는 사람이 많은 모양은 뺀다.</p>
+
+    <div class="mk-ctl"><span class="mk-l">번호 고정·제외 — 누를 때마다 꼭 포함 → 제외 → 기본 (고정은 5개까지)</span>
+      <div class="numgrid" id="numgrid">{% for n in range(1, 46) %}<button type="button" data-n="{{ n }}" data-s="none" aria-label="{{ n }}번 (기본)">{{ n }}</button>{% endfor %}</div>
+    </div>
+
+    <div class="mk-row">
+      <button type="button" class="btn btn-primary btn-go" id="lotto-go">번호 만들기</button>
+      <button type="button" class="btn" id="lotto-copy">번호 복사</button>
+      <button type="button" class="btn" id="lotto-reset">고정·제외 지우기</button>
+    </div>
+    <p class="mk-msg" id="lotto-msg" role="status"></p>
+    <div class="mk-out" id="lotto-out" aria-live="polite"><noscript><p class="empty">번호를 만들려면 자바스크립트가 필요합니다.</p></noscript></div>
+    <p class="note note-fig">1등 기대 수령액은 최근 52회 평균 1등 총액 <b>{{ S.pool1_recent_mean|won }}원</b>과 회당 판매
+      <b>{{ S.games_next|won }}게임</b>을 기준으로, 같은 조합을 산 사람 수를 인기도 모델로 추정해 계산한 세전 기대값이다.
+      평균 조합은 약 <b>{{ (S.pool1_recent_mean * S.share_avg)|won }}원</b>(평균 {{ '%.1f'|format(S.mu_avg) }}명이 함께 산다).
+      인기도 백분위는 814만 조합 전체를 모델 점수로 줄 세운 위치다.</p>
+
+    <div class="mk-ctl"><span class="mk-l">이미 고른 번호 검사</span>
+      <div class="mk-row"><input type="text" id="my-numbers" inputmode="numeric" placeholder="예: 3 11 19 27 33 42" aria-label="검사할 번호 6개">
+        <button type="button" class="btn" id="check-go">내 번호 검사</button></div>
+    </div>
+    <div class="mk-out" id="check-out"></div>
+  </div>
+
+  <div id="pension-panel" class="mk-panel" hidden>
+    <div class="mk-row">
+      <label class="mk-ctl"><span class="mk-l">조</span>
+        <select id="pension-group"><option value="rand">조 무작위</option>{% for g in range(1, 6) %}<option value="{{ g }}">{{ g }}조</option>{% endfor %}<option value="all">모든 조 (1~5조 같은 번호 5장)</option></select></label>
+      <label class="mk-ctl"><span class="mk-l">장 수</span>
+        <select id="pension-count">{% for k in range(1, 6) %}<option value="{{ k }}"{% if k == 5 %} selected{% endif %}>{{ k }}장</option>{% endfor %}</select></label>
+    </div>
+    <p class="note mk-help">조(1~5)와 6자리 숫자를 암호 난수로 고른다. 연금복권은 당첨금이 정해져 있어 나눠 갖지 않으므로,
+      어떤 번호든 당첨 확률과 기대값이 같다. 모든 조를 사면 1등과 2등을 함께 노릴 수 있지만 한 장당 기대값은 그대로다.</p>
+    <div class="mk-row">
+      <button type="button" class="btn btn-primary btn-go" id="pension-go">번호 만들기</button>
+      <button type="button" class="btn" id="pension-copy">번호 복사</button>
+    </div>
+    <div class="mk-out" id="pension-out" aria-live="polite"></div>
+    <p class="note note-fig">1등 월 700만 원×20년(조+6자리) · 2등 월 100만 원×10년(6자리, 다른 조) · 보너스 월 100만 원×10년 ·
+      3등 100만 원(끝 5자리) · 4등 10만 원 · 5등 5만 원 · 6등 5천 원 · 7등 1천 원(끝 1자리). 동행복권 회차별 당첨 정보에서 확인한 금액이다.</p>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+{% import "_macros.html" as M %}
+{% set pop = V.D.lotto.popularity %}{% set t5 = pop.tiers['5'] %}{% set fp = pop.first_prize_model %}{% set mm = pop.manual_model %}{% set S = V.S %}{% set rec = V.D.lotto.popularity_recovery %}
+<header class="phead">
+  <p class="eyebrow">근거 3 · 회차별 1~5등 당첨자 수</p>
+  <h1>사람들은 어떤 번호를 고르나</h1>
+  <p class="lead">k등 당첨자 수는 '모두가 무작위로 샀다면' 판매 게임 수 × 확률로 정확히 정해진다. 실제가 그보다 많으면 그 주 당첨번호를
+    사람들이 많이 고른 것이다. 5등은 매주 수십만~백만 건이라 측정 오차가 0.1~0.3% 뿐이다. {{ pop.first_round }}회 이후
+    {{ pop.n_draws|num }}회, 역대 {{ V.meta.total_games|won }} 게임의 선택이 이 숫자들에 담겨 있다.</p>
+  {{ M.verdict('diff', '뚜렷한 패턴 있음', '5등 당첨자 수만으로 그 주 번호의 인기를 ' ~ t5.r2_oof|pct ~ ' 설명한다 (처음 보는 회차 기준)') }}
+</header>
+
+<div class="lgrid">
+  <div class="panel" id="numbers">
+    <h2 class="panel-h">번호별 인기도 <span class="src-of">그 번호가 당첨번호에 있을 때 5등 당첨자 수 변화 (%)</span></h2>
+    {{ M.course('확률과통계 12주 다중회귀', '14주 카이제곱 (Wald)') }}
+    {{ M.legend([('bar', 'pos4', '많이 고름 — 1등을 나눠 가질 사람이 많다'), ('bar', 'neg4', '덜 고름'), ('line', 'k-err', '95% 구간')]) }}
+    <figure class="chart-fig">{{ M.columns(V.pop_chart) }}
+      <figcaption>많이 고르는 번호: <b>{{ V.pop_rank[:6]|join(', ') }}</b>. 덜 고르는 번호: <b>{{ V.pop_rank[-6:]|reverse|join(', ') }}</b>.
+        생일·날짜로 고를 수 있는 31 이하가 대체로 인기이고 7 이 1위다. 45개 효과가 모두 0 이라는 가설은
+        Wald χ² = {{ pop.number_effect.wald_chi2|num }}(44 자유도)로 기각된다. 전반기와 후반기에 따로 추정한 값의 상관은
+        {{ '%.2f'|format(t5.era_beta_r) }}.</figcaption></figure>
+    {{ M.tableview(['번호', '인기도 (%)', '95% 구간 ±', '순위'], V.pop_rows, (1, 2, 3)) }}
+  </div>
+
+  <div class="panel" id="shapes">
+    <h2 class="panel-h">모양 효과 — 지난주 번호는 피한다</h2>
+    {{ M.course('확률과통계 12주 다중회귀') }}
+    <div class="tablewrap full"><table class="data">
+      <thead><tr><th>조합의 모양</th><th>5등 당첨자 변화</th><th>p</th></tr></thead>
+      <tbody>
+      {% for k, label in [('prev_overlap', '지난 회차 번호 1개 겹칠 때마다'), ('consec', '연번 쌍 1개당'), ('slip_col_max', '용지 같은 세로줄 1개 더'), ('slip_row_max', '용지 같은 가로줄 1개 더')] %}
+      <tr><td>{{ label }}</td><td class="num">{{ (t5.theta[k] * 100)|signed }}%</td><td class="num">{{ t5.theta_p[k]|p }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    <p class="pnote">직전 회차 당첨번호가 섞인 조합은 덜 팔린다(겹치는 번호 1개당 {{ (t5.theta.prev_overlap * 100)|signed(1) }}%,
+      p = {{ t5.theta_p.prev_overlap|p }}). '방금 나온 번호는 또 안 나온다'는 도박사의 오류로, 해외 복권 연구에서도 보고된 현상이다.
+      용지 세로줄 효과는 약하게만 보인다. 용지가 한 줄에 7개씩 배치돼 있다는 것은 가정이고, 가정이 틀리면 이 효과가 0 으로 나올 뿐
+      나머지 추정에는 영향이 없다.</p>
+  </div>
+
+  <div class="panel" id="manual">
+    <h2 class="panel-h">검증 ① 인기 조합일수록 1등 중 수동이 많다</h2>
+    {{ M.course('확률과통계 5주 이항분포', '12주 회귀 (로지스틱)') }}
+    <figure class="chart-fig">{{ M.columns(V.manual_chart) }}
+      <figcaption>자동은 기계가 무작위로 고르므로 어떤 조합이든 똑같이 당첨된다 — 대조군이다. 그래서 같은 조합의 1등 중 수동 비율을 보면 수동
+        구매자가 그 조합을 얼마나 좋아했는지 알 수 있다. 인기도 점수는 5등 자료로만 만들었는데(그 회차는 학습에서 뺐다) 수동 비율이
+        {{ mm.by_s[0].manual_share|pct }}에서 {{ mm.by_s[-1].manual_share|pct }}로 올라간다({{ mm.n_draws|num }}회, 1등 {{ (mm.manual + mm.auto)|num }}명,
+        p = {{ mm.delta1_p|p }}).</figcaption></figure>
+  </div>
+
+  <div class="panel" id="first">
+    <h2 class="panel-h">검증 ② 인기 점수가 1등 당첨자 수를 예측한다</h2>
+    {{ M.course('확률과통계 5주 포아송분포', '12주 회귀') }}
+    {{ M.legend([('bar', 'k-accent', '실제 1등 수 ÷ 무작위 기대'), ('line', 'k-ref', '모델 예측')]) }}
+    <figure class="chart-fig">{{ M.columns(V.calib_chart) }}
+      <figcaption>x 축은 인기도 10분위(1 = 가장 덜 인기). 1등 당첨자 수 ~ 포아송(기대 × e<sup>γ·점수</sup>)에서
+        γ = {{ '%.2f'|format(fp.gamma1) }} ± {{ '%.2f'|format(fp.gamma1_se) }}(p = {{ fp.gamma1_p|p }}). 1등은 매주 10명 안팎이라 한 회차씩은
+        들쭉날쭉하지만 1,000회 넘게 모으면 방향이 분명하다.</figcaption></figure>
+  </div>
+
+  <div class="panel" id="payoff">
+    <h2 class="panel-h">그래서 얼마나 득인가 — 인기도별 1등 기대 수령액</h2>
+    {{ M.course('확률과통계 5주 포아송분포 · 기대값') }}
+    <figure class="chart-fig">{{ M.line(V.payoff_chart) }}
+      <figcaption>x 축은 814만 조합을 모델 인기도로 줄 세운 백분위, y 축은 1등이 됐을 때 받는 기대 금액(평균 조합 = 1).
+        한 주 {{ S.games_next|won }}게임이 팔리면 평균 조합은 약 {{ '%.1f'|format(S.mu_avg) }}명이 함께 산다. 모델은 실제 당첨번호(무작위 표본)로
+        학습해서 1·2·3·4·5·6 처럼 극단적으로 인기 있는 조합의 쏠림은 과소평가한다 — 그런 모양은 생성기에서 규칙으로 따로 뺀다.</figcaption></figure>
+  </div>
+
+  <div class="panel" id="checks">
+    <h2 class="panel-h">모델 점검</h2>
+    {{ M.course('머신러닝 2 일반화 · 교차검증') }}
+    <div class="tablewrap full"><table class="data">
+      <thead><tr><th>점검</th><th>결과</th></tr></thead>
+      <tbody>
+      {% for k, t in pop.tiers.items() %}<tr><td>{{ k }}등 비율 — 처음 보는 회차 R² (시간 블록 5-fold)</td><td class="num">{{ '%.3f'|format(t.r2_oof) }}</td></tr>{% endfor %}
+      <tr><td>전반기 vs 후반기 번호효과 상관 (5등)</td><td class="num">{{ '%.3f'|format(t5.era_beta_r) }}</td></tr>
+      <tr><td>양성 대조 — 선호를 아는 가상 구매자 {{ rec.n_draws }}회에서 되찾은 상관</td><td class="num">{{ '%.4f'|format(rec.corr) }}</td></tr>
+      <tr><td>1등 수 모델의 이탈도 설명 비율</td><td class="num">{{ fp.deviance_explained|pct(1) }}</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>

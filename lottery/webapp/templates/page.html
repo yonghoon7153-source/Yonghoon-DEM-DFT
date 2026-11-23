@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{% if onepage %}복권 번호 연구소{% else %}{{ title }} · 복권 번호 연구소{% endif %}{% endblock %}
+{% block content %}
+{# 화면 하나 = 섹션 하나. /all 은 섹션 전부를 이어 붙인 한 장짜리 (freeze.py 가 내보낸다). #}
+{% for s in sections %}
+<section class="lsec" id="{{ s }}" aria-label="{{ s }}">
+{% include "sections/" ~ s ~ ".html" %}
+</section>
+{% endfor %}
+{% endblock %}
+{% block scripts %}
+{% if 'make' in sections %}<script src="{{ url_for('static', filename='js/make.js') }}?v={{ asset_version }}" defer></script>{% endif %}
+{% endblock %}

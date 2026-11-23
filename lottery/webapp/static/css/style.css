@@ -1,0 +1,723 @@
+/* 출처: claude/14-gate-code-review-9qkx05 @ 39c660e0e 의 webapp/static/css/style.css — 공통 구획만 그대로 가져왔다.
+   가져온 행: 1-543 (폰트·토큰·타이포·기본·접근성·사이드바·본문 틀·숫자 타일·패널·버튼·키값·배지·칩),
+   827-876 (차트·표), 934-969 (커맨드 팔레트·404), 1023-1104 (좁은 화면·인쇄), 1468-1472 (.nav-tag).
+   뺀 것: 마크다운 본문·질문 카드·타임라인·게이트·figref·메모·파이프라인·리더 (복권 웹앱에 없는 화면).
+   복권 화면 전용 스타일은 lottery.css 에 따로 둔다 — 이 파일은 원본과 diff 가 쉽게 남도록 고치지 않는다. */
+/* ============================================================================
+   style.css — Yonghoon-DEM-DFT 모노레포 열람기
+   ----------------------------------------------------------------------------
+   설계 전제 셋 (이걸 알고 봐야 왜 이렇게 생겼는지 읽힌다)
+
+   1. 외부 자원이 **하나도** 없다. CSP 가 `default-src 'self'` 라 CDN 을 못 쓴다.
+      그래서 폰트도 **저장소 안에 두고 우리가 직접 서빙**한다 (`static/fonts/`,
+      아래 @font-face). 아이콘은 base.html 의 인라인 SVG 스프라이트다.
+   2. 이 앱은 **긴 기술 문서를 읽는 도구**다. 6만 자짜리 논문 digest 가 주 화면이고,
+      한글·영문·수식·코드가 한 문단에 섞인다. 장식보다 본문 폭·행간·제목 계층이
+      먼저다. 등장 애니메이션 같은 건 없다 (상태 변화에만 150~200ms).
+   3. 다크 모드가 **덤이 아니다.** 연구실에서 밤에 본다. 토큰을 두 벌 다 손으로
+      골랐고, 라이트에서 쓴 값을 그냥 뒤집지 않았다.
+   ========================================================================== */
+
+/* ── 폰트: 저장소가 들고 있다 ─────────────────────────────────────────────
+   왜 시스템 폰트를 버렸나 — 이 앱의 주 화면은 **한글·영문·코드가 한 문단에
+   섞인** 논문 digest 다. Windows 의 기본 한글 폰트(맑은 고딕)는 획이 가늘고
+   라틴 글자가 Segoe UI 로 갈아 끼워지면서 한 줄 안에서 굵기와 기준선이 흔들린다.
+   Pretendard 는 한글과 라틴을 **한 벌로** 그린 폰트라 그 흔들림이 없다.
+
+   두 파일 다 SIL Open Font License 1.1 이라 재배포할 수 있다. 원본을 그대로
+   두지 않고 이 위키가 실제로 쓰는 문자만 남겼다 (`static/fonts/LICENSE.md` 에
+   출처·판본·잘라낸 범위를 적어 뒀다).
+
+   `font-display: swap` — 폰트가 도착하기 전에도 글이 먼저 보여야 한다. */
+@font-face {
+  font-family: "Pretendard";
+  src: url("../fonts/Pretendard.subset.woff2") format("woff2-variations"),
+       url("../fonts/Pretendard.subset.woff2") format("woff2");
+  font-weight: 45 920;   /* 가변축 — 640 같은 중간 굵기를 진짜로 그린다 */
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+/* ── 토큰: 라이트 ─────────────────────────────────────────────────────── */
+:root {
+  --bg:         #f3f2ee;   /* 종이에 가까운 따뜻한 회백 — 순백은 오래 못 읽는다 */
+  --surface:    #ffffff;
+  --surface-2:  #f9f8f4;
+  --surface-3:  #edece7;
+  --line:       #dfddd5;
+  --line-2:     #eceae4;
+  --ink:        #14161a;
+  --ink-2:      #33383f;
+  /* ⚠ ink-3 은 캡션·메타·눈금 같은 **작은 글자**에 쓴다. 예쁜 회색을 고르면
+     작은 글자에서 AA(4.5:1)가 깨진다 — 이 값은 흰 카드·회색 카드·본문 바탕
+     셋 모두에서 4.5 를 넘도록 잡았다 (#737a85 는 4.07 로 모자랐다).
+     2026-09-03: #646b75 (4.9:1) 도 "흐리다" 는 지적을 받아 한 단 더 내렸다 —
+     AA 를 겨우 넘기는 것과 **읽기 편한 것**은 다르다. 지금은 6.0:1 근처. */
+  --ink-3:      #545b66;
+
+  --accent:      #175d8d;
+  --accent-2:    #0f4569;
+  --accent-soft: #e5eff7;
+  /* ⚠ accent 를 **바탕으로** 깔았을 때의 글자색. `#fff` 를 박아 두면 안 된다 —
+     다크의 accent 는 밝은 하늘색이라 흰 글자가 2.31:1 로 안 읽힌다. */
+  --on-accent:   #ffffff;
+
+  --ok:   #1c7a4d;  --ok-soft:   #e4f2eb;
+  --bad:  #ab392f;  --bad-soft:  #fbeae7;
+  --warn: #8c5d0e;  --warn-soft: #f7efdb;
+  --gap:  #59499f;  --gap-soft:  #edeaf8;
+
+  /* 차트 계열 — 색은 **넷째** 단서다 (파선·점 모양·끝 라벨이 먼저) */
+  --c-a: #175d8d;   /* LLI    */
+  --c-b: #b0631a;   /* LAM_PE */
+  --c-c: #59499f;   /* LAM_NE */
+
+  /* ══ 종류 색 — 이 위키의 **3층 구조**를 부호로 만든 것 ══════════════════
+     색은 장식이 아니라 "이 글의 근거 등급이 무엇인가" 를 말한다. 처음 온
+     사람이 색만 보고 셋을 갈라 볼 수 있어야 한다 (홈의 `색이 뜻하는 것`
+     범례가 같은 토큰을 쓴다 — 한 곳에서 바꾸면 둘 다 따라온다).
+
+       1층 raw/  — 불변 원본. sha256 봉인. 우리가 못 고친다        → --k-raw
+       2층 컴파일 — 우리가 원본에서 **판단해 쓴** 것               → 종류별 색
+       3층 산출물 — 기계가 낸 수치. 정본은 artifact·RESULTS*.md    → --k-out  */
+  --k-raw:  #175d8d;  --k-raw-soft:  #e5eff7;   /* 논문 digest (불변) */
+  --k-q:    #59499f;  --k-q-soft:    #edeaf8;   /* 열린 질문 (미결) */
+  --k-c:    #0f6f6b;  --k-c-soft:    #e0f0ef;   /* 개념 (정리된 판단) */
+  --k-e:    #1c7a4d;  --k-e-soft:    #e4f2eb;   /* satellite (살아 있는 프로젝트) */
+  --k-out:  #b0631a;  --k-out-soft:  #f8ecdf;   /* 연구 산출물 (기계 출력) */
+  --k: var(--accent); --k-soft: var(--accent-soft);   /* 현재 화면의 종류 */
+
+  --shadow-1: 0 1px 2px rgba(20,22,26,.05), 0 1px 3px rgba(20,22,26,.045);
+  --shadow-2: 0 4px 14px rgba(20,22,26,.09), 0 16px 40px rgba(20,22,26,.08);
+  --mark:     rgba(233, 178, 42, .38);
+
+  color-scheme: light;
+}
+
+/* ── 토큰: 다크 ──────────────────────────────────────────────────────── */
+:root[data-theme="dark"] {
+  --bg:         #0f1114;
+  --surface:    #16191e;
+  --surface-2:  #1c2027;
+  --surface-3:  #242931;
+  --line:       #2c323b;
+  --line-2:     #232830;
+  --ink:        #e7e8ea;
+  --ink-2:      #c5cbd4;
+  --ink-3:      #9ba2ad;
+
+  --accent:      #6cb2e2;
+  --accent-2:    #9bcef0;
+  --accent-soft: #142b3c;
+  --on-accent:   #0f1114;   /* 밝은 하늘색 바탕 — 글자는 어둡게 (8.20:1) */
+
+  --ok:   #56c08a;  --ok-soft:   #11291f;
+  --bad:  #ef8a80;  --bad-soft:  #2e1a18;
+  --warn: #dcaa61;  --warn-soft: #2b2214;
+  --gap:  #a99ce8;  --gap-soft:  #211f36;
+
+  --c-a: #6cb2e2;
+  --c-b: #e0a35e;
+  --c-c: #a99ce8;
+
+  --k-raw: #6cb2e2;  --k-raw-soft: #142b3c;
+  --k-q:   #a99ce8;  --k-q-soft:   #211f36;
+  --k-c:   #4fb8b1;  --k-c-soft:   #102b2a;
+  --k-e:   #56c08a;  --k-e-soft:   #11291f;
+  --k-out: #e0a35e;  --k-out-soft: #2d2114;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,.34), 0 1px 3px rgba(0,0,0,.3);
+  --shadow-2: 0 6px 18px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.42);
+  --mark:     rgba(228, 178, 66, .3);
+
+  color-scheme: dark;
+}
+
+/* OS 설정이 다크인데 사용자가 라이트를 고르지 않았을 때 — 위 블록과 같은 값 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0f1114; --surface:#16191e; --surface-2:#1c2027; --surface-3:#242931;
+    --line:#2c323b; --line-2:#232830;
+    --ink:#e7e8ea; --ink-2:#c5cbd4; --ink-3:#9ba2ad;
+    --accent:#6cb2e2; --accent-2:#9bcef0; --accent-soft:#142b3c; --on-accent:#0f1114;
+    --ok:#56c08a; --ok-soft:#11291f; --bad:#ef8a80; --bad-soft:#2e1a18;
+    --warn:#dcaa61; --warn-soft:#2b2214; --gap:#a99ce8; --gap-soft:#211f36;
+    --c-a:#6cb2e2; --c-b:#e0a35e; --c-c:#a99ce8;
+    --k-raw:#6cb2e2; --k-raw-soft:#142b3c; --k-q:#a99ce8; --k-q-soft:#211f36;
+    --k-c:#4fb8b1;  --k-c-soft:#102b2a;  --k-e:#56c08a; --k-e-soft:#11291f;
+    --k-out:#e0a35e; --k-out-soft:#2d2114;
+    --shadow-1: 0 1px 2px rgba(0,0,0,.34), 0 1px 3px rgba(0,0,0,.3);
+    --shadow-2: 0 6px 18px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.42);
+    --mark: rgba(228,178,66,.3);
+    color-scheme: dark;
+  }
+}
+
+/* ── 타이포 스케일 ────────────────────────────────────────────────────
+   전에는 15px 하나로 본문·캡션·코드·제목을 다 했다. 크기만이 아니라 **행간과
+   자간이 함께** 움직여야 계층이 보인다: 작은 글자는 촘촘하면 안 읽히고
+   (--lh-ui), 큰 제목은 행간이 넓으면 흩어진다 (--lh-tight). */
+:root {
+  /* 앞의 둘은 우리가 서빙하는 파일, 뒤는 도착 전(또는 실패 시) 대역 */
+  --sans: "Pretendard", "Pretendard Variable", system-ui, -apple-system,
+          "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR",
+          "Malgun Gothic", "맑은 고딕", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+          Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+
+  --fs-3xl: 1.875rem;   /* 30px  페이지 제목            */
+  --fs-2xl: 1.375rem;   /* 22px  본문 h1 / 큰 절 제목   */
+  --fs-xl:  1.1875rem;  /* 19px  h2                     */
+  --fs-lg:  1.0625rem;  /* 17px  h3 · 카드 제목         */
+  --fs-md:  1rem;       /* 16px  본문                   */
+  --fs-sm:  .9375rem;   /* 15px  촘촘한 본문 · UI       */
+  /* 작은 쪽 셋은 2026-09-03 에 한 단씩 올렸다 — 11px 는 한글에서 받침이 뭉갠다.
+     (13.5 / 12.5 / 11.5px. 실수 px 는 브라우저가 서브픽셀로 처리한다.) */
+  --fs-xs:  .84375rem;  /* 13.5px  메타 · 캡션          */
+  --fs-2xs: .78125rem;  /* 12.5px  칩 · 라벨            */
+  --fs-3xs: .71875rem;  /* 11.5px  눈금 · 아이브라우    */
+
+  --lh-prose: 1.78;     /* 한글 본문은 라틴보다 행간이 더 필요하다 */
+  --lh-ui:    1.5;
+  --lh-tight: 1.28;
+
+  --measure: 78ch;      /* 본문 폭. 한글은 라틴보다 글자당 폭이 넓어 68ch 면
+                           한 줄에 45자밖에 안 들어간다 — 표·인용이 많은 이
+                           위키에서는 줄이 너무 자주 끊긴다. */
+  --rail: 258px;        /* 사이드바 */
+  --r-sm: 7px; --r: 11px; --r-lg: 15px;
+  --t: 160ms cubic-bezier(.3, .7, .4, 1);
+}
+
+/* ── 기본 ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--fs-md);
+  line-height: var(--lh-ui);
+  /* Pretendard 는 가변축이라 400 과 450 사이가 실제로 그려진다. 한글 본문은
+     라틴보다 획이 촘촘해 400 이면 화면에서 얇게 보인다 — 반 단 올린다.
+     (`-webkit-font-smoothing: antialiased` 는 **뺐다**. macOS 에서 획을 더
+      얇게 만들어 지금 고치려는 문제를 다시 만든다.) */
+  font-weight: 430;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 { line-height: var(--lh-tight); letter-spacing: -.014em; margin: 0; font-weight: 640; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-2); text-decoration: underline; text-underline-offset: 2px; }
+
+code, .mono, pre, kbd { font-family: var(--mono); font-variant-ligatures: none; }
+code { font-size: .875em; }
+:not(pre) > code {
+  background: var(--surface-2); border: 1px solid var(--line-2);
+  border-radius: 5px; padding: .08em .34em; color: var(--ink-2);
+  overflow-wrap: break-word;
+}
+pre {
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 13px 15px; overflow-x: auto;
+  font-size: var(--fs-xs); line-height: 1.6; margin: 0;
+}
+pre code { border: 0; background: none; padding: 0; font-size: inherit; }
+
+.muted { color: var(--ink-3); font-weight: 400; }
+.wrap  { overflow-wrap: anywhere; }
+.num   { font-variant-numeric: tabular-nums; }
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* 아이콘 — 선 굵기·캡을 한 곳에서 정한다 */
+.ic {
+  width: 1.05em; height: 1.05em; flex: 0 0 auto;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ── 접근성 기반 ──────────────────────────────────────────────────────── */
+a:focus-visible, button:focus-visible, input:focus-visible,
+summary:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.skip-link {
+  position: fixed; left: 12px; top: -60px; z-index: 200;
+  background: var(--accent); color: var(--on-accent); padding: 10px 16px;
+  border-radius: var(--r-sm); font-size: var(--fs-sm); font-weight: 600;
+  transition: top var(--t);
+}
+.skip-link:focus { top: 12px; text-decoration: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    transition-duration: .001ms !important;
+    animation-duration: .001ms !important;
+  }
+}
+
+/* ══ 사이드바 ═══════════════════════════════════════════════════════════ */
+.sidebar {
+  position: fixed; inset: 0 auto 0 0; width: var(--rail); z-index: 40;
+  background: var(--surface); border-right: 1px solid var(--line);
+  padding: 20px 14px 14px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 2px;
+  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+}
+.sidebar-header { padding: 0 8px 4px; }
+.brand { font-size: var(--fs-lg); font-weight: 700; color: var(--ink); letter-spacing: -.022em; }
+.brand:hover { text-decoration: none; color: var(--ink); }
+.brand-accent { color: var(--accent); }
+.brand-sub { font-size: var(--fs-3xs); color: var(--ink-3); margin-top: 3px; letter-spacing: .01em; }
+
+/* 팔레트 열기 버튼 — 사이드바의 검색 입력을 대신한다.
+   페이지가 20개 남짓이라 "훑어 찾기" 보다 "이름 대고 바로 가기" 가 빠르다. */
+.cmdk-open {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  margin: 12px 0 6px; padding: 8px 10px;
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: var(--surface-2); color: var(--ink-3);
+  font: inherit; font-size: var(--fs-xs); cursor: pointer;
+  transition: border-color var(--t), color var(--t);
+}
+.cmdk-open:hover { border-color: var(--accent); color: var(--ink-2); }
+.cmdk-open span { flex: 1; text-align: left; }
+.kbd {
+  font-family: var(--mono); font-size: var(--fs-3xs); line-height: 1;
+  padding: 3px 5px; border: 1px solid var(--line);
+  border-bottom-width: 2px; border-radius: 5px;
+  background: var(--surface); color: var(--ink-3);
+}
+
+.nav-section {
+  margin: 16px 0 5px; padding: 0 9px;
+  font-size: var(--fs-3xs); font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3);
+}
+.nav-links { list-style: none; margin: 0; padding: 0; }
+.nav-links a {
+  position: relative;
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 10px; border-radius: var(--r-sm);
+  color: var(--ink-2); font-size: var(--fs-sm); font-weight: 500;
+  transition: background var(--t), color var(--t);
+}
+.nav-links a:hover { background: var(--surface-2); color: var(--ink); text-decoration: none; }
+.nav-links a .ic { color: var(--ink-3); transition: color var(--t); }
+.nav-links a:hover .ic { color: var(--ink-2); }
+
+/* 현재 위치 — 색·굵기만이 아니라 **왼쪽 막대**로도 표시한다 */
+.nav-links a.active {
+  background: var(--accent-soft); color: var(--accent); font-weight: 640;
+}
+.nav-links a.active .ic { color: var(--accent); }
+.nav-links a.active::before {
+  content: ""; position: absolute; left: -14px; top: 50%;
+  width: 3px; height: 20px; margin-top: -10px;
+  background: var(--accent); border-radius: 0 3px 3px 0;
+}
+
+.sidebar-footer { margin-top: auto; padding-top: 14px; }
+.theme-toggle {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 8px; border-radius: var(--r-sm);
+  border: 1px solid var(--line); background: var(--surface-2);
+  color: var(--ink-2); font: inherit; font-size: var(--fs-xs); cursor: pointer;
+  transition: border-color var(--t), color var(--t);
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.ro-note {
+  margin: 12px 0 0; padding: 10px 11px;
+  border: 1px dashed var(--line); border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: var(--fs-3xs); line-height: 1.62; color: var(--ink-3);
+  word-break: keep-all;
+}
+.ro-note .ic { float: left; margin: 1px 6px 0 0; color: var(--ink-3); }
+.ro-note code { font-size: .95em; padding: 0 3px; }
+
+.menu-toggle, .nav-veil { display: none; }
+
+/* ══ 본문 틀 ════════════════════════════════════════════════════════════ */
+.content {
+  margin-left: var(--rail);
+  padding: 34px clamp(20px, 3.6vw, 46px) 100px;
+  max-width: calc(var(--rail) + 1180px);
+}
+
+.phead { margin-bottom: 26px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.phead h1 { font-size: var(--fs-3xl); letter-spacing: -.024em; }
+.eyebrow {
+  margin: 0 0 7px; font-size: var(--fs-3xs); font-weight: 700;
+  letter-spacing: .11em; text-transform: uppercase; color: var(--ink-3);
+}
+.lead {
+  margin: 11px 0 0; max-width: 74ch;
+  font-size: var(--fs-sm); line-height: 1.7; color: var(--ink-2);
+  word-break: keep-all; overflow-wrap: break-word;
+}
+/* ★ 제목에 `max-width: 30ch` 을 걸어 뒀더니 영문 논문 제목이 세 줄로 접혔다
+   (실측: "Wang et al. 2025 — Interpretable ML / for Battery Prognosis (Adv.
+   Energy / Mater. 15)"). 30ch 은 한글엔 맞아도 영문 서지엔 너무 좁다.
+   폭은 칸이 정하게 두고, 줄이 갈릴 때만 고르게 나누도록 `balance` 를 준다. */
+.doc-head h1 {
+  font-size: var(--fs-2xl); line-height: var(--lh-tight);
+  word-break: keep-all; text-wrap: balance;
+}
+
+.crumbs {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 7px;
+  margin-bottom: 12px; font-size: var(--fs-xs); color: var(--ink-3);
+}
+.crumbs b { font-family: var(--mono); font-weight: 500; color: var(--ink-2); font-size: .95em; }
+
+.note {
+  margin: 14px 0; padding: 11px 14px;
+  border-left: 3px solid var(--accent); border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: var(--accent-soft); color: var(--ink-2);
+  font-size: var(--fs-xs); line-height: 1.68; word-break: keep-all;
+}
+.note-fig { border-left-color: var(--ink-3); background: var(--surface-2); }
+.empty { color: var(--ink-3); font-size: var(--fs-sm); padding: 18px 0; }
+
+/* ── 숫자 타일 ─────────────────────────────────────────────────────── */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 12px; margin-bottom: 26px; }
+.stat {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--surface); color: var(--ink); box-shadow: var(--shadow-1);
+  transition: border-color var(--t), box-shadow var(--t);
+}
+a.stat:hover { border-color: var(--accent); text-decoration: none; box-shadow: var(--shadow-2); }
+.stat b { font-size: 1.6rem; font-weight: 660; line-height: 1.05; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.stat span { font-size: var(--fs-2xs); color: var(--ink-3); }
+.stat.is-static { background: var(--surface-2); box-shadow: none; }
+
+/* ── 패널 · 카드 ──────────────────────────────────────────────────── */
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: 20px 24px; margin-bottom: 18px; box-shadow: var(--shadow-1);
+}
+.panel-h {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px;
+  margin: 0 0 14px; padding-bottom: 11px; border-bottom: 1px solid var(--line-2);
+  font-size: var(--fs-lg);
+}
+.sub-h { margin: 22px 0 8px; font-size: var(--fs-sm); font-weight: 640; color: var(--ink-2); }
+.src-of {
+  font-size: var(--fs-2xs); font-weight: 400; color: var(--ink-3);
+  background: none; border: 0; padding: 0;
+}
+.split { display: grid; grid-template-columns: 1.12fr .88fr; gap: 18px; align-items: start; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
+.cards-wide { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); }
+.card {
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow-1); overflow: hidden;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+.card:hover { border-color: var(--line); box-shadow: var(--shadow-2); }
+.card-body { padding: 17px 18px 14px; flex: 1; }
+.card-t { display: block; font-size: var(--fs-lg); font-weight: 640; color: var(--ink); letter-spacing: -.015em; word-break: keep-all; }
+.card-t:hover { color: var(--accent); text-decoration: none; }
+.card-d { margin: 7px 0 11px; font-size: var(--fs-xs); line-height: 1.62; color: var(--ink-2); word-break: keep-all; }
+.card-foot {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+  padding: 11px 18px; border-top: 1px solid var(--line-2); background: var(--surface-2);
+  font-size: var(--fs-2xs); color: var(--ink-3);
+}
+.card-path {
+  display: block; padding: 6px 18px 8px; background: var(--surface-2);
+  border: 0; border-top: 1px solid var(--line-2);
+  font-size: var(--fs-3xs); color: var(--ink-3); overflow-wrap: anywhere;
+}
+.card-paper { border-top: 3px solid var(--accent); }
+.card-q     { border-top: 3px solid var(--gap); }
+.card-ent   { border-top: 3px solid var(--ok); }
+.figcount b { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+/* ── 버튼 ─────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px; border-radius: var(--r-sm);
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink-2); font: inherit; font-size: var(--fs-xs); font-weight: 500;
+  cursor: pointer; white-space: nowrap;
+  transition: border-color var(--t), color var(--t), background var(--t);
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: var(--on-accent); }
+.btn-go { font-weight: 600; }
+.btn.sm { padding: 2px 8px; font-size: var(--fs-3xs); }
+
+/* 분절 컨트롤 (게이트 라운드 수) */
+.seg { display: inline-flex; align-items: center; gap: 4px; margin-top: 14px; flex-wrap: wrap; }
+.seg-l { font-size: var(--fs-2xs); color: var(--ink-3); margin-right: 3px; }
+.seg-b {
+  padding: 5px 11px; border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: var(--surface); color: var(--ink-2); font-size: var(--fs-2xs);
+  transition: border-color var(--t), background var(--t), color var(--t);
+}
+.seg-b:hover { border-color: var(--accent); text-decoration: none; }
+.seg-b.is-on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+
+/* ── 키·값 ────────────────────────────────────────────────────────── */
+.kv {
+  display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px 14px; margin: 10px 0 0; font-size: var(--fs-xs);
+}
+.kv dt { color: var(--ink-3); }
+.kv dd { margin: 0; color: var(--ink-2); min-width: 0; }
+.kv-sm { font-size: var(--fs-3xs); gap: 3px 12px; }
+.kv-inline { margin-top: 14px; }
+.dt-note { font-size: .88em; opacity: .75; }
+
+/* ── 배지 (frontmatter) ───────────────────────────────────────────────
+   색만으로 구분하지 않는다: 글리프 + 축 이름 + 값 문자열이 항상 함께 있고,
+   색은 그 위에 얹는 넷째 단서다. #}                                        */
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
+.badge {
+  display: inline-flex; align-items: center;
+  border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
+  font-size: var(--fs-3xs); line-height: 1.7; background: var(--surface);
+}
+.badge .b-glyph { padding: 0 5px 0 6px; font-size: .95em; color: var(--ink-3); }
+.badge .b-key   { padding: 0 6px 0 1px; color: var(--ink-3); }
+.badge .b-val   { padding: 0 7px; font-weight: 650; background: var(--surface-2); color: var(--ink-2); }
+.badge.tone-good .b-glyph, .badge.tone-good .b-val { color: var(--ok); }
+.badge.tone-good { border-color: color-mix(in srgb, var(--ok) 32%, var(--line)); }
+.badge.tone-mid  .b-glyph, .badge.tone-mid  .b-val { color: var(--warn); }
+.badge.tone-mid  { border-color: color-mix(in srgb, var(--warn) 32%, var(--line)); }
+.badge.tone-weak .b-glyph, .badge.tone-weak .b-val { color: var(--ink-3); }
+.badge.tone-bad  .b-glyph, .badge.tone-bad  .b-val { color: var(--bad); }
+.badge.tone-bad  { border-color: color-mix(in srgb, var(--bad) 32%, var(--line)); }
+.badge.tone-info .b-glyph, .badge.tone-info .b-val { color: var(--accent); }
+
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0 0; }
+.tag {
+  font-size: var(--fs-3xs); color: var(--ink-3);
+  background: var(--surface-2); border: 1px solid var(--line-2);
+  border-radius: 5px; padding: 1px 7px;
+}
+.tag::before { content: "#"; opacity: .5; }
+
+.srcs { display: flex; gap: 9px; align-items: baseline; margin-top: 12px; font-size: var(--fs-3xs); }
+.srcs-h { flex: 0 0 auto; color: var(--ink-3); text-transform: uppercase; letter-spacing: .09em; font-weight: 700; }
+.srcs-l { display: flex; flex-wrap: wrap; gap: 4px 10px; min-width: 0; }
+.src { font-family: var(--mono); border-bottom: 1px dotted currentColor; overflow-wrap: anywhere; }
+.src-plain { color: var(--ink-3); border-bottom-style: none; }
+
+/* ── 칩 ───────────────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-3xs); font-weight: 500; line-height: 1.75;
+  padding: 0 8px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-3);
+  white-space: nowrap;
+}
+.chip.kind { text-transform: lowercase; letter-spacing: .04em; }
+.chip-now  { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); color: var(--accent); background: var(--accent-soft); }
+.st-open, .st-active { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 36%, var(--line)); background: var(--warn-soft); }
+.st-answered, .st-closed { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 36%, var(--line)); background: var(--ok-soft); }
+.act { text-transform: uppercase; letter-spacing: .07em; font-weight: 700; font-size: var(--fs-3xs); }
+.act-ingest { color: var(--accent); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, var(--line)); }
+.act-create { color: var(--ok);     background: var(--ok-soft);     border-color: color-mix(in srgb, var(--ok) 30%, var(--line)); }
+.act-update { color: var(--warn);   background: var(--warn-soft);   border-color: color-mix(in srgb, var(--warn) 30%, var(--line)); }
+.act-query, .act-verify { color: var(--gap); background: var(--gap-soft); border-color: color-mix(in srgb, var(--gap) 30%, var(--line)); }
+
+/* ══ 차트 (인라인 SVG · 라이브러리 없음) ════════════════════════════════ */
+.chart-fig { margin: 4px 0 0; }
+.chart { display: block; width: 100%; height: auto; max-width: 860px; margin: 0 auto; }
+.c-grid   { stroke: var(--line); stroke-width: 1; }
+.c-grid-v { stroke: var(--line-2); }
+.c-axis   { stroke: var(--ink-3); stroke-width: 1.2; }
+.c-tick   { fill: var(--ink-3); font-family: var(--mono); font-size: 12px; }
+.c-tick-y { text-anchor: end; dominant-baseline: middle; }
+.c-tick-x { text-anchor: middle; }
+.c-axlabel { fill: var(--ink-2); font-family: var(--sans); font-size: 12.5px; font-weight: 600; text-anchor: middle; }
+.c-line { stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+.c-pt   { stroke-width: 1.4; }
+.c-endlabel { font-family: var(--sans); font-size: 12.5px; font-weight: 700; }
+.c-cut { fill: var(--ink-3); font-family: var(--sans); font-size: 11px; }
+/* 계열: 색 + **파선 패턴** + 점 모양(템플릿) + 끝 라벨 — 네 겹의 중복 부호화 */
+.c-a .c-line { stroke: var(--c-a); }
+.c-a .c-pt   { fill: var(--c-a); stroke: var(--surface); }
+.c-a .c-endlabel { fill: var(--c-a); }
+.c-b .c-line { stroke: var(--c-b); stroke-dasharray: 7 4; }
+.c-b .c-pt   { fill: var(--c-b); stroke: var(--surface); }
+.c-b .c-endlabel { fill: var(--c-b); }
+.c-c .c-line { stroke: var(--c-c); stroke-dasharray: 2 3.4; }
+.c-c .c-pt   { fill: var(--c-c); stroke: var(--surface); }
+.c-c .c-endlabel { fill: var(--c-c); }
+.chart-fig figcaption {
+  margin: 12px auto 0; max-width: 76ch;
+  font-size: var(--fs-xs); line-height: 1.65; color: var(--ink-3); word-break: keep-all;
+}
+
+/* ══ 표 ═════════════════════════════════════════════════════════════════ */
+.tablewrap {
+  overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-sm);
+  max-height: 460px; overflow-y: auto;
+}
+table.data { border-collapse: separate; border-spacing: 0; width: 100%; font-size: var(--fs-xs); }
+table.data th, table.data td {
+  padding: 6px 11px; border-bottom: 1px solid var(--line-2);
+  text-align: left; white-space: nowrap;
+}
+table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.data th {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--surface-2); color: var(--ink-2);
+  font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+}
+table.data td.rowh { font-weight: 600; color: var(--ink); }
+table.data tr:last-child td { border-bottom: 0; }
+table.data tbody tr:hover td { background: var(--surface-2); }
+
+/* ══ 커맨드 팔레트 ══════════════════════════════════════════════════════ */
+.cmdk { position: fixed; inset: 0; z-index: 120; display: flex; justify-content: center; align-items: flex-start; padding: clamp(40px, 12vh, 130px) 16px 16px; }
+.cmdk[hidden] { display: none; }
+.cmdk-veil { position: absolute; inset: 0; background: rgba(10, 12, 16, .48); }
+:root[data-theme="dark"] .cmdk-veil { background: rgba(0, 0, 0, .62); }
+.cmdk-box {
+  position: relative; width: min(620px, 100%); max-height: 70vh;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-2);
+}
+.cmdk-field { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.cmdk-field .ic { color: var(--ink-3); width: 1.15em; height: 1.15em; }
+.cmdk-field input { flex: 1; min-width: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: var(--fs-lg); }
+.cmdk-field input:focus { outline: none; }
+.cmdk-x { display: flex; padding: 5px; border: 0; background: none; color: var(--ink-3); cursor: pointer; border-radius: 5px; }
+.cmdk-x:hover { color: var(--ink); background: var(--surface-2); }
+.cmdk-list { list-style: none; margin: 0; padding: 6px; overflow-y: auto; flex: 1; }
+.cmdk-i {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 8px 11px; border-radius: var(--r-sm); cursor: pointer;
+}
+.cmdk-i:hover, .cmdk-i.is-on { background: var(--accent-soft); }
+.cmdk-i.is-on { outline: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+.cmdk-t { font-size: var(--fs-sm); font-weight: 560; color: var(--ink); flex: 0 1 auto; word-break: keep-all; }
+.cmdk-k { font-size: var(--fs-3xs); color: var(--ink-3); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; flex: 0 0 auto; }
+.cmdk-d { font-size: var(--fs-3xs); color: var(--ink-3); flex: 1 1 40%; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.cmdk-empty { padding: 22px 14px; text-align: center; color: var(--ink-3); font-size: var(--fs-xs); }
+.cmdk-foot { display: flex; gap: 16px; padding: 9px 14px; border-top: 1px solid var(--line); background: var(--surface-2); font-size: var(--fs-3xs); color: var(--ink-3); }
+.cmdk-foot span { display: inline-flex; align-items: center; gap: 4px; }
+
+/* ══ 404 ════════════════════════════════════════════════════════════════ */
+.phead.nf { border-bottom: 0; }
+.nf h1 { font-size: 2.2rem; }
+.nf-act { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+/* ══ 좁은 화면 ══════════════════════════════════════════════════════════
+   순서: ① 목차가 본문 위로 접힌다 ② 찬반이 위아래로 ③ 사이드바가 사라진다.
+   본문은 어느 단계에서도 살아 있어야 한다. */
+@media (max-width: 1180px) {
+  .reader { grid-template-columns: 190px minmax(0, 1fr); gap: 26px; }
+}
+@media (max-width: 1040px) {
+  .split { grid-template-columns: 1fr; }
+  .duel  { grid-template-columns: 1fr; }
+  .reader { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .reader-side { position: static; margin-bottom: 20px; }
+  .toc {
+    max-height: 300px; border-right: 0; border: 1px solid var(--line);
+    border-radius: var(--r); padding: 12px 6px;
+  }
+  .roundlist { columns: 1; }
+}
+@media (max-width: 860px) {
+  :root { --measure: 100%; }
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--t); box-shadow: var(--shadow-2);
+  }
+  body.nav-open .sidebar { transform: none; }
+  .nav-veil { display: block; position: fixed; inset: 0; z-index: 35; background: rgba(10, 12, 16, .4); }
+  .nav-veil[hidden] { display: none; }
+  .content { margin-left: 0; padding: 62px 16px 80px; max-width: 100%; }
+  .menu-toggle {
+    display: flex; align-items: center; justify-content: center;
+    position: fixed; top: 12px; left: 12px; z-index: 50;
+    width: 38px; height: 38px; padding: 0;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-sm); color: var(--ink); cursor: pointer;
+    box-shadow: var(--shadow-1);
+  }
+  .phead h1 { font-size: 1.55rem; }
+  .cards, .cards-wide { grid-template-columns: 1fr; }
+  .panel { padding: 16px 15px; border-radius: var(--r); }
+  .prose { font-size: var(--fs-sm); }
+  .round-meta { margin-left: 0; }
+}
+
+/* ══ 인쇄 ═══════════════════════════════════════════════════════════════ */
+/* 화면 위의 "PDF 로 저장" — 인쇄에서는 사라진다 (아래 print 블록) */
+.pdfbtn {
+  position: fixed; right: 18px; bottom: 18px; z-index: 40;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 14px; border-radius: 999px; cursor: pointer;
+  font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--ink-1); background: var(--surface-1);
+  border: 1px solid var(--line); box-shadow: 0 2px 10px rgb(0 0 0 / 12%);
+}
+.pdfbtn:hover { background: var(--surface-2); border-color: var(--k); color: var(--k); }
+.pdfbtn:focus-visible { outline: 2px solid var(--k); outline-offset: 2px; }
+@media (max-width: 720px) { .pdfbtn { right: 12px; bottom: 12px; padding: 8px 12px; } }
+
+@media print {
+  /* ⚠ 인쇄본은 **화면의 사본**이다. 여기서 내용을 빼거나 요약하지 않는다 —
+     빠진 줄이 있으면 인쇄본을 읽는 사람이 그것을 모른다. 없애는 것은 탐색
+     장치(사이드바·팔레트·버튼)뿐이다. */
+  .sidebar, .menu-toggle, .cmdk, .skip-link, .toc, .jump, .seg,
+  .nav-veil, .pdfbtn, .theme-toggle { display: none !important; }
+  .content { margin: 0; padding: 0; max-width: 100%; }
+  .content::before { display: none; }
+  .panel, .card { box-shadow: none; break-inside: avoid; }
+  .reader { grid-template-columns: 1fr; }
+
+  /* 배경색을 지우지 않는다 — 경고 상자와 본문이 같은 흰 바탕이 되면 경고가
+     본문으로 읽힌다. 경고를 뗀 사본은 사본이 아니라 틀린 글이다. */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* 한 덩어리가 페이지 경계에서 잘리지 않게 */
+  .pipe-sec, .pipe-find, .pipe-card, .plain, .pipe-quote, .pipe-note,
+  .gloss dt, .gloss dd, tr, .tw-num { break-inside: avoid; }
+  h1, h2, h3, .pipe-h { break-after: avoid; }
+  table { break-inside: auto; }
+  thead { display: table-header-group; }      /* 표가 넘어가면 머리줄을 다시 */
+
+  a { text-decoration: none; }
+  @page { margin: 14mm 12mm; }
+}
+
+
+/* ── 원본 1468-1472행: 사이드바 메뉴 꼬리표 (원본에서는 /pipeline 구획 안에 있다) ── */
+.nav-tag {
+  margin-left: auto; padding: 1px 7px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .01em;
+}

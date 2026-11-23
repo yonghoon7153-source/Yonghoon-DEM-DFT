@@ -1,0 +1,66 @@
+{% import "_macros.html" as M %}
+{% set real = V.D.lotto.ml.real %}{% set dd = V.D.lotto.ddpm %}{% set em = V.D.lotto.em %}{% set svr = V.D.lotto.svr.r2_oof %}
+<header class="phead">
+  <p class="eyebrow">근거 2 · 예측</p>
+  <h1>머신러닝은 다음 번호를 맞힐까</h1>
+  <p class="lead">{{ real.test_rounds[0] }}~{{ real.test_rounds[1] }}회({{ real.n_test }}회차)를 차례로 예측했다. 각 회차는 그 전 회차까지만 보고
+    예측하고(walk-forward), 모델은 100회마다 다시 학습한다. 특징에는 번호별 빈도·미출현 간격·궁합수 점수와 함께
+    <b>직전 회차 1~5등 당첨자 수와 판매량</b>도 넣었다. 같은 과정을 진짜 무작위로 만든 가상 역사에도 돌려 나란히 놓았다 —
+    둘이 구분되지 않으면 모델이 찾은 것은 패턴이 아니라 잡음이다.</p>
+  {{ M.verdict('same', '무작위와 구분 안 됨', real.rows|length ~ '개 전략 모두 평균 적중이 무작위 기대 0.8개와 같다') }}
+</header>
+
+<div class="panel" id="board">
+  <h2 class="panel-h">전략별 평균 적중 수 (6개 중) <span class="src-of">{{ real.n_test }}회차 · 95% 구간</span></h2>
+  {{ M.course('머신러닝 7 로지스틱 회귀 · SVM 소프트 마진·커널 트릭', '4-1 신경망', '12 나이브 베이즈', '확률과통계 9주 구간추정') }}
+  {{ M.legend([('dot', 'k-accent', '실제 당첨번호 (가로선: 95% 구간)'), ('ring', '', '가상 무작위 역사'), ('line', 'k-ref', '무작위 기대 0.8')]) }}
+  <figure class="chart-fig">{{ M.dotwhisker(V.ml_chart) }}
+    <figcaption>가장 높아 보인 전략도 보정 전 p = {{ V.ml_best_raw_p|p }}이고, 전략이 {{ real.rows|length }}개라 하나쯤은 이 정도로 좋아 보이는 것이
+      정상이다(Bonferroni 보정 후 모두 1.00). 확률을 내는 모델은 '모든 번호 13.3%'보다 로그손실이 나빴다. 실제로 샀다면 투입액의
+      {{ V.ml_roi[0]|pct }}~{{ V.ml_roi[1]|pct }}를 돌려받았다.</figcaption></figure>
+  <div class="tablewrap full"><table class="data">
+    <thead><tr><th>전략</th><th>평균 적중</th><th>z</th><th>보정 p</th><th>AUC</th><th>회수율</th><th>로그손실 변화</th><th>가상 역사</th></tr></thead>
+    <tbody>{% for r in real.rows %}{% set nr = V.D.lotto.ml.null.rows[loop.index0] %}<tr><td class="rowh">{{ r.model }}</td>
+      <td class="num">{{ '%.3f'|format(r.mean_hits) }}</td><td class="num">{{ r.z|signed }}</td><td class="num">{{ r.p_bonferroni|p }}</td>
+      <td class="num">{{ '%.3f'|format(r.auc) }}</td><td class="num">{{ (r.won / r.spent)|pct }}</td>
+      <td class="num">{% if r.dlogloss is defined and r.dlogloss is not none %}{{ r.dlogloss|signed(4) }}{% else %}–{% endif %}</td><td class="num">{{ '%.3f'|format(nr.mean_hits) }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</div>
+
+<div class="lgrid">
+  <div class="panel" id="ddpm">
+    <h2 class="panel-h">확산 모델(DDPM)이 만든 번호</h2>
+    {{ M.course('머신러닝 15 확산 모델 (Ho et al. 2020)') }}
+    <p class="pnote">1~{{ dd.train_rounds[1] }}회 당첨번호를 45칸 벡터(뽑힌 칸 +1, 나머지 −1)로 바꿔 학습했다. 강의와 같은 설정(β 1e−4 → 0.02,
+      T = 1000, 잡음 ε 예측)이고 잡음 예측망은 256×256 신경망이다. 생성한 {{ dd.n_generated|num }}개 조합을 검사했다.</p>
+    {{ M.legend([('bar', 'k-accent', '생성 번호에서 쓰인 횟수'), ('line', 'k-ref', '균등하면 ' ~ (dd.n_generated * 6 / 45)|round|int ~ '회')]) }}
+    <figure class="chart-fig">{{ M.columns(V.ddpm_chart) }}</figure>
+    <div class="tablewrap full"><table class="data"><tbody>
+      <tr><td>과거 당첨번호를 그대로 외워 낸 비율</td><td class="num">{{ dd.memorization.exact_copy_rate|pct(2) }}</td><td>외우지 않음</td></tr>
+      <tr><td>학습 데이터의 우연한 빈도와의 상관</td><td class="num">{{ dd.corr_with_train_freq|signed }}</td><td>잡음을 '핫 번호'로 과장</td></tr>
+      <tr><td>{{ dd.test_rounds[0] }}회~ 평균 적중</td><td class="num">{{ '%.3f'|format(dd.hits_one_per_draw.mean) }}개 (z {{ dd.hits_one_per_draw.z|signed }})</td><td>무작위와 같음</td></tr>
+      <tr><td>1등 시 기대 몫 (균등 무작위 대비)</td><td class="num">{{ '%.3f'|format(dd.share_vs_uniform.ratio) }}배</td><td>{{ '인기 번호 쪽으로 치우침' if dd.share_vs_uniform.ratio < 0.995 else '차이 작음' }}</td></tr>
+      <tr><td>정확히 6칸만 선명하게 뜬 비율</td><td class="num">{{ dd.six_clear_rate|pct(1) }}</td><td>'6개' 구조를 덜 배움</td></tr>
+    </tbody></table></div>
+    <p class="pnote">확산 모델은 무작위 데이터에서 <b>없는 패턴을 만들어 냈다.</b> 학습을 4배로 늘려도 번호 사용 편차가 학습 데이터 자체의 편차보다
+      3배 이상 컸다. 생성기의 '확산 모델' 방식은 이 사실을 보여 주는 실험용이다.</p>
+  </div>
+
+  <div class="panel" id="em">
+    <h2 class="panel-h">숨은 유형(군집)이 있나 · 커널 SVR</h2>
+    {{ M.course('머신러닝 13 EM — 베르누이 혼합', '7 SVM 커널 트릭') }}
+    <p class="pnote">EM 으로 당첨번호를 K개 유형의 혼합으로 적합하면 BIC 는 <b>K = {{ em.best_k_bic }}</b>(유형 없음)을 고른다. K = 2 의 로그우도
+      증가 {{ '%.1f'|format(em.gain_k2_vs_k1) }} 은 무작위 역사에서도 평균 {{ '%.1f'|format(em.null_gain_mean) }} ± {{ '%.1f'|format(em.null_gain_sd) }}
+      만큼 나온다(p = {{ em.p_mc|p }}).</p>
+    <div class="tablewrap full"><table class="data">
+      <thead><tr><th>K</th><th>로그우도</th><th>BIC (작을수록 좋음)</th></tr></thead>
+      <tbody>{% for k, b in em.bic.items() %}<tr><td class="rowh">{{ k }}</td><td class="num">{{ '%.1f'|format(em.loglik[k]) }}</td><td class="num">{{ '%.1f'|format(b) }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    <p class="pnote">커널 트릭을 회귀에 쓴 SVR 로 '사람들의 선택' 모델을 다시 적합해도 처음 보는 회차에서 R² 가 나아지지 않았다 —
+      인기도는 번호별 효과의 합으로 충분히 설명된다.</p>
+    <div class="tablewrap full"><table class="data">
+      <thead><tr><th>모델 (5등 비율, 시간 블록 5-fold)</th><th>R²</th></tr></thead>
+      <tbody>{% for k, r in svr.items() %}<tr><td>{{ k }}</td><td class="num">{{ '%.3f'|format(r) }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+</div>

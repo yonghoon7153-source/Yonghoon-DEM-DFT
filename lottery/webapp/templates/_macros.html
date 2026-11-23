@@ -1,0 +1,107 @@
+{# _macros.html — 복권 화면의 부품.
+
+   차트는 content.py 가 좌표를 다 계산해 넘긴다. 여기서는 그리기만 한다
+   (본체 앱의 sweep_chart 와 같은 분업). 마크마다 <title> 을 달아 마우스를 올리면
+   값이 뜬다 — 자바스크립트 없이. 색은 lottery.css 의 클래스·토큰이 정한다.
+
+   색만으로 구분하지 않는다 (본체 _macros 의 배지 규칙과 같다): 판정에는
+   글리프(●○)와 낱말이 같이 붙고, 차트 계열은 범례 + 선/막대 모양으로도 갈린다. #}
+
+{% macro verdict(kind, label, text) %}
+<p class="verdict">
+  <span class="chip v-{{ kind }}" title="{{ label }}"><span aria-hidden="true">{{ '●' if kind == 'diff' else '○' }}</span>{{ label }}</span>
+  <span>{{ text }}</span>
+</p>
+{% endmacro %}
+
+{% macro course() %}
+<div class="ctags">{% for t in varargs %}<span class="ctag">{{ t }}</span>{% endfor %}</div>
+{% endmacro %}
+
+{% macro legend(items) %}
+<div class="legend">
+  {% for kind, cls, label in items %}<span><i class="key key-{{ kind }} {{ cls }}" aria-hidden="true"></i>{{ label }}</span>{% endfor %}
+</div>
+{% endmacro %}
+
+{% macro ball(n, cls, sm=false) %}<span class="ball {{ cls }}{% if sm %} sm{% endif %}">{{ n }}</span>{% endmacro %}
+
+{# ── 세로 막대 ── #}
+{% macro columns(c) %}
+<svg class="chart lc" viewBox="0 0 {{ c.w }} {{ c.h }}" role="img" aria-label="{{ c.aria }}">
+  {% for g in c.grid %}
+  <line class="{{ 'c-axis' if g.zero else 'c-grid' }}" x1="{{ c.l }}" x2="{{ c.r }}" y1="{{ g.y }}" y2="{{ g.y }}"/>
+  <text class="c-tick c-tick-y" x="{{ c.l - 8 }}" y="{{ g.y }}">{{ g.label }}</text>
+  {% endfor %}
+  {% if c.band2 %}<rect class="c-band2" x="{{ c.l }}" width="{{ c.r - c.l }}" y="{{ c.band2.y }}" height="{{ c.band2.h }}"/>{% endif %}
+  {% if c.band %}<rect class="c-band" x="{{ c.l }}" width="{{ c.r - c.l }}" y="{{ c.band.y }}" height="{{ c.band.h }}"/>{% endif %}
+  {% for b in c.bars %}
+  <g class="c-bar {{ b.cls }}"><title>{{ b.title }}</title><rect class="c-hit" x="{{ b.hx }}" y="{{ c.top }}" width="{{ b.hw }}" height="{{ c.ih }}"/><path d="{{ b.d }}"/></g>
+  {% endfor %}
+  {% for e in c.errors or [] %}<line class="c-err" x1="{{ e.x }}" x2="{{ e.x }}" y1="{{ e.y1 }}" y2="{{ e.y2 }}"/>{% endfor %}
+  {% if c.ref is defined %}<line class="c-ref" x1="{{ c.l }}" x2="{{ c.r }}" y1="{{ c.ref }}" y2="{{ c.ref }}"/>{% endif %}
+  {% if c.line %}
+  <polyline class="c-refline" points="{{ c.line.points }}"/>
+  {% for d in c.line.dots %}<circle class="c-refdot" cx="{{ d.cx }}" cy="{{ d.cy }}" r="4"/>{% endfor %}
+  {% endif %}
+  {% for x in c.xlabels %}<text class="c-tick c-tick-x" x="{{ x.x }}" y="{{ c.xly }}">{{ x.t }}</text>{% endfor %}
+</svg>
+{% endmacro %}
+
+{# ── 칸 그림 (발산형 9단계) ── #}
+{% macro heat(c) %}
+<svg class="chart hm" viewBox="0 0 {{ c.w }} {{ c.h }}" role="img" aria-label="{{ c.aria }}">
+  {% for k in c.cells %}<rect class="{{ k.cls }}" x="{{ k.x }}" y="{{ k.y }}" width="{{ k.s }}" height="{{ k.s }}"><title>{{ k.title }}</title></rect>{% endfor %}
+  {% for r in c.rl %}<text class="c-tick c-tick-y" x="{{ c.rlx }}" y="{{ r.y }}">{{ r.t }}</text>{% endfor %}
+  {% for r in c.cl %}<text class="c-tick c-tick-x" x="{{ r.x }}" y="{{ c.cly }}">{{ r.t }}</text>{% endfor %}
+</svg>
+{% endmacro %}
+
+{# ── 가로 점·구간 ── #}
+{% macro dotwhisker(c) %}
+<svg class="chart dw" viewBox="0 0 {{ c.w }} {{ c.h }}" role="img" aria-label="{{ c.aria }}">
+  {% for g in c.grid %}
+  <line class="c-grid" x1="{{ g.x }}" x2="{{ g.x }}" y1="{{ c.top }}" y2="{{ c.bottom }}"/>
+  <text class="c-tick c-tick-x" x="{{ g.x }}" y="{{ c.tly }}">{{ g.label }}</text>
+  {% endfor %}
+  <line class="c-ref" x1="{{ c.ref.x }}" x2="{{ c.ref.x }}" y1="{{ c.top - 6 }}" y2="{{ c.bottom }}"/>
+  <text class="c-reflabel" x="{{ c.ref.x }}" y="{{ c.top - 10 }}">{{ c.ref.label }}</text>
+  {% for r in c.rows %}
+  <g class="dw-row"><title>{{ r.title }}</title>
+    <rect class="c-hit" x="0" y="{{ r.y|float - 13 }}" width="{{ c.w }}" height="26"/>
+    <text class="dw-label" x="{{ c.lx }}" y="{{ r.y }}">{{ r.label }}</text>
+    <line class="dw-ci" x1="{{ r.lo }}" x2="{{ r.hi }}" y1="{{ r.y }}" y2="{{ r.y }}"/>
+    {% if r.x2 %}<circle class="dw-null" cx="{{ r.x2 }}" cy="{{ r.y }}" r="4"/>{% endif %}
+    <circle class="dw-dot" cx="{{ r.x }}" cy="{{ r.y }}" r="5"/>
+  </g>
+  {% endfor %}
+</svg>
+{% endmacro %}
+
+{# ── 선 ── #}
+{% macro line(c) %}
+<svg class="chart ln" viewBox="0 0 {{ c.w }} {{ c.h }}" role="img" aria-label="{{ c.aria }}">
+  {% for g in c.grid %}
+  <line class="c-grid" x1="{{ c.l }}" x2="{{ c.r }}" y1="{{ g.y }}" y2="{{ g.y }}"/>
+  <text class="c-tick c-tick-y" x="{{ c.l - 8 }}" y="{{ g.y }}">{{ g.label }}</text>
+  {% endfor %}
+  {% for x in c.xt %}<text class="c-tick c-tick-x" x="{{ x.x }}" y="{{ c.xty }}">{{ x.t }}</text>{% endfor %}
+  {% if c.ref is defined %}<line class="c-ref" x1="{{ c.l }}" x2="{{ c.r }}" y1="{{ c.ref }}" y2="{{ c.ref }}"/>{% endif %}
+  <polygon class="ln-area" points="{{ c.area }}"/>
+  <polyline class="ln-line" points="{{ c.points }}"/>
+  {% for h in c.hits %}<circle class="ln-hit" cx="{{ h.cx }}" cy="{{ h.cy }}" r="9"><title>{{ h.title }}</title></circle>{% endfor %}
+  {% for mk in c.marks %}
+  <circle class="ln-mark" cx="{{ mk.cx }}" cy="{{ mk.cy }}" r="5"/>
+  <text class="ln-marklabel" x="{{ mk.cx|float + (8 if mk.anchor == 'start' else -8) }}" y="{{ mk.cy|float - 10 }}" text-anchor="{{ mk.anchor }}">{{ mk.label }}</text>
+  {% endfor %}
+</svg>
+{% endmacro %}
+
+{# ── 표로 보기 (차트의 값을 색 없이 다시 준다) ── #}
+{% macro tableview(head, rows, num_cols=()) %}
+<details class="tv"><summary>표로 보기</summary>
+<div class="tablewrap"><table class="data">
+  <thead><tr>{% for h in head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for r in rows %}<tr>{% for c in r %}<td{% if loop.index0 in num_cols %} class="num"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+</table></div></details>
+{% endmacro %}
