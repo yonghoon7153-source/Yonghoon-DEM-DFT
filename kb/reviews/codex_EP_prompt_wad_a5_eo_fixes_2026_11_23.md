@@ -38,6 +38,8 @@ operator? Physics settings, the ladder, thresholds, the secondary rule and the G
 
 - Base = `8fd051a22` (what EO reviewed). Records-only commits after it (your EO letter · your reply verbatim · build-log key `⑦`) do not touch tools or package.
   Fixes: `df5ea438b` (tools · tests) and `0fbc49760` (package rebuilt · build log `⑧`). This letter is a records-only commit after them.
+  Commits from other tracks merged in between (b2o3 · literature extractor · governance ledger) do not touch `tools/wad/` or the package —
+  `git diff 8fd051a22 HEAD -- tools/wad db/inputs/wad_a5_vasp_2026_11_20` shows only the a5 tool and the four package files.
 - `git diff 8fd051a22 0fbc49760 -- tools/wad/build_a5_vasp_package.py tools/wad/build_v5_vasp_package.py` — a5 tool sha256 `35592b07ed0f0fd8…`;
   the V5 collector file is **unchanged** (`90065ed5c4f7d052…`, your EO verdict GO); the a5 selftest now binds it to the complete-row count.
 - Package `db/inputs/wad_a5_vasp_2026_11_20/` — changed files: `run_a5.sh` · `README.md` · `jobs.json` (tool sha + five new rule strings
