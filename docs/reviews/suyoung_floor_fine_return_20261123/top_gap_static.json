@@ -1,0 +1,55 @@
+{
+  "kind": "static_first_projection_only",
+  "sources": {
+    "scripts/dem_suyoung_sf2d_dev.py": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+    "scripts/suyoung_u6_first_dev.py": "5db0f1bda90c824a23479401b7744cf8d31fc64f373441abca692dce6717bda5",
+    "scripts/suyoung_u6b_dev.py": "50f1a3aec71b750105852dfec281fc7ca9b84f5d4a594ee8fcc10073d4dba762",
+    "docs/reviews/suyoung_floor_contact_20261123/material_floor.py": "4b64bcfe6d0975e3bb18d450cfab77c8c3db750dc06f17965c21c5057f3dd72b"
+  },
+  "rows": [
+    {
+      "cells": 8,
+      "native_material_points": 9653,
+      "first_step_end_geometric_gap_diameters": 0.0012786992403057695,
+      "initial_gap_diameters": 0.0017271973653654182,
+      "downward_impulse_code": 1.916056871670592e-06,
+      "affected_mass_fraction": 0.00024936903002759645,
+      "reconstructed_impulse_code": 1.9160568716705923e-06,
+      "far_wall_impulse_code": 0.0,
+      "separating_impulse_code": 0.0
+    },
+    {
+      "cells": 12,
+      "native_material_points": 21609,
+      "first_step_end_geometric_gap_diameters": 0.0014281986153252824,
+      "initial_gap_diameters": 0.0017271973653654182,
+      "downward_impulse_code": 1.5499618266217758e-06,
+      "affected_mass_fraction": 0.00020172286271830607,
+      "reconstructed_impulse_code": 1.549961826621776e-06,
+      "far_wall_impulse_code": 0.0,
+      "separating_impulse_code": 0.0
+    },
+    {
+      "cells": 16,
+      "native_material_points": 39053,
+      "first_step_end_geometric_gap_diameters": 0.001502948302836149,
+      "initial_gap_diameters": 0.0017271973653654182,
+      "downward_impulse_code": 1.4860723007596932e-06,
+      "affected_mass_fraction": 0.0001934078333845163,
+      "reconstructed_impulse_code": 1.4860723007596934e-06,
+      "far_wall_impulse_code": 0.0,
+      "separating_impulse_code": 0.0
+    },
+    {
+      "cells": 24,
+      "native_material_points": 87857,
+      "first_step_end_geometric_gap_diameters": 0.0015776979903459054,
+      "initial_gap_diameters": 0.0017271973653654182,
+      "downward_impulse_code": 1.493796622279953e-06,
+      "affected_mass_fraction": 0.00019441313056207284,
+      "reconstructed_impulse_code": 1.4937966222799529e-06,
+      "far_wall_impulse_code": 0.0,
+      "separating_impulse_code": 0.0
+    }
+  ]
+}
