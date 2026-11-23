@@ -1,0 +1,24 @@
+{
+  "begin_utc": "2026-11-23T00:46:49.101628+00:00",
+  "canonical_run_segment": "UNSELECTED",
+  "command_rc": 0,
+  "end_utc": "2026-11-23T00:46:49.751080+00:00",
+  "execution_identity": "NOT_ESTABLISHED",
+  "inventory_sha256": "590db9cc8dcaf0802f48a720159435d0631a6e11ac005152f0137b756cb35158",
+  "observation": {
+    "cases": 30,
+    "logs": 60,
+    "pairs_with_b7_in_both": 30,
+    "pairs_with_different_file_sizes": 30,
+    "pairs_with_equal_b7_row_counts": 30
+  },
+  "scanner_process_rc": 0,
+  "scope": "WSL30",
+  "sealed_scanner_sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+  "section5": "UNRESOLVED",
+  "source_lead_last_reported": "NONE_KNOWN",
+  "status": "INVENTORY_COMPLETE",
+  "tau": "NOT_EVALUATED",
+  "v13_release": "NOT_AUTHORIZED",
+  "value_access": "NOT_GRANTED"
+}
