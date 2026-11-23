@@ -7,7 +7,7 @@ letter: ER
 track: wad
 channel: codex
 kind: prompt
-status: 발송 대기 (사용자) · 기준 891e106e5 (EQ 가 본 묶음 · MANIFEST 679d7050…) → 고침 c14d52abb (도구 · 시험) · cc3873047 (묶음 · 빌드 기록 ⑬) · 묶음 MANIFEST 8e295bae… · selftest a5 266/266 · 돌연변이 191 (첫 전체 판 186 · 살아남은 5 시험 떼어 5/5)
+status: 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md · Q-ER-6 GO · 범위 안 P0 셋 · P1 둘) · 기준 891e106e5 (EQ 가 본 묶음 · MANIFEST 679d7050…) → 고침 c14d52abb (도구 · 시험) · cc3873047 (묶음 · 빌드 기록 ⑬) · 묶음 MANIFEST 8e295bae… · selftest a5 266/266 · 돌연변이 191 (첫 전체 판 186 · 살아남은 5 시험 떼어 5/5)
 confidence: medium
 verificationStatus: unverified
 explored: false

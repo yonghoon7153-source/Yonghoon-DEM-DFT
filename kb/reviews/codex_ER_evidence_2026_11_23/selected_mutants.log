@@ -1,0 +1,4 @@
+  빨강 ✓                   m141 러너: 트리 관문 통째로 끔 (tree_gate → 늘 통과 · Codex EQ — 관문 하나를 빼면 반례 묶음이 한꺼번에 빨강인가)
+  빨강 ✓                   m169 검사기: 트리 관문 통째로 끔 (check_return → tree_problems · Codex EQ)
+  빨강 ✓                   m176 검사기: 0 바이트 status.tsv 거부 뺌 (history_problems · Codex EQ P1)
+✅ 돌연변이 3/3 잡음
