@@ -4607,6 +4607,20 @@ def _selftest():
         kj5 = os.path.join(D(wr5, "c1"), "killed.json"); k5 = json.loads(open(kj5).read()) if os.path.isfile(kj5) else {}
         ck(pr5[0] == 2 and p5.returncode == 0 and k5.get("wall_s") == "648001" and k5.get("sched_job_id") == "sched-1",
            f"⛔음성 Codex ER Q-ER-3②: 겹친 --killed → 둘째 {pr5[0]} · 첫째 {p5.returncode} · 남은 기록 {k5.get('wall_s')} 초 ({k5.get('sched_job_id')})")
+        # pack() 자체 관문 (m158): 앞 관문 (fin5 · drop5 · PACK_ONLY) 이 가리므로 따로 — PACK_ONLY 관문 뒤 · pack() 전 ($(utc) 자리) 에서 세우고 시도 폴더에 모르는 파일 → 포장 관문 8 (반송본 · 임시 파일 안 만듦)
+        wpg = cp_(qa_base, "w_er_packgate"); gopg = os.path.join(T, "er_packgate_go"); tgzpg = os.path.join(wpg, "a5_return.tgz")
+        tgpg0 = _sha(tgzpg) if os.path.isfile(tgzpg) else None
+        ppg = subprocess.Popen(["bash", os.path.join(wpg, "run_a5.sh")], cwd=wpg, env={**os.environ, **PB, "PACK_ONLY": "1", "FAKE_DATE_PAUSE": gopg},
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        tpg = time_.time()
+        while not os.path.exists(gopg + ".wait") and ppg.poll() is None and time_.time() - tpg < 60:
+            time_.sleep(0.1)
+        wtpg = os.path.exists(gopg + ".wait"); _write(os.path.join(D(wpg, "A5"), "junk.txt"), "x\n")
+        open(gopg, "w").close(); outpg = ppg.communicate(timeout=120)[0]
+        tgpg = _sha(tgzpg) if os.path.isfile(tgzpg) else None
+        lfpg = [f_ for f_ in ("a5_return.tgz.part", "a5_return.tgz.sha256.part", "a5_return.tmp", "a5_return.list") if os.path.exists(os.path.join(wpg, f_))]
+        ck(wtpg and ppg.returncode == 8 and "트리 관문 (포장)" in outpg and tgpg == tgpg0 and not lfpg,
+           f"⛔음성 pack() 자체 관문 (m158): PACK_ONLY 관문 뒤 · 포장 전에 생긴 모르는 파일 → {ppg.returncode} (멈춤 {wtpg} · 포장 관문 {'트리 관문 (포장)' in outpg}) · 반송본 {'그대로' if tgpg == tgpg0 else '바뀜'} · 남은 임시 {lfpg}")
         # ER Q-ER-4: 중간 반송본 (c1 전자행 7) 뒤 같은 c1 폴더를 출력 전 체크포인트로 복구 → --infra-abort · 다시 돌림 모두 8 (트리 · 반송본 그대로)
         wr6, _, _ = run_pkg("er_rows", {"A5": "conv", "c1": "plateau@7", "c2": "conv"}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c1"}, session=True)
         pk6 = pack_only(wr6)
