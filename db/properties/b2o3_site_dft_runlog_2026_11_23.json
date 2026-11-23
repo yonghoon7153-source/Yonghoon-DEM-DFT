@@ -43,5 +43,12 @@
   "블록": "B=claude/evac-2026-11-20; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python\n( echo \"== ①′ 이어가기 확인 (worktree · 조합 · UMA 출력 폴더 없음)\" && git -C $W log --oneline -1 && [ -s $R/ob_combos/manifest.json ] && [ ! -e $R/uma_ob_combos ] \\\n && echo \"== GPU (참고 · 남의 python3 와 나눠 쓴다 — 사용자 11-23 선택 · 실행기가 여유 ≥ 4000 MiB 를 다시 본다)\" && nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader \\\n && echo \"== ⑦ 조합 UMA 이완 발사 (이완만 · 10월 실행기 · tmux bsite_ob0)\" \\\n && { R=$R SRC=$W PY=$PY CAND=$R/ob_combos N_EXPECT=239 SESSION=bsite_ob0 OUTNAME=uma_ob_combos TIME_PS=0 TEMP=500 SEED=20261123 RELAX_FMAX=0.05 bash $W/db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh > $R/launch_ob0.log 2>&1; rc=$?; tail -8 $R/launch_ob0.log; [ $rc = 0 ]; } \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
   "감시": "watch -n 30 'bash $HOME/w_bsite_ob0.sh'",
   "프로브_뒤로": "블록 1 · 1b 의 ⑥ (프로브) 는 GPU 가 빈 뒤 새 블록으로 — ⑤ 는 compute-apps 조회 (kgy 에서 권한 없음 · rc 1) 대신 메모리 사용량 · 사용률로 본다 (바탕 화면 그래픽 ≈ 500 MiB)"
+ },
+ "조합_UMA_이완_발사_2026_11_23": {
+  "근거": "사용자가 붙인 감시 화면 (kgy 22:51:23)",
+  "시작": "2026-11-23 22:50:20 (입력 · 소스 해시 재대조 통과) · tmux bsite_ob0 · 출력 ~/work/runs/b2o3_site_dft_2026_11_23/uma_ob_combos",
+  "22:51:23": "끝난 구조 1 / 239 · 진행 BMLi_00__c01 FIRE 0 걸음 (E −499.088 eV · 힘 최대 13.2 eV/Å — 옮긴 원자 6 개 주변이라 시작 힘이 큰 것은 예상대로)",
+  "GPU": "9701 / 24576 MiB · 100 % (남의 python3 7.4 GB 와 나눠 씀 · 사용자 선택)",
+  "어림": "구조당 ≈ 1 분이면 239 개 ≈ 4 h (나눠 쓰는 속도라 바뀔 수 있다) → 끝나면 pick_ob → 12 개 어닐"
  }
 }
