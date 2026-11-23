@@ -14476,6 +14476,72 @@
     "근거_발화": "사용자 2026-11-23 (대피 세션 · 채팅): '그냥 놔두고 중간에 stop돼도 다시 이어서 할 수 있음 됐지 뭐'",
     "decision_digest": "sha256:95e2752f390193dc42ad7c5d286160e7bc013b03683efbb3abb3760c364c6e6d"
    }
+  },
+  {
+   "id": "D-2026-11-23-b2o3-bo-placement-amend6-relax2",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "b2o3.bo_placement.dft_stage9_relax2",
+   "slot": "b2o3_bo_placement_dft_stage9_amend6",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "dopant_o_placement_family"
+    ],
+    "methods": [
+     "qe-uspp-paw__pbe-scf-fixedcell-relax"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "b2o3 B·O 배치 카드 개정 6 (결과 본 뒤의 확인) — 9 단계 가족마다 단일점 2 번 후보 이온 이완 · 가족 값 = 두 후보 중 최저 · 판독 규칙 (a)–(d) · DFT 비용 상한 다시 정하기",
+   "statement": "카드 '개정_6_9단계_2번후보_이완_2026_11_23': 9 단계 단일점 2 번 후보 셋 (F_B cfg0015 · F_P cfg0019 · F_free cfg0017) 을 판 고정 도구 b2o3_bo_dft.py v6 (0c3b7f51) 의 _expected_relax 로 같은 기준 셀 · 같은 설정에서 고정셀 이온 이완 (잡 rx_FP_cfg0019 → rx_FB_cfg0015 → rx_Ffree_cfg0017) · 가족 값 = 대표 · 2 번 두 이완 에너지 중 낮은 것 · 압력 어림 2³ (B 가족별 21.7 / 32.5 GPa · 가족 안 두 후보는 같은 B) 모든 조합에서 순서 · 0.10 eV/B₂O₃ 판정이 같고 모든 후보 |P| ≤ 2 GPa 일 때만 결론 · (a) F_B 최저 · 차 ≥ 0.10 → 허용 문장 추가 · 10 단계 · 11a · 11b 그대로 · (b) F_B 최저 · 차 < 0.10 → 가족 못 가름 · 11b 서술 조건부 · (c) 다른 가족 최저 → 11b · 12 결과는 'F_B 가족 (대표 이완 기준으로 고름)' 조건부 · 다시 고르기는 사용자 결정 · (d) |P| > 2 GPa 또는 조합에 따라 갈림 → 판정 보류 · EOS 는 새 결정. 9 단계 대표 이완 판정 (relax_verdict.json) 은 소급해 안 바꾼다 · 판 고정 도구는 고치지 않는다 (얇은 새 도구 b2o3_bo_dft_relax2.py)",
+   "rationale": "가족마다 대표 하나만 이완해서 '가족 전체 최저' 를 쓸 수 없다. 단일점의 가족 안 차 (F_B 0.008 · F_P 0.058 eV/B₂O₃) 는 가족 사이 (≈ 0.5) 보다 훨씬 작지만 이완 뒤 순서는 다를 수 있다 — 2 번 후보까지 이완해 판정 범위를 넓힌다 (사용자 2026-11-23 'ㅇㅇ 2번 후보까지 하자'). 결과를 본 뒤의 확인이라 판독 규칙을 2 번 후보 결과 전에 박는다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": true,
+   "results_seen_note": "9 단계 단일점 6 · 탐침 3 · 대표 이완 3 (F_B 최저 · 승자–차저 0.471 eV/B₂O₃) 을 본 뒤 · 2 번 후보 이완 결과 0 건 — 판독 규칙은 그 결과 전에 박는다 · 9 단계 판정은 소급해 안 바꾼다",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "record": "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json",
+   "amends": "D-2026-11-13-b2o3-bo-placement-amend5-dft",
+   "depends_on": [
+    "D-2026-11-09-b2o3-bo-placement-amend1",
+    "D-2026-11-13-b2o3-bo-placement-amend5-dft"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_6_9단계_2번후보_이완_2026_11_23)",
+    "db/raw/b2o3_bo_stage9_dft_2026_11_20/sp_verdict.json (rows i = 2 · 대상 셋)",
+    "db/raw/b2o3_bo_stage9_dft_2026_11_20/relax_verdict.json (9 단계 대표 이완 판정 · 그대로 둔다)",
+    "tools/doping/b2o3_bo_dft.py v6 sha256 0c3b7f51dbebff7ab9b818e165f0a4cf36a627a93efc878d2db04ff69b08cd0b (판 고정 · 안 고침)"
+   ],
+   "reopen_criteria": [
+    "2 번 후보 이완 결과를 연 뒤에는 판독 규칙 (a)–(d) 를 바꾸지 않는다 — 바꿔야 하면 새 개정",
+    "3 번 이하 후보 · 새 가족 · EOS 는 이 개정 범위 밖 — 새 결정"
+   ],
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": "claude-session-2026-11-23 (evac)",
+   "cost_cap": {
+    "dft_GPU_h": "9 단계 실제 ≈ 100.7 (단일점 183 분 + 탐침 147 분 + 대표 이완 5713 분) — 개정 1 상한 60 초과 (9 단계 때 기록 누락 · 여기서 적는다) · 이 개정 어림 60–95 → DFT 합계 ≈ 160–200 · 새 상한 = 사용자 결정",
+    "machine": "gabia GPU (대표 이완 ≈ 35 GB · kgy 24 GB 에는 안 들어감) · UMA 와 동시 금지 → 11b 큐가 선 뒤 (어림 11-30) · 11b 이어 돌리기와의 순서 = 사용자 결정"
+   },
+   "enforcement": "얇은 새 도구 tools/doping/b2o3_bo_dft_relax2.py (아직 없음) — 판 고정 b2o3_bo_dft.py v6 의 _expected_relax · read_stage_outputs · parse_pw_in 을 불러 입력 sha256 대조 · 출력 검사 · 2³ B 조합 · relax2_verdict.json · selftest 음성 포함 · 대조 잡: 같은 판독 경로로 9 단계 대표 이완 판정 (relax_verdict.json) 을 다시 내서 같은지 본다",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-23",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 2026-11-23 'ㅇㅇ 2번 후보까지 하자' — 판독 규칙 · 비용 상한 · 순서 비준 대기 · 도구 아직 없음"
+    }
+   ],
+   "_note": "proposed — 사용자 비준 전 · 도구 아직 없음"
   }
  ]
 }
