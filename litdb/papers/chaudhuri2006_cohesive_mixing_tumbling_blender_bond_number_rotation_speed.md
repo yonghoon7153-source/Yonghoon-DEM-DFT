@@ -451,6 +451,7 @@
 - 위 Co 산술이 빌린 δ/R_t = 0.03 의 원 논문 대조 (원문 인쇄값 아님 · 그림 4 기울기 평균 · 준 2D · 반 채움 · Fr 10⁻⁴) + 비점착 회전 드럼 흐름층 영 모형 (무차원 식에서 rpm 은 k(Fr) · 확산으로만 들어옴 [그 카드 산술]) · 이 논문 ref [6] · [7] (Khakhar 1997 Phys. Fluids 두 편) 을 그 논문이 [24] · [10] 으로 인용 (2026-11-24 카드): `khakhar1999_chaotic_mixing_granular_2d_tumbling_mixers_flowing_layer` — D.V. Khakhar, J.J. McCarthy, J.F. Gilchrist, J.M. Ottino, Chaos 9 (1999) 195–205.
 - 이 논문의 Bond 0.1 · 120 · 마개 흐름을 인용하며 액교 점착 (모든 쌍 · 벽 같은 γ) × 회전 속도 × 충전율로 가로 혼합을 잰 3D 드럼 DEM (점착 ↑ → 회전당 k 단조 ↓ · 회전당 k 는 마른 입자만 rpm 따라 ↓ · 마른 입자 64 % 충전 최악 · 2026-11-24 카드): `liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period`.
 - 회전 드럼 운동 꼴 지도 (전이 기준식 · Bed Behavior Diagram · 자유유동 단분산 한정 · 점착 축 없음) — 이 논문 12.5 · 20 · 30 rpm 은 드럼 지름 두 판 (본문 9 cm · 그림 축 ≈18 cm) 에 따라 구름 ↔ 폭포 경계 근처 ~ 폭포 꼴 [그 카드 산술] (Mellmann, Powder Technol. 118 (2001) 251–270 · 2026-11-24 카드): `mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude`.
+- 같은 Walton–Braun 법선 · 증분 미끄럼 접선을 점착 없이 메카노퓨전 장치 (2D · 1000–4000 rpm) 에 쓴 DEM (2004 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

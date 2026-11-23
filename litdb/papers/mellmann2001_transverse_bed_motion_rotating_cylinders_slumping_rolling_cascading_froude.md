@@ -395,6 +395,7 @@
 - 점착 × rpm × 충전율 드럼 DEM: `liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period` (구름 영역 가정 · 같은 충전율 규약) · `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` · `jarray2019_cohesion_driven_mixing_segregation_drum` ('cascading regime') · `nase2001_granular_bond_collision_number_wet_cohesion` (드럼 동적 각 · 임계의 10 %).
 - 점착 혼합 상태도 (점착 축 — 이 지도에 없는 축): `li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy` · `li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation` · `figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram`.
 - 혼합 지수: `lacey1954_particle_mixing_theory_index`.
+- 원심 꼴 (ω²R/g 14–224) 코팅 장치 (메카노퓨전 · 안쪽 조각 + 긁개) 의 2D DEM — 챔버 지름 25 mm 로 우리 드럼과 같고 운동 체제가 다르다 (2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

@@ -378,6 +378,7 @@ F_N = K₂ (α − α₀)     (unloading)        K₂ > K₁ ,  e = √(K₁/K�
 - 접촉 법칙 계보 · 우리 덱: `luding2008_cohesive_frictional_contact_models` (hooke/hysteresis 정의서 · Walton–Braun 대체판) · `thakur2014_eepa_adhesive_elastoplastic_dem` (k_t = 2/7 k₁ 을 Walton–Braun 으로 인용) · `morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis` (Walton–Braun 1986 · Walton–Johnson 2009 서지) · `pasha2014_linear_elastoplastic_adhesive_contact` · `thorntonning1998_adhesive_elastoplastic_contact` · `zunker2024_mdr_contact_model_partI` (제하 비교).
 - 강성 낮추기 · 겹침 한계: `paulick2015_elastic_particle_properties_dem_review` · `lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior` · `coetzee2017_dem_calibration_review` (Walton–Braun 이력 spring head-to-head).
 - 슈트 흐름 · 결정화: `silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem`.
+- 같은 법선 법칙 (Walton–Braun) 으로 메카노퓨전 장치를 돌린 2D DEM (공저자 Walton · 이 논문 = 그 논문 ref [10] = 강성 둔감 근거 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
