@@ -167,7 +167,7 @@ evidenceScope: multi-source-primary
 | EM | 2026-11-20 | `internal_EM_prompt_wad_a5_package_2026_11_20.md` | `internal_EM_reply_wad_a5_package_2026_11_20.md` | 발송 · 회신 수령 2026-11-20 | 같은 라벨 · 주제 토큰 일치 ['a5', 'package', 'wad'] |
 | EN | 2026-11-22 | `codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` | `codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` | 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 · 묶음 MANIFEST 8439e129… → 회신 수령 NO-GO (P0 1 · P1 3 · P2 1 · P3 1 — codex_EN_reply_wad_a5_em_fixes_2026_11_22.md) | 같은 라벨 · 주제 토큰 일치 ['a5', 'em', 'fixes', 'wad'] |
 | EO | 2026-11-22 | `codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md` | `codex_EO_reply_wad_a5_en_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (`codex_EO_reply_wad_a5_en_fixes_2026_11_23.md`) · 기준 커밋 68f683462 → 고침 b84907868 (도구) · 8fd051a22 (묶음) · 묶음 MANIFEST b01d0861… · 돌연변이 84/84 | 같은 라벨 · 주제 토큰 일치 ['a5', 'en', 'fixes', 'wad'] |
-| EP | 2026-11-23 | `codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` | — | 발송 대기 (사용자) · 기준 8fd051a22 (EO 가 본 묶음) → 고침 df5ea438b (도구 · 시험) · 0fbc49760 (묶음 · 빌드 기록 ⑧) · 묶음 MANIFEST f10dedef… · selftest a5 211/211 · 돌연변이 113/113 | — |
+| EP | 2026-11-23 | `codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` | `codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md · 재승인 조건 ①–④) · 기준 8fd051a22 (EO 가 본 묶음) → 고침 df5ea438b (도구 · 시험) · 0fbc49760 (묶음 · 빌드 기록 ⑧) · 묶음 MANIFEST f10dedef… · selftest a5 211/211 · 돌연변이 113/113 | 같은 라벨 · 주제 토큰 일치 ['a5', 'eo', 'fixes', 'wad'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

@@ -7,7 +7,7 @@ letter: EP
 track: wad
 channel: codex
 kind: prompt
-status: 발송 대기 (사용자) · 기준 8fd051a22 (EO 가 본 묶음) → 고침 df5ea438b (도구 · 시험) · 0fbc49760 (묶음 · 빌드 기록 ⑧) · 묶음 MANIFEST f10dedef… · selftest a5 211/211 · 돌연변이 113/113
+status: 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md · 재승인 조건 ①–④) · 기준 8fd051a22 (EO 가 본 묶음) → 고침 df5ea438b (도구 · 시험) · 0fbc49760 (묶음 · 빌드 기록 ⑧) · 묶음 MANIFEST f10dedef… · selftest a5 211/211 · 돌연변이 113/113
 confidence: medium
 verificationStatus: unverified
 explored: false
