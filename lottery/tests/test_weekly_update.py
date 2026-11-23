@@ -66,6 +66,9 @@ def site(tmp_path, monkeypatch):
                 return 1
 
         def weekly(self) -> int:
+            return self.weekly_ok()
+
+        def weekly_ok(self) -> int:
             def run(args, label):
                 if args == ["fetch_data.py"]:
                     return self.fetch()
@@ -142,3 +145,27 @@ def test_human_can_accept_an_official_correction(site):
     assert site.fetch() == 1
     assert site.fetch("--allow-history-change") == 0
     assert len(dataset.load_lotto(dataset.RAW_DIR)) == N_LOTTO - 3  # 기본 인자는 실제 data/raw 에 묶여 있다
+
+
+def test_failed_analysis_restores_data_so_a_retry_sees_the_new_round(site, capsys, monkeypatch):
+    """자체 리뷰 D1 (PARTIAL): 분석·테스트가 실패하면(2) 받은 파일이 남고 백업은 지워져, 같은 사본에서 다시 돌리면
+    '새 회차 없음'(3) 으로 끝났다. 실패하면 data/ 를 받기 전으로 되돌려야 다시 돌렸을 때 새 회차를 다시 본다."""
+    site.serve(body("lotto645.json", lambda rows: rows[:-1]), body("pension720.json"))
+    assert site.fetch() == 0
+    kept = site.digest()
+    site.serve(body("lotto645.json"), body("pension720.json"))
+    assert _weekly_with(site, monkeypatch, lambda args, label: 1 if label == "분석" else 0) == 2
+    assert site.digest() == kept, "실패한 주간 작업이 받은 파일을 남겼다"
+    capsys.readouterr()
+    assert site.weekly_ok() == 0, "다시 돌리면 새 회차를 다시 봐야 한다"
+
+
+def _weekly_with(site, monkeypatch, step):
+    """주간 작업을 돌리되 받기 뒤 단계(분석·테스트)는 step(args, label) 이 정한다."""
+    def run(args, label):
+        if args == ["fetch_data.py"]:
+            return site.fetch()
+        return step(args, label)
+    monkeypatch.setattr(weekly_update, "_run", run)
+    monkeypatch.setattr(sys, "argv", ["weekly_update.py"])
+    return weekly_update.main()
