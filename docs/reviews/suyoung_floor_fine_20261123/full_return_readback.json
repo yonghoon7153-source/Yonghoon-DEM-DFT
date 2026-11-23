@@ -1,0 +1,146 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "release": "c0e077ad5961d7be8dd801ea2f527b76089b362a",
+  "archives": {
+    "full": "aa0f2ad7126a65654975de6a741a58b49c57a5cc84c42983b226ddca15212b65",
+    "prefix": "57d0a6fe178b2faf0545013ef43b9ff6d175c1fdb18e93522ec8dcb8eb1b7e34",
+    "old": "fc685932f4a1710fe944c5d2dafbcb56bf239f473184f009983a3ff4805dabea"
+  },
+  "arms": {
+    "F8": {
+      "first_positive_step": 261,
+      "first_positive_displacement_diameters": 0.11705801064050947,
+      "first_positive_MPa": 0.005268269252256317,
+      "terminal_step": 2719,
+      "terminal_displacement_diameters": 1.219466402036572,
+      "terminal_MPa": 1.2026533941729116,
+      "elapsed_seconds": 170.73331916506868,
+      "stable_prefix_rows": 271
+    },
+    "F16": {
+      "first_positive_step": 569,
+      "first_positive_displacement_diameters": 0.12759771657940622,
+      "first_positive_MPa": 0.0010217695670213624,
+      "terminal_step": 6589,
+      "terminal_displacement_diameters": 1.4775770730082693,
+      "terminal_MPa": 1.2007072706903696,
+      "elapsed_seconds": 837.9071122120367,
+      "stable_prefix_rows": 541
+    }
+  },
+  "reference_MPa": 0.6636991102836952,
+  "pairs": {
+    "previous": {
+      "common": {
+        "samples": 5319,
+        "max_abs_difference_MPa": 0.5366575989506163,
+        "fixed_reference_ratio": 0.8085856838367982,
+        "fixed_reference_comparison": "EXCEEDS",
+        "fixed_reference_first_exceedance": {
+          "u": 0.012087024470351482,
+          "F8_MPa": 0.04504276337320029,
+          "F16_MPa": 0.011443392340219682,
+          "F8_minus_F16_MPa": 0.03359937103298061,
+          "F8_native": false,
+          "F16_native": true
+        },
+        "first_worst": {
+          "u": 0.11925565145330064,
+          "F8_MPa": 1.2003567092343115,
+          "F16_MPa": 0.6636991102836952,
+          "F8_minus_F16_MPa": 0.5366575989506163,
+          "F8_native": true,
+          "F16_native": true
+        }
+      },
+      "both_positive_knots": {
+        "samples": 5156,
+        "max_abs_difference_MPa": 0.5366575989506163,
+        "fixed_reference_ratio": 0.8085856838367982,
+        "fixed_reference_comparison": "EXCEEDS",
+        "fixed_reference_first_exceedance": {
+          "u": 0.012087024470351482,
+          "F8_MPa": 0.04504276337320029,
+          "F16_MPa": 0.011443392340219682,
+          "F8_minus_F16_MPa": 0.03359937103298061,
+          "F8_native": false,
+          "F16_native": true
+        },
+        "first_worst": {
+          "u": 0.11925565145330064,
+          "F8_MPa": 1.2003567092343115,
+          "F16_MPa": 0.6636991102836952,
+          "F8_minus_F16_MPa": 0.5366575989506163,
+          "F8_native": true,
+          "F16_native": true
+        }
+      }
+    },
+    "candidate": {
+      "common": {
+        "samples": 5439,
+        "max_abs_difference_MPa": 0.5277162139368279,
+        "fixed_reference_ratio": 0.7951136377314985,
+        "fixed_reference_comparison": "EXCEEDS",
+        "fixed_reference_first_exceedance": {
+          "u": 0.01269249693918173,
+          "F8_MPa": 0.03333489265756345,
+          "F16_MPa": 0.0,
+          "F8_minus_F16_MPa": 0.03333489265756345,
+          "F8_native": true,
+          "F16_native": true
+        },
+        "first_worst": {
+          "u": 0.1219466402036572,
+          "F8_MPa": 1.2026533941729116,
+          "F16_MPa": 0.6749371802360837,
+          "F8_minus_F16_MPa": 0.5277162139368279,
+          "F8_native": true,
+          "F16_native": true
+        }
+      },
+      "both_positive_knots": {
+        "samples": 4870,
+        "max_abs_difference_MPa": 0.5277162139368279,
+        "fixed_reference_ratio": 0.7951136377314985,
+        "fixed_reference_comparison": "EXCEEDS",
+        "fixed_reference_first_exceedance": {
+          "u": 0.012759771657940622,
+          "F8_MPa": 0.03592880809325087,
+          "F16_MPa": 0.0010217695670213624,
+          "F8_minus_F16_MPa": 0.03490703852622951,
+          "F8_native": false,
+          "F16_native": true
+        },
+        "first_worst": {
+          "u": 0.1219466402036572,
+          "F8_MPa": 1.2026533941729116,
+          "F16_MPa": 0.6749371802360837,
+          "F8_minus_F16_MPa": 0.5277162139368279,
+          "F8_native": true,
+          "F16_native": true
+        }
+      }
+    }
+  },
+  "four_curve_common": {
+    "knots": 5319,
+    "end_diameters": 1.1925565145330064,
+    "peaks": {
+      "previous": {
+        "peak_MPa": 0.5366575989506163,
+        "peak_pct": 80.85856838367982,
+        "at_displacement_diameters": 1.1925565145330064
+      },
+      "candidate": {
+        "peak_MPa": 0.4450382436073692,
+        "peak_pct": 67.05421729692233,
+        "at_displacement_diameters": 1.1925565145330064
+      }
+    }
+  },
+  "coarse_result": "EXCEEDS",
+  "finer_pair_status": "UNMEASURED",
+  "u6_qualified": false,
+  "stage3_go": false
+}
