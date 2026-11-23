@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 366편 · 생성 2026-11-23
+> digest 367편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -69,7 +69,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (91편)
+## 접촉역학 · 소성 (DEM 이론) (92편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -90,6 +90,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` | 무른 + 강체 입자 혼합물의 미시역학 압밀 모델 — 학회 단편 (Powders & Grains 2021) · PRE 2020 판의 요약 + 시작 상태 표 (φ0 · Z0) · NSCD contact dynamics + FE 2D — Cárdenas-Barrantes, Cantor, Barés, Renouf, Azéma ( | NSCD+FEM 2D 다입자 (LMGC90 — 강체 + neo-Hookean 비압축 FE 원판 혼합, 등방  | 2026-11-09 | 🖼 7 |
 | `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` | 무른(초탄성 실리콘) + 단단한(PVC) 2D 입자 혼합물의 일축 압밀 실험 — 대변형 DIC 로 입자 내부 변형장 · 배위수 · 접촉 길이 (contact length) 를 재고 미시역학 압밀 법칙을 일축으로 확장 · 검증 — Cárdenas-Barrantes, Barés, Renouf, Azéma (Phys. Rev. | experiment 2D (실리콘 초탄성 + PVC 강체 이분산 원기둥 혼합 · 일축 압축 · 평판 스캐너  | 2026-11-09 | 🖼 14 |
 | `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` | 무른 (탄성) 구 집합의 3D 등방 압밀 — non-smooth contact dynamics (NSCD) + 입자별 FE (구 50 · 100 개 × 사면체 808 개, LMGC90) 로 jammed φ0 ≈ 0.5 에서 φ ≈ 0.96 까지 · Hertz 점접촉 DEM 이 벗어나는 지점 · 3D 미시역학 압밀 법칙 P | NSCD+FEM 3D 다입자 (LMGC90 — 탄성 구 50 · 100 개 × 4 절점 사면체 808 개 · | 2026-11-10 | 🖼 19 |
+| `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` | 정사각 우물 점착 (접촉 때 상수 인력 · K = F_cohes/mg) 을 넣은 Walton–Braun DEM 회전 드럼 — 같은 크기 이원계에서 점착을 키우면 혼합이 아주 조금 빨라졌다가 (K 0.1 · 5 바퀴 끝에서만) 크게 느려지고 (K 60 · 90 · 120), K 120 에서는 빠른 회전 (12.5 → 30  | DEM (Walton-Braun latching-spring normal force K1/K2 + Walto | 2026-11-23 | 🖼 37 |
 | `chung2008_dem_parameters_bulk_behaviour_confined_compression` | 구속 압축 DEM 의 매개변수 민감도 — 유리구슬 (Ø10 mm 단분산 구 · E 41 GPa) · 옥수수 (겹친 구 4 개 · E 1.66 GPa) 를 Ø145 mm 아크릴 원통 (Ko 시험기 개조) 에서 위 판으로 ≈0.8–1 kN (≈48–61 kPa) 까지 누름 · Hertz-Mindlin 무점착 탄성 접촉 · 실 | DEM (PFC3D 3.0 · Hertz-Mindlin no-slip + damping + Coulomb s | 2026-11-17 | 🖼 54 |
 | `clemmer2024_bpm_elastic_grain_compaction_beyond_jamming` | 결합입자 모델 (BPM) 로 탄성 변형 입자의 3D 침대를 재밍 너머 고압까지 누르다 — 입자 1024 개 × 점 입자 ~5000 개 · 다체 결합 항으로 ν −0.11–0.4 · Hertz DEM 과 φ − φ_c ≈ 0.1 에서 갈라지지만 같은 지표 (φ_MC) 로는 압력 2 배 안 · DEM 의 φ_sphere 는  | BPM 3D (LAMMPS BPM package · 회전 없는 점 입자 + 결합 · 다체 항으로 ν 조절 · | 2026-11-12 | 🖼 46 |
 | `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |

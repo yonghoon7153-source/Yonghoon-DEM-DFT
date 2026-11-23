@@ -394,6 +394,7 @@
 - 결합 규칙 · 점착 측정: `begat2004_cohesive_adhesive_balance_afm_colloid_probe` · `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` · `vanoss1988_lifshitz_vdw_acid_base_interfacial` (기하평균은 분산 성분만 · 산 · 염기 성분은 깨짐) · `mohammadijam2014_inverse_gas_chromatography_review` · `deng2021_mechanical_surface_energy_tester_bond_number`.
 - 정렬 · 상호작용 혼합 · 코팅: `hersey1975_ordered_mixing_concept` · `egermann1983_ordered_vs_interactive_mixture_nomenclature` · `pfeffer2001_dry_particle_coating_engineered_particulates` · `otani2025_dem_se_dispersion_aggregation_compression`.
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` · `chandratilleke2012_particle_scale_mixing_index` · `jadidi2023_dem_batch_solid_mixers_review`.
+- 같은 축 · 다른 그룹 (이 논문보다 앞선 건식 점착 드럼 DEM · 2026-11-23 카드): `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` — B. Chaudhuri, A. Mehrotra, F.J. Muzzio, M.S. Tomassone, Powder Technol. 165 (2006) 105–114 (정사각 우물 상수 힘 · 쌍 점착 자유 변수 (기하평균과 맞는 런은 K_rb = K_rr = 0 뿐) · 중간 점착 K_bb 50 의 반대 다섯 = 이 논문 '절대 점착 세기가 따로 효과' 와 같은 쪽 · 12.5–30 rpm 회전 효과 — 그 카드 §3-8 · §3-9).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

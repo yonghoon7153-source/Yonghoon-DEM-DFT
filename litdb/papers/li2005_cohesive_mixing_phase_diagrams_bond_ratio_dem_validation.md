@@ -476,6 +476,7 @@ Hertz–Mindlin + Lian–Thornton 액체 다리 3D DEM (강성을 낮춤) 두 �
 - DEM 강성 연화 근거: `walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem` (ref [33]) · `paulick2015_elastic_particle_properties_dem_review` · `lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior`.
 - 정렬 · 상호작용 혼합 · 코팅: `hersey1975_ordered_mixing_concept` · `egermann1983_ordered_vs_interactive_mixture_nomenclature` · `pfeffer2001_dry_particle_coating_engineered_particulates` · `otani2025_dem_se_dispersion_aggregation_compression`.
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` · `chandratilleke2012_particle_scale_mixing_index` · `jadidi2023_dem_batch_solid_mixers_review`.
+- 같은 축 · 다른 그룹 (건식 · 정사각 우물 DEM · 회전 속도 축 · 2026-11-23 카드): `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` — B. Chaudhuri, A. Mehrotra, F.J. Muzzio, M.S. Tomassone, Powder Technol. 165 (2006) 105–114 (쌍 점착을 결합 규칙 없이 따로 바꾼 13 비균일 런을 이 논문 ℜ1 · ℜ2 로 옮기면 비점착 대비 부호 일치 6 · 반대 5 (모두 K_bb 50) · 경계 2 — 그 카드 §3-8 [카드 산술]).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
