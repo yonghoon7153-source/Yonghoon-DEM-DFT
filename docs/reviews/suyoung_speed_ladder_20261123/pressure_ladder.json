@@ -1,0 +1,1057 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "fixed_reference_MPa": 0.6636991102836952,
+  "qualification": "HOLD",
+  "speeds": {
+    "original": {
+      "common": {
+        "count": 1139,
+        "max_abs_MPa": 0.1318955708009594,
+        "max_percent": 19.87279608444574,
+        "peak": {
+          "step_F24": 1048,
+          "displacement_D": 0.15667534502075808,
+          "F12_MPa": 0.203580623712413,
+          "F24_MPa": 0.0716850529114536,
+          "gap_MPa": 0.1318955708009594
+        },
+        "first_above": {
+          "step_F24": 877,
+          "displacement_D": 0.13111095189237143,
+          "F12_MPa": 0.03373268381188396,
+          "F24_MPa": 0.0,
+          "gap_MPa": 0.03373268381188396
+        }
+      },
+      "native": {
+        "count": 1139,
+        "max_abs_MPa": 0.1318955708009594,
+        "max_percent": 19.87279608444574,
+        "peak": {
+          "step_F24": 1048,
+          "displacement_D": 0.15667534502075808,
+          "F12_MPa": 0.203580623712413,
+          "F24_MPa": 0.0716850529114536,
+          "gap_MPa": 0.1318955708009594
+        },
+        "first_above": {
+          "step_F24": 877,
+          "displacement_D": 0.13111095189237143,
+          "F12_MPa": 0.03373268381188396,
+          "F24_MPa": 0.0,
+          "gap_MPa": 0.03373268381188396
+        }
+      },
+      "floor_arrival": {
+        "12": {
+          "step": 400,
+          "time_code": 0.5990312043945488,
+          "displacement_D": 0.11959950001584674
+        },
+        "24": {
+          "step": 908,
+          "time_code": 0.6799004169878129,
+          "displacement_D": 0.1357454325179852
+        }
+      },
+      "onset_delay_diagnostic": {
+        "label": "DEVELOPMENT_DIAGNOSTIC_DIFFERENT_PLATE_DISPLACEMENTS_ONLY",
+        "use_for_qualification": false,
+        "delay_F24_steps": 108,
+        "delay_time_code": 0.08086921259326409,
+        "comparison_samples": 516,
+        "F12_first_step": 0,
+        "F12_last_step": 515,
+        "same_time_peak": {
+          "F12_bracketing_steps": [
+            511,
+            511
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 1022,
+          "aligned_F24_step": 1130,
+          "original_displacement_D": 0.1527883612702441,
+          "aligned_F24_displacement_D": 0.16893429377238256,
+          "same_time_gap_MPa": 0.131164950389683,
+          "aligned_gap_MPa": 0.034743558829231136
+        },
+        "aligned_peak": {
+          "F12_bracketing_steps": [
+            511,
+            511
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 1022,
+          "aligned_F24_step": 1130,
+          "original_displacement_D": 0.1527883612702441,
+          "aligned_F24_displacement_D": 0.16893429377238256,
+          "same_time_gap_MPa": 0.131164950389683,
+          "aligned_gap_MPa": 0.034743558829231136
+        },
+        "at_original_native_peak": null,
+        "at_original_common_peak": null,
+        "at_first_common_crossing": {
+          "F12_bracketing_steps": [
+            438,
+            439
+          ],
+          "F12_interpolated": true,
+          "original_F24_step": 877,
+          "aligned_F24_step": 985,
+          "original_displacement_D": 0.13111095189237143,
+          "aligned_F24_displacement_D": 0.147256884394511,
+          "same_time_gap_MPa": 0.03373268381188396,
+          "aligned_gap_MPa": 0.00848595550332288
+        }
+      },
+      "at": {
+        "anchor_0p139D": {
+          "pressure": {
+            "step_F24": 930,
+            "displacement_D": 0.13903441876842115,
+            "F12_MPa": 0.07681657998471127,
+            "F24_MPa": 0.005873414353581523,
+            "gap_MPa": 0.07094316563112975
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.07681657998471127,
+              "lid_down_MPa": 0.15904945936272719,
+              "floor_over_lid": 0.48297290850592495,
+              "inferred_momentum_MPa": -0.08223287937801592,
+              "direct_momentum_MPa": null
+            },
+            "F24": {
+              "floor_MPa": 0.005873414353581524,
+              "lid_down_MPa": 0.145561158167492,
+              "floor_over_lid": 0.04035014853909858,
+              "inferred_momentum_MPa": -0.13968774381391047,
+              "direct_momentum_MPa": null
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.07094316563112975,
+              "lid_down_MPa": 0.013488301195235197,
+              "inferred_momentum_MPa": 0.05745486443589455,
+              "direct_momentum_MPa": null
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.0057104423333985575,
+              "lid_down_MPa": 0.14562116256763014,
+              "floor_over_lid": 0.03921437126795691,
+              "inferred_momentum_MPa": -0.13991072023423157,
+              "direct_momentum_MPa": null
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.07110613765131271,
+              "lid_down_MPa": 0.01342829679509705,
+              "inferred_momentum_MPa": 0.05767784085621565,
+              "direct_momentum_MPa": null
+            }
+          }
+        },
+        "anchor_0p170D": {
+          "pressure": {
+            "step_F24": 1138,
+            "displacement_D": 0.17013028877254088,
+            "F12_MPa": 0.25130278916647103,
+            "F24_MPa": 0.15527747556774812,
+            "gap_MPa": 0.0960253135987229
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.25130278916647103,
+              "lid_down_MPa": 0.15684474769875964,
+              "floor_over_lid": 1.6022391113098038,
+              "inferred_momentum_MPa": 0.09445804146771139,
+              "direct_momentum_MPa": null
+            },
+            "F24": {
+              "floor_MPa": 0.15527747556774812,
+              "lid_down_MPa": 0.1346622839030562,
+              "floor_over_lid": 1.1530880887148243,
+              "inferred_momentum_MPa": 0.020615191664691918,
+              "direct_momentum_MPa": null
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.0960253135987229,
+              "lid_down_MPa": 0.022182463795703433,
+              "inferred_momentum_MPa": 0.07384284980301947,
+              "direct_momentum_MPa": null
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.15505009939853034,
+              "lid_down_MPa": 0.1346665307615195,
+              "floor_over_lid": 1.1513632861984693,
+              "inferred_momentum_MPa": 0.02038356863701085,
+              "direct_momentum_MPa": null
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.09625268976794069,
+              "lid_down_MPa": 0.022178216937240147,
+              "inferred_momentum_MPa": 0.07407447283070054,
+              "direct_momentum_MPa": null
+            }
+          }
+        },
+        "common_peak": {
+          "pressure": {
+            "step_F24": 1048,
+            "displacement_D": 0.15667534502075808,
+            "F12_MPa": 0.203580623712413,
+            "F24_MPa": 0.0716850529114536,
+            "gap_MPa": 0.1318955708009594
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.20358062371241303,
+              "lid_down_MPa": 0.1559801394003467,
+              "floor_over_lid": 1.305170161374792,
+              "inferred_momentum_MPa": 0.04760048431206634,
+              "direct_momentum_MPa": null
+            },
+            "F24": {
+              "floor_MPa": 0.0716850529114536,
+              "lid_down_MPa": 0.14378652765717004,
+              "floor_over_lid": 0.49855194418751214,
+              "inferred_momentum_MPa": -0.07210147474571643,
+              "direct_momentum_MPa": null
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.13189557080095943,
+              "lid_down_MPa": 0.012193611743176652,
+              "inferred_momentum_MPa": 0.11970195905778278,
+              "direct_momentum_MPa": null
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.07127459823257348,
+              "lid_down_MPa": 0.14380680319466424,
+              "floor_over_lid": 0.4956274435507237,
+              "inferred_momentum_MPa": -0.07253220496209076,
+              "direct_momentum_MPa": null
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.13230602547983955,
+              "lid_down_MPa": 0.01217333620568245,
+              "inferred_momentum_MPa": 0.1201326892741571,
+              "direct_momentum_MPa": null
+            }
+          }
+        },
+        "native_peak": {
+          "pressure": {
+            "step_F24": 1048,
+            "displacement_D": 0.15667534502075808,
+            "F12_MPa": 0.203580623712413,
+            "F24_MPa": 0.0716850529114536,
+            "gap_MPa": 0.1318955708009594
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.20358062371241303,
+              "lid_down_MPa": 0.1559801394003467,
+              "floor_over_lid": 1.305170161374792,
+              "inferred_momentum_MPa": 0.04760048431206634,
+              "direct_momentum_MPa": null
+            },
+            "F24": {
+              "floor_MPa": 0.0716850529114536,
+              "lid_down_MPa": 0.14378652765717004,
+              "floor_over_lid": 0.49855194418751214,
+              "inferred_momentum_MPa": -0.07210147474571643,
+              "direct_momentum_MPa": null
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.13189557080095943,
+              "lid_down_MPa": 0.012193611743176652,
+              "inferred_momentum_MPa": 0.11970195905778278,
+              "direct_momentum_MPa": null
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.07127459823257348,
+              "lid_down_MPa": 0.14380680319466424,
+              "floor_over_lid": 0.4956274435507237,
+              "inferred_momentum_MPa": -0.07253220496209076,
+              "direct_momentum_MPa": null
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.13230602547983955,
+              "lid_down_MPa": 0.01217333620568245,
+              "inferred_momentum_MPa": 0.1201326892741571,
+              "direct_momentum_MPa": null
+            }
+          }
+        },
+        "common_first_above": {
+          "pressure": {
+            "step_F24": 877,
+            "displacement_D": 0.13111095189237143,
+            "F12_MPa": 0.03373268381188396,
+            "F24_MPa": 0.0,
+            "gap_MPa": 0.03373268381188396
+          },
+          "impulse": null
+        },
+        "native_first_above": {
+          "pressure": {
+            "step_F24": 877,
+            "displacement_D": 0.13111095189237143,
+            "F12_MPa": 0.03373268381188396,
+            "F24_MPa": 0.0,
+            "gap_MPa": 0.03373268381188396
+          },
+          "impulse": null
+        }
+      }
+    },
+    "half": {
+      "common": {
+        "count": 1139,
+        "max_abs_MPa": 0.0801165458789749,
+        "max_percent": 12.071214898077752,
+        "peak": {
+          "step_F24": 1110,
+          "displacement_D": 0.08297215313599282,
+          "F12_MPa": 0.12476236908970706,
+          "F24_MPa": 0.044645823210732155,
+          "gap_MPa": 0.0801165458789749
+        },
+        "first_above": {
+          "step_F24": 962,
+          "displacement_D": 0.07190919938452778,
+          "F12_MPa": 0.03395616319622076,
+          "F24_MPa": 0.0,
+          "gap_MPa": 0.03395616319622076
+        }
+      },
+      "native": {
+        "count": 2277,
+        "max_abs_MPa": 0.0801165458789749,
+        "max_percent": 12.071214898077752,
+        "peak": {
+          "step_F24": 1110,
+          "displacement_D": 0.08297215313599282,
+          "F12_MPa": 0.12476236908970706,
+          "F24_MPa": 0.044645823210732155,
+          "gap_MPa": 0.0801165458789749
+        },
+        "first_above": {
+          "step_F24": 961,
+          "displacement_D": 0.07183444969701802,
+          "F12_MPa": 0.03352227730224554,
+          "F24_MPa": 0.0,
+          "gap_MPa": 0.03352227730224554
+        }
+      },
+      "floor_arrival": {
+        "12": {
+          "step": 430,
+          "time_code": 0.6439585447241399,
+          "displacement_D": 0.06428473125851708
+        },
+        "24": {
+          "step": 977,
+          "time_code": 0.7315668583668428,
+          "displacement_D": 0.07303044469717634
+        }
+      },
+      "onset_delay_diagnostic": {
+        "label": "DEVELOPMENT_DIAGNOSTIC_DIFFERENT_PLATE_DISPLACEMENTS_ONLY",
+        "use_for_qualification": false,
+        "delay_F24_steps": 117,
+        "delay_time_code": 0.08760831364270276,
+        "comparison_samples": 1080,
+        "F12_first_step": 0,
+        "F12_last_step": 1079,
+        "same_time_peak": {
+          "F12_bracketing_steps": [
+            555,
+            555
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 1110,
+          "aligned_F24_step": 1227,
+          "original_displacement_D": 0.08297215313599282,
+          "aligned_F24_displacement_D": 0.09171786657465208,
+          "same_time_gap_MPa": 0.0801165458789749,
+          "aligned_gap_MPa": 0.0057802737653814
+        },
+        "aligned_peak": {
+          "F12_bracketing_steps": [
+            983,
+            983
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 1966,
+          "aligned_F24_step": 2083,
+          "original_displacement_D": 0.14695788564447088,
+          "aligned_F24_displacement_D": 0.15570359908313014,
+          "same_time_gap_MPa": 0.0221090298854362,
+          "aligned_gap_MPa": 0.03240796025965931
+        },
+        "at_original_native_peak": {
+          "F12_bracketing_steps": [
+            555,
+            555
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 1110,
+          "aligned_F24_step": 1227,
+          "original_displacement_D": 0.08297215313599282,
+          "aligned_F24_displacement_D": 0.09171786657465208,
+          "same_time_gap_MPa": 0.0801165458789749,
+          "aligned_gap_MPa": 0.0057802737653814
+        },
+        "at_original_common_peak": {
+          "F12_bracketing_steps": [
+            555,
+            555
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 1110,
+          "aligned_F24_step": 1227,
+          "original_displacement_D": 0.08297215313599282,
+          "aligned_F24_displacement_D": 0.09171786657465208,
+          "same_time_gap_MPa": 0.0801165458789749,
+          "aligned_gap_MPa": 0.0057802737653814
+        },
+        "at_first_common_crossing": {
+          "F12_bracketing_steps": [
+            481,
+            481
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 962,
+          "aligned_F24_step": 1079,
+          "original_displacement_D": 0.07190919938452778,
+          "aligned_F24_displacement_D": 0.08065491282318593,
+          "same_time_gap_MPa": 0.03395616319622076,
+          "aligned_gap_MPa": 0.005593885169591053
+        }
+      },
+      "at": {
+        "anchor_0p139D": {
+          "pressure": {
+            "step_F24": 1860,
+            "displacement_D": 0.13903441876842115,
+            "F12_MPa": 0.15469355924411549,
+            "F24_MPa": 0.16017311877203969,
+            "gap_MPa": -0.005479559527924199
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.15469355924411549,
+              "lid_down_MPa": 0.08403384275144309,
+              "floor_over_lid": 1.8408483318044977,
+              "inferred_momentum_MPa": 0.0706597164926724,
+              "direct_momentum_MPa": 0.07065971649269495
+            },
+            "F24": {
+              "floor_MPa": 0.16017311877203969,
+              "lid_down_MPa": 0.06706746524186956,
+              "floor_over_lid": 2.3882387413091792,
+              "inferred_momentum_MPa": 0.09310565353017013,
+              "direct_momentum_MPa": 0.09310565353020159
+            },
+            "F12_minus_F24": {
+              "floor_MPa": -0.005479559527924199,
+              "lid_down_MPa": 0.016966377509573527,
+              "inferred_momentum_MPa": -0.022445937037497726,
+              "direct_momentum_MPa": -0.022445937037506636
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.16019928378549075,
+              "lid_down_MPa": 0.0670906313071956,
+              "floor_over_lid": 2.3878040892470938,
+              "inferred_momentum_MPa": 0.09310865247829515,
+              "direct_momentum_MPa": 0.09310865247829254
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": -0.005505724541375268,
+              "lid_down_MPa": 0.016943211444247486,
+              "inferred_momentum_MPa": -0.022448935985622753,
+              "direct_momentum_MPa": -0.022448935985597593
+            }
+          }
+        },
+        "anchor_0p170D": {
+          "pressure": {
+            "step_F24": 2276,
+            "displacement_D": 0.17013028877254088,
+            "F12_MPa": 0.16549452691863442,
+            "F24_MPa": 0.15503328197113342,
+            "gap_MPa": 0.010461244947501003
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.1654945269186344,
+              "lid_down_MPa": 0.21974636089318272,
+              "floor_over_lid": 0.7531161209949693,
+              "inferred_momentum_MPa": -0.05425183397454833,
+              "direct_momentum_MPa": -0.05425183397457408
+            },
+            "F24": {
+              "floor_MPa": 0.15503328197113342,
+              "lid_down_MPa": 0.1517111114547221,
+              "floor_over_lid": 1.0218980039402243,
+              "inferred_momentum_MPa": 0.0033221705164113158,
+              "direct_momentum_MPa": 0.0033221705163831486
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.010461244947500975,
+              "lid_down_MPa": 0.06803524943846062,
+              "inferred_momentum_MPa": -0.057574004490959646,
+              "direct_momentum_MPa": -0.05757400449095723
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.1549871498746342,
+              "lid_down_MPa": 0.1515271560007216,
+              "floor_over_lid": 1.0228341504271097,
+              "inferred_momentum_MPa": 0.0034599938739125757,
+              "direct_momentum_MPa": 0.0034599938738957433
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.010507377044000205,
+              "lid_down_MPa": 0.06821920489246111,
+              "inferred_momentum_MPa": -0.057711827848460906,
+              "direct_momentum_MPa": -0.05771182784846982
+            }
+          }
+        },
+        "common_peak": {
+          "pressure": {
+            "step_F24": 1110,
+            "displacement_D": 0.08297215313599282,
+            "F12_MPa": 0.12476236908970706,
+            "F24_MPa": 0.044645823210732155,
+            "gap_MPa": 0.0801165458789749
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.12476236908970707,
+              "lid_down_MPa": 0.0781211657780975,
+              "floor_over_lid": 1.5970367037800424,
+              "inferred_momentum_MPa": 0.04664120331160958,
+              "direct_momentum_MPa": 0.04664120331152772
+            },
+            "F24": {
+              "floor_MPa": 0.04464582321073216,
+              "lid_down_MPa": 0.07422313728875782,
+              "floor_over_lid": 0.6015081663422819,
+              "inferred_momentum_MPa": -0.029577314078025656,
+              "direct_momentum_MPa": -0.029577314078383557
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.0801165458789749,
+              "lid_down_MPa": 0.0038980284893396777,
+              "inferred_momentum_MPa": 0.07621851738963523,
+              "direct_momentum_MPa": 0.07621851738991128
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.04431870312527617,
+              "lid_down_MPa": 0.07424287926010735,
+              "floor_over_lid": 0.5969421386528819,
+              "inferred_momentum_MPa": -0.029924176134831178,
+              "direct_momentum_MPa": -0.029924176134885776
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.0804436659644309,
+              "lid_down_MPa": 0.0038782865179901455,
+              "inferred_momentum_MPa": 0.07656537944644076,
+              "direct_momentum_MPa": 0.07656537944641349
+            }
+          }
+        },
+        "native_peak": {
+          "pressure": {
+            "step_F24": 1110,
+            "displacement_D": 0.08297215313599282,
+            "F12_MPa": 0.12476236908970706,
+            "F24_MPa": 0.044645823210732155,
+            "gap_MPa": 0.0801165458789749
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.12476236908970707,
+              "lid_down_MPa": 0.0781211657780975,
+              "floor_over_lid": 1.5970367037800424,
+              "inferred_momentum_MPa": 0.04664120331160958,
+              "direct_momentum_MPa": 0.04664120331152772
+            },
+            "F24": {
+              "floor_MPa": 0.04464582321073216,
+              "lid_down_MPa": 0.07422313728875782,
+              "floor_over_lid": 0.6015081663422819,
+              "inferred_momentum_MPa": -0.029577314078025656,
+              "direct_momentum_MPa": -0.029577314078383557
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.0801165458789749,
+              "lid_down_MPa": 0.0038980284893396777,
+              "inferred_momentum_MPa": 0.07621851738963523,
+              "direct_momentum_MPa": 0.07621851738991128
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.04431870312527617,
+              "lid_down_MPa": 0.07424287926010735,
+              "floor_over_lid": 0.5969421386528819,
+              "inferred_momentum_MPa": -0.029924176134831178,
+              "direct_momentum_MPa": -0.029924176134885776
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.0804436659644309,
+              "lid_down_MPa": 0.0038782865179901455,
+              "inferred_momentum_MPa": 0.07656537944644076,
+              "direct_momentum_MPa": 0.07656537944641349
+            }
+          }
+        },
+        "common_first_above": {
+          "pressure": {
+            "step_F24": 962,
+            "displacement_D": 0.07190919938452778,
+            "F12_MPa": 0.03395616319622076,
+            "F24_MPa": 0.0,
+            "gap_MPa": 0.03395616319622076
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.03395616319622076,
+              "lid_down_MPa": 0.08027472421309381,
+              "floor_over_lid": 0.42299943760731207,
+              "inferred_momentum_MPa": -0.04631856101687305,
+              "direct_momentum_MPa": -0.046318561016830254
+            },
+            "F24": {
+              "floor_MPa": 0.0,
+              "lid_down_MPa": 0.07272272055293678,
+              "floor_over_lid": 0.0,
+              "inferred_momentum_MPa": -0.07272272055293678,
+              "direct_momentum_MPa": -0.07272272055296651
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.03395616319622076,
+              "lid_down_MPa": 0.007552003660157028,
+              "inferred_momentum_MPa": 0.02640415953606373,
+              "direct_momentum_MPa": 0.026404159536136257
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.0,
+              "lid_down_MPa": 0.07272746209055601,
+              "floor_over_lid": 0.0,
+              "inferred_momentum_MPa": -0.07272746209055601,
+              "direct_momentum_MPa": -0.07272746209050975
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.03395616319622076,
+              "lid_down_MPa": 0.007547262122537798,
+              "inferred_momentum_MPa": 0.02640890107368296,
+              "direct_momentum_MPa": 0.02640890107367949
+            }
+          }
+        },
+        "native_first_above": {
+          "pressure": {
+            "step_F24": 961,
+            "displacement_D": 0.07183444969701802,
+            "F12_MPa": 0.03352227730224554,
+            "F24_MPa": 0.0,
+            "gap_MPa": 0.03352227730224554
+          },
+          "impulse": null
+        }
+      }
+    },
+    "quarter": {
+      "common": {
+        "count": 1139,
+        "max_abs_MPa": 0.060085699720169125,
+        "max_percent": 9.053153573535116,
+        "peak": {
+          "step_F24": 3276,
+          "displacement_D": 0.12243998814122303,
+          "F12_MPa": 0.14079143247952242,
+          "F24_MPa": 0.08070573275935329,
+          "gap_MPa": 0.060085699720169125
+        },
+        "first_above": {
+          "step_F24": 1088,
+          "displacement_D": 0.040663830005387425,
+          "F12_MPa": 0.0378657576373741,
+          "F24_MPa": 0.004058371025221871,
+          "gap_MPa": 0.033807386612152227
+        }
+      },
+      "native": {
+        "count": 4553,
+        "max_abs_MPa": 0.06010117841127019,
+        "max_percent": 9.055485758536005,
+        "peak": {
+          "step_F24": 3270,
+          "displacement_D": 0.12221573907869265,
+          "F12_MPa": 0.14003371618240598,
+          "F24_MPa": 0.07993253777113579,
+          "gap_MPa": 0.06010117841127019
+        },
+        "first_above": {
+          "step_F24": 1082,
+          "displacement_D": 0.040439580942858155,
+          "F12_MPa": 0.036066247305669666,
+          "F24_MPa": 0.002826736008119935,
+          "gap_MPa": 0.033239511297549734
+        }
+      },
+      "floor_arrival": {
+        "12": {
+          "step": 468,
+          "time_code": 0.7008665091416221,
+          "displacement_D": 0.034982853754634835
+        },
+        "24": {
+          "step": 1066,
+          "time_code": 0.7982090798557363,
+          "displacement_D": 0.039841583442778994
+        }
+      },
+      "onset_delay_diagnostic": {
+        "label": "DEVELOPMENT_DIAGNOSTIC_DIFFERENT_PLATE_DISPLACEMENTS_ONLY",
+        "use_for_qualification": false,
+        "delay_F24_steps": 130,
+        "delay_time_code": 0.09734257071411419,
+        "comparison_samples": 2212,
+        "F12_first_step": 0,
+        "F12_last_step": 2211,
+        "same_time_peak": {
+          "F12_bracketing_steps": [
+            1635,
+            1635
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 3270,
+          "aligned_F24_step": 3400,
+          "original_displacement_D": 0.12221573907869265,
+          "aligned_F24_displacement_D": 0.1270744687668368,
+          "same_time_gap_MPa": 0.06010117841127019,
+          "aligned_gap_MPa": 0.035976366872005394
+        },
+        "aligned_peak": {
+          "F12_bracketing_steps": [
+            1601,
+            1601
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 3202,
+          "aligned_F24_step": 3332,
+          "original_displacement_D": 0.1196742497033565,
+          "aligned_F24_displacement_D": 0.12453297939149954,
+          "same_time_gap_MPa": 0.055096977291681726,
+          "aligned_gap_MPa": 0.03936669085641284
+        },
+        "at_original_native_peak": {
+          "F12_bracketing_steps": [
+            1635,
+            1635
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 3270,
+          "aligned_F24_step": 3400,
+          "original_displacement_D": 0.12221573907869265,
+          "aligned_F24_displacement_D": 0.1270744687668368,
+          "same_time_gap_MPa": 0.06010117841127019,
+          "aligned_gap_MPa": 0.035976366872005394
+        },
+        "at_original_common_peak": {
+          "F12_bracketing_steps": [
+            1638,
+            1638
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 3276,
+          "aligned_F24_step": 3406,
+          "original_displacement_D": 0.12243998814122303,
+          "aligned_F24_displacement_D": 0.12729871782936608,
+          "same_time_gap_MPa": 0.060085699720169125,
+          "aligned_gap_MPa": 0.03542899625033161
+        },
+        "at_first_common_crossing": {
+          "F12_bracketing_steps": [
+            544,
+            544
+          ],
+          "F12_interpolated": false,
+          "original_F24_step": 1088,
+          "aligned_F24_step": 1218,
+          "original_displacement_D": 0.040663830005387425,
+          "aligned_F24_displacement_D": 0.045522559693531583,
+          "same_time_gap_MPa": 0.033807386612152227,
+          "aligned_gap_MPa": 0.0035349420101417964
+        }
+      },
+      "at": {
+        "anchor_0p139D": {
+          "pressure": {
+            "step_F24": 3720,
+            "displacement_D": 0.13903441876842115,
+            "F12_MPa": 0.15521042807187396,
+            "F24_MPa": 0.14059061118254895,
+            "gap_MPa": 0.01461981688932501
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.15521042807187396,
+              "lid_down_MPa": 0.1144118165525117,
+              "floor_over_lid": 1.3565943863904728,
+              "inferred_momentum_MPa": 0.04079861151936226,
+              "direct_momentum_MPa": 0.04079861151935879
+            },
+            "F24": {
+              "floor_MPa": 0.14059061118254895,
+              "lid_down_MPa": 0.10674840725281426,
+              "floor_over_lid": 1.3170277177961593,
+              "inferred_momentum_MPa": 0.03384220392973469,
+              "direct_momentum_MPa": 0.03384220392978119
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.01461981688932501,
+              "lid_down_MPa": 0.0076634092996974434,
+              "inferred_momentum_MPa": 0.006956407589627567,
+              "direct_momentum_MPa": 0.0069564075895776
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.14062576153793507,
+              "lid_down_MPa": 0.10675569177195926,
+              "floor_over_lid": 1.3172671096387596,
+              "inferred_momentum_MPa": 0.03387006976597581,
+              "direct_momentum_MPa": 0.03387006976600792
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.01458466653393889,
+              "lid_down_MPa": 0.007656124780552442,
+              "inferred_momentum_MPa": 0.006928541753386447,
+              "direct_momentum_MPa": 0.006928541753350871
+            }
+          }
+        },
+        "anchor_0p170D": {
+          "pressure": {
+            "step_F24": 4552,
+            "displacement_D": 0.17013028877254088,
+            "F12_MPa": 0.15899840135679766,
+            "F24_MPa": 0.14594977074039744,
+            "gap_MPa": 0.013048630616400214
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.15899840135679766,
+              "lid_down_MPa": 0.18763331825992502,
+              "floor_over_lid": 0.847388954324946,
+              "inferred_momentum_MPa": -0.02863491690312736,
+              "direct_momentum_MPa": -0.02863491690312045
+            },
+            "F24": {
+              "floor_MPa": 0.14594977074039744,
+              "lid_down_MPa": 0.1509579146060217,
+              "floor_over_lid": 0.9668242378765314,
+              "inferred_momentum_MPa": -0.005008143865624259,
+              "direct_momentum_MPa": -0.005008143865636442
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.013048630616400214,
+              "lid_down_MPa": 0.036675403653903316,
+              "inferred_momentum_MPa": -0.0236267730375031,
+              "direct_momentum_MPa": -0.023626773037484006
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.14591757732127647,
+              "lid_down_MPa": 0.15087412253185775,
+              "floor_over_lid": 0.9671478108544778,
+              "inferred_momentum_MPa": -0.004956545210581281,
+              "direct_momentum_MPa": -0.004956545210585531
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.013080824035521188,
+              "lid_down_MPa": 0.03675919572806727,
+              "inferred_momentum_MPa": -0.02367837169254608,
+              "direct_momentum_MPa": -0.02367837169253492
+            }
+          }
+        },
+        "common_peak": {
+          "pressure": {
+            "step_F24": 3276,
+            "displacement_D": 0.12243998814122303,
+            "F12_MPa": 0.14079143247952242,
+            "F24_MPa": 0.08070573275935329,
+            "gap_MPa": 0.060085699720169125
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.14079143247952244,
+              "lid_down_MPa": 0.11798054958451894,
+              "floor_over_lid": 1.1933444366493837,
+              "inferred_momentum_MPa": 0.022810882895003506,
+              "direct_momentum_MPa": 0.022810882894990215
+            },
+            "F24": {
+              "floor_MPa": 0.08070573275935329,
+              "lid_down_MPa": 0.10170412069166397,
+              "floor_over_lid": 0.7935345412800783,
+              "inferred_momentum_MPa": -0.02099838793231068,
+              "direct_momentum_MPa": -0.020998387932299387
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.06008569972016915,
+              "lid_down_MPa": 0.016276428892854966,
+              "inferred_momentum_MPa": 0.04380927082731419,
+              "direct_momentum_MPa": 0.0438092708272896
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.08064049143384965,
+              "lid_down_MPa": 0.1017203933106984,
+              "floor_over_lid": 0.7927662173654643,
+              "inferred_momentum_MPa": -0.02107990187684876,
+              "direct_momentum_MPa": -0.021079901876949317
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.0601509410456728,
+              "lid_down_MPa": 0.016260156273820534,
+              "inferred_momentum_MPa": 0.043890784771852265,
+              "direct_momentum_MPa": 0.04389078477193953
+            }
+          }
+        },
+        "native_peak": {
+          "pressure": {
+            "step_F24": 3270,
+            "displacement_D": 0.12221573907869265,
+            "F12_MPa": 0.14003371618240598,
+            "F24_MPa": 0.07993253777113579,
+            "gap_MPa": 0.06010117841127019
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.140033716182406,
+              "lid_down_MPa": 0.11802746736203693,
+              "floor_over_lid": 1.1864502332568674,
+              "inferred_momentum_MPa": 0.022006248820369084,
+              "direct_momentum_MPa": 0.02200624882037976
+            },
+            "F24": {
+              "floor_MPa": 0.0799325377711358,
+              "lid_down_MPa": 0.10192013980194835,
+              "floor_over_lid": 0.7842663670444434,
+              "inferred_momentum_MPa": -0.021987602030812542,
+              "direct_momentum_MPa": -0.021987602030878607
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.060101178411270204,
+              "lid_down_MPa": 0.016107327560088577,
+              "inferred_momentum_MPa": 0.043993850851181626,
+              "direct_momentum_MPa": 0.04399385085125837
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.0798685920274047,
+              "lid_down_MPa": 0.10194045454033626,
+              "floor_over_lid": 0.7834827928474847,
+              "inferred_momentum_MPa": -0.022071862512931556,
+              "direct_momentum_MPa": -0.022071862513035622
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.060165124155001304,
+              "lid_down_MPa": 0.016087012821700664,
+              "inferred_momentum_MPa": 0.04407811133330064,
+              "direct_momentum_MPa": 0.04407811133341538
+            }
+          }
+        },
+        "common_first_above": {
+          "pressure": {
+            "step_F24": 1088,
+            "displacement_D": 0.040663830005387425,
+            "F12_MPa": 0.0378657576373741,
+            "F24_MPa": 0.004058371025221871,
+            "gap_MPa": 0.033807386612152227
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.037865757637374105,
+              "lid_down_MPa": 0.04136265063816436,
+              "floor_over_lid": 0.9154577149472197,
+              "inferred_momentum_MPa": -0.0034968930007902577,
+              "direct_momentum_MPa": -0.00349689300074911
+            },
+            "F24": {
+              "floor_MPa": 0.004058371025221871,
+              "lid_down_MPa": 0.03750245775132947,
+              "floor_over_lid": 0.10821613484993531,
+              "inferred_momentum_MPa": -0.033444086726107596,
+              "direct_momentum_MPa": -0.03344408672624149
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.03380738661215223,
+              "lid_down_MPa": 0.0038601928868348956,
+              "inferred_momentum_MPa": 0.029947193725317338,
+              "direct_momentum_MPa": 0.02994719372549238
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.003976775877778189,
+              "lid_down_MPa": 0.03749354759668557,
+              "floor_over_lid": 0.10606560682269862,
+              "inferred_momentum_MPa": -0.03351677171890738,
+              "direct_momentum_MPa": -0.03351677171900628
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.03388898175959591,
+              "lid_down_MPa": 0.0038691030414787914,
+              "inferred_momentum_MPa": 0.03001987871811712,
+              "direct_momentum_MPa": 0.03001987871825717
+            }
+          }
+        },
+        "native_first_above": {
+          "pressure": {
+            "step_F24": 1082,
+            "displacement_D": 0.040439580942858155,
+            "F12_MPa": 0.036066247305669666,
+            "F24_MPa": 0.002826736008119935,
+            "gap_MPa": 0.033239511297549734
+          },
+          "impulse": {
+            "F12": {
+              "floor_MPa": 0.03606624730566967,
+              "lid_down_MPa": 0.041379059649598565,
+              "floor_over_lid": 0.8716062571523315,
+              "inferred_momentum_MPa": -0.005312812343928892,
+              "direct_momentum_MPa": -0.005312812343939974
+            },
+            "F24": {
+              "floor_MPa": 0.002826736008119935,
+              "lid_down_MPa": 0.03738790344194709,
+              "floor_over_lid": 0.07560563037478317,
+              "inferred_momentum_MPa": -0.03456116743382716,
+              "direct_momentum_MPa": -0.034561167433675793
+            },
+            "F12_minus_F24": {
+              "floor_MPa": 0.033239511297549734,
+              "lid_down_MPa": 0.003991156207651475,
+              "inferred_momentum_MPa": 0.029248355089898266,
+              "direct_momentum_MPa": 0.02924835508973582
+            },
+            "F24_two_steps": {
+              "floor_MPa": 0.002962992737345501,
+              "lid_down_MPa": 0.03737757916805264,
+              "floor_over_lid": 0.07927192727018634,
+              "inferred_momentum_MPa": -0.03441458643070714,
+              "direct_momentum_MPa": -0.0344145864306675
+            },
+            "F12_minus_F24_same_duration": {
+              "floor_MPa": 0.03310325456832417,
+              "lid_down_MPa": 0.004001480481545923,
+              "inferred_momentum_MPa": 0.029101774086778248,
+              "direct_momentum_MPa": 0.029101774086727525
+            }
+          }
+        }
+      }
+    }
+  }
+}
