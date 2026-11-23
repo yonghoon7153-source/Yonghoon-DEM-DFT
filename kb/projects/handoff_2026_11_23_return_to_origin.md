@@ -105,7 +105,7 @@ evidenceScope: single-source
   MD-1 판정 (P–O 개시 없음 · Zr–S 시드 하나에서만) — 문장은 카드 ⏩_2026_11_22_MD1_판정 의 허용 문장에서만.
 - b2o3 UMA-MD (1저자 = 사용자): D-2026-11-23-b2o3-bo-11b-cap-continue (11b 큐가 상한 150 h 에서 서면 이어 띄우기 · RESUME=1) ·
   D-2026-11-23-b2o3-bo-placement-amend6-relax2 (9 단계 가족마다 2 번 후보 이완 셋 · 판독 규칙 (a)–(d) 결과 전 · DFT 합계 상한 200 GPU-h ·
-  11b 이어 돌리기 먼저 · Codex 확인 없음 · 도구 tools/doping/b2o3_bo_dft_relax2.py 는 아직 없다).
+  11b 이어 돌리기 먼저 · Codex 확인 없음 · 도구 b2o3_bo_dft_relax2.py (tools/doping 에 만들 것) 는 아직 없다).
 - 우리 DFT 기준선 (B₂O₃ · 1저자 = 사용자): D-2026-11-23-b2o3-site-dft (B-P 대 B-Li DFT 형성 에너지 · 같은 출발물 (host + B₂O₃ + Li₂S/Li₃PS₄) 반응 에너지 ·
   10월 UMA 후보 + O 가 B 에 붙은 짝 (사용자 선택) · 기준상 넷 vc-relax 허락 · 판정 |D| ≥ 0.10 eV/B · 원자당 (자유 원자 기준 · Wang 2025 Fig. S3 식) 값은 안 쓴다 · 기계 kgy).
 
@@ -128,7 +128,7 @@ evidenceScope: single-source
 - 편지 kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md (발송 대기 · 사용자가 보내는 글 사본을 받았다) ·
   기준 cc3873047 (ER 가 본 묶음) → 고침 19ddec83c · a6b34ffa6 · 1da64d0be · 묶음 MANIFEST 50beb026… · selftest 279/279 (메인 세션 재확인) ·
   돌연변이 전체 한 번 209/210 + 살아남은 m158 은 시험 하나 더해 홀로 빨강 (편지 §5 · 빌드 기록 ⑮ 에 경위).
-- 회신이 오면: 원문을 kb/reviews/codex_ES_reply_wad_a5_er_fixes_2026_11_2x.md 로 그대로 (선례 codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md) ·
+- 회신이 오면: 원문을 codex_ES_reply_wad_a5_er_fixes_2026_11_2x.md (kb/reviews 에) 로 그대로 (선례 codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md) ·
   첨부는 kb/reviews/codex_ES_evidence_<날짜>/ · ES 편지 status 를 '발송 · 회신 수령' 으로 · 빌드 기록 ⑯ (db/properties/wad_a5_build_log_2026_11_20.json ·
   indent 2 · 끝에 덧붙임) · python3 tools/kb_wiki.py reviews --write · index · lint.
 - NO-GO 면 고침 — a5 도구 (tools/wad/build_a5_vasp_package.py · build_v5_vasp_package.py) 와 db/inputs/wad_a5_vasp_2026_11_20/ 은 이제 본 세션 것이다.
