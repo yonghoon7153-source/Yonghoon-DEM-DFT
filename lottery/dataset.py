@@ -8,9 +8,13 @@ DataError 로 멈춘다 (fail-closed) — 분석은 검증을 통과한 레코�
   - 로또: 1..N 회차 연속, 전부 토요일·7일 간격, 번호 6개 1..45 서로 다름·오름차순,
     보너스 1..45 이고 본번호와 겹치지 않음, 1회 = 10 23 29 33 37 40 + 16 (2002-12-07)
   - 게임당 가격: 5등 당첨금이 10,000원이면 2,000원(1~87회), 5,000원이면 1,000원(88회~)
-  - 총판매액은 wholEpsdSumNtslAmt. (rlvtEpsdSumNtslAmt 는 261회부터 정확히 절반 =
-    당첨금 재원 50%.) 판매액/가격 = 게임 수 로 계산한 5등 기대 당첨자 수와 실측이
-    가격 구간별로 2% 안에서 맞는다 — 판매액 필드와 확률 공식을 동시에 검증한다.
+  - 총판매액은 wholEpsdSumNtslAmt. (rlvtEpsdSumNtslAmt 는 261회부터 거의 절반 = 당첨금 재원 50% —
+    정확히 같지는 않다: 261회 이후 79회가 판매액의 0.0002% 안에서 어긋나 검증에 쓰지 않는다.)
+    판매액/가격 = 게임 수 로 계산한 5등 기대 당첨자 수와 실측이 가격 구간 합계로 2% 안에서 맞고,
+    1,000원 구간(88회~)은 회차마다 0.85~1.20 이다 (검사 범위 TIER5_ROUND_BAND) — 판매액 필드와
+    확률 공식을 동시에 검증한다. 합계만 보면 회차 하나가 10배 틀려도 통과한다 (자체 리뷰 B1).
+  - 항등식 (자체 리뷰 B2): sumWnNope = 1~5등 당첨자 합 (전 회차), rnkKSumWnAmt = rnkKWnAmt × rnkKWnNope
+    (AMOUNT_IDENTITY_FROM_ROUND 회부터 전 등수 — 그 전에는 총액 필드가 다른 기준이다)
   - 1등 자동/수동/반자동 구분은 262회부터 기록 (그 전은 0,0,0 → None 으로 둔다)
   - 연금: 1..N 회차 연속, 전부 목요일·7일 간격, 조 1..5, 1등·보너스 6자리 숫자 문자열
 새로 받은 목록은 이에 더해 이미 가진 목록을 그대로 이어 가야 한다 (history_changes — fetch_data.py 가 적용).
@@ -32,6 +36,8 @@ P_MATCH = {k: comb(6, k) * comb(39, 6 - k) / N_COMB for k in range(7)}
 P_TIER5 = P_MATCH[3]  # 5등 = 정확히 3개 일치
 
 SPLIT_FROM_ROUND = 262  # 1등 자동/수동/반자동 구분이 기록되기 시작한 회차
+AMOUNT_IDENTITY_FROM_ROUND = 575  # 등수별 총액 = 1인당 × 인원 이 전 등수에서 성립하기 시작한 회차 (2026-11-23 실측)
+TIER5_ROUND_BAND = (0.7, 1.4)  # 1,000원 구간 회차별 5등 실측/기대 허용 범위 (실측 0.852~1.196)
 LOTTO_ANCHOR = {"round": 1, "date": dt.date(2002, 12, 7),
                 "numbers": (10, 23, 29, 33, 37, 40), "bonus": 16}
 PENSION_FIRST_DATE = dt.date(2020, 5, 7)  # 연금복권720+ 1회 추첨일
@@ -128,6 +134,12 @@ def parse_lotto(raw: bytes) -> list[LottoDraw]:
             errors.append(f"로또 {rnd}회: 5등 당첨금 {tier5} 로 게임 가격을 정할 수 없음")
             price = 1000
         winners = tuple(int(r[f"rnk{k}WnNope"]) for k in range(1, 6))
+        if int(r["sumWnNope"]) != sum(winners):
+            errors.append(f"로또 {rnd}회: 총 당첨자 수 {r['sumWnNope']} 가 1~5등 합 {sum(winners)} 과 다름")
+        if rnd >= AMOUNT_IDENTITY_FROM_ROUND:
+            bad = [k for k in range(1, 6) if int(r[f"rnk{k}SumWnAmt"]) != int(r[f"rnk{k}WnAmt"]) * winners[k - 1]]
+            if bad:
+                errors.append(f"로또 {rnd}회: {bad}등 총 당첨금이 1인당 금액 × 인원과 다름")
         split = (int(r["winType1"]), int(r["winType2"]), int(r["winType3"]))
         if rnd >= SPLIT_FROM_ROUND:
             if sum(split) != winners[0]:
@@ -158,6 +170,12 @@ def parse_lotto(raw: bytes) -> list[LottoDraw]:
             ratio = sum(d.winners[4] for d in seg) / sum(d.games * P_TIER5 for d in seg)
             if abs(ratio - 1) > 0.02:
                 errors.append(f"로또: 가격 {p}원 구간 5등 실측/기대 = {ratio:.4f} (1±0.02 밖)")
+    lo_b, hi_b = TIER5_ROUND_BAND
+    off = [(d.round, d.winners[4] / (d.games * P_TIER5) if d.sales > 0 else 0.0) for d in out if d.price == 1000]
+    off = [(rnd, x) for rnd, x in off if not lo_b <= x <= hi_b]
+    if off:
+        errors.append(f"로또: 5등 실측/기대가 회차 범위 {lo_b}~{hi_b} 밖 — "
+                      + ", ".join(f"{rnd}회 {x:.3f}" for rnd, x in off[:10]))
     if errors:
         raise DataError("\n".join(errors))
     return out

@@ -80,3 +80,34 @@ def test_non_json_and_wrong_shape_fail_closed():
         dataset.parse_lotto(b"<html>moved</html>")
     with pytest.raises(dataset.DataError):
         dataset.parse_lotto(json.dumps({"data": {"list": []}}).encode())
+
+
+# ── 자체 리뷰 1차 B1·B2: 회차 하나가 틀린 원본. 리뷰 반례 — 88회 이후 아무 회차의 5등 당첨자 수나 판매액을
+# ×10/÷10 해도 1164/1164 통과 (가격 구간 합계만 봤다), 1000회 ×10 이면 5등 인기도 OOF R² 0.661 → 0.145.
+# API 의 정확한 항등식(총 당첨자 = 1~5등 합, 575회부터 등수별 총액 = 1인당 × 인원)도 안 썼다 →
+# 1240회 1등 1인당 금액 ×10 이 통과해 /make 의 1등 기대 금액이 17% 부풀었다.
+
+def _tier5_times(row: dict, f: float) -> None:
+    """5등 당첨자 수만 f 배 — 총 당첨자 수·5등 총액은 맞춰 둔다 (회차별 비율 검사만 걸려야 한다)."""
+    old = int(row["rnk5WnNope"])
+    new = int(old * f)
+    row.update(rnk5WnNope=new, rnk5SumWnAmt=new * int(row["rnk5WnAmt"]),
+               sumWnNope=int(row["sumWnNope"]) - old + new)
+
+
+def _first_amount_times_10(row: dict) -> None:
+    assert int(row["rnk1WnNope"]) > 0, "1등이 있는 회차여야 1인당 × 인원 항등식이 깨진다"
+    row.update(rnk1WnAmt=int(row["rnk1WnAmt"]) * 10)
+
+
+@pytest.mark.parametrize("label, mutate, expect", [
+    ("1000회 5등 당첨자 수 ×10", lambda r: _tier5_times(r[999], 10), "회차 범위"),
+    ("1000회 5등 당첨자 수 ÷10", lambda r: _tier5_times(r[999], 0.1), "회차 범위"),
+    ("1000회 판매액 ×10", lambda r: r[999].update(wholEpsdSumNtslAmt=int(r[999]["wholEpsdSumNtslAmt"]) * 10), "회차 범위"),
+    ("100회 판매액 ÷10", lambda r: r[99].update(wholEpsdSumNtslAmt=int(r[99]["wholEpsdSumNtslAmt"]) // 10), "회차 범위"),
+    ("총 당첨자 수 ≠ 1~5등 합", lambda r: r[700].update(sumWnNope=int(r[700]["sumWnNope"]) + 1), "1~5등 합"),
+    ("1240회 1등 1인당 금액 ×10", lambda r: _first_amount_times_10(r[1239]), "1인당 금액 × 인원"),
+])
+def test_lotto_validator_catches_single_round_errors(label, mutate, expect):
+    with pytest.raises(dataset.DataError, match=expect):
+        dataset.parse_lotto(_mut_lotto(mutate))
