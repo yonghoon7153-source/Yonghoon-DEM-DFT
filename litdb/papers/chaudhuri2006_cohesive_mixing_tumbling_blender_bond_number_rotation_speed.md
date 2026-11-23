@@ -449,6 +449,7 @@
 - 정렬 · 상호작용 혼합 · 코팅 (G1 의 '덮임' 쪽): `hersey1975_ordered_mixing_concept` · `pfeffer2001_dry_particle_coating_engineered_particulates` · `otani2025_dem_se_dispersion_aggregation_compression`.
 - 같은 해 · 다른 그룹의 전단 (회전 세기) 판 (액체 다리 · 실험 · 2026-11-23 카드): `li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram` — H. Li, J.J. McCarthy, *"Cohesive particle mixing and segregation under shear"*, Powder Technol. 164 (2006) 58–64 (충돌 수 Co 로 고른 동적 상태도 · 느린 전단에서 더 섞이는 쌍 — 이 논문의 '빠른 회전이 낫다' 와 영역이 다름).
 - 위 Co 산술이 빌린 δ/R_t = 0.03 의 원 논문 대조 (원문 인쇄값 아님 · 그림 4 기울기 평균 · 준 2D · 반 채움 · Fr 10⁻⁴) + 비점착 회전 드럼 흐름층 영 모형 (무차원 식에서 rpm 은 k(Fr) · 확산으로만 들어옴 [그 카드 산술]) · 이 논문 ref [6] · [7] (Khakhar 1997 Phys. Fluids 두 편) 을 그 논문이 [24] · [10] 으로 인용 (2026-11-24 카드): `khakhar1999_chaotic_mixing_granular_2d_tumbling_mixers_flowing_layer` — D.V. Khakhar, J.J. McCarthy, J.F. Gilchrist, J.M. Ottino, Chaos 9 (1999) 195–205.
+- 이 논문의 Bond 0.1 · 120 · 마개 흐름을 인용하며 액교 점착 (모든 쌍 · 벽 같은 γ) × 회전 속도 × 충전율로 가로 혼합을 잰 3D 드럼 DEM (점착 ↑ → 회전당 k 단조 ↓ · 회전당 k 는 마른 입자만 rpm 따라 ↓ · 마른 입자 64 % 충전 최악 · 2026-11-24 카드): `liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

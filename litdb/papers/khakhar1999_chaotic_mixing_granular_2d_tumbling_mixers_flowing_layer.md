@@ -381,6 +381,7 @@
 - 점착 드럼 DEM · 회전 속도: `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` · `jarray2019_cohesion_driven_mixing_segregation_drum`.
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` (이 논문 ref 3) · `chandratilleke2012_particle_scale_mixing_index` · `nadeem2023_gnn_mixing_index`.
 - 믹서 DEM 리뷰: `jadidi2023_dem_batch_solid_mixers_review`.
+- 포물선 흐름층 모형을 아무 충전율 + 비혼합 핵으로 넓혀 (Ding 2002 경유) 순환 주기의 평균 · 표준편차를 낸 액교 점착 3D 드럼 DEM (최대 층 두께 6d · 8d → k ≈ 0.23 · 0.30 at 40 % · Fr 8.8 × 10⁻³ · L/d 26.6 [그 카드 산술] · 바퀴 단위라 유량이 ω 와 무관 · 이 논문 1997 판을 인용 · 2026-11-24 카드): `liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
