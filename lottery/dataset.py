@@ -35,6 +35,9 @@ SPLIT_FROM_ROUND = 262  # 1등 자동/수동/반자동 구분이 기록되기 �
 LOTTO_ANCHOR = {"round": 1, "date": dt.date(2002, 12, 7),
                 "numbers": (10, 23, 29, 33, 37, 40), "bonus": 16}
 PENSION_FIRST_DATE = dt.date(2020, 5, 7)  # 연금복권720+ 1회 추첨일
+# 판정 기준: 보정 p 가 이보다 작으면 '차이 있음'. 웹 화면(content.py)과 RESULTS.md(build_results.py)의
+# 판정 문구가 모두 이 값과 보정 p 에서 나온다 (자체 리뷰 K1). 웹앱이 numpy 없이 import 하도록 여기 둔다.
+ALPHA = 0.05
 
 
 class DataError(ValueError):

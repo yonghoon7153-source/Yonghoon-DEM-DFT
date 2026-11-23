@@ -6,7 +6,7 @@
   <p class="lead">진짜 무작위로 뽑은 가상의 역사를 {{ st.b_mc|num }}번 만들어 같은 통계량을 잰 뒤 실제 값과 비교했다
     (몬테카를로). p 가 작을수록 무작위로는 설명하기 어렵다는 뜻이다. 질문이 많으면 우연히 작은 p 가 나오기 쉬워서
     Holm 방법으로 보정했다.</p>
-  {{ M.verdict('same', '무작위와 구분 안 됨', '질문 ' ~ st.summary|length ~ '개 모두 — 보정 후 가장 작은 p 가 ' ~ (st.summary|map(attribute='p_holm')|min)|p) }}
+  {{ M.verdict(V.verdict.random.kind, V.verdict.random.label, V.verdict.random.text) }}
 </header>
 
 <div class="panel" id="summary">
@@ -25,9 +25,10 @@
     {{ M.course('확률과통계 5주 이항분포', '14주 카이제곱 적합도') }}
     {{ M.legend([('bar', 'k-accent', '실제 출현'), ('line', 'k-ref', '기대 ' ~ '%.1f'|format(fq.expected) ~ '회'), ('box', 'k-band', '95% 범위 ' ~ fq.band95[0] ~ '~' ~ fq.band95[1]), ('box', 'k-band2', '45개 동시 보정 ' ~ fq.band_bonferroni[0] ~ '~' ~ fq.band_bonferroni[1])]) }}
     <figure class="chart-fig">{{ M.columns(V.freq_chart) }}
-      <figcaption>가장 많이 나온 {{ fq.most[0] }}번({{ fq.counts[fq.most[0]-1] }}회)과 가장 적게 나온 {{ fq.least[0] }}번({{ fq.counts[fq.least[0]-1] }}회)도
-        45개를 동시에 볼 때의 우연 범위 안이다. 전반기와 후반기 빈도의 상관은 r = {{ '%.2f'|format(fq.half_split_r) }}(p = {{ fq.half_split_p_mc|p }}) —
-        과거에 많이 나온 번호가 이후에도 많이 나오지 않았다.</figcaption></figure>
+      <figcaption>가장 많이 나온 {{ fq.most[0] }}번({{ fq.counts[fq.most[0]-1] }}회)과 가장 적게 나온 {{ fq.least[0] }}번({{ fq.counts[fq.least[0]-1] }}회){% if V.freq_in_band %}도
+        45개를 동시에 볼 때의 우연 범위 안이다{% else %} 중 45개를 동시에 볼 때의 우연 범위를 벗어난 것이 있다{% endif %}.
+        전반기와 후반기 빈도의 상관은 r = {{ '%.2f'|format(fq.half_split_r) }}(p = {{ fq.half_split_p_mc|p }}) —
+        {% if V.sig('과거 빈도가 미래 빈도를 예고하나') %}보정 후에도 유의한 관계다{% else %}과거에 많이 나온 번호가 이후에도 많이 나오지 않았다{% endif %}.</figcaption></figure>
     {{ M.tableview(['번호', '출현', '최근 100회', '미출현 회차'], V.freq_rows, (1, 2, 3)) }}
   </div>
 
@@ -57,8 +58,9 @@
     {{ M.course('확률과통계 5주 기하분포') }}
     {{ M.legend([('bar', 'k-accent', '실제 간격 빈도'), ('line', 'k-ref', '기하분포 기대')]) }}
     <figure class="chart-fig">{{ M.columns(V.gap_chart) }}
-      <figcaption>간격은 '매 회 13.3% 확률로 나오는' 기하분포를 그대로 따른다(p = {{ gp.p_mc|p }}). 지금 가장 오래 쉰 번호는
-        {{ gp.max_current_gap_number }}번({{ gp.max_current_gap }}회째)이지만 다음 회차에 나올 확률은 여전히 6/45 = 13.3%다.</figcaption></figure>
+      <figcaption>{% if V.sig('간격 분포') %}간격 분포가 '매 회 13.3% 확률로 나오는' 기하분포와 다르다(보정 후에도 유의, p = {{ gp.p_mc|p }}).
+        원인을 확인하기 전까지 '나올 때가 됐다'는 주장을 판정하지 않는다.{% else %}간격은 '매 회 13.3% 확률로 나오는' 기하분포를 그대로 따른다(p = {{ gp.p_mc|p }}). 지금 가장 오래 쉰 번호는
+        {{ gp.max_current_gap_number }}번({{ gp.max_current_gap }}회째)이지만 다음 회차에 나올 확률은 여전히 6/45 = 13.3%다.{% endif %}</figcaption></figure>
   </div>
 
   <div class="panel" id="sum">
@@ -66,9 +68,9 @@
     {{ M.course('확률과통계 5·6주 중심극한정리') }}
     {{ M.legend([('bar', 'k-accent', '실제 당첨번호'), ('line', 'k-ref', '814만 조합 전수 분포')]) }}
     <figure class="chart-fig">{{ M.columns(V.sum_chart) }}
-      <figcaption>'총합 100~175 가 잘 나온다'는 말은 사실이지만 조합 자체가 그 구간에 몰려 있어서다. 실제 평균
+      <figcaption>{% if V.sig('총합 분포') %}총합 분포가 814만 조합 전수와 다르다(보정 후에도 유의) — 실제 평균{% else %}'총합 100~175 가 잘 나온다'는 말은 사실이지만 조합 자체가 그 구간에 몰려 있어서다. 실제 평균{% endif %}
         {{ '%.1f'|format(st.features.sum.obs_mean) }}, 전수 평균 {{ '%.1f'|format(st.features.sum.exp_mean) }}(p = {{ st.features.sum.p|p }}).
-        홀짝·고저·연번·AC값·구간·끝수도 모두 전수 분포와 같다.</figcaption></figure>
+        {% if V.feature_sig %}보정 후에도 전수 분포와 다른 지표: {{ V.feature_sig|join(' · ') }}.{% else %}홀짝·고저·연번·AC값·구간·끝수도 모두 전수 분포와 구분되지 않는다.{% endif %}</figcaption></figure>
     {{ M.tableview(['지표', '실제 평균', '전수 평균', 'p'], V.feature_rows, (1, 2, 3)) }}
   </div>
 

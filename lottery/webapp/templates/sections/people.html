@@ -6,7 +6,7 @@
   <p class="lead">k등 당첨자 수는 '모두가 무작위로 샀다면' 판매 게임 수 × 확률로 정확히 정해진다. 실제가 그보다 많으면 그 주 당첨번호를
     사람들이 많이 고른 것이다. 5등은 매주 수십만~백만 건이라 측정 오차가 0.1~0.3% 뿐이다. {{ pop.first_round }}회 이후
     {{ pop.n_draws|num }}회, 역대 {{ V.meta.total_games|won }} 게임의 선택이 이 숫자들에 담겨 있다.</p>
-  {{ M.verdict('diff', '뚜렷한 패턴 있음', '5등 당첨자 수만으로 그 주 번호의 인기를 ' ~ t5.r2_oof|pct ~ ' 설명한다 (처음 보는 회차 기준)') }}
+  {{ M.verdict(V.verdict.people.kind, V.verdict.people.label, V.verdict.people.text) }}
 </header>
 
 <div class="lgrid">

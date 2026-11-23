@@ -176,6 +176,10 @@ def write_results_md(d: dict) -> None:
     src = m["source"]["files"]
     pop, ml = lo["popularity"], lo["ml"]
     best = max(ml["real"]["rows"], key=lambda r: r["mean_hits"])
+    # 판정 줄은 보정 p 에서 나온다 — 고정 해석은 결과가 바뀌어도 남는다 (자체 리뷰 K1)
+    sig_lo = [r["question"] for r in lo["stats"]["summary"] if r["p_holm"] < dataset.ALPHA]
+    sig_pe = [f"(연금) {r['question']}" for r in pe["stats"]["summary"] if r["p_holm"] < dataset.ALPHA]
+    sig_ml = [r["model"] for r in ml["real"]["rows"] if r["p_bonferroni"] < dataset.ALPHA]
     sc = pop["score"]
     i10, i1 = sc["pct"].index(10.0), sc["pct"].index(1.0)
     lines = [
@@ -196,6 +200,8 @@ def write_results_md(d: dict) -> None:
         *[f"| {r['question']} | {r['p']:.3f} | {r['p_holm']:.3f} |" for r in lo["stats"]["summary"]],
         *[f"| (연금) {r['question']} | {r['p']:.3f} | {r['p_holm']:.3f} |" for r in pe["stats"]["summary"]],
         "",
+        f"- 판정: Holm 보정 p < {dataset.ALPHA} 인 질문 — 로또 {len(sig_lo)}개, 연금 {len(sig_pe)}개"
+        + (" (" + " · ".join(sig_lo + sig_pe) + ")" if sig_lo + sig_pe else ""),
         f"- 궁합수: 990쌍 중 보정 전 p<0.05 {lo['stats']['pairs']['n_raw_p05']}쌍 (우연 기대 "
         f"{lo['stats']['pairs']['n_raw_p05_expected']:.1f}), Holm 유의 {lo['stats']['pairs']['n_sig_holm']}쌍",
         f"- 검출력: 번호 하나가 {lo['power']['single_number_rel_bias'] * 100:.0f}% 더 잘 나와야 80% 확률로 잡힌다. "
@@ -213,8 +219,11 @@ def write_results_md(d: dict) -> None:
           f"{n['mean_hits']:.3f} | {r['won'] / r['spent'] * 100:.0f}% |"
           for r, n in zip(ml["real"]["rows"], ml["null"]["rows"])],
         "",
-        f"가장 높아 보인 모델: {best['model']} {best['mean_hits']:.3f}개 (보정 전 p={best['p_better']:.3f}, "
-        f"보정 후 {best['p_bonferroni']:.2f}) — 여러 모델 중 최고를 고르면 생기는 선택 편향 범위.",
+        f"- 판정: Bonferroni p < {dataset.ALPHA} 인 전략 {len(sig_ml)}개" + (" (" + " · ".join(sig_ml) + ")" if sig_ml else ""),
+        f"- 가장 높아 보인 모델: {best['model']} {best['mean_hits']:.3f}개 (보정 전 p={best['p_better']:.3f}, "
+        f"보정 후 {best['p_bonferroni']:.2f})"
+        + (" — 보정 후에도 유의한 전략이 있다. 다른 기간에서 재현되기 전에는 예측력으로 보지 않는다." if sig_ml
+           else " — 여러 모델 중 최고를 고르면 생기는 선택 편향 범위."),
         "",
         "## 3. 사람들은 어떤 번호를 고르나 (등수별 당첨자 수)",
         "",

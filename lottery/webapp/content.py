@@ -19,6 +19,7 @@ import json
 import math
 import sys
 from pathlib import Path
+from statistics import NormalDist
 
 ROOT = Path(__file__).resolve().parents[1]  # lottery/
 RESULTS = ROOT / "results" / "analysis.json"
@@ -265,11 +266,70 @@ def view() -> dict:
     return _cache["view"]
 
 
+def holm_sig(summary: list[dict], key: str) -> bool:
+    """질문 문구에 key 가 든 행 하나의 Holm 보정 p < ALPHA. 문구가 바뀌어 0개나 여러 개가 걸리면 멈춘다
+    — 조용히 '구분 안 됨' 으로 두지 않는다."""
+    rows = [r for r in summary if key in r["question"]]
+    if len(rows) != 1:
+        raise KeyError(f"판정할 질문을 하나로 정하지 못함: {key!r} → {len(rows)}개")
+    return rows[0]["p_holm"] < dataset.ALPHA
+
+
+def verdicts(D: dict) -> dict:
+    """화면의 판정 — 머리 칩 · 홈 카드 · 판정표가 모두 여기서 나온다 (자체 리뷰 K1: 고정 문구는 주간 갱신으로
+    p 가 바뀌어도 그대로 남아, 한 화면에서 머리와 표가 반대로 말할 수 있었다)."""
+    lo, pe, a = D["lotto"], D["pension"], dataset.ALPHA
+
+    def tests(summary: list[dict]) -> dict:
+        n, sig = len(summary), [r["question"] for r in summary if r["p_holm"] < a]
+        if sig:
+            return {"kind": "diff", "label": "무작위와 다른 점 있음", "sig": sig,
+                    "text": f"질문 {n}개 중 {len(sig)}개가 보정 후에도 p < {a}: " + " · ".join(sig),
+                    "card": f"{n}개 질문 중 {len(sig)}개가 보정 후에도 무작위와 다르다 — 원인을 확인하기 전까지 결론을 보류한다."}
+        return {"kind": "same", "label": "무작위와 구분 안 됨", "sig": [],
+                "text": f"질문 {n}개 모두 — 보정 후 가장 작은 p 가 {fmt_p(min(r['p_holm'] for r in summary))}",
+                "card": f"{n}개 질문 모두 무작위와 구분되지 않는다."}
+
+    def models(rows: list[dict], what: str) -> dict:
+        sig, p = [r["model"] for r in rows if r["p_bonferroni"] < a], min(r["p_bonferroni"] for r in rows)
+        if sig:
+            return {"kind": "diff", "label": "무작위보다 나은 전략 있음", "sig": sig, "min_p": p,
+                    "text": " · ".join(sig) + f" — 보정 후에도 {what}이 무작위보다 높다 (p < {a}). "
+                            "다른 기간에서 재현되기 전에는 예측력으로 보지 않는다",
+                    "card": f"보정 후에도 무작위보다 나은 전략이 {len(sig)}개 나왔다 — 재현을 확인하기 전까지 결론을 보류한다."}
+        return {"kind": "same", "label": "무작위보다 낫지 않음", "sig": [], "min_p": p,
+                "text": f"{len(rows)}개 전략 모두 {what}이 무작위보다 높다고 할 수 없다 (보정 후 가장 작은 p = {fmt_p(p)})",
+                "card": "무작위보다 나은 전략은 없었다."}
+
+    t5, ne = lo["popularity"]["tiers"]["5"], lo["popularity"]["number_effect"]
+    if ne["wald_p"] < a and t5["r2_oof"] > 0:
+        people = {"kind": "diff", "label": "뚜렷한 패턴 있음",
+                  "text": f"5등 당첨자 수만으로 그 주 번호의 인기를 {pct(t5['r2_oof'])} 설명한다 (처음 보는 회차 기준)"}
+    else:
+        people = {"kind": "same", "label": "패턴 안 보임",
+                  "text": f"번호별 인기 차이가 유의하지 않거나(p = {fmt_p(ne['wald_p'])}) 처음 보는 회차를 설명하지 "
+                          f"못한다 (R² {t5['r2_oof']:.3f})"}
+    out = {"random": tests(lo["stats"]["summary"]), "pension": tests(pe["stats"]["summary"]),
+           "ml": models(lo["ml"]["real"]["rows"], "평균 적중"),
+           "pension_ml": models(pe["ml"]["real"]["rows"], "정답률"), "people": people}
+    out["changed"] = [what for what, bad in (
+        ("로또 추첨기: " + out["random"]["card"], out["random"]["kind"] == "diff"),
+        ("연금 추첨: " + out["pension"]["card"], out["pension"]["kind"] == "diff"),
+        ("로또 예측: " + out["ml"]["card"], out["ml"]["kind"] == "diff"),
+        ("연금 예측: " + out["pension_ml"]["card"], out["pension_ml"]["kind"] == "diff"),
+        ("사람들의 선택: " + people["text"], people["kind"] == "same")) if bad]
+    out["thesis"] = not out["changed"]  # 홈의 결론 문장('추첨기에는 패턴이 없고, 사람에게는 있다')이 맞는가
+    return out
+
+
 def _build_view(D: dict) -> dict:
     lo, pe, meta = D["lotto"], D["pension"], D["meta"]
     st, pop, S = lo["stats"], lo["popularity"], lo["popularity"]["score"]
     n = st["n_draws"]
     v: dict = {"D": D, "meta": meta, "S": S}
+    vd = v["verdict"] = verdicts(D)
+    v["sig"] = lambda key: holm_sig(st["summary"], key)  # 템플릿: {% if V.sig('간격 분포') %}
+    v["psig"] = lambda key: holm_sig(pe["stats"]["summary"], key)
 
     # ── 공통 요약
     all_summary = st["summary"] + pe["stats"]["summary"]
@@ -277,6 +337,7 @@ def _build_view(D: dict) -> dict:
     i10 = S["pct"].index(10.0)
     v["facts"] = {
         "n_tests": len(all_summary), "min_holm": min(r["p_holm"] for r in all_summary),
+        "n_sig": sum(r["p_holm"] < dataset.ALPHA for r in all_summary),
         "n_models": len(hits), "hit_lo": min(hits), "hit_hi": max(hits),
         # 생성기 기본값(인기 하위 20% 안에서 균등하게 고름)으로 얻는 1등 기대 수령액의 평균 배수 − 1.
         # (하위 10% '경계' 조합의 값 share_at_pct[i10] 와 다르다 — 경계값을 쓰면 기본값의 효과를 낮춰 말하게 된다)
@@ -323,6 +384,11 @@ def _build_view(D: dict) -> dict:
                        fmt_p(r["p_holm"])) for r in pr["top"]]
     v["feature_rows"] = [(f["label"], f"{f['obs_mean']:.2f}", f"{f['exp_mean']:.2f}", fmt_p(f["p"]))
                          for f in st["features"].values()]
+    v["alpha"] = dataset.ALPHA
+    band = fq["band_bonferroni"]
+    v["freq_in_band"] = band[0] <= min(fq["counts"]) and max(fq["counts"]) <= band[1]
+    v["feature_sig"] = [r["question"] for r in st["summary"]
+                        if "무작위 조합과 다른가" in r["question"] and r["p_holm"] < dataset.ALPHA]
     sf = st["features"]["sum"]
     v["sum_chart"] = columns(
         sf["obs"], [str(x) for x in sf["values"]], x_every=2, line=sf["exp"], aria="총합 분포",
@@ -340,6 +406,8 @@ def _build_view(D: dict) -> dict:
     v["ml_roi"] = (min(r["won"] / r["spent"] for r in real["rows"]), max(r["won"] / r["spent"] for r in real["rows"]))
     v["ml_best_raw_p"] = min(r["p_better"] for r in real["rows"])
     dd = lo["ddpm"]
+    # 확산 모델 적중의 판정 — 양측 검정, 기준은 ALPHA (고정 문구 "무작위와 같음" 대신, 자체 리뷰 K1)
+    v["ddpm_hits_same"] = abs(dd["hits_one_per_draw"]["z"]) < NormalDist().inv_cdf(1 - dataset.ALPHA / 2)
     v["ddpm_chart"] = columns(
         dd["number_counts"], [str(i + 1) for i in range(45)], x_every=5, ref=dd["n_generated"] * 6 / 45,
         aria="확산 모델 번호 사용 횟수",
@@ -430,25 +498,36 @@ def _build_view(D: dict) -> dict:
 
     # ── 흔한 주장 판정표 — 국내 로또 앱·사이트의 공통 기능(출현·미출현 통계, 궁합수, 패턴 필터,
     #    AI 추천 …)과 동행복권 '복권의 오해와 진실' 을 참고해, 각 주장에 이 데이터의 답을 붙인다.
-    feats = st["features"]
+    feats, sig = st["features"], v["sig"]
+    check = "차이 있음 — 검토"  # 보정 후 유의: 원인을 확인하기 전까지 그 주장을 판정하지 않는다
+    hot, half = sig("특정 번호가 더 잘 나오나"), sig("과거 빈도가 미래 빈도를 예고하나")
+    gap = sig("간격 분포")
+    pairs = pr["n_sig_holm"] > 0 or any(sig(k) for k in ("990쌍", "가장 자주 함께", "세 개 묶음"))
+    run = sig("연번 쌍") or sig("이월수")
     v["myths"] = [
-        ("핫·콜드 번호 (많이 나온 번호가 또 나온다)", "다르지 않음",
-         f"번호별 빈도 p = {fmt_p(fq['p_mc'])}. 전반기·후반기 빈도 상관 r = {fq['half_split_r']:.2f} — 많이 나온 번호가 이후에 더 나오지 않았다",
+        ("핫·콜드 번호 (많이 나온 번호가 또 나온다)", check if hot or half else "다르지 않음",
+         f"번호별 빈도 p = {fmt_p(fq['p_mc'])}. 전반기·후반기 빈도 상관 r = {fq['half_split_r']:.2f} — "
+         + ("보정 후에도 유의한 관계다" if half else "많이 나온 번호가 이후에 더 나오지 않았다"),
          "random", "freq"),
-        ("오래 안 나온 번호는 나올 때가 됐다", "다르지 않음",
+        ("오래 안 나온 번호는 나올 때가 됐다", check if gap else "다르지 않음",
+         f"출현 간격이 기하분포와 다르다 (보정 후에도 유의, p = {fmt_p(gp['p_mc'])})" if gap else
          f"출현 간격은 기하분포 그대로 (p = {fmt_p(gp['p_mc'])}). 몇 회를 쉬었든 다음 회 확률은 6/45 = 13.3%",
          "random", "gaps"),
-        ("궁합수 (같이 잘 나오는 번호)", "다르지 않음",
-         f"990쌍 중 다중비교 보정 후 유의한 쌍 {pr['n_sig_holm']}개. 보정 전 p<0.05 {pr['n_raw_p05']}쌍은 우연 기대 {pr['n_raw_p05_expected']:.0f}쌍보다 적다",
+        ("궁합수 (같이 잘 나오는 번호)", check if pairs else "다르지 않음",
+         f"990쌍 중 다중비교 보정 후 유의한 쌍 {pr['n_sig_holm']}개. 보정 전 p<0.05 {pr['n_raw_p05']}쌍 "
+         f"(우연 기대 {pr['n_raw_p05_expected']:.0f}쌍)",
          "random", "pairs"),
-        ("총합·홀짝·고저·구간 패턴으로 거르기", "확률 불변",
-         f"분포가 814만 조합 전수와 같다 (총합 p = {fmt_p(feats['sum']['p'])}, 홀짝 p = {fmt_p(feats['odd']['p'])}). 거르면 고를 조합 수만 줄고 한 장의 확률은 그대로",
+        ("총합·홀짝·고저·구간 패턴으로 거르기", check if v["feature_sig"] else "확률 불변",
+         "보정 후에도 전수 분포와 다른 지표: " + " · ".join(v["feature_sig"]) if v["feature_sig"] else
+         f"분포가 814만 조합 전수와 구분되지 않는다 (총합 p = {fmt_p(feats['sum']['p'])}, 홀짝 p = {fmt_p(feats['odd']['p'])}). "
+         "거르면 고를 조합 수만 줄고 한 장의 확률은 그대로",
          "random", "sum"),
-        ("연속번호·이월수", "다르지 않음",
+        ("연속번호·이월수", check if run else "다르지 않음",
          f"연번 분포 p = {fmt_p(feats['consec']['p'])}, 이월수 p = {fmt_p(lg['carry_p'])}",
          "random", "carry"),
-        ("AI·머신러닝 번호 예측", "못 맞힘",
-         f"16개 전략 평균 적중 {v['facts']['hit_lo']:.2f}~{v['facts']['hit_hi']:.2f}개 (무작위 0.8개), 보정 후 모두 p = 1.00",
+        ("AI·머신러닝 번호 예측", check if vd["ml"]["sig"] else "못 맞힘",
+         f"{len(hits)}개 전략 평균 적중 {v['facts']['hit_lo']:.2f}~{v['facts']['hit_hi']:.2f}개 (무작위 0.8개), "
+         f"보정 후 가장 작은 p = {fmt_p(vd['ml']['min_p'])}",
          "ml", "board"),
         ("고정수·제외수 지정", "기능으로 채택",
          "본인이 고르고 싶은 번호를 반영하는 편의 기능. 당첨 확률은 바뀌지 않는다", "make", None),
