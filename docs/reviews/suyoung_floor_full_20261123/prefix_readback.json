@@ -1,0 +1,46 @@
+{
+  "release": "b16bef3f7791b86d31f0197d86b58d9d93d84750",
+  "zip_payload_hashes": 29,
+  "native_rows": 1624,
+  "registered_peak_MPa": 0.6636991102836952,
+  "models": {
+    "original": {
+      "arms": {
+        "8": {
+          "first_positive_step": 30,
+          "positive_samples": 213,
+          "last_pressure_MPa": 0.04602251676840027
+        },
+        "16": {
+          "first_positive_step": 58,
+          "positive_samples": 412,
+          "last_pressure_MPa": 0.01169265738695957
+        }
+      },
+      "peak_gap_MPa": 0.0343298593814407,
+      "peak_pct": 5.172503450662539,
+      "fine_step_at_peak": 540,
+      "first_above_5pc": 539,
+      "last_displacement": 0.012109449376604409
+    },
+    "candidate": {
+      "arms": {
+        "8": {
+          "first_positive_step": 261,
+          "positive_samples": 10,
+          "last_pressure_MPa": 0.015084426203299962
+        },
+        "16": {
+          "first_positive_step": null,
+          "positive_samples": 0,
+          "last_pressure_MPa": 0.0
+        }
+      },
+      "peak_gap_MPa": 0.015624027792716046,
+      "peak_pct": 2.3540829798668295,
+      "fine_step_at_peak": 536,
+      "first_above_5pc": null,
+      "last_displacement": 0.012109449376604409
+    }
+  }
+}
