@@ -802,5 +802,14 @@
   "담는_곳": "db/raw/b2o3_bo_stage11a_phonon_2026_11_23/",
   "다음": "push 뒤 로컬 대조 — SHA256SUMS · summary 판정 셋 STABLE · 포논 정체성 struct_sha256 = 회수한 s11a_relax/<이름>/post_relax.xyz 의 struct_hash (포논이 그 이완 구조로 돌았는지) → 11b 블록",
   "by": "agent · 2026-11-23"
+ },
+ "11a_회수_끝_2026_11_23": {
+  "출처": "사용자 붙여넣기 2026-11-23 (gabia) — 회수 블록 그대로 · push 직전 fetch + merge 가 그 사이 올라간 20332b883 을 받아 합침 (막힘 없음)",
+  "커밋": "회수 bc7e74565 · 합침 d29f5b33c (gabia) → 로컬 ff",
+  "내용": "db/raw/b2o3_bo_stage11a_phonon_2026_11_23/ — 파일 27 개 · 300 KB · s11a_cand/manifest.json · s11a_relax (anneal_results.json · 구조별 post_relax.xyz · md.log · relax.log) · s11a_relax.log · queue_b2o3_s11a.sh · .sha256 · s11a_phonon (run.log · 구조별 log · summary · freqs · cache.identity) · 변위 캐시 제외",
+  "로컬_대조": "SHA256SUMS 27/27 일치 · manifest 해시 = 9 단계 회수본 s8_anneal 원본 (3/3) · 이완 셋 converged · 걸음 434 · 506 · 484 · 포논 summary 셋 STABLE · 병진 3 · 허수 0 · 0 · 입력 fmax 0.0088 · 0.0054 · 0.0011 eV/Å · 포논 정체성 struct_sha256 = 회수한 post_relax.xyz 의 struct_hash (3/3 · 포논이 그 이완 구조로 돌았다)",
+  "gabia_화면_판정_줄": "cfg0015 STABLE 병진 3 허수 0 0 fmax_in 0.0054 struct f358a4247c5d · cfg0019 STABLE 병진 3 허수 0 0 fmax_in 0.0011 struct 8afd48447b43 · cfg0040 STABLE 병진 3 허수 0 0 fmax_in 0.0088 struct 3f6e82927ad7",
+  "다음": "11b 블록 (2 단계 MD · 카드 · 셀구축 v1 11b 절 · 비용 · 시간을 블록과 같이 알린다)",
+  "by": "agent · 2026-11-23"
  }
 }
