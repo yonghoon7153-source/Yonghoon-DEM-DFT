@@ -1351,5 +1351,46 @@
   "dup": "정본에 이 논문 카드가 **이미 있다** = `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` (Journal Pre-proof 44 쪽으로 작성 · 2026-11-02 커밋 9ae6f2080 · SI 그림 S1–S8 포함) → 그 카드를 보강한다 (새 카드 금지)",
   "note": "- ⚠ **새 카드가 아니라 기존 카드 보강이다.** 대상 = `litdb/papers/tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond.md`. 새 slug · 새 카드 파일을 만들지 않는다.\n- 할 일: ① 서지를 최종판 (권 · 논문 번호 · 쪽 · 출판일) 으로 ② 카드의 'Journal Pre-proof — 권호 · 쪽 미정 · 숫자가 바뀔 수 있다' 경고를 최종판 대조 결과로 바꾼다 ③ Pre-proof 로 적은 숫자 · 그림 · 표를 최종판과 한 줄씩 대조 — 바뀐 곳만 고치고 카드 끝 '최종판 대조 (11-23)' 절에 바뀐 것 · 같은 것 목록 ④ 최종판 SI 9 쪽을 카드의 SI 내용과 대조 (빠진 것만 더함) ⑤ 크롭은 최종판에서 달라진 그림 · 표만 새로 만들고 기존 크롭 파일 이름 · 경로는 유지.\n- 정독 출력 (batch tsv · findings) 은 평소대로.",
   "nn": "146"
+ },
+ "U-1123-4": {
+  "pdf": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+  "si": [
+   "559ad740-Sup_Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf"
+  ],
+  "extra": [],
+  "kind": "새 카드",
+  "row": "후보 표의 행이 아니다 — 1저자 11-23 업로드 *'논문에이전트 하고 잘 크롭핑해서 litdb로 보내줘용'* (두 편 중 하나). 본문 31 쪽 (Journal Pre-proof) + SI 3 쪽.",
+  "bib": "X. Zhang, D. Li, C. Shen, K. Shen, X. Han, Y. Zheng — Unveiling the Effect of Mixing Sequence and Shear Speed on PTFE Fibrillation of Dry-Processed Graphite Anodes — Materials Today Energy (Journal Pre-proof · 권 · 쪽 미정) · DOI 10.1016/j.mtener.2026.102458 · MTENER 102458 · 받음 2026-08-09 · 고침 2026-10-01 · 채택 2026-11-15 (첫 쪽에서 다시 확인)",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
+  "dup": "정본에 이 논문 카드 없음 (DOI 10.1016/j.mtener.2026.102458 · 제목 낱말 'Fibrillation of Dry-Processed Graphite' · 'Mixing Sequence and Shear' git grep 0 건 · papers/ 목록 확인 · 2026-11-23). 관련 카드 = han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode · lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode · kang2026_multiscale_inverse_design_ptfe_fibrillation_dry_electrode · kang2025_bollard_anchored_binder_dry_electrode. 같은 해 다른 Zhang 카드 (예: zhang2026_dryprocess_electrode_architecture_cell_level) 가 있으니 slug 를 다르게 · 저자가 같으면 🔗 관련 카드.",
+  "note": "- ⚠ Journal Pre-proof (권 · 쪽 미정 · 최종판에서 숫자가 바뀔 수 있다) 표지를 카드 머리에.\n- 꼭 뽑을 것: 혼합 순서 (무엇을 어떤 순서로 · 단계 수) · 전단 속도 (rpm · 시간 · 장비 · 온도) · 조성 (흑연 · PTFE · 도전재 wt%) · 섬유화 지표 (정의 · 측정법 · 그림 판독이면 [판독] + 방법) · 섬유 지름 · 길이 · 자립막 · 압연 (압력 · 온도 · 두께 · 밀도 · 기공률) · 기계 (인장 · 박리 · 굽힘) · 전자전도도 (측정법) · 전기화학 (셀 꼴 · 용량 · 율속 · 사이클) · 모델 · 식이 있으면 식 번호별 크롭.\n- 자세한 분석 절에서 견줄 자리 (값은 정본 카드에서 옮긴다 · 리포 본 트리는 읽지 않는다): 우리 PTFE 전도격자 표현 = 섬유 중심선 한 셀만 절연 (표면 코팅 없음) · PTFE 지름 0.25 µm 는 앵커됨 · 길이 40 µm 는 출처 없음 (이 논문이 섬유 길이 · 지름 분포를 주면 그 값 · 측정 조건을 정확히) · Lee 2025 (PTFE 0.5 → 5 wt% 에서 전자전도도 크게 붕괴 — 정본 카드 값) · 믹서 혼합 (코팅 활물질 · 혼합 순서) · kang2026 · han2024 · lee2025 카드와의 관계.\n- 흑연 음극 · 액체 전해질이면 우리 (황화물 고체전해질 양극) 와 다른 점을 한정어로.",
+  "nn": "147"
+ },
+ "U-1123-5": {
+  "pdf": "f9daec4d-Four-dimensional_X-ray_nano-holotomography_reveals_multiscale_chemomechanics_in_composite_graphite_silicon_battery_electrodes.pdf",
+  "si": [
+   "4027f62e-Sup_Four-dimensional_X-ray_nano-holotomography_reveals_multiscale_chemomechanics_in_composite_graphite_silicon_battery_electrodes.pdf"
+  ],
+  "extra": [
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM3_ESM.avi",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM4_ESM.avi",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM5_ESM.avi",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM6_ESM.avi",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM7_ESM.avi",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM8_ESM.avi",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM9_ESM.xlsx",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM10_ESM.xlsx",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM11_ESM.xlsx",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM12_ESM.xlsx",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM13_ESM.xlsx",
+   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM14_ESM.xlsx"
+  ],
+  "kind": "새 카드",
+  "row": "후보 표의 행이 아니다 — 1저자 11-23 업로드 *'논문에이전트 하고 잘 크롭핑해서 litdb로 보내줘용'* (두 편 중 하나). 본문 16 쪽 + SI 54 쪽 + 보충 ZIP (영상 avi 6 · 원자료 xlsx 6).",
+  "bib": "V. Vanpeene, O. Stamati, F. Cadiou, Q. Jacquet, J. Villanova, S. Lyonnard — Four-dimensional X-ray nano-holotomography reveals multiscale chemomechanics in composite graphite–silicon battery electrodes — Nature Nanotechnology (2026) · DOI 10.1038/s41565-026-02327-6 · 권 · 쪽 · 출판일 = 첫 쪽에서",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "dup": "정본에 이 논문 카드 없음 (DOI 10.1038/s41565-026-02327-6 · 'Four-dimensional X-ray nano-holotomography' git grep 0 건 · 2026-11-23). 'Vanpeene' 는 korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens 카드 · INDEX.md · reading/batch_61 에 나온다 → 그 인용이 이 논문인지 (다른 Vanpeene 논문인지) 대조해 정독 출력에 적는다 (그 카드는 고치지 않는다).",
+  "note": "- 꼭 뽑을 것: 시료 (흑연 : Si 비 · 바인더 · 도전재 · 두께 · 기공률 · 셀 꼴 · 전해질) · 측정 (빔라인 · 에너지 · 화소 크기 · 시야 · 스캔 시간 · 중단-operando 절차 · 충방전 조건) · DVC (요소 크기 · 변위 정확도 · 변형률 정의) · 정량값 (입자 · 전극 부피 변화 · 변형률 장 · 기공률 · 두께 변화 · 균열 · 박리) · 식 번호별 크롭.\n- 보충 영상 6 개 (avi) = ffprobe 로 길이 · 해상도 → ffmpeg 로 정지 화면 (처음 · 가운데 · 끝) 을 뽑아 직접 보고, SI 의 영상 설명과 맞춰 '영상 S? = 무엇' 을 카드에 · 영상마다 대표 정지 화면 한두 장을 figures/<slug>/vid_S?_t??s.png 로 (figures.json 손 크롭 관례) · 영상 파일은 커밋하지 않는다.\n- 원자료 xlsx 6 개 = openpyxl 로 열어 어느 그림의 원자료인지 적고, 카드의 숫자는 그림 판독 대신 원자료에서 ([원자료 MOESM?] 표지) · xlsx 는 커밋하지 않는다.\n- 자세한 분석 절에서 견줄 자리 (값은 정본 카드에서 옮긴다): 사이클 화학기계 (입자 팽창 · 접촉 개구 · 균열 · 박리) · DEM 반경 진동 선례 카드 · DEM ↔ MPM 연계 (입자 형태 변형) · 측정 해상도 ↔ 우리 복셀 격자.\n- 액체 전해질 LIB 흑연–Si 음극이라 우리 (황화물 고체전해질 양극) 와 다른 점을 한정어로.",
+  "nn": "148"
  }
 }
