@@ -1,0 +1,180 @@
+{
+ "slug": "sun2026_ssb_interface_electromechanical_gaps_account",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-23",
+ "sources": [
+  "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Disruption of the solid−solid interface: from solvation-buffered to mechanically constrained electrochemistry. (a) In conventional solid− liquid interfaces, the macroscopic fluidity of the electrolyte enables natural stress relaxation. (b) In solid-state batteries, the rigid solid−solid interface lacks fluidity and solvation. Thermodynamic and kinetic reconstruction from classical solid−liquid to mechanically constrained solid−solid interfaces. (c) The free energy landscape of a classical solid−liquid interface. (d) The disrupted free energy landscape at a rigid solid−solid interface. The local stresses introduce a significant mechanical overpotential (ηmech) that directly distorts the activation barrier (ΔG‡) alongside the conventional electrical overpotential (ηelec). 1. INTRODUCTION by coupling phase-field and finite-element methods under a global current constraint. • Zhou,",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    375.5
+   ],
+   "w": 2151,
+   "h": 1339,
+   "dpi": 300,
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Raman based microscopic stress mapping in solid state batteries. (a) Schematic of the experimental setup for Raman stress calibration and mapping. (b) Workflow for converting Raman peak shifts into spatially resolved stress distributions. Pressure dependent Raman spectra of LPSC establish the peak position and stress relationship, which is applied to Raman area scans for stress mapping (positive values denote tensile stress). Adapted with permission from ref 3. Copyright © 2025 American Chemical Society and ref 4. Copyright © 2025 Elsevier. theoretical framework of solid−solid interfacial reactions from mapping and modeling aspects. First, we developed submicron in situ Raman stress-electrochemical mapping to resolve the local state of stress (SOS) and its spatial correlation with the state of charge (SOC).3 Second, we quantified this bidirectional coupling by introducing mecha",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    310.0
+   ],
+   "w": 2151,
+   "h": 1066,
+   "dpi": 300,
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "blank": 0.683
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Stress evolution of a Li|LPSC|NCM solid-state battery during the first cycle. Stress distribution map during the quasi in situ experiment, where positive values denote tensile stress. Adapted with permission from ref 3. Copyright © 2025 American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.4,
+    252.7
+   ],
+   "w": 2151,
+   "h": 827,
+   "dpi": 300,
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Stress induced SOC heterogeneity in composite cathodes. (a) SOC-dependent Raman peak splitting of NCM particles and quantitative analysis of splitting evolution. (b) Raman-derived stress map of the solid electrolyte revealing heterogeneous local stress distribution, where positive values denote tensile stress. (c, d) Raman spectra of NCM and LPSC collected from high tensile stress and low tensile stress regions, respectively. Adapted with permission from ref 3. Copyright © 2025 American Chemical Society. positive), κ is Raman shift-pressure coefficient (in cm−1 diamond anvil cell (Figure 2(a)), we applied controlled hydrostatic pressure to the reference material and probed the corresponding vibrational response. As shown in Figure 2(b), the characteristic Raman peak shifts linearly toward higher wavenumbers with increasing pressure (up to ∼2 GPa). GPa−1), and ω0 is the ambient ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    281.5,
+    561.5,
+    568.3
+   ],
+   "w": 2151,
+   "h": 1196,
+   "dpi": 300,
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "blank": 0.712
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Bidirectional electro-chemo-mechanical coupling at the solid−solid interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    187.0,
+    561.5,
+    307.2
+   ],
+   "w": 1051,
+   "h": 502,
+   "dpi": 300,
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "blank": 0.591
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) “Harder-to-hard” pairing strategy, typical for rigid ceramic electrolytes coupled with high-modulus LAAs. When χ > 1, interfacial stability is achieved when the anode is mechanically stiffer than electrolyte. (b) “Softer-to-soft” pairing strategy, representative of compliant polymer electrolytes paired with low-modulus alloy anode. When χ > 1, stability dictates that the anode must be mechanically more compliant than the electrolyte. Adapted with permission from ref 26. Copyright © 2025 American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    192.2
+   ],
+   "w": 2151,
+   "h": 575,
+   "dpi": 300,
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Illustration of the real solid-state battery structure (top), the classical P2D homogenization that averages out particle-level stress and topology (bottom-left), and the Real 2D multiphysics reconstruction that preserves discrete particle geometry, interfacial morphology, and particle-to- electrode mechanical crosstalk (bottom-right). Adapted with permission from ref 1. Copyright © 2025 American Physical Society. side V̅ of Li0 is itself tunable through alloying. Interfacial stability is then quantified by molar volume ratio demands a compliant low-modulus anode (soft-to-soft), preventing the sharp stress gradients that would otherwise cause interfacial delamination. G G V V / / SSE anode This “Hard−Soft Pairing” principle is corroborated by recent independent advances. In metallurgical design, the pursuit of mechanical compatibility through high-modulus components has been hi",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    241.5,
+    561.5,
+    482.6
+   ],
+   "w": 2151,
+   "h": 1005,
+   "dpi": 300,
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "blank": 0.74
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (a) Long-term galvanostatic cycling of a Li|LPSC|NCM811 solid-state battery. The voltage profile is coupled with particle-resolved cathode stress evolution and anode morphology evolution. Cathode particles generate GPa-level stress fluctuations, producing mechanical overpotential and capacity loss. At the anode, lithium initially deposits uniformly but progressively penetrates solid electrolyte grain boundaries. (b) Grain-boundary topology controls dendrite propagation: network-like boundaries constrain penetration, whereas Y-shaped boundaries induce stress-driven jump nucleation and accelerate short circuit. Adapted with permission from ref 1. Copyright © 2025 American Physical Society. tions, where mechanical stress directly enters the chemical potential and reshapes local reaction kinetics through the mechanical overpotential, ηmech. However, a real composite electrode is no",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    362.3
+   ],
+   "w": 2151,
+   "h": 1284,
+   "dpi": 300,
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "blank": 0.726
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}
