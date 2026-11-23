@@ -184,5 +184,31 @@
     "Codex_확인": "재빌드 = 배포 트리 바이트 일치 · MANIFEST f10dedef… · selftest 211 · 313 · 194 · 변이 7/7 독립 재실행 (첨부 selected_mutants.log) · G5 일치 · 실제 VASP 5.4.4 c2 출력 형식은 범위 밖",
     "다음": "고침 (러너 · 검사기 같은 함수) → 시험 · 변이 · EP 반례 재현 (첨부 extra.json 의 꼴) → 묶음 재빌드 → EQ 편지",
     "by": "agent · 2026-11-23"
+  },
+  "⑩_Codex_EP_고침_2026_11_23": {
+    "근거": "Codex EP 회신 (NO-GO · 기준 0fbc49760 · MANIFEST f10dedef…) — kb/reviews/codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md · 첨부 codex_EP_evidence_2026_11_23/extra.json · 빌드 기록 ⑨",
+    "먼저_재현": "extra.json 반례 꼴을 selftest 에 먼저 넣고 EP 묶음 도구 (35592b07…) 로 돌림 → 211/234 (새 검사 23 개 모두 빨강 · 옛 211 초록): 숫자 못 읽는 유일 행 (--killed 0 · 다시 1 · a5_c1) · 같은 행의 실행 실패 (RUN_FAILED · a5_c1) · 'SDA' 콜론 앞 절단 (--infra-abort 0 · 다시 0 · OK) · 진행 폴더의 남의 영수증 (러너 0 · c2 뜸 · 검사기 OK) · 부분 복구 (러너 0 · 시작점 다시 씀 · 검사기 OK) · attempt.json run_id · t_start (검사기 OK) · 끝 기록 없음 (OK) · attempts 없음 · 다름 (포장 0 · 다시 0) · 빈 sched_job_id (러너 1 · a5_c1) · 빈 reason (OK) · 0xE9 사유 (기록함) · 장부 맞바꿈 (러너 0 · OK) · u8 · wall_of · 장부 대조 harness",
+    "①_숫자_행": "완전한 행 = 칸 6 또는 7 · N 양의 정수 · ncg 정수 · 나머지 실수 (부호 · 소수점 · E 지수 두 자리) — 러너 row_scan (awk R) = 검사기 _complete_row (REAL_TOK) · 콜론 앞 머리 절단 = 줄 맨 앞 글자 1–4 끝 조각 (러너 NR > NL 줄 · 검사기 HDR_CUT) → 완전한 행 0 이면 손상 · 손상은 끝난 시도 · 끊긴 시도 모두 REVIEW 8 · --killed · --infra-abort 거부",
+    "②_시간_출처": "보존 폴더 (run_aborted/) 는 그 영수증만 · 진행 폴더는 영수증을 안 봄 (러너 wall_of case · 검사기 wall_of 부모 폴더 이름) · 진행 폴더의 infra_abort.json(.part) → 러너 ledger5 (사다리 시작 · 기록 명령) 멈춤 8 · 검사기 ledger_problems LADDER_VIOLATION",
+    "③_시도_이력": "run/status.tsv 마지막 칸 run_id · 이력 줄마다 지금 · 보존 폴더의 끝난 시도 (attempt.json · run_id · 변형) 가 있어야 함 · 한 번씩 — 러너 hist5 (ledger5 안 · 장부 없을 때도) = 검사기 history_problems · 한 방향 (끝난 시도에 줄 없음은 안 봄 — 끊기는 틈)",
+    "④_실행_ID": "끝난 시도 attempt.json run_id · t_start = attempt.start (러너 end_id — gate5 BAD2 종료 2 · receipt5 · 검사기 end_problem — check_attempt5 ATTEMPT_MISMATCH · abort_receipt_problem) · 끝 기록 없는 반송은 채택 안 함 (STOPPED_FOR_REVIEW) · PACK_ONLY · 다시 돌림 전 fin_ok (REC1 · 코드 · attempts = att5) 아니면 종료 2",
+    "⑤_영수증_조건부": "sched_job_id · cancel_utc · reason 은 읽을 때 비면 거부 (killed5 · receipt5 = killed_problems · abort_receipt_problem) · 손으로 넣은 글은 쓸 때 UTF-8 확인 (u8ok · RFC 3629 · Python 엄한 decode 와 18 탐침 같음) — 거부를 고름 (바꿔 쓰면 운영자 글이 몰래 바뀐다 · 거부는 명령 한 번 다시) · 읽을 때 REC1 은 그대로 원문 바이트 비교 (한계 문구 정정)",
+    "⑥_장부_순서": "장부 줄 순서 = 영수증 recorded_s · attempt.start t_start 가 줄 순서대로 줄지 않음 (러너 ledger5 = 검사기 _ledger_core) · 단 순서 대조는 해 봤다가 뺌 — 시각 순서 + 사다리 순서 대조에 들어가 따로 시험할 수 없는 겹친 가드 (끝난 시도의 시작 기록 필수 대조도 같은 까닭으로 end_problem 안으로)",
+    "옛_시험_고침": "c2 상태 꾸밈 (s2_variant · S15) 이 끝난 c2 를 지우거나 끊김으로 바꿀 때 그 시도의 이력 줄도 지움 (실제 그런 반송과 같게) · EN P1 러너 가드 시험 ga5 (A5 없음 + 보존 c1) · gc1 (c1 없음 + 보존 c2) 도 지운 단의 이력 줄을 지움 (이력 대조가 그 가드를 가리지 않게 — 첫 판에서 m65 · m66 이 초록이었다) · 장부 harness 'no_ledger_no_folder' 는 그 시도의 이력 줄까지 지운 서로 맞는 복구 (문제 없음 · 한계) · 러너가 끝 기록을 보여 줄 때 바이트로 자르지 않고 코드 · 상태만 (여러 바이트 글자를 가르면 UTF-8 이 깨져 시험이 죽었다)",
+    "시험_더함": "순수 4 (숫자 행 · 콜론 앞 절단) · 끝에서 끝 19 (검사기 혼자 옛 러너 반송의 빈 killed.json 칸 (첫 판 m139 초록 — 끝 기록 코드 대조가 가렸다) · --infra-abort 0xE9 포함 · ep_garb · ep_garb_rf · ep_hcut · ep_stray 러너 · 검사기 · ep_hist 러너 · 검사기 · 끝 기록 신원 검사기 2 · 러너 1 · 끝 기록 없음 · attempts 없음 · 다름 · 빈 sched_job_id · 빈 reason · 0xE9 --killed · --infra-abort · 장부 맞바꿈) · 러너 = 검사기 대조 2 (u8ok 18 탐침 · wall_of 5 탐침) · row_scan 탐침 21 → 35 · 장부 harness 19 → 23 변형",
+    "시험": "build_a5 236/236 (211 → 236 · 최종 도구로 기본 awk mawk 1.3.4 · gawk 5.2.1 · LC_ALL=C.UTF-8 셋 다 통과) · build_v5 313/313 · build_round2 194/194 (둘 다 파일 안 바뀜 · 커밋 a97eba79f 트리에서 다시 돌림 · venv python 3.11 · dftd3 1.6.0)",
+    "돌연변이": "140/140 빨강 (최종 도구 af7848e1… · venv python 3.11 · dftd3 1.6.0 · 두 묶음 --jobs 2 · 69/69 + 71/71 · 무효 0 · 이름 140 개 모두 빨강 줄 하나씩) — 옛 113 (6 개 자리 다시 잡음: m25 m46 m85 m91 m99 m105 · 바뀐 줄 · 뜻 같게) + 새 27 (m114–m140 · 새 가드마다 양쪽 하나 이상). 첫 판 (같은 시험 · 고치기 전) 에서 셋이 초록 — m65 · m66 (EN P1 러너 가드 ga5 · gc1 — 새 이력 대조가 먼저 멈춰 가렸다) · m139 (검사기 빈 killed.json 칸 — 끝 기록 코드 대조가 가렸다) → ga5 · gc1 에서 지운 단의 이력 줄도 지움 · 검사기 혼자 시험 더함 (selftest 235 → 236) → 셋 빨강 (3/3) → 최종 도구로 140 전체 다시",
+    "EM_탐침": "p1–p9 (10 개) EP 가 본 판 (35592b07…) ↔ 새 판 정규화 대조: 9 개 같음 (p1 · p2 · p4 · p9 는 두 판 다 같은 자리 FileNotFoundError — 탐침 가정) · p7 만 라벨 STOPPED_FOR_REVIEW → LADDER_VIOLATION (채택 없음 같음) — 탐침이 끝난 c2 (· c1) 폴더를 지우고 status.tsv 줄은 남김 = 부분 복구 (③ 이 잡음) · 끝 기록 attempts 를 맞추고 남은 이력 줄도 지우면 (p7c · scratch · 실제 준비 실패가 남기는 꼴) EO · EP 와 같은 LADDER_INCOMPLETE · 같은 메모",
+    "EN_EO_재현": "EN (ken1 · ken2) · EO (eo_sda · eo_sda_old · eo_tail · eo_tailnl · eo_findmg · eo_esc · eo_kj0–2 · eo_st0–2 · eo_st_iab · eo_cap · eo_unk · eo_led0–2 · eo_sw1/2) · 양성 대조 그대로 통과 (selftest)",
+    "G5_재현": "V5 --collect (COMMAND_AND_CHECKS 본 집계 · V5 반송 10-15 를 scratch 에 풀어서 · venv python · 커밋 a97eba79f 트리) → rc 3 · collect JSON afecfa08… 바이트 같음 · 화면 출력 바이트 같음 (값은 싣지 않음 · 바이트 대조만 · V5 도구 안 바뀜 90065ed5…)",
+    "남은_한계": "① SDA/CGA 칸 수는 실물 DAV 에서 온 규칙 (실제 c2 출력 없음 · 다르면 멈춤 8) · 앞 빈칸 머리 조각은 열 머리 줄 절단과 가를 수 없어 0 스텝 · 지수 세 자리 (Fortran '0.1+101') 는 손상 · ② 스케줄러 벽시계 · 노드 시계는 업체 값 · ③ 이력 줄까지 맞게 지운 복구는 못 잡음 · 끝난 시도에 줄 없음은 안 봄 · ④ attempt.json 은 REC1 아님 (grep · json — 러너 꼴에서만 같음) · ⑤ 읽을 때 REC1 은 문자열 안 비 UTF-8 을 양쪽 같게 받음 (손으로 고친 기록만) · ⑥ date +%s 를 믿음 · 모든 기록을 서로 맞게 함께 꾸민 반송은 못 잡음",
+    "최종_도구_sha256": {
+      "tools/wad/build_a5_vasp_package.py": "af7848e1fc9ede110e623ff74652744c760668186dbeeff32946a208779d94e1",
+      "tools/wad/build_v5_vasp_package.py": "90065ed5c4f7d052a248a1ca7b17af6f4bf67a9d548ddc27ce70415ba664d013"
+    },
+    "묶음": "db/inputs/wad_a5_vasp_2026_11_20/ 다시 빌드 (임시 빌드 → diff -r → 넷 복사) · MANIFEST sha256 679d705024b1c573e5a2861fbc3caa557d9f6ef016fb3d39bb2e8d4c829df278 (그 앞 f10dedef…) · 바뀐 것 run_a5.sh · README.md · jobs.json (도구 sha · 규칙 글 — complete_row_rule · record_grammar · time_source_rule · ledger_rule · final_attempts_rule 고침 · history_rule 새로) · MANIFEST · 잡 입력 · SEALED_ENV 바이트 같음 · bash -n 통과 · MANIFEST 대조 통과 (10 줄)",
+    "커밋": "도구 · 시험 a97eba79f (이 기록과 묶음은 다음 커밋 · 편지 EQ 는 그 다음 기록 커밋)",
+    "다음": "Codex 편지 EQ (kb/reviews/codex_EQ_prompt_wad_a5_ep_fixes_2026_11_23.md · 영어 · 조건 ①–④ + 조건부 + P2) → 사용자 발송 → GO 뒤 zip · handoff · 운영 안내",
+    "by": "claude · 2026-11-23 (대피 세션 fork)"
   }
 }
