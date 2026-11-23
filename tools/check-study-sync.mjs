@@ -69,6 +69,9 @@ try {
   payload = encrypt({ ...deck, deckId: 'other-deck' }); await fails();
   payload = encrypt(deck, '0'.repeat(64)); await fails(); // Valid AES tag, incorrect plaintext hash.
   payload = encrypt({ ...deck, cards: [] }); await fails();
+  for (const ja of [{ 32: ['one'] }, { 2: ['missing'] }, { 2: ['one', 'one'] }]) {
+    payload = encrypt({ ...deck, today: { ja, en: {} } }); await fails();
+  }
   payload = good; status = 404; await fails(); status = 200;
   redirected = true; await fails(); redirected = false;
   const transport = await page.evaluate(async ({ profile, good }) => {

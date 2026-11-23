@@ -17,6 +17,28 @@ export interface WordDeck {
   deckId: string;
   title: string;
   cards: WordCard[];
+  today?: Record<StudyLanguage, Record<string, string[]>>;
+}
+
+function parseToday(value: unknown, cards: WordCard[]): NonNullable<WordDeck['today']> {
+  const invalid = () => new Error('단어장의 날짜별 복습 목록을 확인해 주세요.');
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw invalid();
+  const byId = new Map(cards.map((card) => [card.id, card]));
+  const today: NonNullable<WordDeck['today']> = { ja: {}, en: {} };
+  for (const language of ['ja', 'en'] as const) {
+    const days = (value as Record<string, unknown>)[language];
+    if (!days || typeof days !== 'object' || Array.isArray(days)) throw invalid();
+    for (const [day, ids] of Object.entries(days)) {
+      if (!/^(?:[1-9]|[12]\d|3[01])$/.test(day) || !Array.isArray(ids) || ids.length > cards.length) throw invalid();
+      const members = new Set<string>();
+      for (const id of ids) {
+        if (typeof id !== 'string' || !byId.get(id)?.[language] || members.has(id)) throw invalid();
+        members.add(id);
+      }
+      today[language][day] = [...members];
+    }
+  }
+  return today;
 }
 
 /** Imported files are data. Render their strings with textContent, never HTML. */
@@ -50,7 +72,38 @@ export function parseDeck(value: unknown): WordDeck {
   });
   const deckId = str(d.deckId, 160), title = str(d.title, 160);
   if (!deckId || !title) throw new Error('단어장 이름을 확인해 주세요.');
-  return { schemaVersion: 1, deckId, title, cards };
+  const deck: WordDeck = { schemaVersion: 1, deckId, title, cards };
+  if (d.today !== undefined) deck.today = parseToday(d.today, cards);
+  return deck;
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+/** KST midnight occurs at 15:00 UTC, regardless of the browser's local time zone. */
+export function seoulStudyDay(now = Date.now()) {
+  const local = new Date(now + KST_OFFSET_MS);
+  const ordinal = Math.floor(local.getTime() / DAY_MS);
+  return {
+    key: local.toISOString().slice(0, 10),
+    dayOfMonth: local.getUTCDate(),
+    ordinal,
+    nextMidnight: (ordinal + 1) * DAY_MS - KST_OFFSET_MS,
+  };
+}
+
+export function dailyCards(deck: WordDeck, language: StudyLanguage, day: ReturnType<typeof seoulStudyDay>, publicSample: boolean): WordCard[] {
+  if (publicSample) {
+    // Six of the eighteen paired examples per day. A stride of seven gives
+    // consecutive days disjoint selections and visits every starting position.
+    const count = deck.cards.length;
+    const first = ((day.ordinal * 7) % count + count) % count;
+    return Array.from({ length: Math.min(6, count) }, (_, i) => deck.cards[(first + i) % count]!)
+      .filter((card) => card[language]);
+  }
+  const ids = deck.today?.[language][String(day.dayOfMonth)] ?? [];
+  const byId = new Map(deck.cards.map((card) => [card.id, card]));
+  return ids.map((id) => byId.get(id)!);
 }
 
 export function matchesCard(card: WordCard, query: string): boolean {

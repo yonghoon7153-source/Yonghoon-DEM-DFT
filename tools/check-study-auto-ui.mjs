@@ -53,6 +53,47 @@ try {
   assert.equal(await p.evaluate(() => localStorage.getItem('nihonchizu.private-deck.v1')), null);
   const clearedRequests = requests; await p.clock.fastForward(5 * 60 * 1000); assert.equal(requests, clearedRequests);
   await ctx.close();
+  // Earlier clients saved the right revision but dropped unknown deck fields in their cache.
+  const upgraded = await browser.newContext({ timezoneId: 'UTC' });
+  const linked = await upgraded.newPage();
+  await linked.clock.install({ time: new Date('2026-11-22T14:59:00Z') });
+  const today = {
+    ja: { 22: ['qa-4', 'qa-3'], 23: ['qa-1', 'qa-5'] },
+    en: { 22: ['qa-3', 'qa-4'], 23: ['qa-5', 'qa-1'] },
+  };
+  const latest = encrypt({ ...deck, today });
+  await linked.addInitScript(({ deck, profile, revision }) => {
+    const key = 'nihonchizu.private-deck.v1';
+    if (!localStorage.getItem(key)) localStorage.setItem(key, JSON.stringify({ ...deck, studyConnection: profile, studyRevision: revision }));
+  }, { deck, profile, revision: JSON.parse(latest).revision });
+  await linked.route('**/study-feed/my-deck.v1.enc.json', r => r.fulfill({ contentType: 'application/json', body: latest }));
+  await linked.goto(`${process.env.BASE || 'http://localhost:5004/'}#words`, { waitUntil: 'networkidle' });
+  const choose = name => linked.locator('.study').getByRole('button', { name, exact: true }).click();
+  const expr = linked.locator('.study__expression');
+  await linked.waitForFunction(() => document.querySelector('.study__count').textContent === '1 / 2');
+  assert.equal(await expr.textContent(), '日本語4');
+  await choose('이제 알겠어요');
+  assert.equal(await expr.textContent(), '日本語3');
+  await choose('English');
+  assert.equal(await expr.textContent(), 'English 3');
+  assert.match(await linked.locator('.study__learned').textContent(), /0 \/ 2/);
+  await choose('목록');
+  assert.deepEqual(await linked.locator('.study__row-expression').allTextContents(), ['English 3', 'English 4']);
+  await linked.clock.fastForward(61_000);
+  assert.deepEqual(await linked.locator('.study__row-expression').allTextContents(), ['English 5', 'English 1']);
+  await choose('日本語');
+  assert.deepEqual(await linked.locator('.study__row-expression').allTextContents(), ['日本語1', '日本語5']);
+  await choose('전체');
+  assert.equal(await linked.locator('.study__row').count(), 6);
+  assert.match(await linked.locator('.study__learned').textContent(), /1 \/ 6/);
+  await choose('오늘');
+  await linked.clock.setSystemTime(new Date('2026-11-23T15:05:00Z'));
+  await linked.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+  assert.equal(await linked.locator('.study__row').count(), 0);
+  await linked.reload({ waitUntil: 'networkidle' });
+  assert.equal(await linked.locator('.study__count').textContent(), '0 / 0');
+  assert.deepEqual(await linked.evaluate(() => JSON.parse(localStorage.getItem('nihonchizu.private-deck.v1')).today), today);
+  await upgraded.close();
   const blocked = await browser.newContext();
   await blocked.addInitScript(() => { Storage.prototype.setItem = () => { throw new Error('quota'); }; });
   const b = await blocked.newPage(); await b.route('**/study-feed/my-deck.v1.enc.json', r => r.fulfill({ contentType: 'application/json', body: encrypt(deck) }));
@@ -62,5 +103,5 @@ try {
   assert.match(await b.locator('.study__message').textContent(), /저장 공간/);
   assert.ok(!(await b.locator('.study__message').textContent()).includes('고르지 않아도'));
   await blocked.close();
-  console.log(JSON.stringify({ passed: ['connection import', 'key never requested', 'same revision keeps flipped card', 'changed revision keeps card and marks', 'five-minute polling', 'failed refresh keeps cache', 'reload with cache', 'basic and forget stop polling', 'quota warning preserved'] }));
+  console.log(JSON.stringify({ passed: ['connection import', 'key never requested', 'same revision keeps flipped card', 'changed revision keeps card and marks', 'five-minute polling', 'failed refresh keeps cache', 'reload with cache', 'basic and forget stop polling', 'quota warning preserved', 'same-revision upgrade restores dated cache', 'Notion order per language, Seoul rollover and empty day'] }));
 } finally { await browser.close(); }

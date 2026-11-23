@@ -13,6 +13,8 @@ try {
   const study = p.locator('.study');
   const click = (name) => study.getByRole('button', { name, exact: true }).click();
   await p.locator('.study__card').waitFor();
+  assert.equal(await p.locator('.study__count').textContent(), '1 / 6');
+  await click('전체');
   assert.equal(await p.locator('.study__count').textContent(), '1 / 18');
   await p.locator('.study__card').click();
   assert.equal(await p.locator('.study__card').getAttribute('data-face'), 'back');
@@ -59,6 +61,7 @@ try {
   for (let i = 0; i < 18; i++) { expressions.add(await p.locator('.study__expression').textContent()); if (i < 17) await click('다음'); }
   assert.equal(expressions.size, 18);
   await p.reload({ waitUntil: 'networkidle' });
+  await click('전체');
   assert.match(await p.locator('.study__learned').textContent(), /2 \/ 18/);
   checks.push('flip, examples, independent language marks, filter-empty, list, keyboard, shuffle, reload');
   const oldTitle = await p.locator('.study__title').textContent();
@@ -110,6 +113,7 @@ try {
   const blocked = await browser.newContext();
   await blocked.addInitScript(() => { Storage.prototype.setItem = () => { throw new Error('quota'); }; });
   const b = await blocked.newPage(); await b.goto(`${base}#words`, { waitUntil: 'networkidle' });
+  await b.getByRole('button', { name: '전체', exact: true }).click();
   await b.getByRole('button', { name: '이제 알겠어요', exact: true }).click();
   assert.match(await b.locator('.study__message').textContent(), /이번 화면/);
   assert.match(await b.locator('.study__learned').textContent(), /1 \/ 18/);
@@ -120,11 +124,55 @@ try {
     localStorage.setItem('nihonchizu.known-cards.v1', JSON.stringify(['daily-conversation:ja:daily-002', 'daily-conversation:ja:daily-003']));
   });
   const c = await corrupt.newPage(); await c.goto(`${base}#words`, { waitUntil: 'networkidle' });
+  await c.getByRole('button', { name: '전체', exact: true }).click();
   assert.match(await c.locator('.study__learned').textContent(), /2 \/ 18/);
   assert.match(await c.locator('.study__card').getAttribute('aria-label'), /なるほど/);
   await c.getByRole('button', { name: '이제 알겠어요', exact: true }).click();
   assert.equal(await c.evaluate(() => JSON.parse(localStorage.getItem('nihonchizu.known-cards.v1')).length), 3);
   await corrupt.close(); checks.push('corrupt private deck cannot erase independent learned marks; card name includes expression');
+  // Browser-local November 22 all the way through Seoul's November 23 midnight.
+  const western = await browser.newContext({ timezoneId: 'America/Los_Angeles', locale: 'ko-KR' });
+  const daily = await western.newPage();
+  await daily.clock.install({ time: new Date('2026-11-22T14:59:00Z') });
+  await daily.goto(`${base}#words`, { waitUntil: 'networkidle' });
+  const action = name => daily.locator('.study').getByRole('button', { name, exact: true }).click();
+  const expressionsInList = () => daily.locator('.study__row-expression').allTextContents();
+  const dateLabel = daily.locator('.study__subtitle');
+  assert.ok(await dateLabel.isVisible());
+  assert.match(await dateLabel.textContent(), /11월 22일.*한국 시간/);
+  await action('목록');
+  const day22 = await expressionsInList();
+  assert.equal(day22.length, 6);
+  await action('전체');
+  const all = await expressionsInList();
+  assert.equal(all.length, 18);
+  const otherDay = all.find(word => !day22.includes(word));
+  await action('오늘');
+  await daily.locator('.study__search').fill(otherDay);
+  assert.deepEqual(await expressionsInList(), []);
+  await daily.locator('.study__search').fill('');
+  assert.deepEqual(await expressionsInList(), day22);
+  await daily.locator('.study__row').nth(3).click();
+  assert.equal(await daily.locator('.study__count').textContent(), '4 / 6');
+  await daily.clock.fastForward(61_000);
+  assert.equal(await daily.locator('.study__count').textContent(), '1 / 6');
+  await action('목록');
+  assert.match(await dateLabel.textContent(), /11월 23일/);
+  const day23 = await expressionsInList();
+  assert.equal(day23.length, 6);
+  assert.notDeepEqual([...day23].sort(), [...day22].sort());
+  await daily.reload({ waitUntil: 'networkidle' });
+  await action('목록');
+  assert.deepEqual(await expressionsInList(), day23);
+  // Simulate a suspended tab: wall time jumps while timers have not fired.
+  await daily.clock.setSystemTime(new Date('2026-11-23T15:01:00Z'));
+  await daily.evaluate(() => window.dispatchEvent(new Event('focus')));
+  assert.match(await dateLabel.textContent(), /11월 24일/);
+  const day24 = await expressionsInList();
+  assert.equal(day24.length, 6);
+  assert.notDeepEqual([...day24].sort(), [...day23].sort());
+  await western.close();
+  checks.push('Seoul midnight while open, same-day reload, resumed tab, daily/full scopes and scoped search');
   assert.deepEqual(errors, []);
   console.log(JSON.stringify({ passed: checks, appErrors: errors }, null, 2));
 } finally { await browser.close(); }
