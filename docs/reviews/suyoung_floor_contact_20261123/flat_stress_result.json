@@ -1,0 +1,57 @@
+{
+  "scope": "Synthetic instantaneous static surface; no dense compression arm",
+  "profiles": [
+    {
+      "name": "constant",
+      "slope": 0,
+      "rows": [
+        {
+          "grid": 80,
+          "old_wall_MPa": 9.062500000000002,
+          "candidate_wall_MPa": 9.483122362869183,
+          "analytical_discrete_candidate_MPa": 9.483122362869198,
+          "continuum_surface_stress_MPa": 10.0,
+          "impulse": 0.00042605146578378046,
+          "particle_momentum_change": 0.0004260514657837804
+        },
+        {
+          "grid": 160,
+          "old_wall_MPa": 9.062500000000009,
+          "candidate_wall_MPa": 9.483122362869207,
+          "analytical_discrete_candidate_MPa": 9.483122362869198,
+          "continuum_surface_stress_MPa": 10.0,
+          "impulse": 0.00042605146578378154,
+          "particle_momentum_change": 0.0004260514657837815
+        }
+      ],
+      "old_grid_gap_MPa": -7.105427357601002e-15,
+      "candidate_grid_gap_MPa": -2.3092638912203256e-14
+    },
+    {
+      "name": "linear_depth",
+      "slope": 8,
+      "rows": [
+        {
+          "grid": 80,
+          "old_wall_MPa": 9.575000000000006,
+          "candidate_wall_MPa": 9.986075949367097,
+          "analytical_discrete_candidate_MPa": 9.98607594936709,
+          "continuum_surface_stress_MPa": 10.0,
+          "impulse": 0.0004486478327343606,
+          "particle_momentum_change": 0.00044864783273436057
+        },
+        {
+          "grid": 160,
+          "old_wall_MPa": 9.31875000000001,
+          "candidate_wall_MPa": 9.734599156118161,
+          "analytical_discrete_candidate_MPa": 9.734599156118144,
+          "continuum_surface_stress_MPa": 10.0,
+          "impulse": 0.0004373496492590715,
+          "particle_momentum_change": 0.0004373496492590716
+        }
+      ],
+      "old_grid_gap_MPa": 0.2562499999999961,
+      "candidate_grid_gap_MPa": 0.25147679324893524
+    }
+  ]
+}
