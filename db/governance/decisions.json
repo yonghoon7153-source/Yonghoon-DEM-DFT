@@ -14389,6 +14389,93 @@
     "근거_발화": "사용자 2026-11-22 AskUserQuestion '[혁주] MD-1 개정 3 을 비준할까요? (결과 전 · MD-1 판독은 아직 하나도 안 돌렸어요) ① 규칙: 생산 첫 프레임 (t = 0) 에 이미 문턱 안이던 원자 쌍 (P–O < 1.8 · Zr–S < 2.9 Å) 은 그 쌍의 사건을 전부 판정에서 빼요. 끊겼다 다시 붙어도 안 세고, 시드마다 몇 쌍이었는지만 기록해요. ② 판정: 생산 중 새로 문턱 안에 든 쌍이 1 ps 넘게 이어지는 시드가 2/3 이면 '개시 관측' 이에요. 문턱 · 지속 · 무결성 · 관측창은 개정 2 그대로예요. t = 0 쌍까지 센 옛 셈은 기록으로만 남겨요. ③ 도구: 판독 도구에 이 경로를 넣었어요. 시험 34/34 · 깨기 6/6 이고, 개정 3 이 없는 카드로는 옛 판과 출력이 같아요. 개정이 active 가 아니면 판독을 거부해요. ④ 한계: t = 0 에 문턱 바로 밖이던 쌍이 들어오면 '새 쌍' 으로 세요. '600 K 에서 새로 다가왔다' 는 뜻은 아니에요.' → '비준 — 개정 그대로 (Recommended)'",
     "decision_digest": "sha256:8230e8c64843bfd9faf3a6b0f41798653d910537851c5e25a6b259b1a80b6005"
    }
+  },
+  {
+   "id": "D-2026-11-23-b2o3-bo-11b-cap-continue",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "b2o3.bo_placement.stability_stage11b",
+   "slot": "b2o3_bo_placement_stage11b_cap_continue",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "stability_check"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "b2o3 B·O 배치 11b — 안정성 상한 150 h 에서 큐가 서면 같은 계획으로 이어 돌린다 · 단위 도중 멈춤은 RESUME=1 (run_meta 대조 · 끊긴 온도는 처음부터) · 결과 전",
+   "statement": "11b MD 큐 (계획 db/inputs/b2o3_bo_11b_2026_11_23/plan.json sha256 4a33eb414261a752686cfacbb5754e67b1abb348d59bce00f5fcb1c83e58f586 · 드라이버 c3e2d358ee53cefab7c0c4a05ff6eea7ec322d2a75993643c302ada725f155a9) 가 카드 안정성 상한 150 (실행기 cap_wall_h · 큐 시작부터의 시간) 에 걸려 새 단위를 안 띄우고 서면, 같은 계획으로 큐를 다시 띄워 끝 기록 없는 단위만 돈다 (새 큐는 새 150 h · 카드 상한을 넘는 것을 허용). 단위가 끝 기록 없이 멈춘 자리 (반쯤 남은 out_root · 실패 기록) 는 실행기 새 판 (tools/doping/run_b2o3_11b_md.sh sha256 90ef801ab67195e7bbea3a2afd589eb382c2b968b4d26f1e0c2da53bcf421292 · RESUME=1) 으로만 이어 돌린다 — run_meta.json 의 label · seed · v0_xyz · 온도 · prod/equilib · save_traj 가 그 단위와 같을 때만 · 끝난 온도 (msd.json) 는 드라이버가 건너뛰고 끊긴 온도는 같은 시작 구조 · 같은 시드로 처음부터 · 옛 실패 기록 · run_meta 는 이름을 바꿔 남긴다 · 끝 기록에 resumed. 실패 기록이 있던 단위도 이 길로 이어 돌린다 (종전 실행기의 '실패 단위는 다시 안 돌림' 을 바꾼다). 판정 · 문턱 · β · 대조 · 온도 · 시드 · 판독 계약 (런로그 11b_판독_계약_결과_전_2026_11_23) 은 그대로.",
+   "rationale": "실측 속도 ≈ 29.4 ps/h 한 줄 (10:16:37 → 11:03:51 · gabia GPU 를 DEM 쪽 python3 4.4 GB 와 같이 씀) — 카드 어림 (단독 turbo ≈ 145 ps/h · 90–130 GPU-h) 의 약 1/5 · 단위 ≈ 55–57 h → 셋째 단위 (cfg0015) 는 ≈ 112 h 에 시작해 ≈ 169 h 에 끝나고 넷째 (cfg0019) 는 상한에 걸려 배치 하나가 빠진다 · 사용자 11-23 '그냥 놔두고 중간에 stop돼도 다시 이어서 할 수 있음 됐지 뭐'.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "11b 판독 0 건 — 감시 화면의 md.log 진행 시간 · 프레임 수 · GPU 메모리만 봤다 (골격 사건 · β · 수송값 안 봄)",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "record": "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json (11b_이어돌리기_규칙_2026_11_23 · 11b_감시_v2_2026_11_23)",
+   "amends": "D-2026-11-09-b2o3-bo-placement-amend1",
+   "depends_on": [
+    "D-2026-11-09-b2o3-bo-placement-amend1"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json (11b_발사_2026_11_23 · 11b_감시_v2_2026_11_23 · 11b_이어돌리기_규칙_2026_11_23)",
+    "tools/doping/run_b2o3_11b_md.sh (sha256 90ef801ab67195e7bbea3a2afd589eb382c2b968b4d26f1e0c2da53bcf421292 · selftest 26 · 깨기 7/7)",
+    "tools/modelc_v3/disorder_ensemble_diffusion.py run_md (msd.json 있으면 그 온도 건너뜀 · 다시 돌 때 traj.xyz 를 지우고 새로 씀 · 온도마다 같은 시작 구조 · seed + 1000·cfg + T)"
+   ],
+   "reopen_criteria": [
+    "① 이어 돌리기는 11b 이 큐 (계획 4a33eb41) 에만 — 다른 단계 · 다른 카드의 상한으로 넘어가지 않는다",
+    "② 이어 돌린 큐가 다시 상한에 걸리면 같은 규칙으로 한 번 더 · 단위 실패가 같은 자리에서 되풀이되면 (같은 온도 · 같은 시드) 더 돌리지 않고 사용자에게"
+   ],
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-23",
+     "session": "대피 세션 claude/evac-2026-11-20"
+    }
+   ],
+   "cost_cap": {
+    "stability_GPU_h": "카드 상한 150 을 넘는다 — 어림 ≈ 226 h (현재 속도 · 8 단위) · DEM 잡이 끝나면 줄어든다",
+    "machine": "gabia GPU · GPU pw.x 와 UMA 동시 금지 그대로"
+   },
+   "enforcement": "실행기 새 판 RESUME=1 (기본 0 = 종전 동작) · run_meta 대조 · 옛 기록 보존 · 끝 기록 resumed · 돌고 있는 판 ($Q/run_b2o3_11b_md.sh · e989b6ac) 은 덮지 않는다 (새 판은 run_b2o3_11b_md_v2.sh 로 꺼내 큐가 선 뒤에만 · 런로그 이어_띄우기_블록)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-23",
+     "state": "proposed",
+     "by": "claude",
+     "note": "실측 속도 29.4 ps/h → 상한 150 h 에 넷째 단위 (cfg0019) 가 걸림 · 실행기 RESUME 판 (selftest 26 · 깨기 7/7) · 런로그 규칙 · 이어 띄우기 블록 (결과 전 · 11b 판독 0 건)"
+    },
+    {
+     "at": "2026-11-23",
+     "state": "active",
+     "by": "사용자 (b2o3 UMA-MD (B₂O₃ 계산 쪽) · 1저자 = 사용자)",
+     "note": "비준 (결과 전) — 사용자 2026-11-23 (대피 세션 · 채팅): 속도 29.4 ps/h 와 '상한 150 h 에 넷째 단위가 걸린다' 보고 뒤 '그냥 놔두고 중간에 stop돼도 다시 이어서 할 수 있음 됐지 뭐'"
+    }
+   ],
+   "_note": "active — 사용자 비준 2026-11-23 (채팅 원문 · 결과 전 · 11b 판독 0 건) · 내용 커밋 9c78664e",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-23T02:17:20Z",
+    "commit": "9c78664e600c325024f72965b37a2d441b4edb9e",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-23 (대피 세션 · 채팅): '그냥 놔두고 중간에 stop돼도 다시 이어서 할 수 있음 됐지 뭐'",
+    "decision_digest": "sha256:95e2752f390193dc42ad7c5d286160e7bc013b03683efbb3abb3760c364c6e6d"
+   }
   }
  ]
 }

@@ -24,6 +24,11 @@
 #   ③ GPU 여유 ≥ MIN_FREE_MIB — 아니면 기다린다 (WAIT_MAX_S > 0 이면 그만큼만 기다리고 멈춘다 — 시험용)
 #   ④ 같은 out_root 로 도는 python 이 있으면 멈춘다 (9) · out_root 가 이미 있으면 끝 기록이 있으면 건너뛰고
 #      없으면 그 줄을 멈춘다 (6 · 반쯤 남은 출력에 새 런을 섞지 않는다)
+#      ↻ RESUME=1 (2026-11-23 · 사용자 '중간에 stop돼도 다시 이어서') — 끝 기록 없는 자리 (반쯤 남은 out_root · 실패 기록)
+#        를 이어 돌린다: run_meta.json 의 label · seed · v0_xyz · 온도 · prod/equilib · save_traj 가 이 계획의 그 단위와
+#        같을 때만 (아니면 6) · 같은 out_root 로 드라이버를 다시 띄우면 드라이버가 msd.json 있는 온도는 건너뛰고
+#        끊긴 온도는 같은 시작 구조 · 같은 시드로 처음부터 다시 돈다 (traj.xyz 를 지우고 새로 씀) · 옛 실패 기록은
+#        <out>.fail.<epoch>.json · 옛 run_meta 는 run_meta.before_resume.<epoch>.json 으로 남긴다 · 끝 기록에 resumed true
 #   ⑤ 큐 시작부터 CAP_WALL_H 시간이 지났으면 새 단위를 띄우지 않는다 (카드 안정성 상한 150 GPU-h)
 # 단위가 끝나면: rc 0 · 네 온도 모두 traj.xyz (프레임 ≥ MIN_FRAMES) · aimd_results.json · msd.json · ensemble_results.json
 #   → <out_root>.done.json (traj sha256 · 프레임 수 · 시간) · 아니면 <out_root>.fail.json 을 쓰고 다음 단위로
@@ -36,7 +41,8 @@
 #   · 판정하지 않는다 — 골격 사건 (census) · β 는 판독 블록이 한다 (계약 = 런로그 11b_판독_계약_결과_전)
 #   · 수송값을 읽지 않는다 — 드라이버가 D · Ea 를 파일에 쓰지만 2 단계는 전도도를 재지 않는다 (08-25 마감 · 카드 ⛔)
 #   · 런 도중에 뜬 pw.x 는 막지 못한다 — 단위를 띄우기 전에만 막고, 도중에는 로그에 경고 줄만 남긴다
-#   · 실패한 단위를 다시 돌리지 않는다 (사용자 결정) · 궤적이 물리적으로 맞는지 보지 않는다 (프레임 수 · 해시만)
+#   · 실패한 단위를 저절로 다시 돌리지 않는다 — 다시 돌리는 것은 사람이 RESUME=1 로 띄울 때만 · 한 온도 안에서
+#     이어 붙이지 않는다 (끊긴 온도는 처음부터) · 궤적이 물리적으로 맞는지 보지 않는다 (프레임 수 · 해시만)
 #   · GPU 에 우리 말고 다른 UMA 잡이 있어도 막지 않는다 (여유 VRAM 만 본다)
 # =============================================================================
 set -u
@@ -48,12 +54,13 @@ POLL_S=${POLL_S:-300}
 WAIT_MAX_S=${WAIT_MAX_S:-0}
 MIN_FRAMES=${MIN_FRAMES:-4000}
 DRY_RUN=${DRY_RUN:-0}
+RESUME=${RESUME:-0}
 
 ts(){ date '+%F %T'; }
 
 helper(){   # $1 = 하위 명령 · 나머지 인자 — 계획 · 대조 이완 기록 · 끝 기록
 "$HPY" - "$@" <<'PY'
-import hashlib, json, math, os, sys
+import hashlib, json, math, os, sys, time
 from pathlib import Path
 
 def sha(p):
@@ -151,7 +158,56 @@ def control_check(R, P):
     if probs: die("대조 이완 기록 불일치 — " + " · ".join(probs), 5)
     print(sha(pr))
 
-def finish(out_root, rc, t0, t1, start_sha, driver_sha, min_frames):
+def resume_check(out_root, label, seed, v0, apply_it):
+    """RESUME=1 — 끝 기록 없는 자리가 이 계획의 그 단위 런인지 (run_meta.json) 보고, apply 면 옛 기록을 옆으로 옮긴다.
+    끝난 온도 = msd.json 이 있고 D 칸이 비어 있지 않음 (값은 안 본다 · 드라이버의 건너뛰기 조건과 같게)."""
+    o = Path(out_root)
+    ff = Path(str(o) + ".fail.json")
+    stamp = str(int(time.time()))
+    if not o.exists():
+        if not ff.is_file(): die("이어 돌릴 자리가 없다", 6)
+        msg = "자리 없음 (드라이버가 자리를 만들기 전에 끝남) — 처음부터"
+        if apply_it:
+            tgt = Path(str(o) + f".fail.{stamp}.json"); ff.rename(tgt); msg += f" · 옛 실패 기록 → {tgt.name}"
+        print(msg); return
+    rm = o / "run_meta.json"
+    if not rm.is_file(): die("run_meta.json 이 없다 — 이 자리를 띄운 런을 확인할 수 없다 (손으로 정리할 것)", 6)
+    try:
+        m = json.load(open(rm, encoding="utf-8"))
+    except Exception as e:
+        die(f"run_meta.json 을 못 읽는다: {e}", 6)
+    probs = []
+    if m.get("label") != label: probs.append(f"label {m.get('label')} ≠ {label}")
+    if str(m.get("seed")) != str(seed): probs.append(f"seed {m.get('seed')} ≠ {seed}")
+    if str(m.get("v0_xyz")) != str(v0): probs.append(f"v0_xyz {m.get('v0_xyz')} ≠ {v0}")
+    try:
+        if [float(x) for x in (m.get("temperatures") or [])] != [float(t) for t in TEMPS]:
+            probs.append(f"temperatures {m.get('temperatures')}")
+        if float(m.get("prod_ps")) != 400.0 or float(m.get("equilib_ps")) != 5.0:
+            probs.append(f"prod_ps/equilib_ps {m.get('prod_ps')}/{m.get('equilib_ps')}")
+    except (TypeError, ValueError):
+        probs.append("temperatures · prod_ps · equilib_ps 를 숫자로 못 읽는다")
+    if m.get("save_traj") is not True: probs.append("save_traj 아님")
+    if probs: die("이 자리는 이 계획의 이 단위 런이 아니다 — " + " · ".join(probs), 6)
+    done = []
+    for T in TEMPS:
+        mj = o / "d0.00_cfg0" / f"T{T}" / "msd.json"
+        try:
+            if mj.is_file() and json.load(open(mj, encoding="utf-8")).get("D_Li_cm2_s") is not None:
+                done.append(f"T{T}")
+        except Exception:
+            pass
+    redo = [f"T{T}" for T in TEMPS if f"T{T}" not in done]
+    msg = (f"끝난 온도 {' '.join(done) or '없음'} (드라이버가 건너뜀) · 다시 {' '.join(redo) or '없음'} "
+           f"(끊긴 온도는 같은 시작 구조 · 같은 시드로 처음부터)")
+    if apply_it:
+        keep = o / f"run_meta.before_resume.{stamp}.json"
+        keep.write_bytes(rm.read_bytes()); msg += f" · 옛 run_meta → {keep.name}"
+        if ff.is_file():
+            tgt = Path(str(o) + f".fail.{stamp}.json"); ff.rename(tgt); msg += f" · 옛 실패 기록 → {tgt.name}"
+    print(msg)
+
+def finish(out_root, rc, t0, t1, start_sha, driver_sha, min_frames, resumed=False):
     o = Path(out_root)
     per_t, probs = {}, []
     if rc != 0: probs.append(f"rc {rc}")
@@ -180,7 +236,11 @@ def finish(out_root, rc, t0, t1, start_sha, driver_sha, min_frames):
         per_t[f"T{T}"] = rec
     body = {"out_root": str(o), "rc": rc, "start_s": t0, "end_s": t1, "wall_h": round((t1 - t0) / 3600, 3),
             "start_sha256": start_sha, "driver_sha256": driver_sha, "per_T": per_t, "problems": probs,
+            "resumed": bool(resumed),
             "note": "판정 아님 — 끝 기록 (rc · 파일 · 프레임 · 해시) · 수송값은 읽지 않는다"}
+    if resumed:
+        body["resume_note"] = ("RESUME=1 로 이어 돌림 — 끝난 온도는 드라이버가 건너뛰었고 끊긴 온도는 같은 시작 구조 · "
+                               "같은 시드로 처음부터 · wall_h 는 이어 돌린 구간만 · 옛 기록은 queue.log 의 ↻ 줄")
     tgt = Path(str(o) + (".fail.json" if probs else ".done.json"))
     tgt.write_text(json.dumps(body, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(("FAIL " + " · ".join(probs)) if probs else f"DONE {body['wall_h']} h · 프레임 " + " ".join(f"{k}:{v.get('frames')}" for k, v in per_t.items()))
@@ -195,7 +255,10 @@ if cmd == "plan":
 elif cmd == "control":
     control_check(sys.argv[2], load_plan(sys.argv[3]))
 elif cmd == "finish":
-    finish(sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]), sys.argv[6], sys.argv[7], int(sys.argv[8]))
+    finish(sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]), sys.argv[6], sys.argv[7], int(sys.argv[8]),
+           len(sys.argv) > 9 and sys.argv[9] == "1")
+elif cmd == "resume":
+    resume_check(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6] == "apply")
 elif cmd == "args":
     for x in json.loads(sys.argv[2]):
         print(x)
@@ -231,13 +294,18 @@ same_run(){   # $1 out_root — 그 경로로 도는 python 이 있나 (pgrep �
 say(){ echo "$(ts) [줄 ${LANE:-·}] $*" | tee -a "$QLOG"; }
 
 run_lane(){   # $1 = 줄 번호 — 그 줄의 단위를 계획 순서대로
-  local LANE=$1 id lane name kind seed start want out cur t0 t1 rc res wpid
+  local LANE=$1 id lane name kind seed start want out cur t0 t1 rc res wpid rmsg resumed
   while read -r _ id lane name kind seed start want; do
     [ "$lane" = "$LANE" ] || continue
+    resumed=0
     if [ $(( $(date +%s) - QSTART )) -ge $(( CAP_H * 3600 )) ]; then say "⛔ 큐 시작부터 ${CAP_H} 시간 (카드 상한) — $id 부터 띄우지 않는다"; return 0; fi
     out=$OUT/$name/s$seed
     if [ -e "$out.done.json" ]; then say "↷ $id 끝 기록 있음 — 건너뜀"; continue; fi
-    if [ -e "$out" ] || [ -e "$out.fail.json" ]; then say "⛔ $id 자리 $out 가 이미 있는데 끝 기록이 없다 — 이 줄을 멈춘다 (반쯤 남은 출력에 섞지 않는다 · 사용자 결정)"; return 6; fi
+    if [ -e "$out" ] || [ -e "$out.fail.json" ]; then
+      if [ "$RESUME" != 1 ]; then say "⛔ $id 자리 $out 가 이미 있는데 끝 기록이 없다 — 이 줄을 멈춘다 (반쯤 남은 출력에 섞지 않는다 · 이어 돌리려면 RESUME=1)"; return 6; fi
+      rmsg=$(helper resume "$out" "b2o3_11b_${name}_s${seed}" "$((VOFF + seed))" "$R/$start" check 2>&1) || { say "⛔ $id 이어 돌리기 거부 — $rmsg"; return 6; }
+      resumed=1
+    fi
     if [ "$kind" = control ]; then
       cur=$(helper control "$R" "$PLAN") || { say "⛔ $id 대조 이완 기록 검사 실패 — 이 줄을 멈춘다"; return 5; }
     else
@@ -248,6 +316,10 @@ run_lane(){   # $1 = 줄 번호 — 그 줄의 단위를 계획 순서대로
     wait_for "pw.x 없어지기" pwx_on 7 || return 7
     wait_for "GPU 여유 ${MIN_FREE_MIB} MiB" vram_low 8 || return 8
     if same_run "$out"; then say "⛔ $id 같은 out_root 로 도는 python 이 있다 — 이 줄을 멈춘다"; return 9; fi
+    if [ "$resumed" = 1 ]; then
+      rmsg=$(helper resume "$out" "b2o3_11b_${name}_s${seed}" "$((VOFF + seed))" "$R/$start" apply 2>&1) || { say "⛔ $id 이어 돌리기 거부 — $rmsg"; return 6; }
+      say "↻ $id 이어 돌린다 — $rmsg"
+    fi
     mkdir -p "$OUT/$name"
     say "▶ $id ($kind · 시드 $seed · 드라이버 --seed $((VOFF + seed))) 시작 · 시작 파일 ${cur:0:16} · GPU 여유 $(free_mib) MiB"
     t0=$(date +%s)
@@ -257,7 +329,7 @@ run_lane(){   # $1 = 줄 번호 — 그 줄의 단위를 계획 순서대로
     rc=$?
     kill "$wpid" 2>/dev/null; wait "$wpid" 2>/dev/null
     t1=$(date +%s)
-    res=$(helper finish "$out" "$rc" "$t0" "$t1" "$cur" "$DSHA" "$MIN_FRAMES" 2>&1)
+    res=$(helper finish "$out" "$rc" "$t0" "$t1" "$cur" "$DSHA" "$MIN_FRAMES" "$resumed" 2>&1)
     say "■ $id $res"
   done < "$UNITS"
   return 0
@@ -288,11 +360,13 @@ fail = os.environ.get("FAKE_FAIL", "")
 short = os.environ.get("FAKE_SHORT", "")
 for T in a.temperatures:
     d = o / "d0.00_cfg0" / f"T{T}"; d.mkdir(parents=True, exist_ok=True)
+    if (d / "msd.json").is_file() and json.loads((d / "msd.json").read_text()).get("D_Li_cm2_s") is not None:
+        continue                                   # 진짜 드라이버처럼 끝난 온도는 건너뛴다 (resume)
     n = 3 if (short and short in a.label and T == "800") else 5
     with open(d / "traj.xyz", "w") as f:
         for i in range(n):
             f.write("2\nLattice=\"5 0 0 0 5 0 0 0 5\"\nLi 0 0 0\nS 1 1 1\n")
-    (d / "aimd_results.json").write_text("{}"); (d / "msd.json").write_text("{}")
+    (d / "aimd_results.json").write_text("{}"); (d / "msd.json").write_text('{"D_Li_cm2_s": 1.0}')
 if fail and fail in a.label:
     sys.exit(3)
 (o / "ensemble_results.json").write_text("{}")
@@ -363,6 +437,38 @@ EOF
     "[ $rc = 6 ] && [ ! -e $T/R/out/B/s1.done.json ] && [ ! -e $T/R/out/C/s1.done.json ] && [ -e $T/R/out/C/s2.done.json ]"
   reset_out; rc=$(runq FAKE_FAIL=b2o3_11b_B_s2); ck "[실패 기록] 드라이버 rc ≠ 0 → fail.json · 다음 단위는 계속 · 종료 0 · 요약에 실패 1" \
     "[ $rc = 0 ] && [ -e $T/R/out/B/s2.fail.json ] && [ -e $T/R/out/C/s2.done.json ] && grep -q '실패 1' $T/R/out/queue.log"
+  # ↻ 이어 돌리기 (RESUME=1 · 2026-11-23 사용자 '중간에 stop돼도 다시 이어서') — 바로 위 실패 기록 자리 (B_s2) 그대로 쓴다
+  rc=$(runq); ck "⛔음성: 실패 기록 자리는 RESUME 없이 다시 띄우면 그 줄을 멈춘다 (6 · 안내 줄에 RESUME=1)" \
+    "[ $rc = 6 ] && [ ! -e $T/R/out/B/s2.done.json ] && grep -q '이어 돌리려면 RESUME=1' $T/R/out/queue.log"
+  rc=$(runq RESUME=1); ck "[↻] RESUME=1 → 실패 기록 자리를 이어 돌려 끝 기록 (resumed true) · 옛 실패 기록은 이름 바꿔 남김 · 나머지는 건너뜀" \
+    "[ $rc = 0 ] && [ -e $T/R/out/B/s2.done.json ] && [ ! -e $T/R/out/B/s2.fail.json ] && ls $T/R/out/B/s2.fail.*.json > /dev/null 2>&1 && grep -q '\"resumed\": true' $T/R/out/B/s2.done.json && grep -q '↻ B_s2 이어 돌린다' $T/R/out/queue.log && [ \$(grep -c '건너뜀' $T/R/out/queue.log) -ge 7 ]"
+  # 반쯤 남은 자리: B_s1 을 '600 K 도중에 죽음' 꼴로 만든다 (300 K 끝 · 600 K 궤적 2 프레임 · msd 없음 · 800 · 1000 없음)
+  local H300; rm -f "$T/R/out/B/s1.done.json" "$T/R/out/B/s1/ensemble_results.json" "$T/R/out/B/s1/d0.00_cfg0/T600/msd.json"
+  rm -rf "$T/R/out/B/s1/d0.00_cfg0/T800" "$T/R/out/B/s1/d0.00_cfg0/T1000"; head -8 "$T/R/out/B/s1/d0.00_cfg0/T600/traj.xyz" > "$T/t6" && mv "$T/t6" "$T/R/out/B/s1/d0.00_cfg0/T600/traj.xyz"
+  H300=$(sha256sum "$T/R/out/B/s1/d0.00_cfg0/T300/traj.xyz" | cut -c1-64)
+  cp -r "$T/R/out/B/s1" "$T/B_s1_partial"
+  "$HPY" - "$T/R/out/B/s1/run_meta.json" <<'EOF2'
+import json, sys
+p = sys.argv[1]; m = json.load(open(p)); m["seed"] = "11009"; json.dump(m, open(p, "w"))
+EOF2
+  rc=$(runq RESUME=1); ck "⛔음성: run_meta 의 seed 가 이 단위 (11001) 와 다르면 이어 돌리지 않는다 (6 · 드라이버 안 띄움)" \
+    "[ $rc = 6 ] && [ ! -e $T/R/out/B/s1.done.json ] && grep -q 'B_s1 이어 돌리기 거부 .*seed 11009' $T/R/out/queue.log && [ ! -e $T/R/out/B/s1/d0.00_cfg0/T800 ]"
+  rm -rf "$T/R/out/B/s1"; cp -r "$T/B_s1_partial" "$T/R/out/B/s1"
+  "$HPY" - "$T/R/out/B/s1/run_meta.json" <<'EOF2'
+import json, sys
+p = sys.argv[1]; m = json.load(open(p)); m["label"] = "b2o3_11b_C_s1"; json.dump(m, open(p, "w"))
+EOF2
+  rc=$(runq RESUME=1); ck "⛔음성: run_meta 의 label 이 다른 단위 (C_s1) 면 이어 돌리지 않는다 (6 · 시드가 같아도)" \
+    "[ $rc = 6 ] && [ ! -e $T/R/out/B/s1.done.json ] && grep -q 'B_s1 이어 돌리기 거부 .*label b2o3_11b_C_s1' $T/R/out/queue.log"
+  rm -f "$T/R/out/B/s1/run_meta.json"
+  rc=$(runq RESUME=1); ck "⛔음성: run_meta.json 이 없으면 이어 돌리지 않는다 (6)" \
+    "[ $rc = 6 ] && [ ! -e $T/R/out/B/s1.done.json ] && grep -q 'B_s1 이어 돌리기 거부 .*run_meta.json 이 없다' $T/R/out/queue.log"
+  rm -rf "$T/R/out/B/s1"; cp -r "$T/B_s1_partial" "$T/R/out/B/s1"; rm -rf "$T/R/out/C/s1" "$T/R/out/C/s1.done.json"
+  rc=$(runq RESUME=1); ck "[↻] 이어 돌린 단위 다음의 새 단위 (C_s1) 는 이어 돌리기가 아니다 (resumed false · 줄이 멈추지 않는다)" \
+    "[ $rc = 0 ] && [ -e $T/R/out/C/s1.done.json ] && grep -q '\"resumed\": false' $T/R/out/C/s1.done.json"
+  ck "[↻] 반쯤 남은 자리 → 300 K 궤적은 그대로 (해시 같음) · 600 K 는 처음부터 (프레임 5) · 800 · 1000 K 새로 · 끝 기록" \
+    "[ $rc = 0 ] && [ -e $T/R/out/B/s1.done.json ] && [ \$(sha256sum $T/R/out/B/s1/d0.00_cfg0/T300/traj.xyz | cut -c1-64) = $H300 ] && grep -q '\"T600\": {' $T/R/out/B/s1.done.json && \"$HPY\" -c \"import json,sys; d=json.load(open('$T/R/out/B/s1.done.json')); sys.exit(0 if d['per_T']['T600']['frames']==5 and d['per_T']['T1000']['frames']==5 and d['resumed'] else 1)\" && grep -q '끝난 온도 T300 (드라이버가 건너뜀) · 다시 T600 T800 T1000' $T/R/out/queue.log && ls $T/R/out/B/s1/run_meta.before_resume.*.json > /dev/null 2>&1"
+  rc=$(runq); ck "[양성] 이어 돌린 뒤 다시 띄우면 8 단위 다 건너뜀 (드라이버 안 띄움)" "[ $rc = 0 ] && [ \$(tail -9 $T/R/out/queue.log | grep -c '건너뜀') = 8 ]"
   reset_out; rc=$(runq FAKE_SHORT=b2o3_11b_C_s1); ck "⛔음성: 한 온도라도 프레임이 모자라면 끝이 아니라 실패 기록 (rc 0 이어도)" \
     "[ -e $T/R/out/C/s1.fail.json ] && grep -q 'T800 프레임 3 < 5' $T/R/out/C/s1.fail.json"
   reset_out; rc=$(runq FAKE_USED=46000 WAIT_MAX_S=2); ck "⛔음성: GPU 여유가 모자라면 기다리다 시간 초과로 멈춘다 (8) · 드라이버 안 띄움" "[ $rc = 8 ] && [ ! -e $T/R/out/M ]"

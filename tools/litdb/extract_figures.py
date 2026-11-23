@@ -754,15 +754,77 @@ def _near_key(text, si_file):
     return f"{kind[0]}{label.upper()}"
 
 
-def missing_labels(found_keys, near, skipped):
-    """추출 결과의 **번호 공백**과 **규칙에 떨어진 캡션 후보** → [{key, why, skipped, near_miss}, …].
+# 본문 참조 (2026-11-23 · pandey2026 Fig. 19) — 끝 번호 대조용. 'Fig. 19' · 'Figure 19 presents' · 'FIGURE 19 |' ·
+#   'Figs. 3 and 19' · 'Figures 17–19' · 'Table 2' · 'Scheme 1' · 'Supplementary Fig. 3' · 'Fig. S3'.
+#   ⚠ 쉼표 · and 목록은 **복수 키워드** (Figs. · Figures · Tables · Schemes) 뒤에서만 받는다 — 단수 'Fig. 2, 20 mg' 의
+#     20 을 그림 번호로 읽지 않으려고. 단수는 첫 번호와 범위 (– · — · - · to) 만.
+#   ⚠ 150 넘는 번호는 버린다 (연도 · 쪽 번호 같은 숫자가 키워드 뒤에 붙는 우연).
+#   ⚠ 키워드 첫 글자는 대문자만 (F · T · S — 나머지는 대소문자 무관이라 'FIGURE' · 'TABLE' 은 받는다) — 소문자 'periodic table 3d' ·
+#     'scheme 2' 를 참조로 읽지 않으려고. 소문자 'fig. 3' 를 쓰는 옛 저널은 그래서 안 센다 (못 하는 것).
+REF_HEAD = re.compile(r"(?<![A-Za-z])(?P<si>" + SI_PRE + r")?"
+                      r"(?P<kw>(?-i:F)ig(?:ure)?s?\.?|(?-i:T)ables?|(?-i:S)chemes?)\s*(?=S?\s?\d)", re.I)
+REF_NUM = re.compile(r"\s*(?P<s>S\s?)?(?P<n>\d+)(?:[a-z](?![a-z]))?")
+REF_SEP_RANGE = re.compile(r"\s*(?:–|—|-|to\b)\s*", re.I)
+REF_SEP_LIST = re.compile(r"\s*(?:,\s*and\b|,|and\b|&|–|—|-|to\b)\s*", re.I)
+REF_MAX = 150
+
+
+def text_refs(text, si_file):
+    """본문 글에서 그림 · 표 · 스킴 참조 키 → ['f19', 'fS3', 't2', …] (같은 키가 여러 번 나오면 여러 번).
+
+    키 규칙은 `_near_key` · extract 와 같다 (SI 파일이면 S 를 붙인다). 캡션 자신의 번호도 참조로 센다 —
+    캡션 글이 있다는 것 자체가 그 번호가 있다는 뜻이다.
+    ⛔ 못 하는 것: 남의 논문 그림을 가리키는 'Figure 3 of ref. 12' 도 센다 (확인 대상으로만 쓴다) ·
+      단수 키워드 뒤 쉼표 목록 ('Fig. 3, 4') 은 첫 번호만 · 로마 숫자 ('TABLE I') · 소문자 키워드 ('fig. 3') 는 안 센다 ·
+      'Extended Data' 는 SI 로 친다 (CAP_RE 와 같다) · 블록 경계에서 갈린 'Supplementary' ↵ 'Table 2' 는 본문 표로 읽힌다.
+    """
+    # 줄 끝 하이픈을 먼저 잇는다 — 'Supple-\nmentary Table 2' (liu2026 Li-In-S p4 실측) 가 본문 'Table 2' 로 읽혀
+    #   표가 없는 논문에 t1 · t2 누락이 떴다. 소프트 하이픈 (\xad) 도 같은 자리에 온다 (pandey2026 'sche\xad').
+    t = re.sub(r"\xad\s*", "", text or "")
+    t = re.sub(r"(?<=[a-z])-[ \t]*\n\s*(?=[a-z])", "", t)
+    t = " ".join(t.split())
+    out = []
+    for m in REF_HEAD.finditer(t):
+        kw = m.group("kw").lower()
+        kind = "t" if kw.startswith("tab") else ("s" if kw.startswith("sch") else "f")
+        plural = kw.rstrip(".").endswith("s")          # figs · figures · tables · schemes
+        sep = REF_SEP_LIST if plural else REF_SEP_RANGE
+        pos, first = m.end(), True
+        while True:
+            if not first:
+                s = sep.match(t, pos)
+                if not s:
+                    break
+                pos = s.end()
+            n = REF_NUM.match(t, pos)
+            if not n:
+                break
+            pos, first = n.end(), False
+            num = int(n.group("n"))
+            if not 0 < num <= REF_MAX:
+                continue
+            si_ = bool(si_file or m.group("si") or n.group("s"))
+            out.append(f"{kind}{'S' if si_ else ''}{num}")
+    return out
+
+
+def missing_labels(found_keys, near, skipped, refs=None, si_given=False):
+    """추출 결과의 **번호 공백**과 **규칙에 떨어진 캡션 후보** → [{key, why, skipped, near_miss[, refs]}, …].
 
     ⛔⛔ 2026-09-27 (gao2026 실측): Fig. 12·13·15·17 이 빠졌는데 추출 출력만 봐서는 몰랐다 — 12·17 은
       is_caption 이 떨궈 **제외 목록에도 없었고**, 13·15 는 '그래픽 없음' 한 줄로 18 행 제한 속에 묻혔다.
       번호 구멍 검사는 `--audit` 에만 있어서 추출 직후엔 아무도 돌리지 않았다. 추출이 스스로 말한다:
       ① 종류·본문/SI 별로 1..최대 번호 중 빠진 번호 ② 캡션 모양인데 떨어진 후보 중 끝내 추출 안 된 번호.
-    found_keys = {'f1','fS3',…} · near = [(key, page, text)] · skipped = [(key, page, why)].
-    ⛔ 못 하는 것: 마지막 번호를 통째로 놓치고 후보도 없으면 모른다 · ②는 본문 참조일 수도 있다 (그렇게 적는다).
+    ⛔⛔ 2026-11-23 (pandey2026 실측): 마지막 그림 Fig. 19 가 **보고 없이** 빠졌다 — 캡션은 인정됐는데 자르기에서
+      '영역 없음' 으로 떨어졌고, ① 은 1..18 만 봤고, 제외 목록의 번호는 ① 의 공백일 때만 붙었다. 그래서 더 본다:
+      ③ 본문 참조 (`text_refs`) 의 최댓값이 추출 최댓값보다 크면 그 사이 번호 (끝 번호) · 한 장도 안 나온 종류는 1..최댓값
+      ④ 캡션으로 인정됐는데 자르기에서 떨어진 번호 중 끝내 추출 안 된 것 (위치와 상관없이).
+      SI 번호의 ③ 은 SI 가 입력에 있을 때만 (si_given · 또는 SI 번호가 하나라도 추출됨) — 본문은 SI 를 늘 참조하는데
+      SI 파일이 없는 경우가 많아서, 안 그러면 매번 SI 전체가 '누락' 으로 뜬다.
+    found_keys = {'f1','fS3',…} · near = [(key, page, text)] · skipped = [(key, page, why)] ·
+      refs = [(key, page)] (`text_refs`) · si_given = 입력 파일 중 SI 파일이 있었나.
+    ⛔ 못 하는 것: 본문이 한 번도 안 가리키고 캡션도 안 잡힌 마지막 번호는 여전히 모른다 · ②④ 는 본문 참조나
+      본문 문단 오탐일 수도 있고 ③ 은 남의 논문 그림 참조일 수도 있다 (그렇게 적는다 — 확인 대상이지 판정이 아니다).
     """
     have = {}
     for k in found_keys:
@@ -770,32 +832,63 @@ def missing_labels(found_keys, near, skipped):
         num = re.sub(r"\D", "", lab)
         if num:
             have.setdefault((kind, lab.startswith("S")), set()).add(int(num))
-    near_by, skip_by = {}, {}
+    near_by, skip_by, ref_by = {}, {}, {}
     for k, p, t in near:
         near_by.setdefault(k, []).append({"page": p, "text": t[:90]})
     for k, p, why in skipped:
         skip_by.setdefault(k, []).append(f"p{p} {why}")
+    ref_max = {}
+    for k, p in (refs or ()):
+        g = (k[0], k[1:].startswith("S"))
+        n = int(re.sub(r"\D", "", k[1:]))
+        ref_by.setdefault(k, [])
+        if p not in ref_by[k]:
+            ref_by[k].append(p)
+        ref_max[g] = max(ref_max.get(g, 0), n)
+    si_seen = si_given or any(si_ for (_k, si_) in have)
     out, seen = [], set()
-    for (kind, si_), nums in sorted(have.items()):
-        for n in range(1, max(nums) + 1):
+
+    def add(key, why):
+        seen.add(key)
+        rec = {"key": key, "why": why, "skipped": skip_by.get(key, []), "near_miss": near_by.get(key, [])}
+        if ref_by.get(key):
+            rec["refs"] = [f"p{p}" for p in ref_by[key][:4]]
+        out.append(rec)
+
+    for g in sorted(set(have) | {g for g in ref_max if not g[1] or si_seen}):
+        kind, si_ = g
+        nums = have.get(g, set())
+        top_have = max(nums) if nums else 0
+        top_ref = ref_max.get(g, 0) if (not si_ or si_seen) else 0
+        lab = f"{({'f': 'Fig.', 't': 'Table', 's': 'Scheme'})[kind]} {'S' if si_ else ''}{top_ref}"
+        for n in range(1, max(top_have, top_ref) + 1):
             if n in nums:
                 continue
             key = f"{kind}{'S' if si_ else ''}{n}"
-            seen.add(key)
-            out.append({"key": key, "why": "번호 공백 — 이 번호가 추출되지 않았다",
-                        "skipped": skip_by.get(key, []), "near_miss": near_by.get(key, [])})
+            if n <= top_have:
+                add(key, "번호 공백 — 이 번호가 추출되지 않았다")
+            elif nums:
+                add(key, f"끝 번호 — 본문이 {lab} 까지 가리키는데 추출 최대는 {top_have} "
+                         f"(남의 논문 그림 참조일 수도 있다 · 확인)")
+            else:
+                add(key, f"이 종류가 한 장도 추출되지 않았는데 본문이 {lab} 까지 가리킨다 "
+                         f"(남의 논문 참조일 수도 있다 · 확인)")
+    for key in sorted(skip_by, key=lambda k: (k[0], k[1:2] == "S", int(re.sub(r"\D", "", k[1:]) or 0))):
+        if key in found_keys or key in seen:
+            continue
+        add(key, "캡션으로 인정됐는데 자르기에서 떨어졌고 추출 0 — 본문 문단 오탐일 수도 있다 (제외 사유 확인)")
     for key, lst in sorted(near_by.items()):
         if key in found_keys or key in seen:
             continue
-        out.append({"key": key, "why": "캡션 모양 후보가 규칙에 떨어졌고 추출 0 — 본문 참조일 수도 있다 (확인)",
-                    "skipped": skip_by.get(key, []), "near_miss": lst})
+        add(key, "캡션 모양 후보가 규칙에 떨어졌고 추출 0 — 본문 참조일 수도 있다 (확인)")
     return out
 
 
 def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             maxpx=1500, relto=None):
     out_dir = OUT_ROOT / slug
-    found, seen, skipped, near, votes = [], {}, [], [], []
+    found, seen, skipped, near, votes, refs = [], {}, [], [], [], []
+    si_given = any(SI_TAG.search(Path(p).stem) for p in pdf_paths)   # SI 번호의 끝 번호 대조는 SI 가 있을 때만
     for pdf_path in pdf_paths:
         _GCACHE.clear()                        # 문서마다 비운다 (위 주석 참고)
         doc = fitz.open(pdf_path)
@@ -811,6 +904,8 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             page = doc[pno]
             blocks = page_blocks(page)         # 캡션 위 끝 = 첫 글줄 (2026-11-16 · tighten_caption_tops)
             caps = [(b, is_caption(b[4])) for b in blocks]
+            for b in blocks:                   # 본문 참조 번호 — 끝 번호 대조 (2026-11-23 · missing_labels ③)
+                refs.extend((k, pno + 1) for k in text_refs(b[4], si))
             for b, h in caps:                  # 캡션 모양인데 떨어진 블록 — 번호 공백 보고에 쓴다 (조용히 버리지 않는다)
                 if h is None:
                     nk = _near_key(b[4], si)
@@ -908,7 +1003,8 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             "sources": [_relto(p, relto) for p in pdf_paths],
             "figures": found,
             # 번호 공백·떨어진 캡션 후보 (2026-09-27) — 빈 목록이 정상. 있으면 손 크롭(manual_crop) 대상 후보다.
-            "missing_labels": missing_labels({r["key"] for r in found}, near, skipped),
+            # 2026-11-23: 본문 참조 최댓값과의 끝 번호 대조 · 자르기에서 떨어진 번호도 위치와 상관없이 (pandey2026 Fig. 19).
+            "missing_labels": missing_labels({r["key"] for r in found}, near, skipped, refs, si_given=si_given),
             # PDF 마다 표 캡션 양식 다수결 (2026-11-16) — caption_below 가 True 인 파일만 표를 캡션 **위**에서 잘랐다.
             "table_caption_vote": votes}
     if not dry:
@@ -1359,12 +1455,13 @@ def _report(slug, meta, skipped, dry):
             print(f"  {k:<6} p{p:<3} {why}")
     miss = meta.get("missing_labels") or []
     if miss:                                   # 18 행 제한 없이 전부 — 놓친 그림은 묻히면 안 된다
-        print(f"--- ⚠ 번호 공백·놓친 캡션 후보 {len(miss)}건 — 조용히 넘기지 말고 확인할 것 "
+        print(f"--- ⚠ 번호 공백·끝 번호·놓친 캡션 후보 {len(miss)}건 — 조용히 넘기지 말고 확인할 것 "
               f"(손으로 자르면 figures.json 에 manual_crop 사유)")
         for m in miss:
             sk = f" · 제외: {'; '.join(m['skipped'][:2])}" if m["skipped"] else ""
             nm = m["near_miss"][0] if m["near_miss"] else None
-            print(f"  {m['key']:<6} {m['why']}{sk}"
+            rf = f" · 본문 참조 {' '.join(m['refs'])}" if m.get("refs") else ""
+            print(f"  {m['key']:<6} {m['why']}{sk}{rf}"
                   + (f" · 후보 p{nm['page']}: {nm['text'][:56]!r}" if nm else ""))
     if not dry:
         print(f"→ litdb/figures/{slug}/  (figures.json 포함)")
@@ -1962,6 +2059,49 @@ def selftest():
     chk("마지막 번호 뒤의 떨어진 후보도 보고한다 (공백 검사가 못 보는 자리) — '본문 참조일 수도' 표시",
         [m["key"] for m in ml2] == ["f3"] and "본문 참조" in ml2[0]["why"])
     chk("⛔음성: 빠진 게 없으면 빈 목록", missing_labels({"f1", "f2", "t1"}, [], []) == [])
+    # (c2) 끝 번호 · 자르기에서 떨어진 번호 (2026-11-23 · pandey2026 Fig. 19 — 캡션 인정 · '영역 없음' · 1..18 만 봐서 침묵)
+    chk("본문 참조: 'FIGURE 19 |' 캡션 꼴도 참조로 센다", text_refs("FIGURE 19 | Schematic summary of", False) == ["f19"])
+    chk("본문 참조: 'Figure 19 presents …' → f19", text_refs("Figure 19 presents a schematic summary", False) == ["f19"])
+    chk("본문 참조: 복수 목록 'Figs. 3 and 19' → f3 · f19", text_refs("as in Figs. 3 and 19, the", False) == ["f3", "f19"])
+    chk("본문 참조: 복수 범위 'Figures 17–19' → f17 · f19", text_refs("Figures 17–19 show", False) == ["f17", "f19"])
+    chk("본문 참조: 'Figs. 3,4' (빈칸 없는 쉼표) → f3 · f4", text_refs("see Figs. 3,4 for", False) == ["f3", "f4"])
+    chk("⛔음성: 단수 'Fig. 2, 20 mg' 의 20 은 그림 번호가 아니다", text_refs("in Fig. 2, 20 mg of powder", False) == ["f2"])
+    chk("⛔음성: 패널 범위 'Fig. 2a–c' 는 f2 하나", text_refs("Fig. 2a–c show", False) == ["f2"])
+    chk("⛔음성: 150 넘는 번호 ('Table 2025') 는 버린다", text_refs("Table 2025 data", False) == [])
+    chk("⛔음성: 소문자 'periodic table 3d' · 'scheme 2 times' 는 참조가 아니다 (대문자 'FIGURE 3' 은 참조)",
+        text_refs("the periodic table 3d metals and the doping scheme 2 times", False) == []
+        and text_refs("FIGURE 3 | caption", False) == ["f3"])
+    chk("⛔음성: 줄 끝 하이픈 'Supple-↵mentary Table 2' 는 SI 표 (tS2) — 본문 t2 가 아니다 (liu2026 Li-In-S p4)",
+        text_refs("results (Supple-\nmentary Table 2).", False) == ["tS2"]
+        and text_refs("Supple\xad\nmentary Fig. 4", False) == ["fS4"])
+    chk("⛔음성: 번호 없는 'Table of Contents' · 'Figure of merit' 는 참조 아님",
+        text_refs("Table of Contents and Figure of merit", False) == [])
+    chk("본문 참조: SI 표기 — 'Fig. S3' · 'Supplementary Table 2' · SI 파일의 'Figure 3'",
+        text_refs("Fig. S3 and Supplementary Table 2", False) == ["fS3", "tS2"]
+        and text_refs("Figure 3 shows", True) == ["fS3"])
+    ml3 = missing_labels({f"f{n}" for n in range(1, 19) if n not in (5, 11)}, [],
+                         [("f5", 9, "영역 없음"), ("f11", 17, "영역 없음"), ("f19", 25, "영역 없음")],
+                         [("f19", 25), ("f5", 9), ("f11", 17)])
+    chk("★pandey 꼴: 공백 f5 · f11 + 끝 번호 f19 (제외 사유 · 본문 참조 쪽 붙음)",
+        [m["key"] for m in ml3] == ["f5", "f11", "f19"] and "끝 번호" in ml3[2]["why"]
+        and ml3[2]["skipped"] == ["p25 영역 없음"] and ml3[2]["refs"] == ["p25"])
+    ml4 = missing_labels({"f1", "f2"}, [], [("f3", 7, "그래픽 없음(img0/draw2)")])
+    chk("★자르기에서 떨어진 끝 번호는 본문 참조가 없어도 보고한다 (종전 침묵)",
+        [m["key"] for m in ml4] == ["f3"] and "자르기에서 떨어졌고" in ml4[0]["why"])
+    ml5 = missing_labels({"f1", "f2"}, [], [], [("f4", 6)])
+    chk("★본문이 Fig. 4 까지 가리키면 f3 · f4 를 끝 번호로 보고한다",
+        [m["key"] for m in ml5] == ["f3", "f4"] and all("끝 번호" in m["why"] for m in ml5))
+    chk("⛔음성: 본문 참조 최댓값이 추출 최댓값 이하면 아무것도 안 더한다",
+        missing_labels({"f1", "f2", "f3"}, [], [], [("f2", 3), ("f3", 4)]) == [])
+    chk("⛔음성: SI 가 입력에 없으면 본문의 'Fig. S12' 참조로 SI 를 누락이라 하지 않는다",
+        missing_labels({"f1", "f2"}, [], [], [("fS12", 5)]) == [])
+    ml6 = missing_labels({"f1", "f2"}, [], [], [("fS2", 5)], si_given=True)
+    chk("SI 가 입력에 있으면 SI 참조도 대조한다 (fS1 · fS2)", [m["key"] for m in ml6] == ["fS1", "fS2"])
+    ml7 = missing_labels({"f1", "f2"}, [], [], [("t2", 4)])
+    chk("★표가 한 장도 안 나왔는데 본문이 Table 2 까지 가리키면 t1 · t2 보고 ('한 장도' 문구)",
+        [m["key"] for m in ml7] == ["t1", "t2"] and all("한 장도" in m["why"] for m in ml7))
+    chk("⛔음성: 이미 추출된 번호의 제외 기록 ('중복(작은 쪽)') 은 보고하지 않는다",
+        missing_labels({"f1", "f2"}, [], [("f2", 8, "중복(작은 쪽)")]) == [])
     # (d) 옆캡션 — 합성 PDF 로 실제 영역 산정 경로를 시험한다 (gao2026 p21 좌표)
     def _pix():
         pm = fitz.Pixmap(fitz.csRGB, fitz.IRect(0, 0, 40, 40), False)
@@ -2003,6 +2143,17 @@ def selftest():
             "f13" not in keys and "f14" in keys and keys["f14"]["bbox"][0] > 170)
         chk("번호 공백 보고: 합성 PDF 의 f13 누락이 missing_labels 에 제외 사유와 함께 올라온다",
             any(x["key"] == "f13" and x["skipped"] for x in m["missing_labels"]))
+        # 호출부 결속 (2026-11-23) — 함수만 시험하면 extract 가 refs 를 안 넘겨도 초록이다 (2026-09-13 '호출부만 되돌림' 함정).
+        endref = _doc("endref.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
+                                               p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix(),
+                                                              keep_proportion=False),
+                                               p.insert_textbox(fitz.Rect(51, 560, 544, 600), "The outlook in Figure 15 "
+                                                                "summarizes the remaining challenges.", fontsize=9)))
+        m, _sk = extract([endref], "endref_test", dry=True)
+        e15 = [x for x in m["missing_labels"] if x["key"] == "f15"]
+        chk("★호출부: 합성 PDF 본문의 'Figure 15' 참조가 extract → missing_labels 로 넘어가 f15 를 끝 번호로 보고",
+            any(f["key"] == "f13" for f in m["figures"]) and len(e15) == 1
+            and "끝 번호" in e15[0]["why"] and e15[0].get("refs") == ["p1"])
         prose_over = _doc("prose.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
                                                   p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix()),
                                                   p.insert_textbox(fitz.Rect(190, 300, 540, 380), PROSE, fontsize=9)))

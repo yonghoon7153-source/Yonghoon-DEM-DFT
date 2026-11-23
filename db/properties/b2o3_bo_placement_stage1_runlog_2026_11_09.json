@@ -856,5 +856,33 @@
   "⚠": "GPU 를 셋이 같이 써서 런 속도가 어림 (단독 turbo ≈ 145 ps/h) 보다 느릴 수 있다 — 첫 생산 프레임 속도로 끝 시각을 다시 잰다 · 큐 상한 150 h 는 실행기가 센다",
   "다음": "속도 재기 (한두 시간 뒤 watch) → 8 단위 끝 → 회수 블록 → 판독 (11b_판독_계약_결과_전_2026_11_23 그대로)",
   "by": "agent · 2026-11-23"
+ },
+ "11b_감시_v2_2026_11_23": {
+  "출처": "사용자 붙여넣은 gabia 화면 — watch v1 10:13:49 · md.log 확인 명령 (10:16 직전) · watch v2 10:16:37 (2026-11-23)",
+  "왜_v2": "v1 은 traj.xyz 프레임만 셌다 — 드라이버가 궤적을 생산 구간에서만 쓰므로 평형 5 ps 동안 '평형 중' 만 보여 돌고 있는지 알 수 없었다 (10:13:49 화면) · v2 는 md.log 마지막 줄의 시간 (평형 5 + 생산 400 = 온도마다 405 ps) 과 화면 시각 (date +%T) 을 같이 찍는다 · 큐 로그 줄은 110 자에서 자른다 (v1 의 150 자 자름이 'GPU 여유' 숫자를 4470 으로 잘라 보였다 — 11b_발사_2026_11_23 GPU 줄)",
+  "감시_v2": "watch -n 30 'O=/data/work/runs/b2o3_bo_2026_11_09/s11b_md; tmux has-session -t b2o3_s11b 2>/dev/null && echo \"== tmux b2o3_s11b 도는 중 · $(date +%T)\" || echo \"== tmux b2o3_s11b 없음 = 끝났거나 멈춤\"; tail -3 $O/queue.log 2>/dev/null | cut -c1-110; for u in $O/*/s[12]; do [ -d \"$u\" ] || continue; c=$(ls -td $u/d0.00_cfg0/T* 2>/dev/null | head -1); t=$(tail -1 $c/md.log 2>/dev/null | awk \"{print \\$1}\"); n=$(head -1 $c/traj.xyz 2>/dev/null); f=; [ -n \"$n\" ] && f=$(( $(wc -l < $c/traj.xyz) / (n + 2) )); s=\"도는 중\"; [ -e $u.done.json ] && s=\"끝\"; [ -e $u.fail.json ] && s=\"실패\"; echo \"-- $(basename $(dirname $u) | cut -c1-16)/$(basename $u): $s · 온도 $(ls -d $u/d0.00_cfg0/T* 2>/dev/null | sed \"s#.*/T##\" | sort -n | tr \"\\n\" \" \")· 지금 ${c##*/} · md.log ${t:-없음} ps / 405 · 프레임 ${f:-0} / 4000\"; done; echo \"== GPU\"; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'",
+  "시험": "가짜 폴더 세 단위 (평형 중 = md.log 3.2 ps · 궤적 없음 / 생산 중 = 궤적 77 프레임 · md.log 없음 / 끝 = done.json) 에 대해 shlex.split → sh -c 로 실행해 줄 꼴 확인 (세션 안 · 2026-11-23) · 실패 단위 (fail.json) 와 GPU 줄은 시험에 안 넣었다",
+  "관측": {
+   "10:13:49_v1": "두 줄 ctrl_s1 · ctrl_s2 '평형 중' · GPU 9002 MiB · 100 % · 우리 두 런 2270 · 2286 MiB (10:03 의 1654 · 1644 에서 늘어남) · 남의 python3 1314219 4420 MiB 그대로",
+   "md_log_확인": "s1 T300 6.2260 → 6.2280 ps · s2 6.2400 → 6.2420 ps (줄마다 2 fs = 매 걸음 기록) · 런 로그 끝은 torch 컴파일 경고 (10:01:23) 뿐 · 오류 없음",
+   "10:16:37_v2": "s1 md.log 6.3120 ps · s2 6.3260 ps · 둘 다 생산 프레임 13 / 4000 ((6.31 − 5) / 0.1 ps = 13 ✓) · GPU 9002 MiB · 100 %"
+  },
+  "속도_어림_잠정": "시작 10:01:09 → 10:16:37 에 6.31 ps — 모델 적재 · 컴파일 시간을 포함한 평균이라 하한 ≈ 24 ps/h · 두 시각 표본 사이 간격이 짧아 (md.log 확인 ↔ v2 화면 수 초) 실속도는 아직 못 잼 · 단독 turbo ≈ 145 ps/h 의 1/3 꼴 (GPU 를 셋이 나눠 씀) 이면 ≈ 48 ps/h",
+  "끝_시각_어림_잠정": "단위 하나 = 4 온도 × 405 ps = 1620 ps · 줄마다 4 단위 — 48 ps/h 면 단위 ≈ 34 h · 줄 ≈ 135 h (상한 150 h 안) · 30 ps/h 면 단위 ≈ 54 h · 넷째 단위 (cfg0019) 시작 시각 ≈ 162 h > 150 h → 실행기가 안 띄운다 (배치 하나가 빠진다)",
+  "다음": "한 시간 이상 간격의 두 번째 v2 화면으로 실속도 → 끝 시각 · 상한 150 h 를 넘으면 사용자에게 선택지 (그대로 두고 넷째 단위만 따로 · kgy 로 단위 나눠 돌리기 · 상한 다시 정하기) — 판독 계약 (11b_판독_계약_결과_전_2026_11_23) 은 그대로",
+  "by": "agent · 2026-11-23"
+ },
+ "11b_이어돌리기_규칙_2026_11_23": {
+  "사용자_원문": "그냥 놔두고 중간에 stop돼도 다시 이어서 할 수 있음 됐지 뭐 (2026-11-23 · 속도 29.4 ps/h · 상한 150 h 에 넷째 단위가 걸린다는 보고 뒤)",
+  "속도_실측": "10:16:37 → 11:03:51 (2,834 초) · s1 md.log 6.312 → 29.408 ps (29.3 ps/h) · s2 6.326 → 29.472 ps (29.4 ps/h) · 둘 다 T300 · GPU 9,002 MiB · 100 % · 남의 python3 (DEM 쪽 · 4,420 MiB) 와 같이 씀 — 카드 어림 (단독 turbo ≈ 145 ps/h · 90–130 GPU-h) 의 약 1/5",
+  "끝_시각_어림_잠정": "단위 = 4 온도 × 405 ps = 1,620 ps — 대조 (124 원자) ≈ 55 h · b2o3 (128 원자 · 원자 수 비례 가정) ≈ 57 h · 줄마다: 대조 끝 ≈ 11-25 17시 · cfg0040 끝 ≈ 11-28 02시 · cfg0015 시작 ≈ 112 h (< 150) → 끝 ≈ 11-30 11시 · cfg0019 시작 ≈ 169 h > 150 → 실행기가 안 띄우고 큐가 선다 (끝 기록 6) · 이어 돌리면 cfg0019 두 시드 ≈ 57 h → 12-02 저녁 · DEM 잡이 끝나면 빨라진다 (어림 · 판정 아님)",
+  "규칙_1_상한에서_서면": "같은 계획 (4a33eb41) 으로 큐를 다시 띄운다 — 끝 기록 있는 단위는 실행기가 건너뛰고 (↷) 끝 기록 없는 단위만 돈다 · 새 큐는 새 150 h · 카드 안정성 상한 (150) 을 넘는 이어 돌리기 = 사용자 결정 (위 원문) · 결정 D-2026-11-23-b2o3-bo-11b-cap-continue",
+  "규칙_2_단위_도중_멈춤": "재부팅 · 메모리 · 강제 종료로 단위가 끝 기록 없이 멈추면 (반쯤 남은 out_root 또는 실패 기록) 실행기 새 판 (RESUME=1) 으로 다시 띄운다 — run_meta.json 의 label · seed · v0_xyz · 온도 · prod/equilib · save_traj 가 그 단위와 같을 때만 (아니면 6 으로 멈춤) · 끝난 온도 (msd.json 있음) 는 드라이버가 건너뛰고 끊긴 온도는 같은 시작 구조 · 같은 시드로 처음부터 (traj.xyz 를 지우고 새로 씀) · 옛 실패 기록 → <out>.fail.<epoch>.json · 옛 run_meta → run_meta.before_resume.<epoch>.json · 끝 기록에 resumed true",
+  "판정에_미치는_것": "없음 — 온도마다 같은 시작 구조에서 따로 시작하고 (드라이버 seed + 1000·cfg + T) 각 온도의 궤적은 한 번에 끝까지 돈 것만 남는다 (끊긴 온도는 처음부터) · 판정 · 문턱 · β · 대조 · 판독 계약 (11b_판독_계약_결과_전_2026_11_23) 그대로 · 실패 기록이 있던 단위도 이어 돌린다 (종전 '실패 단위는 다시 안 돌림' 을 이 결정이 바꾼다)",
+  "⛔_돌던_판_안_덮기": "지금 도는 큐의 실행기 ($Q/run_b2o3_11b_md.sh · sha256 e989b6acd3b723b4419f0395f7785986f56d4ed07636c5ae06f90763db5f4d91) 는 덮어쓰지 않는다 — bash 는 스크립트를 읽어 가며 돌려서, 돌고 있는 파일이 바뀌면 남은 줄이 엉뚱하게 실행된다 · 새 판은 다른 이름 (run_b2o3_11b_md_v2.sh) 으로 꺼내 큐가 선 뒤에만 쓴다",
+  "실행기_새_판": "tools/doping/run_b2o3_11b_md.sh sha256 90ef801ab67195e7bbea3a2afd589eb382c2b968b4d26f1e0c2da53bcf421292 — RESUME=1 (기본 0 · 종전 동작 그대로) · selftest 18 → 26 (실패 기록 자리 RESUME 없이 6 · RESUME 로 끝 기록 · seed · label 다르면 거부 · run_meta 없으면 거부 · 반쯤 남은 자리 300 K 궤적 해시 그대로 · 600 K 처음부터 · 이어 돌린 단위 다음 새 단위는 resumed false · 다시 띄우면 8 단위 건너뜀) · 깨기 7/7 빨간불 (RESUME 문 없앰 · seed · label · run_meta 없음 문구 · resumed 무시 · 실패 기록 지움 · 단위마다 resumed 초기화 없앰)",
+  "이어_띄우기_블록 (큐가 선 뒤 · 사용자가 붙여넣는다)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; S=$R/src; Q=$R/s11b_src; D=$S/tools/modelc_v3/disorder_ensemble_diffusion.py\necho \"== ① 큐가 섰는지 (tmux 없음 · 큐 로그 끝 줄)\" && ! tmux has-session -t b2o3_s11b 2>/dev/null && tail -3 $R/s11b_md/queue.log | cut -c1-140 && echo \"== ② 실행기 새 판 (이어 돌리기 RESUME) · 계획 · 드라이버 해시 — 돌던 판 run_b2o3_11b_md.sh 는 안 덮는다\" && git -C /data/work/repo fetch -q origin claude/evac-2026-11-20 && git -C /data/work/repo show FETCH_HEAD:tools/doping/run_b2o3_11b_md.sh > $Q/run_b2o3_11b_md_v2.sh && (cd $Q && printf '%s\\n' \"90ef801ab67195e7bbea3a2afd589eb382c2b968b4d26f1e0c2da53bcf421292  run_b2o3_11b_md_v2.sh\" \"4a33eb414261a752686cfacbb5754e67b1abb348d59bce00f5fcb1c83e58f586  plan.json\" | sha256sum -c -) && echo \"c3e2d358ee53cefab7c0c4a05ff6eea7ec322d2a75993643c302ada725f155a9  $D\" | sha256sum -c - && echo \"== ③ 새 판 자가시험 (가짜 드라이버 · 1–2 분)\" && bash $Q/run_b2o3_11b_md_v2.sh --selftest > $Q/selftest_v2.log 2>&1 && tail -1 $Q/selftest_v2.log && echo \"== ④ 이어 띄우기 $(date '+%F %T')\" && tmux new -d -s b2o3_s11b \"R=$R PY=$PY DRV=$D PLAN=$Q/plan.json RESUME=1 bash $Q/run_b2o3_11b_md_v2.sh\" && sleep 30 && tail -12 $R/s11b_md/queue.log | cut -c1-160",
+  "블록_설명": "① tmux 없음 (큐가 섰다) · 큐 로그 끝 줄 ② 새 판을 다른 이름으로 꺼내 해시 대조 (실행기 · 계획 · 드라이버) ③ 새 판 자가시험 ④ RESUME=1 로 tmux b2o3_s11b 다시 → 30 초 뒤 큐 로그 (↷ 건너뜀 · ↻ 이어 돌림 · ▶ 새 단위) · 감시는 감시 v2 그대로 · 블록 bash -n 통과 (세션 안)",
+  "by": "agent · 2026-11-23"
  }
 }
