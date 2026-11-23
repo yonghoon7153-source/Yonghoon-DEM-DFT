@@ -1,6 +1,6 @@
 # 복합양극 미세구조
 
-전극 미세구조 · 공정 · 장 `dem-micro` · 논문 83편 · 읽기 카드 76편
+전극 미세구조 · 공정 · 장 `dem-micro` · 논문 82편 · 읽기 카드 75편
 
 > 공극률, 굴곡도, 이온 · 전자 경로의 연결성.
 
@@ -78,7 +78,7 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 4. Bielefeld et al. 2019 (`bielefeld2020_effective_ionic_conductivity_binder`) — Bielefeld et al. 2019의 유효 이온전도도 편으로, 접촉 저항 없는 연속체 계산이 조성과 바인더에 어떻게 반응하는지 보여 준다.
 5. Bazzoun et al. 2026 (`bazzoun2026_dem_fem_rnm_ionic`) — DEM 구조 위 RNM 계산을 같은 소재계의 EIS 실측과 맞대어 계산과 실측의 거리를 보여 준다.
 
-## 이 장의 논문 (83편)
+## 이 장의 논문 (82편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -162,6 +162,5 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 | `oh2026_bimodal_composite_cathode` | Oh et al. 2026 | Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries | 작은 단결정 NCM이 큰 다결정 NCWA 사이 틈을 채우면 공극률과 이온 굴곡도가 낮아지고, 7:3 조성에서 속도 특성과 수명이 함께 가장 좋다. |
 | `oh2026_carbon_coating_siox_ion_electron_balance` | Oh et al. 2026 | Optimized carbon coating on SiOx enables balanced ion/electron transport and uniform dispersion in SiOx/Graphite composite electrodes | CVD 탄소코팅이 두꺼울수록 전자전도는 좋아지지만 Li⁺ 수송이 막혀, 중간 두께가 저항, rate, 수명에서 가장 낫다. |
 | `pan2026_thesis_rate_capable_energy_dense_cathode_composites` | Bonian Pan 2026 | Engineering Rate Capable, Energy-Dense Lithium-Ion Battery Cathode Composites | 액체 LIB 양극에서 2층 기공 구배와 SWCNT·그래핀 혼성 도전재는 고율 용량을 올렸고, LMO에 입힌 LFP 셸은 직렬 수송 장벽이 됐다. |
-| `zhang2026_polymer_electrolyte_modeling_perspective` | Zhang et al. 2026 | Modeling Approaches for Polymer-Based Electrolytes in Advanced Batteries: Bridging Processing, Structure, and Performance | 고분자계 전해질 모델을 네 축으로 분류하면 이온겔 연구는 분자, 기전, 비결합에 몰리고 메조 축척과 완전결합은 비어 있다. |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | Zhou et al. 2026 | Microstructure-resolved modeling of gyroid structural electrolytes: Mechanical and transport behavior | 공극률은 강성과 이온전도를 서로 반대로 바꾸고, 셀의 축 늘림은 한 방향의 둘을 함께 올리고 가로 방향에서는 함께 내린다. |
 | `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` | Wang et al. 2027 | Accelerating NCM811 cathode effective bulk-modulus prediction for lithium-ion batteries: A geometry-reduction-based graph neural network | (카드 없음) |

@@ -1,6 +1,6 @@
 # 그 밖의 문헌
 
-전극 미세구조 · 공정 · 장 `dem-etc` · 논문 16편 · 읽기 카드 9편
+전극 미세구조 · 공정 · 장 `dem-etc` · 논문 21편 · 읽기 카드 9편
 
 > 위 묶음에 들지 않은 DEM 축 문헌. 저장소 인덱스에서도 '기타'로 남아 있다.
 
@@ -72,11 +72,15 @@ Lee et al. 2026은 전해질 계보다 방법이 우리에게 닿는다. 우리 
 4. Eizenhammer et al. 2026 (`eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell`) — 입도분포를 DEM 입자 템플릿으로 바꾸는 층화 역변환 표본 규약의 출처다.
 5. Shenouda & Hoff 2020 (`shenouda2020_dem_metal_powder_am_liggghts_tutorial`) — 우리 LIGGGHTS 입력 스크립트와 명령어 골격이 같아 input을 읽는 입문서로 쓸 수 있다.
 
-## 이 장의 논문 (16편)
+## 이 장의 논문 (21편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
 | `bzox_dry_zro2x_nmc_shell_coating_sulfide_assb` |  | superseded by choi2026_bzox_dry_zro2x_nmc_shell_coating.md | 이 기록은 보조자료(SI)만으로 만든 구판이며, 본문을 확보한 뒤 내용이 통합본으로 모두 옮겨졌다. |
+| `lacey1954_particle_mixing_theory_index` | Lacey 1954 | Developments in the theory of particle mixing | (카드 없음) |
+| `hersey1975_ordered_mixing_concept` | J.A. Hersey 1975 | Ordered Mixing: A New Concept in Powder Mixing Practice | (카드 없음) |
+| `egermann1983_ordered_vs_interactive_mixture_nomenclature` | H. Egermann · N. A. Orr 1983 | Ordered mixtures — Interactive mixtures | (카드 없음) |
+| `nase2001_granular_bond_collision_number_wet_cohesion` | Nase · Vargas · Abatan · McCarthy 2001 | Discrete characterization tools for cohesive granular material | (카드 없음) |
 | `windreich2003_voxel_based_surface_area_estimation` | Windreich et al. 2003 | Voxel-based surface area estimation: from theory to practice | (카드 없음) |
 | `lindblad2005_surface_area_weighted_local_configurations` | Lindblad 2005 | Surface area estimation of digitized 3D objects using weighted local configurations | (카드 없음) |
 | `lawrence2008_single_vgcnf_elastic_modulus_morphology` | Lawrence et al. 2008 | Elastic Properties and Morphology of Individual Carbon Nanofibers | (카드 없음) |
@@ -92,3 +96,4 @@ Lee et al. 2026은 전해질 계보다 방법이 우리에게 닿는다. 우리 
 | `kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review` | Kang et al. 2026 | Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries | (카드 없음) |
 | `lee2026_eecfp_dnn_electrolyte_ce_lmb` | Lee et al. 2026 | Interpretable enhanced-ECFP-guided deep learning for rational electrolyte design and Coulombic efficiency prediction in lithium metal batteries | 농도 가중 분자지문으로 학습한 DNN을 SHAP으로 해석해 얻은 규칙대로 조합한 전해질이 Li–Cu CE 99.72 %를 냈다. |
 | `park2026_ceramic_pp_separator` | Park et al. 2026 | Ultra-thin ceramic-coated dry-biaxially stretched polypropylene separator achieving balanced ionic transport and short-circuit resistance in lithium metal batteries | 건식 이축연신 PP 분리막에 스퍼터 Al₂O₃ 초박막을 입히면 기공구조는 그대로 두고 이온전도와 단락 저항이 함께 오른다. |
+| `zhang2026_polymer_electrolyte_modeling_perspective` | Zhang et al. 2026 | Modeling Approaches for Polymer-Based Electrolytes in Advanced Batteries: Bridging Processing, Structure, and Performance | (카드 없음) |

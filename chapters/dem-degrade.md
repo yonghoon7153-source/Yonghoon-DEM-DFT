@@ -1,6 +1,6 @@
 # 화학-기계 열화와 계면
 
-전극 미세구조 · 공정 · 장 `dem-degrade` · 논문 37편 · 읽기 카드 34편
+전극 미세구조 · 공정 · 장 `dem-degrade` · 논문 38편 · 읽기 카드 34편
 
 > 균열, 박리, 응력에 따른 계면 저항 변화.
 
@@ -72,7 +72,7 @@ SE 강성이 열화에 유리한지에서 모델끼리 엇갈린다. Bucci et al
 4. Parks et al. 2023 (`intergranular_cracking_nmc811_jmca2023`) — 같은 NMC811 입자를 충전 전후로 찍어 입계 균열이 전기화학으로 생기는 것을 직접 보인다.
 5. Song et al. 2025 (`song2025_porous_argyrodite_modulus_fracture_toughness`) — 다공 Li₆PS₅Cl의 벌크 영률과 파괴인성을 같은 시편에서 재어 나노압입값과 척도 차이를 드러낸다.
 
-## 이 장의 논문 (37편)
+## 이 장의 논문 (38편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -112,4 +112,5 @@ SE 강성이 열화에 유리한지에서 모델끼리 엇갈린다. Bucci et al
 | `park2026_thiolene_sbr_binder_assb` | Park et al. 2026 | Multi‐Faceted Binder Enhancement via Slurry‐Applicable Thiol‐Ene Click Chemistry for Low‐Pressure‐Operable All‐Solid‐State Batteries | 0.3 MPa 작동에서 thiol-ene로 가교한 SBR 바인더가 접착 강화형보다 용량과 수명을 크게 개선했다. |
 | `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` | Sedlatschek et al. 2026 | Characterization of the grain boundary strength of polycrystalline NMC811 using in situ micro tensile tests | (카드 없음) |
 | `tabakovic2026_mechanical_stress_eis_ica_drt_dfn` | Tabakovic 2026 | Impact of Mechanical Stress on Electrochemical Impedance Spectra and Incremental Capacity of the Lithium-Ion Battery | 응력 결합 DFN 시뮬레이션에서 정수압은 ICA 피크를 저전압 쪽으로 평행 이동시키고, EIS 변화의 부호를 SoC에 따라 바꾼다. |
+| `vanpeene2026_4d_nano_holotomography_dvc_graphite_silicon_chemomechanics` | Vanpeene et al. 2026 | Four-dimensional X-ray nano-holotomography reveals multiscale chemomechanics in composite graphite–silicon battery electrodes | (카드 없음) |
 | `wang2026_dryprocess_thick_cathode_failure_ncm94` | Wang et al. 2026 | Failure mechanisms of dry-processed thick cathodes in sulfide solid-state batteries: a mechanistic investigation | 건식 후막 양극의 열화는 입자 간 접촉이 아니라 양극 계면의 화학분해와 전하이동 저항 증가에서 온다. |

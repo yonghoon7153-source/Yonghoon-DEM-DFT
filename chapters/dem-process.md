@@ -1,6 +1,6 @@
 # 전극 공정
 
-전극 미세구조 · 공정 · 장 `dem-process` · 논문 99편 · 읽기 카드 82편
+전극 미세구조 · 공정 · 장 `dem-process` · 논문 94편 · 읽기 카드 74편
 
 > 혼합, 캘린더링, 가압, 건식 전극 제조.
 
@@ -70,16 +70,12 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 4. OTANI et al. 2025 (`otani2025_dem_se_dispersion_aggregation_compression`) — 압축 전 SE 분산 상태가 압밀 뒤 밀도와 접촉면적을 정한다는 것을 응집수 한 축으로 보인 DEM이다.
 5. Zhang et al. 2026 (`zhang2026_xct_dem_cathode_calendering_peel_calibration`) — 같은 모델 안에서 하중 상태 값과 제하 후 값이 어떻게 갈리는지 보여 견줄 값의 상태를 정하는 기준을 준다.
 
-## 이 장의 논문 (99편)
+## 이 장의 논문 (94편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
-| `lacey1954_particle_mixing_theory_index` | Lacey 1954 | Developments in the theory of particle mixing | 혼합 상태는 두 기준 분산 사이의 지수 M으로 재되, 대류형 혼합이면 M이 표본 크기에 크게 걸리므로 여러 표본 크기로 분석해야 한다. |
-| `hersey1975_ordered_mixing_concept` | J.A. Hersey 1975 | Ordered Mixing: A New Concept in Powder Mixing Practice | 상호작용하는 미분이 운반체 표면에 붙어 같은 단위체를 이루면, 그 혼합물은 흔히 무작위 혼합물보다 더 균질하다. |
-| `egermann1983_ordered_vs_interactive_mixture_nomenclature` | H. Egermann · N. A. Orr 1983 | Ordered mixtures — Interactive mixtures | 'ordered'는 무작위보다 고른 혼합 정도에만 쓰고, 미분이 운반체에 붙는 혼합의 유형은 'interactive'로 부르자는 제안이다. |
 | `pfeffer2001_dry_particle_coating_engineered_particulates` | Pfeffer · Dave · Wei · Ramlakhan 2001 | Synthesis of engineered particulates with tailored properties using dry particle coating | (카드 없음) |
 | `stewart2001_dem_pept_bladed_mixer_detailed_comparison` | Stewart · Bridgwater · Zhou · Yu 2001 | Simulated and measured flow of granules in a bladed mixer—a detailed comparison | 마찰만 바꾼 이산요소법(DEM) 다섯 경우는 믹서 유동의 큰 그림을 재현했지만, 어느 한 벌도 층 전체의 세부 속도를 맞히지 못했다. |
-| `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` | Begat · Morton · Staniforth · Price 2004 | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations II: Influence on Fine Particle Delivery Characteristics | 접착과 자기 응집의 비 Λ₁₂가 1보다 큰 약물은 lactose에 고르게 퍼지고, 1보다 작은 약물은 덩어리로 남는다. |
 | `geldart2006_powder_flowability_angle_of_repose_tester` | Geldart et al. 2006 | Characterization of powder flowability using measurement of angle of repose | 100 g 소량 동적 안식각 시험기로 잰 AOR은 Hausner 비와 직선으로 맞고, 측정 방법이 다른 AOR끼리는 비교할 수 없다. |
 | `chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer` | Chandratilleke et al. 2010 | Effect of Blade Speed on Granular Flow and Mixing in a Cylindrical Mixer | 날개가 빠를수록 시간으로는 빨리 섞이지만, 회전수와 에너지로 보면 느린 날개가 낫다. |
 | `sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode` | Sakuda et al. 2011 | All-solid-state lithium secondary batteries using LiCoO2 particles with pulsed laser deposition coatings of Li2S–P2S5 solid electrolytes | 펄스 레이저 증착으로 입힌 황화물 전해질 막이 이온 경로를 만들어, 전해질 입자 10 wt%로 30 wt% 혼합 전극과 같은 용량을 낸다. |
@@ -88,12 +84,10 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 | `stershic2015_fabric_tensor_calendering_nmc_xct_dem` | Stershic et al. 2015 | Modeling the evolution of lithium-ion particle contact distributions using a fabric tensor approach | 압연 뒤 NMC111 양극의 접촉은 다섯 판정법 모두에서 수직 방향이 줄고 수평 방향이 늘지만, 같은 입도 분포의 구 DEM은 이 변화를 재현하지 못한다. |
 | `kawaguchi2017_dry_coating_parametric_na2so4_model_se` | Kawaguchi et al. 2017 | Parametric study of dry coating process of electrode particle with model material of sulfide solid electrolytes for all-solid-state battery | (카드 없음) |
 | `meyer2017_calendering_compaction_resistance_line_load_exponential_model` | Meyer et al. 2017 | Characterization of the calendering process for compaction of electrodes for lithium-ion batteries | 압연 뒤 코팅 밀도는 선하중의 지수 포화 식으로 맞고, 그 빠르기를 정하는 compaction resistance는 NCM 양극이 흑연 음극의 거의 두 배다. |
-| `alizadeh2018_dem_adhesion_calibration_segregation_heap` | Alizadeh et al. 2018 | A methodology for calibration of DEM input parameters in simulation of segregation of powder mixtures, a special focus on adhesion | 단일 성분 안식각으로 JKR 계면 에너지를 보정한 DEM은 코팅이 EP 분리를 줄이고, 지나친 점착은 다시 분리를 키움을 보였다. |
 | `kawaguchi2018_dry_coating_model_se_particle_powtec` | Kawaguchi et al. 2018 | Dry coating of electrode particle with model particle of sulfide solid electrolytes for all-solid-state secondary battery | 모델 물질 Na₂SO₄로 NCM을 건식 충격 코팅하면 NCM이 깨지지 않고 다 덮이며, 압분체에서 NCM끼리 덜 닿고 공극도 준다. |
 | `meyer2018_calendering_process_model_active_material_mass_loading` | Meyer et al. 2018 | Process modeling of the electrode calendering of lithium-ion batteries regarding variation of cathode active materials and mass loadings | 최소 기공률을 압연 전 값의 0.4배로 고정하면 선하중과 압연 뒤 기공률의 관계가 압밀 저항 γ_C 하나로 적히고, γ_C는 면적 부하에 비례한다. |
 | `nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch` | Nam et al. 2018 | Toward practical all-solid-state lithium-ion batteries with high energy density and safety: Comparative study for electrodes fabricated by dry- and slurry-mixing processes | 같은 조성에서 바인더 슬러리 시트는 무바인더 손혼합 전극보다 고체 전해질 피복률과 0.1C 용량이 낮고, 예비 혼합은 저율에서만 이를 덜어 준다. |
 | `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` | Hippauf et al. 2019 | Overcoming binder limitations of sheet-type solid-state cathodes using a solvent-free dry-film approach | 용매 없는 건식 막 공정으로 PTFE를 0.1 wt%까지 줄인 황화물 양극 시트를 만들었다. 0.7 wt% 이상에서는 양극 계면 저항이 커진다. |
-| `jarray2019_cohesion_driven_mixing_segregation_drum` | Jarray et al. 2019 | Cohesion-driven mixing and segregation of dry granular media | 표면만 실란화해 한 종에 점착을 주면 같은 크기 쌍은 분리되고, 작은 쪽이 점착인 크기 다른 쌍은 크기 분리가 준다. |
 | `sangros2019_dem_calendering_lib_electrode` | Sangrós Giménez et al. 2019 | Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method | 단일 NMC 입자 측정으로 탄소성 접촉을 정하고 바인더 bond를 더한 DEM이 압연 후 공극률과 두께를 재현하고 탄성회복을 정량했다. |
 | `chibwe2020_nnsi_segregation_index` | Chibwe et al. 2020 | Particle near-neighbour separation index for quantification of segregation of granular material | 같은 타입 최근접 거리를 접촉과 균일분산 사이에서 0–1로 정규화한 SI를 제안했지만, 검증은 2성분 DEM에 그친다. |
 | `doux2020_pressure_effects_sulfide_se_jmca` | Doux et al. 2020 | Pressure effects on sulfide electrolytes for all solid-state batteries | Li₆PS₅Cl 펠릿의 측정 전도도는 성형압이 정하는 기공과 적층압이 정하는 Ti 전극 접촉에 함께 좌우된다. |
@@ -167,9 +161,10 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 | `qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode` | Qin et al. 2026 | Manufacturing process modeling of bilayer cathode for graded thick electrode design | 건조 직후 살아 있던 층별 공극률 대비가 40 % 캘린더링 뒤 두 적층 순서 모두에서 반대로 뒤집힌다. |
 | `sankar2026_fiber_scale_dem_carbon_felt_manufacturing` | Sankar et al. 2026 | Fiber-Scale Discrete Element Modeling Approach for Microstructural Evolution in Carbon Felt Electrode Manufacturing | 섬유를 구 사슬로 푼 DEM에서 탄소펠트 미세구조는 단계마다 쌓인 제조 이력이 정하고, 큰 기공목은 확산을 지배하지 않는다. |
 | `schmitt2026_chemomech_stability_dry_cathode_separator_sheets` | Schmitt et al. 2026 | Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries | PTFE 건식 시트 양극은 산화 분해가 더 커도 첫 방전, CE, 율속이 펠릿보다 좋았고, 원문은 수명을 화학-기계 안정성이 정한다고 해석했다. |
-| `sun2026_dem_extrusion_recirculation_dry_electrode` | Sun et al. 2026 | Discrete Element Method Modeling of an Extrusion Process with Recirculation for Dry Manufacturing of Lithium‐Ion Battery Electrodes | 재순환 압출 DEM에서 회전수와 바인더 강성이 공극률을 좌우했다. CNF를 균질화한 탓에 σ_e 순위는 실험과 뒤집혔다. |
-| `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` | Gallegos Tovar et al. 2026 | Cold spray deposition of cathode composites modeled via a DEM plastic–elastic bond framework | 결합구 DEM에서 NMC622 복합 입자의 증착은 기판 항복응력이 주로 정하고, 사선 충돌과 PVDF 부족은 증착을 막는다. |
+| `sun2026_dem_extrusion_recirculation_dry_electrode` | Sun et al. 2026 | Discrete Element Method Modeling of an Extrusion Process with Recirculation for Dry Manufacturing of Lithium‐Ion Battery Electrodes | (카드 없음) |
+| `sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint` | Sun et al. 2026 | Microstructure-resolved modeling of fused filament fabrication of lithium-ion battery electrodes | (카드 없음) |
 | `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` | Wolf et al. 2026 | Microstructure Evolution in Dry‑Coated Sulfidic All‐Solid‐State Battery Cathodes: Investigating Core–Shell Particle Morphology | 압출 혼합은 배치 메카노퓨전보다 적은 에너지로 소립 NCM 위에 LPSCl 껍질 모양을 만들고 이온 전도도와 율속을 높였다. |
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo et al. 2026 | Porosity-gradient dry-processed graphite electrode with deformable primer layer for boosting fast-charging capability of lithium-ion batteries | 가장 무른 PVDF 프라이머층이 라미네이션 중 자발적 공극 구배를 만들어 굴곡도를 낮추고 3C 급속충전과 Li plating 억제를 개선한다. |
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | Zhang et al. 2026 | Dry electrode architecture design to push energy density limits at the cell level | 건식 NMC811 후막은 CBD 균일도가 더 낮아도 연결성이 높아서, 활물질 99 wt%에서도 분극 없이 용량을 낸다. |
+| `zhang2026_mixing_sequence_shear_speed_ptfe_fibrillation_dry_graphite_anode` | Zhang et al. 2026 | Unveiling the Effect of Mixing Sequence and Shear Speed on PTFE Fibrillation of Dry-Processed Graphite Anodes | (카드 없음) |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | Zhang et al. 2026 | Investigation into Microstructural and Mechanical Evolution During Lithium-Ion Battery Cathode Calendering via X-ray Tomography-Based Discrete Element Method | (카드 없음) |

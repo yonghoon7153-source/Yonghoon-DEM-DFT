@@ -1,6 +1,6 @@
 # 접촉역학과 소성
 
-전극 미세구조 · 공정 · 장 `dem-contact` · 논문 79편 · 읽기 카드 52편
+전극 미세구조 · 공정 · 장 `dem-contact` · 논문 90편 · 읽기 카드 49편
 
 > 탄소성 접촉 모형, 점착, 분말 치밀화 이론.
 
@@ -70,7 +70,7 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 3. Cárdenas-Barrantes et al. 2020 (`cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd`) — 강체와 무른 입자 혼합의 압밀을 배위수와 단일 입자 응답으로 풀어 무른 입자 갈래의 중심에 있다.
 4. So et al. 2022 (`so2022_dem_contact_model_assb_compaction_sintering`) — 경도 기반 항복과 평형 overlap으로 실제 E_SE를 쓴 채 LPS 압밀을 실험에 맞춘 배터리 DEM이다.
 
-## 이 장의 논문 (79편)
+## 이 장의 논문 (90편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -79,6 +79,7 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `johnson1971_jkr_surface_energy_contact_elastic_solids` | Johnson · Kendall · Roberts 1971 | Surface energy and the contact of elastic solids | 표면 에너지를 넣은 에너지 평형으로 접촉 반경과 떼는 힘 P = −(3/2)γπR을 얻었고, 이 떼는 힘은 탄성률과 무관하다. |
 | `dmt1975_adhesion_contact_deformation` | Derjaguin et al. 1975 | Effect of contact deformations on the adhesion of particles | 탄성 구와 평면의 pull-off 힘은 접촉 변형과 무관하게 점접촉 값 2πRγ이며 반경의 1차에 비례한다. |
 | `molerus1975_theory_of_yield_cohesive_powders` | Molerus 1975 | Theory of Yield of Cohesive Powders | 무작위 단분산 구 충전의 평균 접촉력과 소성 평탄화로 H = κN을 얻고 유효 항복궤적 tan φ_e = (1+κ) tan ρ를 유도했다. |
+| `egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity` | H. Egermann 1980 | Effects of Adhesion on Mixing Homogeneity — Part I: Ordered Adhesion–Random Adhesion | (카드 없음) |
 | `arzt1982_particle_coordination_densification_spheres` | Arzt 1982 | The influence of an increasing particle coordination on the densification of spherical powders | (카드 없음) |
 | `swinkels1983_hip_densification_plastic_yield_creep_mechanisms` | Swinkels · Wilkinson · Arzt · Ashby 1983 | Mechanisms of hot-isostatic pressing | 열간 등방 가압(HIP)의 소성 항복과 멱법칙 크리프 치밀화는 배위수 증가와 뾰족한 기공을 넣어야 실측에 가깝게 예측된다. |
 | `onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset` | Onoda · Liniger 1990 | Random Loose Packings of Uniform Spheres and the Dilatancy Onset | 유효 중력을 0으로 외삽한 균일 구의 가장 느슨한 안정 packing fraction은 0.555 ± 0.005이고, 전단 팽창도 이 값에서 시작된다. |
@@ -89,15 +90,21 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `vuquoc1999_elastoplastic_normal_contact_force_displacement_model` | Vu-Quoc · Zhang 1999 | An elastoplastic contact force–displacement model in the normal direction: displacement–driven version | (카드 없음) |
 | `bouvard2000_hard_soft_powder_densification` | Bouvard 2000 | Densification behaviour of mixtures of hard and soft powders under pressure | (카드 없음) |
 | `mesarovicfleck2000_dissimilar_elastoplastic_indentation` | Mesarovic · Fleck 2000 | Frictionless indentation of dissimilar elastic–plastic spheres | 평균 접촉압은 1.1 σ_y에서 항복을 시작해 경도 plateau까지 오르고, 큰 접촉에서는 다시 떨어진다. |
-| `nase2001_granular_bond_collision_number_wet_cohesion` | Nase · Vargas · Abatan · McCarthy 2001 | Discrete characterization tools for cohesive granular material | 정지 더미와 호퍼는 Bo_g ≈ 1에서 급변하지만, 회전 드럼은 Bo_g가 아니라 충돌 수 Co로 보아야 전이가 드러난다. |
 | `silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem` | Silbert et al. 2001 | Granular flow down an inclined plane: Bagnold scaling and rheology | (카드 없음) |
 | `kogutetsion2002_ep_sphere_rigid_flat` | Kogut · Etsion 2002 | Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat | (카드 없음) |
+| `li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy` | Li · McCarthy 2003 | Controlling Cohesive Particle Mixing and Segregation | (카드 없음) |
 | `martinbouvard2003_dem_composite_cold_compaction` | Martin · Bouvard 2003 | Study of the cold compaction of composite powders by the discrete element method | 연질과 경질 구의 혼합 분말을 DEM으로 압밀해, 경질 입자가 압밀을 저지하는 두 메커니즘을 정량적으로 나누었다. |
-| `begat2004_cohesive_adhesive_balance_afm_colloid_probe` | Begat · Morton · Staniforth · Price 2004 | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy | AFM 콜로이드 탐침 하나로 자기 물질과 상대 물질 결정면의 떼는 힘 비를 재면 접촉 기하를 지우고 응집과 접착의 균형을 정량할 수 있다. |
+| `begat2004_cohesive_adhesive_balance_afm_colloid_probe` | Begat · Morton · Staniforth · Price 2004 | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy | (카드 없음) |
+| `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` | Begat · Morton · Staniforth · Price 2004 | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations II: Influence on Fine Particle Delivery Characteristics | (카드 없음) |
 | `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | Jackson · Green 2005 | A Finite Element Study of Elasto-Plastic Hemispherical Contact Against a Rigid Flat | 탄성-완전소성 반구를 강체평판에 누르면 평균 접촉압 한계가 a/R 값에 따라 2.84σ_y에서 σ_y까지 내려간다. |
+| `li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation` | Li · McCarthy 2005 | Phase diagrams for cohesive particle mixing and segregation | (카드 없음) |
+| `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` | Chaudhuri et al. 2006 | Cohesive effects in powder mixing in a tumbling blender | (카드 없음) |
+| `li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram` | Li · McCarthy 2006 | Cohesive particle mixing and segregation under shear | (카드 없음) |
 | `morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem` | Moreno-Atanasio et al. 2007 | Computer simulation of the effect of contact stiffness and adhesion on the fluidization behaviour of powders | 점착이 클수록 접촉 강성 선택이 유동화 결과를 바꾸며, 표면 에너지 3.7 mJ/m²에서 강성 50 N/m인 계는 끝내 유동화되지 않았다. |
 | `chung2008_dem_parameters_bulk_behaviour_confined_compression` | Chung · Ooi 2008 | Influence of Discrete Element Model Parameters on Bulk Behavior of a Granular Solid under Confined Compression | (카드 없음) |
+| `jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum` | Jones et al. 2008 | An investigation into the relationship between carrier-based dry powder inhalation performance and formulation cohesive–adhesive force balances | (카드 없음) |
 | `luding2008_cohesive_frictional_contact_models` | Luding 2008 | Cohesive, frictional powders: contact models for tension | 점착 탄소성 이력 선형 스프링 하나로 압밀, 응력완화, 인장·압축 강도시험까지 재현하고, 인장강도는 점착 강성 k_c가 정한다. |
+| `figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram` | Figueroa et al. 2009 | Predicting the impact of adhesive forces on particle mixing and segregation | (카드 없음) |
 | `harthong2009_high_density_compaction_dem_voronoi_contact_law` | Harthong et al. 2009 | Modeling of high-density compaction of granular materials by the Discrete Element Method | 단순 입방 격자 유한요소 계산에 맞춘 국소 상대밀도 강성 항을 넣으면 DEM이 무작위 packing 압밀을 상대밀도 0.95 근처까지 재현한다. |
 | `matsusaka2010_triboelectric_charging_powders_review` | Matsusaka et al. 2010 | Triboelectric charging of powders: A review | 분말의 마찰 대전은 주로 유효 일함수 차를 따른 전자 이동이고, 두 모형 모두 반복 충돌에서 전하가 평형값에 지수 접근한다고 준다. |
 | `ai2011_rolling_resistance_contact_models_dem` | Ai et al. 2011 | Assessment of rolling resistance models in discrete element simulations | 방향 일정 토크 모델은 멈춘 뒤 토크가 진동하고 점성 모델은 정적 토크가 없어, 2D 시험과 모래더미에서 탄소성 스프링–대시포트 모델만 안정했다. |
@@ -111,6 +118,7 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `pasha2014_linear_elastoplastic_adhesive_contact` | Pasha et al. 2014 | A linear model of elasto-plastic and adhesive contact deformation | pull-off를 소성 평탄화 면적의 표면에너지 일로 유도한 선형 접촉모델이 Thornton–Ning 모델의 충돌 거동을 거의 재현한다. |
 | `thakur2014_eepa_adhesive_elastoplastic_dem` | Thakur et al. 2014 | Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model | (카드 없음) |
 | `brodu2015_multiple_contact_dem_dense_granular` | Brodu et al. 2015 | Multiple-contact discrete-element model for simulating dense granular media | 같은 알의 다른 접촉이 만든 변위를 겹침에 더한 다접촉 이산요소법(DEM)은 γ 하나로 실측을 맞추고, 접촉 독립 DEM은 최대 압축 판 힘의 43 %만 낸다. |
+| `capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function` | Capece et al. 2015 | Prediction of powder flow performance using a multi-component granular Bond number | (카드 없음) |
 | `paulick2015_elastic_particle_properties_dem_review` | Paulick et al. 2015 | Review on the influence of elastic particle properties on DEM simulation results | (카드 없음) |
 | `paulick2015_particle_contact_stiffness_two_particle_method` | Paulick et al. 2015 | A new method for the determination of particle contact stiffness | 같은 힘에서 두 알 변위와 한 알 변위의 차로 잰 유리 구슬 접촉강성은 낮은 힘에서 한 알 강성보다 낮고 80 N에서 높았다. |
 | `vanlew2015_modifying_youngs_modulus_distribution` | Van Lew et al. 2015 | Modifying Young's modulus in DEM simulations based on distributions of experimental measurements | 단일 pebble 압쇄로 잰 입자별 E는 벌크값보다 낮고, 이를 넣은 DEM packing은 더 무르다. |
@@ -120,7 +128,9 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation` | McGrogan et al. 2017 | Compliant Yet Brittle Mechanical Behavior of Li₂S–P₂S₅ Lithium‐Ion‐Conducting Solid Electrolyte | 광유 속 압입으로 잰 70Li₂S–30P₂S₅ 유리는 E 18.5 GPa로 무르지만 K_Ic 0.23 MPa·m^½로 취성이다. |
 | `tian2017_contact_area_loss_assb_simulation` | Tian · Qi 2017 | Simulation of the Effect of Contact Area Loss in All-Solid-State Li-Ion Batteries | (카드 없음) |
 | `xu2017_nmc532_nanoindentation_modulus_hardness_toughness` | Xu et al. 2017 | Mechanical and Structural Degradation of LiNixMnyCozO₂Cathode in Li-Ion Batteries: An Experimental Study | (카드 없음) |
+| `alizadeh2018_dem_adhesion_calibration_segregation_heap` | Alizadeh et al. 2018 | A methodology for calibration of DEM input parameters in simulation of segregation of powder mixtures, a special focus on adhesion | (카드 없음) |
 | `devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte` | de Vasconcelos et al. 2019 | In-Situ Nanoindentation Measurement of Local Mechanical Behavior of a Li-Ion Battery Cathode in Liquid Electrolyte | 액체 전해질에 담가도 NMC532의 탄성률과 경도는 그대로였고, 응집체의 압입 인성만 올랐으며 고분자 기지는 크게 물러졌다. |
+| `jarray2019_cohesion_driven_mixing_segregation_drum` | Jarray et al. 2019 | Cohesion-driven mixing and segregation of dry granular media | (카드 없음) |
 | `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` | Roessler · Katterfeld 2019 | DEM parameter calibration of cohesive bulk materials using a simple angle of repose test | 점착 분말에는 안식각 대신 원통 인양 중 기둥의 상 전이와 굽힘 윤곽이 재현성 있는 보정 기준이 된다. |
 | `vu2019_soft_grain_compression_beyond_jamming_dic` | Vu · Barés 2019 | Soft-grain compression: Beyond the jamming point | 입자 안 변형장 통계는 재밍점과 함께 재료마다 자리가 다른 두 번째 교차를 드러낸다고 원문은 결론 짓는다. |
 | `cantor2020_compaction_model_highly_deformable_particles` | Cantor et al. 2020 | Compaction Model for Highly Deformable Particle Assemblies | 초탄성 원판 1500개의 등방 압축에서 단일 입자 상자 법칙과 배위수 법칙을 곱해 압밀 식을 세웠다 |
@@ -129,7 +139,7 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `bares2021_soft_rigid_mix_experiment_dic_proceedings` | Barés et al. 2021 | Highly strained mixtures of bidimensional soft and rigid grains: an experimental approach from the local scale | 실리콘과 PVC 원기둥 혼합을 2D로 눌러 DIC로 재니 변형은 무른 입자에 몰리고 접촉 길이는 φ에 선형으로 늘었다. |
 | `cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd` | Cárdenas-Barrantes et al. 2021 | Micromechanical description of the compaction of soft pentagon assemblies | 2D 무른 오각형과 원판의 압밀은 거시적으로 비슷하고, 차이는 마찰에 따른 재배열과 도달 밀도에서 나오며 압밀 식은 다각형으로 넓혀진다. |
 | `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` | Cárdenas-Barrantes et al. 2021 | A micro-mechanical compaction model for granular mix of soft and rigid particles | 강체와 무른 원판 혼합의 등방 압밀은 단일 입자 압축 법칙과 배위수 증가 법칙을 묶은 식 하나로 기술되고, 거시 적합 변수는 φmax 하나다. |
-| `deng2021_mechanical_surface_energy_tester_bond_number` | Deng et al. 2021 | A study of particle adhesion for cohesive powders using a novel mechanical surface energy tester | 분말 단층을 떨어뜨려 50 % 탈착 감속도로 Bond 수를 얻었으나, 검토 측은 그 값이 1 + a₅₀/g와 같다고 본다. |
+| `deng2021_mechanical_surface_energy_tester_bond_number` | Deng et al. 2021 | A study of particle adhesion for cohesive powders using a novel mechanical surface energy tester | (카드 없음) |
 | `giannis2021_stress_based_multicontact_dem` | Giannis et al. 2021 | Stress based multi-contact model for discrete-element simulations | 응력 trace 보정항으로 접촉을 서로 묶어, 고전 DEM이 놓친 고변형 강화를 보정 계수 β 하나로 회복했다. |
 | `papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation` | Papakyriakou et al. 2021 | Mechanical behavior of inorganic lithium-conducting solid electrolytes | 글러브박스 안 온도 가변 나노압입에서 황화물은 산화물보다 무르고, 모든 고체전해질이 작은 점탄성 손실과 전위 지배 크리프를 보였다. |
 | `so2021_dem_mold_pressure_assb_coldpress` | So et al. 2021 | Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method | 접촉 소성을 넣은 3D DEM이 압밀을 재현했고, 응집체 SE의 이온전도는 φ_SE^crit = 0.13의 percolation식을 따른다. |
@@ -151,5 +161,6 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `he2026_dem_calendering_inhomogeneity_areal_density` | He et al. 2026 | Discrete element method analysis of calendering inhomogeneity in NCM cathodes: Effects of areal density on force distribution and particle integrity | (카드 없음) |
 | `heck2026_densification_sulfide_se_binder_scalable` | Heck et al. 2026 | Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing | (카드 없음) |
 | `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` | Thompson et al. 2026 | High Pressure Densification Investigation of Li₃PS₄ and Li₆PS₅Cl Solid Electrolytes using Combine X‐Ray Diffraction, X‐Ray Absorption Tomography and Ionic Measurement | LPSCl은 GPa 압력에서 두 단계로 치밀해지고, 감압 때 격자는 돌아오지만 선폭과 전도도 변화는 남는다. |
+| `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` | Gallegos Tovar et al. 2026 | Cold spray deposition of cathode composites modeled via a DEM plastic–elastic bond framework | (카드 없음) |
 | `var2026_sulfide_se_mechanical_properties_local_indentation_pellet` | Var et al. 2026 | The mechanical properties of solid sulfur electrolytes: a local approach for a multiscale design | 오일 보호 고속 나노압입으로 잰 Li₆PS₅Cl 입자 값을 넣으면 완전 소성 압밀식이 실제 압력을 약 3배 낮게 준다. |
 | `varkey2026_multicontact_elastoplastic_dem` | Varkey et al. 2026 | DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model | 강체 구 DEM에 응력기반 다중접촉 구속항을 더하자 halide 고체전해질 분리막과 양극의 압밀 두께가 실험과 1 % 안쪽으로 맞았다. |

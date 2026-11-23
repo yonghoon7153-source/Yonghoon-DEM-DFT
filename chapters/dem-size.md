@@ -1,6 +1,6 @@
 # SE 입도 효과
 
-전극 미세구조 · 공정 · 장 `dem-size` · 논문 17편 · 읽기 카드 11편
+전극 미세구조 · 공정 · 장 `dem-size` · 논문 18편 · 읽기 카드 11편
 
 > 전해질 입자 크기와 분포가 충진, 접촉, 전도도에 주는 영향.
 
@@ -72,7 +72,7 @@ DEM의 탄성 입력도 연구마다 다르다. Shi et al. 2019와 Faka et al. 2
 4. Ghanshyam et al. 2021 (`yadav2021_lpscl_sieved_psd_impedance_tortuosity`) — 큰 SE 등급이 이긴다는 반대 방향 결과이며 그 이득이 펠릿 σ에서 넘어온 것이라는 검토가 붙어 있다.
 5. Schneider et al. 2023 (`schneider2023_particle_size_pressure_transport`) — 압력의 두 영역과 입계 저항 해석을 제시해 펠릿 σ와 밀도가 엇갈리는 이유를 읽게 해 준다.
 
-## 이 장의 논문 (17편)
+## 이 장의 논문 (18편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -90,6 +90,7 @@ DEM의 탄성 입력도 연구마다 다르다. Shi et al. 2019와 Faka et al. 2
 | `lee2025_heckel_argyrodite_powder_densification_nanoindentation` | Lee et al. 2025 | Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries | (카드 없음) |
 | `lin2025_submicron_lpscl_cathode_li_kinetics` | Lin et al. 2025 | Sub-micrometer Li₆PS₅Cl regulated cathodic Li kinetics in sulfide based all-solid-state batteries | 습식 밀링으로 D50 2.34 µm가 된 Li₆PS₅Cl은 펠릿 전도도가 떨어져도 NCM811 복합양극의 기공, 용량, 수명을 개선했다. |
 | `tailored_cathode_microstructure_low_pressure_assb` | Zhou et al. 2025 | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for All-Solid-State Batteries | (카드 없음) |
+| `cho2026_pore_network_homogeneity_powder_compacted_se_separator` | Cho et al. 2026 | Pore-network homogeneity for mechanically reliable powder-compacted solid-electrolyte separators | (카드 없음) |
 | `faka2026_particle_size_consolidation_strain_lpscl` | Faka et al. 2026 | How Particle Size Affects Consolidation Behavior, Strain and Properties of Li₆PS₅Cl Fast Ionic Conductors | 같은 Li₆PS₅Cl에서 큰 입자는 약 1 GPa에서 상대밀도 100 %에 닿고, 작은 입자는 1.5 GPa에서도 95 %에 머물며, 변형은 크기 불균일에서 온다. |
 | `lei2026_se_particle_size_effects_review` | Lei et al. 2026 | Review of Particle Size Effects of Solid Electrolytes in All-Solid-State Batteries | 작은 SE는 충진, 접촉, 기계 강도에 유리하고 큰 SE는 이온전도와 화학 안정성에 유리하다. 모든 수치는 2차 인용이다. |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Yano et al. 2026 | Effect of size distribution of solid electrolyte on tortuosity of ionic conductive paths: A combined experimental and simulation study | (카드 없음) |
