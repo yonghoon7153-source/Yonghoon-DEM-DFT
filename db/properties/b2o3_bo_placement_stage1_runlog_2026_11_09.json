@@ -763,5 +763,15 @@
   "로컬_대조": "SHA256SUMS 34/34 일치 · 판정 지문 셋 같음",
   "이완_구조_배위 (relax_verdict 기록 · 판정 아님)": "F_B: B 두 개 모두 3 배위 (BS₂O · BSO₂) · P 8 개 모두 4 배위 · F_P: B 둘 BS₃ · P 8 개 4 배위 (PS₃O 셋) · F_free: B 하나 BS₂O · 하나 BS₄ · P 8 개 4 배위 (컷 B–S 2.2 · B–O 1.7 · P–S 2.4 · P–O 1.8 Å)",
   "by": "agent · 2026-11-22"
+ },
+ "11a_발사_2026_11_23": {
+  "출처": "사용자 2026-11-23 '지금 포논 돌고 있어' (블록 ① · ② 출력은 안 받음)",
+  "사실": "블록 ② 는 ① 결과 검사 (tmux b2o3_s11a 끝 · run_rc 0 · check_rc 0 · 셋 다 converged · fmax ≤ 0.01 · time_ps 0 · 목적 b2o3_bo/stage11a_phonon_relax) 를 통과해야 tmux b2o3_s11ph 를 띄운다 → ① 통과 · 포논 셋 차례로 도는 중",
+  "못_받은_것": "① 의 fmax · 걸음 수 줄 · 시작 시각 — 끝나면 회수 블록으로 받는다",
+  "끝나면": "run.log '끝' · 셋 rc · *_summary.json 의 verdict → 판정 규칙 (11a_포논_블록_2026_11_22) 대로 기록 → 회수 블록 (s11a_cand · s11a_relax 결과 · s11a_phonon 요약 · 주파수 · 로그 · 캐시 제외) → 11b 블록",
+  "by": "agent · 2026-11-23",
+  "①_출력 (사용자 붙여넣기 2026-11-23)": "판 지문 셋 OK · pw.x 없음 · 새 자리 · 후보 해시 3 개 확인 · 목적 b2o3_bo/stage11a_phonon_relax · run_anneal 자가시험 통과 · queue 6/6 · inputs 3/3 · VRAM 사용 4436 / 49140 MiB (여유 44704) · ⑤ 발사 2026-11-22 22:01:09 (gabia) · 첫 구조 cfg0015 MD 0 걸음 (TIME_PS 0) → 이완 시작",
+  "GPU_공유": "발사 전부터 다른 python3 (PID 1191552 · 4420 MiB · GPU 사용률 100 %) 가 돌고 있었다 — 11-20 MD-0 때 본 그 잡 (DEM 쪽으로 보임 · 우리 잡 아님) · pw.x 가 아니라 공존 금지 규칙에는 안 걸린다 · 우리 이완 python 1504 MiB · 포논 시간 어림 (구조당 10–30 분) 이 늘어날 수 있다",
+  "감시 (사용자에게 줌)": "watch -n 30 'R=/data/work/runs/b2o3_bo_2026_11_09; O=$R/s11a_phonon; … 이완 로그 끝 두 줄 · 포논 run.log · 구조별 캐시 변위 수 / 769 · verdict 줄 · nvidia-smi 계산 프로세스 · 메모리 · 사용률'"
  }
 }
