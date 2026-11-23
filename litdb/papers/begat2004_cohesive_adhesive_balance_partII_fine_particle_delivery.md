@@ -292,6 +292,7 @@
 
 ## 🔗 관련 카드
 - 같은 연작: [`begat2004_cohesive_adhesive_balance_afm_colloid_probe`](begat2004_cohesive_adhesive_balance_afm_colloid_probe.md) (Part I — CAB 측정 · 결합 규칙 시험 · min 규칙 충돌).
+- 같은 방법의 후속 (2008 · 16 제형 · Λ 의 역수 CAB 축 · 담체별 최적 1.07–1.16): [`jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum`](jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum.md).
 - 용어 (interactive mixture): [`egermann1983_ordered_vs_interactive_mixture_nomenclature`](egermann1983_ordered_vs_interactive_mixture_nomenclature.md) (같은 날) · [`hersey1975_ordered_mixing_concept`](hersey1975_ordered_mixing_concept.md) · [`pfeffer2001_dry_particle_coating_engineered_particulates`](pfeffer2001_dry_particle_coating_engineered_particulates.md).
 - 점착 → 혼합 · 분리: [`jarray2019_cohesion_driven_mixing_segregation_drum`](jarray2019_cohesion_driven_mixing_segregation_drum.md) (한 상만 점착 → 분리) · [`alizadeh2018_dem_adhesion_calibration_segregation_heap`](alizadeh2018_dem_adhesion_calibration_segregation_heap.md).
 - 접착 이론: [`johnson1971_jkr_surface_energy_contact_elastic_solids`](johnson1971_jkr_surface_energy_contact_elastic_solids.md) · [`dmt1975_adhesion_contact_deformation`](dmt1975_adhesion_contact_deformation.md).

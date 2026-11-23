@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 368편 · 생성 2026-11-23
+> digest 369편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -69,7 +69,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (93편)
+## 접촉역학 · 소성 (DEM 이론) (94편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -114,6 +114,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | 탄소성 반구–강체평판 접촉의 유한요소 연구 — Jackson & Green (J. Tribology 2005) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 13 |
 | `jarray2019_cohesion_driven_mixing_segregation_drum` | 점착을 켜고 끄는 것만으로 혼합 ↔ 분리를 뒤집는다 — 같은 크기 이원계에서 한 쪽만 점착이면 분리 (MI 0.91 → 0.65), 크기가 다른 이원계에서 작은 쪽이 점착이면 크기 분리가 줄어든다 (0.52 → 0.78) · 실란화 유리구 (반경 0.85 · 1.25 · 2 mm) 회전 드럼 실험 · 미세저울로 잰 떼는  | exp (rotating-drum cohesive powder mixing · silanized glass  | 2026-10-13 | 🖼 21 |
 | `johnson1971_jkr_surface_energy_contact_elastic_solids` | Surface energy and the contact of elastic solids — 표면 에너지가 있는 두 탄성 구의 접촉: 무하중에서도 유한한 접촉 반경 a³ = R(6γπR)/K · 떼는 힘 P = −(3/2)γπR (탄성률 무관) · γ = "energy of adhesion of both surfaces"  | theory (adhesive elastic contact — energy balance, JKR) + ex | 2026-10-13 | 🖼 14 |
+| `jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum` | 콜로이드 탐침 AFM 으로 따로 잰 응집 ÷ 접착 비 (CAB) 로 16 제형의 흡입 성능을 가른다 — 네 담체 모두 CAB 가 1 보다 살짝 큰 쪽 (1.07 · 1.12 · 1.12 · 1.16) 에서 미세입자량 (FPD) 이 최대 이고 더 접착 쪽 · 더 응집 쪽으로 가면 나빠진다 · 그런데 혼합 균일도 (함량 RS | experiment (carrier-based dry powder inhaler formulations ·  | 2026-11-24 | 🖼 31 |
 | `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` | 메카노퓨전 (MF) 으로 NCM811 위에 Li₆PS₅Cl 껍질 (80:20 ≈500 nm · 90:10 ≈350 nm) 을 만들면 같은 SE 총량에서 SE 덩어리 · 공극이 사라지고 이온 경로가 산다 — 수송 tortuosity (τ²_ion = Φ_SE·σ_bulk/σ_eff) 2.38 → 2.21 (80:20) ·  | exp (메카노퓨전 SE 코팅 · FIB-EDS 껍질 두께 · XRD/XPS · 전자 차단 셀 EIS → σ | 2026-10-13 | 🖼 27 |
 | `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` | 메카노퓨전 (Hosokawa Picoline + Nobilta · 1,000–10,000 rpm · 5–60 min) 으로 단결정 NCM82 위에 Li₃InCl₆ (+ CB) 껍질 — TEM 두께 ≈5 nm (99:1:0) · ≈100 nm (80:20:1) · XPS 피복률 γ 0.53 → 1.00 · 저압 (3.45  | exp + DEM (메카노퓨전 건식 코팅 · SEM/EDX · 입자 분할 AI · (S)TEM · SPED  | 2026-10-13 | 🖼 46 |
 | `kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation` | 순수 황화물 SE 를 누른 채 (in situ · ≤ 103 MPa) X 선 CT 로 본 densification (입자 파쇄 → 틈 메움 → 상온 가압 소결) 과 XCT 복셀 유한체적 σ_ion ↔ EIS — 주 재료 Li₆PS₅Br (75–150 µm 체 분급) · 계산 ÷ 실측 1.80 (8.7 MPa) → 1.07 | experiment + image-based simulation (in situ XCT 가압 셀 · EIS  | 2026-11-12 | 🖼 44 |
