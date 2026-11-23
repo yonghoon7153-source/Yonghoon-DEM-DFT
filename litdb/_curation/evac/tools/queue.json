@@ -1469,7 +1469,7 @@
   "model2": "주제가 가까운 정본 카드 = jarray2019_cohesion_driven_mixing_segregation_drum (믹싱 · 점착 절 구성 참고 · 절 번호는 본 카드를 따른다)",
   "dup": "정본에 이 논문 카드 없음 (papers/ 파일 목록 + git grep 'Mechanofusion system' 0 건 · 2026-11-23). 메카노퓨전 실험 카드 = kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact · kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable (DEM Rocky · 점착 없음) → '🔗 관련 카드'",
   "note": "- 꼭 뽑을 것: 장치 기하 (챔버 지름 · 안쪽 조각 · 긁개 · 틈) · DEM (Walton–Braun 식 · 2D · 입자 크기 · 개수 · 물성 · 시간 간격) · 회전 속도 · 채움 · 에너지 (운동 · 회전) · 충돌 압력 · 안쪽 조각 힘 · 실험 대조 · 무엇이 없나 (게스트 입자 · 점착 · 막 형성) — 우리 코팅 과정 구현에 옮길 점 · 빠진 점.\n- 우리 질문 (믹서 논지 · 1저자 11-23 결정): '점착 비 기준' = AM 표면과 SE 표면의 점착 대비 (표면 에너지 비 γ_AM/γ_SE · 같은 SE 탐침 AFM 힘 비) 가 건식 혼합에서 SE 가 AM 위에 붙을지 SE 끼리 (또는 벽에) 뭉칠지를 정한다 + 회전 속도 (rpm) 공정 축 + 코팅 과정 자체의 DEM 구현 시도. 산술 근거 = `/home/user/Yonghoon-DEM-DFT/docs/hetero_thesis.md` §2 (읽기만 · 기하평균 규칙 W_AS = 2√(γ_A γ_S) → SE→AM / SE–SE = 1.8 √(γ_A/γ_S) · 문턱 γ_A/γ_S ≈ 0.31).\n- 공백 검사 (★ 이 카드의 핵심 산출 · 정독 출력 끝 절 '공백 검사 G1–G4' 로 따로 적는다): 이 논문이 다음 넷을 이미 했는지 '반례 / 일부 / 없음' + 근거 쪽 · 문장 · (반례면) 우리 문장을 어떻게 좁힐지 한 줄. G1 점착 대비를 설계 변수로 혼합 결과 (덮임 ↔ 뭉침 · 섞임 ↔ 분리) 를 예측 · G2 점착 입력을 따로 재고 (AFM · IGC · 접촉각 등) 혼합 결과를 미리 예측 · G3 회전 속도 최적을 입자 수준 맞교환 (덩어리 풀림 ↔ 벽 부착 손실 등) 으로 설명 · G4 공정 × 재료 상태도 (회전 세기 × 점착 · Bond 수 등) 가 다른 재료로 옮겨 감.\n- 우리 드럼 믹서 DEM 과 견줄 자리 (값은 리포 문서에서 옮긴다 · 읽기만): `docs/reviews/mixer_b2_u_development_20261122/README.md` (B1-U Bo_SE 0.21244 · B2-U 21.244 · γ_AM/γ_SE 0.1 비코팅 / 1 코팅 · γ_W/γ_SE 0.00256) · Lacey 지수 칸 16×16×4 · 12×12×3 · 8×8×2.",
-  "nn": ""
+  "nn": "160"
  },
  "N-156": {
   "pdf": "1db10fd7-Numerical_simulation_of_dry_particle_coating_processes_by_the_discrete_element_method.pdf",
