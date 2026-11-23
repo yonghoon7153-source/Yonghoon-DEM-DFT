@@ -64,7 +64,7 @@ try {
     ja: { 22: ['qa-4', 'qa-3'], 23: ['qa-1', 'qa-5'] },
     en: { 22: ['qa-3', 'qa-4'], 23: ['qa-5', 'qa-1'] },
   };
-  const latest = encrypt({ ...deck, today });
+  let latest = encrypt({ ...deck, today });
   await linked.addInitScript(({ deck, profile, revision }) => {
     const key = 'nihonchizu.private-deck.v1';
     if (!localStorage.getItem(key)) localStorage.setItem(key, JSON.stringify({ ...deck, studyConnection: profile, studyRevision: revision }));
@@ -75,11 +75,7 @@ try {
   const expr = linked.locator('.study__expression');
   await linked.getByRole('button', { name: '오늘', exact: true }).waitFor();
   assert.equal(await linked.getByRole('tab', { name: '내 일본어 기록' }).getAttribute('aria-selected'), 'true');
-  assert.equal(await linked.locator('.study__count').textContent(), '1 / 6');
-  await choose('목록');
-  assert.deepEqual(await linked.locator('.study__row-expression').allTextContents(), deck.cards.map(c => c.ja));
-  await choose('카드');
-  await choose('오늘');
+  assert.equal(await linked.locator('.study__count').textContent(), '1 / 2');
   assert.equal(await expr.textContent(), '日本語4');
   await choose('이제 알겠어요');
   assert.equal(await expr.textContent(), '日本語3');
@@ -95,14 +91,40 @@ try {
   await choose('전체');
   assert.equal(await linked.locator('.study__row').count(), 6);
   assert.match(await linked.locator('.study__learned').textContent(), /1 \/ 6/);
-  await choose('오늘');
+  // A manual full-deck choice survives a new revision and midnight in the open records tab.
+  latest = encrypt({ ...deck, today, cards: [...deck.cards, { id: 'seventh', ja: '追加', en: 'Added', ko: '추가' }] });
+  await linked.locator('.study__import summary').click();
+  await choose('지금 새로 받기');
+  await linked.waitForFunction(() => document.querySelectorAll('.study__row').length === 7);
   await linked.clock.setSystemTime(new Date('2026-11-23T15:05:00Z'));
   await linked.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
-  assert.equal(await linked.locator('.study__row').count(), 0);
+  assert.equal(await linked.locator('.study__row').count(), 7);
+  await choose('English');
+  await linked.locator('.study__search').fill('English 1');
+  await linked.locator('.study__select').selectOption('명사');
+  await choose('낯선 단어만');
+  await linked.getByRole('tab', { name: '생활회화' }).click();
+  await linked.getByRole('tab', { name: '내 일본어 기록' }).click();
+  for (const name of ['오늘', '日本語']) {
+    assert.equal(await linked.getByRole('button', { name, exact: true }).getAttribute('aria-pressed'), 'true');
+  }
+  assert.equal(await linked.locator('.study__search').inputValue(), '');
+  assert.equal(await linked.locator('.study__select').inputValue(), '');
+  assert.equal(await linked.getByRole('button', { name: '낯선 단어만' }).getAttribute('aria-pressed'), 'false');
+  assert.ok(await linked.getByRole('heading', { name: /24일.*없어요/ }).isVisible());
   await linked.reload({ waitUntil: 'networkidle' });
-  assert.equal(await linked.locator('.study__count').textContent(), '1 / 6');
-  await choose('오늘');
   assert.equal(await linked.locator('.study__count').textContent(), '0 / 0');
+  await choose('전체');
+  assert.equal(await linked.locator('.study__count').textContent(), '1 / 7');
+  await linked.evaluate(() => window.dispatchEvent(new Event('focus')));
+  assert.equal(await linked.locator('.study__count').textContent(), '1 / 7');
+  await linked.getByRole('tab', { name: '내 일본어 기록' }).click();
+  assert.equal(await linked.locator('.study__count').textContent(), '0 / 0');
+  await choose('전체');
+  await linked.locator('.words__back').click();
+  await linked.locator('#words-page').waitFor({ state: 'hidden' });
+  await linked.locator('#words-link').click();
+  await linked.waitForFunction(() => document.querySelector('.study__count')?.textContent === '0 / 0');
   assert.deepEqual(await linked.evaluate(() => JSON.parse(localStorage.getItem('nihonchizu.private-deck.v1')).today), today);
   await upgraded.close();
   const blocked = await browser.newContext();
@@ -115,5 +137,5 @@ try {
   assert.match(await b.locator('.study__message').textContent(), /저장 공간/);
   assert.ok(!(await b.locator('.study__message').textContent()).includes('고르지 않아도'));
   await blocked.close();
-  console.log(JSON.stringify({ passed: ['connection import', 'key never requested', 'same revision keeps flipped card', 'changed revision keeps card and marks', 'five-minute polling', 'failed refresh keeps cache', 'reload with cache', 'basic and forget stop polling', 'quota warning preserved', 'same-revision upgrade restores dated cache', 'Notion order per language, Seoul rollover and empty day'] }));
+  console.log(JSON.stringify({ passed: ['connection import', 'key never requested', 'same revision keeps flipped card', 'changed revision keeps card and marks', 'five-minute polling', 'failed refresh keeps cache', 'reload with cache', 'basic and forget stop polling', 'quota warning preserved', 'same-revision upgrade restores dated cache', 'daily on first upgrade, tab return and reload; manual full survives refresh and midnight', 'Notion order per language and empty day'] }));
 } finally { await browser.close(); }

@@ -19,6 +19,9 @@ try {
   assert.ok(await tab('내 일본어 기록').evaluate(el => el === document.activeElement));
   assert.ok(await p.getByRole('tablist').isVisible());
   assert.ok(await study.getByRole('button', { name: '내 Notion 단어장 연결', exact: true }).isVisible());
+  const todayLink = p.getByRole('tabpanel').getByRole('link', { name: /Notion.*오늘|오늘.*Notion/ });
+  assert.ok(await todayLink.isVisible());
+  assert.equal(await todayLink.getAttribute('href'), 'https://app.notion.com/p/88da2a26e0104ee39453b672ef24cee1?v=200bd4a8aa6d4f6e99060fe9d6e0663e');
   assert.equal(await p.locator('.study__card:visible').count(), 0);
   assert.equal(await p.locator('.study__search:visible').count(), 0);
   await tab('내 일본어 기록').press('Home');
@@ -128,9 +131,15 @@ try {
   await p.reload({ waitUntil: 'networkidle' });
   assert.equal(await tab('내 일본어 기록').getAttribute('aria-selected'), 'true');
   assert.equal(await p.locator('.study__count').textContent(), '1 / 2');
+  const everyDay = Object.fromEntries(Array.from({ length: 31 }, (_, index) => [index + 1, ['noun']]));
+  const datedDeck = { ...imported, today: { ja: everyDay, en: {} } };
+  await p.locator('input[type=file]').setInputFiles({ ...sameFile, buffer: Buffer.from(JSON.stringify(datedDeck)) });
+  await p.waitForFunction(() => document.querySelector('.study__expression')?.textContent === '財布');
+  assert.equal(await p.locator('.study__count').textContent(), '1 / 1');
+  assert.equal(await study.getByRole('button', { name: '오늘', exact: true }).getAttribute('aria-pressed'), 'true');
   assert.equal(uploads.length, 0);
   await p.locator('.study__import summary').click();
-  checks.push('empty private tab and import; all Japanese records, separate tab filters, offline reload, safe text and links');
+  checks.push('direct Notion Today link, daily import default, legacy full deck, scoped filters, offline reload and safe text');
   await click('이 기기의 단어장 지우기');
   assert.equal(await tab('내 일본어 기록').getAttribute('aria-selected'), 'true');
   assert.equal(await p.locator('.study__card:visible').count(), 0);

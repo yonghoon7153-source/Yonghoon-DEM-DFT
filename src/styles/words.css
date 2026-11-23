@@ -75,6 +75,8 @@
 .study__connect { padding: clamp(20px, 4vw, 36px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
 .study__connect-title { font: 24px var(--font-head); }
 .study__connect p { margin: 10px 0 18px; color: var(--ink-2); line-height: 1.7; overflow-wrap: anywhere; }
+.study__connect-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 18px; }
+.study__connect-actions a { display: inline-flex; align-items: center; }
 .study [hidden] { display: none !important; }
 .study button, .study input, .study select, .study a { -webkit-tap-highlight-color: transparent; }
 .study button { cursor: pointer; }

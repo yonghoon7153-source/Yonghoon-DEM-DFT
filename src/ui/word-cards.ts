@@ -1,5 +1,6 @@
 import { fetchStudyDeck, parseConnection, type StudyConnection } from './study-sync';
 import initialDeck from '../../data/word-cards.json';
+import words from '../../data/words.json';
 import { el } from './dom';
 import { dailyCards, matchesCard, parseDeck, seoulStudyDay, shuffled, type StudyLanguage, type WordCard, type WordDeck } from './word-deck';
 
@@ -27,7 +28,7 @@ export function createWordCards() {
   root.append(tablist, ...panels);
   let active = -1;
   function open(i: number) {
-    if (active === i) return;
+    if (active === i) { sections[i]!.enter(); return; }
     if (active >= 0) { sections[active]!.pause(); panels[active]!.replaceChildren(); }
     active = i;
     tabs.forEach((tab, n) => {
@@ -36,7 +37,7 @@ export function createWordCards() {
       panels[n]!.hidden = n !== i;
     });
     panels[i]!.append(sections[i]!.root);
-    sections[i]!.refresh();
+    sections[i]!.enter();
   }
   tabs.forEach((tab, i) => tab.addEventListener('click', () => open(i)));
   tablist.addEventListener('keydown', (event) => {
@@ -57,7 +58,9 @@ export function createWordCards() {
   window.setInterval(refreshActive, 5 * 60 * 1000);
   window.addEventListener('focus', refreshActive);
   window.addEventListener('pageshow', refreshActive);
-  window.addEventListener('hashchange', () => window.setTimeout(refreshActive, 0));
+  window.addEventListener('hashchange', () => window.setTimeout(() => {
+    if (root.isConnected && !root.closest('[hidden]')) sections[active]!.enter();
+  }, 0));
   document.addEventListener('visibilitychange', refreshActive);
   return root;
 }
@@ -126,9 +129,10 @@ function createCardPanel(original: WordDeck | undefined, known: Set<string>, mar
   const load = button('내 단어장 불러오기', 'study__text-button');
   const connect = button('내 Notion 단어장 연결');
   const welcome = el('div', { class: 'study__connect' },
-    el('h2', { class: 'study__connect-title' }, '기록한 일본어 불러오기'),
-    el('p', {}, '개인 운영 페이지에서 받은 study-connection.json을 선택하면, 기록한 단어와 문장을 전체 카드로 볼 수 있어요.'),
-    connect);
+    el('h2', { class: 'study__connect-title' }, '오늘 복습할 일본어'),
+    el('p', {}, '이 브라우저에서 오늘의 카드를 보려면 개인 연결 파일(study-connection.json)을 한 번 불러와 주세요.'),
+    el('div', { class: 'study__connect-actions' }, connect,
+      el('a', { class: 'study__text-button', href: words.today.reviewUrl, target: '_blank', rel: 'noopener noreferrer' }, 'Notion에서 오늘 목록 열기')));
   const forget = button('이 기기의 단어장 지우기', 'study__text-button');
   const syncMessage = el('p', { class: 'study__save-note', role: 'status' });
   const refresh = button('지금 새로 받기', 'study__text-button');
@@ -159,7 +163,7 @@ function createCardPanel(original: WordDeck | undefined, known: Set<string>, mar
     catch { message.textContent = '학습 표시는 이번 화면에서만 유지돼요. 브라우저 저장 공간을 확인해 주세요.'; }
   }
   let day = seoulStudyDay();
-  let scope: 'today' | 'all' = isPublic ? 'today' : 'all';
+  let scope: 'today' | 'all' = isPublic || deck.today ? 'today' : 'all';
   let available: WordCard[] = [];
   let mixedIds: string[] | undefined;
   function preparePool() {
@@ -317,13 +321,17 @@ function createCardPanel(original: WordDeck | undefined, known: Set<string>, mar
   }
   function showDeck(nextDeck: WordDeck, preserve = false) {
     const sameDeck = preserve && deck.deckId === nextDeck.deckId;
-    const defaultScope = !sameDeck || (scope === 'today' && !nextDeck.today);
+    const resetReview = !sameDeck || Boolean(deck.today) !== Boolean(nextDeck.today);
     deck = nextDeck;
-    if (defaultScope) scope = 'all';
-    if (!sameDeck) {
-      language = 'ja'; mode = 'cards'; query.value = ''; category.value = ''; onlyUnknown = false; mixedIds = undefined;
+    if (resetReview) {
+      resetPersonalReview();
+      if (!sameDeck) mode = 'cards';
     }
-    preparePool(); select(sameDeck && !defaultScope);
+    preparePool(); select(!resetReview);
+  }
+  function resetPersonalReview() {
+    language = 'ja'; scope = deck.today ? 'today' : 'all';
+    query.value = ''; category.value = ''; onlyUnknown = false; mixedIds = undefined;
   }
   function installDeck(imported: WordDeck, preserve: boolean) {
     const focusNewDeck = !savedDeck && root.isConnected &&
@@ -409,5 +417,12 @@ function createCardPanel(original: WordDeck | undefined, known: Set<string>, mar
     if (request) { lastAttempt = 0; syncMessage.textContent = ''; }
     cancelRefresh();
   }
-  return { root, connected: !!savedDeck, refresh: maybeRefresh, pause };
+  function enter() {
+    if (!isPublic && deck.today && (scope !== 'today' || language !== 'ja' || query.value || category.value || onlyUnknown)) {
+      resetPersonalReview();
+      preparePool(); select();
+    }
+    maybeRefresh();
+  }
+  return { root, connected: !!savedDeck, refresh: maybeRefresh, pause, enter };
 }
