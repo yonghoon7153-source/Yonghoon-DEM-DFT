@@ -209,6 +209,7 @@
 - 같은 계보: [`hersey1975_ordered_mixing_concept`](hersey1975_ordered_mixing_concept.md) ('ordered mixing' 원전 — 이 논문이 좁히려는 용법) · [`pfeffer2001_dry_particle_coating_engineered_particulates`](pfeffer2001_dry_particle_coating_engineered_particulates.md) (이 논문을 [22] 로 인용 · Orr 귀속) · [`lacey1954_particle_mixing_theory_index`](lacey1954_particle_mixing_theory_index.md) (무작위 기준 지수).
 - 같은 날 · 'interactive mixture' 를 쓰는 측정 논문: [`begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery`](begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery.md) (Λ₁₂ > 1 = 상호작용 혼합물을 잘 만듦).
 - 혼합 지표: [`chandratilleke2012_particle_scale_mixing_index`](chandratilleke2012_particle_scale_mixing_index.md) (이론 분모 · M > 1 논의) · [`nadeem2023_gnn_mixing_index`](nadeem2023_gnn_mixing_index.md).
+- 이 단신의 참고 [7] 원문 (2026-11-24): [`egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity`](egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity.md) — 무작위 부착 (운반체당 개수 Poisson) → C_dose = 100√(1/n) = 무작위 혼합 C_R (식 6 = 식 2) = 의사무작위 · 정렬 부착 (같은 수) → CV 0 [Hersey] · 기전 미확립 · 'interactive' 낱말 없음 · 'mechanical co-ordination' 없음.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

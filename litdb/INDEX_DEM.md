@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 370편 · 생성 2026-11-23
+> digest 371편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -69,7 +69,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (95편)
+## 접촉역학 · 소성 (DEM 이론) (96편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -101,6 +101,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte` | NMC532 이차입자 응집체 · 소결 펠릿 · PVDF · CB/PVDF 의 건조 ↔ 액체 전해질 (1 M LiPF₆-PC · 1 h) 속 나노압입 — 응집체 E 113 → 108 · H 7.8 → 7.8 GPa · 펠릿 200 → 201 · 14.0 → 13.9 GPa (깊이 85 nm · 평균 · 차이 없음) · 응집 | exp (instrumented nanoindentation inside an Ar glovebox, dry | 2026-11-12 | 🖼 63 |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
 | `doux2020_pressure_effects_sulfide_se_jmca` | 냉간 성형압 50–370 MPa ↔ 순수 Li₆PS₅Cl (NEI) 펠릿의 상대밀도 · 이온전도도와 작동 적층압 2–70 MPa ↔ 전극 접촉 — densification 은 250 MPa 위에서 둔해지고 (상대밀도 68.3 → 75.4 → ≈77 % · σ 0.99 → 2.06 → 2.28 mS/cm · 진밀도 분모는  | experiment (순수 LPSCl powder 펠릿 cold-press 성형압 · 적층압 load cel | 2026-11-12 | 🖼 36 |
+| `egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity` | 점착이 혼합 균질도를 높이는 것은 점착 그 자체가 아니라 '정렬 부착' (운반체마다 같은 수의 미분) 뿐이다 — 미분이 운반체에 무작위로 붙으면 ('무작위 부착' · 운반체당 개수 = Poisson 요동) 정제 함량 변동 C_dose = 100√(1/(n₁·n₂)) = 100√(1/n) 이 무작위 혼합의 C_R 과 같다  | theory (powder mixing statistics — ordered vs random adhesio | 2026-11-24 | 🖼 30 |
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |
 | `figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram` | 반데르발스 점착 이원 구슬의 혼합 ↔ 분리를 쌍별 입상 Bond 수의 비로 미리 가른다 — Bo_vdw,ij = 2πΓ_ij R\*/((4/3)πg[R³ρ]_m) (식 22) · ℜ1 = Bo11/Bo12 = ϕ(β+1)/2 · ℜ2 = Bo22/Bo12 = (1/ϕ)(β+1)αβ²/2 (작은 쪽이 가벼울 때 · 식 25 | DEM (Particle Dynamics · adhesive elastic-plastic contact: J | 2026-11-23 | 🖼 63 |
 | `german2014_coordination_number_powder_densification` | 분말 치밀화 동안 배위수 (닿은 이웃 수) 는 상대밀도의 제곱으로 오른다 — 문헌 113 쌍 (최소 안정 · 무작위 느슨 / 조밀 충전 · 완전 치밀 · 다이 · 냉간 등압 압분 · 고상 / 액상 소결 · DEM · 모의) 의 맞춤 N_C = 2 + 11f² (표준오차 1.0 ≈ 측정 오차 ±1) · 세 고정점 ≈3 (f | review + data compilation (113 literature pairs of mean coor | 2026-11-16 | 🖼 43 |
