@@ -27,9 +27,10 @@ import sys
 
 from lxml import etree
 from pptx import Presentation
-from pptx.chart.data import CategoryChartData
+from pptx.chart.data import CategoryChartData, XyChartData
 from pptx.dml.color import RGBColor
-from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION
+from pptx.enum.chart import (XL_AXIS_CROSSES, XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION,
+                              XL_MARKER_STYLE)
 from pptx.enum.dml import MSO_LINE
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
@@ -246,6 +247,173 @@ def chart(slide, spec, x, y, w, h):
     return gf
 
 
+def _plot_layout(gf, box):
+    """차트 그림 영역을 비율 (x, y, w, h) 로 고정 — 세로축 제목이 틀 밖으로 잘리지 않게 (11-23 v8)."""
+    plot_area = gf.chart._chartSpace.find(qn('c:chart')).find(qn('c:plotArea'))
+    old = plot_area.find(qn('c:layout'))
+    if old is not None:
+        plot_area.remove(old)
+    layout = etree.Element(qn('c:layout'))
+    ml = etree.SubElement(layout, qn('c:manualLayout'))
+    for tag, val in (('c:layoutTarget', 'inner'), ('c:xMode', 'edge'), ('c:yMode', 'edge'),
+                     ('c:x', box[0]), ('c:y', box[1]), ('c:w', box[2]), ('c:h', box[3])):
+        etree.SubElement(ml, qn(tag)).set('val', str(val))
+    plot_area.insert(0, layout)
+
+
+
+_DASH = {'solid': MSO_LINE.SOLID, 'dash': MSO_LINE.DASH, 'sysDot': MSO_LINE.ROUND_DOT,
+         'sysDash': MSO_LINE.SQUARE_DOT, 'lgDash': MSO_LINE.LONG_DASH}
+
+
+def _axis(ax, a):
+    ax.minimum_scale = a['min']; ax.maximum_scale = a['max']; ax.major_unit = a['step']
+    ax.tick_labels.number_format = a.get('fmt', '0.0'); ax.tick_labels.number_format_is_linked = False
+    ax.tick_labels.font.size = Pt(9.5)
+    ax.has_major_gridlines = bool(a.get('grid', False))
+    if a.get('grid'):
+        ax.major_gridlines.format.line.color.rgb = RGBColor(0xD9, 0xD9, 0xD9)
+    if a.get('title'):
+        ax.has_title = True
+        tf = ax.axis_title.text_frame
+        tf.text = a['title']
+        for r in tf.paragraphs[0].runs:
+            font(r, 10, False, INK)
+
+
+def xy_chart(slide, spec, x, y, w, h):
+    """실데이터 선 그래프 (11-23 v15) — 덱 안 차트라 1저자가 편집할 수 있다.
+    series = [{name, pts [[x, y] …], color, dash, width, marker (크기), line, legend}]
+    축 범위 밖 · NaN · inf 점은 멈춘다 (조용히 잘려 보이지 않게).  가로축은 세로축 최솟값 자리에 둔다."""
+    xa, ya = spec['x'], spec['y']
+    for s in spec['series']:
+        if not s.get('pts'):
+            raise SystemExit(f'⛔ 선 그래프 "{s["name"]}" 점 없음')
+        for px, py in s['pts']:
+            if not (math.isfinite(px) and math.isfinite(py)):
+                raise SystemExit(f'⛔ 선 그래프 "{s["name"]}" 유한하지 않은 점 ({px}, {py})')
+            if not (xa['min'] <= px <= xa['max'] and ya['min'] <= py <= ya['max']):
+                raise SystemExit(f'⛔ 선 그래프 "{s["name"]}" 축 범위 밖 점 ({px}, {py})')
+    cd = XyChartData()
+    for s in spec['series']:
+        ser = cd.add_series(s['name'])
+        for px, py in s['pts']:
+            ser.add_data_point(px, py)
+    gf = slide.shapes.add_chart(XL_CHART_TYPE.XY_SCATTER_LINES_NO_MARKERS, Inches(x), Inches(y),
+                                Inches(w), Inches(h), cd)
+    ch = gf.chart
+    ch.font.size = Pt(9.5); ch.font.name = FONT
+    ch.has_title = False
+    for ser, s in zip(ch.plots[0].series, spec['series']):
+        col = RGBColor.from_string(s['color'])
+        ser.smooth = False
+        if s.get('line', True):
+            ln = ser.format.line
+            ln.color.rgb = col; ln.width = Pt(s.get('width', 2.0))
+            ln.dash_style = _DASH[s.get('dash', 'solid')]
+        else:
+            ser.format.line.fill.background()
+        if s.get('marker'):
+            ser.marker.style = XL_MARKER_STYLE.CIRCLE; ser.marker.size = int(s['marker'])
+            ser.marker.format.fill.solid(); ser.marker.format.fill.fore_color.rgb = col
+            ser.marker.format.line.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+    _axis(ch.category_axis, dict(xa, grid=xa.get('grid', False)))     # XY 의 가로축 = 첫 값 축
+    _axis(ch.value_axis, dict(ya, grid=ya.get('grid', True)))
+    ch.value_axis.crosses = XL_AXIS_CROSSES.MINIMUM                    # 가로축을 세로 최솟값 자리에
+    shown = [i for i, s in enumerate(spec['series']) if s.get('legend', True)]
+    ch.has_legend = len(shown) > 1
+    if ch.has_legend:
+        ch.legend.position = XL_LEGEND_POSITION.TOP
+        ch.legend.include_in_layout = False
+        ch.legend.font.size = Pt(9.5)
+        leg = ch.legend._element
+        after = leg.find(qn('c:legendPos'))
+        for i, s in enumerate(spec['series']):                         # 도움 선 (최대 · ±기준 짝) 범례 숨김
+            if s.get('legend', True):
+                continue
+            le = etree.Element(qn('c:legendEntry'))
+            etree.SubElement(le, qn('c:idx')).set('val', str(i))
+            etree.SubElement(le, qn('c:delete')).set('val', '1')
+            after.addnext(le); after = le
+    if spec.get('plot'):
+        _plot_layout(gf, spec['plot'])
+    return gf
+
+GRID_STYLE = {                          # 상태 → (채움, 글자색, 테두리, 점선)
+    'done': (RGBColor(0x1F, 0x3A, 0x5F), RGBColor(0xFF, 0xFF, 0xFF), None, False),
+    'run': (RGBColor(0xF2, 0xB1, 0x34), INK, None, False),
+    'wait': (RGBColor(0xF2, 0xF2, 0xF2), MUTED, RGBColor(0xA6, 0xA6, 0xA6), True),
+}
+
+
+def _grid_text(sh, lines, color):
+    tf = sh.text_frame
+    tf.word_wrap = True
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    tf.margin_left = tf.margin_right = Inches(0.02)
+    tf.margin_top = tf.margin_bottom = Inches(0.01)
+    for k, (t, size, bold) in enumerate(lines):
+        p = tf.paragraphs[0] if k == 0 else tf.add_paragraph()
+        p.alignment = PP_ALIGN.CENTER
+        r = p.add_run(); r.text = t; font(r, size, bold, color)
+
+
+def status_grid(slide, spec, x, y, w, h):
+    """진행 칸 그림 — 행 (가정 A) × 열 (가정 B) 묶음마다 칸 n 개 · 칸 = 이름 + 상태 (완료 · 계산 중 · 대기).
+    PPT 도형으로 그려 덱 안에서 고칠 수 있다.  상태를 색만으로 보이지 않게 글자도 쓴다."""
+    rows, cols, cells, st = spec['rows'], spec['cols'], spec['cells'], spec['status']
+    labels = spec.get('labels', {'done': '완료', 'run': '계산 중', 'wait': '대기'})
+    if len(st) != len(rows) or any(len(r) != len(cols) for r in st) or \
+            any(len(b) != len(cells) for r in st for b in r) or \
+            any(s not in GRID_STYLE for r in st for b in r for s in b):
+        raise SystemExit('⛔ grid 상태 표 모양이 행 · 열 · 칸 수와 다르다')
+    rw = spec.get('row_w', 1.15)                         # 행 머리 폭
+    hh = 0.30                                            # 열 머리 높이
+    gap, pad = 0.10, 0.05
+    bw = (w - rw - gap * len(cols)) / len(cols)
+    bh = (h - hh - gap * (len(rows) - 1)) / len(rows)
+    cw = (bw - pad * (len(cells) + 1)) / len(cells)
+    big = bh >= 0.85                                     # 칸이 크면 글자도 키운다 (글이 짧은 장)
+    f_head, f_name, f_state = (11, 10, 11) if big else (10, 9, 9.5)
+    if spec.get('corner'):                               # 왼쪽 위 빈 칸 = 칸의 뜻
+        tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(rw), Inches(hh))
+        tb.name = 'GRID corner'
+        _grid_text(tb, [(spec['corner'], f_name, False)], MUTED)
+    for j, c in enumerate(cols):
+        bx = x + rw + gap + j * (bw + gap)
+        tb = slide.shapes.add_textbox(Inches(bx), Inches(y), Inches(bw), Inches(hh))
+        tb.name = f'GRID col {j}'
+        _grid_text(tb, [(c, f_head, True)], INK)
+    for i, r in enumerate(rows):
+        by = y + hh + i * (bh + gap)
+        tb = slide.shapes.add_textbox(Inches(x), Inches(by), Inches(rw), Inches(bh))
+        tb.name = f'GRID row {i}'
+        _grid_text(tb, [(t, f_head, True) for t in r.split('\n')], INK)
+        for j in range(len(cols)):
+            bx = x + rw + gap + j * (bw + gap)
+            box = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(bx), Inches(by), Inches(bw), Inches(bh))
+            box.name = f'GRID block {i}{j}'
+            box.fill.background(); box.shadow.inherit = False
+            box.line.color.rgb = RGBColor(0xD9, 0xD9, 0xD9); box.line.width = Pt(0.75)
+            for k, name in enumerate(cells):
+                s = st[i][j][k]
+                fill, ink, line, dash = GRID_STYLE[s]
+                cell = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(bx + pad + k * (cw + pad)),
+                                              Inches(by + pad), Inches(cw), Inches(bh - 2 * pad))
+                cell.name = f'GRID cell {i}{j}{k}'
+                cell.shadow.inherit = False
+                cell.fill.solid(); cell.fill.fore_color.rgb = fill
+                if line is None:
+                    cell.line.fill.background()
+                else:
+                    cell.line.color.rgb = line; cell.line.width = Pt(0.75)
+                    if dash:
+                        cell.line.dash_style = MSO_LINE.DASH
+                val = spec.get('values', {}).get(f'{i}{j}{k}')    # 끝난 칸의 값 (1저자가 준 중간 값)
+                second = val if (s == 'done' and val) else labels[s]
+                _grid_text(cell, [(name, f_name, False), (second, f_state + (1 if val else 0), s != 'wait')], ink)
+
+
 def figure_row(slide, figs, x0, y0, width, y1, gap=0.25):
     """그림 칸을 한 줄로 — 칸 폭은 'w' (상대값) 비율."""
     ws = [f.get('w', 1.0) for f in figs]
@@ -261,7 +429,13 @@ def figure_row(slide, figs, x0, y0, width, y1, gap=0.25):
         elif 'slot' in f:
             slot(slide, x, y0, fw, fh, f['slot'], f.get('desc', ''), f.get('src', ''))
         elif 'chart' in f:
-            chart(slide, f['chart'], x, y0, fw, fh)
+            gf = chart(slide, f['chart'], x, y0, fw, fh)
+            if f['chart'].get('plot'):
+                _plot_layout(gf, f['chart']['plot'])
+        elif 'grid' in f:
+            status_grid(slide, f['grid'], x, y0, fw, fh)
+        elif 'xy' in f:
+            xy_chart(slide, f['xy'], x, y0, fw, fh)
         if f.get('cap'):
             textbox(slide, x, y0 + fh + 0.02, fw, 0.28, [f['cap']], 10.5, align=PP_ALIGN.CENTER)
         x += fw + gap
@@ -304,11 +478,16 @@ def content_slide(prs, tpl, spec):
         h = est_height(spec['bullets'], size, BODY_W)
         textbox(s, BODY_X, y_body, BODY_W, h, spec['bullets'], size, name='Body')
         if figs:
-            y0 = y_body + h + 0.12
+            y0 = y_body + h + spec.get('fig_gap', 0.12)
             if FIG_BOTTOM - y0 < 1.6:
                 raise SystemExit(f'⛔ "{spec["title"]}" 글이 길어 그림 칸이 {FIG_BOTTOM - y0:.2f} in — '
                                  'bullet 을 줄이거나 fig_pos=right')
-            figure_row(s, figs, BODY_X, y0, BODY_W, FIG_BOTTOM)
+            y1 = FIG_BOTTOM
+            mh = spec.get('fig_max_h')                   # 글이 짧은 장: 그림 줄을 남는 칸의 세로 가운데에 둔다
+            if mh and FIG_BOTTOM - y0 > mh:
+                y0 += (FIG_BOTTOM - y0 - mh) / 2
+                y1 = y0 + mh
+            figure_row(s, figs, BODY_X, y0, BODY_W, y1)
     return s
 
 
@@ -409,7 +588,56 @@ def _selftest():
     assert abs(_units('가나') - 2.0) < 1e-9 and abs(_units('ab') - 1.1) < 1e-9; ok += 1
     assert est_height(['• ' + '가' * 200], 14, 9.5) > est_height(['• 가'], 14, 9.5); ok += 1
     assert _TOKEN.split('a **b** c [[d]]') == ['a ', '**b**', ' c ', '[[d]]', '']; ok += 1
-    print(f'selftest {ok}/8 ✓')
+    # 진행 칸 그림 (11-23 v8) — 칸 수 = 행 × 열 × 칸 · 상태 글자 · 모양이 다르면 멈춤
+    prs = Presentation()
+    sl = prs.slides.add_slide(prs.slide_layouts[6])
+    g = dict(rows=['A', 'B'], cols=['C', 'D'], cells=['낮은 끝', '보정값', '높은 끝'], corner='칸',
+             status=[[['done', 'done', 'run'], ['wait'] * 3], [['done', 'wait', 'done'], ['wait', 'run', 'wait']]])
+    status_grid(sl, g, 0.5, 0.5, 5.2, 1.7)
+    cells = [s for s in sl.shapes if s.name.startswith('GRID cell')]
+    texts = [s.text_frame.text for s in cells]
+    assert len(cells) == 12 and sum('완료' in t for t in texts) == 4 \
+        and sum('계산 중' in t for t in texts) == 2 and sum('대기' in t for t in texts) == 6; ok += 1
+    try:
+        status_grid(sl, dict(g, status=[[['done'] * 3]]), 0.5, 0.5, 5.2, 1.7)
+        raise AssertionError('모양이 다른 상태 표를 받았다')
+    except SystemExit:
+        ok += 1
+    cd = CategoryChartData(); cd.categories = ['a', 'b']; cd.add_series('s', (1, 2))
+    gf = sl.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, Inches(1), Inches(3), Inches(4), Inches(2), cd)
+    _plot_layout(gf, (0.14, 0.17, 0.83, 0.68))
+    pa = gf.chart._chartSpace.find(qn('c:chart')).find(qn('c:plotArea'))
+    assert pa[0].tag == qn('c:layout') and pa[0].find(qn('c:manualLayout')).find(qn('c:x')).get('val') == '0.14' \
+        and len(pa.findall(qn('c:layout'))) == 1; ok += 1
+    # 선 그래프 (11-23 v15) — 실데이터 곡선 · 범례 숨김 · 범위 밖 점 = 멈춤 · 가로축 = 세로 최솟값 자리
+    xs = dict(series=[dict(name='8 칸', pts=[[0, 0], [1.0, 0.5], [1.2, 1.2]], color='1F3A5F'),
+                      dict(name='16 칸', pts=[[0, 0], [1.4, 1.1]], color='C55A11', dash='dash'),
+                      dict(name='최대 차이', pts=[[1.2, 0.6], [1.2, 1.2]], color='262626', dash='sysDot',
+                           width=1.0, legend=False),
+                      dict(name='점', pts=[[1.2, 1.2]], color='262626', marker=7, line=False, legend=False)],
+              x=dict(min=0, max=1.6, step=0.4, fmt='0.0', title='판 변위'),
+              y=dict(min=-0.25, max=1.25, step=0.25, fmt='0.00', title='압력'), plot=[0.15, 0.2, 0.8, 0.6])
+    gx = xy_chart(sl, xs, 1, 5, 4, 2.5)
+    cs = gx.chart._chartSpace
+    sers = cs.findall('.//' + qn('c:ser'))
+    hid = [le.find(qn('c:idx')).get('val') for le in cs.findall('.//' + qn('c:legendEntry'))
+           if le.find(qn('c:delete')) is not None and le.find(qn('c:delete')).get('val') == '1']
+    assert len(sers) == 4 and hid == ['2', '3'] \
+        and sers[1].find('.//' + qn('a:prstDash')).get('val') == 'dash' \
+        and sers[3].find(qn('c:marker')).find(qn('c:symbol')).get('val') == 'circle' \
+        and cs.findall('.//' + qn('c:valAx'))[0].find(qn('c:crosses')).get('val') == 'min'; ok += 1
+    try:
+        xy_chart(sl, dict(xs, series=[dict(name='밖', pts=[[0, 0], [2.0, 0.5]], color='1F3A5F')]), 1, 5, 4, 2.5)
+        raise AssertionError('축 범위 밖 점을 받았다')
+    except SystemExit:
+        ok += 1
+    try:
+        xy_chart(sl, dict(xs, series=[dict(name='nan', pts=[[0, 0], [0.5, float('nan')]], color='1F3A5F')]),
+                 1, 5, 4, 2.5)
+        raise AssertionError('NaN 점을 받았다')
+    except SystemExit:
+        ok += 1
+    print(f'selftest {ok}/14 ✓')
     return 0
 
 
