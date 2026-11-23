@@ -1,5 +1,6 @@
 """Run a single author-approved B2-C development rotation from an isolated installation."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -21,11 +22,14 @@ u_completion = runpy.run_path(str(HERE / "mixer_b2_u_completion.py"))
 PAIR_SHA = "6fb926e4a0fbe2b536acccb90cf10e440da2d064611cf0b0bc913a341d8f0f1a"
 CASE = "PRECAL_R1_B2_C"
 TOKEN = "GO_B2_C_ONCE"
+PARALLEL_TOKEN = "GO_B2_C_PARALLEL_ONCE"
+PARALLEL_DISPOSITION = "B2_U_TERMINAL_AND_W9_WAIVED_20261123"
 DECK = "d36d199388243ccd630cbd346cbcdb6f37bf8bb92ae9c8f4e73e2e98597a6a3e"
 META = "18f2e3cb3d83e6402a128acd2d0172813505fd34f1b8d17aa4067569728535eb"
 ARCHIVES = ("b2_report.tar.gz", "b2_full_result.tar.gz")
 CONTROLLERS = ("mixer_b2_c_ibb.py", "mixer_b2_u_completion.py", "mixer_b2_u_ibb.py", "mixer_b1_pair_ibb.py",
                "mixer_rotation_n0_ibb.py", "mixer_e0_pilot_ibb.py")
+PARALLEL_CONTROLLERS = CONTROLLERS + ("mixer_b2_c_parallel_ibb.py", "mixer_b2_c_parallel_capacity.py")
 runtime_preflight = b1["runtime_preflight"]
 
 
@@ -34,27 +38,68 @@ def case_name(role):
     return CASE
 
 
-def author_token(role, token):
+def author_token(role, token, parallel=False):
     case_name(role)
-    need(token == TOKEN, "explicit B2-C author GO required")
+    need(token == (PARALLEL_TOKEN if parallel else TOKEN), "explicit B2-C author GO required")
 
 
-def authority(pin, previous):
-    return dict(label="DEVELOPMENT_DATA_ONLY", release_pin=pin, author_action=TOKEN,
-                allowed_to_submit=[CASE], execution_authorized=True, runtime_concurrency=1,
-                asset_manifest=b1["B_MANIFEST"], previous=previous,
-                automatic_retry=False, paper_qualified=False)
+def authority(pin, previous, parallel=False):
+    grant = dict(label="DEVELOPMENT_DATA_ONLY", release_pin=pin, author_action=TOKEN,
+                 allowed_to_submit=[CASE], execution_authorized=True, runtime_concurrency=1,
+                 asset_manifest=b1["B_MANIFEST"], previous=previous,
+                 automatic_retry=False, paper_qualified=False)
+    if parallel:
+        grant.update(author_action=PARALLEL_TOKEN, runtime_concurrency=2, peer_admission=PARALLEL_DISPOSITION)
+    return grant
 
 
-def prepare(root, prior_root, role, token, pin, runtime):
-    author_token(role, token)
+def acknowledged_peer(prior_root):
+    """Bind the original acknowledged U job to its immutable approval and author release."""
+    u_case, u_job, u_pin = (u_completion[key] for key in ("U_CASE", "U_JOB", "U_PIN"))
+    site = prior_root / "B" / F8
+    paths = dict(submission=site/"cases"/u_case/"submission.receipt.json",
+                 approval=site/"approvals"/u_case/"approval.json",
+                 release=prior_root/"control/pair_pin.json", authority=prior_root/"control/pair_authority.json")
+    refs = {}
+    records = {}
+    for key, path in paths.items():
+        need(path.resolve(strict=True) == path.absolute() and path.is_file(), "linked B2-U " + key)
+        raw = path.read_bytes()
+        refs[key] = {"path":str(path.resolve()), "sha256":hashlib.sha256(raw).hexdigest()}
+        records[key] = json.loads(raw)
+    submitted, approval, go = (records[key] for key in ("submission", "approval", "authority"))
+    need(records["release"].get("commit") == u_pin and go.get("release_pin") == u_pin
+         and go.get("author_action") == "GO_B2_U_ONCE" and go.get("allowed_to_submit") == [u_case]
+         and go.get("execution_authorized") is True, "B2-U original release or authority differs")
+    need(approval.get("case") == u_case and approval.get("np") == 20
+         and approval.get("wave_release") == [u_case] and approval.get("execution_authorized") is True
+         and approval.get("author_go") == refs["authority"], "B2-U original approval differs")
+    need(submitted.get("case") == u_case and str(submitted.get("job_id")) == u_job
+         and submitted.get("state") == "SUBMITTED" and type(submitted.get("returncode")) is int
+         and submitted["returncode"] == 0 and submitted.get("approval_sha256") == refs["approval"]["sha256"],
+         "B2-U original submission differs")
+    return dict(evidence_type="SUBMISSION_ACKNOWLEDGEMENT", release_pin=u_pin, job_id=u_job,
+                case=u_case, files=refs)
+
+
+def prepare(root, prior_root, role, token, pin, runtime, parallel=False):
+    author_token(role, token, parallel)
     here_root, prior_root = root.resolve(), prior_root.resolve()
     need(here_root != prior_root and here_root not in prior_root.parents and prior_root not in here_root.parents,
          "B2 requires its own installation")
     original_pair = root / "control/b1_pair_readback.json"
     need(sha(original_pair) == PAIR_SHA, "B1 pair readback identity")
-    proof = root / "control/b2_u_return.json"
-    peer = ref(u_completion["verify_original"](prior_root, proof))
+    if parallel:
+        proof = root / "control/b2_u_submission.json"
+        acknowledgement = acknowledged_peer(prior_root)
+        put(proof, acknowledgement)
+        peer = dict(ref(proof), evidence_type=acknowledgement["evidence_type"],
+                    case=acknowledgement["case"], job_id=acknowledgement["job_id"])
+        prior_refs = list(acknowledgement["files"].values())
+    else:
+        proof = root / "control/b2_u_return.json"
+        peer = ref(u_completion["verify_original"](prior_root, proof))
+        prior_refs = [peer]
     manifest_path = root / "B_manifest.json"
     need(sha(manifest_path) == b1["B_MANIFEST"], "B manifest identity")
     manifest = base["verify_deployment"](root)
@@ -69,9 +114,12 @@ def prepare(root, prior_root, role, token, pin, runtime):
     (ctx / "control").mkdir()
     (ctx / "evidence").mkdir()
     auth = root / "control/pair_authority.json"
-    put(auth, authority(pin, peer))
+    grant = authority(pin, peer, parallel)
+    put(auth, grant)
     policy = here / "campaign_policy.json"
-    put(policy, base["policy"](str(here), sha(auth)))
+    campaign = base["policy"](str(here), sha(auth))
+    campaign["max_concurrency"] = grant["runtime_concurrency"]
+    put(policy, campaign)
     case, folder = here / "cases" / CASE, here / "approvals" / CASE
     case.mkdir(parents=True)
     folder.mkdir(parents=True)
@@ -90,15 +138,20 @@ def prepare(root, prior_root, role, token, pin, runtime):
     binary, mpi, prefix = runtime
     paths = [root / "B" / base["safe_rel"](row["path"]) for row in manifest["files"]]
     paths.extend(case / n for n in parts)
-    paths.extend(HERE / n for n in CONTROLLERS)
-    paths.extend([python, auth, original_pair, Path(peer["path"]), proof, manifest_path,
+    paths.extend(HERE / n for n in (PARALLEL_CONTROLLERS if parallel else CONTROLLERS))
+    paths.extend([python, auth, original_pair, proof, manifest_path,
                   root / "control/n0_return.json", root / "control/pair_pin.json",
                   root / "control/AB_RECEIPT.json", root / "control/runtime_reference.json",
                   ctx / "evidence/author_arm.json"])
-    put(folder / "source_manifest.json", {"files": [ref(p) for p in paths]})
-    live = runtime_preflight(root, ctx, binary, mpi, prefix)
+    put(folder / "source_manifest.json", {"files": [ref(p) for p in paths] + prior_refs})
+    if parallel:
+        capacity = runpy.run_path(str(HERE / "mixer_b2_c_parallel_capacity.py"))
+        live = capacity["preflight"](root, ctx, binary, mpi, prefix, prior_root)
+    else:
+        live = runtime_preflight(root, ctx, binary, mpi, prefix)
     approval = dict(schema="mixer_first8_execution_approval/1", gate="MAP_CASE_GO", execution_authorized=True,
-                    case=CASE, case_dir=str(case), np=20, author_choices_confirmed=True, approved_concurrency=1,
+                    case=CASE, case_dir=str(case), np=20, author_choices_confirmed=True,
+                    approved_concurrency=grant["runtime_concurrency"],
                     wave_release=[CASE], runner_reviewed=True, walltime_approved=True, source_root=str(root/"B"),
                     source_pin=rotation["PIN_B"], minimum_free_bytes=base["FREE_BYTES"],
                     minimum_free_inodes=base["FREE_INODES"], campaign_policy=ref(policy), author_go=ref(auth),
@@ -116,17 +169,17 @@ def prepare(root, prior_root, role, token, pin, runtime):
     return submit, ap
 
 
-def collect(root, role, jid, acct, runtime, live, pin):
+def collect(root, role, jid, acct, runtime, live, pin, parallel=False):
     case_name(role)
     terminal = base["terminal"](acct, jid)
     need(terminal is not None, "job is not accounted terminal")
     ctx = root / "arms/C"
     with b1["collection_lease"](ctx):
         need(not (ctx / "return.json").exists(), "return already exists")
-        return collect_terminal(root, ctx, jid, acct, terminal, runtime, live, pin)
+        return collect_terminal(root, ctx, jid, acct, terminal, runtime, live, pin, parallel)
 
 
-def collect_terminal(root, ctx, jid, acct, terminal, runtime, live, pin):
+def collect_terminal(root, ctx, jid, acct, terminal, runtime, live, pin, parallel=False):
     here = root / "B" / F8
     case = here / "cases" / CASE
     name = "collection_" + str(time.time_ns())
@@ -147,6 +200,8 @@ def collect_terminal(root, ctx, jid, acct, terminal, runtime, live, pin):
                   frame_count=len(frames), exact_frame_names=exact, return_ready=ready, post_runtime_matches=match,
                   w9=w9, post_runtime_error=error, post_start_unix=start, post_finished_unix=finish,
                   job_end_unix=end.get("end_unix"))
+    if parallel:
+        record["peer_admission"] = PARALLEL_DISPOSITION
     put(ctx / "evidence" / (name + ".json"), record)
     out = ctx / name
     out.mkdir()
@@ -156,7 +211,8 @@ def collect_terminal(root, ctx, jid, acct, terminal, runtime, live, pin):
             if path.is_file():
                 tar.add(path, CASE + "/" + path.relative_to(case).as_posix(), recursive=False)
     with tarfile.open(out / ARCHIVES[0], "x:gz", compresslevel=1) as tar:
-        for rel in ("control/pair_pin.json", "control/pair_authority.json", "control/b2_u_return.json", "B_manifest.json"):
+        peer_file = "control/b2_u_submission.json" if parallel else "control/b2_u_return.json"
+        for rel in ("control/pair_pin.json", "control/pair_authority.json", peer_file, "B_manifest.json"):
             tar.add(root / rel, rel)
         tar.add(ctx / "evidence", "evidence")
         for rel in ("campaign_policy.json", "approvals/" + CASE, "admission"):
@@ -171,10 +227,10 @@ def collect_terminal(root, ctx, jid, acct, terminal, runtime, live, pin):
     return 0 if ready else 1
 
 
-def main():
+def main(parallel=False):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("role", choices=("C",))
-    p.add_argument("action", choices=(TOKEN, "collect"))
+    p.add_argument("action", choices=(PARALLEL_TOKEN if parallel else TOKEN, "collect"))
     for key in ("root", "prior-root", "binary", "mpi", "prefix"):
         p.add_argument("--" + key, type=Path, required=True)
     args = p.parse_args()
@@ -188,11 +244,12 @@ def main():
     os.environ.clear()
     os.environ.update(keep)
     pin = read(root / "control/pair_pin.json")
-    need(re.fullmatch("[0-9a-f]{40}", pin["commit"]) and set(pin["controllers"]) == set(CONTROLLERS)
-         and all(sha(HERE / n) == pin["controllers"][n] for n in CONTROLLERS), "controller identity")
+    controllers = PARALLEL_CONTROLLERS if parallel else CONTROLLERS
+    need(re.fullmatch("[0-9a-f]{40}", pin["commit"]) and set(pin["controllers"]) == set(controllers)
+         and all(sha(HERE / n) == pin["controllers"][n] for n in controllers), "controller identity")
     live = args.action != "collect"
     if live:
-        submit, ap = prepare(root, args.prior_root, args.role, args.action, pin["commit"], runtime)
+        submit, ap = prepare(root, args.prior_root, args.role, args.action, pin["commit"], runtime, parallel)
         reply = base["command"]([sys.executable, "-I", "-B", str(submit), str(ap)], 90)
         put(root / "arms/C/evidence/submit.json", dict(rc=reply.returncode, stdout=reply.stdout, stderr=reply.stderr))
         print("SUBMIT_RC=" + str(reply.returncode), flush=True)
@@ -204,7 +261,7 @@ def main():
          and re.fullmatch("[1-9][0-9]*", jid), "no confirmed B2-C job")
     print("JOB_ID=" + jid, flush=True)
     acct = rotation["monitor"](case, jid) if live else rotation["account"](jid)
-    return collect(root, args.role, jid, acct, runtime, live, pin["commit"])
+    return collect(root, args.role, jid, acct, runtime, live, pin["commit"], parallel)
 
 
 if __name__ == "__main__":
