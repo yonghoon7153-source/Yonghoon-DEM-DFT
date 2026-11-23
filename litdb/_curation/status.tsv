@@ -117,12 +117,12 @@ N-110	대피	끝	figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_
 N-111	대피	끝	capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function · 4014d4922	정독 155 · 의도 일부 (다성분 Bo · 흐름 예측 검증 채움 · 우리 3 상 Bo 직접은 일부 = 쌍 무게 조화평균 · 힘 법칙 · 출력 다름) · 공백 G1 없음 · G2 일부 반례 (IGC γ_d → 혼합물 ff_c 결과 전 예측) · G3 없음 · G4 일부 · 카드 문제 = 수치 오류 없음 · alizadeh2018 L274 · deng2021 L323 서술 일부만 맞음 (기록만)
 N-112 첫째	대피	끝	li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy · 7bfb6e2f4	정독 149 · 새 카드 · 392 줄 · 크롭 20 · 의도 대조 일부 (상태도 축 = R1/R2 × cosθ 비 · Bo 축 아님) · 공백 검사 G1 반례 (섞임↔분리) / 일부 (덮임↔뭉침) · G2 반례 (정성 · 접촉각) · G3 없음 · G4 일부 · 혼합쌍 규칙별 문턱 min 0.556 / 기하평균 0.309 / 산술 0.111 · 카드 문제 jarray2019 L322
 N-112 둘째	대피	끝	li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation · 69b5bf668	정독 150 · 새 카드 · 480 줄 · 크롭 39 (식 10) · 의도 대조 일부 · 공백 검사 G1 반례 (섞임↔분리 · 11/11 + DEM 2) / 덮임↔뭉침 일부 · G2 반례 (접촉각 → ℜ → 상 · 힘 측정 없음) · G3 없음 · G4 일부 (재료 축만 · 크기비 0.25 까지) · 우리 산술 B-U = E · B-C = M · SE/AM_P 크기비 0.111 = 검증 밖 · 카드 문제 jarray2019 L322 일부
-N-113	대피	도는 중		PDF 받음 · Egermann 1980 Powder Technol 27 203 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사) · 시작 11-24 03:31 KST
+N-113	대피	끝	egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity · efd6c4772	정독 156 · 의도 일부 (무작위 부착이면 σ = σ_R 의사무작위 · 정렬 부착 정의 · CV 0 = 조건부 채움 · M ≈ 1 · M > 1 해석 규칙은 CV · 단위 수 고정 시료 틀이라 칸 M 대응 필요) · 공백 G1–G4 모두 없음 · 카드 문제 = egermann1983 L72 조건 빠진 요약 · L192 '카드 없음' 낡음 · L85 [7] 귀속 경미 (기록만)
 N-114	대피	차례 기다림		PDF 받음 (그 밖 1) · Thiel–Lai–Hersey 1981 Powder Technol 28 117 (+ 114-2 번 파일 = Egermann 1980 Powder Technol 26 235 — 다른 논문 · 후보 밖 · 한 에이전트가 카드 둘)
 N-115	대피	차례 기다림		PDF 받음 · Buslik 1973 Powder Technol 7 111
 N-116	대피	차례 기다림		PDF 받음 · Abdullah–Geldart 1999 Powder Technol 102 151
 N-117	대피	차례 기다림		PDF 받음 · Pinson 1998 J Phys D 31 457
-N-118	대피	차례 기다림		PDF 받음 · Gilchrist 1999 Chaos 9 195 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사)
+N-118	대피	도는 중		PDF 받음 · Gilchrist 1999 Chaos 9 195 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사) · 시작 11-24 04:02 KST
 N-119	대피	차례 기다림		PDF 받음 · Oguchi–Tamatani 1986 J Electrochem Soc 133 841
 N-120	대피	차례 기다림		PDF 받음 · Yoshida 2003 Powder Technol 135/136 23
 N-121	대피	차례 기다림		PDF 받음 · Shen–Chen 2007 Chem Eng Sci 62 3748
