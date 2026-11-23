@@ -217,6 +217,7 @@ DEM (입자 동역학) + 실험 — 우리 쪽 반쪽은 **믹서 DEM 의 점착
 - 접촉 이론: [`johnson1971_jkr_surface_energy_contact_elastic_solids`](johnson1971_jkr_surface_energy_contact_elastic_solids.md).
 - 충돌 수 Co 를 이원 쌍으로 늘린 같은 그룹 논문 (이 논문 = 그 ref [11] · 2026-11-23 카드): [`li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram`](li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram.md) (Li · McCarthy, Powder Technol. 164 (2006) 58–64 · 쌍 비 Co_ii/Co_12 의 동적 상태도 · 환형 전단 셀 실험).
 - Bo_g 를 다성분 혼합물로 넓혀 흐름 함수 계수를 예측한 논문 (2026-11-24 카드): [`capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function`](capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function.md) (Capece · Ho · Strong · Gao, Powder Technol. 286 (2015) 561–571 · 건식 vdW · Rumpf 다돌기 힘).
+- 드럼 충돌 수 Co 의 흐름층 두께 δ/R_t ≈ 0.03 의 출처 (위 참고 [42] · 원문 제1 저자 = **Khakhar** · 원문은 0.03 을 인쇄하지 않음 — 그림 4 두 직선 기울기 0.0243 · 0.0357 의 평균 · 준 2D · 반 채움 · Fr 1.6–6.2 × 10⁻⁴ · 0.8 · 2.0 mm 유리구 · 비점착 · 2026-11-24 카드): [`khakhar1999_chaotic_mixing_granular_2d_tumbling_mixers_flowing_layer`](khakhar1999_chaotic_mixing_granular_2d_tumbling_mixers_flowing_layer.md).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

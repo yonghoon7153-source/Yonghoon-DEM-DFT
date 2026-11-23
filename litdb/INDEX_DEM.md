@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 371편 · 생성 2026-11-23
+> digest 372편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -234,7 +234,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (81편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (82편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -271,6 +271,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `kawaguchi2017_dry_coating_parametric_na2so4_model_se` | 건식 충격 블렌딩 (Hybridizer NHS-0) 코팅의 공정 창 — 황화물 SE 의 모델 물질 Na₂SO₄ (연성 · 상온 가압 소결) 로 NCM111 을 코팅: 회전자 선속도 50 m/s = 부분 피복 · ≥ 80 m/s = 완전 피복 · 시간 ↑ (60 → 1800 s) = 불연속 → 연속 막 · 게스트 비율 ↓  | exp (건식 코팅 공정 매개변수 연구 — 모델 SE · SEM/EDX · ICP-AES 순조성 · 세척 후 | 2026-10-13 | 🖼 8 |
 | `kawaguchi2018_dry_coating_model_se_particle_powtec` | 황화물 SE 의 모델 물질 Na₂SO₄ 로 NCM111 을 건식 충격 코팅 (Hybridizer NHS-0 · 16,000 rpm · 5 min · 70 : 30 wt%) 한 첫 보고 — 진동 혼합 · 막자 혼합 · 건식 코팅 세 분말 비교: 코팅만 NCM 을 다 덮고 (연속 막 ≈0.5 µm · NCM 파손 없음) 36 | exp (건식 코팅 첫 보고 — 모델 SE Na₂SO₄ · 혼합 방법 3 종 (vibrating mixer  | 2026-11-12 | 🖼 38 |
 | `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` | 건식 충격 코팅 NCM@Li₃PS₄ 코어–셸 vs 막자 단순 혼합 — 전극 제작 조건 (SE 질량비 Xs 0.1 / 0.3 · 압축압 P 180 / 360 MPa · 셀 체결 토크 Ts 0.5 / 2.5 N·m) 2³ 완전요인 DOE · ANOVA · 다중선형회귀: 단순 혼합은 P 가, 코팅은 Xs 가 첫 방전 용량을 좌 | exp + 통계 (건식 충격 블렌딩 코팅 · SEM/EDX · 입도 · UV-vis 순조성 · 반쪽셀 충방전 | 2026-10-13 | 🖼 17 |
+| `khakhar1999_chaotic_mixing_granular_2d_tumbling_mixers_flowing_layer` | 반 채운 2D 회전 믹서의 흐름층 기구학 + 혼돈 혼합 — 바닥은 강체 회전 · 표면 얇은 흐름층은 단순 전단 (v_x = 2u(1 + y/δ)) · 반 채움이면 층 중간 유량 Q0 = ωL²/2 → 평균 속도 u = ωL²/(2δ0) · 층 모양이 늘 닮음 (δ0/L = k) 이라 가정하면 원형은 정상 흐름 (선형 늘어 | theory + experiment (continuum flowing-layer kinematic model | 2026-11-24 | 🖼 63 |
 | `kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode` | 같은 조성 (LiCoO₂ : 78Li₂S·22P₂S₅ 유리세라믹 SE : Super P = 39 : 59 : 2 wt) 을 세 방식으로 섞으면 — 건식 손 막자 ↔ 초음파 + 톨루엔 습식 손 막자 ↔ 초음파 + 습식 고속 볼 믹서 — 첫 방전 60.6 · 91.0 · 112.7 mAh/g [판독 Fig. 4a] · 50  | experiment (황화물 유리세라믹 SE 복합 양극의 혼합 방법 비교 — 건식 손 막자 · 초음파 + t | 2026-11-22 | 🖼 33 |
 | `kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering` | 건식 R2R 공정 10 mAh/cm² NCA 양극 (50 mg/cm² · 3.6 g/cc · ≈139 µm · NCA : 도전재 : PTFE = 96 : 1.8 : 2.2) — PTFE 섬유화 온도 80 °C (DMA 평탄 60–110 °C · Tg ≈118 °C) · CB + 그래핀 50 : 50 도전재 · 2 단 압연 | experiment (건식 전극 dry electrode · dry process 장비 사슬 (혼합 → 압출 | 2026-11-22 | 🖼 82 |
 | `kim2026_charge_engineered_cnf_binder` | Kim 2026 (Nature Communications, DOI 10.1038/s41467-026-73909-0) — 전하조작(charge-engineered) 셀룰로오스 나노피브릴 바인더로 PFAS-free 고로딩 양극 | experiment | 2026-07-28 | 🖼 43 |
