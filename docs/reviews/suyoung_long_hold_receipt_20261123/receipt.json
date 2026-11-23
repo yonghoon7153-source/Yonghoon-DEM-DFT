@@ -1,0 +1,84 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "purpose": "historical_fixed_height_return",
+  "u6a_used": false,
+  "status": "COMPLETE",
+  "release": "206dd6dd00547237fba2ef577098a448263b7736",
+  "author_tar_sha256": "e5a2a20133b3d0ea958126c3466896f0f91388f5c55762b622dbad63dfc2a3a3",
+  "screen_sha256": "e331b11dc25e3e6084ec013bf1c3ed38c7070eee3961830a9251aaa5e29f1f81",
+  "source_manifest_sha256": "695a5a5586cbb3f3d33a3507b52dddb9ccf072e97f87b7c3397bd8c9feebce66",
+  "previous_fixed_tar_sha256": "218f4b4b784a63ededdefefba92a8160e41c86bc56f0e2c121febc7cd4ff4cf2",
+  "previous_csv_prefixes_verified": 10,
+  "timeouts_observed": 0,
+  "retries": 0,
+  "total_windows": 16,
+  "last_four_windows": [
+    13,
+    14,
+    15,
+    16
+  ],
+  "arms": {
+    "12": {
+      "ramp_steps": 1638,
+      "hold_steps": 4800,
+      "windows_verified": 4,
+      "previous_csv_prefixes_verified": 5,
+      "begin_utc": "2026-11-23T10:02:51Z",
+      "budget_s": 2400,
+      "begin_to_long_receipt_approx_seconds": 474,
+      "late": [
+        {
+          "floor_MPa": 0.10799708282202516,
+          "particle_kinetic_energy_model_units": 1.330618624595017e-06
+        },
+        {
+          "floor_MPa": 0.14298649396110755,
+          "particle_kinetic_energy_model_units": 5.405253932933661e-07
+        },
+        {
+          "floor_MPa": 0.10757397788154736,
+          "particle_kinetic_energy_model_units": 1.2168536441360465e-06
+        },
+        {
+          "floor_MPa": 0.09973627989624657,
+          "particle_kinetic_energy_model_units": 9.32349829361868e-07
+        }
+      ]
+    },
+    "24": {
+      "ramp_steps": 3276,
+      "hold_steps": 9600,
+      "windows_verified": 4,
+      "previous_csv_prefixes_verified": 5,
+      "begin_utc": "2026-11-23T10:10:45Z",
+      "budget_s": 7200,
+      "begin_to_long_receipt_approx_seconds": 3651,
+      "late": [
+        {
+          "floor_MPa": 0.07787890030273353,
+          "particle_kinetic_energy_model_units": 1.1894601802091815e-06
+        },
+        {
+          "floor_MPa": 0.08315267750192272,
+          "particle_kinetic_energy_model_units": 1.3458675274017521e-06
+        },
+        {
+          "floor_MPa": 0.1259450916602668,
+          "particle_kinetic_energy_model_units": 6.52443779375481e-07
+        },
+        {
+          "floor_MPa": 0.09835387314198674,
+          "particle_kinetic_energy_model_units": 1.6094984454477405e-06
+        }
+      ]
+    }
+  },
+  "late_signed_floor_gap_MPa": [
+    0.03011818251929163,
+    0.05983381645918483,
+    -0.01837111377871943,
+    0.0013824067542598378
+  ],
+  "new_research_runs_for_readback": 0
+}
