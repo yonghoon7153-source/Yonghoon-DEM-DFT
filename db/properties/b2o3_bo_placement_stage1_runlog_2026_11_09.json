@@ -780,5 +780,27 @@
   "확인": "본문을 로컬 dash 로 가짜 폴더에 돌려 봤다 (진행 중 · 끝난 구조 · 안 시작한 구조 세 경우 출력 정상) · 769 = 128 원자 × 3 × ± 2 + 기준 1 (uma_phonon.py · ASE Vibrations nfree 2 · 캐시 = <out>_cache/ 안 파일 하나가 변위 하나)",
   "읽는_법": "변위 N / 769 가 늘면 도는 중 · '마지막' 시각이 멈추고 tmux 없음이면 멈춤 · 구조가 끝나면 run.log rc 와 n_modes · lowest · verdict 세 줄 · 판정 어휘는 11a_포논_블록_2026_11_22 의 결과 전 규칙 그대로 (STABLE · SOFT 보류 · UNSTABLE)",
   "by": "agent · 2026-11-23"
+ },
+ "11a_판정_2026_11_23": {
+  "출처": "사용자 붙여넣은 gabia watch 화면 (2026-11-23 09:35:26 · 포논만 보는 watch) — 원자료 회수는 회수 블록으로 (11a_회수_블록_2026_11_23)",
+  "run.log": "09:02:41 시작 cfg0040 → 09:04:23 rc=0 · 09:04:23 시작 cfg0015 → 09:05:46 rc=0 · 09:05:46 시작 cfg0019 → 09:07:08 rc=0 · 09:07:08 끝 (구조당 약 1.5 분 · 어림 10–30 분보다 훨씬 짧았다)",
+  "구조별": {
+   "cfg0040_E-2252.241_O-bo4": "변위 769/769 · n_modes 384 · 병진 3 · 비병진 허수 < −30: 0 · −30..−5: 0 · 가장 낮은 비병진 12 개 24.452 · 26.309 · 27.111 · 29.561 · 31.215 · 35.988 · 42.463 · 45.46 · 46.724 · 49.157 · 49.406 · 50.071 cm⁻¹ · verdict STABLE",
+   "cfg0015_E-2254.436_O-bo4": "변위 769/769 · n_modes 384 · 병진 3 · 비병진 허수 < −30: 0 · −30..−5: 0 · 가장 낮은 비병진 12 개 23.995 · 27.608 · 28.447 · 30.814 · 34.309 · 36.777 · 42.048 · 44.336 · 45.697 · 46.449 · 50.69 · 51.347 cm⁻¹ · verdict STABLE",
+   "cfg0019_E-2254.209_O-bo4": "변위 769/769 · n_modes 384 · 병진 3 · 비병진 허수 < −30: 0 · −30..−5: 0 · 가장 낮은 비병진 12 개 23.998 · 25.88 · 26.95 · 29.061 · 32.24 · 37.824 · 38.934 · 41.273 · 44.096 · 44.336 · 47.381 · 49.651 cm⁻¹ · verdict STABLE"
+  },
+  "판정 (결과 전 규칙 11a_포논_블록_2026_11_22 그대로)": "셋 다 STABLE — 이완 조건 (converged · fmax ≤ 0.01) 은 블록 ② 가 통과를 확인한 뒤에만 포논을 띄웠다 · SOFT 없음 → 12 후처리 멈춤 조건 미발동 · 병진 모드 판별 깨끗 (셋 다 3 개)",
+  "허용_문장": "「선택한 주기셀의 UMA 조화 진동 검사 (Γ) 에서 비병진 허수 모드 없음 (−5 cm⁻¹ 기준) — 셀 수직폭 5.72 · 11.44 · 28.61 Å (가장 좁은 폭 < 10 Å)」 (F_B 안정성 대상 셋 각각)",
+  "금지_그대로": "'DFT 동역학 안정' · '진짜 국소 최소' (UMA · Γ 만) · '열적으로 안정' (11b MD 몫) · 셀 밖 파장 (q ≠ 0) · 셀 모양 불안정",
+  "다음": "회수 블록 (11a_회수_블록_2026_11_23) → 로컬 SHA256SUMS · summary 판정 대조 → 11b 블록 (2 단계 MD · 사용자 '권고대로' 순서 · 블록을 줄 때 비용 · 시간을 다시 알린다)",
+  "by": "agent · 2026-11-23"
+ },
+ "11a_회수_블록_2026_11_23": {
+  "블록 (gabia · 계산 없음 · 사용자가 붙여넣는다 · push 가 마지막)": "R=/data/work/runs/b2o3_bo_2026_11_09; W=/data/work/wt_b2o3_s11arec; O=db/raw/b2o3_bo_stage11a_phonon_2026_11_23\n{ [ ! -e $W ] || { echo \"⛔ $W 가 이미 있다\"; false; }; } && ! tmux has-session -t b2o3_s11ph 2>/dev/null && ! tmux has-session -t b2o3_s11a 2>/dev/null && tail -1 $R/s11a_phonon/run.log | grep -q \" 끝$\" && [ \"$(grep -ac ' rc=0$' $R/s11a_phonon/run.log)\" = 3 ] && echo \"== 포논 셋 rc 0 · 끝\" && git -C /data/work/repo fetch origin claude/evac-2026-11-20 && git -C /data/work/repo worktree add --detach $W FETCH_HEAD && mkdir -p $W/$O && rsync -a -m --include='/s11a_cand/' --include='/s11a_cand/manifest.json' --include='/s11a_relax/' --include='/s11a_relax/anneal_results.json' --include='/s11a_relax/*/' --include='/s11a_relax/*/post_relax.xyz' --include='/s11a_relax/*/*.log' --include='/s11a_relax.log' --include='/queue_b2o3_s11a.sh' --include='/queue_b2o3_s11a.sha256' --include='/s11a_phonon/' --include='/s11a_phonon/*.log' --include='/s11a_phonon/*_summary.json' --include='/s11a_phonon/*_freqs.txt' --include='/s11a_phonon/*_cache.identity.json' --exclude='*' $R/ $W/$O/ && (cd $W/$O && find . -type f ! -name SHA256SUMS | sort | xargs sha256sum > SHA256SUMS && echo \"파일 $(wc -l < SHA256SUMS) 개 · $(du -sh . | cut -f1)\" && python3 -c \"import json,glob; [print('  ', p.split('/')[-1][:7], d['verdict_code'], '병진', d['n_translational'], '허수', d['n_nontrans_below_alarm'], d['n_nontrans_soft'], 'fmax_in', round(d['input_fmax_eV_A'], 4), 'struct', d['identity']['struct_sha256'][:12]) for p in sorted(glob.glob('s11a_phonon/*_summary.json')) for d in [json.load(open(p))]]\") && S=$(du -sm $W/$O | cut -f1) && { [ \"$S\" -le 50 ] || { echo \"⛔ ${S} MB > 50 MB — 커밋하지 않는다 (이 줄을 붙여 주세요)\"; false; }; } && git -C $W add $O && git -C $W commit -q -m \"b2o3 stage-11a raw outputs from gabia (UMA fmax 0.01 relax 3 + Gamma phonon 3: manifest, relaxed xyz, logs, phonon summaries and frequencies; displacement caches left out)\" -m $'Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\\nClaude-Session: https://claude.ai/code/session_01Er41drwDRfvL6hhZbVtBiw' && git -C $W fetch origin claude/evac-2026-11-20 && git -C $W merge -q --no-edit FETCH_HEAD && git -C $W push origin HEAD:claude/evac-2026-11-20 && git -C /data/work/repo worktree remove $W && echo \"✅ 11a 회수 push 끝\"",
+  "블록_설명": "① worktree 자리 비었는지 · tmux b2o3_s11ph · b2o3_s11a 없음 · run.log 끝 줄 '끝' · rc=0 셋 ② 대피 브랜치 fetch → 새 worktree (메인 FETCH_HEAD) ③ rsync 고른 것만 — s11a_cand/manifest.json · s11a_relax/anneal_results.json · 구조별 post_relax.xyz · *.log · s11a_relax.log · queue_b2o3_s11a.sh · .sha256 · s11a_phonon 의 run.log · 구조별 log · *_summary.json · *_freqs.txt · *_cache.identity.json (변위 캐시 *_cache/ 는 안 담는다) ④ SHA256SUMS · 파일 수 · 크기 · summary 판정 줄 (verdict · 병진 · 허수 수 · 입력 fmax · 구조 해시) ⑤ 50 MB 넘으면 커밋하지 않고 멈춤 ⑥ 커밋 → push 직전에 worktree 에서 다시 fetch + merge (그 사이 에이전트가 올린 커밋 때문에 'fetch first' 로 막히지 않게 · 11-22 교훈) → push → worktree 지움",
+  "로컬_시험": "bash -n 통과 · rsync 거르개를 가짜 폴더로 돌려 고른 것만 들어가는지 확인 (변위 캐시 · md.traj · 다른 단계 폴더 · 다른 큐 파일 · s11a_cand 의 다른 파일 제외) · summary 판정 줄 python 을 가짜 JSON 으로 돌려 봄",
+  "담는_곳": "db/raw/b2o3_bo_stage11a_phonon_2026_11_23/",
+  "다음": "push 뒤 로컬 대조 — SHA256SUMS · summary 판정 셋 STABLE · 포논 정체성 struct_sha256 = 회수한 s11a_relax/<이름>/post_relax.xyz 의 struct_hash (포논이 그 이완 구조로 돌았는지) → 11b 블록",
+  "by": "agent · 2026-11-23"
  }
 }
