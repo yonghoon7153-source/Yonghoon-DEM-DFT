@@ -1,0 +1,289 @@
+{
+  "floor_y": 0.15,
+  "width": 0.7024180763115129,
+  "scope": "Fixed archived incoming particle states; signed first lower-wall stress projection in MPa.",
+  "geometric": "All field-nodes with y <= 0.15 on each target grid, independent of momentum sign; this is an algebraic projection.",
+  "mask_contribution": "(saved - geometric) on grid 80 minus (saved - geometric) on grid 160.",
+  "identities": {
+    "archives": {
+      "cross": "4bb6fe0cdff8964c6bf02cfbf3f9dd9f7bdec5199cfddce0e3d8160b0dd4f391",
+      "probe": "fcf9fd337d57c77cb9b4f751a6b938ce60a1d9010e438026ac10ffa762104cfd"
+    },
+    "sources": {
+      "flat_patch.py": "636b96e5f5480527e22dba5e93594c8ec33168abd74068a80843996e00fe8229",
+      "read_wall_layers.py": "35b7a683d41e38582547a971edaf3385a75955bdf27cd9fe89fc0ed42bb81a0a",
+      "scripts/dem_suyoung_sf2d_dev.py": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+      "docs/reviews/suyoung_wall_cross_projection_20261122/cross.py": "d587f32a9e74cfdefcccc97f1c81281168fd26bfdbb74b04ae3b0df5009d57ab"
+    }
+  },
+  "rows": [
+    {
+      "source_cells": 8,
+      "source_step": 269,
+      "projections": [
+        {
+          "target_step": 269,
+          "grid": 80,
+          "saved_keys": 82,
+          "saved_supported_keys": 82,
+          "geometric_supported_keys": 82,
+          "saved": {
+            "yy": 0.04296098877540595,
+            "yx": 1.6477379899413433e-18,
+            "stress_MPa": 0.04296098877540595
+          },
+          "geometric": {
+            "yy": 0.04296098877540595,
+            "yx": 1.6477379899413433e-18,
+            "stress_MPa": 0.04296098877540595
+          },
+          "saved_minus_geometric": {
+            "yy": 0.0,
+            "yx": 0.0,
+            "stress_MPa": 0.0
+          }
+        },
+        {
+          "target_step": 538,
+          "grid": 160,
+          "saved_keys": 91,
+          "saved_supported_keys": 84,
+          "geometric_supported_keys": 84,
+          "saved": {
+            "yy": 0.024182427426890682,
+            "yx": 1.6496282527373918e-18,
+            "stress_MPa": 0.024182427426890682
+          },
+          "geometric": {
+            "yy": 0.024182427426890682,
+            "yx": 1.6496282527373918e-18,
+            "stress_MPa": 0.024182427426890682
+          },
+          "saved_minus_geometric": {
+            "yy": 0.0,
+            "yx": 0.0,
+            "stress_MPa": 0.0
+          }
+        }
+      ],
+      "coarse_minus_fine": {
+        "saved": {
+          "yy": 0.01877856134851527,
+          "yx": -1.890262796048522e-21,
+          "stress_MPa": 0.01877856134851527
+        },
+        "geometric": {
+          "yy": 0.01877856134851527,
+          "yx": -1.890262796048522e-21,
+          "stress_MPa": 0.01877856134851527
+        },
+        "saved_minus_geometric": {
+          "yy": 0.0,
+          "yx": 0.0,
+          "stress_MPa": 0.0
+        }
+      }
+    },
+    {
+      "source_cells": 16,
+      "source_step": 538,
+      "projections": [
+        {
+          "target_step": 269,
+          "grid": 80,
+          "saved_keys": 82,
+          "saved_supported_keys": 82,
+          "geometric_supported_keys": 98,
+          "saved": {
+            "yy": 0.011007273141624795,
+            "yx": 2.378899301670868e-06,
+            "stress_MPa": 0.011009652040926465
+          },
+          "geometric": {
+            "yy": 0.011058731671456812,
+            "yx": 9.848233495248883e-19,
+            "stress_MPa": 0.011058731671456814
+          },
+          "saved_minus_geometric": {
+            "yy": -5.1458529832017555e-05,
+            "yx": 2.3788993016698833e-06,
+            "stress_MPa": -4.90796305303489e-05
+          }
+        },
+        {
+          "target_step": 538,
+          "grid": 160,
+          "saved_keys": 91,
+          "saved_supported_keys": 91,
+          "geometric_supported_keys": 91,
+          "saved": {
+            "yy": 0.011123877563308394,
+            "yx": 8.642307301229196e-19,
+            "stress_MPa": 0.011123877563308394
+          },
+          "geometric": {
+            "yy": 0.011123877563308394,
+            "yx": 8.642307301229196e-19,
+            "stress_MPa": 0.011123877563308394
+          },
+          "saved_minus_geometric": {
+            "yy": 0.0,
+            "yx": 0.0,
+            "stress_MPa": 0.0
+          }
+        }
+      ],
+      "coarse_minus_fine": {
+        "saved": {
+          "yy": -0.00011660442168359882,
+          "yx": 2.3788993016700036e-06,
+          "stress_MPa": -0.00011422552238192843
+        },
+        "geometric": {
+          "yy": -6.514589185158126e-05,
+          "yx": 1.2059261940196866e-19,
+          "stress_MPa": -6.514589185157953e-05
+        },
+        "saved_minus_geometric": {
+          "yy": -5.1458529832017555e-05,
+          "yx": 2.3788993016698833e-06,
+          "stress_MPa": -4.90796305303489e-05
+        }
+      }
+    },
+    {
+      "source_cells": 8,
+      "source_step": 270,
+      "projections": [
+        {
+          "target_step": 270,
+          "grid": 80,
+          "saved_keys": 82,
+          "saved_supported_keys": 82,
+          "geometric_supported_keys": 82,
+          "saved": {
+            "yy": 0.044882013736305015,
+            "yx": -1.4108077165095904e-18,
+            "stress_MPa": 0.044882013736305015
+          },
+          "geometric": {
+            "yy": 0.044882013736305015,
+            "yx": -1.4108077165095904e-18,
+            "stress_MPa": 0.044882013736305015
+          },
+          "saved_minus_geometric": {
+            "yy": 0.0,
+            "yx": 0.0,
+            "stress_MPa": 0.0
+          }
+        },
+        {
+          "target_step": 540,
+          "grid": 160,
+          "saved_keys": 91,
+          "saved_supported_keys": 84,
+          "geometric_supported_keys": 84,
+          "saved": {
+            "yy": 0.025271623079830895,
+            "yx": -1.5870259832084598e-18,
+            "stress_MPa": 0.025271623079830895
+          },
+          "geometric": {
+            "yy": 0.025271623079830895,
+            "yx": -1.5870259832084598e-18,
+            "stress_MPa": 0.025271623079830895
+          },
+          "saved_minus_geometric": {
+            "yy": 0.0,
+            "yx": 0.0,
+            "stress_MPa": 0.0
+          }
+        }
+      ],
+      "coarse_minus_fine": {
+        "saved": {
+          "yy": 0.01961039065647412,
+          "yx": 1.762182666988694e-19,
+          "stress_MPa": 0.01961039065647412
+        },
+        "geometric": {
+          "yy": 0.01961039065647412,
+          "yx": 1.762182666988694e-19,
+          "stress_MPa": 0.01961039065647412
+        },
+        "saved_minus_geometric": {
+          "yy": 0.0,
+          "yx": 0.0,
+          "stress_MPa": 0.0
+        }
+      }
+    },
+    {
+      "source_cells": 16,
+      "source_step": 540,
+      "projections": [
+        {
+          "target_step": 270,
+          "grid": 80,
+          "saved_keys": 82,
+          "saved_supported_keys": 82,
+          "geometric_supported_keys": 98,
+          "saved": {
+            "yy": 0.011524247367865857,
+            "yx": 2.470888005943845e-06,
+            "stress_MPa": 0.011526718255871801
+          },
+          "geometric": {
+            "yy": 0.01157790319573967,
+            "yx": 4.1353840069307613e-19,
+            "stress_MPa": 0.01157790319573967
+          },
+          "saved_minus_geometric": {
+            "yy": -5.365582787381258e-05,
+            "yx": 2.4708880059434316e-06,
+            "stress_MPa": -5.1184939867868554e-05
+          }
+        },
+        {
+          "target_step": 540,
+          "grid": 160,
+          "saved_keys": 91,
+          "saved_supported_keys": 91,
+          "geometric_supported_keys": 91,
+          "saved": {
+            "yy": 0.011578788162775296,
+            "yx": -4.003854340846131e-19,
+            "stress_MPa": 0.011578788162775296
+          },
+          "geometric": {
+            "yy": 0.011578788162775296,
+            "yx": -4.003854340846131e-19,
+            "stress_MPa": 0.011578788162775296
+          },
+          "saved_minus_geometric": {
+            "yy": 0.0,
+            "yx": 0.0,
+            "stress_MPa": 0.0
+          }
+        }
+      ],
+      "coarse_minus_fine": {
+        "saved": {
+          "yy": -5.454079490943911e-05,
+          "yx": 2.470888005944245e-06,
+          "stress_MPa": -5.2069906903495083e-05
+        },
+        "geometric": {
+          "yy": -8.849670356265299e-07,
+          "yx": 8.139238347776893e-19,
+          "stress_MPa": -8.849670356265299e-07
+        },
+        "saved_minus_geometric": {
+          "yy": -5.365582787381258e-05,
+          "yx": 2.4708880059434316e-06,
+          "stress_MPa": -5.1184939867868554e-05
+        }
+      }
+    }
+  ]
+}
