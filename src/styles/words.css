@@ -69,6 +69,12 @@
 .words__note-link .words__label { font-size: 14px; }
 .words__note-link .words__description { font-size: 14px; }
 .study { --study-border: var(--line-2); font-size: 16px; }
+.study__sections { display: flex; gap: 8px; margin: 0 0 20px; border-bottom: 1px solid var(--line-2); }
+.study__section-tab { min-height: 44px; margin-bottom: -1px; padding: 9px 18px; border: 1px solid transparent; border-bottom-color: var(--line-2); border-radius: 12px 12px 0 0; background: transparent; color: var(--ink-2); font-size: 16px; }
+.study__section-tab[aria-selected="true"] { background: var(--accent-2-soft); border-color: var(--line-2); border-bottom: 3px solid var(--accent-2); color: var(--ink); font-weight: 600; }
+.study__connect { padding: clamp(20px, 4vw, 36px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+.study__connect-title { font: 24px var(--font-head); }
+.study__connect p { margin: 10px 0 18px; color: var(--ink-2); line-height: 1.7; overflow-wrap: anywhere; }
 .study [hidden] { display: none !important; }
 .study button, .study input, .study select, .study a { -webkit-tap-highlight-color: transparent; }
 .study button { cursor: pointer; }

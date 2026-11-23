@@ -12,6 +12,17 @@ try {
   await p.goto(`${base}#words`, { waitUntil: 'networkidle' });
   const study = p.locator('.study');
   const click = (name) => study.getByRole('button', { name, exact: true }).click();
+  const tab = name => p.getByRole('tab', { name, exact: true });
+  assert.equal(await tab('생활회화').getAttribute('aria-selected'), 'true');
+  await tab('생활회화').press('End');
+  assert.equal(await tab('내 일본어 기록').getAttribute('aria-selected'), 'true');
+  assert.ok(await tab('내 일본어 기록').evaluate(el => el === document.activeElement));
+  assert.ok(await p.getByRole('tablist').isVisible());
+  assert.ok(await study.getByRole('button', { name: '내 Notion 단어장 연결', exact: true }).isVisible());
+  assert.equal(await p.locator('.study__card:visible').count(), 0);
+  assert.equal(await p.locator('.study__search:visible').count(), 0);
+  await tab('내 일본어 기록').press('Home');
+  assert.ok(await tab('생활회화').evaluate(el => el === document.activeElement));
   await p.locator('.study__card').waitFor();
   assert.equal(await p.locator('.study__count').textContent(), '1 / 6');
   await click('전체');
@@ -64,31 +75,66 @@ try {
   await click('전체');
   assert.match(await p.locator('.study__learned').textContent(), /2 \/ 18/);
   checks.push('flip, examples, independent language marks, filter-empty, list, keyboard, shuffle, reload');
-  const oldTitle = await p.locator('.study__title').textContent();
+  await p.locator('.study__search').fill('reservation');
+  await tab('내 일본어 기록').click();
   await p.locator('input[type=file]').setInputFiles({ name: 'broken.json', mimeType: 'application/json', buffer: Buffer.from('{bad') });
   await p.waitForFunction(() => document.querySelector('.study__message').textContent.includes('JSON'));
-  assert.equal(await p.locator('.study__title').textContent(), oldTitle);
+  assert.equal(await p.locator('.study__card:visible').count(), 0);
   const imported = { schemaVersion: 1, deckId: 'qa-only', title: '개인 단어장', cards: [
     { id: 'ja', ja: '<img src=x onerror=alert(1)>', ko: '태그도 문자로', notionUrl: 'javascript:alert(1)' },
+    { id: 'noun', ja: '財布', ko: '지갑', category: '명사' },
     { id: 'en', en: 'one English card', ko: '영어만 있는 카드' },
   ] };
   const uploads = [];
   p.on('request', r => { if (r.method() === 'POST') uploads.push(r.url()); });
-  await p.locator('input[type=file]').setInputFiles({ name: 'my-deck.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(imported)) });
-  await p.waitForFunction(() => document.querySelector('.study__title').textContent === '개인 단어장');
+  const sameFile = { name: 'my-deck.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(imported)) };
+  // Hold just the first local read until its owning tab has been deactivated.
+  await p.evaluate(() => {
+    const original = File.prototype.text;
+    File.prototype.text = async function () {
+      File.prototype.text = original;
+      await new Promise(resolve => { window.releaseDeckRead = resolve; });
+      return original.call(this);
+    };
+  });
+  await p.locator('input[type=file]').setInputFiles(sameFile);
+  await p.waitForFunction(() => typeof window.releaseDeckRead === 'function');
+  await tab('생활회화').click();
+  await p.evaluate(() => window.releaseDeckRead());
+  await tab('내 일본어 기록').click();
+  assert.match(await study.locator('.study__message').textContent(), /다시 선택/);
+  assert.equal(await p.locator('input[type=file]').inputValue(), '');
+  assert.equal(await p.evaluate(() => localStorage.getItem('nihonchizu.private-deck.v1')), null);
+  const chooserPending = p.waitForEvent('filechooser');
+  await click('내 Notion 단어장 연결');
+  const chooser = await chooserPending;
+  await chooser.setFiles(sameFile);
+  await p.locator('.study__card').waitFor();
+  checks.push('keyboard tab activation, interrupted import, reselecting the same file');
   assert.equal(await p.locator('.study__card img').count(), 0);
   assert.equal(await p.locator('.study__source').isVisible(), false);
+  assert.equal(await p.locator('.study__count').textContent(), '1 / 2');
+  assert.equal(await p.locator('.study__search').inputValue(), '');
+  await p.locator('.study__select').selectOption('명사');
+  assert.equal(await p.locator('.study__expression').textContent(), '財布');
+  await tab('생활회화').click();
+  assert.equal(await p.locator('.study__search').inputValue(), 'reservation');
   assert.equal(await p.locator('.study__count').textContent(), '1 / 1');
+  await tab('내 일본어 기록').click();
+  assert.equal(await p.locator('.study__select').inputValue(), '명사');
+  assert.equal(await p.locator('.study__expression').textContent(), '財布');
+  await p.locator('.study__select').selectOption('');
   await click('English'); assert.equal(await p.locator('.study__expression').textContent(), 'one English card');
   await p.reload({ waitUntil: 'networkidle' });
-  assert.equal(await p.locator('.study__title').textContent(), '개인 단어장');
+  assert.equal(await tab('내 일본어 기록').getAttribute('aria-selected'), 'true');
+  assert.equal(await p.locator('.study__count').textContent(), '1 / 2');
   assert.equal(uploads.length, 0);
   await p.locator('.study__import summary').click();
-  await click('기본 단어장 보기');
-  await click('보관한 내 단어장 보기');
-  assert.equal(await p.locator('.study__title').textContent(), '개인 단어장');
-  checks.push('invalid file preserves deck; private import persists without upload, safe text and links, missing languages');
+  checks.push('empty private tab and import; all Japanese records, separate tab filters, offline reload, safe text and links');
   await click('이 기기의 단어장 지우기');
+  assert.equal(await tab('내 일본어 기록').getAttribute('aria-selected'), 'true');
+  assert.equal(await p.locator('.study__card:visible').count(), 0);
+  await tab('생활회화').click();
   await p.evaluate(() => { location.hash = 'kyoto'; });
   await p.waitForFunction(() => document.getElementById('words-page').hidden);
   await p.click('#words-link'); await p.locator('.study__card').waitFor();

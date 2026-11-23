@@ -4,7 +4,7 @@ import { randomBytes, randomUUID, createHash, createCipheriv } from 'node:crypto
 const { chromium } = createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const browser = await chromium.launch();
 const profile = { schemaVersion: 1, kind: 'nihonchizu-study-connection', feedId: randomUUID(), deckId: 'qa-sync', url: '/study-feed/my-deck.v1.enc.json', key: randomBytes(32).toString('base64url') };
-const deck = { schemaVersion: 1, deckId: 'qa-sync', title: '자동 갱신 테스트', cards: Array.from({ length: 6 }, (_, i) => ({ id: `qa-${i}`, ja: `日本語${i}`, en: `English ${i}`, ko: `뜻${i}`, category: '회화' })) };
+const deck = { schemaVersion: 1, deckId: 'qa-sync', title: '자동 갱신 테스트', cards: Array.from({ length: 6 }, (_, i) => ({ id: `qa-${i}`, ja: `日本語${i}`, en: `English ${i}`, ko: `뜻${i}`, category: i % 2 ? '명사' : '표현' })) };
 function encrypt(value) {
   const bytes = Buffer.from(JSON.stringify(value)), revision = createHash('sha256').update(bytes).digest('hex'), iv = randomBytes(12);
   const cipher = createCipheriv('aes-256-gcm', Buffer.from(profile.key, 'base64url'), iv);
@@ -26,7 +26,9 @@ try {
   await p.goto(`${process.env.BASE || 'http://localhost:5004/'}#words`, { waitUntil: 'networkidle' });
   const upload = () => p.locator('input[type=file]').setInputFiles({ name: 'connection.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(profile)) });
   const click = name => p.locator('.study').getByRole('button', { name, exact: true }).click();
-  await upload(); await p.waitForFunction(() => document.querySelector('.study__title').textContent === '자동 갱신 테스트');
+  const tab = name => p.getByRole('tab', { name, exact: true });
+  await tab('내 일본어 기록').click();
+  await upload(); await p.locator('.study__card').waitFor();
   assert.equal(requests, 1);
   await click('이제 알겠어요');
   assert.equal(await p.locator('.study__count').textContent(), '2 / 6');
@@ -45,10 +47,11 @@ try {
   fail = true; await click('지금 새로 받기'); await p.waitForFunction(() => document.querySelector('.study__save-note[role=status]').textContent.includes('받지 못'));
   assert.equal(await p.locator('.study__count').textContent(), '2 / 7');
   await p.reload({ waitUntil: 'networkidle' });
-  assert.equal(await p.locator('.study__title').textContent(), '자동 갱신 테스트');
+  assert.equal(await tab('내 일본어 기록').getAttribute('aria-selected'), 'true');
   assert.match(await p.locator('.study__learned').textContent(), /1 \/ 7/);
+  await tab('생활회화').click(); const basicRequests = requests; await p.clock.fastForward(5 * 60 * 1000); assert.equal(requests, basicRequests);
+  await tab('내 일본어 기록').click();
   await p.locator('.study__import summary').click();
-  await click('기본 단어장 보기'); const basicRequests = requests; await p.clock.fastForward(5 * 60 * 1000); assert.equal(requests, basicRequests);
   await click('이 기기의 단어장 지우기');
   assert.equal(await p.evaluate(() => localStorage.getItem('nihonchizu.private-deck.v1')), null);
   const clearedRequests = requests; await p.clock.fastForward(5 * 60 * 1000); assert.equal(requests, clearedRequests);
@@ -70,7 +73,13 @@ try {
   await linked.goto(`${process.env.BASE || 'http://localhost:5004/'}#words`, { waitUntil: 'networkidle' });
   const choose = name => linked.locator('.study').getByRole('button', { name, exact: true }).click();
   const expr = linked.locator('.study__expression');
-  await linked.waitForFunction(() => document.querySelector('.study__count').textContent === '1 / 2');
+  await linked.getByRole('button', { name: '오늘', exact: true }).waitFor();
+  assert.equal(await linked.getByRole('tab', { name: '내 일본어 기록' }).getAttribute('aria-selected'), 'true');
+  assert.equal(await linked.locator('.study__count').textContent(), '1 / 6');
+  await choose('목록');
+  assert.deepEqual(await linked.locator('.study__row-expression').allTextContents(), deck.cards.map(c => c.ja));
+  await choose('카드');
+  await choose('오늘');
   assert.equal(await expr.textContent(), '日本語4');
   await choose('이제 알겠어요');
   assert.equal(await expr.textContent(), '日本語3');
@@ -91,6 +100,8 @@ try {
   await linked.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
   assert.equal(await linked.locator('.study__row').count(), 0);
   await linked.reload({ waitUntil: 'networkidle' });
+  assert.equal(await linked.locator('.study__count').textContent(), '1 / 6');
+  await choose('오늘');
   assert.equal(await linked.locator('.study__count').textContent(), '0 / 0');
   assert.deepEqual(await linked.evaluate(() => JSON.parse(localStorage.getItem('nihonchizu.private-deck.v1')).today), today);
   await upgraded.close();
@@ -98,8 +109,9 @@ try {
   await blocked.addInitScript(() => { Storage.prototype.setItem = () => { throw new Error('quota'); }; });
   const b = await blocked.newPage(); await b.route('**/study-feed/my-deck.v1.enc.json', r => r.fulfill({ contentType: 'application/json', body: encrypt(deck) }));
   await b.goto(`${process.env.BASE || 'http://localhost:5004/'}#words`, { waitUntil: 'networkidle' });
+  await b.getByRole('tab', { name: '내 일본어 기록' }).click();
   await b.locator('input[type=file]').setInputFiles({ name: 'connection.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(profile)) });
-  await b.waitForFunction(() => document.querySelector('.study__title').textContent === '자동 갱신 테스트');
+  await b.locator('.study__card').waitFor();
   assert.match(await b.locator('.study__message').textContent(), /저장 공간/);
   assert.ok(!(await b.locator('.study__message').textContent()).includes('고르지 않아도'));
   await blocked.close();

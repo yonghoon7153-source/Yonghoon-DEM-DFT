@@ -8,14 +8,73 @@ const KNOWN_KEY = 'nihonchizu.known-cards.v1';
 
 export function createWordCards() {
   const original = parseDeck(initialDeck);
-  let deck = original, language: StudyLanguage = 'ja', mode: 'cards' | 'list' = 'cards';
+  const known = new Set<string>();
+  let marksWarning = '';
+  try {
+    const marks: unknown = JSON.parse(localStorage.getItem(KNOWN_KEY) || '[]');
+    if (!Array.isArray(marks) || !marks.every((s) => typeof s === 'string')) throw new Error('Invalid marks');
+    for (const mark of marks) known.add(mark);
+  } catch { marksWarning = '이전 학습 표시를 읽지 못했어요. 새 표시는 이번 화면에서만 유지해요.'; }
+  const conversation = createCardPanel(original, known, marksWarning);
+  const records = createCardPanel(undefined, known, marksWarning);
+  const sections = [conversation, records];
+  const root = el('section', { class: 'study', 'aria-label': '단어 카드로 복습하기' });
+  const tablist = el('div', { class: 'study__sections', role: 'tablist', 'aria-label': '학습 단어장' });
+  const tabs = ['생활회화', '내 일본어 기록'].map((label, i) =>
+    el('button', { type: 'button', role: 'tab', class: 'study__section-tab', id: `word-tab-${i}`, 'aria-controls': `word-panel-${i}` }, label));
+  const panels = tabs.map((tab, i) => el('div', { role: 'tabpanel', id: `word-panel-${i}`, 'aria-labelledby': tab.id }));
+  tablist.append(...tabs);
+  root.append(tablist, ...panels);
+  let active = -1;
+  function open(i: number) {
+    if (active === i) return;
+    if (active >= 0) { sections[active]!.pause(); panels[active]!.replaceChildren(); }
+    active = i;
+    tabs.forEach((tab, n) => {
+      tab.setAttribute('aria-selected', String(n === i));
+      tab.tabIndex = n === i ? 0 : -1;
+      panels[n]!.hidden = n !== i;
+    });
+    panels[i]!.append(sections[i]!.root);
+    sections[i]!.refresh();
+  }
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => open(i)));
+  tablist.addEventListener('keydown', (event) => {
+    let i = active;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') i = 1 - active;
+    else if (event.key === 'Home') i = 0;
+    else if (event.key === 'End') i = 1;
+    else return;
+    event.preventDefault(); open(i); tabs[i]!.focus();
+  });
+  open(records.connected ? 1 : 0);
+  const refreshActive = () => sections[active]!.refresh();
+  function scheduleMidnight() {
+    window.setTimeout(() => { refreshActive(); scheduleMidnight(); }, Math.max(1, seoulStudyDay().nextMidnight - Date.now()));
+  }
+  scheduleMidnight();
+  window.setTimeout(refreshActive, 0);
+  window.setInterval(refreshActive, 5 * 60 * 1000);
+  window.addEventListener('focus', refreshActive);
+  window.addEventListener('pageshow', refreshActive);
+  window.addEventListener('hashchange', () => window.setTimeout(refreshActive, 0));
+  document.addEventListener('visibilitychange', refreshActive);
+  return root;
+}
+
+function createCardPanel(original: WordDeck | undefined, known: Set<string>, marksWarning: string) {
+  const isPublic = !!original;
+  // An unconnected personal tab has no cards and opens its import prompt.
+  const emptyDeck: WordDeck = { schemaVersion: 1, deckId: '', title: '', cards: [] };
+  let deck = original ?? emptyDeck, language: StudyLanguage = 'ja', mode: 'cards' | 'list' = 'cards';
   let index = 0, flipped = false, onlyUnknown = false, order: WordCard[] = [];
-  let known = new Set<string>(), storageWarning = '', canPersistKnown = true;
+  let storageWarning = marksWarning;
   let savedDeck: WordDeck | undefined;
   let connection: StudyConnection | undefined, revision = '';
   let request: AbortController | undefined, generation = 0, lastAttempt = 0;
+  let importing = false;
   try {
-    const saved = localStorage.getItem(DECK_KEY);
+    const saved = !isPublic && localStorage.getItem(DECK_KEY);
     if (saved) {
       const raw = JSON.parse(saved); savedDeck = parseDeck(raw); deck = savedDeck;
       // A broken connection must not discard a usable cached deck.
@@ -28,14 +87,9 @@ export function createWordCards() {
         }
       } catch { storageWarning = '단어장은 열었지만 자동 연결 정보를 읽지 못했어요. 연결 파일을 다시 불러와 주세요.'; }
     }
-  } catch { storageWarning = '저장된 단어장을 읽지 못해 기본 단어장을 열었어요. 필요하면 파일을 다시 불러와 주세요.'; }
-  try {
-    const marks: unknown = JSON.parse(localStorage.getItem(KNOWN_KEY) || '[]');
-    if (!Array.isArray(marks) || !marks.every((s) => typeof s === 'string')) throw new Error('Invalid marks');
-    known = new Set(marks);
-  } catch { canPersistKnown = false; storageWarning += ' 이전 학습 표시를 읽지 못했어요. 기존 저장값은 보존하고 새 표시는 이번 화면에서만 유지해요.'; }
+  } catch { storageWarning = '저장된 단어장을 읽지 못했어요. 연결 파일이나 단어장 파일을 다시 불러와 주세요.'; }
 
-  const root = el('section', { class: 'study', 'aria-label': '단어 카드로 복습하기' });
+  const root = el('div', {});
   const name = el('h2', { class: 'study__title' });
   const subtitle = el('p', { class: 'study__subtitle' });
   const message = el('p', { class: 'study__message', role: 'status' }, storageWarning);
@@ -48,7 +102,7 @@ export function createWordCards() {
   const tabs = el('div', { class: 'study__tabs', role: 'group', 'aria-label': '학습 언어' }, ja, en);
   const modes = el('div', { class: 'study__tabs', role: 'group', 'aria-label': '보기 방식' }, cardMode, listMode);
   const query = el('input', { class: 'study__search', type: 'search', placeholder: '단어·뜻 검색', 'aria-label': '단어 또는 뜻 검색', autocomplete: 'off' });
-  const category = el('select', { class: 'study__select', 'aria-label': '상황별로 고르기' });
+  const category = el('select', { class: 'study__select', 'aria-label': isPublic ? '상황별로 고르기' : '기록 분류로 고르기' });
   const unknown = button('낯선 단어만', 'study__filter');
   const mix = button('섞기', 'study__button study__shuffle');
   const count = el('span', { class: 'study__count' });
@@ -70,40 +124,47 @@ export function createWordCards() {
   let listLimit = 40;
   const file = el('input', { type: 'file', accept: '.json,application/json', class: 'sr-only', tabindex: '-1', 'aria-label': '내 단어장 파일' });
   const load = button('내 단어장 불러오기', 'study__text-button');
-  const openPersonal = button('내 Notion 단어장 연결', 'study__text-button');
-  const basic = button('기본 단어장 보기', 'study__text-button');
+  const connect = button('내 Notion 단어장 연결');
+  const welcome = el('div', { class: 'study__connect' },
+    el('h2', { class: 'study__connect-title' }, '기록한 일본어 불러오기'),
+    el('p', {}, '개인 운영 페이지에서 받은 study-connection.json을 선택하면, 기록한 단어와 문장을 전체 카드로 볼 수 있어요.'),
+    connect);
   const forget = button('이 기기의 단어장 지우기', 'study__text-button');
   const syncMessage = el('p', { class: 'study__save-note', role: 'status' });
   const refresh = button('지금 새로 받기', 'study__text-button');
   const importPanel = el('details', { class: 'study__import' },
-    el('summary', {}, '내 단어장으로 공부하기'),
+    el('summary', {}, '단어장 연결 관리'),
     el('p', {}, '채팅에서 받은 연결 파일이나 단어장 JSON을 골라 주세요. 연결 파일은 처음 한 번만 불러오면 돼요. 파일과 학습 표시는 이 브라우저에 보관해요.'),
-    el('div', { class: 'study__import-actions' }, load, basic, forget, refresh, file),
+    el('div', { class: 'study__import-actions' }, load, forget, refresh),
   );
-  root.append(
-    el('div', { class: 'study__top' }, el('div', {}, name, subtitle, openPersonal), modes),
+  const studyView = el('div', {},
+    el('div', { class: 'study__top' }, el('div', {}, name, subtitle), modes),
     el('div', { class: 'study__toolbar' }, scopes, tabs, mix),
     el('div', { class: 'study__filters' }, query, category, unknown),
     el('div', { class: 'study__meta' }, count, learned), progress,
     scene, navigation, ratings, detail, source, list, more,
     el('p', { id: 'study-shortcuts', class: 'study__shortcuts' }, '카드를 눌러 뒤집기 · 카드에서 ← → 이동 · Space로 뜻 보기'),
     el('p', { class: 'study__save-note' }, '학습 표시는 이 브라우저에 저장돼요. Notion 암기 기록은 바뀌지 않아요.'),
-    syncMessage, importPanel, message, status,
+    syncMessage,
   );
+  if (!isPublic) root.append(welcome, file);
+  root.append(studyView);
+  if (!isPublic) root.append(importPanel);
+  root.append(message, status);
 
   const key = (c: WordCard) => `${deck.deckId}:${language}:${c.id}`;
   function persistKnown() {
-    if (!canPersistKnown) { message.textContent = '기존 학습 표시를 읽지 못해 덮어쓰지 않았어요. 새 표시는 이번 화면에서만 유지돼요.'; return; }
+    if (marksWarning) { message.textContent = marksWarning; return; }
     try { localStorage.setItem(KNOWN_KEY, JSON.stringify([...known])); }
     catch { message.textContent = '학습 표시는 이번 화면에서만 유지돼요. 브라우저 저장 공간을 확인해 주세요.'; }
   }
   let day = seoulStudyDay();
-  let scope: 'today' | 'all' = deck === original || deck.today ? 'today' : 'all';
+  let scope: 'today' | 'all' = isPublic ? 'today' : 'all';
   let available: WordCard[] = [];
   let mixedIds: string[] | undefined;
   function preparePool() {
     const selectedCategory = category.value;
-    available = scope === 'today' ? dailyCards(deck, language, day, deck === original) : deck.cards.filter((c) => c[language]);
+    available = scope === 'today' ? dailyCards(deck, language, day, isPublic) : deck.cards.filter((c) => c[language]);
     if (mixedIds) {
       const remaining = new Map(available.map((c) => [c.id, c]));
       const kept: WordCard[] = [];
@@ -113,7 +174,7 @@ export function createWordCards() {
       }
       available = kept.concat([...remaining.values()]);
     }
-    category.replaceChildren(el('option', { value: '' }, '모든 상황'),
+    category.replaceChildren(el('option', { value: '' }, isPublic ? '모든 상황' : '모든 분류'),
       ...[...new Set(available.map((c) => c.category))].sort().map((c) => el('option', { value: c }, c)));
     if ([...category.options].some((o) => o.value === selectedCategory)) category.value = selectedCategory;
   }
@@ -128,7 +189,11 @@ export function createWordCards() {
   }
   function render() {
     const c = order[index];
-    const isPublic = deck === original;
+    const needsConnection = !isPublic && !savedDeck;
+    welcome.hidden = !needsConnection;
+    studyView.hidden = needsConnection;
+    importPanel.hidden = needsConnection;
+    if (needsConnection) return;
     name.textContent = isPublic ? '기본 생활 회화' : deck.title;
     const dateLabel = `${Number(day.key.slice(5, 7))}월 ${day.dayOfMonth}일`;
     subtitle.textContent = scope === 'today'
@@ -137,8 +202,6 @@ export function createWordCards() {
     scopes.hidden = !isPublic && !deck.today;
     today.setAttribute('aria-pressed', String(scope === 'today'));
     all.setAttribute('aria-pressed', String(scope === 'all'));
-    openPersonal.hidden = !isPublic;
-    openPersonal.textContent = savedDeck ? '내 단어장 열기' : '내 Notion 단어장 연결';
     [ja, en].forEach((b, i) => b.setAttribute('aria-pressed', String(language === (i ? 'en' : 'ja'))));
     [cardMode, listMode].forEach((b, i) => b.setAttribute('aria-pressed', String(mode === (i ? 'list' : 'cards'))));
     unknown.setAttribute('aria-pressed', String(onlyUnknown));
@@ -151,11 +214,9 @@ export function createWordCards() {
     ratings.hidden = !c || mode !== 'cards'; navigation.hidden = mode !== 'cards';
     list.hidden = mode !== 'list'; scene.hidden = mode !== 'cards';
     detail.hidden = !c || !flipped || mode !== 'cards'; source.hidden = !c?.notionUrl || mode !== 'cards';
-    refresh.hidden = !connection || deck === original;
-    syncMessage.hidden = !connection || deck === original;
+    refresh.hidden = !connection;
+    syncMessage.hidden = !connection;
     if (connection && !syncMessage.textContent) syncMessage.textContent = '매일 오전 9시에 정리한 단어장을 화면을 열어 둔 동안 5분마다 확인해요.';
-    basic.hidden = !savedDeck && deck === original;
-    basic.textContent = deck === original ? '보관한 내 단어장 보기' : '기본 단어장 보기';
     if (c?.notionUrl) source.href = c.notionUrl; else source.removeAttribute('href');
     const noDaily = scope === 'today' && !available.length;
     const empty = () => el('div', { class: 'study__empty' },
@@ -246,7 +307,7 @@ export function createWordCards() {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); move(event.key === 'ArrowLeft' ? -1 : 1); }
   });
   load.addEventListener('click', () => file.click());
-  openPersonal.addEventListener('click', () => { if (savedDeck) basic.click(); else file.click(); });
+  connect.addEventListener('click', () => file.click());
   function cancelRefresh() { generation++; request?.abort(); request = undefined; }
   function persistDeck() {
     if (!savedDeck) return;
@@ -256,16 +317,20 @@ export function createWordCards() {
   }
   function showDeck(nextDeck: WordDeck, preserve = false) {
     const sameDeck = preserve && deck.deckId === nextDeck.deckId;
-    const hasToday = nextDeck === original || !!nextDeck.today;
-    const defaultScope = !sameDeck || Boolean(deck.today) !== Boolean(nextDeck.today);
+    const defaultScope = !sameDeck || (scope === 'today' && !nextDeck.today);
     deck = nextDeck;
-    if (defaultScope) scope = hasToday ? 'today' : 'all';
-    if (!sameDeck) { query.value = ''; category.value = ''; onlyUnknown = false; mixedIds = undefined; }
+    if (defaultScope) scope = 'all';
+    if (!sameDeck) {
+      language = 'ja'; mode = 'cards'; query.value = ''; category.value = ''; onlyUnknown = false; mixedIds = undefined;
+    }
     preparePool(); select(sameDeck && !defaultScope);
   }
   function installDeck(imported: WordDeck, preserve: boolean) {
+    const focusNewDeck = !savedDeck && root.isConnected &&
+      (document.activeElement === document.body || document.activeElement === file || document.activeElement === connect);
     savedDeck = imported;
     showDeck(imported, preserve);
+    if (focusNewDeck) (order.length ? card : ja).focus({ preventScroll: true });
   }
   async function receive(candidate: StudyConnection, connecting = false) {
     if (request) return;
@@ -274,7 +339,7 @@ export function createWordCards() {
     syncMessage.textContent = '새 단어장을 확인하고 있어요…';
     try {
       const result = await fetchStudyDeck(candidate, controller.signal);
-      if (token !== generation || (!connecting && (connection !== candidate || deck === original))) return;
+      if (token !== generation || (!connecting && connection !== candidate)) return;
       // Older clients cached the revision after stripping the daily index from the deck.
       const changed = connecting || result.revision !== revision || (!!result.deck.today && !deck.today);
       if (changed) {
@@ -296,52 +361,53 @@ export function createWordCards() {
   }
   function maybeRefresh(force = false) {
     checkDay();
-    if (!connection || deck === original || !root.isConnected || root.closest('[hidden]') || document.visibilityState !== 'visible') return;
+    if (importing || !connection || !root.isConnected || root.closest('[hidden]') || document.visibilityState !== 'visible') return;
     if (!force && Date.now() - lastAttempt < 5 * 60 * 1000) return;
     void receive(connection);
   }
-  let midnightTimer: number;
   function checkDay() {
     const current = seoulStudyDay();
     if (current.key !== day.key) {
       day = current;
       if (scope === 'today') { mixedIds = undefined; preparePool(); select(); }
     }
-    window.clearTimeout(midnightTimer);
-    midnightTimer = window.setTimeout(checkDay, Math.max(1, current.nextMidnight - Date.now()));
   }
   refresh.addEventListener('click', () => maybeRefresh(true));
-  window.setInterval(() => maybeRefresh(), 5 * 60 * 1000);
-  window.addEventListener('focus', () => maybeRefresh());
-  window.addEventListener('pageshow', () => maybeRefresh());
-  window.addEventListener('hashchange', () => window.setTimeout(() => maybeRefresh(), 0));
-  document.addEventListener('visibilitychange', () => maybeRefresh());
   file.addEventListener('change', async () => {
     const chosen = file.files?.[0]; if (!chosen) return;
+    file.value = '';
     cancelRefresh(); const fileGeneration = generation;
+    importing = true;
+    message.textContent = '단어장 파일을 확인하고 있어요…';
     try {
       if (chosen.size > 8 * 1024 * 1024) throw new Error('8MB 이하의 단어장 파일을 선택해 주세요.');
       const raw: unknown = JSON.parse(await chosen.text());
       if (fileGeneration !== generation) return;
       if (raw && typeof raw === 'object' && 'kind' in raw && raw.kind === 'nihonchizu-study-connection') {
-        const candidate = parseConnection(raw); cancelRefresh(); await receive(candidate, true);
+        const candidate = parseConnection(raw); await receive(candidate, true);
       } else {
-        const imported = parseDeck(raw); cancelRefresh(); connection = undefined; revision = ''; syncMessage.textContent = '';
+        const imported = parseDeck(raw); connection = undefined; revision = ''; syncMessage.textContent = '';
         installDeck(imported, false); message.textContent = `${deck.cards.length.toLocaleString()}개 표현을 이 브라우저에 보관했어요.`;
         persistDeck(); render();
       }
-    } catch (error) { message.textContent = error instanceof SyntaxError ? 'JSON 단어장 파일인지 확인해 주세요. 기존 단어장은 그대로예요.' : error instanceof Error ? error.message : '파일을 읽지 못했어요.'; }
-    file.value = '';
+    } catch (error) {
+      if (fileGeneration === generation) message.textContent = error instanceof SyntaxError ? 'JSON 단어장 파일인지 확인해 주세요. 기존 단어장은 그대로예요.' : error instanceof Error ? error.message : '파일을 읽지 못했어요.';
+    } finally {
+      if (fileGeneration === generation) importing = false;
+    }
   });
-  basic.addEventListener('click', () => { cancelRefresh(); showDeck(deck === original && savedDeck ? savedDeck : original); message.textContent = `${deck === original ? '기본' : '보관한 내'} 단어장을 열었어요. 단어장 파일과 학습 표시는 유지돼요.`; maybeRefresh(true); });
   forget.addEventListener('click', () => {
     try { localStorage.removeItem(DECK_KEY); }
     catch { message.textContent = '브라우저의 저장된 단어장을 지우지 못했어요. 브라우저 설정에서 이 사이트 데이터를 확인해 주세요.'; return; }
-    cancelRefresh(); connection = undefined; revision = ''; syncMessage.textContent = '';
-    savedDeck = undefined; showDeck(original);
+    cancelRefresh(); importing = false; connection = undefined; revision = ''; syncMessage.textContent = '';
+    savedDeck = undefined; showDeck(emptyDeck); connect.focus();
     message.textContent = '이 기기의 단어장 사본을 지웠어요. Notion 원본과 학습 표시는 유지돼요.';
   });
-  preparePool(); select(); checkDay();
-  window.setTimeout(() => maybeRefresh(), 0);
-  return root;
+  preparePool(); select();
+  function pause() {
+    if (importing) { importing = false; message.textContent = '불러오기를 멈췄어요. 이어서 연결하려면 파일을 다시 선택해 주세요.'; }
+    if (request) { lastAttempt = 0; syncMessage.textContent = ''; }
+    cancelRefresh();
+  }
+  return { root, connected: !!savedDeck, refresh: maybeRefresh, pause };
 }
