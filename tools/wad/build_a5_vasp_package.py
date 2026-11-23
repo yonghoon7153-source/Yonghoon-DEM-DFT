@@ -31,6 +31,12 @@
   Codex EP (11-23): 완전한 행 = 숫자로 읽히는 행 (칸 6 · 7 · N 양의 정수 · ncg 정수 · 실수 칸) · 콜론 앞에서 잘린 머리 = 손상 · 시간 출처는 보존 폴더의 영수증만 ·
   진행 폴더의 영수증 거부 · 시도 이력 (status.tsv run_id = hist5 = history_problems) · 끝난 시도의 끝 기록 신원 (end_id = end_problem) · 끝 기록 없는 반송 채택 안 함 ·
   다시 포장 · 다시 돌림 전 끝 기록 대조 (fin_ok) · 영수증 필수 칸 비면 거부 · 손으로 넣은 글은 쓸 때 UTF-8 확인 (u8ok) · 장부 줄 순서 = 기록 · 시작 시각 순서.
+  Codex EQ (11-23 · 다섯 번째 NO-GO 뒤 구조로): **트리 관문 하나** (러너 tree5 · tree_gate = 검사기 tree_problems · 같은 규칙 · 같은 사유 낱말) 를 러너의 모든 진입점
+  (기록 명령 · PACK_ONLY · 다시 돌림 · 단 발사 직전 · 포장 = 기존 반송본을 덮기 전) 에 건다 — 모르는 것 · 못 읽는 것 · 서로 안 맞는 것은 아무것도 쓰지 않고 종료 8:
+  이름 (모르는 이름 · 잔여 *.part · 링크 · 하위 폴더) · 시작 기록 · 끝 기록 틀 (attempt.json = printf 그대로 · ATT1_TPL) · 신원 · 봉인 (sha 표 = 지금 파일) ·
+  끊김 기록 (끝 기록과 함께 · 보존 폴더 · 문법 · 결속 · 빈칸) · 진행 폴더 영수증 · 장부 (단 순서 A5 ≤ c1 ≤ c2) · 이력 (0 바이트 · 잘린 줄) · 끝 기록 (code/state 조합) ·
+  시작점 · ⓪ 기록 (W0_TPL) · 모든 기록 UTF-8 · 기존 반송본 ⊆ 지금 트리 (러너만). 쓰는 쪽: attempt.json · WAVECAR.info 는 임시 파일에 완성한 뒤 mv ·
+  필수 칸은 빈칸 문자 (공백 · 탭 · LF · VT · FF · CR — 원문은 그 JSON 이스케이프까지) 만인 글도 거부 (쓸 때 · 읽을 때). 행 판독: 숫자 칸 길이 ≤ 24 (늘 유한) · 앞 빈칸을 걷은 머리 조각도 손상 (열 제목 'N' 만 0 스텝).
 
 개정 5 해석 1 (사용자 2026-11-20 · 1저자 · AskUserQuestion '멈추고 1저자에게 (Recommended)') — 러너와 검사기가 같은 갈래로 본다:
   다음 단은 지금 단이 SCF_NOT_CONVERGED 이거나 전자 반복행 ≥ 1 인 실행 실패 (행 ≥ 1 끊김을 --killed 로 기록한 것 포함) 로 끝났을 때만 ·
@@ -57,17 +63,21 @@
    · 묶음 빌드 · 러너 함수 추출에는 bash 가 필요하다 (bash -n 으로 함수 끝을 정한다)
    · 완전한 전자 반복행 (Codex EO P0 · EP P0) 은 '다 쓰였고 숫자로 읽히는가' 만 본다 — 줄바꿈 · 그 단의 머리 그대로 · ':' 뒤 빈칸 · 칸 6 · 7 · N 양의 정수 ·
      ncg 정수 · 실수 칸 (지수 두 자리까지). 값이 물리적으로 맞는지 (스텝 번호가 이어지는지 · NELM · OUTCAR 대조) 는 판정 계약이 본다 · SDA/CGA 행의 칸 수는
-     5.4.4 실물로 확인하지 않았다 (DAV 실물: 6 · 7 칸 — 칸이 다르면 손상 → 멈춤 8 · 채택 쪽으로는 안 틀린다) · 콜론 앞 머리 절단은 줄 맨 앞 글자 1–4 꼴만 본다
-     (VASP 행은 줄 맨 앞에서 시작한다 · 앞 빈칸이 있는 조각은 열 머리 줄의 절단과 가를 수 없어 0 스텝으로 둔다)
+     5.4.4 실물로 확인하지 않았다 (DAV 실물: 6 · 7 칸 — 칸이 다르면 손상 → 멈춤 8 · 채택 쪽으로는 안 틀린다) · 콜론 앞 머리 절단은 앞 빈칸을 걷은 글자 1–4 조각
+     (Codex EQ — 앞 빈칸 뒤 'N' 만 열 제목으로 0 스텝 · 줄 맨 앞 'N' 은 손상) · 숫자 칸 길이 ≤ 24 (지수 두 자리와 함께 |x| < 1e119 — 실물 칸 ≤ 16 · 더 긴 칸은 손상)
    · 한 줄 기록 문법 REC1 (Codex EO P1) 의 값 비교는 원문 (이스케이프를 풀지 않은 글) 으로 한다 — 같은 값을 \\u 로 바꿔 쓰면 다른 값으로 본다 (러너 · 검사기 같다) ·
-     문자열 안의 비 ASCII 바이트는 읽을 때 UTF-8 인지 보지 않고 받는다 (양쪽 같다 — 손으로 고친 기록의 비 UTF-8 바이트는 엄한 JSON 판독기가 거부할 수 있다) ·
+     기록 파일 전체가 UTF-8 이 아니면 트리 관문이 읽을 때 거부한다 (Codex EQ — 저장 뒤 바이트 손상 · 전에는 받았다) ·
      러너는 손으로 넣은 글 (잡 id · 취소 시각 · 사유) 을 쓸 때 UTF-8 이 아니면 거부한다 (u8ok · Codex EP — 전에는 그 바이트를 그대로 썼다) ·
-     attempt.json 은 REC1 이 아니다 (sha 표 객체) — elapsed_s · run_id · t_start 는 러너가 grep · 검사기가 json 으로 읽는다 (러너가 쓴 꼴에서만 같다)
+     attempt.json · w0_check.json 은 REC1 이 아니다 (안에 객체) — 트리 관문이 printf 틀 그대로만 받는다 (tpl5 = tpl_parse · Codex EQ — 키 순서 · 빈칸까지 같아야 한다 ·
+     러너가 아닌 도구가 같은 내용을 다른 꼴로 쓰면 거부한다) · wall_of 의 elapsed_s 는 여전히 러너 grep · 검사기 json (관문이 틀을 먼저 본다)
+   · 트리 관문 (Codex EQ) 의 이름 규칙은 현장 트리 기준이다 — 시도 폴더에 반송 허용 · 금지 이름 · VASP 표준 출력 (VASP_OUT) 밖의 이름이 있으면 멈춘다 (VASP_CMD 가
+     시도 폴더에 다른 파일을 쓰는 환경이면 거짓 멈춤 8 · 연락) · 기존 반송본 대조는 러너만 한다 (검사기는 반송본 하나를 받는다) · 업체 시계 · 노드 시계는 믿는다
    · 중단 장부 · 영수증 · 시도 폴더 · 끝 기록을 모두 서로 맞게 함께 바꾼 위조는 못 잡는다 (서로 대조할 뿐 · 업체 서버의 원본을 보지 않는다)
    · 끝 기록의 시도 목록 (Codex EO P2) 은 그 실행의 시도 폴더 · run_id 를 묶는다 — 같은 실행에서 포장을 두 번 해도 같다 (포장 시각은 묶지 않는다)
    · 시도 이력 대조 (Codex EP P1) 는 한 방향이다 — 이력 줄마다 지금 · 보존 폴더의 끝난 시도가 있어야 한다 (끝난 시도에 이력 줄이 없는 것은 러너가 끝 기록과 이력 줄 사이에서
      끊기는 틈 때문에 보지 않는다) · 이력 줄까지 함께 지운 부분 복구는 못 잡는다
-   · 장부 줄 순서 (Codex EP P2) 는 영수증 기록 시각 · 시작 시각이 줄 순서대로 늘어나는지만 본다 (같은 기계의 date +%s 를 믿는다 · 단 순서는 사다리 순서 대조가 본다)
+   · 장부 줄 순서 (Codex EP P2 · EQ P2) 는 영수증 기록 시각 · 시작 시각이 줄 순서대로 줄지 않는지와 단 순서 (전역 번호순 A5 ≤ c1 ≤ c2) 를 따로 본다 —
+     시간 순서는 단 순서를 함의하지 않는다 (같은 초의 맞바꿈은 시간으로는 통과했다 · Codex EQ 정정) · date +%s 를 믿는다
 """
 import argparse
 import json
@@ -123,6 +133,15 @@ MGMT = ("run/env.txt", "run/status.tsv", "run/infra_aborts.tsv", "run/w0_check.j
 SCHEMA_PKG, SCHEMA_RESULT = "wad_a5_vasp_package/v1", "wad_a5_result/v1"
 BLOCKING = ("ATTEMPT_MISMATCH", "INPUT_MODIFIED", "POTCAR_UNVERIFIED", "ATTEMPT_UNREADABLE")   # 어느 시도든 이것이면 채택 없음 (무결성)
 AB_RE = re.compile(r"^(.+)_(A5|c1|c2)_([0-9]+)$")
+# 트리 관문 (Codex EQ — 러너 tree5 = 검사기 tree_problems) 의 한 곳 상수: 러너에는 run_a5_text 가 자리표시 (@ATT_EXTRA@ · @ATT1_T@ · @W0_T@) 로 같은 바이트를 넣는다
+VASP_OUT = ("CONTCAR", "DOSCAR", "EIGENVAL", "PCDAT", "XDATCAR", "REPORT", "PROCAR", "PROOUT", "PARCHG", "ELFCAR", "WAVEDER", "AECCAR0", "AECCAR1", "AECCAR2",
+            "STOPCAR", "vaspout.h5", ".running")          # 시도 폴더에 둘 수 있는 VASP 표준 출력 · 러너 표지 (반송 허용 · 금지 이름 밖) — 그 밖은 모르는 이름 (멈춤)
+SEAL_ORDER = ("INCAR", "POSCAR", "KPOINTS", "POTCAR", "OUTCAR", "OSZICAR", "WAVECAR.info", "stdout.log", "POTCAR.titel", "POTCAR.species.sha256", "attempt.start")
+ATT1_TPL = ('{"job": \x01, "attempt": \x01, "stage": \x01, "run_id": \x01, "rc": \x02, "t_start": \x02, "t_end": \x02, "elapsed_s": \x02, "vasp_version": \x01, '
+            '"kernel_sha256": \x01, "perf": \x01, "sha256": {' + ", ".join(f'"{f}": \x01' for f in SEAL_ORDER) + "}}")      # run_one5 의 attempt.json printf 그대로
+W0_TPL = ('{"path": \x01, "sha256": \x01, "size": \x01, "head": \x01, "expect": {"sha256": \x01, "size": \x01, "NKPTS": \x01, "NBANDS": \x01, "ENCUT": \x01}, '
+          '"verified": \x02, "why": \x01, "checked_utc": \x01}')                                                          # w0_check 의 printf 그대로
+FINAL_COMBOS = frozenset({(0, "OK"), (1, "NO_PRIMARY"), (1, "CLOSED"), (5, "CAP"), (6, "ENV"), (8, "REVIEW")})         # fin5 가 쓰는 code/state 만
 
 
 # ───────────────────────── 외주 2차 부품 (파이썬) ─────────────────────────
@@ -148,7 +167,8 @@ def verify_variant(base, text, var):
 
 GEN_ROW = re.compile(r"^[ \t]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:")    # 러너 row_scan 의 awk 와 같은 꼴 (줄 맨 앞 1–4 글자 + ':' = '행꼴')
 REAL_TOK = re.compile(r"[+-]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[Ee][+-]?[0-9][0-9]?)?")   # 행의 실수 칸 (러너 row_scan 의 R 과 같다 · 지수 두 자리 — 유한 · Codex EP P0)
-HDR_CUT = re.compile(r"[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?")                    # 콜론 앞에서 잘린 머리 (줄 맨 앞 글자 1–4 · 끝 조각에만 · Codex EP P0)
+HDR_CUT = re.compile(r"[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?")                    # 콜론 앞에서 잘린 머리 (앞 빈칸 · 탭을 걷은 끝 조각이 글자 1–4 · 앞 빈칸 뒤 'N' 은 열 제목 — Codex EP P0 · EQ P0)
+ROW_TOK_MAX = 24    # 완전한 행의 칸 하나 ≤ 24 글자 (Codex EQ P0 — 실물 5.4.4 칸은 ≤ 16)
 ROW_MIN_TOK = 6     # 완전한 행 — 머리 ':' 뒤 칸 ≥ 6 (N E dE d eps ncg rms · rms(c) 는 첫 행들 · 수렴 행에 없다 — 외주 2차 반송 실물 OSZICAR 23 개: 6 칸 110 행 · 7 칸 1255 행)
 
 
@@ -159,7 +179,8 @@ def _complete_row(ln, stage):
     m = re.fullmatch(r"[ \t]*(?:" + "|".join(ROW_HDR[stage]) + r"):[ \t]+(.*)", ln)
     t = [x for x in re.split(r"[ \t]+", m.group(1)) if x] if m else []
     ok = (len(t) in (ROW_MIN_TOK, ROW_MIN_TOK + 1) and re.fullmatch(r"[1-9][0-9]*", t[0]) is not None and re.fullmatch(r"[0-9]+", t[4]) is not None
-          and all(REAL_TOK.fullmatch(t[i]) for i in (1, 2, 3, 5)) and (len(t) == ROW_MIN_TOK or REAL_TOK.fullmatch(t[6]) is not None))
+          and all(REAL_TOK.fullmatch(t[i]) for i in (1, 2, 3, 5)) and (len(t) == ROW_MIN_TOK or REAL_TOK.fullmatch(t[6]) is not None)
+          and all(len(x) <= ROW_TOK_MAX for x in t))                  # 칸 길이 ≤ 24 — 지수 두 자리와 함께 |x| < 1e119 (늘 유한 · 310 자리 → 손상 · Codex EQ P0)
     return t if ok else None
 
 
@@ -167,7 +188,7 @@ def row_gate(osz, stage):
     """OSZICAR 원문 → (완전한 행 수, 사유 | None) — 러너 row_scan 과 같은 규칙 (selftest 가 같은 탐침으로 대조 · Codex EO P0).
     줄은 '\\n' 으로만 나눈다 · 마지막 '\\n' 뒤 조각 = 끝 조각 (줄바꿈 없음). 행꼴 줄 (GEN_ROW) 마다: 머리가 그 단의 허용 머리 밖이면 사유 row_header_<머리> (첫 것) ·
     줄바꿈으로 끝났고 완전하면 (_complete_row) 센다 · 아니면 손상. 사유 순서: nul_bytes (NUL 이 있으면 — awk 마다 다르게 읽는다) > row_header_<머리> > incomplete_row
-    (줄바꿈으로 끝난 완전하지 않은 행꼴 줄이 있거나 · 완전한 행 0 인데 행꼴 끝 조각 또는 콜론 앞에서 잘린 머리 조각 (줄 맨 앞 글자 1–4) 이 있음). 완전한 행 ≥ 1 뒤의 행꼴 끝 조각은 세지 않고 사유도 아니다 (스케줄러에 끊긴 잘린 꼬리).
+    (줄바꿈으로 끝난 완전하지 않은 행꼴 줄이 있거나 · 완전한 행 0 인데 행꼴 끝 조각 또는 콜론 앞에서 잘린 머리 조각 (앞 빈칸 · 탭을 걷고 글자 1–4 · 앞 빈칸 뒤 'N' 만 열 제목) 이 있음). 완전한 행 ≥ 1 뒤의 행꼴 끝 조각은 세지 않고 사유도 아니다 (스케줄러에 끊긴 잘린 꼬리).
     ⚠ 못 하는 것: 줄바꿈까지 쓰인 행의 숫자 값이 맞는지는 판정 계약 (유한수 · 스텝 번호) 이 본다 — 여기서는 '다 쓰였는가' 만 본다."""
     if osz is None:
         return 0, None
@@ -192,8 +213,10 @@ def row_gate(osz, stage):
             bad = bad or f"row_header_{h}"
         else:
             tailrow = True
-    elif tail and HDR_CUT.fullmatch(tail):           # 콜론 앞에서 잘린 머리 ('SDA' · 'D') — 완전한 행 0 이면 손상 (Codex EP P0 · 러너 row_scan 과 같다)
-        tailrow = True
+    elif tail:                                       # 콜론 앞에서 잘린 머리 ('SDA' · 'D' · 앞 빈칸 '  SDA') — 완전한 행 0 이면 손상 (Codex EP P0 · EQ P0 · 러너 row_scan 과 같다)
+        u = tail.lstrip(" \t")
+        if HDR_CUT.fullmatch(u) and not (u != tail and re.fullmatch(r"N *", u)):     # 앞 빈칸 뒤 'N' 만 열 제목 (0 스텝)
+            tailrow = True
     if bad:
         return n, bad
     if part or (tailrow and n == 0):
@@ -332,6 +355,8 @@ def r2_parts():
     P["finish"] = _patch(P["finish"], "⚠ 값 없는 잡이 있다 — 그대로 반송해 주세요 (실패도 기록입니다)",
                          "⚠ 주 기준 값 없음 — 그대로 반송해 주세요 (보조 기준은 반송 뒤 우리가 봅니다 · 실패도 기록입니다)")
     P["finish"] = _patch(P["finish"], "다음 잡을 띄우지 않았다", "다음 단을 띄우지 않았다")
+    # 포장 = 덮어쓰기 전에 트리 관문 (끝 포장 · 환경 고장 포장 · PACK_ONLY — 기존 반송본 대조 · 잔여 · 신원 · 끝 기록 · Codex EQ P1)
+    P["pack"] = _patch(P["pack"], "pack(){\n", "pack(){\n  tree_gate 포장                       # 덮어쓰기 전에 항상 (Codex EQ — 실패면 종료 8 · 아무것도 안 씀)\n")
     # 포장: 점으로 시작하는 폴더 (run/.prep_* 준비 폴더 · run/.a5.lock) 는 담지 않는다 (VASP 를 띄운 적 없는 임시 폴더 · 리뷰 P2(c))
     P["pack"] = _patch(P["pack"], 'grep -E "^(run|run_aborted)/[^/]+/(stageA/)?($RET_ALLOW)$"', 'grep -E "^(run|run_aborted)/[^/.][^/]*/(stageA/)?($RET_ALLOW)$"')
     # 끝 안내: 8 (1저자 검토 멈춤 · 개정 5 해석 1) 을 더한다
@@ -361,10 +386,10 @@ RUN_A5_HEAD = r'''#!/usr/bin/env bash
 #   종료: 0 c1 또는 c2 주 기준 수렴 (끝) · 1 주 기준 값 없음 — 사다리 끝 (끝 · 실패도 기록) · 2 인자 · 묶음 · 환경 오류 (아무것도 띄우지 않음)
 #         3 준비 실패 (그 단은 소모 안 함 — 원인을 고친 뒤 다시) · 4 포장 실패 (PACK_ONLY=1 로 다시)
 #         5 누적 상한 @CAP_H@ h (끝) 또는 끊긴 시도 · 벽시계 미상 (--killed · --infra-abort · --infra-wall 로 기록한 뒤 다시)
-#         6 공통 환경 고장 (VASP 빌드 · PP — 전체 정지) · 7 전자 반복행 0 (--infra-abort 또는 연락) · 8 1저자 검토 멈춤 (끝)
+#         6 공통 환경 고장 (VASP 빌드 · PP — 전체 정지) · 7 전자 반복행 0 (--infra-abort 또는 연락) · 8 1저자 검토 멈춤 (끝) 또는 트리 관문 (아무것도 쓰지 않음 · 원본 보존 · 연락)
 #   끝 (0 · 1 · 5 상한 · 8 · 돈 뒤의 6 — VASP 빌드 다름) 뒤에 다시 돌리면 run/final.json 을 찍고 같은 코드로 끝낸다 — 아무것도 띄우지 않는다 (포장만: PACK_ONLY=1)
 #   보내는 것: 끝 뒤 `sha256sum -c a5_return.tgz.sha256` 까지 통과한 쌍
-#   지원 환경: Linux · bash ≥ 4 · GNU coreutils (find sort grep cmp sha256sum od stat mv -T tr tail wc) · GNU tar · awk (mawk/gawk) · sed -E
+#   지원 환경: Linux · bash ≥ 4 · GNU coreutils (find sort grep cmp sha256sum od stat mv -T tr tail wc mktemp) · GNU tar · awk (mawk/gawk) · sed -E
 # =============================================================================
 set -u
 ORIG_PWD=$PWD
@@ -431,6 +456,9 @@ done < SEALED_ENV.tsv
   || { echo "⛔ SEALED_ENV.tsv 가 불완전하다 — 실행하지 않는다"; exit 2; }
 incar_of(){ case "$1" in A5c) echo INCAR.a5A5c;; A5f) echo INCAR.a5A5f;; c1) echo INCAR.a5c1;; c2) echo INCAR.a5c2;; esac; }
 stage_hdr(){ case "$1" in A5|c1) echo 'DAV|RMM';; c2) echo 'SDA|CGA';; esac; }
+ATT_EXTRA='@ATT_EXTRA@'      # 시도 폴더에 둘 수 있는 VASP 표준 출력 · 표지 (반송 허용 · 금지 이름 밖) — 그 밖의 이름은 트리 관문이 멈춘다 (Codex EQ P1)
+ATT1_T='@ATT1_T@'            # attempt.json 틀 (run_one5 의 printf 그대로 · \001 문자열 · \002 음 아닌 정수) — 검사기 ATT1_TPL 과 같은 바이트
+W0_T='@W0_T@'                # w0_check.json 틀 (w0_check 의 printf 그대로) — 검사기 W0_TPL
 
 # ── 한 줄 기록 문법 REC1 (killed.json · infra_abort.json · attempt.start · final.json) — 검사기 rec_parse 와 같은 문법 · 다음 단을 띄우기 전에 전체를 읽는다 (Codex EO P1) ──
 #   파일 = 한 줄 (+ 끝 줄바꿈 하나) · NUL 없음 · { "키": 값 (, "키": 값)* } (빈칸 · 탭은 JSON 처럼 토큰 사이 어디든 — "run_id":"x" 도 받는다) · 키 [a-z][a-z0-9_]* ·
@@ -514,10 +542,8 @@ receipt5(){ # $1 run_aborted/<잡>_<단>_<k> → '-' 또는 사유 — 중단 �
   R=$(rec5 "$d/infra_abort.json") || { echo receipt_form; return; }
   for k in job rung run_id sched_job_id cancel_utc reason wall_s oszicar recorded_utc; do rf "$R" "$k" s > /dev/null || { echo "receipt_field_$k"; return; }; done
   rf "$R" recorded_s i > /dev/null || { echo receipt_field_recorded_s; return; }
-  for k in sched_job_id cancel_utc reason; do [ -n "$(rf "$R" "$k" s)" ] || { echo "receipt_empty_$k"; return; }; done     # 기록 명령이 요구한 칸은 읽을 때도 (Codex EP 조건부)
+  for k in sched_job_id cancel_utc reason; do nbj "$(rf "$R" "$k" s)" || { echo "receipt_blank_$k"; return; }; done     # 빈 값 · 빈칸 문자만 (이스케이프 포함 · 쓸 때도 nbw · Codex EP 조건부 · EQ P1)
   { [ "$(rf "$R" job s)" = "$JOB" ] && [ "$(rf "$R" rung s)" = "$r" ]; } || { echo receipt_job_rung; return; }
-  k=$(start_id "$d" "$r"); [ "$k" = - ] || { echo "receipt_$k"; return; }
-  if [ -f "$d/attempt.json" ]; then k=$(end_id "$d"); [ "$k" = - ] || { echo "receipt_$k"; return; }; fi
   [ "$(rf "$R" run_id s)" = "$(rget "$d/attempt.start" run_id s)" ] || { echo receipt_run_id; return; }
   w=$(rf "$R" wall_s s); { [ "$w" = UNKNOWN ] || secs_ok "$w"; } || { echo receipt_wall_s; return; }
   t0=$(rget "$d/attempt.start" t_start i); rs=$(rf "$R" recorded_s i)
@@ -529,9 +555,6 @@ receipt5(){ # $1 run_aborted/<잡>_<단>_<k> → '-' 또는 사유 — 중단 �
 }
 ledger5(){ # 중단 장부 (run/infra_aborts.tsv) ↔ 보존 폴더 (run_aborted/) ↔ 영수증 양방향 대조 → '-' 또는 사유 (검사기 ledger_problems + abort_receipt_problem · Codex EO P1 Q-EO-3)
   local L=run/infra_aborts.tsv d b lst rows x n w s prs=0 pt0=0
-  for s in A5 c1 c2; do                                                     # 진행 폴더에 중단 영수증이 섞이면 거부 — 영수증은 run_aborted/ 에만 (Codex EP P1)
-    for b in infra_abort.json infra_abort.json.part; do { [ -e "run/${JOB}_$s/$b" ] || [ -L "run/${JOB}_$s/$b" ]; } && { echo "stray_receipt_$s"; return; }; done
-  done
   lst=$(for d in run_aborted/*; do b=${d#run_aborted/}; [[ "$b" =~ ^${JOB}_(A5|c1|c2)_[[:digit:]]+$ ]] && [ -d "$d" ] && printf '%s\n' "$b"; done | LC_ALL=C sort)
   if [ ! -e "$L" ] && [ ! -L "$L" ]; then
     [ -z "$lst" ] && { hist5; return; }
@@ -540,11 +563,13 @@ ledger5(){ # 중단 장부 (run/infra_aborts.tsv) ↔ 보존 폴더 (run_aborted
   [ -f "$L" ] || { echo ledger_not_file; return; }
   tr -d '\000' < "$L" 2>/dev/null | cmp -s - "$L" 2>/dev/null || { echo ledger_nul; return; }
   [ "$(tail -c 1 "$L" | od -An -tx1 | tr -d ' \n')" = 0a ] || { echo ledger_no_final_newline; return; }
+  u8f "$L" || { echo utf8_infra_aborts.tsv; return; }
   rows=$(LC_ALL=C awk -F'\t' -v J="$JOB" -v M="$INFRA_MAX" 'BEGIN { H = "recorded_utc\tjob\trung\tsched_job_id\tcancel_utc\twall_s\treason\tdir" }
     NR == 1 { if ($0 != H) { print "BAD ledger_header"; exit } next }
     { i++
       if (NF != 8) { print "BAD ledger_row_" i "_fields"; exit }
       if ($2 != J || ($3 != "A5" && $3 != "c1" && $3 != "c2")) { print "BAD ledger_row_" i "_job_rung"; exit }
+      r = ($3 == "A5") ? 1 : (($3 == "c1") ? 2 : 3); if (r < pr) { print "BAD ledger_row_" i "_rung_order"; exit }; pr = r     # 단 순서 (전역 번호순 A5 ≤ c1 ≤ c2 · 같은 초 · Codex EQ P2)
       if ($8 != J "_" $3 "_" i) { print "BAD ledger_row_" i "_dir"; exit }
       if (!($6 == "UNKNOWN" || ($6 ~ /^(0|[1-9][0-9]*)$/ && length($6) <= 9))) { print "BAD ledger_row_" i "_wall_s"; exit }
       if (i > M) { print "BAD ledger_over_max"; exit }
@@ -591,20 +616,15 @@ att5(){ # 이 사다리의 시도 목록 '경로=run_id' (경로 바이트 순 �
   done
   printf '%s' "$out"
 }
-end_id(){ # $1 끝난 시도 폴더 → '-' 또는 사유 — 끝 기록 (attempt.json) 의 run_id · t_start = 시작 기록 (attempt.start) (검사기 end_problem 과 같다 · Codex EP 조건부 Q-EP-4c)
-  local d=$1 R a b
-  R=$(rec5 "$d/attempt.start") || { echo end_start_form; return; }
-  a=$(grep -o '"run_id": "[^"]*"' "$d/attempt.json" 2>/dev/null | head -1 | sed 's/^"run_id": "//; s/"$//')
-  b=$(grep -o '"t_start": [0-9]*' "$d/attempt.json" 2>/dev/null | head -1 | sed 's/^"t_start": //')
-  { [ -n "$a" ] && [ "$a" = "$(rf "$R" run_id s)" ]; } || { echo end_run_id; return; }
-  { [ -n "$b" ] && [ "$b" = "$(rf "$R" t_start i)" ]; } || { echo end_t_start; return; }
-  echo -
-}
+
 hist5(){ # run/status.tsv 의 시도 줄 (run_id · 변형) 이 지금 · 보존 폴더의 끝난 시도 (attempt.json 있음) 로 설명되는가 → '-' 또는 사유 (검사기 history_problems 와 같다 · Codex EP P1 Q-EP-4a)
   local S=run/status.tsv d have
   { [ -e "$S" ] || [ -L "$S" ]; } || { echo -; return; }
   [ -f "$S" ] || { echo status_not_file; return; }
+  [ -s "$S" ] || { echo status_empty; return; }                                                       # 0 바이트 — 머리 줄도 없다 (머리만 있는 파일은 받는다 · Codex EQ P1)
   tr -d '\000' < "$S" 2>/dev/null | cmp -s - "$S" 2>/dev/null || { echo status_nul; return; }
+  [ "$(tail -c 1 "$S" | od -An -tx1 | tr -d ' \n')" = 0a ] || { echo status_no_final_newline; return; }  # 잘린 줄 (쓰다 끊김)
+  u8f "$S" || { echo utf8_status.tsv; return; }
   have=$(for d in "run/${JOB}_A5" "run/${JOB}_c1" "run/${JOB}_c2" run_aborted/*; do
            case "$d" in run_aborted/*) [[ "${d#run_aborted/}" =~ ^${JOB}_(A5|c1|c2)_[[:digit:]]+$ ]] || continue;; esac
            { [ -d "$d" ] && [ -f "$d/attempt.json" ]; } || continue
@@ -620,8 +640,12 @@ hist5(){ # run/status.tsv 의 시도 줄 (run_id · 변형) 이 지금 · 보존
       seen[k] = 1 }
     END { if (!x) print "-" }' - "$S"
 }
-u8ok(){ # $1 글 → 0 (UTF-8 로 온전함 · RFC 3629 — 검사기 쪽 기준은 Python bytes.decode('utf-8')) · 1 (아님) — 손으로 넣은 글을 기록에 쓰기 전에 (Codex EP 조건부 Q-EP-2)
-  printf '%s' "$1" | od -An -v -tx1 | LC_ALL=C awk 'BEGIN { for (k = 0; k < 256; k++) v[sprintf("%02x", k)] = k }
+u8ok(){ printf '%s' "$1" | u8in; }    # $1 글 → 0 · 1 — 손으로 넣은 글을 기록에 쓰기 전에 (Codex EP 조건부 Q-EP-2)
+u8f(){ u8in < "$1"; }                # $1 파일 → 0 · 1 — 기록을 읽어 쓰기 전에 (영수증 · 끊김 · 시작 · 끝 기록 · 장부 · 이력 — 저장 뒤 바이트 손상 · Codex EQ P1)
+nbw(){ [ -n "$(printf '%s' "$1" | tr -d ' \t\n\v\f\r')" ]; }       # 쓸 때 필수 칸 — 빈칸 문자 여섯 (공백 · 탭 · LF · VT · FF · CR) 밖 글자 하나 (검사기 _blank 와 같은 집합 · Codex EQ P1)
+nbj(){ printf '%s\n' "$1" | LC_ALL=C awk '{ gsub(/\\[tnrf]|\\u00(0[9a-dA-D]|20)| /, ""); exit ($0 == "") }'; }   # 읽을 때 (JSON 원문) — 공백 · 빈칸 이스케이프 (\t \n \r \f · \u0009–\u000d ·  ) 를 걷고 남는 글자 하나 (검사기 _blank)
+u8in(){ # 표준 입력 바이트 → 0 (UTF-8 로 온전함 · RFC 3629 — 검사기 쪽 기준은 Python bytes.decode('utf-8')) · 1 (아님)
+  od -An -v -tx1 | LC_ALL=C awk 'BEGIN { for (k = 0; k < 256; k++) v[sprintf("%02x", k)] = k }
     { for (i = 1; i <= NF; i++) b[++n] = v[$i] }
     END { i = 1
       while (i <= n) {
@@ -641,20 +665,206 @@ u8ok(){ # $1 글 → 0 (UTF-8 로 온전함 · RFC 3629 — 검사기 쪽 기준
       }
       exit 0 }'
 }
-fin_ok(){ # run/final.json → '-' 또는 사유 — 끝 기록 전체 (REC1 · code 0 1 5 6 8 · state · why · attempts = 지금 시도 목록 att5) — 다시 포장 · 다시 돌림 전에 (검사기 load_final + attempts 대조 · Codex EP 조건부)
-  local R a
+fin_ok(){ # run/final.json → '-' 또는 사유 — 끝 기록 전체 (UTF-8 · REC1 · 칸 · fin5 가 쓰는 code/state 조합만 · attempts = 지금 시도 목록 att5) — 검사기 final_problem 과 같다 (Codex EP 조건부 · EQ P1)
+  local R a c s
+  u8f run/final.json || { echo utf8_final.json; return; }
   R=$(rec5 run/final.json) || { echo final_form; return; }
-  case "$(rf "$R" code i)" in 0|1|5|6|8) ;; *) echo final_code; return;; esac
-  { rf "$R" state s > /dev/null && rf "$R" why s > /dev/null; } || { echo final_fields; return; }
+  c=$(rf "$R" code i) || { echo final_form; return; }
+  { s=$(rf "$R" state s) && rf "$R" why s > /dev/null && rf "$R" written_utc s > /dev/null && rf "$R" written_s i > /dev/null; } || { echo final_fields; return; }
+  case "$c:$s" in 0:OK|1:NO_PRIMARY|1:CLOSED|5:CAP|6:ENV|8:REVIEW) ;; *) echo final_code_state; return;; esac
   a=$(rf "$R" attempts s) || { echo final_no_attempts; return; }
   [ "$a" = "$(att5)" ] || { echo final_attempts_differ; return; }
   echo -
 }
 
+# ── 트리 관문 (Codex EQ · 다섯 번째 NO-GO 뒤 구조로 · 러너 = 검사기 tree_problems · 같은 규칙 · 같은 사유 낱말) ──
+#   어디서: 기록 명령 (--infra-abort · --infra-wall · --killed · --reset-w0) · PACK_ONLY · 다시 돌림 (잠금 다음 · 무엇을 쓰기 전 · 끝난 사다리 재사용 포함) ·
+#   단 발사 직전 (cap_gate) · 포장 (pack — 기존 반송본을 덮어쓰기 전). 첫 사유에서 종료 8 · 아무것도 쓰지 않는다 (원본 보존).
+#   차례: 이름 (files5) → 시도 폴더마다 시작 · 끝 · 끊김 기록 (rec_dir5) → 중단 장부 · 영수증 · 시도 이력 (ledger5 → hist5) → 끝 기록 (fin_ok) →
+#         시작점 (sp_rec5) → ⓪ 기록 (w0_rec5) → 기존 반송본 (tgz5 — 러너 쪽만: 검사기는 반송본 하나만 받는다).
+#   ⚠ 못 하는 것: 모든 기록을 서로 맞게 함께 고친 트리 (선언한 위협 범위 밖 · §1b) · 업체 시계 · 노드 시계 · VASP_CMD 가 시도 폴더에 표준 밖 이름을 쓰면 거짓 멈춤 (8 · 연락).
+tpl5(){ # $1 파일 · $2 틀 (\001 = 문자열 — 따옴표 · 역슬래시 · 제어 바이트 없음 · \002 = 음 아닌 정수 — 선행 0 없음 · 16 자리 이하 · 나머지 글자 그대로) →
+  #       맞으면 '=값' 줄들 (틀 차례) · 아니면 출력 없이 1 — 한 줄 (+ 끝 줄바꿈 하나) · NUL 없음 · 검사기 tpl_parse 와 같은 규칙 (잘린 JSON · 정수 칸의 소수 → 거부)
+  [ -f "$1" ] || return 1
+  tr -d '\000' < "$1" 2>/dev/null | cmp -s - "$1" 2>/dev/null || return 1
+  LC_ALL=C awk -v T="$2" 'BEGIN { for (k = 1; k < 256; k++) ord[sprintf("%c", k)] = k }
+    { m++; s = $0 }
+    END {
+      if (m != 1) exit 1
+      L = length(s); n = length(T); i = 1; out = ""
+      for (p = 1; p <= n; p++) {
+        c = substr(T, p, 1)
+        if (c == "\001") {
+          if (substr(s, i, 1) != "\"") exit 1
+          j = i + 1
+          while (j <= L) { d = substr(s, j, 1); if (d == "\"") break; if (d == "\\" || ord[d] < 32) exit 1; j++ }
+          if (j > L) exit 1
+          out = out "=" substr(s, i + 1, j - i - 1) "\n"; i = j + 1
+        } else if (c == "\002") {
+          j = i; while (j <= L && substr(s, j, 1) ~ /^[0-9]$/) j++
+          v = substr(s, i, j - i)
+          if (v !~ /^(0|[1-9][0-9]*)$/ || length(v) > 16) exit 1
+          out = out "=" v "\n"; i = j
+        } else {
+          if (substr(s, i, 1) != c) exit 1
+          i++
+        }
+      }
+      if (i <= L) exit 1
+      printf "%s", out
+    }' "$1"
+}
+att_ok5(){ # $1 끝난 시도 폴더 · $2 attempt.start (rec5) · $3 attempt.json 값 (tpl5) → '-' 또는 사유 — 신원 (run_id · t_start = 시작 기록) · 봉인 (sha 표 = 지금 파일 · POTCAR 본문 빼고 열 개)
+  local d=$1 i=11 f k V
+  mapfile -t V <<< "$3"
+  [ "${#V[@]}" = 22 ] || { echo att_form; return; }
+  V=("${V[@]#=}")
+  [ "${V[3]}" = "$(rf "$2" run_id s)" ] || { echo end_run_id; return; }
+  [ "${V[5]}" = "$(rf "$2" t_start i)" ] || { echo end_t_start; return; }
+  for f in INCAR POSCAR KPOINTS POTCAR OUTCAR OSZICAR WAVECAR.info stdout.log POTCAR.titel POTCAR.species.sha256 attempt.start; do
+    k=${V[$i]}; i=$((i + 1))
+    [ "$f" != POTCAR ] || continue
+    if [ -f "$d/$f" ]; then [ "$k" = "$(h "$d/$f")" ] || { echo "seal_$f"; return; }
+    else [ -z "$k" ] || { echo "seal_$f"; return; }; fi
+  done
+  echo -
+}
+killed_rec5(){ # $1 진행 폴더 · $2 단 · $3 attempt.start (rec5) → '-' 또는 사유 — 끊김 기록 문법 · 칸 · 빈칸 · 결속 (잡 · 단 · run_id · 초 · 기록 시각 ≥ 시작) — 그 시간을 쓰기 전에 (Codex EQ P0)
+  local K k t0 rs
+  K=$(rec5 "$1/killed.json") || { echo killed_json_form; return; }
+  for k in job rung run_id wall_s sched_job_id cancel_utc reason osz_rows recorded_utc; do rf "$K" "$k" s > /dev/null || { echo "killed_json_field_$k"; return; }; done
+  rf "$K" recorded_s i > /dev/null || { echo killed_json_field_recorded_s; return; }
+  for k in sched_job_id cancel_utc reason; do nbj "$(rf "$K" "$k" s)" || { echo "killed_json_blank_$k"; return; }; done
+  { [ "$(rf "$K" job s)" = "$JOB" ] && [ "$(rf "$K" rung s)" = "$2" ]; } || { echo killed_job_or_rung; return; }
+  [ "$(rf "$K" run_id s)" = "$(rf "$3" run_id s)" ] || { echo killed_run_id; return; }
+  secs_ok "$(rf "$K" wall_s s)" || { echo killed_wall_s; return; }
+  t0=$(rf "$3" t_start i); rs=$(rf "$K" recorded_s i)
+  { [ -n "$t0" ] && [ -n "$rs" ] && [ "$rs" -ge "$t0" ]; } 2>/dev/null || { echo killed_recorded_s; return; }
+  echo -
+}
+rec_dir5(){ # $1 시도 폴더 (run/<잡>_<단> · run_aborted/<잡>_<단>_<k>) · $2 단 → '-' 또는 사유 — 시작 기록 → UTF-8 → 끝 기록 (틀 · 신원 · 봉인) → 끊김 기록 (자리 · 문법 · 결속) → 진행 폴더의 영수증
+  local d=$1 S A x f
+  [ -f "$d/attempt.start" ] || { echo no_start; return; }
+  x=$(start_id "$d" "$2"); [ "$x" = - ] || { echo "$x"; return; }
+  for f in attempt.start attempt.json killed.json infra_abort.json; do
+    if [ -f "$d/$f" ] && ! u8f "$d/$f"; then echo "utf8_$f"; return; fi
+  done
+  S=$(rec5 "$d/attempt.start")
+  if [ -f "$d/attempt.json" ]; then
+    A=$(tpl5 "$d/attempt.json" "$ATT1_T") || { echo att_form; return; }
+    x=$(att_ok5 "$d" "$S" "$A"); [ "$x" = - ] || { echo "$x"; return; }
+  fi
+  if [ -f "$d/killed.json" ]; then
+    case "$d" in run_aborted/*) echo killed_in_aborted; return;; esac                  # 0 스텝 중단 폴더에 끊김 (행 ≥ 1) 기록 — 서로 안 맞는다
+    [ ! -f "$d/attempt.json" ] || { echo end_and_killed; return; }                      # 끝난 시도에 끊김 기록 — 남의 killed.json 으로 시간을 바꾸지 못하게 (Codex EQ P0)
+    x=$(killed_rec5 "$d" "$2" "$S"); [ "$x" = - ] || { echo "$x"; return; }
+  fi
+  case "$d" in run/*) [ ! -f "$d/infra_abort.json" ] || { echo stray_receipt; return; };; esac     # 영수증은 run_aborted/ 에만 (Codex EP P1)
+  echo -
+}
+files5(){ # → '-' 또는 사유 — run/ · run_aborted/ · 시도 폴더의 이름 (모르는 이름 · 잔여 *.part · 링크 · 하위 폴더 → 멈춤 · 재포장이 현장 오류를 지우지 못하게 · Codex EQ P1)
+  local f b d e
+  for f in run/* run/.[!.]* run/..?*; do
+    { [ -e "$f" ] || [ -L "$f" ]; } || continue
+    b=${f#run/}
+    case "$b" in
+      "${JOB}_A5"|"${JOB}_c1"|"${JOB}_c2"|.a5.lock|".prep_${JOB}_A5"|".prep_${JOB}_c1"|".prep_${JOB}_c2") { [ -d "$f" ] && [ ! -L "$f" ]; } || { echo "run_entry_$b"; return; };;
+      env.txt|status.tsv|infra_aborts.tsv|w0_check.json|start_point.json|final.json) { [ -f "$f" ] && [ ! -L "$f" ]; } || { echo "run_entry_$b"; return; };;
+      *) echo "run_entry_$b"; return;;
+    esac
+  done
+  for f in run_aborted/* run_aborted/.[!.]* run_aborted/..?*; do
+    { [ -e "$f" ] || [ -L "$f" ]; } || continue
+    b=${f#run_aborted/}
+    { [[ "$b" =~ ^${JOB}_(A5|c1|c2)_[1-9][0-9]*$ ]] && [ -d "$f" ] && [ ! -L "$f" ]; } || { echo "aborted_entry_$b"; return; }
+  done
+  for d in "run/${JOB}_A5" "run/${JOB}_c1" "run/${JOB}_c2" run_aborted/*; do
+    [ -d "$d" ] || continue
+    for f in "$d"/* "$d"/.[!.]* "$d"/..?*; do
+      { [ -e "$f" ] || [ -L "$f" ]; } || continue
+      e=${f##*/}
+      { [ -f "$f" ] && [ ! -L "$f" ] && [[ "$e" =~ ^($RET_ALLOW|$RET_FORBID|$ATT_EXTRA)$ ]]; } || { echo "file_$f"; return; }
+    done
+  done
+  echo -
+}
+sp_rec5(){ # run/start_point.json → '-' 또는 사유 — UTF-8 · REC1 · 칸 (from · path · sha256 · head 문자열 · written_s 정수) — sp_load 가 읽기 전에 (검사기 sp_problem)
+  local R k
+  u8f run/start_point.json || { echo utf8_start_point.json; return; }
+  R=$(rec5 run/start_point.json) || { echo start_point_form; return; }
+  for k in from path sha256 head; do rf "$R" "$k" s > /dev/null || { echo start_point_form; return; }; done
+  rf "$R" written_s i > /dev/null || { echo start_point_form; return; }
+  echo -
+}
+w0_rec5(){ # run/w0_check.json → '-' 또는 사유 — UTF-8 · 틀 (w0_check 의 printf 그대로 · 잘림 → 거부) (검사기 w0_problem)
+  u8f run/w0_check.json || { echo utf8_w0_check.json; return; }
+  tpl5 run/w0_check.json "$W0_T" > /dev/null || { echo w0_form; return; }
+  echo -
+}
+tgz5(){ # 기존 반송본 (a5_return.tgz + .sha256) ↔ 지금 트리 → '-' 또는 사유 — 덮어쓰기 · 이어 돌리기 전에 (Codex EQ P1 Q-EQ-3 · 러너 쪽만):
+  #   둘 다 없으면 볼 것 없음 · 하나만 있음 · sha 꼴 · sha 다름 · 못 읽음 → 멈춤 · 반송본의 끝 기록 (run/final.json) = 지금 끝 기록 (바이트) ·
+  #   반송본의 시도마다 (attempt.start run_id) 지금 트리에 그 시도가 있고 (진행 폴더 → 그 자리 또는 같은 단의 보존 폴더) · 반송본에 있던 attempt.json · killed.json 은 바이트로 같고 ·
+  #   보존 폴더의 시도는 같은 자리 (영수증은 장부 규칙 · --infra-wall 이 벽시계를 채우므로 바이트는 안 본다) — 지금 트리 ⊇ 반송본 (완료 기록 없는 중간 포장 허용)
+  local T x
+  { [ -e a5_return.tgz ] || [ -L a5_return.tgz ] || [ -e a5_return.tgz.sha256 ] || [ -L a5_return.tgz.sha256 ]; } || { echo -; return; }
+  { [ -f a5_return.tgz ] && [ ! -L a5_return.tgz ] && [ -f a5_return.tgz.sha256 ] && [ ! -L a5_return.tgz.sha256 ]; } || { echo tgz_pair; return; }
+  { [ "$(awk 'END { print NR }' a5_return.tgz.sha256 2>/dev/null)" = 1 ] && grep -qxE '[0-9a-f]{64}  a5_return\.tgz' a5_return.tgz.sha256; } || { echo tgz_sha_form; return; }
+  sha256sum -c --status a5_return.tgz.sha256 2>/dev/null || { echo tgz_sha; return; }
+  T=$(mktemp -d 2>/dev/null) && [ -d "$T" ] || { echo tgz_tmp; return; }
+  x=$(tgz5_in "$T"); rm -rf "$T"; echo "${x:-tgz_fail}"
+}
+tgz5_in(){ # $1 임시 폴더 — tgz5 의 대조 (반송본의 기록 파일만 꺼낸다)
+  local T=$1 f d b st rid c x e
+  tar tzf a5_return.tgz > "$T/m" 2>/dev/null || { echo tgz_list; return; }
+  grep -E "^(run/final\.json|run/${JOB}_(A5|c1|c2)/(attempt\.start|attempt\.json|killed\.json|infra_abort\.json)|run_aborted/${JOB}_(A5|c1|c2)_[1-9][0-9]*/(attempt\.start|attempt\.json|killed\.json|infra_abort\.json))$" "$T/m" > "$T/w"
+  mkdir "$T/x" || { echo tgz_tmp; return; }
+  if [ -s "$T/w" ]; then tar xzf a5_return.tgz -C "$T/x" -T "$T/w" 2>/dev/null || { echo tgz_extract; return; }; fi
+  if [ -f "$T/x/run/final.json" ]; then cmp -s "$T/x/run/final.json" run/final.json || { echo tgz_final_differs; return; }; fi
+  for f in "$T"/x/run/*/attempt.start "$T"/x/run_aborted/*/attempt.start; do
+    [ -f "$f" ] || continue
+    d=${f%/attempt.start}; b=${d#"$T"/x/}
+    rid=$(rget "$f" run_id s) || { echo "tgz_start_form_$b"; return; }
+    c=""
+    case "$b" in
+      run_aborted/*) [ "$(rget "$b/attempt.start" run_id s 2>/dev/null)" = "$rid" ] && c=$b;;          # 보존 폴더는 옮기지 않는다 — 같은 자리 · 같은 run_id (영수증은 장부 규칙)
+      *) st=${b#run/"${JOB}"_}
+         for x in "$b" run_aborted/"${JOB}_${st}"_*; do                                                    # 진행 폴더는 그 자리 또는 --infra-abort 로 옮긴 같은 단의 보존 폴더
+           [ -f "$x/attempt.start" ] && [ "$(rget "$x/attempt.start" run_id s)" = "$rid" ] && { c=$x; break; }
+         done;;
+    esac
+    [ -n "$c" ] || { echo "tgz_attempt_missing_$b"; return; }
+    for e in attempt.json killed.json; do
+      [ ! -f "$d/$e" ] || cmp -s "$d/$e" "$c/$e" || { echo "tgz_end_differs_$b/$e"; return; }
+    done
+  done
+  echo -
+}
+tree5(){ # 트리 관문 — '-' 또는 첫 사유 (검사기 tree_problems + ledger_problems 와 같은 규칙 · 같은 낱말)
+  local x d st
+  x=$(files5); [ "$x" = - ] || { echo "$x"; return; }
+  for d in "run/${JOB}_A5" "run/${JOB}_c1" "run/${JOB}_c2" run_aborted/*; do
+    [ -d "$d" ] || continue
+    st=${d#*/"${JOB}"_}; st=${st%%_*}
+    x=$(rec_dir5 "$d" "$st"); [ "$x" = - ] || { echo "$d:$x"; return; }
+  done
+  x=$(ledger5); [ "$x" = - ] || { echo "$x"; return; }
+  if [ -e run/final.json ]; then x=$(fin_ok); [ "$x" = - ] || { echo "$x"; return; }; fi
+  if [ -e run/start_point.json ]; then x=$(sp_rec5); [ "$x" = - ] || { echo "$x"; return; }; fi
+  if [ -e run/w0_check.json ]; then x=$(w0_rec5); [ "$x" = - ] || { echo "$x"; return; }; fi
+  x=$(tgz5); [ "$x" = - ] || { echo "$x"; return; }
+  echo -
+}
+tree_gate(){ # $1 어디서 — 트리 관문이 '-' 가 아니면 아무것도 쓰지 않고 종료 8 (원본 보존 · 잠금은 EXIT trap 이 지운다)
+  local x; x=$(tree5)
+  [ "$x" = - ] && return 0
+  echo "⛔ 트리 관문 ($1) — ${x:-판독 실패} — 아무것도 쓰거나 띄우거나 포장하지 않고 멈춘다 (종료 8 · run/ · run_aborted/ · a5_return.tgz 그대로). 이 줄을 그대로 보내 주세요 (1저자)"
+  exit 8
+}
+
 # ── 완전한 전자 반복행 (검사기 row_gate 와 같은 규칙 · selftest 가 같은 탐침으로 대조 · Codex EO P0 · EP P0) ──
 #   행꼴 = 줄 맨 앞 1–4 글자 + ':' · 완전한 행 = 줄바꿈으로 끝난 행꼴 줄 · 머리가 그 단의 허용 머리 그대로 · ':' 뒤 빈칸 · 칸 6 또는 7 (N E dE d eps ncg rms [rms(c)]) ·
-#   숫자로 읽힘 — N 양의 정수 · ncg 정수 · 나머지 실수 (부호 · 소수점 · E 지수 두 자리까지 — NaN · *** · inf · 글자는 아니다).
-#   사유: '-' · row_header_<머리> (허용 밖 머리) · incomplete_row (줄바꿈 있는 덜 쓴 행꼴 줄 · 완전한 행 0 인데 행꼴 끝 조각 또는 콜론 앞에서 잘린 머리 — 줄 맨 앞 글자 1–4) · nul_bytes.
+#   숫자로 읽힘 — N 양의 정수 · ncg 정수 · 나머지 실수 (부호 · 소수점 · E 지수 두 자리까지 — NaN · *** · inf · 글자는 아니다) · 칸마다 24 글자 이하 (늘 유한 · Codex EQ P0).
+#   사유: '-' · row_header_<머리> (허용 밖 머리) · incomplete_row (줄바꿈 있는 덜 쓴 행꼴 줄 · 완전한 행 0 인데 행꼴 끝 조각 또는 콜론 앞에서 잘린 머리 — 앞 빈칸 · 탭을 걷고 글자 1–4 · 앞 빈칸 뒤 'N' 만 열 제목) · nul_bytes.
 #   완전한 행 ≥ 1 뒤 줄바꿈 없는 끝 조각 (행꼴 · 머리 조각) 은 세지 않고 넘어간다 (스케줄러 끊김의 잘린 꼬리).
 row_scan(){ # $1 시도 폴더 · $2 단 → "완전한행수 사유"
   local f=$1/OSZICAR H nl
@@ -671,9 +881,10 @@ row_scan(){ # $1 시도 폴더 · $2 단 → "완전한행수 사유"
       if (r !~ F) { p++; next }
       sub(F, "", r); sub(/[ \t]+$/, "", r)
       k = (r == "") ? 0 : split(r, t, /[ \t]+/)
-      if ((k == 6 || k == 7) && t[1] ~ /^[1-9][0-9]*$/ && t[5] ~ /^[0-9]+$/ && t[2] ~ R && t[3] ~ R && t[4] ~ R && t[6] ~ R && (k == 6 || t[7] ~ R)) n++; else p++
+      lg = 1; for (q = 1; q <= k; q++) if (length(t[q]) > 24) lg = 0                                  # 칸 길이 ≤ 24 — 늘 유한 (Codex EQ P0 · 310 자리)
+      if (lg && (k == 6 || k == 7) && t[1] ~ /^[1-9][0-9]*$/ && t[5] ~ /^[0-9]+$/ && t[2] ~ R && t[3] ~ R && t[4] ~ R && t[6] ~ R && (k == 6 || t[7] ~ R)) n++; else p++
     }
-    NR > NL && /^[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?$/ { tp = 1 }
+    NR > NL { u = $0; sub(/^[ \t]+/, "", u); if (u ~ /^[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?$/ && !(u != $0 && u ~ /^N *$/)) tp = 1 }     # 머리 조각 (앞 빈칸 걷고 · 열 제목 'N' 만 0 스텝 · Codex EQ P0)
     END { if (bad != "") print n + 0, bad; else if (p > 0 || (tp && n == 0)) print n + 0, "incomplete_row"; else print n + 0, "-" }' "$f"
 }
 osz_feed(){ # 판정 계약 입력 — 줄바꿈으로 끝난 줄만 (끝 조각은 뺀다) · 그 단의 허용 머리 → DAV: (검사기 feed5 와 같다 · row_scan 사유가 없을 때만 쓴다)
@@ -803,6 +1014,7 @@ later5(){ # $1 단 → 그 뒤 단의 폴더 · 기록 이름 (없으면 빈 출
 case "${1:-}" in --infra-abort|--infra-wall|--killed|--reset-w0)
   [ ! -f run/final.json ] || { echo "⛔ 이 사다리는 끝났다 (run/final.json: 코드 $(rget run/final.json code i) · $(rget run/final.json state s)) — 기록을 더하거나 고치지 않는다 (포장만: PACK_ONLY=1)"; exit 2; };;
 esac
+case "${1:-}" in --infra-abort|--infra-wall|--killed|--reset-w0) tree_gate "기록 명령 $1";; esac      # 기록을 더하기 전 트리 관문 (모르는 것 · 못 읽는 것 · 서로 안 맞는 것 → 종료 8 · Codex EQ)
 
 # ── 잠금 지우기 — 운영자가 스케줄러로 그 잡이 끝났음을 확인한 뒤 (주인을 그대로 적어야 지운다) ──
 if [ "${1:-}" = "--unlock" ]; then
@@ -835,9 +1047,6 @@ if [ "${1:-}" = "--infra-abort" ]; then
   src=run/${JOB}_$st
   [ -d "$src" ] || { echo "⛔ $src 가 없다"; exit 2; }
   lx=$(later5 "$st"); [ -z "$lx" ] || { echo "⛔ 뒤 단 ($lx) 이 이미 있다 — $st 의 0 스텝 중단은 뒤 단을 띄우기 전에만 기록한다 (1저자에게 알린다)"; exit 2; }
-  [ -f "$src/attempt.start" ] || { echo "⛔ $src 에 시작 표지 (attempt.start) 가 없다 — 이 러너가 띄운 시도가 아니다 (연락)"; exit 2; }
-  x=$(start_id "$src" "$st"); [ "$x" = - ] || { echo "⛔ $src/attempt.start 가 이 폴더의 시도가 아니다 ($x) — 기록하지 않는다 (연락)"; exit 2; }
-  x=$(ledger5); [ "$x" = - ] || { echo "⛔ 중단 장부 · 보존 폴더 · 영수증이 이미 어긋났다 ($x) — 기록하지 않는다 (1저자)"; exit 2; }
   if [ -e "$src/OSZICAR" ]; then
     { [ -f "$src/OSZICAR" ] && [ -r "$src/OSZICAR" ]; } || { echo "⛔ $src/OSZICAR 를 읽지 못했다 — 0 행인지 확인할 수 없어 기록하지 않는다 (1저자)"; exit 2; }
     g=$(row_scan "$src" "$st"); osz=zero_rows
@@ -848,7 +1057,7 @@ if [ "${1:-}" = "--infra-abort" ]; then
   so=$(grep -acE '^[[:space:]]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:[[:space:]]+[0-9]' "$src/stdout.log" 2>/dev/null); so=${so:-0}
   oi=$(grep -acE 'Iteration +[0-9]+\(' "$src/OUTCAR" 2>/dev/null); oi=${oi:-0}
   [ "$so" = 0 ] && [ "$oi" = 0 ] || { echo "⛔ OSZICAR 는 $osz 인데 stdout.log 전자 반복행 $so · OUTCAR Iteration $oi — 출력 유실이지 0 스텝이 아니다 · 기록하지 않는다"; exit 2; }
-  [ -n "$sid" ] && [ -n "$when" ] && [ -n "$why" ] || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다"; exit 2; }
+  { nbw "$sid" && nbw "$when" && nbw "$why"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다 (빈칸 문자 — 공백 · 탭 · 줄바꿈 · VT · FF · CR — 만인 글도 안 된다 · Codex EQ)"; exit 2; }
   { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }
   if [ -n "${WALL_S:-}" ]; then
     secs_ok "$WALL_S" || { echo "⛔ WALL_S '$WALL_S' — 0 이상의 10진 정수 (초 · 선행 0 없이 · 9 자리 이하) 여야 한다"; exit 2; }
@@ -888,7 +1097,6 @@ if [ "${1:-}" = "--infra-wall" ]; then
   b=$(basename "$2"); dd=run_aborted/$b; sec=$3
   [ -f "$dd/infra_abort.json" ] || { echo "⛔ $dd/infra_abort.json 이 없다"; exit 2; }
   secs_ok "$sec" || { echo "⛔ 초 '$sec' — 0 이상의 10진 정수 (선행 0 없이 · 9 자리 이하) 여야 한다"; exit 2; }
-  x=$(ledger5); [ "$x" = - ] || { echo "⛔ 중단 장부 · 보존 폴더 · 영수증이 어긋난다 ($x) — 고치지 않는다 (1저자)"; exit 2; }
   R=$(rec5 "$dd/infra_abort.json") || { echo "⛔ $dd/infra_abort.json 을 읽지 못했다 — 고치지 않는다"; exit 2; }
   [ "$(rf "$R" wall_s s)" = UNKNOWN ] || { echo "⛔ $dd 의 벽시계는 미상이 아니다 — 고치지 않는다"; exit 2; }
   { printf '%s\n' "$R" | LC_ALL=C awk -F'\t' -v W="$sec" -v U="$(utc)" -v S="$(date +%s)" 'BEGIN { printf "{" }
@@ -913,11 +1121,10 @@ if [ "${1:-}" = "--killed" ]; then
   [ ! -f "$src/killed.json" ] || { echo "⛔ $src 는 이미 기록했다 — 고치지 않는다"; exit 2; }
   lx=$(later5 "$st"); [ -z "$lx" ] || { echo "⛔ 뒤 단 ($lx) 이 이미 있다 — $st 의 끊김은 뒤 단을 띄우기 전에만 기록한다 (1저자에게 알린다)"; exit 2; }
   secs_ok "${WALL_S:-}" || { echo "⛔ WALL_S=<초> (스케줄러 장부의 그 시도 벽시계) 가 있어야 한다"; exit 2; }
-  x=$(start_id "$src" "$st"); [ "$x" = - ] || { echo "⛔ $src/attempt.start 가 이 폴더의 시도가 아니다 ($x) — 기록하지 않는다 (연락)"; exit 2; }
   g=$(row_scan "$src" "$st"); n=${g%% *}; rw=${g#* }
   [ "$rw" = - ] || { echo "⛔ $src OSZICAR 행 판독 $rw (완전한 행 $n) — 잘린 첫 행 · 손상 · 남의 머리는 기록하지 않는다 (다시 돌리면 1저자 검토 멈춤 8)"; exit 2; }
   [ "$n" -ge 1 ] 2>/dev/null || { echo "⛔ $src OSZICAR 전자 반복행 0 — 0 스텝 중단이면 --infra-abort (OUTCAR 에만 반복 흔적이 있으면 출력 유실 — 연락)"; exit 2; }
-  [ -n "$sid" ] && [ -n "$when" ] && [ -n "$why" ] || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다"; exit 2; }
+  { nbw "$sid" && nbw "$when" && nbw "$why"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다 (빈칸 문자 — 공백 · 탭 · 줄바꿈 · VT · FF · CR — 만인 글도 안 된다 · Codex EQ)"; exit 2; }
   { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }
   rid=$(rget "$src/attempt.start" run_id s)
   printf '{"job": "%s", "rung": "%s", "run_id": "%s", "wall_s": "%s", "sched_job_id": "%s", "cancel_utc": "%s", "reason": "%s", "osz_rows": "%s", "recorded_utc": "%s", "recorded_s": %d}\n' \
@@ -927,9 +1134,7 @@ if [ "${1:-}" = "--killed" ]; then
   echo "✓ $src 벽시계 $WALL_S 초 기록 — 다시 돌리면 다음 단부터 이어 간다"; exit 0
 fi
 
-if [ "${PACK_ONLY:-0}" = 1 ] && { [ -e run/final.json ] || [ -L run/final.json ]; }; then      # 끝난 사다리의 다시 포장 — 끝 기록이 이 사다리의 것일 때만 (Codex EP 조건부 Q-EP-4c)
-  x=$(fin_ok); [ "$x" = - ] || { echo "⛔ run/final.json 이 이 사다리의 끝 기록과 맞지 않는다 ($x) — 포장하지 않는다 · 연락"; exit 2; }
-fi
+[ "${PACK_ONLY:-0}" != 1 ] || tree_gate "PACK_ONLY 포장"      # 다시 포장 전 트리 관문 — env.txt 에 쓰기 전 (끝 기록 조합 · 잔여 파일 · 끝 기록 신원 · 기존 반송본 · Codex EQ P1 Q-EQ-4)
 @PACK_ONLY@
 
 [ $# -eq 0 ] || { echo "⛔ 모르는 인자 '$1' — 계산은 인자 없이 돌린다 · 기록 명령은 --infra-abort · --infra-wall · --killed · --reset-w0 · --unlock (README)"; exit 2; }
@@ -945,6 +1150,7 @@ if ! mkdir "$LOCK" 2>/dev/null; then
 fi
 printf '%s %s\n' "$HOST" "$$" > "$LOCK/owner" || { rm -rf "$LOCK"; echo "⛔ 잠금 주인을 적지 못했다"; exit 2; }
 trap 'rm -rf "$LOCK"' EXIT; trap 'exit 143' TERM; trap 'exit 129' HUP; trap 'exit 130' INT
+tree_gate "다시 돌림"      # 잠금 다음 · 무엇을 쓰기 전 (env.txt · status.tsv · 준비 폴더 정리 · ⓪ · 끝난 사다리 재사용) — Codex EQ
 # ── 끝난 사다리면 아무것도 띄우지 않는다 (리뷰 P1-1) · 보낼 묶음이 그 끝 기록을 담았는지 본다 (Codex EN P1 — 중간 PACK_ONLY 묶음 · 끝 포장 실패 뒤) ──
 ret_has_final(){ # a5_return.tgz 가 .sha256 (한 줄 · 그 이름) 과 맞고, 그 안의 run/final.json 이 지금 run/final.json 과 바이트로 같으면 0
   [ -f a5_return.tgz ] && [ -f a5_return.tgz.sha256 ] || return 1
@@ -953,9 +1159,7 @@ ret_has_final(){ # a5_return.tgz 가 .sha256 (한 줄 · 그 이름) 과 맞고,
   tar xzf a5_return.tgz -O run/final.json 2>/dev/null | cmp -s - run/final.json
 }
 if [ -f run/final.json ]; then
-  x=$(fin_ok)                                                              # 끝 기록 전체 (REC1 · 코드 · attempts = 지금 시도 목록) — 검사기 load_final 과 같다 (Codex EP 조건부)
   log "■ 다시 돌림 — 이 사다리는 이미 끝났다: 코드 $(rget run/final.json code i) · $(rget run/final.json state s)"
-  [ "$x" = - ] || { echo "⛔ run/final.json 이 이 사다리의 끝 기록과 맞지 않는다 ($x) — 포장 · 계산 모두 하지 않는다 · 연락"; exit 2; }
   fc=$(rget run/final.json code i)
   if ! ret_has_final; then
     log "⛔ a5_return.tgz 가 없거나 · sha256 이 맞지 않거나 · 이 끝 기록 (run/final.json) 을 담지 않았다 — 옛 묶음을 보내지 않는다"
@@ -1089,18 +1293,19 @@ run_one5(){ # $1 단 (A5|c1|c2) · $2 변형 (A5c|A5f|c1|c2) · $3 시도 폴더
           "$wsha" "$wcp" "${istart:-NA}" "${icharg:-NA}" "$nr" "$pr" "$hon")
       else rs=null; fi
       printf '{"sha256": "%s", "size": %s, "head": "%s", "outcar": {"NKPTS": "%s", "NBANDS": "%s", "ENCUT": "%s"}, "restart": %s}\n' "$(h "$d/WAVECAR")" \
-        "$(stat -c %s "$d/WAVECAR" 2>/dev/null || echo 0)" "$hd" "$(out_num "$d" NKPTS)" "$(out_num "$d" NBANDS)" "$(out_num "$d" ENCUT)" "$rs" > "$d/WAVECAR.info";;
+        "$(stat -c %s "$d/WAVECAR" 2>/dev/null || echo 0)" "$hd" "$(out_num "$d" NKPTS)" "$(out_num "$d" NBANDS)" "$(out_num "$d" ENCUT)" "$rs" > "$d/WAVECAR.info.part" && mv -f "$d/WAVECAR.info.part" "$d/WAVECAR.info" || { log "⛔ $d WAVECAR 기록 쓰기 실패 — 더 하지 않는다 (종료 8 · 연락)"; exit 8; };;
     c1|c2)
       wend=$(h "$d/WAVECAR")
       hon=0; [ "$istart" = 1 ] && [ "$icharg" = 0 ] && [ "$nr" = 0 ] && [ "$pr" = 1 ] && [ -n "$wsha" ] && [ "$wsha" = "$wcp" ] && [ "$wcp" = "$wend" ] && hon=1
       printf '{"src_sha256": "%s", "copied_sha256": "%s", "end_sha256": "%s", "istart": "%s", "icharg": "%s", "not_read_phrase": %s, "positive_regex_match": "%s", "honoured": %s, "start_head": "%s", "outcar": {"NKPTS": "%s", "NBANDS": "%s", "ENCUT": "%s"}}\n' \
-        "$wsha" "$wcp" "$wend" "${istart:-NA}" "${icharg:-NA}" "$nr" "$pr" "$hon" "$SPH" "$(out_num "$d" NKPTS)" "$(out_num "$d" NBANDS)" "$(out_num "$d" ENCUT)" > "$d/WAVECAR.info";;
+        "$wsha" "$wcp" "$wend" "${istart:-NA}" "${icharg:-NA}" "$nr" "$pr" "$hon" "$SPH" "$(out_num "$d" NKPTS)" "$(out_num "$d" NBANDS)" "$(out_num "$d" ENCUT)" > "$d/WAVECAR.info.part" && mv -f "$d/WAVECAR.info.part" "$d/WAVECAR.info" || { log "⛔ $d WAVECAR 기록 쓰기 실패 — 더 하지 않는다 (종료 8 · 연락)"; exit 8; };;
   esac
   if [ "$st" != c2 ]; then x=$(hist_max "$d"); case "$x" in ''|*[!0-9]*) ;; *) [ "$x" -gt 45 ] && echo "$(utc) $var info history_max $x" >> "$d/warn.log";; esac; fi
   printf '{"job": "%s", "attempt": "%s", "stage": "a5", "run_id": "%s", "rc": %d, "t_start": %d, "t_end": %d, "elapsed_s": %d, "vasp_version": "%s", "kernel_sha256": "", "perf": "%s", "sha256": {"INCAR": "%s", "POSCAR": "%s", "KPOINTS": "%s", "POTCAR": "%s", "OUTCAR": "%s", "OSZICAR": "%s", "WAVECAR.info": "%s", "stdout.log": "%s", "POTCAR.titel": "%s", "POTCAR.species.sha256": "%s", "attempt.start": "%s"}}\n' \
     "$JOB" "$var" "$rid" "$rc" "$t0" "$t1" "$el" "$ver" "$(printf '%s' "$PERF_LINES" | tr '\n' ';')" \
     "$(h "$d/INCAR")" "$(h "$d/POSCAR")" "$(h "$d/KPOINTS")" "$(cat "$d/POTCAR.sha256")" "$(h "$d/OUTCAR")" "$(h "$d/OSZICAR")" "$(h "$d/WAVECAR.info")" \
-    "$(h "$d/stdout.log")" "$(h "$d/POTCAR.titel")" "$(h "$d/POTCAR.species.sha256")" "$(h "$d/attempt.start")" > "$d/attempt.json"
+    "$(h "$d/stdout.log")" "$(h "$d/POTCAR.titel")" "$(h "$d/POTCAR.species.sha256")" "$(h "$d/attempt.start")" > "$d/attempt.json.part" && mv -f "$d/attempt.json.part" "$d/attempt.json" \
+    || { log "⛔ $d 끝 기록 (attempt.json) 쓰기 실패 — 더 하지 않는다 (종료 8 · 남은 .part 는 트리 관문이 멈춘다 · 연락)"; exit 8; }
   j=$(judge5 "$d" "$st"); set -- $j
   printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$JOB" "$var" "a5" "$rc" "$1" "$2" "$3" "$4" "$5" "$el" "$rid" >> run/status.tsv
   rm -f "$d/POTCAR" "$d/CHGCAR" "$d/CHG" "$d/vasprun.xml" "$d/vdw_kernel.bindat" "$d/LOCPOT"
@@ -1112,9 +1317,9 @@ run_one5(){ # $1 단 (A5|c1|c2) · $2 변형 (A5c|A5f|c1|c2) · $3 시도 폴더
 killed5(){ # $1 시도 폴더 · $2 단 · $3 완전한 행 수 → "-" (맞음) 또는 "상태 행수 사유" — 끊긴 시도도 원문에 남은 증거를 본다 (Codex EN P0 · P1 · EO P1 — 검사기 killed_problems 와 같은 순서):
   #   ① c1 · c2 재시작 원문 — OUTCAR ISTART 1 job · ICHARG 0 charge · 'WAVECAR not read' 없음 · 등록부 문구 · NKPTS·NBANDS·ENCUT = 시작점 머리
   #      (끝 기록이 없어 sha 셋은 못 본다 · 시작 복사본 sha 는 띄우기 전에 확인했다) — 아니면 RESTART_NOT_HONOURED
-  #   ② killed.json — 한 줄 기록 문법 (REC1) 전체 · 칸 · 잡 · 단 · run_id = attempt.start · osz_rows = 지금 완전한 행 수 · wall_s 초 · recorded_s ≥ 시작 시각 — 아니면 KILLED_RECORD_MISMATCH
+  #   ② killed.json osz_rows = 지금 완전한 행 수 — 아니면 KILLED_RECORD_MISMATCH (문법 · 칸 · 빈칸 · 잡 · 단 · run_id · 초 · 기록 시각은 트리 관문 killed_rec5 · Codex EQ)
   #   행 머리 · 행 손상 · attempt.start 의 잡 · 단 · 변형은 그 앞 (gate5) 에서 본다
-  local d=$1 st=$2 n=$3 is ic K S0 k t0 rs
+  local d=$1 st=$2 n=$3 is ic
   case "$st" in c1|c2)
     is=$(grep -aE '^[[:space:]]*ISTART *= *[0-9]+[[:space:]]+job' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ISTART *= *[0-9]+' | grep -oE '[0-9]+$')
     ic=$(grep -aE '^[[:space:]]*ICHARG *= *[0-9]+[[:space:]]+charge' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ICHARG *= *[0-9]+' | grep -oE '[0-9]+$')
@@ -1124,33 +1329,21 @@ killed5(){ # $1 시도 폴더 · $2 단 · $3 완전한 행 수 → "-" (맞음)
     { [ "$(out_num "$d" NKPTS)" = "${SP_NK:-x}" ] && [ "$(out_num "$d" NBANDS)" = "${SP_NB:-x}" ] && enc_eq "$(out_num "$d" ENCUT)" "${SP_EN:-x}"; } \
       || { echo "RESTART_NOT_HONOURED $n dims_ne_start_head"; return; };;
   esac
-  K=$(rec5 "$d/killed.json") || { echo "KILLED_RECORD_MISMATCH $n killed_json_form"; return; }
-  for k in job rung run_id wall_s sched_job_id cancel_utc reason osz_rows recorded_utc; do rf "$K" "$k" s > /dev/null || { echo "KILLED_RECORD_MISMATCH $n killed_json_field_$k"; return; }; done
-  rf "$K" recorded_s i > /dev/null || { echo "KILLED_RECORD_MISMATCH $n killed_json_field_recorded_s"; return; }
-  for k in sched_job_id cancel_utc reason; do [ -n "$(rf "$K" "$k" s)" ] || { echo "KILLED_RECORD_MISMATCH $n killed_json_empty_$k"; return; }; done     # Codex EP 조건부
-  S0=$(rec5 "$d/attempt.start")
-  [ "$(rf "$K" job s)" = "$JOB" ] && [ "$(rf "$K" rung s)" = "$st" ] || { echo "KILLED_RECORD_MISMATCH $n job_or_rung"; return; }
-  [ "$(rf "$K" run_id s)" = "$(rf "$S0" run_id s)" ] || { echo "KILLED_RECORD_MISMATCH $n run_id"; return; }
-  [ "$(rf "$K" osz_rows s)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows"; return; }
-  secs_ok "$(rf "$K" wall_s s)" || { echo "KILLED_RECORD_MISMATCH $n wall_s"; return; }
-  t0=$(rf "$S0" t_start i); rs=$(rf "$K" recorded_s i)
-  { [ -n "$t0" ] && [ -n "$rs" ] && [ "$rs" -ge "$t0" ]; } 2>/dev/null || { echo "KILLED_RECORD_MISMATCH $n recorded_s"; return; }
+  [ "$(rget "$d/killed.json" osz_rows s)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows"; return; }
   echo -
 }
 gate5(){ # $1 시도 폴더 · $2 단 → "갈래 상태 행수 사유" (빈칸 없는 낱말 넷)
-  #   NEW 띄울 차례 · WAIT5 끊김 (끝 기록 없음) · ZERO 전자 반복행 0 (멈춤 7) · ENV 다른 VASP 빌드 (끝 6) · REVIEW 1저자 (끝 8) · BAD2 이 러너가 띄운 시도가 아님 ·
+  #   NEW 띄울 차례 · WAIT5 끊김 (끝 기록 없음) · ZERO 전자 반복행 0 (멈춤 7) · ENV 다른 VASP 빌드 (끝 6) · REVIEW 1저자 (끝 8) ·
   #   OK 주 기준 수렴 · NEXT 다음 단 (SCF_NOT_CONVERGED · 행 ≥ 1 실행 실패 · 행 ≥ 1 끊김 기록)
-  #   순서 (검사기 check_attempt5 · a5_class 와 같다): attempt.start 가 이 폴더의 것 (아니면 BAD2 · Codex EO P1) → 완전한 행 판독 (row_scan) →
+  #   순서 (검사기 check_attempt5 · a5_class 와 같다): [시작 · 끝 기록 신원 · 봉인 · 끊김 기록 결속은 트리 관문 — Codex EQ] → 완전한 행 판독 (row_scan) →
   #   끝난 시도: 빌드 → 행 손상 · 남의 머리 (REVIEW · Codex EO P0) → 행 0 (ZERO) → 설정 에코 → 판정 · 끝 기록 없는 시도: 행 손상 · 남의 머리 (REVIEW — 기록 전이라도) → 끊김 기록
   local d=$1 st=$2 n why g var ver e s
   [ -e "$d" ] || { echo "NEW - 0 -"; return; }
-  { [ -d "$d" ] && [ -f "$d/attempt.start" ]; } || { echo "BAD2 - 0 no_start_marker"; return; }
-  e=$(start_id "$d" "$st"); [ "$e" = - ] || { echo "BAD2 - 0 $e"; return; }
+  #   폴더 이름 · 시작 기록 (잡 · 단 · 변형) · 끝 기록 틀 · 신원 · 봉인 · 끊김 기록은 트리 관문 (tree5) 이 다시 돌릴 때 · 띄우기 전에 본다 (Codex EQ — 한 곳)
   var=$(rget "$d/attempt.start" attempt s)
   g=$(row_scan "$d" "$st"); [ -n "$g" ] || g="0 -"
   n=${g%% *}; why=${g#* }; ver=$(clean "$(ver_of "$d")")
   if [ -f "$d/attempt.json" ]; then
-    e=$(end_id "$d"); [ "$e" = - ] || { echo "BAD2 - 0 $e"; return; }                # 끝 기록이 이 시작 기록의 것인가 (run_id · t_start · Codex EP 조건부 Q-EP-4c)
     if [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then echo "ENV VERSION_MISMATCH $n vasp_build"; return; fi
     [ "$why" = - ] || { echo "REVIEW SCF_UNVERIFIED $n $why"; return; }
     [ "$n" -ge 1 ] 2>/dev/null || { echo "ZERO SCF_UNVERIFIED 0 no_rows"; return; }
@@ -1176,11 +1369,11 @@ on_stop(){ # gate5 낱말 넷 + 단 → 멈출 갈래면 끝낸다 (돌아오면
     ZERO) stop5 7 "$st 전자 반복행 0 (rc $(rc_of "run/${JOB}_$st") · stdout.log 첫 줄: $(head -c 160 "run/${JOB}_$st/stdout.log" 2>/dev/null | head -1)) — 다음 단을 띄우지 않는다. 스케줄러 기록이 있는 0 스텝 인프라 중단이면 'bash run_a5.sh --infra-abort $st <잡 id> <취소 UTC> <사유>' 뒤 다시 (같은 단부터 · 잡 전체 $INFRA_MAX 회) · 아니면 (실행 파일 · 모듈 · 입력) 고치기 전에 연락";;
     ENV) fin5 6 ENV "$st VASP 빌드가 봉인과 다르다 — 공통 환경 고장 · 전체 정지";;
     REVIEW) fin5 8 REVIEW "$st $s ($why · 전자 반복행 $n) — 개정 5 해석 1 (사용자 2026-11-20): 재시작 미이행 · SCF 미확인 · 설정 에코 다름은 더 돌리지 않는다 → 1저자";;
-    BAD2) log "⛔ $st 폴더 (run/${JOB}_$st) 는 이 러너가 띄운 시도가 아니다 ($why) — 아무것도 띄우지 않는다 · 연락"; exit 2;;
     *) log "⛔ $st 갈래 '$k' 를 모른다 — 연락"; exit 2;;
   esac
 }
-cap_gate(){ # $1 단 — 띄우기 전 누적 상한 (넘으면 끝 5 · 벽시계 미상이면 멈춤 5)
+cap_gate(){ # $1 단 — 띄우기 전: 트리 관문 (모르는 것 · 못 읽는 것 · 서로 안 맞는 것 → 종료 8 · Codex EQ) → 누적 상한 (넘으면 끝 5 · 벽시계 미상이면 멈춤 5)
+  tree_gate "$1 발사 직전"
   cap_ok; case $? in
     0) return 0;;
     1) fin5 5 CAP "누적 상한 $CAP_H h — $1 를 띄우지 않았다 (1저자)";;
@@ -1209,7 +1402,7 @@ elig5(){ # A5 자격 (개정 5 '자격 = 개정 4 ⓐ 자격의 앞 셋' — 검
   return 0
 }
 # ── 시작점 — 첫 c 단을 띄울 때 한 번 정해 run/start_point.json 에 두고, 그 뒤로는 다시 정하지 않는다 (리뷰 P0-2(b)) ──
-sp_field(){ grep -o "\"$1\": \"[^\"]*\"" run/start_point.json 2>/dev/null | head -1 | sed 's/.*: "//; s/"$//'; }
+sp_field(){ rget run/start_point.json "$1" s; }     # REC1 (검사기 json 과 같은 값 · 트리 관문 sp_rec5 가 먼저 · Codex EQ)
 sp_load(){
   SPF=$(sp_field from); S=$(sp_field path); SS=$(sp_field sha256); SPH=$(sp_field head)
   case "$SPF" in A5) [ "$S" = "run/${JOB}_A5/WAVECAR" ] || return 1;; W0) [ "$S" = "$W0_WAVECAR" ] || return 1;; *) return 1;; esac
@@ -1226,8 +1419,6 @@ sp_write(){
 log "════ W_ad a5 · $JOB ════"
 pp_ok "$JOB" || env6_pre
 w0_check
-# 중단 장부 ↔ 보존 폴더 ↔ 영수증 — 시작점을 쓰거나 어느 단이든 (다시) 띄우기 전에 양방향으로 (부분 복구 · 손댄 기록이면 1저자 · Codex EO P1 Q-EO-3)
-x=$(ledger5); [ "$x" = - ] || fin5 8 REVIEW "중단 장부 (run/infra_aborts.tsv) · 보존 폴더 (run_aborted/) · 영수증 · 시도 이력 (run/status.tsv) 이 어긋난다 ($x) — 부분 복구 · 손댄 기록 · 진행 폴더의 영수증 · 시작점을 쓰거나 다시 띄우지 않는다 (1저자)"
 W0OK=0; grep -q '"verified": 1' run/w0_check.json && W0OK=1
 A=run/${JOB}_A5; C1=run/${JOB}_c1; C2=run/${JOB}_c2
 SS=""; SPF=""; S=""; SPH=""; SP_NK=""; SP_NB=""; SP_EN=""; SPWHY="-"
@@ -1307,6 +1498,13 @@ fin5 1 NO_PRIMARY "c1 $s1 · c2 $gs — 주 기준 값 없음 (보조 기준은 
 '''
 
 
+def _env_text():
+    """RUN_A5_ENV + 트리 관문 상수 (VASP_OUT · ATT1_TPL · W0_TPL — 검사기와 같은 바이트 · 러너 awk 는 \\001 · \\002 를 바이트로 푼다)."""
+    tb = lambda s_: s_.replace("\x01", "\\001").replace("\x02", "\\002")
+    return (RUN_A5_ENV.replace("@ATT_EXTRA@", "|".join(re.escape(x) for x in VASP_OUT)).replace("@ATT1_T@", tb(ATT1_TPL))
+            .replace("@W0_T@", tb(W0_TPL)))
+
+
 def run_a5_text():
     P = r2_parts()
     funcs = "\n".join(P[n] for n in R2_FUNCS)
@@ -1315,8 +1513,8 @@ def run_a5_text():
             .replace("@CAP_H@", f"{CAP_H:g}").replace("@INFRA_MAX@", str(INFRA_MAX)))
     cli = (RUN_A5_CLI.replace("@PACK_ONLY@", P["pack_only"]).replace("@PERF@", P["perf"])
            .replace("@W0_REL@", W0_REL))
-    txt = head + "\n# ── 외주 2차 러너 부품 (build_round2_vasp_package.RUN_ALL 에서 이름으로 꺼냄 · 패치 자리는 build_a5 r2_parts) ──\n" + funcs + "\n" + RUN_A5_ENV + cli + RUN_A5_BODY
-    for ph in ("@JOB@", "@RET_ALLOW@", "@RET_FORBID@", "@CAP_H@", "@INFRA_MAX@", "@PACK_ONLY@", "@PERF@", "@W0_REL@"):
+    txt = head + "\n# ── 외주 2차 러너 부품 (build_round2_vasp_package.RUN_ALL 에서 이름으로 꺼냄 · 패치 자리는 build_a5 r2_parts) ──\n" + funcs + "\n" + _env_text() + cli + RUN_A5_BODY
+    for ph in ("@JOB@", "@RET_ALLOW@", "@RET_FORBID@", "@CAP_H@", "@INFRA_MAX@", "@PACK_ONLY@", "@PERF@", "@W0_REL@", "@ATT_EXTRA@", "@ATT1_T@", "@W0_T@"):
         if ph in txt:
             raise PkgError(f"러너에 채우지 않은 자리 {ph}")
     if not _bash_ok(txt):
@@ -1421,20 +1619,27 @@ def build(out, v5_pkg=None, ledger=None, registry=None, w0=None, check_decision=
             "final_record": "끝 (0 · 1 · 5 상한 · 8 · 돈 뒤의 6 — VASP 빌드 다름) 에 run/final.json — 다시 돌려도 아무것도 띄우지 않는다 · 검사기는 끝 기록이 기록으로 낸 사다리 판정과 같은지 본다 (보수 쪽으로만)",
             "complete_row_rule": ("완전한 전자 반복행만 센다 (러너 row_scan = 검사기 row_gate · Codex EO P0 · EP P0): 줄바꿈까지 쓰임 · 그 단의 머리 그대로 · ':' 뒤 빈칸 · "
                                   "칸 6 또는 7 (N E dE d eps ncg rms [rms(c)]) · 숫자로 읽힘 (N 양의 정수 · ncg 정수 · 실수 칸 — 지수 두 자리) · 완전한 행 ≥ 1 뒤 줄바꿈 없는 끝 조각은 세지 않음 · "
-                                  "완전한 행 0 + 행꼴 조각 또는 콜론 앞 머리 조각 (줄 맨 앞 글자 1–4) · 줄바꿈 있는 덜 쓴 행 · 숫자로 안 읽히는 행 · 남의 머리 · NUL = 손상 → 끝 기록과 관계없이 멈춤 8"),
+                                  "완전한 행 0 + 행꼴 조각 또는 콜론 앞 머리 조각 (앞 빈칸을 걷은 글자 1–4 · 앞 빈칸 뒤 'N' 만 열 제목 0 스텝) · 줄바꿈 있는 덜 쓴 행 · 숫자로 안 읽히는 행 · "
+                                  "칸 길이 > 24 (늘 유한 · Codex EQ) · 남의 머리 · NUL = 손상 → 끝 기록과 관계없이 멈춤 8"),
             "record_grammar": ("한 줄 기록 REC1 (killed.json · infra_abort.json · attempt.start · final.json — 러너 rec5 = 검사기 rec_parse · Codex EO P1): 한 줄 · NUL 없음 · "
                                "{\"키\": 값, …} · 토큰 사이 빈칸/탭 · 키 [a-z][a-z0-9_]* · 값 = JSON 문자열 (제어 바이트 날것 금지) 또는 음 아닌 정수 (16 자리 이하) · 같은 키 금지 · "
-                               "값 비교는 원문 · 러너는 손으로 넣은 글을 JSON 이스케이프 (jstr) 해서 쓰고 UTF-8 이 아니면 쓰지 않는다 (u8ok) · 잡 id · 취소 시각 · 사유는 읽을 때도 비면 거부 (Codex EP)"),
+                               "값 비교는 원문 · 러너는 손으로 넣은 글을 JSON 이스케이프 (jstr) 해서 쓰고 UTF-8 이 아니면 쓰지 않는다 (u8ok) · 잡 id · 취소 시각 · 사유는 쓸 때 · 읽을 때 "
+                               "비거나 빈칸 문자 (공백 · 탭 · LF · VT · FF · CR · 원문은 그 이스케이프까지) 뿐이면 거부 (Codex EP · EQ) · 기록 파일은 읽을 때 UTF-8 이어야 한다 (트리 관문) · attempt.json · w0_check.json 은 printf 틀 그대로 (tpl5 = tpl_parse)"),
             "time_source_rule": ("벽시계 출처 (러너 wall_of = 검사기 wall_of · Codex EO P1 · EP P1): 보존 폴더 (run_aborted/) 는 그 중단 영수증 wall_s 만 · 진행 폴더는 영수증을 보지 않고 "
-                                 "끊김 기록 wall_s → attempt.json elapsed_s → 미상 · "
+                                 "끊김 기록 wall_s (그 시작 기록과 결속된 것만 · 끝 기록과 함께 있으면 트리 관문이 멈춤 · Codex EQ) → attempt.json elapsed_s → 미상 · "
                                  "검사기는 띄운 시도마다 앞 시도들의 합이 알려졌고 ≤ 상한인지 · 미상 영수증 뒤 시도 없음 · 채운 시각 ≤ 다음 시작을 본다"),
-            "ledger_rule": ("중단 장부 (run/infra_aborts.tsv) ↔ 보존 폴더 (run_aborted/) ↔ 영수증 양방향 · 장부 줄 순서 = 기록 시각 · 시작 시각 순 · 진행 폴더에 영수증 없음 "
+            "ledger_rule": ("중단 장부 (run/infra_aborts.tsv) ↔ 보존 폴더 (run_aborted/) ↔ 영수증 양방향 · 장부 줄 순서 = 기록 시각 · 시작 시각 순 + 단 순서 A5 ≤ c1 ≤ c2 (Codex EQ P2) · "
+                            "진행 폴더에 영수증 없음 (트리 관문) "
                             "(러너 ledger5 = 검사기 ledger_problems + abort_receipt_problem · Codex EO P1 · EP P1 · P2) — 어긋나면 러너 멈춤 8 · 검사기 LADDER_VIOLATION"),
             "history_rule": ("시도 이력 run/status.tsv (끝난 시도마다 한 줄 · 마지막 칸 run_id) 의 줄마다 지금 · 보존 폴더의 끝난 시도 (run_id · 변형) 가 있어야 한다 "
-                             "(러너 hist5 = 검사기 history_problems · Codex EP P1) — 시작점을 쓰거나 다시 띄우기 전에 · 어긋나면 멈춤 8 · LADDER_VIOLATION"),
-            "final_attempts_rule": ("run/final.json attempts = 시도 폴더=run_id 목록 (경로 바이트 순 · 러너 att5 = 검사기 attempts_of · Codex EO P2) — 다른 실행의 묶음이면 다시 돌림 종료 4 · "
-                                    "끝 기록이 없거나 시도 목록이 다르면 포장만 · 다시 돌림 모두 종료 2 (fin_ok · Codex EP) · 검사기는 반송과 다르거나 끝 기록 없는 반송을 STOPPED_FOR_REVIEW · "
-                                    "끝난 시도의 attempt.json run_id · t_start = attempt.start (end_id = end_problem)"),
+                             "(러너 hist5 = 검사기 history_problems · Codex EP P1) · 0 바이트 · 줄바꿈 없는 끝 · 비 UTF-8 은 거부 · 머리만 있는 파일은 받는다 (Codex EQ) — 트리 관문 · 어긋나면 멈춤 8 · LADDER_VIOLATION"),
+            "final_attempts_rule": ("run/final.json attempts = 시도 폴더=run_id 목록 (경로 바이트 순 · 러너 att5 = 검사기 attempts_of · Codex EO P2) · code/state 는 fin5 가 쓰는 조합만 "
+                                    "(0 OK · 1 NO_PRIMARY|CLOSED · 5 CAP · 6 ENV · 8 REVIEW · Codex EQ) — 어긋나면 트리 관문 (러너 8 · 검사기 LADDER_VIOLATION) · 끝 기록 없는 반송은 "
+                                    "STOPPED_FOR_REVIEW · 끝난 시도의 attempt.json run_id · t_start = attempt.start (att_ok5 = att_problem)"),
+            "tree_gate_rule": ("트리 관문 하나 (러너 tree5 = 검사기 tree_problems · 같은 규칙 · 같은 사유 낱말 · Codex EQ): 기록 명령 · PACK_ONLY · 다시 돌림 · 단 발사 직전 · 포장 "
+                               "(기존 반송본을 덮기 전) 마다 — 이름 (run/ · run_aborted/ · 시도 폴더 = 반송 허용 · 금지 · VASP 표준 출력만 · 잔여 *.part · 링크 · 하위 폴더 거부) → "
+                               "시도 폴더마다 시작 기록 · UTF-8 · 끝 기록 틀 · 신원 · 봉인 (sha 표 = 지금 파일) · 끊김 기록 자리 · 문법 · 결속 · 진행 폴더 영수증 → 장부 · 영수증 · 이력 → "
+                               "끝 기록 → 시작점 → ⓪ 기록 → 기존 반송본 ⊆ 지금 트리 (러너만) — 첫 사유에서 종료 8 · 아무것도 쓰지 않는다 (원본 보존)"),
             "tool_sha256": _sha(os.path.abspath(__file__)), "round2_tool_sha256": _sha(os.path.abspath(R2.__file__)), "v5_tool_sha256": _sha(os.path.abspath(V.__file__)),
             "sources": {"v5_manifest_sha256": R2.V5_MANIFEST_SHA256, "registry_path": REG_PATH, "registry_sha256": reg_sha,
                         "a4_result": A4_RESULT, "a4_result_sha256": A4_RESULT_SHA256},
@@ -1469,7 +1674,7 @@ C1_SEC_ORDER = ("c1 보조 채택은 c2 가 확인된 끝 (SCF_NOT_CONVERGED · 
 EXIT_CODES = {"0": "c1 또는 c2 주 기준 수렴 (끝)", "1": "주 기준 값 없음 — 사다리 끝 (끝 · 실패도 기록)", "2": "인자 · 묶음 · 환경 · 잠금 오류 (아무것도 띄우지 않음)",
               "3": "준비 실패 (그 단 소모 안 함 — 원인을 고친 뒤 다시)", "4": "포장 실패 (PACK_ONLY=1)",
               "5": "누적 상한 (끝) 또는 끊긴 시도 · 벽시계 미상 (--killed · --infra-abort · --infra-wall 로 기록한 뒤 다시)",
-              "6": "공통 환경 고장 (VASP 빌드 · PP — 전체 정지 · 돈 뒤 빌드가 다르면 끝 · 띄우기 전 PP 불일치는 끝 기록 없음)", "7": "전자 반복행 0 (멈춤 · --infra-abort 또는 연락)", "8": "1저자 검토 멈춤 (끝)"}
+              "6": "공통 환경 고장 (VASP 빌드 · PP — 전체 정지 · 돈 뒤 빌드가 다르면 끝 · 띄우기 전 PP 불일치는 끝 기록 없음)", "7": "전자 반복행 0 (멈춤 · --infra-abort 또는 연락)", "8": "1저자 검토 멈춤 (끝) · 또는 트리 관문 — 모르는 · 못 읽는 · 서로 안 맞는 기록 (아무것도 쓰지 않음 · 원본 보존 · 연락)"}
 
 
 def _readme(meta, msha):
@@ -1533,7 +1738,12 @@ W0_WAVECAR=<보존 ⓐ 절대 경로 또는 none> VASP_CMD="mpirun -np 64 vasp_s
 - **중단 장부 (`run/infra_aborts.tsv`) 와 보존 폴더 (`run_aborted/`) · 영수증이 서로 맞지 않으면** (한쪽에만 있는 중단 · 다른 벽시계 · 다른 run_id) → 멈춤 (종료 8) —
   시작점을 다시 쓰거나 어느 단도 다시 띄우지 않습니다. 장부 줄은 일어난 순서 (기록 시각 · 시작 시각 순) 여야 합니다. **진행 폴더 (`run/<잡>_<단>/`) 에
   중단 영수증 (`infra_abort.json`) 이 있거나 · 시도 이력 (`run/status.tsv`) 의 줄에 해당하는 끝난 시도 폴더가 없어도** 같은 멈춤 (종료 8) 입니다.
-  시도 폴더의 `attempt.start` 가 그 폴더의 시도가 아니거나 (잡 · 단 · 변형) · 끝난 시도의 `attempt.json` (run_id · t_start) 이 그 시작 기록과 다르면 아무것도 띄우지 않고 종료 2 (연락).
+- **트리 관문 (같은 검사 하나 — 기록 명령 · `PACK_ONLY=1` · 다시 돌림 · 단을 띄우기 직전 · 포장 = 기존 `a5_return.tgz` 를 덮기 전)**: 아래 중 하나라도 걸리면
+  **아무것도 쓰거나 띄우거나 포장하지 않고 종료 8** 입니다 (`run/` · `run_aborted/` · `a5_return.tgz` 그대로 — 화면의 `⛔ 트리 관문 …` 줄을 그대로 보내 주세요).
+  모르는 이름 · 남은 `*.part` · 링크 · 하위 폴더 (시도 폴더에는 반송 이름 · VASP 표준 출력만) · 시작 기록 (`attempt.start`) 이 그 폴더의 시도가 아님 ·
+  끝 기록 (`attempt.json`) 이 잘렸거나 그 시작 기록과 다름 · 끝 기록 뒤에 바뀐 파일 (OUTCAR · OSZICAR · INCAR … sha 표) · 끝난 시도에 끊김 기록 (`killed.json`) ·
+  끊김 기록이 그 시도와 다름 · 진행 폴더의 중단 영수증 · 중단 장부 · 영수증 · 시도 이력 (`run/status.tsv` — 0 바이트 · 잘린 줄 · 끝난 시도 없는 줄) ·
+  끝 기록 (`run/final.json`) 의 코드 · 상태 조합 · 시도 목록 · 시작점 · ⓪ 기록 · UTF-8 아닌 기록 · 옆의 `a5_return.tgz` 보다 트리가 과거 (그 안의 끝 기록 · 끝난 시도가 지금 없음).
 
 ## 4. 종료 코드
 | 코드 | 뜻 | 할 일 |
@@ -1550,8 +1760,8 @@ W0_WAVECAR=<보존 ⓐ 절대 경로 또는 none> VASP_CMD="mpirun -np 64 vasp_s
 
 - **끝 (0 · 1 · 5 상한 · 8 · 돈 뒤의 6 — VASP 빌드 다름) 뒤에는 다시 돌려도 아무것도 띄우지 않습니다** (run/final.json 을 찍고 같은 코드로 끝) — 포장만 다시 하려면 `PACK_ONLY=1 bash run_a5.sh`.
   다시 돌렸을 때 `a5_return.tgz` 가 없거나 · sha256 이 안 맞거나 · 그 끝 기록 (run/final.json) 을 담지 않았으면 (중간에 만든 옛 묶음) 종료 4 입니다 — `PACK_ONLY=1 bash run_a5.sh` 로 포장만 다시 하고 그 묶음을 보내 주세요.
-- 끝 기록 (`run/final.json`) 에는 이 사다리의 시도 폴더와 run_id 가 묶여 있습니다 — 다른 폴더 (다른 실행) 의 `a5_return.tgz` · `.sha256` 을 옮겨 오면 다시 돌릴 때 종료 4 입니다.
-  끝 기록이 이 사다리의 것이 아니면 (시도 목록이 없거나 다름) 포장만 (`PACK_ONLY=1`) · 다시 돌림 모두 종료 2 (연락) 입니다.
+- 끝 기록 (`run/final.json`) 에는 이 사다리의 시도 폴더와 run_id 가 묶여 있습니다 — 다른 폴더 (다른 실행) 의 끝난 `a5_return.tgz` · `.sha256` 을 옮겨 오면
+  다시 돌림 · 포장만 (`PACK_ONLY=1`) 모두 종료 8 (트리 관문 · 반송본을 덮지 않음 · 연락) 입니다. 끝 기록이 이 사다리의 것이 아니어도 (시도 목록 · 코드 · 상태) 종료 8 입니다.
 - 보내는 것: `a5_return.tgz` + `a5_return.tgz.sha256` (`sha256sum -c a5_return.tgz.sha256` 통과 뒤). WAVECAR · CHGCAR · POTCAR 본문은 담지 않습니다.
 
 ## 5. 기록 명령 (계산이 돌고 있지 않을 때)
@@ -1568,6 +1778,7 @@ W0_WAVECAR=<보존 ⓐ 절대 경로 또는 none> VASP_CMD="mpirun -np 64 vasp_s
 ## 6. 하지 말 것
 - INCAR · POSCAR · KPOINTS 를 고치지 마세요 · 시도 폴더 (run/ · run_aborted/) 를 지우거나 옮기지 마세요 (러너가 이 기록으로 다음 단 · 시작점을 정합니다).
   복구할 때는 `run/` · `run_aborted/` · `run/infra_aborts.tsv` 를 **함께** 되살리세요 — 일부만 되살리면 장부 대조가 어긋나 종료 8 입니다.
+  `run/` 를 옛 체크포인트로 되살렸는데 옆의 `a5_return.tgz` 가 더 뒤 (끝난 단 · 끝 기록이 있음) 이면 종료 8 — 반송본을 덮지 않습니다 (연락).
   끝 (종료 0 · 1 · 5 상한 · 8) 뒤에는 다시 돌려도 아무것도 띄우지 않습니다 — 포장만 다시 하려면 `PACK_ONLY=1 bash run_a5.sh`.
 - 외주 2차 러너를 다시 돌리지 마세요.
 """
@@ -1903,8 +2114,8 @@ def killed_problems(job, attdir, stage, osz, n, registry=None, src_head=None):
     if rec_i(k, "recorded_s") is None:
         return "KILLED_RECORD_MISMATCH", "killed.json 칸 recorded_s 가 없거나 정수가 아니다"
     for f_ in ("sched_job_id", "cancel_utc", "reason"):
-        if rec_s(k, f_) == "":
-            return "KILLED_RECORD_MISMATCH", f"killed.json 칸 {f_} 가 비었다 — 기록 명령이 요구한 칸 (Codex EP 조건부)"
+        if _blank(rec_s(k, f_)):
+            return "KILLED_RECORD_MISMATCH", f"killed.json 칸 {f_} 가 비었다 · 빈칸뿐이다 — 기록 명령이 요구한 칸 (Codex EP 조건부 · EQ P1)"
     s0 = rec_read(os.path.join(attdir, "attempt.start"))
     if rec_s(k, "job") != job["dir"] or rec_s(k, "rung") != stage:
         return "KILLED_RECORD_MISMATCH", f"killed.json 잡 {rec_s(k, 'job')!r} · 단 {rec_s(k, 'rung')!r} ≠ 이 시도 ({job['dir']} · {stage})"
@@ -2222,17 +2433,11 @@ def abort_receipt_problem(job, d, stage):
     if rec_i(x, "recorded_s") is None:
         return "중단 영수증 칸 recorded_s 가 없거나 정수가 아니다"
     for f_ in ("sched_job_id", "cancel_utc", "reason"):
-        if rec_s(x, f_) == "":
-            return f"중단 영수증 칸 {f_} 가 비었다 — 기록 명령이 요구한 칸 (Codex EP 조건부)"
+        if _blank(rec_s(x, f_)):
+            return f"중단 영수증 칸 {f_} 가 비었다 · 빈칸뿐이다 (receipt_blank_{f_}) — 기록 명령이 요구한 칸 (Codex EP 조건부 · EQ P1)"
     if rec_s(x, "job") != job["dir"] or rec_s(x, "rung") != stage:
         return f"중단 영수증 잡 {rec_s(x, 'job')!r} · 단 {rec_s(x, 'rung')!r} ≠ 폴더 ({job['dir']} · {stage})"
-    sp_ = start_problem(job["dir"], d, stage)
-    if sp_:
-        return f"중단 영수증 폴더의 attempt.start 가 그 폴더의 시도가 아니다 ({sp_})"
-    if os.path.isfile(os.path.join(d, "attempt.json")):
-        ep_ = end_problem(d)
-        if ep_:
-            return f"중단 영수증 폴더의 끝 기록 (attempt.json) 이 그 시작 기록의 것이 아니다 ({ep_} · Codex EP 조건부)"
+    # 그 폴더의 시작 기록 · 끝 기록 신원 · 봉인은 트리 관문 (rec_dir_problem — 모든 시도 폴더 · 러너 rec_dir5) 이 본다 (Codex EQ — 한 곳)
     s0 = rec_read(os.path.join(d, "attempt.start"))
     if rec_s(x, "run_id") != rec_s(s0, "run_id"):
         return f"중단 영수증 run_id {rec_s(x, 'run_id')!r} ≠ attempt.start {rec_s(s0, 'run_id')!r} (Codex EO P1)"
@@ -2285,8 +2490,14 @@ def history_problems(job, base):
     if not os.path.isfile(p):
         return ["시도 이력 (run/status.tsv) 이 파일이 아니다"]
     raw = open(p, "rb").read()
+    if not raw:
+        return ["시도 이력 (run/status.tsv) 이 0 바이트다 (status_empty) — 머리 줄도 없다 · 머리만 있는 파일은 받는다 (Codex EQ P1)"]
     if b"\x00" in raw:
         return ["시도 이력 (run/status.tsv) 에 NUL 이 있다"]
+    if not raw.endswith(b"\n"):
+        return ["시도 이력 (run/status.tsv) 이 줄바꿈으로 끝나지 않는다 (status_no_final_newline) — 쓰다 끊긴 줄"]
+    if not _u8(raw):
+        return ["시도 이력 (run/status.tsv) 이 UTF-8 이 아니다 (utf8_status.tsv)"]
     cand = [f"run/{J}_{s}" for s in STAGES]
     try:
         cand += [f"run_aborted/{n}" for n in os.listdir(os.path.join(base, "run_aborted")) if re.fullmatch(re.escape(J) + r"_(A5|c1|c2)_[0-9]+", n)]
@@ -2320,12 +2531,8 @@ def history_problems(job, base):
 
 
 def ledger_problems(job, base):
-    """진행 폴더의 중단 영수증 (run/<잡>_<단>/infra_abort.json · 영수증은 run_aborted/ 에만 — Codex EP P1) + 장부 핵심 (_ledger_core) + 시도 이력 (history_problems)
-    → 문제 목록 (러너 ledger5 = 이 셋 + abort_receipt_problem)."""
-    J = job["dir"]
-    out = [f"진행 폴더 run/{J}_{s} 에 중단 영수증 ({f}) 이 있다 — 영수증은 run_aborted/ 에만 · 시간 출처로 쓰지 않는다 (남의 영수증 · Codex EP P1)"
-           for s in STAGES for f in ("infra_abort.json", "infra_abort.json.part") if os.path.lexists(os.path.join(base, "run", f"{J}_{s}", f))]
-    return out + _ledger_core(job, base) + history_problems(job, base)
+    """장부 핵심 (_ledger_core) + 시도 이력 (history_problems) → 문제 목록 (러너 ledger5 = 이 둘 + abort_receipt_problem · 진행 폴더의 영수증은 트리 관문 rec_dir_problem)."""
+    return _ledger_core(job, base) + history_problems(job, base)        # 진행 폴더의 영수증 (자리) · *.part (잔여) 는 트리 관문 (tree_problems · Codex EQ)
 
 
 def _ledger_core(job, base):
@@ -2355,16 +2562,21 @@ def _ledger_core(job, base):
         return ["중단 장부에 NUL 이 있다"]
     if not raw.endswith(b"\n"):
         return ["중단 장부가 줄바꿈으로 끝나지 않는다 (잘린 장부)"]
+    if not _u8(raw):
+        return ["중단 장부가 UTF-8 이 아니다 (utf8_infra_aborts.tsv)"]
     lines = raw[:-1].decode("latin-1").split("\n")
     if lines[0] != LEDGER_HEAD:
         return ["중단 장부 머리 줄이 다르다"]
-    rows = {}
+    rows, pr = {}, 0
     for i, ln in enumerate(lines[1:], 1):
         f = ln.split("\t")
         if len(f) != 8:
             return [f"중단 장부 {i} 째 줄 칸 수 {len(f)} ≠ 8"]
         if f[1] != J or f[2] not in STAGES:
             return [f"중단 장부 {i} 째 줄 잡 · 단 ({f[1]!r} · {f[2]!r})"]
+        if STAGES.index(f[2]) + 1 < pr:
+            return [f"중단 장부 {i} 째 줄 단 {f[2]} 이 앞 줄 단보다 앞이다 (ledger_row_{i}_rung_order) — 전역 번호순 A5 ≤ c1 ≤ c2 (같은 초의 맞바꿈 · Codex EQ P2)"]
+        pr = STAGES.index(f[2]) + 1
         if f[7] != f"{J}_{f[2]}_{i}":
             return [f"중단 장부 {i} 째 줄 폴더 {f[7]!r} ≠ {J}_{f[2]}_{i} (줄 번호 = 폴더 번호)"]
         if not (f[5] == "UNKNOWN" or SECS_RE.fullmatch(f[5])):
@@ -2383,7 +2595,7 @@ def _ledger_core(job, base):
         rs_, t0_ = rec_i(rec_read(os.path.join(ab, n_, "infra_abort.json")), "recorded_s"), rec_i(rec_read(os.path.join(ab, n_, "attempt.start")), "t_start")
         if rs_ is not None and t0_ is not None:
             if rs_ < prs or t0_ < pt0:
-                out.append(f"중단 장부 {n_} 의 기록 시각 {rs_} · 시작 {t0_} 이 앞 줄 ({prs} · {pt0}) 보다 이르다 — 장부 줄 순서 = 일어난 순서 (Codex EP P2)")
+                out.append(f"중단 장부 {n_} 의 기록 시각 {rs_} · 시작 {t0_} 이 앞 줄 ({prs} · {pt0}) 보다 이르다 (ledger_time_order) — 장부 줄 순서 = 일어난 순서 (Codex EP P2)")
             prs, pt0 = rs_, t0_
     return out
 
@@ -2400,6 +2612,239 @@ def attempts_of(base, job):
     for p in sorted(c for c in cand if os.path.isdir(os.path.join(base, c))):
         out.append(f"{p}={rec_s(rec_read(os.path.join(base, p, 'attempt.start')), 'run_id') or '-'}")
     return " ".join(out)
+
+
+def tpl_parse(raw, tpl):
+    """한 줄 틀 기록 (attempt.json · w0_check.json — 러너 printf 그대로의 꼴) → 값 목록 (틀의 바이트 1 = 문자열 원문 · 바이트 2 = 정수) | None — 러너 tpl5 와 같은 규칙:
+    한 줄 (+ 끝 줄바꿈 하나) · NUL 없음 · 틀 글자 그대로 · 문자열 = 따옴표 · 역슬래시 · 제어 바이트 (0x00–0x1F) 없음 · 정수 = 선행 0 없음 · 16 자리 이하 (잘린 JSON · 정수 칸의 소수 → None)."""
+    if not isinstance(raw, (bytes, bytearray)) or b"\x00" in raw:
+        return None
+    lines = bytes(raw).split(b"\n")
+    if raw.endswith(b"\n"):
+        lines.pop()
+    if len(lines) != 1:
+        return None
+    s, out, i = lines[0], [], 0
+    L = len(s)
+    for c in tpl.encode("latin-1"):
+        if c == 1:
+            if i >= L or s[i] != 0x22:
+                return None
+            j = i + 1
+            while j < L and s[j] != 0x22:
+                if s[j] == 0x5C or s[j] < 0x20:
+                    return None
+                j += 1
+            if j >= L:
+                return None
+            out.append(s[i + 1:j].decode("latin-1")); i = j + 1
+        elif c == 2:
+            j = i
+            while j < L and 0x30 <= s[j] <= 0x39:
+                j += 1
+            v = s[i:j]
+            if not re.fullmatch(rb"0|[1-9][0-9]*", v) or len(v) > 16:
+                return None
+            out.append(int(v)); i = j
+        else:
+            if i >= L or s[i] != c:
+                return None
+            i += 1
+    return out if i == L else None
+
+
+def _u8(raw):
+    """바이트 → UTF-8 로 온전한가 (러너 u8in · u8f 와 같은 판정 — selftest 탐침 대조)."""
+    try:
+        bytes(raw).decode("utf-8")
+        return True
+    except UnicodeDecodeError:
+        return False
+
+
+BLANK_ESC = re.compile(r"\\(?:[tnrf]|u00(?:0[9a-dA-D]|20))| ")     # 필수 칸 빈칸 판정에서 걷는 것 (러너 nbj 의 awk 정규식과 같다)
+
+
+def _blank(v):
+    """필수 칸 원문 (JSON 이스케이프 그대로) → 비었거나 빈칸 문자뿐인가 — 공백 · 빈칸 이스케이프 (\\t \\n \\r \\f · \\u0009–\\u000d · \\u0020) 를 걷고
+    남는 글자가 없다 (러너 nbj 와 같은 규칙 · 쓸 때 러너 nbw 는 같은 여섯 문자 — 공백 · 탭 · LF · VT · FF · CR · Codex EQ P1). 원문의 날것 탭 · 줄바꿈은 REC1 이 이미 거부한다."""
+    return v is None or BLANK_ESC.sub("", v) == ""
+
+
+def _readb(p):
+    try:
+        return open(p, "rb").read()
+    except OSError:
+        return None
+
+
+def att_problem(d, s0, vals):
+    """끝난 시도의 attempt.json 값 (tpl_parse · ATT1_TPL) → 사유 | None — 신원 (run_id · t_start = attempt.start) · 봉인 (sha 표 = 지금 파일 · POTCAR 본문 빼고 열 개 · 러너 att_ok5)."""
+    if vals[3] != rec_s(s0, "run_id"):
+        return "end_run_id"
+    if vals[5] != rec_i(s0, "t_start"):
+        return "end_t_start"
+    for f, k in zip(SEAL_ORDER, vals[11:]):
+        if f == "POTCAR":
+            continue
+        p = os.path.join(d, f)
+        if k != (_sha(p) if os.path.isfile(p) else ""):
+            return f"seal_{f}"
+    return None
+
+
+def killed_rec_problem(job_dir, d, stage, s0):
+    """진행 폴더의 killed.json → 사유 | None — 문법 · 칸 · 빈칸 · 결속 (잡 · 단 · run_id · 초 · 기록 시각 ≥ 시작 · 러너 killed_rec5 · 그 시간을 쓰기 전에 · Codex EQ P0)."""
+    k = rec_read(os.path.join(d, "killed.json"))
+    if k is None:
+        return "killed_json_form"
+    for f_ in KILLED_STR:
+        if rec_s(k, f_) is None:
+            return f"killed_json_field_{f_}"
+    if rec_i(k, "recorded_s") is None:
+        return "killed_json_field_recorded_s"
+    for f_ in ("sched_job_id", "cancel_utc", "reason"):
+        if _blank(rec_s(k, f_)):
+            return f"killed_json_blank_{f_}"
+    if rec_s(k, "job") != job_dir or rec_s(k, "rung") != stage:
+        return "killed_job_or_rung"
+    if rec_s(k, "run_id") != rec_s(s0, "run_id"):
+        return "killed_run_id"
+    if not SECS_RE.fullmatch(rec_s(k, "wall_s")):
+        return "killed_wall_s"
+    t0 = rec_i(s0, "t_start")
+    if t0 is None or rec_i(k, "recorded_s") < t0:
+        return "killed_recorded_s"
+    return None
+
+
+def rec_dir_problem(job_dir, d, rel, stage):
+    """시도 폴더 하나 → 사유 | None (러너 rec_dir5 와 같은 차례): 시작 기록 → UTF-8 (시작 · 끝 · 끊김 · 영수증) → 끝 기록 (틀 · 신원 · 봉인) →
+    끊김 기록 (보존 폴더면 killed_in_aborted · 끝 기록과 함께면 end_and_killed · 문법 · 결속) → 진행 폴더의 영수증 (stray_receipt)."""
+    if not os.path.isfile(os.path.join(d, "attempt.start")):
+        return "no_start"
+    sp_ = start_problem(job_dir, d, stage)
+    if sp_:
+        return sp_
+    for f in ("attempt.start", "attempt.json", "killed.json", "infra_abort.json"):
+        p = os.path.join(d, f)
+        if os.path.isfile(p):
+            raw_ = _readb(p)
+            if raw_ is None or not _u8(raw_):
+                return f"utf8_{f}"
+    s0 = rec_read(os.path.join(d, "attempt.start"))
+    if os.path.isfile(os.path.join(d, "attempt.json")):
+        vals = tpl_parse(_readb(os.path.join(d, "attempt.json")), ATT1_TPL)
+        if vals is None:
+            return "att_form"
+        ap_ = att_problem(d, s0, vals)
+        if ap_:
+            return ap_
+    if os.path.isfile(os.path.join(d, "killed.json")):
+        if rel.startswith("run_aborted/"):
+            return "killed_in_aborted"
+        if os.path.isfile(os.path.join(d, "attempt.json")):
+            return "end_and_killed"
+        kp_ = killed_rec_problem(job_dir, d, stage, s0)
+        if kp_:
+            return kp_
+    if rel.startswith("run/") and os.path.isfile(os.path.join(d, "infra_abort.json")):
+        return "stray_receipt"
+    return None
+
+
+def files_problem(job_dir, base):
+    """run/ · run_aborted/ · 시도 폴더의 이름 → 사유 | None (러너 files5 와 같은 규칙): run/ = 시도 폴더 · 잠금 · 준비 폴더 (폴더 · 링크 아님) · 관리 기록 (파일 · 링크 아님) 만 ·
+    run_aborted/ = <잡>_<단>_<k> 폴더만 · 시도 폴더 = 반송 허용 · 금지 이름 · VASP 표준 출력 (VASP_OUT) 의 파일만 — 잔여 *.part · 모르는 이름 · 링크 · 하위 폴더 → 멈춤."""
+    isdir_ = lambda p: os.path.isdir(p) and not os.path.islink(p)
+    isfile_ = lambda p: os.path.isfile(p) and not os.path.islink(p)
+    run, ab = os.path.join(base, "run"), os.path.join(base, "run_aborted")
+    dirs_ok = {f"{job_dir}_{s}" for s in STAGES} | {".a5.lock"} | {f".prep_{job_dir}_{s}" for s in STAGES}
+    files_ok = {os.path.basename(m) for m in MGMT}
+    for n in sorted(os.listdir(run)) if os.path.isdir(run) else []:
+        p = os.path.join(run, n)
+        if not ((n in dirs_ok and isdir_(p)) or (n in files_ok and isfile_(p))):
+            return f"run_entry_{n}"
+    abn = sorted(os.listdir(ab)) if os.path.isdir(ab) else []
+    for n in abn:
+        if not (re.fullmatch(re.escape(job_dir) + r"_(A5|c1|c2)_[1-9][0-9]*", n) and isdir_(os.path.join(ab, n))):
+            return f"aborted_entry_{n}"
+    names = set(RETURN_ALLOWED) | set(RETURN_FORBIDDEN) | set(VASP_OUT)
+    for rel in [f"run/{job_dir}_{s}" for s in STAGES] + [f"run_aborted/{n}" for n in abn]:
+        d = os.path.join(base, rel)
+        if not os.path.isdir(d):
+            continue
+        for n in sorted(os.listdir(d)):
+            if not (n in names and isfile_(os.path.join(d, n))):
+                return f"file_{rel}/{n}"
+    return None
+
+
+def final_problem(job, base):
+    """run/final.json → 사유 | None (러너 fin_ok 와 같은 차례): UTF-8 · REC1 · code 정수 · 칸 (state · why · written_utc · written_s) · fin5 가 쓰는 code/state 조합 · attempts = 지금 시도 목록."""
+    raw = _readb(os.path.join(base, "run", "final.json")) or b""
+    if not _u8(raw):
+        return "utf8_final.json"
+    x = rec_parse(raw)
+    if x is None or rec_i(x, "code") is None:
+        return "final_form"
+    if any(rec_s(x, k) is None for k in ("state", "why", "written_utc")) or rec_i(x, "written_s") is None:
+        return "final_fields"
+    if (rec_i(x, "code"), rec_s(x, "state")) not in FINAL_COMBOS:
+        return "final_code_state"
+    if rec_s(x, "attempts") is None:
+        return "final_no_attempts"
+    if rec_s(x, "attempts") != attempts_of(base, job):
+        return "final_attempts_differ"
+    return None
+
+
+def sp_problem(base):
+    """run/start_point.json → 사유 | None (러너 sp_rec5): UTF-8 · REC1 · from · path · sha256 · head 문자열 · written_s 정수."""
+    raw = _readb(os.path.join(base, "run", "start_point.json")) or b""
+    if not _u8(raw):
+        return "utf8_start_point.json"
+    x = rec_parse(raw)
+    if x is None or any(rec_s(x, k) is None for k in ("from", "path", "sha256", "head")) or rec_i(x, "written_s") is None:
+        return "start_point_form"
+    return None
+
+
+def w0_problem(base):
+    """run/w0_check.json → 사유 | None (러너 w0_rec5): UTF-8 · 틀 (W0_TPL — w0_check 의 printf 그대로 · 잘림 → 거부)."""
+    raw = _readb(os.path.join(base, "run", "w0_check.json")) or b""
+    if not _u8(raw):
+        return "utf8_w0_check.json"
+    if tpl_parse(raw, W0_TPL) is None:
+        return "w0_form"
+    return None
+
+
+def tree_problems(job, base):
+    """트리 관문 (Codex EQ — 러너 tree5 와 같은 규칙 · 같은 차례 · 같은 사유 낱말) → 사유 목록. 러너는 첫 사유에서 종료 8 (아무것도 쓰지 않는다).
+    차례: 이름 (files_problem) → 시도 폴더마다 (rec_dir_problem · 폴더:사유) → [중단 장부 · 영수증 · 시도 이력은 ledger_problems · abort_receipt_problem 이 따로 — 러너 ledger5] →
+    끝 기록 (final_problem) → 시작점 (sp_problem) → ⓪ 기록 (w0_problem). 기존 반송본 대조 (러너 tgz5) 는 러너 쪽만 — 검사기는 반송본 하나를 받는다.
+    ⚠ 못 하는 것: 모든 기록을 서로 맞게 함께 고친 트리 (위협 범위 밖 · §1b) · 반송에 담기지 않는 이름 (러너가 현장에서 막는다)."""
+    J, out = job["dir"], []
+    fp_ = files_problem(J, base)
+    if fp_:
+        out.append(fp_)
+    abd_ = os.path.join(base, "run_aborted")
+    abn = sorted(n for n in os.listdir(abd_) if re.fullmatch(re.escape(J) + r"_(A5|c1|c2)_[1-9][0-9]*", n)) if os.path.isdir(abd_) else []
+    for rel in [f"run/{J}_{s}" for s in STAGES] + [f"run_aborted/{n}" for n in abn]:
+        d = os.path.join(base, rel)
+        if not os.path.isdir(d):
+            continue
+        st_ = rel.split("/", 1)[1][len(J) + 1:].split("_")[0]
+        rp_ = rec_dir_problem(J, d, rel, st_)
+        if rp_:
+            out.append(f"{rel}:{rp_}")
+    for f_, fn_ in (("final.json", lambda: final_problem(job, base)), ("start_point.json", lambda: sp_problem(base)), ("w0_check.json", lambda: w0_problem(base))):
+        if os.path.lexists(os.path.join(base, "run", f_)):
+            p_ = fn_()
+            if p_:
+                out.append(p_)
+    return out
 
 
 def a5_aborted(job, pkgdir, ret, registry, src_sha, src_head=None):
@@ -2561,6 +3006,8 @@ def check_return(out, ret, manifest_sha256, registry=None):
             viol.append(f"시작점 기록 시각 (written_s {ws_!r}) 이 정수가 아니다 — 첫 c 단 전에 썼는지 확인할 수 없다")
         elif ws_ > min(c_t0):
             viol.append(f"시작점 기록 written_s {ws_} > 첫 c 단 시작 {min(c_t0)} — 시작점은 첫 c 단 전에 한 번만 쓴다 (유실 뒤 다시 쓴 기록 · Codex EN P1)")
+
+    viol += [f"트리 관문 ({t_}) — 러너는 이 트리에서 아무것도 쓰거나 띄우거나 포장하지 않고 멈춘다 (종료 8 · Codex EQ)" for t_ in tree_problems(job, base)]
 
     def stop_at(s_, kind, later):
         lat = [x for x in later if present(x)] + (["시작점 기록"] if (s_ == "A5" and sp is not None) else [])
@@ -2789,6 +3236,8 @@ def _selftest():
             ok += 1
         else:
             bad += 1; print("  ✗", m)
+            if os.environ.get("A5_SELFTEST_FAILFAST"):                 # 돌연변이 시험: 첫 빨강에서 멈춘다 (판정은 같다 — 0 아닌 종료)
+                print(f"⛔ 빠른 멈춤 — {ok}/{ok + bad}"); sys.exit(1)
 
     def raises(fn):
         try:
@@ -2846,8 +3295,16 @@ def _selftest():
     ck(rg("DAV:   1   -0.73E+03   +1.E-3   .1E-4   80   0.3E-03\n", "c1") == (1, None) and rg("DAV:   1   -731   0   0   80   3\n", "c1") == (1, None),
        "숫자 꼴: 부호 · 끝 소수점 · 앞 소수점 · 정수 실수 → 완전한 행")
     ck(rg(hd_ + "SDA") == (0, "incomplete_row") and rg(hd_ + "D", "c1") == (0, "incomplete_row") and rg(hd_ + "SD A") == (0, "incomplete_row")
-       and rg(hd_ + sda1 + "SDA") == (1, None) and rg("       N       E   ") == (0, None) and rg(hd_ + "  SDA") == (0, None),
+       and rg(hd_ + sda1 + "SDA") == (1, None) and rg("       N       E   ") == (0, None),
        "⛔음성 Codex EP P0: 콜론 앞 머리 절단 ('SDA' · 'D') + 완전한 행 0 → 손상 · 완전한 1 행 뒤면 세지 않는 꼬리 · 열 머리 줄의 절단 · 앞 빈칸 조각은 0 스텝")
+    ck(rg(hd_ + "  SDA") == (0, "incomplete_row") and rg(hd_ + "\tDA", "c1") == (0, "incomplete_row") and rg(hd_ + "  DAV") == (0, "incomplete_row")
+       and rg("       N") == (0, None) and rg("       N   ") == (0, None) and rg(hd_ + "  ") == (0, None) and rg("N") == (0, "incomplete_row")
+       and rg(hd_ + sda1 + "  SDA") == (1, None),
+       f"⛔음성 Codex EQ P0: 앞 빈칸 뒤 머리 조각 ('  SDA' · 탭 'DA' · 남의 머리 '  DAV') + 완전한 행 0 → 손상 · 앞 빈칸 'N' (열 제목) 만 0 스텝 · 줄 맨 앞 'N' 은 손상 · 완전한 1 행 뒤면 꼬리 — {rg(hd_ + '  SDA')}")
+    r24 = "SDA:   1   " + "1" * 24 + "   -0.10000E+00   -0.10000E+00  8000   0.300E-03\n"
+    ck(rg(hd_ + r24) == (1, None) and rg(hd_ + r24.replace("1" * 24, "1" * 25)) == (0, "incomplete_row") and rg(hd_ + r24.replace("1" * 24, "1" * 310)) == (0, "incomplete_row")
+       and rg(hd_ + r24.replace("8000", "8" * 25)) == (0, "incomplete_row"),
+       "⛔음성 Codex EQ P0: 숫자 칸 길이 ≤ 24 (지수 두 자리와 함께 |x| < 1e119 — 늘 유한) · 25 자리 · 310 자리 에너지 · 25 자리 ncg → 손상")
     # ①b′ 한 줄 기록 문법 REC1 (Codex EO P1 Q-EO-2a) — 쉼표 유실 · 날것 제어문자 · 같은 키 거부 · 콜론 뒤 공백 없음 · 이스케이프는 받음
     kj = {"job": JOB, "rung": "c2", "run_id": "20261122T000000-1-1", "osz_rows": "7", "recorded_s": 5}
     canon = (json.dumps(kj) + "\n").encode()
@@ -3034,8 +3491,10 @@ def _selftest():
         rsp = rechk(exs)
         ck(rsp["status"] == "START_POINT_MISMATCH", f"⛔음성 시작점 기록 W0 인데 A5 가 자격 → START_POINT_MISMATCH (규칙과 대조) — {rsp['status']} {rsp.get('why', '')[:80]}")
         _write(spj, "{not json")
-        ck(rechk(exs)["status"] == "START_POINT_MISMATCH", "⛔음성 시작점 기록을 못 읽음 → START_POINT_MISMATCH (형식)")
-        exf = unpack(w1, "s1fin"); fj = os.path.join(exf, "run", "final.json"); d_ = json.load(open(fj)); d_["code"] = 1; _write(fj, json.dumps(d_))
+        rsf_ = rechk(exs)
+        ck(rsf_["status"] == "LADDER_VIOLATION" and any("start_point_form" in v for v in rsf_["ladder_violations"]),
+           f"⛔음성 시작점 기록을 못 읽음 → 트리 관문 start_point_form · LADDER_VIOLATION (러너도 종료 8 · Codex EQ — 전에는 START_POINT_MISMATCH) — {rsf_['status']}")
+        exf = unpack(w1, "s1fin"); fj = os.path.join(exf, "run", "final.json"); d_ = json.load(open(fj)); d_["code"] = 1; d_["state"] = "NO_PRIMARY"; _write(fj, json.dumps(d_))
         ck(rechk(exf)["status"] == "STOPPED_FOR_REVIEW", "⛔음성 러너 끝 기록 (코드 1) ≠ 기록으로 낸 사다리 판정 (OK) → STOPPED_FOR_REVIEW")
         exo = unpack(w1, "s1ord"); aj_ = os.path.join(exo, "run", f"{JOB}_c1", "attempt.json"); d_ = json.load(open(aj_))
         tA = json.load(open(os.path.join(exo, "run", f"{JOB}_A5", "attempt.json")))["t_end"]
@@ -3105,11 +3564,12 @@ def _selftest():
                     _write(os.path.join(c2d, "killed.json"), txt_)
             fj_ = os.path.join(exx, "run", "final.json")
             if how == "killed" or how.startswith("killed_"):           # 끝 기록은 그 반송의 시도 목록과 같게 (Codex EO P2 — 검사기가 대조한다)
-                _write(fj_, json.dumps({"code": 1, "state": "NO_PRIMARY", "why": "c2 끊김 (시험)", "attempts": attempts_of(exx, meta["jobs"][0])}))
+                _write(fj_, json.dumps({"code": 1, "state": "NO_PRIMARY", "why": "c2 끊김 (시험)", "attempts": attempts_of(exx, meta["jobs"][0]),
+                                       "written_utc": "2026-11-22T00:00:00Z", "written_s": 1}))
             elif os.path.exists(fj_):
                 os.remove(fj_)                                      # 끝나지 않은 사다리 (포장만 다시 한 반송)
             return rechk(exx)
-        for how_, want_ in (("missing", "LADDER_INCOMPLETE"), ("prep", "LADDER_INCOMPLETE"), ("wait", "LADDER_INCOMPLETE"), ("killed0", "STOPPED_FOR_REVIEW")):
+        for how_, want_ in (("missing", "LADDER_INCOMPLETE"), ("prep", "LADDER_VIOLATION"), ("wait", "LADDER_INCOMPLETE"), ("killed0", "STOPPED_FOR_REVIEW")):   # prep = 시작 기록 없는 c2 폴더 → 트리 관문 no_start (Codex EQ)
             rv_ = s2_variant(how_, how_)
             a_ = adopt(rv_)
             ck(rv_["status"] == want_ and a_.get("adopted") is None, f"⛔음성 c1 정체 · c2 {how_} → {want_} · c1 보조 자동 채택 없음 (리뷰 P0-1) — {rv_['status']} · {a_.get('adopted')}")
@@ -3122,7 +3582,7 @@ def _selftest():
                               ("killed_rung", "KILLED_RECORD_MISMATCH"), ("killed_dup", "KILLED_RECORD_MISMATCH"), ("killed_multi", "KILLED_RECORD_MISMATCH"),
                               ("killed_early", "KILLED_RECORD_MISMATCH")):
             rv_ = s2_variant(how_, how_); a_ = adopt(rv_); c2_ = rv_["attempts"]["c2"]
-            ok_st = ("STOPPED_FOR_REVIEW", "LADDER_VIOLATION") if how_ == "killed_early" else ("STOPPED_FOR_REVIEW",)
+            ok_st = ("STOPPED_FOR_REVIEW",) if how_ in ("killed_hdr", "killed_ist0", "killed_rows") else ("LADDER_VIOLATION",)       # 기록 문법 · 결속 = 트리 관문 (Codex EQ)
             ck(rv_["status"] in ok_st and c2_["status"] == want_st and c2_.get("killed") is True and rv_["classes"]["c2"][0] == "REVIEW" and a_.get("adopted") is None,
                f"⛔음성 Codex EN: c1 정체 · 끊긴 c2 {how_} → c2 {want_st} · {ok_st[0]} · c1 보조 자동 채택 없음 — {rv_['status']} · {c2_['status']} · {a_.get('adopted')}")
         # S3–S5: ⓪ sha · 크기 · 머리 불일치 → A5 새로 (A5f) · 원본 그대로
@@ -3279,6 +3739,7 @@ def _selftest():
         # S15: 누적 상한 — c2 앞에서 넘으면 끝 5 (상한) · 검사기 LADDER_INCOMPLETE · 채택 없음 (리뷰 P0-1)
         w15, rc15, _ = run_pkg("s15", {"A5": "conv", "c1": "plateau", "c2": "conv"})
         shutil.rmtree(D(w15, "c2")); os.remove(os.path.join(w15, "run", "final.json")); drop_rows(w15, "c2")
+        os.remove(os.path.join(w15, "a5_return.tgz")); os.remove(os.path.join(w15, "a5_return.tgz.sha256"))        # 완료 반송본이 남으면 트리 관문이 '복구' 로 멈춘다 (Codex EQ)
         aj = os.path.join(D(w15, "c1"), "attempt.json")
         t_ = open(aj).read(); _write(aj, re.sub(r'"elapsed_s": \d+', '"elapsed_s": 700000', t_))
         _, rc15b, log15 = run_pkg("s15", {"A5": "conv", "c1": "plateau", "c2": "conv"}, fresh=False)
@@ -3333,7 +3794,8 @@ def _selftest():
            f"시험 준비: c1 이 러너째 끊김 (attempt.json 없음 · A5 끝 WAVECAR 남음) — rc {rck}")
         pz = rcmd(wk, "--infra-abort", "c1", "s", "t", "r")
         _, rck2, logk2 = run_pkg("kill1", {"A5": "conv", "c1": "plateau", "c2": "conv"}, fresh=False)
-        os.makedirs(D(wk, "c2")); pkl = rcmd(wk, "--killed", "c1", "s", "t", "r", env_extra={"WALL_S": "100"}); os.rmdir(D(wk, "c2"))
+        os.makedirs(D(wk, "c2")); _write(os.path.join(D(wk, "c2"), "attempt.start"), json.dumps({"job": JOB, "attempt": "c2", "stage": "a5", "run_id": "20261121T000000-1-1", "t_start": 5, "kernel_sha256": ""}) + "\n")
+        pkl = rcmd(wk, "--killed", "c1", "s", "t", "r", env_extra={"WALL_S": "100"}); shutil.rmtree(D(wk, "c2"))
         pk0 = rcmd(wk, "--killed", "c1", "s", "t", "r")
         pk1 = rcmd(wk, "--killed", "c1", "sched-9", "2026-11-21T00:00:00Z", "walltime", env_extra={"WALL_S": "100"})
         pk2 = rcmd(wk, "--killed", "c1", "sched-9", "2026-11-21T00:00:00Z", "walltime", env_extra={"WALL_S": "100"})
@@ -3386,7 +3848,8 @@ def _selftest():
                                          ("두 줄", json.dumps(kb0).replace(', "reason"', ',\n "reason"')))):
             wv = os.path.join(T, f"w_kv{i_}"); shutil.copytree(kb_base, wv, symlinks=True); _write(os.path.join(wv, "run", f"{JOB}_c2", "killed.json"), txt_ + "\n")
             _, rcv, logv = run_pkg(f"kv{i_}", {"A5": "conv", "c1": "plateau", "c2": "plateau@7"}, fresh=False)
-            ck(rcv == 8 and fcode(wv) == 8 and "KILLED_RECORD_MISMATCH" in logv, f"⛔음성 Codex EN P1 러너: killed.json {lab_} → 멈춤 8 (KILLED_RECORD_MISMATCH) — rc {rcv}")
+            ok_ = (fcode(wv) == 8 and "KILLED_RECORD_MISMATCH" in logv) if lab_ == "행 수 6" else (fcode(wv) is None and "트리 관문" in logv and "killed" in logv)
+            ck(rcv == 8 and ok_, f"⛔음성 Codex EN P1 러너: killed.json {lab_} → 멈춤 8 ({'KILLED_RECORD_MISMATCH · 끝 기록 8' if lab_ == '행 수 6' else '트리 관문 · 아무것도 안 씀'}) — rc {rcv} · 끝 기록 {fcode(wv)}")
         # Codex EN P1: run_aborted 의 시도에는 읽을 수 있는 중단 영수증 (기록 시각) 이 있어야 한다 — 빠지면 순서 대조가 attempt.json 끝 시각으로만 돈다
         wr, rcr1, _ = run_pkg("rcpt", {"A5": "zero"})
         prc = rcmd(wr, "--infra-abort", "A5", "sched-3", "2026-11-22T00:00:00Z", "node fault")
@@ -3574,13 +4037,13 @@ def _selftest():
            and rce4 == 0 and re4["status"] == "OK" and re4["attempts"]["c1"]["status"] == "INCOMPLETE_ATTEMPT" and adopt(re4).get("adopted") == "a5_c2",
            f"Codex EO P1: --killed 사유 ESC · 따옴표 · 역슬래시 → 이스케이프한 한 줄 기록 · 원래 글로 풀림 · 종료 {rce4} · {re4['status']} · c2 채택 — {pk4_[1].strip()[-80:]}")
         # EO P1 Q-EO-2a ②: 반송의 killed.json — 쉼표 하나 유실 → 양쪽 거부 (8 · STOPPED_FOR_REVIEW) / 콜론 뒤 공백 없는 유효 JSON → 양쪽 받음 (1 · NO_PRIMARY_VALUE · c1 보조)
-        for i_, (lab_, txt_, wrc_, wst_) in enumerate((("쉼표 유실", json.dumps(kb0).replace(', "rung"', ' "rung"', 1), 8, "STOPPED_FOR_REVIEW"),
+        for i_, (lab_, txt_, wrc_, wst_) in enumerate((("쉼표 유실", json.dumps(kb0).replace(', "rung"', ' "rung"', 1), 8, "LADDER_VIOLATION"),
                                                      ("콜론 뒤 공백 없음 (유효 JSON)", json.dumps(kb0, separators=(",", ":")), 1, "NO_PRIMARY_VALUE"),
                                                      ("탭 · 앞뒤 빈칸 (유효 JSON)", " " + json.dumps(kb0, separators=(" ,\t", " :\t")) + "\t", 1, "NO_PRIMARY_VALUE"))):
             wv = cp_(kb_base, f"w_eo_kj{i_}"); _write(os.path.join(wv, "run", f"{JOB}_c2", "killed.json"), txt_ + "\n")
             _, rcv, logv = run_pkg(f"eo_kj{i_}", {}, fresh=False)
-            rv, _ = chk(wv); av = adopt(rv)
-            ck(rcv == wrc_ and rv["status"] == wst_ and (av.get("adopted") == "a5_c1" if wrc_ == 1 else (av.get("adopted") is None and "KILLED_RECORD_MISMATCH" in logv)),
+            rv = chk(wv)[0] if wrc_ == 1 else rechk(cp_(wv, f"ex_eo_kj{i_}")); av = adopt(rv)
+            ck(rcv == wrc_ and rv["status"] == wst_ and (av.get("adopted") == "a5_c1" if wrc_ == 1 else (av.get("adopted") is None and "killed_json_form" in logv)),
                f"{'⛔음성 ' if wrc_ == 8 else ''}Codex EO P1: 반송 killed.json {lab_} → 러너 종료 {rcv} (기대 {wrc_}) · 검사기 {rv['status']} (기대 {wst_}) · 채택 {av.get('adopted')}")
         # EO P1 Q-EO-2b: c2 attempt.start 의 잡 · 변형 · stage 만 바꾸고 run_id 유지 → 러너 BAD2 (종료 2 · 끝 기록 없음) · 검사기 ATTEMPT_MISMATCH · 채택 없음
         for i_, (lab_, fld_, val_) in enumerate((("잡 이름", "job", "V5_s_outer_A_G4_e70_far_a4"), ("변형", "attempt", "c1"), ("stage", "stage", "a4"))):
@@ -3588,8 +4051,8 @@ def _selftest():
             s0d = json.loads(open(spp_).read()); s0d[fld_] = val_; _write(spp_, json.dumps(s0d) + "\n")
             _, rcv, logv = run_pkg(f"eo_st{i_}", {}, fresh=False)
             pov = pack_only(wv)
-            rv, _ = chk(wv)
-            ck(rcv == 2 and fcode(wv) is None and pov == 0 and rv["attempts"]["c2"]["status"] == "ATTEMPT_MISMATCH" and rv["status"] == "ATTEMPT_MISMATCH"
+            rv = rechk(cp_(wv, f"ex_eo_st{i_}"))
+            ck(rcv == 8 and fcode(wv) is None and pov == 8 and rv["attempts"]["c2"]["status"] == "ATTEMPT_MISMATCH" and rv["status"] == "LADDER_VIOLATION" and "start_" in logv
                and adopt(rv).get("adopted") is None,
                f"⛔음성 Codex EO P1: c2 attempt.start {lab_} 바꿈 (run_id 유지) → 러너 종료 {rcv} · 검사기 {rv['attempts']['c2']['status']} · {rv['status']} · 채택 {adopt(rv).get('adopted')}")
         # EO P1 Q-EO-2b ②: --infra-abort 도 attempt.start 를 그 폴더와 대조 (A5 0 스텝 · 잡 이름만 바꿈 · run_id 유지) → 종료 2 · 폴더 그대로 · 영수증 · 장부 없음 (m113)
@@ -3597,7 +4060,7 @@ def _selftest():
         spi_ = os.path.join(D(wia, "A5"), "attempt.start"); sdi_ = json.loads(open(spi_).read()); sdi_["job"] = "V5_s_outer_A_G4_e70_far_a4"
         _write(spi_, json.dumps(sdi_) + "\n")
         pia = rcmd(wia, "--infra-abort", "A5", "sched-1", "2026-11-23T00:00:00Z", "node", env_extra={"WALL_S": "100"})
-        ck(rcia == 7 and pia[0] == 2 and "이 폴더의 시도가 아니다" in pia[1] and os.path.isdir(D(wia, "A5"))
+        ck(rcia == 7 and pia[0] == 8 and "start_job" in pia[1] and os.path.isdir(D(wia, "A5"))
            and not os.path.exists(os.path.join(wia, "run_aborted")) and not os.path.exists(os.path.join(wia, "run", "infra_aborts.tsv")),
            f"⛔음성 Codex EO P1: --infra-abort 도 attempt.start 를 그 폴더와 대조 (잡만 바꿈) → 종료 {pia[0]} · 폴더 그대로 · 영수증 · 장부 없음 — {pia[1].strip()[-90:]}")
         # EO P1 Q-EO-2c ①: A5 0 스텝 (attempt.json elapsed ≈ 0) 뒤 WALL_S=648001 로 중단 기록 → 영수증 시간이 먼저 → 다시 돌리면 상한 (끝 5) · A5 안 띄움
@@ -3654,9 +4117,10 @@ def _selftest():
                 rp2 = os.path.join(abd_, "infra_abort.json"); d2 = json.loads(open(rp2, encoding="utf-8").read()); d2["run_id"] = "20261123T000000-1-1"; _write(rp2, json.dumps(d2) + "\n")
             sp_had = os.path.isfile(os.path.join(wv, "run", "start_point.json")); sp_sha = _sha(os.path.join(wv, "run", "start_point.json")) if sp_had else None
             _, rcv, logv = run_pkg(f"eo_led{i_}", {"A5": "conv", "c1": "conv"}, fresh=False)
-            rv, _ = chk(wv)
+            rv = rechk(cp_(wv, f"ex_eo_led{i_}"))
             sp_now = _sha(os.path.join(wv, "run", "start_point.json")) if os.path.isfile(os.path.join(wv, "run", "start_point.json")) else None
-            ck(rcv == 8 and fcode(wv) == 8 and "중단 장부" in logv and sp_now == sp_sha and not os.path.isdir(D(wv, "c1")) and rv["status"] == "LADDER_VIOLATION"
+            ck(rcv == 8 and fcode(wv) is None and "트리 관문" in logv and ("ledger" in logv or "receipt" in logv) and sp_now == sp_sha and not os.path.isdir(D(wv, "c1"))
+               and rv["status"] == "LADDER_VIOLATION"
                and any(("장부" in v or "영수증" in v) for v in rv["ladder_violations"]) and adopt(rv).get("adopted") is None,
                f"⛔음성 Codex EO P1: 부분 복구 ({how_}) → 러너 종료 {rcv} · 시작점 {'그대로' if sp_now == sp_sha else '바뀜'} · c1 안 띄움 · 검사기 {rv['status']}")
         for lab_, fn_ in (("장부 줄 빠짐", lambda e_: _write(os.path.join(e_, "run", "infra_aborts.tsv"), LEDGER_HEAD + "\n")),
@@ -3675,16 +4139,19 @@ def _selftest():
         same_ = {k: v for k, v in f1_.items() if k != "attempts"} == {k: v for k, v in f2_.items() if k != "attempts"} and f1_["attempts"] != f2_["attempts"]
         for f_ in ("a5_return.tgz", "a5_return.tgz.sha256"):
             shutil.copy2(os.path.join(wx2, f_), os.path.join(wx1, f_))
+        tgsw = _sha(os.path.join(wx1, "a5_return.tgz"))
         _, rsw1, logsw = run_pkg("eo_sw1", {}, fresh=False, env_extra={"FAKE_NOW": now_})
         psw = pack_only(wx1)
         _, rsw2, _ = run_pkg("eo_sw1", {}, fresh=False, env_extra={"FAKE_NOW": now_})
         rsw, exsw = chk(wx1)
-        ck(rx1 == 0 and rx2 == 0 and same_ and rsw1 == 4 and "PACK_ONLY=1 bash run_a5.sh" in logsw and psw == 0 and rsw2 == 0 and rsw["status"] == "OK"
+        ck(rx1 == 0 and rx2 == 0 and same_ and rsw1 == 8 and "tgz_final_differs" in logsw and psw == 8 and rsw2 == 8 and _sha(os.path.join(wx1, "a5_return.tgz")) == tgsw
+           and rsw["status"] == "OK"
            and rsw["final_record"]["attempts"] == attempts_of(exsw, J_),
-           f"⛔음성 Codex EO P2: 같은 초 별개 실행의 tgz + sha 쌍 → 다시 돌림 종료 {rsw1} (4) · 포장만 다시 {psw} · 다시 {rsw2} · {rsw['status']} · 끝 기록 시도 ID 만 다름 {same_}")
+           f"⛔음성 Codex EO P2 · EQ: 같은 초 별개 실행의 tgz + sha 쌍 (끝 기록 다름) → 다시 돌림 {rsw1} · 포장만 {psw} · 다시 {rsw2} (모두 8 · 트리 관문 tgz_final_differs · 반송본 그대로) · 그 반송본 자체는 {rsw['status']} · 끝 기록 시도 ID 만 다름 {same_}")
         exv = cp_(exsw, "ex_eo_fin"); fjp = os.path.join(exv, "run", "final.json"); dfj = json.loads(open(fjp).read())
         dfj["attempts"] = dfj["attempts"].replace("=", "=9", 1); _write(fjp, json.dumps(dfj) + "\n"); rvf = rechk(exv)
-        ck(rvf["status"] == "STOPPED_FOR_REVIEW" and "시도 목록" in rvf.get("why", ""), f"⛔음성 Codex EO P2: 끝 기록의 시도 목록 ≠ 반송 시도 → STOPPED_FOR_REVIEW — {rvf['status']} {rvf.get('why', '')[:70]}")
+        ck(rvf["status"] == "LADDER_VIOLATION" and any("final_attempts_differ" in v for v in rvf["ladder_violations"]),
+           f"⛔음성 Codex EO P2: 끝 기록의 시도 목록 ≠ 반송 시도 → 트리 관문 final_attempts_differ · LADDER_VIOLATION (러너도 8) — {rvf['status']} {rvf.get('why', '')[:70]}")
         # ═══ Codex EP (11-23) — 숫자를 못 읽는 행 · 콜론 앞 머리 절단 · 진행 폴더의 남의 영수증 · status.tsv 이력 · 끝난 시도 신원 · 끝 기록 · 빈 영수증 칸 · 비 UTF-8 · 장부 순서 ═══
         garb = "SDA: 1 none missing missing abc bad\\n"
         # EP P0 ①: c2 유일 행이 숫자를 못 읽는 행 (칸 수만 맞음) 에서 끊김 → --killed 거부 · 다시 돌림 8 · STOPPED_FOR_REVIEW · 채택 없음 (전에는 --killed 0 · 1 · c1 보조)
@@ -3713,17 +4180,17 @@ def _selftest():
         pst = rcmd(wst_, "--killed", "c1", "sched-5", "2026-11-23T00:00:00Z", "walltime", env_extra={"WALL_S": "648001"})
         shutil.copy(os.path.join(exu, "run_aborted", f"{JOB}_A5_1", "infra_abort.json"), os.path.join(D(wst_, "c1"), "infra_abort.json"))
         _, rcst, logst = run_pkg("ep_stray", {"A5": "conv", "c1": "plateau@7", "c2": "conv"}, fresh=False)
-        ck(pst[0] == 0 and rcst == 8 and fcode(wst_) == 8 and not os.path.isdir(D(wst_, "c2")) and "영수증" in logst,
+        ck(pst[0] == 0 and rcst == 8 and fcode(wst_) is None and not os.path.isdir(D(wst_, "c2")) and "stray_receipt" in logst,
            f"⛔음성 Codex EP P1: 상한 넘은 c1 + 진행 폴더의 남의 영수증 → 러너 종료 {rcst} · c2 {'뜸' if os.path.isdir(D(wst_, 'c2')) else '안 뜸'}")
         exv = cp_(exso, "ex_ep_stray"); shutil.copy(os.path.join(exso, "run_aborted", f"{JOB}_c1_1", "infra_abort.json"), os.path.join(exv, "run", f"{JOB}_c1", "infra_abort.json"))
         rvs = rechk(exv)
-        ck(rvs["status"] == "LADDER_VIOLATION" and any("영수증" in v for v in rvs["ladder_violations"]) and adopt(rvs).get("adopted") is None,
+        ck(rvs["status"] == "LADDER_VIOLATION" and any("stray_receipt" in v for v in rvs["ladder_violations"]) and adopt(rvs).get("adopted") is None,
            f"⛔음성 Codex EP P1 검사기: 진행 폴더 (run/<잡>_c1) 의 중단 영수증 → LADDER_VIOLATION — {rvs['ladder_violations'][:2]}")
         # EP P1 ③: 부분 복구 — c1 0 스텝 중단의 장부 · 보존 폴더 · 시작점을 함께 지우고 status.tsv 의 첫 c1 줄만 남음 → 러너 8 (시작점 안 씀 · c1 안 띄움) · 검사기 LADDER_VIOLATION
         wh_ = cp_(sp_base, "w_ep_hist")
         os.remove(os.path.join(wh_, "run", "infra_aborts.tsv")); shutil.rmtree(os.path.join(wh_, "run_aborted")); os.remove(os.path.join(wh_, "run", "start_point.json"))
         _, rch, logh = run_pkg("ep_hist", {"A5": "conv", "c1": "conv"}, fresh=False)
-        ck(rch == 8 and fcode(wh_) == 8 and not os.path.isfile(os.path.join(wh_, "run", "start_point.json")) and not os.path.isdir(D(wh_, "c1")) and "status.tsv" in logh,
+        ck(rch == 8 and fcode(wh_) is None and not os.path.isfile(os.path.join(wh_, "run", "start_point.json")) and not os.path.isdir(D(wh_, "c1")) and "status_row" in logh,
            f"⛔음성 Codex EP P1: 부분 복구 (장부 · 보존 폴더 · 시작점 함께 빠짐 · status.tsv 의 첫 c1 남음) → 러너 종료 {rch} · 시작점 "
            f"{'다시 씀' if os.path.isfile(os.path.join(wh_, 'run', 'start_point.json')) else '안 씀'}")
         exh = cp_(exso, "ex_ep_hist")
@@ -3741,7 +4208,7 @@ def _selftest():
         wei, rcei1, _ = run_pkg("ep_eid", {"A5": "zero"})
         ajp = os.path.join(D(wei, "A5"), "attempt.json"); _write(ajp, open(ajp).read().replace('"run_id": "', '"run_id": "9', 1))
         _, rcei2, logei = run_pkg("ep_eid", {"A5": "zero"}, fresh=False)
-        ck(rcei1 == 7 and rcei2 == 2 and "end_run_id" in logei, f"⛔음성 Codex EP 조건부: 러너 — 끝난 A5 의 attempt.json run_id ≠ attempt.start → 종료 {rcei2} (BAD2 · 전에는 7)")
+        ck(rcei1 == 7 and rcei2 == 8 and "end_run_id" in logei, f"⛔음성 Codex EP 조건부: 러너 — 끝난 A5 의 attempt.json run_id ≠ attempt.start → 종료 {rcei2} (BAD2 · 전에는 7)")
         # EP 조건부 ④: 끝 기록 — 검사기는 끝 기록 없는 반송을 채택하지 않는다 · 러너는 attempts 가 없거나 다른 끝 기록이면 포장 · 다시 돌림 전에 종료 2
         exv = cp_(exso, "ex_ep_nofin"); os.remove(os.path.join(exv, "run", "final.json")); rvn = rechk(exv)
         ck(rvn["status"] == "STOPPED_FOR_REVIEW" and "끝 기록" in rvn.get("why", "") and adopt(rvn).get("adopted") is None,
@@ -3754,16 +4221,23 @@ def _selftest():
                 dff["attempts"] = dff["attempts"] + " run/x=1"
             _write(fjp_, json.dumps(dff) + "\n"); tg0 = _sha(os.path.join(wf_, "a5_return.tgz"))
             pf_ = pack_only(wf_); _, rcf_, _ = run_pkg(f"ep_fin{i_}", {}, fresh=False)
-            ck(pf_ == 2 and rcf_ == 2 and _sha(os.path.join(wf_, "a5_return.tgz")) == tg0,
+            ck(pf_ == 8 and rcf_ == 8 and _sha(os.path.join(wf_, "a5_return.tgz")) == tg0,
                f"⛔음성 Codex EP 조건부: 러너 끝 기록 attempts {how_} → 포장만 {pf_} · 다시 돌림 {rcf_} (둘 다 2 · 묶음 그대로)")
+        wf3 = cp_(wso, "w_ep_fin_notgz"); fjp3 = os.path.join(wf3, "run", "final.json"); dff3 = json.loads(open(fjp3).read())
+        dff3["attempts"] = dff3["attempts"] + " run/x=1"; _write(fjp3, json.dumps(dff3) + "\n"); fb3 = open(fjp3, "rb").read()
+        for f_ in ("a5_return.tgz", "a5_return.tgz.sha256"):
+            os.remove(os.path.join(wf3, f_))
+        pf3 = pack_only(wf3); _, rcf3, logf3 = run_pkg("ep_fin_notgz", {}, fresh=False)
+        ck(pf3 == 8 and rcf3 == 8 and "final_attempts_differ" in logf3 and not os.path.exists(os.path.join(wf3, "a5_return.tgz")) and open(fjp3, "rb").read() == fb3,
+           f"⛔음성 Codex EQ: 끝 기록 attempts 다름 · 기존 반송본 없음 (반송본 대조가 가리지 않게 — 러너 fin_ok 만) → 포장만 {pf3} · 다시 돌림 {rcf3}")
         # EP 조건부 ⑤: 영수증 · 끊김 기록의 필수 칸 (잡 ID · 취소 시각 · 사유) 이 비면 거부 (러너 · 검사기)
         wv = cp_(kb_base, "w_ep_kjempty"); _write(os.path.join(wv, "run", f"{JOB}_c2", "killed.json"), json.dumps({**kb0, "sched_job_id": ""}) + "\n")
-        _, rcv, logv = run_pkg("ep_kjempty", {}, fresh=False); rv = chk(wv)[0]
-        ck(rcv == 8 and "KILLED_RECORD_MISMATCH" in logv and rv["status"] == "STOPPED_FOR_REVIEW" and adopt(rv).get("adopted") is None,
+        _, rcv, logv = run_pkg("ep_kjempty", {}, fresh=False); rv = rechk(cp_(wv, "ex_ep_kjempty"))
+        ck(rcv == 8 and "killed_json_blank_sched_job_id" in logv and rv["status"] == "LADDER_VIOLATION" and adopt(rv).get("adopted") is None,
            f"⛔음성 Codex EP 조건부: killed.json sched_job_id 빈 문자열 → 러너 {rcv} · 검사기 {rv['status']} · 채택 {adopt(rv).get('adopted')}")
         exk = unpack(wkb, "ep_kjempty_ex"); kpk = os.path.join(exk, "run", f"{JOB}_c2", "killed.json")
         _write(kpk, json.dumps({**json.loads(open(kpk).read()), "sched_job_id": ""}) + "\n"); rvk = rechk(exk)
-        ck(rvk["attempts"]["c2"]["status"] == "KILLED_RECORD_MISMATCH" and rvk["status"] == "STOPPED_FOR_REVIEW" and adopt(rvk).get("adopted") is None,
+        ck(rvk["attempts"]["c2"]["status"] == "KILLED_RECORD_MISMATCH" and rvk["status"] == "LADDER_VIOLATION" and adopt(rvk).get("adopted") is None,
            f"⛔음성 Codex EP 조건부 검사기: 옛 러너 반송 (끝 기록 code 1) 의 killed.json sched_job_id 빈 문자열 → {rvk['attempts']['c2']['status']} · {rvk['status']}")
         exv = cp_(exso, "ex_ep_rempty"); rpe = os.path.join(exv, "run_aborted", f"{JOB}_c1_1", "infra_abort.json"); dre = json.loads(open(rpe, encoding="utf-8").read())
         dre["reason"] = ""; _write(rpe, json.dumps(dre, ensure_ascii=False) + "\n"); rve = rechk(exv)
@@ -3800,20 +4274,213 @@ def _selftest():
         fjr = os.path.join(exro, "run", "final.json"); dfr = json.loads(open(fjr).read()); dfr["attempts"] = attempts_of(exro, J_); _write(fjr, json.dumps(dfr) + "\n")
         rvr = rechk(exro)
         ck(rcr1 == 7 and prA[0] == 0 and rcr2 == 7 and prC[0] == 0 and rcr3 == 8 and not os.path.isdir(D(wr_, "c1")) and rcr4 == 0 and rro["status"] == "OK"
-           and rvr["status"] == "LADDER_VIOLATION" and any("순서" in v for v in rvr["ladder_violations"]),
+           and rvr["status"] == "LADDER_VIOLATION" and any(("순서" in v or "rung_order" in v) for v in rvr["ladder_violations"]),
            f"⛔음성 Codex EP P2: 장부 줄 · 폴더 번호를 c1#1 → A5#2 로 맞바꿈 → 러너 {rcr3} (c1 {'뜸' if os.path.isdir(D(wr_, 'c1')) else '안 뜸'}) · 검사기 {rvr['status']} · "
            f"양성 {rcr4} {rro['status']} — {rvr['ladder_violations'][:2]}")
+        # ═══ Codex EQ (11-23) — 트리 관문 하나: 모르는 것 · 못 읽는 것 · 서로 안 맞는 것은 아무것도 쓰지 않고 멈춤 8 (러너 tree5 = 검사기 tree_problems) ═══
+        import hashlib as _hl
+
+        def snap(w_):                                      # 트리 바이트 지문 (run · run_aborted · 반송본 — 잠금 폴더 빼고) — '아무것도 쓰지 않았다' 를 바이트로 본다
+            h_ = _hl.sha256()
+            for root_ in ("run", "run_aborted"):
+                for dp_, dns_, fns_ in os.walk(os.path.join(w_, root_)):
+                    dns_[:] = sorted(x_ for x_ in dns_ if x_ != ".a5.lock")
+                    for fn_ in sorted(fns_):
+                        p_ = os.path.join(dp_, fn_); h_.update(os.path.relpath(p_, w_).encode() + b"\0" + open(p_, "rb").read() + b"\0")
+            for f_ in ("a5_return.tgz", "a5_return.tgz.sha256"):
+                if os.path.isfile(os.path.join(w_, f_)):
+                    h_.update(f_.encode() + open(os.path.join(w_, f_), "rb").read())
+            return h_.hexdigest()
+        junker = os.path.join(T, "junker.sh")          # 그 단의 VASP 가 시도 폴더에 표준 밖 이름 (core.1) 을 남김
+        _write(junker, f"#!/bin/bash\n{py} {fake}; r=$?\ncase \"$(basename \"$PWD\")\" in *_\"${{FAKE_JUNK_STAGE:-none}}\") echo core > core.1;; esac\nexit $r\n")
+        os.chmod(junker, 0o755)
+        PB = {"PATH": bind + os.pathsep + os.environ.get("PATH", "")}
+        # EQ P0 ① (Q-EQ-1): c2 첫 행 앞 빈칸 두 칸 + 'SDA' 절단 → --infra-abort 거부 · 다시 돌림 8 (전에는 0 스텝으로 받고 c2 다시 · OK · c2 채택)
+        wq1, _, _ = run_pkg("eq_sda2", {"A5": "conv", "c1": "plateau", "c2": "plateau@0|  SDA"}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c2"}, session=True)
+        pq1 = rcmd(wq1, "--infra-abort", "c2", "sched-9", "2026-11-23T00:00:00Z", "node", env_extra={"WALL_S": "100"})
+        _, rcq1, _ = run_pkg("eq_sda2", {"A5": "conv", "c1": "plateau", "c2": "conv"}, fresh=False)
+        rq1, _ = chk(wq1)
+        ck(pq1[0] == 2 and rcq1 == 8 and fcode(wq1) == 8 and rq1["status"] == "STOPPED_FOR_REVIEW" and not os.path.isdir(os.path.join(wq1, "run_aborted"))
+           and adopt(rq1).get("adopted") is None,
+           f"⛔음성 Codex EQ P0: 앞 빈칸 + 'SDA' 절단 → --infra-abort {pq1[0]} · 다시 돌림 {rcq1} · {rq1['status']} · 채택 {adopt(rq1).get('adopted')}")
+        # EQ P0 ② (Q-EQ-1): c2 유일 행 에너지 칸 310 자리 (실행 실패) → 손상 → 종료 8 · 채택 없음 (전에는 RUN_FAILED 근거 → c1 보조)
+        r310 = "SDA:   1   " + "1" * 310 + "   -0.10000E+00   -0.10000E+00  8000   0.300E-03\\n"
+        wq2, rcq2, _ = run_pkg("eq_310", {"A5": "conv", "c1": "plateau", "c2": "crash@0|" + r310})
+        rq2, _ = chk(wq2); sq2 = [r_ for r_ in stat_rows(wq2) if r_[1] == "c2"]
+        ck(rcq2 == 8 and len(sq2) == 1 and sq2[0][4] == "SCF_UNVERIFIED" and sq2[0][8] == "incomplete_row" and rq2["status"] == "STOPPED_FOR_REVIEW"
+           and adopt(rq2).get("adopted") is None,
+           f"⛔음성 Codex EQ P0: c2 유일 행 에너지 310 자리 → 종료 {rcq2} · {sq2[:1]} · {rq2['status']} · 채택 {adopt(rq2).get('adopted')}")
+        # EQ P0 ③ (Q-EQ-2): 648001 s 로 끝난 c1 (상한 넘음 · 대조군 끝 5) 에 남의 0 초 killed.json 복사 → 러너 8 (c2 안 띄움 · 아무것도 안 씀) · 검사기 LADDER_VIOLATION
+        wqk, _, _ = run_pkg("eq_kc", {"A5": "conv", "c1": "plateau", "c2": "conv"}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c2"}, session=True)
+        shutil.rmtree(D(wqk, "c2"))
+        ajq = os.path.join(D(wqk, "c1"), "attempt.json"); _write(ajq, re.sub(r'"elapsed_s": [0-9]+', '"elapsed_s": 648001', open(ajq).read(), count=1))
+        wqk0 = cp_(wqk, "w_eq_kc0"); _, rcqk0, _ = run_pkg("eq_kc0", {"A5": "conv", "c1": "plateau", "c2": "conv"}, fresh=False)
+        wqk1 = cp_(wqk, "w_eq_kc1"); _write(os.path.join(D(wqk1, "c1"), "killed.json"), json.dumps({**kb0, "wall_s": "0"}) + "\n"); s0q = snap(wqk1)
+        _, rcqk1, logqk1 = run_pkg("eq_kc1", {"A5": "conv", "c1": "plateau", "c2": "conv"}, fresh=False)
+        rqk1 = rechk(cp_(wqk1, "ex_eq_kc1"))
+        ck(rcqk0 == 5 and fcode(wqk0) == 5 and rcqk1 == 8 and fcode(wqk1) is None and not os.path.isdir(D(wqk1, "c2")) and snap(wqk1) == s0q and "end_and_killed" in logqk1
+           and rqk1["status"] == "LADDER_VIOLATION" and any("end_and_killed" in v for v in rqk1["ladder_violations"]),
+           f"⛔음성 Codex EQ P0: 648001 s c1 대조군 {rcqk0} · 남의 killed.json 복사 → 러너 {rcqk1} (c2 {'뜸' if os.path.isdir(D(wqk1, 'c2')) else '안 뜸'}) · 검사기 {rqk1['status']}")
+        # EQ P1 ① (Q-EQ-3): 정상 완료 뒤 run/ 만 A5 직후로 복구 (완료 반송본 · sha 그대로) → 러너 8 · 반송본 그대로 · c1 다시 안 띄움 (전에는 두 단을 새 ID 로 다시 돌리고 반송본을 덮음)
+        wqr = cp_(w2, "w_eq_restore")
+        for s_ in ("c1", "c2"):
+            shutil.rmtree(D(wqr, s_)); drop_rows(wqr, s_)
+        for f_ in ("final.json", "start_point.json"):
+            os.remove(os.path.join(wqr, "run", f_))
+        s0r = snap(wqr); _, rcqr, logqr = run_pkg("eq_restore", {"A5": "noconv", "c1": "plateau", "c2": "conv"}, fresh=False)
+        ck(rcqr == 8 and snap(wqr) == s0r and not os.path.isdir(D(wqr, "c1")) and "tgz_" in logqr,
+           f"⛔음성 Codex EQ P1: run/ 를 A5 직후로 복구 + 완료 반송본 → 러너 {rcqr} · 트리 · 반송본 {'그대로' if snap(wqr) == s0r else '바뀜'} — {logqr.strip()[-100:]}")
+        wqi, _, _ = run_pkg("eq_mid", {"A5": "conv", "c1": "plateau@7", "c2": "conv"}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c1"}, session=True)
+        pqi = pack_only(wqi)
+        pqik = rcmd(wqi, "--killed", "c1", "sched-3", "2026-11-23T00:00:00Z", "walltime", env_extra={"WALL_S": "100"})
+        _, rcqi, _ = run_pkg("eq_mid", {"A5": "conv", "c1": "plateau@7", "c2": "conv"}, fresh=False)
+        rqi, _ = chk(wqi)
+        ck(pqi == 0 and pqik[0] == 0 and rcqi == 0 and rqi["status"] == "OK",
+           f"Codex EQ P1 양성: 끝 기록 없는 중간 포장 (PACK_ONLY) 뒤 --killed · 이어 돌림 → 트리 ⊇ 반송본 → {pqi} · {pqik[0]} · {rcqi} · {rqi['status']}")
+        # EQ P1 ② (Q-EQ-3): status.tsv 0 바이트 → 러너 8 (c1 안 띄움 · 전에는 머리 검사를 건너뛰고 c1 · c2) — 머리만 있는 파일은 모든 새 실행이 받는다
+        wqa, _, _ = run_pkg("eq_abase", {"A5": "conv", "c1": "plateau@7", "c2": "conv"}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c1"}, session=True)
+        qa_base = cp_(wqa, "eq_abase_clean"); shutil.rmtree(D(qa_base, "c1"))          # A5 끝 · 시작점 기록 뒤 c1 준비 실패와 같은 트리 (c1 안 띄움)
+        wq5 = cp_(qa_base, "w_eq_st0"); _write(os.path.join(wq5, "run", "status.tsv"), ""); s05 = snap(wq5)
+        _, rcq5, logq5 = run_pkg("eq_st0", {"A5": "conv", "c1": "conv"}, fresh=False)
+        hq5 = history_problems(J_, wq5)
+        ck(rcq5 == 8 and snap(wq5) == s05 and not os.path.isdir(D(wq5, "c1")) and "status_empty" in logq5 and any("status_empty" in p_ for p_ in hq5),
+           f"⛔음성 Codex EQ P1: status.tsv 0 바이트 → 러너 {rcq5} · 검사기 {hq5[:1]} (같은 낱말 status_empty)")
+        # EQ P1 ③ (Q-EQ-4): 잘린 끝 기록 — A5 attempt.json 끝 중괄호 유실 · t_start 뒤 '.5' → 러너 8 (c1 안 띄움 · 전에는 c1 · c2 를 돌리고 0)
+        for i_, how_ in enumerate(("brace", "dot5")):
+            wqt = cp_(qa_base, f"w_eq_trunc{i_}"); ajt = os.path.join(D(wqt, "A5"), "attempt.json"); tx_ = open(ajt).read()
+            _write(ajt, (tx_.rstrip("\n")[:-1] + "\n") if how_ == "brace" else re.sub(r'("t_start": [0-9]+)', r'\1.5', tx_, count=1))
+            s0t = snap(wqt); _, rcqt, logqt = run_pkg(f"eq_trunc{i_}", {"A5": "conv", "c1": "conv"}, fresh=False)
+            ck(rcqt == 8 and snap(wqt) == s0t and not os.path.isdir(D(wqt, "c1")) and "att_form" in logqt, f"⛔음성 Codex EQ P1: A5 attempt.json {how_} → 러너 {rcqt}")
+        # EQ P1 ④: 봉인 — 끝난 A5 의 OUTCAR 가 끝 기록 (sha 표) 뒤에 바뀜 → 러너 8 (전에는 이어 돌림 · 검사기만 ATTEMPT_MISMATCH)
+        wqs = cp_(qa_base, "w_eq_seal"); open(os.path.join(D(wqs, "A5"), "OUTCAR"), "a").write(" \n"); s0s = snap(wqs)
+        _, rcqs, logqs = run_pkg("eq_seal", {"A5": "conv", "c1": "conv"}, fresh=False)
+        ck(rcqs == 8 and snap(wqs) == s0s and not os.path.isdir(D(wqs, "c1")) and "seal_OUTCAR" in logqs, f"⛔음성 Codex EQ: 끝난 A5 OUTCAR 가 봉인과 다름 → 러너 {rcqs}")
+        # EQ P1 ⑤ (Q-EQ-4): 재포장이 현장 오류를 지움 — 끝난 사다리의 c1 폴더에 infra_abort.json.part · c1 끝 기록 신원 다름 · final.json code 0 + REVIEW
+        #   → PACK_ONLY 8 · 다시 돌림 (재사용) 8 · 트리 · 반송본 · env.txt 바이트 그대로 / 검사기 (현장 트리 그대로) LADDER_VIOLATION
+        for i_, how_ in enumerate(("part", "eid", "code0rev")):
+            wqp = cp_(w1, f"w_eq_pack{i_}")
+            if how_ == "part":
+                _write(os.path.join(D(wqp, "c1"), "infra_abort.json.part"), "{")
+            elif how_ == "eid":
+                ajp_ = os.path.join(D(wqp, "c1"), "attempt.json"); _write(ajp_, open(ajp_).read().replace('"run_id": "', '"run_id": "9', 1))
+            else:
+                fjp_ = os.path.join(wqp, "run", "final.json"); _write(fjp_, open(fjp_).read().replace('"state": "OK"', '"state": "REVIEW"', 1))
+            s0p = snap(wqp); pqp = pack_only(wqp); _, rcqp, _ = run_pkg(f"eq_pack{i_}", {}, fresh=False)
+            rqp = rechk(cp_(wqp, f"ex_eq_pack{i_}"))
+            ck(pqp == 8 and rcqp == 8 and snap(wqp) == s0p and rqp["status"] == "LADDER_VIOLATION" and adopt(rqp).get("adopted") is None,
+               f"⛔음성 Codex EQ P1: 끝난 사다리 {how_} → PACK_ONLY {pqp} · 다시 돌림 {rcqp} · 트리 {'그대로' if snap(wqp) == s0p else '바뀜'} · 검사기 {rqp['status']}")
+        # EQ P1 ⑥ (Q-EQ-5): 필수 칸 빈칸만 (잡 ID '   ') → --killed · --infra-abort 거부 (쓰지 않는다)
+        wqb = cp_(wqa, "w_eq_blank"); pqb1 = rcmd(wqb, "--killed", "c1", "   ", "2026-11-23T00:00:00Z", "walltime", env_extra={"WALL_S": "100"})
+        wqb0, rcqb0, _ = run_pkg("eq_blank0", {"A5": "zero"})
+        pqb2 = rcmd(wqb0, "--infra-abort", "A5", "   ", "2026-11-23T00:00:00Z", "node", env_extra={"WALL_S": "10"})
+        ck(pqb1[0] == 2 and not os.path.exists(os.path.join(D(wqb, "c1"), "killed.json")) and rcqb0 == 7 and pqb2[0] == 2 and not os.path.isdir(os.path.join(wqb0, "run_aborted")),
+           f"⛔음성 Codex EQ P1: 잡 ID 빈칸 세 칸 → --killed {pqb1[0]} · --infra-abort {pqb2[0]} (둘 다 2 · 기록 없음)")
+        pqb3 = rcmd(wqb, "--killed", "c1", "sched-3", "\x0b\x0c", "walltime", env_extra={"WALL_S": "100"})
+        pqb4 = rcmd(wqb0, "--infra-abort", "A5", "sched-4", "2026-11-23T00:00:00Z", " \x0c\x0b ", env_extra={"WALL_S": "10"})
+        ck(pqb3[0] == 2 and not os.path.exists(os.path.join(D(wqb, "c1"), "killed.json")) and pqb4[0] == 2 and not os.path.isdir(os.path.join(wqb0, "run_aborted")),
+           f"⛔음성 Codex EQ P1: 취소 시각 VT · FF 만 → --killed {pqb3[0]} · 사유 공백 · FF · VT 만 → --infra-abort {pqb4[0]} (둘 다 2 · 기록 없음 — 읽을 때 규칙과 같은 집합)")
+        # EQ P1 ⑦ (Q-EQ-5): 저장 뒤 영수증 사유 한 바이트 손상 (0xE9 — 비 UTF-8) → 러너 8 (c1 안 띄움) · 검사기 LADDER_VIOLATION
+        wqd = cp_(sp_base, "w_eq_byte"); exd = cp_(exso, "ex_eq_byte")
+        for b_ in (wqd, exd):
+            rpd = os.path.join(b_, "run_aborted", f"{JOB}_c1_1", "infra_abort.json"); bd_ = open(rpd, "rb").read(); ir_ = bd_.index(b'"reason": "') + len(b'"reason": "')
+            open(rpd, "wb").write(bd_[:ir_] + b"\xe9" + bd_[ir_ + 1:])
+        s0d = snap(wqd); _, rcqd, logqd = run_pkg("eq_byte", {"A5": "conv", "c1": "conv"}, fresh=False); rvd = rechk(exd)
+        ck(rcqd == 8 and snap(wqd) == s0d and not os.path.isdir(D(wqd, "c1")) and "utf8_infra_abort.json" in logqd and rvd["status"] == "LADDER_VIOLATION"
+           and any("utf8_infra_abort.json" in v for v in rvd["ladder_violations"]),
+           f"⛔음성 Codex EQ P1: 저장 뒤 영수증 사유 바이트 손상 → 러너 {rcqd} · 검사기 {rvd['status']}")
+        # EQ P2 (Q-EQ-5): 같은 초 (모의 시계 고정) 의 장부 맞바꿈 c1#1 → A5#2 → 러너 8 (c1 안 띄움) · 검사기 LADDER_VIOLATION — 시간 순서만으로는 통과했다 (단 순서 대조)
+        FN = {"FAKE_NOW": "1795400000"}
+        wqn, _, _ = run_pkg("eq_ss", {"A5": "zero"}, env_extra=FN)
+        rcmd(wqn, "--infra-abort", "A5", "sched-1", "2026-11-23T00:00:00Z", "node", env_extra={"WALL_S": "10", **FN, **PB})
+        run_pkg("eq_ss", {"A5": "conv", "c1": "zero"}, fresh=False, env_extra=FN)
+        rcmd(wqn, "--infra-abort", "c1", "sched-2", "2026-11-23T00:00:00Z", "node", env_extra={"WALL_S": "10", **FN, **PB})
+        wqn2 = cp_(wqn, "w_eq_ss_ok"); swap_(wqn); s0n = snap(wqn)
+        _, rcqn, logqn = run_pkg("eq_ss", {"A5": "conv", "c1": "conv"}, fresh=False, env_extra=FN)
+        _, rcqn2, _ = run_pkg("eq_ss_ok", {"A5": "conv", "c1": "conv"}, fresh=False, env_extra=FN)
+        rqn2, exqn = chk(wqn2); swap_(exqn)
+        fjn = os.path.join(exqn, "run", "final.json"); dfn = json.loads(open(fjn).read()); dfn["attempts"] = attempts_of(exqn, J_); _write(fjn, json.dumps(dfn) + "\n")
+        rvn_ = rechk(exqn)
+        ck(rcqn == 8 and snap(wqn) == s0n and not os.path.isdir(D(wqn, "c1")) and "rung_order" in logqn and rcqn2 == 0 and rqn2["status"] == "OK"
+           and rvn_["status"] == "LADDER_VIOLATION" and any("rung_order" in v for v in rvn_["ladder_violations"]),
+           f"⛔음성 Codex EQ P2: 같은 초 장부 맞바꿈 → 러너 {rcqn} · 양성 {rcqn2} {rqn2['status']} · 검사기 {rvn_['status']}")
+        FT1, FT2 = {"FAKE_NOW": "1795400000"}, {"FAKE_NOW": "1795400100"}
+        wto, _, _ = run_pkg("eq_to", {"A5": "zero"}, env_extra=FT1)
+        pto1 = rcmd(wto, "--infra-abort", "A5", "sched-1", "2026-11-23T00:00:00Z", "node", env_extra={"WALL_S": "10", **FT1, **PB})
+        run_pkg("eq_to", {"A5": "zero"}, fresh=False, env_extra=FT2)
+        pto2 = rcmd(wto, "--infra-abort", "A5", "sched-2", "2026-11-23T00:01:40Z", "node", env_extra={"WALL_S": "10", **FT2, **PB})
+        wto2 = cp_(wto, "w_eq_to_ok")
+
+        def lswap_(b_):                                # 장부 줄 · 폴더 번호를 함께 맞바꿈 (줄 i ↔ <잡>_A5_i 는 그대로 맞게 — 시각만 거꾸로)
+            ra_ = os.path.join(b_, "run_aborted"); a1_, a2_ = os.path.join(ra_, f"{JOB}_A5_1"), os.path.join(ra_, f"{JOB}_A5_2")
+            os.rename(a1_, a1_ + ".t"); os.rename(a2_, a1_); os.rename(a1_ + ".t", a2_)
+            lp_ = os.path.join(b_, "run", "infra_aborts.tsv"); L_ = open(lp_).read().split("\n")
+            _write(lp_, "\n".join([L_[0], L_[2].replace(f"{JOB}_A5_2", f"{JOB}_A5_1"), L_[1].replace(f"{JOB}_A5_1", f"{JOB}_A5_2")] + L_[3:]))
+        lswap_(wto); s0to = snap(wto)
+        _, rcto, logto = run_pkg("eq_to", {"A5": "conv", "c1": "conv"}, fresh=False, env_extra=FT2)
+        _, rcto2, _ = run_pkg("eq_to_ok", {"A5": "conv", "c1": "conv"}, fresh=False, env_extra=FT2)
+        rto2, exto = chk(wto2); lswap_(exto)
+        fjt = os.path.join(exto, "run", "final.json"); dft = json.loads(open(fjt).read()); dft["attempts"] = attempts_of(exto, J_); _write(fjt, json.dumps(dft) + "\n")
+        rvto = rechk(exto)
+        ck(pto1[0] == 0 and pto2[0] == 0 and rcto == 8 and snap(wto) == s0to and "ledger_time_order" in logto and "rung_order" not in logto
+           and rcto2 == 0 and rto2["status"] == "OK" and rvto["status"] == "LADDER_VIOLATION" and any("ledger_time_order" in v for v in rvto["ladder_violations"])
+           and not any("rung_order" in v for v in rvto["ladder_violations"]),
+           f"⛔음성 Codex EP P2 (EQ 뒤 떼어 냄): 같은 단 A5#1 · A5#2 (다른 시각) 장부 줄만 맞바꿈 → 러너 {rcto} · 양성 {rcto2} {rto2['status']} · 검사기 {rvto['status']} — 단 순서는 그대로 · 시각 순서만")
+        # 관문 자리 (진입점마다 같은 tree5): 발사 직전 · 끝 포장 · 다시 돌림 (잠금 다음 · env.txt 전) · 기록 명령
+        wqj1, rcqj1, logqj1 = run_pkg("eq_junkA5", {"A5": "conv", "c1": "conv"}, vasp=junker, env_extra={"FAKE_JUNK_STAGE": "A5"})
+        ck(rcqj1 == 8 and not os.path.isdir(D(wqj1, "c1")) and fcode(wqj1) is None and "core.1" in logqj1 and "발사 직전" in logqj1,
+           f"⛔음성 Codex EQ 관문 (c1 발사 직전): A5 폴더에 표준 밖 이름 (core.1) → 러너 {rcqj1} · c1 {'뜸' if os.path.isdir(D(wqj1, 'c1')) else '안 뜸'}")
+        wqj2, rcqj2, logqj2 = run_pkg("eq_junkc1", {"A5": "conv", "c1": "conv"}, vasp=junker, env_extra={"FAKE_JUNK_STAGE": "c1"})
+        ck(rcqj2 == 8 and fcode(wqj2) == 0 and not os.path.exists(os.path.join(wqj2, "a5_return.tgz")) and "포장" in logqj2,
+           f"⛔음성 Codex EQ 관문 (끝 포장 · 덮어쓰기 전): c1 폴더에 core.1 → 끝 기록 0 · 러너 {rcqj2} · 반송본 {'없음' if not os.path.exists(os.path.join(wqj2, 'a5_return.tgz')) else '씀'}")
+        wqe = cp_(qa_base, "w_eq_entry"); _write(os.path.join(wqe, "run", "final.json.part"), "{"); s0e = snap(wqe)
+        _, rcqe, logqe = run_pkg("eq_entry", {"A5": "conv", "c1": "conv"}, fresh=False)
+        ck(rcqe == 8 and snap(wqe) == s0e and "run_entry_final.json.part" in logqe and "다시 돌림" in logqe,
+           f"⛔음성 Codex EQ 관문 (다시 돌림 · 무엇을 쓰기 전): run/final.json.part 잔여 → 러너 {rcqe} · 트리 {'그대로' if snap(wqe) == s0e else '바뀜 (env.txt?)'}")
+        wqg = cp_(wqa, "w_eq_recgate"); _write(os.path.join(wqg, "run", "start_point.json.part"), "{"); s0g = snap(wqg)
+        pqg = rcmd(wqg, "--killed", "c1", "sched-3", "2026-11-23T00:00:00Z", "walltime", env_extra={"WALL_S": "100"})
+        ck(pqg[0] == 8 and snap(wqg) == s0g and not os.path.exists(os.path.join(D(wqg, "c1"), "killed.json")),
+           f"⛔음성 Codex EQ 관문 (기록 명령): run/start_point.json.part 잔여 → --killed {pqg[0]} · 기록 {'함' if os.path.exists(os.path.join(D(wqg, 'c1'), 'killed.json')) else '안 함'}")
+        # 기존 반송본 대조 (러너만 · 규칙마다): 끝 기록만 지움 → tgz_final_differs · 중간 포장 뒤 그 시도 폴더를 지움 → tgz_attempt_missing ·
+        #   중간 포장 뒤 끝난 시도의 끝 기록을 지움 → tgz_end_differs — 모두 종료 8 · 트리 · 반송본 바이트 그대로
+        wqf = cp_(w1, "w_eq_finlost"); os.remove(os.path.join(wqf, "run", "final.json")); s0f = snap(wqf)
+        _, rcqf, logqf = run_pkg("eq_finlost", {"A5": "conv", "c1": "conv"}, fresh=False)
+        ck(rcqf == 8 and snap(wqf) == s0f and "tgz_final_differs" in logqf, f"⛔음성 Codex EQ P1: 끝 기록만 지운 트리 + 완료 반송본 → 러너 {rcqf} (반송본을 다시 쓰지 않음)")
+        wqm2, _, _ = run_pkg("eq_mr", {"A5": "conv", "c1": "plateau@7", "c2": "conv"}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c1"}, session=True)
+        pqm = rcmd(wqm2, "--killed", "c1", "sched-3", "2026-11-23T00:00:00Z", "walltime", env_extra={"WALL_S": "100"})
+        pqm2 = pack_only(wqm2); shutil.rmtree(D(wqm2, "c1")); s0m = snap(wqm2)
+        _, rcqm3, logqm3 = run_pkg("eq_mr", {"A5": "conv", "c1": "plateau@7", "c2": "conv"}, fresh=False)
+        ck(pqm[0] == 0 and pqm2 == 0 and rcqm3 == 8 and snap(wqm2) == s0m and "tgz_attempt_missing" in logqm3,
+           f"⛔음성 Codex EQ P1: 중간 포장 (끊긴 c1 기록 포함) 뒤 c1 폴더를 지움 → 러너 {rcqm3} (c1 다시 안 띄움)")
+        wqd2, _, _ = run_pkg("eq_ed", {"A5": "conv", "c1": "plateau", "c2": "conv"}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c2"}, session=True)
+        pqd = pack_only(wqd2); os.remove(os.path.join(D(wqd2, "c1"), "attempt.json")); drop_rows(wqd2, "c1"); s0d2 = snap(wqd2)
+        _, rcqd2, logqd2 = run_pkg("eq_ed", {"A5": "conv", "c1": "plateau", "c2": "conv"}, fresh=False)
+        ck(pqd == 0 and rcqd2 == 8 and snap(wqd2) == s0d2 and "tgz_end_differs" in logqd2,
+           f"⛔음성 Codex EQ P1: 중간 포장 (끝난 c1) 뒤 c1 끝 기록 · 이력 줄을 지움 (끝나기 전 체크포인트) → 러너 {rcqd2}")
+        # 쓰는 쪽: 끝 기록은 임시 파일에 완성한 뒤 mv — mv 실패 (디스크) 흉내 → 그 자리에서 종료 8 · 끝 기록 없음 · 다음 실행은 남은 .part 로 트리 관문 8
+        _write(os.path.join(bind, "mv"), "#!/bin/bash\nlast=\"\"; for a in \"$@\"; do last=$a; done\n"
+               "if [ -n \"${FAKE_MV_FAIL:-}\" ]; then case \"$last\" in *\"$FAKE_MV_FAIL\") echo 'mv: No space left on device' >&2; exit 1;; esac; fi\n"
+               f"exec {shutil.which('mv')} \"$@\"\n")
+        os.chmod(os.path.join(bind, "mv"), 0o755)
+        wqv, rcqv1, _ = run_pkg("eq_mvfail", {"A5": "conv", "c1": "conv"}, env_extra={"FAKE_MV_FAIL": "_A5/attempt.json"})
+        _, rcqv2, logqv2 = run_pkg("eq_mvfail", {"A5": "conv", "c1": "conv"}, fresh=False)
+        ck(rcqv1 == 8 and not os.path.isfile(os.path.join(D(wqv, "A5"), "attempt.json")) and os.path.isfile(os.path.join(D(wqv, "A5"), "attempt.json.part"))
+           and not os.path.isdir(D(wqv, "c1")) and rcqv2 == 8 and "attempt.json.part" in logqv2,
+           f"⛔음성 Codex EQ P1: 끝 기록 mv 실패 → 러너 {rcqv1} (끝 기록 없음 · c1 안 띄움) · 다시 {rcqv2} (남은 .part → 트리 관문)")
         # 러너 ↔ 검사기 같은 문법 · 같은 규칙 (같은 탐침 · 러너 함수는 RUN_A5_ENV 에서 그대로 꺼낸다 — 손으로 옮기지 않는다)
-        envf = RUN_A5_ENV[RUN_A5_ENV.index("stage_hdr(){"):RUN_A5_ENV.index("stat5(){")]
+        _ee = _env_text(); envf = _ee[_ee.index("stage_hdr(){"):_ee.index("stat5(){")]
+        _retl = "\n".join(l_ for l_ in run_a5_text().splitlines() if l_.startswith(("RET_ALLOW=", "RET_FORBID=")))
         hsh = os.path.join(T, "eo_harness.sh")
-        _write(hsh, f"set -u\nJOB={JOB}\nINFRA_MAX={INFRA_MAX}\n" + r2_block("secs_ok(){") + "\n" + envf + "\n" + r"""
+        _write(hsh, f"set -u\nJOB={JOB}\nINFRA_MAX={INFRA_MAX}\n" + _retl + "\n" + r2_block("h(){") + "\n" + r2_block("secs_ok(){") + "\n" + envf + "\n" + r"""
 case "$1" in
   rec) shift; for f in "$@"; do if r=$(rec5 "$f"); then printf '%s|OK\n%s\n' "$(basename "$f")" "$r"; else echo "$(basename "$f")|BAD"; fi; done;;
   jstr) shift; for a in "$@"; do printf '%s\n' "$(jstr "$a")"; done;;
   rows) shift; for d in "$@"; do echo "$(basename "$d")|$(row_scan "$d" "$(cat "$d/STAGE")")"; done;;
   start) shift; for d in "$@"; do echo "$(basename "$d")|$(start_id "$d" "$(cat "$d/STAGE")")"; done;;
   ledger) shift; for d in "$@"; do echo "$(basename "$d")|$(cd "$d" && ledger5)"; done;;
+  tree) shift; for d in "$@"; do echo "$(basename "$d")|$(cd "$d" && tree5)"; done;;
   u8) shift; for a in "$@"; do if u8ok "$a"; then echo OK; else echo BAD; fi; done;;
+  blank) shift; for a in "$@"; do if nbj "$a"; then echo OK; else echo BLANK; fi; done;;
+  wblank) shift; for a in "$@"; do if nbw "$a"; then echo OK; else echo BLANK; fi; done;;
   wall) shift; B=$1; shift; for r in "$@"; do echo "$r|$(cd "$B" && wall_of "$r")"; done;;
 esac
 """)
@@ -3837,6 +4504,15 @@ esac
         rdiff = {k_: (rec_parse(v_), rgot.get(k_)) for k_, v_ in rprobes.items() if rec_parse(v_) != rgot.get(k_)}
         nacc = sum(1 for v_ in rgot.values() if v_ is not None)
         ck(not rdiff and len(rgot) == len(rprobes) and 6 <= nacc <= 10, f"러너 rec5 = 검사기 rec_parse ({len(rprobes)} 탐침 · 받음 {nacc} · 칸 원문까지) — 다름 {rdiff}")
+        bprobes = ["", "   ", "\\t", "\\n \\r\\f", "\\u0009\\u000A\\u000b\\u000C\\u000d\\u0020", "\\u00a0", "\\u001c", "\\b", "\\\\t", "\\/", "a", " 0 ",
+                   "노드", "\\u0009x", "\\\\u0009", "\\u00200", "\\U0009", "\\u0008"]
+        bo = subprocess.run(["bash", hsh, "blank", *bprobes], capture_output=True).stdout.decode("utf-8").split("\n")[:len(bprobes)]
+        wprobes = ["", " ", "\t", "\r\n", "\x0b\x0c", " \x0b ", "a", " a ", "\x1c", "\xa0", "노드", "\x0c-"]
+        wo = subprocess.run(["bash", hsh, "wblank", *wprobes], capture_output=True).stdout.decode("utf-8").split("\n")[:len(wprobes)]
+        bdiff = [(p_, o_) for p_, o_ in zip(bprobes, bo) if (o_ == "BLANK") != _blank(p_)]
+        wdiff = [(p_, o_) for p_, o_ in zip(wprobes, wo) if (o_ == "BLANK") != (p_.strip(" \t\n\x0b\x0c\r") == "")]
+        ck(not bdiff and not wdiff and len(bo) == len(bprobes) and len(wo) == len(wprobes) and bo.count("BLANK") == 5 and wo.count("BLANK") == 6,
+           f"러너 nbj = 검사기 _blank ({len(bprobes)} 원문 탐침 · 빈칸 {bo.count('BLANK')}) · 러너 nbw = 빈칸 문자 여섯 ({len(wprobes)} 탐침 · 빈칸 {wo.count('BLANK')}) — 다름 {bdiff} {wdiff}")
         jprobes = ["walltime \x1b[31mred\x1b[0m", 'q"uote', "back\\slash", "tab\there", "nl\nhere", "del\x7f", "한글 노드", "", "plain"]
         jo = subprocess.run(["bash", hsh, "jstr", *jprobes], capture_output=True).stdout.decode("utf-8").split("\n")[:len(jprobes)]
         jok = [json.loads('"' + o_ + '"') == p_ and rec_parse(('{"a": "' + o_ + '"}').encode()) is not None for o_, p_ in zip(jo, jprobes)]
@@ -3851,7 +4527,10 @@ esac
                    "ncg_frac": "DAV:   1   -0.73E+03   1E-3   1E-4   80.5   0.3E-03\n", "n_zero": "DAV:   0   -0.73E+03   1E-3   1E-4   80   0.3E-03\n",
                    "eight": "DAV:   1   -0.73E+03   1E-3   1E-4   80   0.3E-03   0.1   9\n", "exp3": "DAV:   1   -0.73E+100   1E-3   1E-4   80   0.3E-03\n",
                    "stars": "DAV:   1   -0.73E+03   1E-3   1E-4   ******   0.3E-03\n", "signs": "DAV:   1   -0.73E+03   +1.E-3   .1E-4   80   0.3E-03\n",
-                   "hcut": hd_ + "SDA", "hcut1": hd_ + sda1 + "SDA", "colcut": "       N       E   ", "dcut": "D", "hcut_ws": hd_ + "  SDA", "hcut_sp": hd_ + "SD A"}
+                   "hcut": hd_ + "SDA", "hcut1": hd_ + sda1 + "SDA", "colcut": "       N       E   ", "dcut": "D", "hcut_ws": hd_ + "  SDA", "hcut_sp": hd_ + "SD A",
+                   "hcut_tab": hd_ + "\tDA", "hcut_dav": hd_ + "  DAV", "col_n": "       N", "col_n_sp": "       N   ", "n_col1": "N", "ws_only": hd_ + "   ",
+                   "r310": hd_ + "SDA:   1   " + "1" * 310 + "   -0.1E+00   -0.1E+00  8000   0.3E-03\n", "r24": hd_ + "SDA:   1   " + "1" * 24 + "   -0.1E+00   -0.1E+00  8000   0.3E-03\n",
+                   "r25": hd_ + "SDA:   1   " + "1" * 25 + "   -0.1E+00   -0.1E+00  8000   0.3E-03\n"}
         odirs, owant = [], {}
         for k_, t_ in oprobes.items():
             for st_ in STAGES:
@@ -3907,7 +4586,8 @@ esac
         lv_ = {"ok": None, "row_gone": "row", "folder_gone": "folder", "extra_folder": "extra", "head": "head", "dir": "dir", "wall": "wall", "nonl": "nonl",
                "nine": "nine", "rcpt_rid": "rid", "rcpt_filled": "filled", "rcpt_wall0": "wall0", "rcpt_noreason": "noreason", "rcpt_rung": "rung",
                "rcpt_early": "early", "rcpt_rawesc": "rawesc", "start_job": "sjob", "no_ledger_no_folder": "none", "no_ledger_folder": "nol",
-               "stray": "stray", "hist_extra": "hist", "rcpt_empty": "rempty", "end_rid": "endrid"}
+               "stray": "stray", "hist_extra": "hist", "rcpt_empty": "rempty", "end_rid": "endrid",
+               "st_empty": "stempty", "rcpt_blank": "rblank", "rcpt_u8": "ru8", "rcpt_ws": "rws", "rcpt_wsu": "rwsu"}
         ldirs, lwant = [], {}
         for k_, how_ in lv_.items():
             e_ = cp_(exso, f"eo_ledger_{k_}"); ab_ = os.path.join(e_, "run_aborted", f"{JOB}_c1_1"); lp_ = os.path.join(e_, "run", "infra_aborts.tsv")
@@ -3935,7 +4615,7 @@ esac
                     fh_.write(f"{JOB}\tc1\ta5\t0\tOK\t1\t0\t0\t-\t1\t20261123T000000-7-7\n")
             elif how_ == "endrid":
                 ajp_ = os.path.join(ab_, "attempt.json"); _write(ajp_, open(ajp_).read().replace('"run_id": "', '"run_id": "9', 1))
-            elif how_ in ("rid", "filled", "wall0", "noreason", "rung", "early", "rawesc", "rempty"):
+            elif how_ in ("rid", "filled", "wall0", "noreason", "rung", "early", "rawesc", "rempty", "rblank", "rws", "rwsu"):
                 rcd2 = dict(rcd)
                 if how_ == "rid":
                     rcd2["run_id"] = "20261123T000000-1-1"
@@ -3951,7 +4631,13 @@ esac
                     rcd2["recorded_s"] = 1000
                 elif how_ == "rempty":
                     rcd2["sched_job_id"] = ""
+                elif how_ == "rblank":
+                    rcd2["sched_job_id"] = "   "
+                elif how_ == "rws":
+                    rcd2["sched_job_id"] = "\t\r\n\x0b\x0c "             # json.dumps → \t \r \n \u000b \f (Codex EQ P1 보강)
                 txt_ = json.dumps(rcd2, ensure_ascii=False)
+                if how_ == "rwsu":
+                    txt_ = re.sub(r'"cancel_utc": "[^"]*"', lambda m_: '"cancel_utc": "\\u000D\\u0020\\u0009"', txt_, count=1)
                 if how_ == "rawesc":
                     txt_ = txt_.replace('"reason": "', '"reason": "\x1b', 1)
                 _write(rc_p, txt_ + "\n")
@@ -3962,17 +4648,84 @@ esac
                 shutil.rmtree(os.path.join(e_, "run_aborted")); os.remove(lp_)
                 stp_ = os.path.join(e_, "run", "status.tsv")
                 _write(stp_, "".join(l_ for l_ in open(stp_).readlines() if not l_.rstrip("\n").endswith("\t" + rid_ab)))
+                fjn_ = os.path.join(e_, "run", "final.json"); dfn_ = json.loads(open(fjn_).read()); dfn_["attempts"] = attempts_of(e_, J_)
+                _write(fjn_, json.dumps(dfn_) + "\n")                # 끝 기록의 시도 목록까지 맞게 (서로 맞는 복구 — 트리 관문도 못 잡는 한계 · 위협 범위 밖)
             elif how_ == "nol":
                 os.remove(lp_)
-            prob_ = ledger_problems(J_, e_) + [p_ for n_ in sorted(os.listdir(os.path.join(e_, "run_aborted"))) if os.path.isdir(os.path.join(e_, "run_aborted"))
+            elif how_ == "stempty":
+                _write(os.path.join(e_, "run", "status.tsv"), "")
+            elif how_ == "ru8":
+                bb_ = open(rc_p, "rb").read(); ib_ = bb_.index(b'"reason": "') + len(b'"reason": "'); open(rc_p, "wb").write(bb_[:ib_] + b"\xe9" + bb_[ib_ + 1:])
+            prob_ = tree_problems(J_, e_) + ledger_problems(J_, e_) + [p_ for n_ in sorted(os.listdir(os.path.join(e_, "run_aborted"))) if os.path.isdir(os.path.join(e_, "run_aborted"))
                                                for p_ in [abort_receipt_problem(J_, os.path.join(e_, "run_aborted", n_), AB_RE.match(n_).group(2))] if p_] \
-                if os.path.isdir(os.path.join(e_, "run_aborted")) else ledger_problems(J_, e_)
+                if os.path.isdir(os.path.join(e_, "run_aborted")) else tree_problems(J_, e_) + ledger_problems(J_, e_)
             ldirs.append(e_); lwant[os.path.basename(e_)] = bool(prob_)
-        lo_ = subprocess.run(["bash", hsh, "ledger", *ldirs], capture_output=True, text=True).stdout
+        lo_ = subprocess.run(["bash", hsh, "tree", *ldirs], capture_output=True, text=True).stdout
         lgot = {k_: (v_ != "-") for k_, v_ in (ln.split("|", 1) for ln in lo_.splitlines() if "|" in ln)}
         ldiff = {k_: (lwant[k_], lgot.get(k_)) for k_ in lwant if lwant[k_] != lgot.get(k_)}
         ck(not ldiff and lwant["eo_ledger_ok"] is False and lwant["eo_ledger_no_ledger_no_folder"] is False and sum(lwant.values()) == len(lwant) - 2,
-           f"러너 ledger5 = 검사기 ledger_problems + abort_receipt_problem ({len(lv_)} 반송 변형 · 문제 있음/없음) — 다름 {ldiff}")
+           f"러너 tree5 = 검사기 tree_problems + ledger_problems + abort_receipt_problem ({len(lv_)} 반송 변형 · 문제 있음/없음) — 다름 {ldiff} · 문제 없음 {[k_ for k_, v_ in lwant.items() if not v_]}")
+        # 트리 관문 같은 낱말 (러너 tree5 첫 사유 = 검사기 tree_problems 첫 사유 = 기대 — 탐침마다 문제 하나 · Codex EQ)
+        jn_ = os.path.join
+
+        def _trim(p_):
+            _write(p_, open(p_).read().rstrip("\n")[:-1] + "\n")
+
+        def _jset(p_, **kw_):
+            d_ = json.loads(open(p_, encoding="utf-8").read()); d_.update(kw_); _write(p_, json.dumps(d_, ensure_ascii=False) + "\n")
+
+        def _jdrop(p_, k_):
+            d_ = json.loads(open(p_, encoding="utf-8").read()); d_.pop(k_); _write(p_, json.dumps(d_, ensure_ascii=False) + "\n")
+
+        def _bad8(p_, key_):
+            bb_ = open(p_, "rb").read(); ib_ = bb_.index(key_) + len(key_); open(p_, "wb").write(bb_[:ib_] + b"\xe9" + bb_[ib_ + 1:])
+        Jq_ = JOB; A_ = f"run/{Jq_}_A5"; C1_ = f"run/{Jq_}_c1"; C2_ = f"run/{Jq_}_c2"; AB_ = f"run_aborted/{Jq_}_c1_1"
+        tprobes = [
+            ("ok", exso, lambda e: None, "-"),
+            ("runpart", exso, lambda e: _write(jn_(e, "run", "final.json.part"), "{"), "run_entry_final.json.part"),
+            ("c1part", exso, lambda e: _write(jn_(e, C1_, "infra_abort.json.part"), "{"), f"file_{C1_}/infra_abort.json.part"),
+            ("c1junk", exso, lambda e: _write(jn_(e, C1_, "notes.txt"), "x"), f"file_{C1_}/notes.txt"),
+            ("c1sub", exso, lambda e: os.makedirs(jn_(e, C1_, "sub")), f"file_{C1_}/sub"),
+            ("abjunk", exso, lambda e: os.makedirs(jn_(e, "run_aborted", "junk")), "aborted_entry_junk"),
+            ("att_brace", exso, lambda e: _trim(jn_(e, C1_, "attempt.json")), f"{C1_}:att_form"),
+            ("att_dot5", exso, lambda e: _write(jn_(e, C1_, "attempt.json"), re.sub(r'("t_start": [0-9]+)', r'\1.5', open(jn_(e, C1_, "attempt.json")).read(), count=1)), f"{C1_}:att_form"),
+            ("att_rid", exso, lambda e: _write(jn_(e, C1_, "attempt.json"), open(jn_(e, C1_, "attempt.json")).read().replace('"run_id": "', '"run_id": "9', 1)), f"{C1_}:end_run_id"),
+            ("att_t0", exso, lambda e: _write(jn_(e, C1_, "attempt.json"), re.sub(r'"t_start": ([0-9]+)', lambda m_: f'"t_start": {int(m_.group(1)) + 1}', open(jn_(e, C1_, "attempt.json")).read(), count=1)), f"{C1_}:end_t_start"),
+            ("seal", exso, lambda e: open(jn_(e, C1_, "OUTCAR"), "a").write(" \n"), f"{C1_}:seal_OUTCAR"),
+            ("endkill", exso, lambda e: _write(jn_(e, C1_, "killed.json"), json.dumps(kb0) + "\n"), f"{C1_}:end_and_killed"),
+            ("abkill", exso, lambda e: _write(jn_(e, AB_, "killed.json"), json.dumps(kb0) + "\n"), f"{AB_}:killed_in_aborted"),
+            ("stray", exso, lambda e: shutil.copy(jn_(e, AB_, "infra_abort.json"), jn_(e, C1_, "infra_abort.json")), f"{C1_}:stray_receipt"),
+            ("rcpt_u8", exso, lambda e: _bad8(jn_(e, AB_, "infra_abort.json"), b'"reason": "'), f"{AB_}:utf8_infra_abort.json"),
+            ("start_job", exso, lambda e: _jset(jn_(e, A_, "attempt.start"), job="V5_x"), f"{A_}:start_job"),
+            ("nostart", exso, lambda e: os.remove(jn_(e, C1_, "attempt.start")), f"{C1_}:no_start"),
+            ("fin_state", exso, lambda e: _write(jn_(e, "run", "final.json"), open(jn_(e, "run", "final.json")).read().replace('"state": "OK"', '"state": "REVIEW"', 1)), "final_code_state"),
+            ("fin_fields", exso, lambda e: _jdrop(jn_(e, "run", "final.json"), "written_s"), "final_fields"),
+            ("fin_u8", exso, lambda e: _bad8(jn_(e, "run", "final.json"), b'"why": "'), "utf8_final.json"),
+            ("sp_form", exso, lambda e: _trim(jn_(e, "run", "start_point.json")), "start_point_form"),
+            ("w0_form", exso, lambda e: _trim(jn_(e, "run", "w0_check.json")), "w0_form"),
+            ("k_ok", kb_base, lambda e: None, "-"),
+            ("k_rid", kb_base, lambda e: _jset(jn_(e, C2_, "killed.json"), run_id="20261123T000000-9-9"), f"{C2_}:killed_run_id"),
+            ("k_blank", kb_base, lambda e: _jset(jn_(e, C2_, "killed.json"), reason="   "), f"{C2_}:killed_json_blank_reason"),
+            ("k_blank_ws", kb_base, lambda e: _jset(jn_(e, C2_, "killed.json"), reason="\t\r\n\x0b\x0c "), f"{C2_}:killed_json_blank_reason"),
+            ("k_blank_u", kb_base, lambda e: _write(jn_(e, C2_, "killed.json"), re.sub(r'"reason": "[^"]*"', lambda m_: '"reason": "\\u0009\\u000A\\u0020"',
+                                                                                         open(jn_(e, C2_, "killed.json")).read(), count=1)), f"{C2_}:killed_json_blank_reason"),
+            ("k_nb_fs", kb_base, lambda e: _jset(jn_(e, C2_, "killed.json"), reason="\x1c"), "-"),
+            ("k_nb_bst", kb_base, lambda e: _write(jn_(e, C2_, "killed.json"), re.sub(r'"reason": "[^"]*"', lambda m_: '"reason": "\\\\t"',
+                                                                                         open(jn_(e, C2_, "killed.json")).read(), count=1)), "-"),
+            ("k_form", kb_base, lambda e: _trim(jn_(e, C2_, "killed.json")), f"{C2_}:killed_json_form"),
+            ("k_rung", kb_base, lambda e: _jset(jn_(e, C2_, "killed.json"), rung="A5"), f"{C2_}:killed_job_or_rung"),
+            ("k_early", kb_base, lambda e: _jset(jn_(e, C2_, "killed.json"), recorded_s=1), f"{C2_}:killed_recorded_s"),
+            ("k_wall", kb_base, lambda e: _jset(jn_(e, C2_, "killed.json"), wall_s="01"), f"{C2_}:killed_wall_s"),
+            ("k_field", kb_base, lambda e: _jdrop(jn_(e, C2_, "killed.json"), "osz_rows"), f"{C2_}:killed_json_field_osz_rows")]
+        tdirs, twant, tchk = [], {}, {}
+        for nm_, src_, fn_, want_ in tprobes:
+            e_ = cp_(src_, f"eq_tree_{nm_}"); fn_(e_); tdirs.append(e_); twant[os.path.basename(e_)] = want_
+            tp_ = tree_problems(J_, e_); tchk[os.path.basename(e_)] = tp_[0] if tp_ else "-"
+        to_ = subprocess.run(["bash", hsh, "tree", *tdirs], capture_output=True, text=True).stdout
+        tgot = dict(ln.split("|", 1) for ln in to_.splitlines() if "|" in ln)
+        tdiff = {k_: (twant[k_], tgot.get(k_), tchk[k_]) for k_ in twant if not (twant[k_] == tgot.get(k_) == tchk[k_])}
+        ck(not tdiff and len(tgot) == len(twant),
+           f"러너 tree5 = 검사기 tree_problems = 기대 낱말 ({len(tprobes)} 탐침 · 이름 · 시작 · 끝 기록 틀 · 신원 · 봉인 · 끊김 기록 자리 · 결속 · 빈칸 · UTF-8 · 끝 기록 조합 · 시작점 · ⓪) — 다름 {tdiff}")
         # S21: 러너 judge5 = 검사기 judge5 (같은 탐침 · 단마다)
         probes = {"conv": dav(30), "sda": dav(30).replace("DAV:", "SDA:"), "cga": sda, "xyz": dav(30).replace("DAV:", "XYZ:"), "cgsp": dav(30) + "CG :  31   1  1  1\n",
                   "nospace": "SDA:1 -0.1E+03 -3E-08 -1E-08\n", "nan": dav(29) + "DAV:   30   -7.3E+02   NaN   NaN  1  1  1\n", "empty": "",
@@ -3981,7 +4734,7 @@ esac
         harness = os.path.join(T, "harness.sh")
         hb = "\n".join(r2_block(f"{n}(){{") for n in ("incar_val",)) + "\n" + _patch(_patch(r2_block("judge(){"), "judge(){", "judge_r2(){"),
                                                                                          'cat "$d/OSZICAR" 2>/dev/null |', 'osz_feed "$d" |')
-        body = RUN_A5_ENV[RUN_A5_ENV.index("stage_hdr(){"):RUN_A5_ENV.index("stat5(){")]
+        body = _ee[_ee.index("stage_hdr(){"):_ee.index("stat5(){")]
         _write(harness, "set -u\n" + hb + "\n" + body + '\nfor d in "$@"; do echo "$(basename "$d")|$(judge5 "$d" "$(cat "$d/STAGE")")"; done\n')
         dirs, want = [], {}
         for k_, osz_ in probes.items():
@@ -4041,7 +4794,7 @@ MUTANTS = (
     ('m22 검사기 c 단 재시작이 시작 sha 를 안 봄', 'build_a5_vasp_package.py', 'if not (src_sha and V.HEX64.match(src_sha) and w.get("src_sha256") == src_sha):', 'if False:', 'a5'),
     ('m23 러너: 행 0 을 다음 단으로 넘김 (해석 1 · ZERO → NEXT)', 'build_a5_vasp_package.py', '[ "$n" -ge 1 ] 2>/dev/null || { echo "ZERO SCF_UNVERIFIED 0 no_rows"; return; }', '[ "$n" -ge 1 ] 2>/dev/null || { echo "NEXT RUN_FAILED 0 no_rows"; return; }', 'a5'),
     ('m24 러너: 재시작 미이행 · SCF 미확인 멈춤 뺌 (REVIEW → NEXT)', 'build_a5_vasp_package.py', '*) echo "REVIEW $s $n -";; esac', '*) echo "NEXT $s $n -";; esac', 'a5'),
-    ('m25 러너: 끝 기록 확인 뺌 (끝난 사다리를 다시 돌림 · P1-1)', 'build_a5_vasp_package.py', 'if [ -f run/final.json ]; then\n  x=$(fin_ok)', 'if false; then\n  x=$(fin_ok)', 'a5'),
+    ('m25 러너: 끝 기록 확인 뺌 (끝난 사다리를 다시 돌림 · P1-1)', 'build_a5_vasp_package.py', 'if [ -f run/final.json ]; then\n  log "■ 다시 돌림', 'if false; then\n  log "■ 다시 돌림', 'a5'),
     ('m26 러너: 시작점을 기록에서 읽지 않고 다시 정함 (P0-2(b))', 'build_a5_vasp_package.py', 'if [ -f run/start_point.json ]; then\n  sp_load ||', 'if false; then\n  sp_load ||', 'a5'),
     ('m27 러너: --infra-abort 뒤 단 거부 뺌 (P0-2(c))', 'build_a5_vasp_package.py', 'lx=$(later5 "$st"); [ -z "$lx" ] || { echo "⛔ 뒤 단 ($lx) 이 이미 있다 — $st 의 0 스텝 중단은', 'lx=""; [ -z "$lx" ] || { echo "⛔ 뒤 단 ($lx) 이 이미 있다 — $st 의 0 스텝 중단은', 'a5'),
     ('m28 러너: --killed 뒤 단 거부 뺌 (P0-2(c))', 'build_a5_vasp_package.py', 'lx=$(later5 "$st"); [ -z "$lx" ] || { echo "⛔ 뒤 단 ($lx) 이 이미 있다 — $st 의 끊김은', 'lx=""; [ -z "$lx" ] || { echo "⛔ 뒤 단 ($lx) 이 이미 있다 — $st 의 끊김은', 'a5'),
@@ -4074,11 +4827,11 @@ MUTANTS = (
     ('m55 러너: 끊긴 c 단의 NBANDS · 시작점 머리 대조 뺌 (EN P0)', 'build_a5_vasp_package.py', '      || { echo "RESTART_NOT_HONOURED $n dims_ne_start_head"; return; };;', '      || true;;', 'a5'),
     ('m56 러너: gate5 가 끊긴 시도를 killed5 로 안 봄 (EN P0)', 'build_a5_vasp_package.py', '  e=$(killed5 "$d" "$st" "$n"); [ "$e" = "-" ] || { echo "REVIEW $e"; return; }', '  :', 'a5'),
     ('m57 러너: 한 줄 기록의 쉼표 없음을 받음 (rec5 · EN P1 · EO P1)', 'build_a5_vasp_package.py', '        if (c == "}") { i++; break }\n        exit 1\n      }', '        if (c == "}") { i++; break }\n        continue\n      }', 'a5'),
-    ('m58 러너: killed.json run_id 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '|| { echo "KILLED_RECORD_MISMATCH $n run_id"; return; }', '|| true', 'a5'),
-    ('m59 러너: killed.json 행 수 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '  [ "$(rf "$K" osz_rows s)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows"; return; }', '  :', 'a5'),
-    ('m60 러너: killed.json 기록 시각 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '|| { echo "KILLED_RECORD_MISMATCH $n recorded_s"; return; }', '|| true', 'a5'),
-    ('m61 러너: killed.json 초 꼴 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '  secs_ok "$(rf "$K" wall_s s)" || { echo "KILLED_RECORD_MISMATCH $n wall_s"; return; }', '  :', 'a5'),
-    ('m62 러너: killed.json 잡 · 단 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '|| { echo "KILLED_RECORD_MISMATCH $n job_or_rung"; return; }', '|| true', 'a5'),
+    ('m58 러너: killed.json run_id 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '  [ "$(rf "$K" run_id s)" = "$(rf "$3" run_id s)" ] || { echo killed_run_id; return; }', '  :', 'a5'),
+    ('m59 러너: killed.json 행 수 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '  [ "$(rget "$d/killed.json" osz_rows s)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows"; return; }', '  :', 'a5'),
+    ('m60 러너: killed.json 기록 시각 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '  { [ -n "$t0" ] && [ -n "$rs" ] && [ "$rs" -ge "$t0" ]; } 2>/dev/null || { echo killed_recorded_s; return; }', '  :', 'a5'),
+    ('m61 러너: killed.json 초 꼴 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '  secs_ok "$(rf "$K" wall_s s)" || { echo killed_wall_s; return; }', '  :', 'a5'),
+    ('m62 러너: killed.json 잡 · 단 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '  { [ "$(rf "$K" job s)" = "$JOB" ] && [ "$(rf "$K" rung s)" = "$2" ]; } || { echo killed_job_or_rung; return; }', '  :', 'a5'),
     ('m63 러너: 한 줄 기록의 같은 키 두 번을 받음 (rec5 · EN P1)', 'build_a5_vasp_package.py', '        if (key in seen) exit 1', '        if (0) exit 1', 'a5'),
     ('m64 러너: 시작점 최초 생성 전 run_aborted 의 c 단을 안 봄 (EN P1)', 'build_a5_vasp_package.py', '  { [ ! -e "$C1" ] && [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c[12]_*" > /dev/null; } \\', '  { [ ! -e "$C1" ] && [ ! -e "$C2" ]; } \\', 'a5'),
     ('m65 러너: A5 를 다시 띄우기 전 run_aborted 의 c 단을 안 봄 (EN P1)', 'build_a5_vasp_package.py', '  [ ! -f run/start_point.json ] && [ ! -e "$C1" ] && [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c[12]_*" > /dev/null \\', '  [ ! -f run/start_point.json ] && [ ! -e "$C1" ] && [ ! -e "$C2" ] \\', 'a5'),
@@ -4091,24 +4844,24 @@ MUTANTS = (
     ('m72 검사기: 끊긴 c 단의 시작점 머리 대조 뺌 (EN P0)', 'build_a5_vasp_package.py', '        if not dims_match(dims, sd):\n            return "RESTART_NOT_HONOURED", f"끊긴', '        if False:\n            return "RESTART_NOT_HONOURED", f"끊긴', 'a5'),
     ('m73 검사기: 한 줄 기록의 같은 키 거부 뺌 (rec_parse · EN P1)', 'build_a5_vasp_package.py', '        if key in out:                                   # 같은 키 두 번', '        if False:                                   # 같은 키 두 번', 'a5'),
     ('m74 검사기: 한 줄 기록의 쉼표 없음을 받음 (rec_parse · EN P1 · EO P1)', 'build_a5_vasp_package.py', '        return None                                      # 멤버 뒤에', '        continue                                      # 멤버 뒤에', 'a5'),
-    ('m75 검사기: killed.json run_id 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '    if rec_s(k, "run_id") != rec_s(s0, "run_id"):', '    if False:', 'a5'),
+    ('m75 검사기: killed.json run_id 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '    if rec_s(k, "run_id") != rec_s(s0, "run_id"):\n        return "KILLED_RECORD_MISMATCH"', '    if False:\n        return "KILLED_RECORD_MISMATCH"', 'a5'),
     ('m76 검사기: killed.json 행 수 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '    if rec_s(k, "osz_rows") != str(n):', '    if False:', 'a5'),
     ('m77 검사기: killed.json 기록 시각 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '    if not (rec_i(s0, "t_start") is not None and rec_i(k, "recorded_s") >= rec_i(s0, "t_start")):', '    if False:', 'a5'),
-    ('m78 검사기: killed.json 초 꼴 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '    if not SECS_RE.fullmatch(rec_s(k, "wall_s")):', '    if False:', 'a5'),
+    ('m78 검사기: killed.json 초 꼴 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '    if not SECS_RE.fullmatch(rec_s(k, "wall_s")):\n        return "KILLED_RECORD_MISMATCH"', '    if False:\n        return "KILLED_RECORD_MISMATCH"', 'a5'),
     ('m79 검사기: killed.json 잡 · 단 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '    if rec_s(k, "job") != job["dir"] or rec_s(k, "rung") != stage:\n        return "KILLED_RECORD_MISMATCH"', '    if False:\n        return "KILLED_RECORD_MISMATCH"', 'a5'),
     ('m80 검사기: 끊긴 시도의 모순을 1저자 멈춤으로 안 봄 (a5_class · EN P0)', 'build_a5_vasp_package.py', '    if x.get("killed") and s in KILLED_PROBLEMS:\n        return "REVIEW", None', '    if False:\n        return "REVIEW", None', 'a5'),
     ('m81 검사기: run_aborted 중단 영수증 필수 뺌 (EN P1)', 'build_a5_vasp_package.py', '        if x_.get("receipt_problem"):', '        if False:', 'a5'),
     ('m82 검사기: 시작점 기록 시각 ≤ 첫 c 단 시작 대조 뺌 (EN P1)', 'build_a5_vasp_package.py', '        elif ws_ > min(c_t0):', '        elif False:', 'a5'),
     ('m83 검사기: 시작점 기록 시각이 정수가 아니어도 넘김 (EN P1)', 'build_a5_vasp_package.py', '        if not (isinstance(ws_, int) and not isinstance(ws_, bool)):\n            viol.append(f"시작점 기록 시각', '        if False:\n            viol.append(f"시작점 기록 시각', 'a5'),
     ('m84 수집기: RUN_FAILED · 미수렴에 행 수 ≥ 1 요구 뺌 (EN P2)', 'build_v5_vasp_package.py', '    if not (isinstance(n, int) and not isinstance(n, bool) and n >= 1):\n        return False                               # 행 수가', '    if False:\n        return False                               # 행 수가', 'v5'),
-    ('m85 러너: 완전한 행 칸 규칙 뺌 (칸 < 6 · N 정수 아님도 셈 · EO P0)', 'build_a5_vasp_package.py', '      if ((k == 6 || k == 7) && t[1] ~ /^[1-9][0-9]*$/ && t[5] ~ /^[0-9]+$/ && t[2] ~ R && t[3] ~ R && t[4] ~ R && t[6] ~ R && (k == 6 || t[7] ~ R)) n++; else p++', '      n++', 'a5'),
+    ('m85 러너: 완전한 행 칸 규칙 뺌 (칸 < 6 · N 정수 아님도 셈 · EO P0)', 'build_a5_vasp_package.py', '      if (lg && (k == 6 || k == 7) && t[1] ~ /^[1-9][0-9]*$/ && t[5] ~ /^[0-9]+$/ && t[2] ~ R && t[3] ~ R && t[4] ~ R && t[6] ~ R && (k == 6 || t[7] ~ R)) n++; else p++', '      n++', 'a5'),
     ('m86 러너: 줄바꿈 없는 끝 조각을 줄로 봄 (잘린 꼬리를 손상으로 · EO P0)', 'build_a5_vasp_package.py', '      if (NR > NL) { tp = 1; next }', '      if (0) { tp = 1; next }', 'a5'),
     ("m87 러너: 완전한 행 0 + 행꼴 끝 조각을 손상으로 안 봄 (EO P0 — 'SDA:' 절단)", 'build_a5_vasp_package.py', 'else if (p > 0 || (tp && n == 0)) print n + 0, "incomplete_row"', 'else if (p > 0) print n + 0, "incomplete_row"', 'a5'),
     ('m88 러너: 끝난 시도의 행 손상 · 남의 머리 멈춤 뺌 (EO P0 — 행 0 판정 앞)', 'build_a5_vasp_package.py', '    [ "$why" = - ] || { echo "REVIEW SCF_UNVERIFIED $n $why"; return; }\n    [ "$n" -ge 1 ] 2>/dev/null || { echo "ZERO', '    :\n    [ "$n" -ge 1 ] 2>/dev/null || { echo "ZERO', 'a5'),
     ('m89 러너: 기록 글의 제어 바이트를 이스케이프하지 않음 (jstr · EO P1)', 'build_a5_vasp_package.py', '      for (k = 1; k < 32; k++) c[sprintf("%02x", k)] = sprintf("\\\\u%04x", k)', '      for (k = 1; k < 1; k++) c[sprintf("%02x", k)] = sprintf("\\\\u%04x", k)', 'a5'),
     ('m90 러너: attempt.start 잡 대조 뺌 (start_id · EO P1 Q-EO-2b)', 'build_a5_vasp_package.py', '  [ "$(rf "$R" job s)" = "$JOB" ] || { echo start_job; return; }', '  :', 'a5'),
     ('m91 러너: 중단 영수증 시간을 attempt.json 뒤로 (wall_of 옛 순서 · EO P1 Q-EO-2c)', 'build_a5_vasp_package.py', '  case "$d" in run_aborted/*)\n    w=$(rget "$d/infra_abort.json" wall_s s) || { echo BAD; return; }\n    if [ "$w" = UNKNOWN ] || secs_ok "$w"; then echo "$w"; else echo BAD; fi; return;;', '  case "$d" in run_aborted/*)\n    w=$(rget "$d/infra_abort.json" wall_s s) || { echo BAD; return; }\n    if [ "$w" = UNKNOWN ] || secs_ok "$w"; then echo "$w"; else echo BAD; fi;;', 'a5'),
-    ('m92 러너: 사다리 시작의 장부 ↔ 보존 폴더 대조 뺌 (EO P1 Q-EO-3)', 'build_a5_vasp_package.py', 'x=$(ledger5); [ "$x" = - ] || fin5 8 REVIEW "중단 장부', 'x=-; [ "$x" = - ] || fin5 8 REVIEW "중단 장부', 'a5'),
+    ('m92 러너: 사다리 시작의 장부 ↔ 보존 폴더 대조 뺌 (EO P1 Q-EO-3)', 'build_a5_vasp_package.py', 'tree_gate "다시 돌림"      # 잠금 다음', ':      # 잠금 다음', 'a5'),
     ('m93 러너: 장부 폴더 집합 = 보존 폴더 집합 대조 뺌 (ledger5 · EO P1 Q-EO-3)', 'build_a5_vasp_package.py', '  [ "$x" = "$lst" ] || { echo ledger_folders_differ; return; }', '  :', 'a5'),
     ('m94 러너: 중단 영수증 run_id = attempt.start 대조 뺌 (receipt5 · EO P1)', 'build_a5_vasp_package.py', '  [ "$(rf "$R" run_id s)" = "$(rget "$d/attempt.start" run_id s)" ] || { echo receipt_run_id; return; }', '  :', 'a5'),
     ('m95 러너: 끝 기록에 시도 목록을 안 묶음 (att5 · EO P2 Q-EO-4)', 'build_a5_vasp_package.py', '"$1" "$2" "$(jstr "$3")" "$(att5)" "$(utc)"', '"$1" "$2" "$(jstr "$3")" "" "$(utc)"', 'a5'),
@@ -4120,43 +4873,94 @@ MUTANTS = (
     ('m101 검사기: 끝난 시도의 행 손상 · 남의 머리를 행 0 앞에서 안 봄 (EO P0)', 'build_a5_vasp_package.py', '    if why_rows:                                                             # 행 손상', '    if False:                                                             # 행 손상', 'a5'),
     ('m102 검사기: attempt.start 잡 대조 뺌 (start_problem · EO P1 Q-EO-2b)', 'build_a5_vasp_package.py', '    if rec_s(x, "job") != job_dir:\n        return "start_job"', '    if False:\n        return "start_job"', 'a5'),
     ('m103 검사기: attempt.start 가 그 폴더의 것인지 안 봄 (check_attempt5 · EO P1 Q-EO-2b)', 'build_a5_vasp_package.py', '        if sp_:\n            return done("ATTEMPT_MISMATCH"', '        if False:\n            return done("ATTEMPT_MISMATCH"', 'a5'),
-    ('m104 러너: gate5 가 attempt.start 를 그 폴더와 대조 안 함 (BAD2 · EO P1 Q-EO-2b)', 'build_a5_vasp_package.py', '  e=$(start_id "$d" "$st"); [ "$e" = - ] || { echo "BAD2 - 0 $e"; return; }', '  :', 'a5'),
+    ('m104 러너: gate5 가 attempt.start 를 그 폴더와 대조 안 함 (BAD2 · EO P1 Q-EO-2b)', 'build_a5_vasp_package.py', '  x=$(start_id "$d" "$2"); [ "$x" = - ] || { echo "$x"; return; }', '  :', 'a5'),
     ('m105 검사기: 중단 영수증 시간을 attempt.json 뒤로 (wall_of 옛 순서 · EO P1 Q-EO-2c)', 'build_a5_vasp_package.py', '        w = rec_s(rec_read(os.path.join(d, "infra_abort.json")), "wall_s")\n        return "UNKNOWN" if w == "UNKNOWN" else (int(w) if w is not None and SECS_RE.fullmatch(w) else None)\n    p = os.path.join(d, "killed.json")', '        w = rec_s(rec_read(os.path.join(d, "infra_abort.json")), "wall_s")\n        pass\n    p = os.path.join(d, "killed.json")', 'a5'),
     ('m106 검사기: 띄울 때의 누적 상한 대조 뺌 (EO P1 Q-EO-2c)', 'build_a5_vasp_package.py', '        elif tot > cap_s:', '        elif False:', 'a5'),
     ('m107 검사기: 미상 영수증 뒤의 시도를 안 봄 (EO P1 Q-EO-2c — UNKNOWN 되돌림)', 'build_a5_vasp_package.py', '        if unk is not None:\n            viol.append(f"{t_} 앞 시도 {unk}', '        if False:\n            viol.append(f"{t_} 앞 시도 {unk}', 'a5'),
     ('m108 검사기: 벽시계를 채운 시각 ≤ 다음 시도 시작 대조 뺌 (EO P1 Q-EO-2c)', 'build_a5_vasp_package.py', '        if fill is not None and tm_.get("start") is not None and tm_["start"] < fill[1]:', '        if False:', 'a5'),
     ('m109 검사기: 장부 ↔ 보존 폴더 대조 뺌 (ledger_problems · EO P1 Q-EO-3)', 'build_a5_vasp_package.py', '    viol += ledger_problems(job, base)', '    viol += []', 'a5'),
-    ('m110 검사기: 끝 기록의 시도 목록 대조 뺌 (EO P2 Q-EO-4)', 'build_a5_vasp_package.py', '    if fin_rec is not None and fin_rec.get("attempts") != attempts_of(base, job):', '    if False:', 'a5'),
+    ('m110 검사기: 끝 기록의 시도 목록 대조 뺌 (final_problem — 트리 관문 · EO P2 Q-EO-4 · check_return 의 옛 대조는 관문 뒤 둘째 줄)', 'build_a5_vasp_package.py', '    if rec_s(x, "attempts") != attempts_of(base, job):\n        return "final_attempts_differ"', '    if False:\n        return "final_attempts_differ"', 'a5'),
     ('m111 검사기: 중단 영수증 run_id = attempt.start 대조 뺌 (abort_receipt_problem · EO P1)', 'build_a5_vasp_package.py', '    if rec_s(x, "run_id") != rec_s(s0, "run_id"):\n        return f"중단 영수증 run_id', '    if False:\n        return f"중단 영수증 run_id', 'a5'),
     ('m112 검사기: 0 스텝 중단 폴더의 행 손상을 안 봄 (EO P0)', 'build_a5_vasp_package.py', '        if (x_.get("row_scan") or {}).get("why", "-") != "-":\n            viol.append(f"{t_} 는 OSZICAR 행 판독', '        if False:\n            viol.append(f"{t_} 는 OSZICAR 행 판독', 'a5'),
-    ('m113 러너: --infra-abort 가 attempt.start 를 그 폴더와 대조 안 함 (EO P1 Q-EO-2b)', 'build_a5_vasp_package.py', '  x=$(start_id "$src" "$st"); [ "$x" = - ] || { echo "⛔ $src/attempt.start 가 이 폴더의 시도가 아니다 ($x) — 기록하지 않는다 (연락)"; exit 2; }\n  x=$(ledger5)', '  x=-; [ "$x" = - ] || { echo "⛔ $src/attempt.start 가 이 폴더의 시도가 아니다 ($x) — 기록하지 않는다 (연락)"; exit 2; }\n  x=$(ledger5)', 'a5'),
-    ('m114 러너: 행의 숫자 판독 뺌 (칸 ≥ 6 · N 정수만 — EP P0)', 'build_a5_vasp_package.py', '      if ((k == 6 || k == 7) && t[1] ~ /^[1-9][0-9]*$/ && t[5] ~ /^[0-9]+$/ && t[2] ~ R && t[3] ~ R && t[4] ~ R && t[6] ~ R && (k == 6 || t[7] ~ R)) n++; else p++', '      if (k >= 6 && t[1] ~ /^[0-9]+$/) n++; else p++', 'a5'),
-    ('m115 러너: 콜론 앞 머리 조각을 끝 조각으로 안 봄 (EP P0)', 'build_a5_vasp_package.py', '    NR > NL && /^[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?$/ { tp = 1 }', '    NR > NL && 0 { tp = 1 }', 'a5'),
+    ('m113 러너: --infra-abort 가 attempt.start 를 그 폴더와 대조 안 함 (EO P1 Q-EO-2b)', 'build_a5_vasp_package.py', 'case "${1:-}" in --infra-abort|--infra-wall|--killed|--reset-w0) tree_gate "기록 명령 $1";; esac', ':', 'a5'),
+    ('m114 러너: 행의 숫자 판독 뺌 (칸 ≥ 6 · N 정수만 — EP P0)', 'build_a5_vasp_package.py', '      if (lg && (k == 6 || k == 7) && t[1] ~ /^[1-9][0-9]*$/ && t[5] ~ /^[0-9]+$/ && t[2] ~ R && t[3] ~ R && t[4] ~ R && t[6] ~ R && (k == 6 || t[7] ~ R)) n++; else p++', '      if (lg && (k == 6 || k == 7) && t[1] ~ /^[1-9][0-9]*$/) n++; else p++', 'a5'),
+    ('m115 러너: 콜론 앞 머리 조각을 끝 조각으로 안 봄 (EP P0)', 'build_a5_vasp_package.py', '    NR > NL { u = $0; sub(/^[ \\t]+/, "", u); if (u ~ /^[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?$/ && !(u != $0 && u ~ /^N *$/)) tp = 1 }', '    NR > NL { u = $0 }', 'a5'),
     ('m116 러너: 진행 폴더의 영수증을 시간 출처로 (wall_of 옛 · EP P1)', 'build_a5_vasp_package.py', '  case "$d" in run_aborted/*)\n    w=$(rget "$d/infra_abort.json" wall_s s) || { echo BAD; return; }', '  [ -e "$d/infra_abort.json" ] && case x in x)\n    w=$(rget "$d/infra_abort.json" wall_s s) || { echo BAD; return; }', 'a5'),
-    ('m117 러너: 진행 폴더의 영수증 거부 뺌 (ledger5 · EP P1)', 'build_a5_vasp_package.py', '    for b in infra_abort.json infra_abort.json.part; do { [ -e "run/${JOB}_$s/$b" ] || [ -L "run/${JOB}_$s/$b" ]; } && { echo "stray_receipt_$s"; return; }; done', '    :', 'a5'),
+    ('m117 러너: 진행 폴더의 영수증 거부 뺌 (ledger5 · EP P1)', 'build_a5_vasp_package.py', '  case "$d" in run/*) [ ! -f "$d/infra_abort.json" ] || { echo stray_receipt; return; };; esac', '  :', 'a5'),
     ('m118 러너: 장부 줄 시각 순서 뺌 (ledger5 · EP P2)', 'build_a5_vasp_package.py', '    { [ "$w" -ge "$prs" ] && [ "$x" -ge "$pt0" ]; } 2>/dev/null || { echo "${b}_ledger_time_order"; return; }', '    :', 'a5'),
     ('m119 러너: 시도 이력 대조 뺌 (hist5 · EP P1)', 'build_a5_vasp_package.py', '  local S=run/status.tsv d have\n  { [ -e "$S" ] || [ -L "$S" ]; } || { echo -; return; }', '  local S=run/status.tsv d have\n  echo -; return', 'a5'),
     ('m120 러너: 장부 없을 때 시도 이력을 안 봄 (부분 복구 · EP P1)', 'build_a5_vasp_package.py', '    [ -z "$lst" ] && { hist5; return; }', '    [ -z "$lst" ] && { echo -; return; }', 'a5'),
-    ('m121 러너: 끝난 시도의 끝 기록 신원 뺌 (gate5 end_id · EP 조건부)', 'build_a5_vasp_package.py', '    e=$(end_id "$d"); [ "$e" = - ] || { echo "BAD2 - 0 $e"; return; }', '    e=-', 'a5'),
-    ('m122 러너: 보존 폴더의 끝 기록 신원 뺌 (receipt5 end_id · EP 조건부)', 'build_a5_vasp_package.py', '  if [ -f "$d/attempt.json" ]; then k=$(end_id "$d"); [ "$k" = - ] || { echo "receipt_$k"; return; }; fi', '  :', 'a5'),
-    ('m123 러너: 영수증 필수 칸 빈 값을 받음 (receipt5 · EP 조건부)', 'build_a5_vasp_package.py', '  for k in sched_job_id cancel_utc reason; do [ -n "$(rf "$R" "$k" s)" ] || { echo "receipt_empty_$k"; return; }; done', '  :', 'a5'),
-    ('m124 러너: 끊김 기록 필수 칸 빈 값을 받음 (killed5 · EP 조건부)', 'build_a5_vasp_package.py', '  for k in sched_job_id cancel_utc reason; do [ -n "$(rf "$K" "$k" s)" ] || { echo "KILLED_RECORD_MISMATCH $n killed_json_empty_$k"; return; }; done', '  :', 'a5'),
+    ('m121 러너: 끝난 시도의 끝 기록 신원 뺌 (gate5 end_id · EP 조건부)', 'build_a5_vasp_package.py', '  [ "${V[3]}" = "$(rf "$2" run_id s)" ] || { echo end_run_id; return; }', '  :', 'a5'),
+    ('m122 러너: 보존 폴더의 끝 기록 신원 뺌 (receipt5 end_id · EP 조건부)', 'build_a5_vasp_package.py', '  [ "${V[5]}" = "$(rf "$2" t_start i)" ] || { echo end_t_start; return; }', '  :', 'a5'),
+    ('m123 러너: 영수증 필수 칸 빈 값을 받음 (receipt5 · EP 조건부)', 'build_a5_vasp_package.py', '  for k in sched_job_id cancel_utc reason; do nbj "$(rf "$R" "$k" s)" || { echo "receipt_blank_$k"; return; }; done', '  :', 'a5'),
+    ('m124 러너: 끊김 기록 필수 칸 빈 값을 받음 (killed5 · EP 조건부)', 'build_a5_vasp_package.py', '  for k in sched_job_id cancel_utc reason; do nbj "$(rf "$K" "$k" s)" || { echo "killed_json_blank_$k"; return; }; done', '  :', 'a5'),
     ('m125 러너: --killed 가 비 UTF-8 글을 씀 (u8ok · EP 조건부)', 'build_a5_vasp_package.py', '  { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }\n  rid=$(rget "$src/attempt.start" run_id s)\n', '  :\n  rid=$(rget "$src/attempt.start" run_id s)\n', 'a5'),
     ('m126 러너: --infra-abort 가 비 UTF-8 글을 씀 (u8ok · EP 조건부)', 'build_a5_vasp_package.py', '  { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }\n  if [ -n "${WALL_S:-}" ]; then', '  :\n  if [ -n "${WALL_S:-}" ]; then', 'a5'),
-    ('m127 러너: 다시 돌림 전 끝 기록 대조 뺌 (fin_ok · EP 조건부)', 'build_a5_vasp_package.py', '  [ "$x" = - ] || { echo "⛔ run/final.json 이 이 사다리의 끝 기록과 맞지 않는다 ($x) — 포장 · 계산 모두 하지 않는다 · 연락"; exit 2; }', '  :', 'a5'),
-    ('m128 러너: 포장만 전 끝 기록 대조 뺌 (fin_ok · EP 조건부)', 'build_a5_vasp_package.py', '  x=$(fin_ok); [ "$x" = - ] || { echo "⛔ run/final.json 이 이 사다리의 끝 기록과 맞지 않는다 ($x) — 포장하지 않는다 · 연락"; exit 2; }', '  :', 'a5'),
+    ('m127 러너: 다시 돌림 전 끝 기록 대조 뺌 (fin_ok · EP 조건부)', 'build_a5_vasp_package.py', '  if [ -e run/final.json ]; then x=$(fin_ok); [ "$x" = - ] || { echo "$x"; return; }; fi', '  :', 'a5'),
+    ('m128 러너: 포장만 전 끝 기록 대조 뺌 (fin_ok · EP 조건부)', 'build_a5_vasp_package.py', '[ "${PACK_ONLY:-0}" != 1 ] || tree_gate "PACK_ONLY 포장"', ':', 'a5'),
     ('m129 러너: 끝 기록의 시도 목록을 지금 목록과 대조 안 함 (fin_ok · EP 조건부)', 'build_a5_vasp_package.py', '  [ "$a" = "$(att5)" ] || { echo final_attempts_differ; return; }', '  :', 'a5'),
-    ('m130 검사기: 행의 숫자 판독 뺌 (_complete_row · EP P0)', 'build_a5_vasp_package.py', '    ok = (len(t) in (ROW_MIN_TOK, ROW_MIN_TOK + 1) and re.fullmatch(r"[1-9][0-9]*", t[0]) is not None and re.fullmatch(r"[0-9]+", t[4]) is not None\n          and all(REAL_TOK.fullmatch(t[i]) for i in (1, 2, 3, 5)) and (len(t) == ROW_MIN_TOK or REAL_TOK.fullmatch(t[6]) is not None))', '    ok = len(t) >= ROW_MIN_TOK and re.fullmatch(r"[0-9]+", t[0]) is not None', 'a5'),
-    ('m131 검사기: 콜론 앞 머리 조각을 끝 조각으로 안 봄 (row_gate · EP P0)', 'build_a5_vasp_package.py', '    elif tail and HDR_CUT.fullmatch(tail):', '    elif False:', 'a5'),
+    ('m130 검사기: 행의 숫자 판독 뺌 (_complete_row · EP P0)', 'build_a5_vasp_package.py', '          and all(REAL_TOK.fullmatch(t[i]) for i in (1, 2, 3, 5)) and (len(t) == ROW_MIN_TOK or REAL_TOK.fullmatch(t[6]) is not None)', '          and True', 'a5'),
+    ('m131 검사기: 콜론 앞 머리 조각을 끝 조각으로 안 봄 (row_gate · EP P0)', 'build_a5_vasp_package.py', '        if HDR_CUT.fullmatch(u) and not (u != tail and re.fullmatch(r"N *", u)):', '        if False:', 'a5'),
     ('m132 검사기: 진행 폴더의 영수증을 시간 출처로 (wall_of 옛 · EP P1)', 'build_a5_vasp_package.py', '    if os.path.basename(os.path.dirname(os.path.abspath(d))) == "run_aborted":       # 보존 폴더는', '    if os.path.lexists(os.path.join(d, "infra_abort.json")):       # 보존 폴더는', 'a5'),
-    ('m133 검사기: 진행 폴더의 영수증 거부 뺌 (ledger_problems · EP P1)', 'build_a5_vasp_package.py', '           for s in STAGES for f in ("infra_abort.json", "infra_abort.json.part") if os.path.lexists(os.path.join(base, "run", f"{J}_{s}", f))]', '           for s in STAGES for f in () if False]', 'a5'),
+    ('m133 검사기: 진행 폴더의 영수증 거부 뺌 (ledger_problems · EP P1)', 'build_a5_vasp_package.py', '    if rel.startswith("run/") and os.path.isfile(os.path.join(d, "infra_abort.json")):\n        return "stray_receipt"', '    if False:\n        return "stray_receipt"', 'a5'),
     ('m134 검사기: 장부 줄 시각 순서 뺌 (EP P2)', 'build_a5_vasp_package.py', '            if rs_ < prs or t0_ < pt0:', '            if False:', 'a5'),
-    ('m135 검사기: 시도 이력 대조 뺌 (history_problems · EP P1)', 'build_a5_vasp_package.py', '    return out + _ledger_core(job, base) + history_problems(job, base)', '    return out + _ledger_core(job, base)', 'a5'),
+    ('m135 검사기: 시도 이력 대조 뺌 (history_problems · EP P1)', 'build_a5_vasp_package.py', '    return _ledger_core(job, base) + history_problems(job, base)', '    return _ledger_core(job, base)', 'a5'),
     ('m136 검사기: 끝난 시도의 끝 기록 신원 뺌 (check_attempt5 end_problem · EP 조건부)', 'build_a5_vasp_package.py', '    ep_ = end_problem(attdir)', '    ep_ = None', 'a5'),
-    ('m137 검사기: 보존 폴더의 끝 기록 신원 뺌 (abort_receipt_problem · EP 조건부)', 'build_a5_vasp_package.py', '        ep_ = end_problem(d)', '        ep_ = None', 'a5'),
-    ('m138 검사기: 영수증 필수 칸 빈 값을 받음 (abort_receipt_problem · EP 조건부)', 'build_a5_vasp_package.py', '        if rec_s(x, f_) == "":', '        if False:', 'a5'),
-    ('m139 검사기: 끊김 기록 필수 칸 빈 값을 받음 (killed_problems · EP 조건부)', 'build_a5_vasp_package.py', '        if rec_s(k, f_) == "":', '        if False:', 'a5'),
+    ('m137 검사기: 보존 폴더의 끝 기록 신원 뺌 (abort_receipt_problem · EP 조건부)', 'build_a5_vasp_package.py', '    if vals[3] != rec_s(s0, "run_id"):\n        return "end_run_id"', '    if False:\n        return "end_run_id"', 'a5'),
+    ('m138 검사기: 영수증 필수 칸 빈 값을 받음 (abort_receipt_problem · EP 조건부)', 'build_a5_vasp_package.py', '        if _blank(rec_s(x, f_)):\n            return f"중단 영수증 칸', '        if False:\n            return f"중단 영수증 칸', 'a5'),
+    ('m139 검사기: 끊김 기록 필수 칸 빈 값을 받음 (killed_problems · EP 조건부)', 'build_a5_vasp_package.py', '        if _blank(rec_s(k, f_)):\n            return "KILLED_RECORD_MISMATCH"', '        if False:\n            return "KILLED_RECORD_MISMATCH"', 'a5'),
     ('m140 검사기: 끝 기록 없는 반송을 채택 (EP 조건부)', 'build_a5_vasp_package.py', '        if fin_rec is None:\n            res.update(status="STOPPED_FOR_REVIEW"', '        if False:\n            res.update(status="STOPPED_FOR_REVIEW"', 'a5'),
+    ('m141 러너: 트리 관문 통째로 끔 (tree_gate → 늘 통과 · Codex EQ — 관문 하나를 빼면 반례 묶음이 한꺼번에 빨강인가)', 'build_a5_vasp_package.py', '  local x; x=$(tree5)\n  [ "$x" = - ] && return 0', '  return 0', 'a5'),
+    ('m142 러너: 이름 검사 뺌 (tree5 → files5 · Codex EQ P1)', 'build_a5_vasp_package.py', '  x=$(files5); [ "$x" = - ] || { echo "$x"; return; }', '  :', 'a5'),
+    ('m143 러너: 시도 폴더의 모르는 이름 · 잔여 *.part 거부 뺌 (files5 · Codex EQ P1)', 'build_a5_vasp_package.py', '      { [ -f "$f" ] && [ ! -L "$f" ] && [[ "$e" =~ ^($RET_ALLOW|$RET_FORBID|$ATT_EXTRA)$ ]]; } || { echo "file_$f"; return; }', '      :', 'a5'),
+    ('m144 러너: run/ 의 모르는 이름 · 잔여 *.part 거부 뺌 (files5 · Codex EQ P1)', 'build_a5_vasp_package.py', '      *) echo "run_entry_$b"; return;;', '      *) ;;', 'a5'),
+    ('m145 러너: 끝 기록 틀 (attempt.json) 거부 뺌 (tpl5 · Codex EQ P1)', 'build_a5_vasp_package.py', '    A=$(tpl5 "$d/attempt.json" "$ATT1_T") || { echo att_form; return; }', '    A=$(tpl5 "$d/attempt.json" "$ATT1_T") || { echo -; return; }', 'a5'),
+    ('m146 러너: 봉인 (sha 표 = 지금 파일) 뺌 (att_ok5 · Codex EQ)', 'build_a5_vasp_package.py', '    if [ -f "$d/$f" ]; then [ "$k" = "$(h "$d/$f")" ] || { echo "seal_$f"; return; }', '    if true; then :', 'a5'),
+    ('m147 러너: 끝 기록 · 끊김 기록 공존 거부 뺌 (rec_dir5 · Codex EQ P0)', 'build_a5_vasp_package.py', '    [ ! -f "$d/attempt.json" ] || { echo end_and_killed; return; }', '    [ ! -f "$d/attempt.json" ] || { echo -; return; }', 'a5'),
+    ('m148 러너: 보존 폴더의 끊김 기록 거부 뺌 (rec_dir5 · Codex EQ)', 'build_a5_vasp_package.py', '    case "$d" in run_aborted/*) echo killed_in_aborted; return;; esac', '    :', 'a5'),
+    ('m149 러너: 기록 UTF-8 읽기 검사 뺌 (rec_dir5 · Codex EQ P1)', 'build_a5_vasp_package.py', '    if [ -f "$d/$f" ] && ! u8f "$d/$f"; then echo "utf8_$f"; return; fi', '    :', 'a5'),
+    ('m150 러너: 0 바이트 status.tsv 거부 뺌 (hist5 · Codex EQ P1)', 'build_a5_vasp_package.py', '  [ -s "$S" ] || { echo status_empty; return; }', '  :', 'a5'),
+    ('m151 러너: 끝 기록 code/state 조합 뺌 (fin_ok · Codex EQ P1)', 'build_a5_vasp_package.py', '  case "$c:$s" in 0:OK|1:NO_PRIMARY|1:CLOSED|5:CAP|6:ENV|8:REVIEW) ;; *) echo final_code_state; return;; esac', '  :', 'a5'),
+    ('m152 러너: 장부 단 순서 뺌 (ledger5 · Codex EQ P2)', 'build_a5_vasp_package.py', 'r = ($3 == "A5") ? 1 : (($3 == "c1") ? 2 : 3); if (r < pr) { print "BAD ledger_row_" i "_rung_order"; exit }; pr = r', 'r = 0', 'a5'),
+    ('m153 러너: 기존 반송본 대조 뺌 (tree5 → tgz5 · Codex EQ P1)', 'build_a5_vasp_package.py', '  x=$(tgz5); [ "$x" = - ] || { echo "$x"; return; }', '  :', 'a5'),
+    ('m154 러너: 반송본 끝 기록 대조 뺌 (tgz5 · Codex EQ P1)', 'build_a5_vasp_package.py', '  if [ -f "$T/x/run/final.json" ]; then cmp -s "$T/x/run/final.json" run/final.json || { echo tgz_final_differs; return; }; fi', '  :', 'a5'),
+    ('m155 러너: 반송본 시도 대조 뺌 (tgz5 · Codex EQ P1)', 'build_a5_vasp_package.py', '    [ -n "$c" ] || { echo "tgz_attempt_missing_$b"; return; }', '    [ -n "$c" ] || continue', 'a5'),
+    ('m156 러너: 반송본 끝 기록 바이트 대조 뺌 (tgz5 · Codex EQ P1)', 'build_a5_vasp_package.py', '      [ ! -f "$d/$e" ] || cmp -s "$d/$e" "$c/$e" || { echo "tgz_end_differs_$b/$e"; return; }', '      :', 'a5'),
+    ('m157 러너: 단 발사 직전 관문 뺌 (cap_gate · Codex EQ)', 'build_a5_vasp_package.py', '  tree_gate "$1 발사 직전"', '  :', 'a5'),
+    ('m158 러너: 포장 관문 뺌 (pack — 덮어쓰기 전 · Codex EQ)', 'build_a5_vasp_package.py', '  tree_gate 포장 ', '  : ', 'a5'),
+    ('m159 러너: --killed 필수 칸 빈칸만 받음 (Codex EQ P1)', 'build_a5_vasp_package.py', '  { nbw "$sid" && nbw "$when" && nbw "$why"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다 (빈칸 문자 — 공백 · 탭 · 줄바꿈 · VT · FF · CR — 만인 글도 안 된다 · Codex EQ)"; exit 2; }\n  { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }\n  rid=$(rget', '  [ -n "$sid" ] && [ -n "$when" ] && [ -n "$why" ] || { echo "⛔"; exit 2; }\n  { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }\n  rid=$(rget', 'a5'),
+    ('m160 러너: --infra-abort 필수 칸 빈칸만 받음 (Codex EQ P1)', 'build_a5_vasp_package.py', '  { nbw "$sid" && nbw "$when" && nbw "$why"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다 (빈칸 문자 — 공백 · 탭 · 줄바꿈 · VT · FF · CR — 만인 글도 안 된다 · Codex EQ)"; exit 2; }\n  { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }\n  if [ -n "${WALL_S:-}" ]; then', '  [ -n "$sid" ] && [ -n "$when" ] && [ -n "$why" ] || { echo "⛔"; exit 2; }\n  { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }\n  if [ -n "${WALL_S:-}" ]; then', 'a5'),
+    ('m161 러너: 끝 기록을 임시 파일 · mv 없이 바로 씀 (run_one5 · Codex EQ P1)', 'build_a5_vasp_package.py', '> "$d/attempt.json.part" && mv -f "$d/attempt.json.part" "$d/attempt.json"', '> "$d/attempt.json"', 'a5'),
+    ('m162 러너: 시작점 기록 문법 뺌 (tree5 → sp_rec5 · Codex EQ)', 'build_a5_vasp_package.py', '  if [ -e run/start_point.json ]; then x=$(sp_rec5); [ "$x" = - ] || { echo "$x"; return; }; fi', '  :', 'a5'),
+    ('m163 러너: ⓪ 기록 틀 뺌 (tree5 → w0_rec5 · Codex EQ)', 'build_a5_vasp_package.py', '  if [ -e run/w0_check.json ]; then x=$(w0_rec5); [ "$x" = - ] || { echo "$x"; return; }; fi', '  :', 'a5'),
+    ('m164 러너: 숫자 칸 길이 ≤ 24 뺌 (row_scan · Codex EQ P0)', 'build_a5_vasp_package.py', '      if (lg && (k == 6 || k == 7)', '      if ((k == 6 || k == 7)', 'a5'),
+    ('m165 러너: 머리 조각의 앞 빈칸을 안 걷음 (row_scan · Codex EQ P0)', 'build_a5_vasp_package.py', 'NR > NL { u = $0; sub(/^[ \\t]+/, "", u); ', 'NR > NL { u = $0; ', 'a5'),
+    ("m166 러너: 열 제목 'N' 예외 뺌 (row_scan · Codex EQ P0)", 'build_a5_vasp_package.py', ' && !(u != $0 && u ~ /^N *$/)) tp = 1 }', ') tp = 1 }', 'a5'),
+    ('m167 러너: 시작 기록 없음을 문법 오류로 (no_start 뺌 · rec_dir5)', 'build_a5_vasp_package.py', '  [ -f "$d/attempt.start" ] || { echo no_start; return; }', '  :', 'a5'),
+    ('m168 러너: 끊김 기록 문법 오류를 받음 (killed_rec5 · Codex EQ)', 'build_a5_vasp_package.py', '  K=$(rec5 "$1/killed.json") || { echo killed_json_form; return; }', '  K=$(rec5 "$1/killed.json") || { echo -; return; }', 'a5'),
+    ('m169 검사기: 트리 관문 통째로 끔 (check_return → tree_problems · Codex EQ)', 'build_a5_vasp_package.py', '    viol += [f"트리 관문 ({t_}) — 러너는 이 트리에서 아무것도 쓰거나 띄우거나 포장하지 않고 멈춘다 (종료 8 · Codex EQ)" for t_ in tree_problems(job, base)]', '    viol += []', 'a5'),
+    ('m170 검사기: 이름 검사 뺌 (tree_problems → files_problem · Codex EQ P1)', 'build_a5_vasp_package.py', '    fp_ = files_problem(J, base)\n    if fp_:', '    fp_ = None\n    if fp_:', 'a5'),
+    ('m171 검사기: 끝 기록 틀 거부 뺌 (rec_dir_problem · Codex EQ P1)', 'build_a5_vasp_package.py', '        if vals is None:\n            return "att_form"', '        if vals is None:\n            return None', 'a5'),
+    ('m172 검사기: 봉인 뺌 (att_problem · Codex EQ)', 'build_a5_vasp_package.py', '        if k != (_sha(p) if os.path.isfile(p) else ""):\n            return f"seal_{f}"', '        if False:\n            return f"seal_{f}"', 'a5'),
+    ('m173 검사기: 끝 기록 · 끊김 기록 공존 거부 뺌 (rec_dir_problem · Codex EQ P0)', 'build_a5_vasp_package.py', '        if os.path.isfile(os.path.join(d, "attempt.json")):\n            return "end_and_killed"', '        if False:\n            return "end_and_killed"', 'a5'),
+    ('m174 검사기: 보존 폴더의 끊김 기록 거부 뺌 (rec_dir_problem · Codex EQ)', 'build_a5_vasp_package.py', '        if rel.startswith("run_aborted/"):\n            return "killed_in_aborted"', '        if False:\n            return "killed_in_aborted"', 'a5'),
+    ('m175 검사기: 기록 UTF-8 읽기 검사 뺌 (rec_dir_problem · Codex EQ P1)', 'build_a5_vasp_package.py', '            if raw_ is None or not _u8(raw_):\n                return f"utf8_{f}"', '            if False:\n                return f"utf8_{f}"', 'a5'),
+    ('m176 검사기: 0 바이트 status.tsv 거부 뺌 (history_problems · Codex EQ P1)', 'build_a5_vasp_package.py', '    if not raw:\n        return ["시도 이력 (run/status.tsv) 이 0 바이트다', '    if False:\n        return ["시도 이력 (run/status.tsv) 이 0 바이트다', 'a5'),
+    ('m177 검사기: 끝 기록 code/state 조합 뺌 (final_problem · Codex EQ P1)', 'build_a5_vasp_package.py', '    if (rec_i(x, "code"), rec_s(x, "state")) not in FINAL_COMBOS:', '    if False:', 'a5'),
+    ('m178 검사기: 장부 단 순서 뺌 (_ledger_core · Codex EQ P2)', 'build_a5_vasp_package.py', '        if STAGES.index(f[2]) + 1 < pr:', '        if False:', 'a5'),
+    ('m179 검사기: 트리 관문의 끊김 기록 run_id 결속 뺌 (killed_rec_problem · Codex EQ P0)', 'build_a5_vasp_package.py', '    if rec_s(k, "run_id") != rec_s(s0, "run_id"):\n        return "killed_run_id"', '    if False:\n        return "killed_run_id"', 'a5'),
+    ('m180 검사기: 트리 관문의 끊김 기록 빈칸 뺌 (killed_rec_problem · Codex EQ P1)', 'build_a5_vasp_package.py', '        if _blank(rec_s(k, f_)):\n            return f"killed_json_blank_{f_}"', '        if False:\n            return f"killed_json_blank_{f_}"', 'a5'),
+    ('m181 검사기: 시작점 기록 문법 뺌 (sp_problem · Codex EQ)', 'build_a5_vasp_package.py', '    if x is None or any(rec_s(x, k) is None for k in ("from", "path", "sha256", "head")) or rec_i(x, "written_s") is None:\n        return "start_point_form"', '    if False:\n        return "start_point_form"', 'a5'),
+    ('m182 검사기: ⓪ 기록 틀 뺌 (w0_problem · Codex EQ)', 'build_a5_vasp_package.py', '    if tpl_parse(raw, W0_TPL) is None:\n        return "w0_form"', '    if False:\n        return "w0_form"', 'a5'),
+    ('m183 검사기: 숫자 칸 길이 ≤ 24 뺌 (_complete_row · Codex EQ P0)', 'build_a5_vasp_package.py', '          and all(len(x) <= ROW_TOK_MAX for x in t))', '          and True)', 'a5'),
+    ('m184 검사기: 머리 조각의 앞 빈칸을 안 걷음 (row_gate · Codex EQ P0)', 'build_a5_vasp_package.py', '        u = tail.lstrip(" \\t")', '        u = tail', 'a5'),
+    ("m185 검사기: 열 제목 'N' 예외 뺌 (row_gate · Codex EQ P0)", 'build_a5_vasp_package.py', ' and not (u != tail and re.fullmatch(r"N *", u)):', ':', 'a5'),
+    ('m186 검사기: 트리 관문의 시작 기록 신원 뺌 (rec_dir_problem · Codex EQ)', 'build_a5_vasp_package.py', '    sp_ = start_problem(job_dir, d, stage)\n    if sp_:\n        return sp_', '    sp_ = None\n    if sp_:\n        return sp_', 'a5'),
+    ('m187 검사기: 시작 기록 없음을 문법 오류로 (no_start 뺌 · rec_dir_problem)', 'build_a5_vasp_package.py', '    if not os.path.isfile(os.path.join(d, "attempt.start")):\n        return "no_start"', '    if False:\n        return "no_start"', 'a5'),
+    ('m188 검사기: 트리 관문의 끝 기록 t_start 신원 뺌 (att_problem · Codex EQ)', 'build_a5_vasp_package.py', '    if vals[5] != rec_i(s0, "t_start"):\n        return "end_t_start"', '    if False:\n        return "end_t_start"', 'a5'),
+    ('m189 러너: 읽을 때 빈칸 판정이 공백만 걷음 (nbj — 빈칸 이스케이프를 글자로 셈 · Codex EQ P1 보강)', 'build_a5_vasp_package.py', "gsub(/\\\\[tnrf]|\\\\u00(0[9a-dA-D]|20)| /, \"\")", "gsub(/ /, \"\")", 'a5'),
+    ('m190 검사기: 빈칸 판정이 공백만 걷음 (_blank — BLANK_ESC · Codex EQ P1 보강)', 'build_a5_vasp_package.py', '    return v is None or BLANK_ESC.sub("", v) == ""', '    return v is None or v.replace(" ", "") == ""', 'a5'),
+    ('m191 러너: 쓸 때 빈칸 판정이 공백만 지움 (nbw — VT · FF 만인 글을 받음 · Codex EQ P1 보강)', 'build_a5_vasp_package.py', "tr -d ' \\t\\n\\v\\f\\r'", "tr -d ' '", 'a5'),
 )
 
 
@@ -4180,7 +4984,8 @@ def _mutants(names=None, jobs=1):
                 return name, f"무효 (코드에 자리 {code.count(old)} 번)", False
             _write(p, code.replace(old, new) + sep + table)
             tool = os.path.join(T, "tools", "wad", "build_a5_vasp_package.py" if which == "a5" else "build_v5_vasp_package.py")
-            r = subprocess.run([sys.executable, "-I", tool, "--selftest"], capture_output=True, text=True, timeout=3600)
+            r = subprocess.run([sys.executable, "-I", tool, "--selftest"], capture_output=True, text=True, timeout=3600,
+                               env={**os.environ, "A5_SELFTEST_FAILFAST": "1"})      # 첫 빨강에서 멈춤 (V5 selftest 는 이 변수를 보지 않는다)
             red = r.returncode != 0
             return name, ("빨강 ✓" if red else "초록 ✗ (시험이 못 잡음)"), red
     with ThreadPoolExecutor(max_workers=max(1, jobs)) as ex:
