@@ -1,0 +1,120 @@
+{
+ "slug": "liu2026_li_in_s_composite_foil_built_in_field_li_lpscl",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-23",
+ "sources": [
+  "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | The analysis of the component characterization of the Li-In-S foil. a Schematic illustration of the reconstruction mechanism of the Li-In-S composite. b Digital photographs of the as-prepared Li-In-S foil. c XRD patterns of the Li-In-S foil. XPS spectra of d In 3d and e S 2p for the Li-In-S foil. f TOF-SIMS secondary ion",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    62.3,
+    537.9,
+    508.7
+   ],
+   "w": 2102,
+   "h": 1861,
+   "dpi": 300,
+   "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
+   "blank": 0.628
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Electrochemical performance of the Li and the Li-In-S symmetric cells at stacking pressures of 10 MPa. a Tafel curves of symmetric Li|LPSC|Li and Li-In-S| LPSC|Li-In-S cells. Critical current density (CCD) tests of b the Li symmetric cell and c the Li-In-S symmetric cell. Galvanostatic Li plating/stripping performance of the Li-In-S|LPSC|Li-In-S cell under d 0.2 mA cm−2 and e 0.5 mA cm−2. DRT transition",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.0,
+    531.5,
+    500.9
+   ],
+   "w": 2075,
+   "h": 1908,
+   "dpi": 300,
+   "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Composition analysis and structure characterization at the negative electrode/electrolyte interface. High-resolution XPS spectra of the LPSC elec- trolyte interface from the symmetric cells after Li plating/stripping. The Li|LPSC|Li and Li-In-S|LPSC|Li-In-S symmetric cells were disassembled after Li plating/strip- ping at a current density of 0.2 mA cm−2/0.2 mAh cm−2 for 100 h under 25 °C, and the Li or Li-In-S electrodes were peeled off to expose the cycled LPSC electrolyte interface for XPS measurements. a S 2p and P 2p XPS spectra of the Li/LPSC interface and b S 2p and P 2p XPS spectra of the Li-In-S/LPSC interface after Li plating/stripping collected at different sputtering times. c TOF-SIMS depth proﬁl- ing results of several representative fragments for the Li/LPSC and Li-In-S/LPSC interface before and after Li plating/stripping. The symmetric cells were",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    72.9,
+    538.9,
+    467.5
+   ],
+   "w": 2106,
+   "h": 1645,
+   "dpi": 300,
+   "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Mechanism investigation at the electrode/electrolyte interface. Snap- shots of a Li/LPSC interface and b Li-In-S/LPSC interface after AIMD simulations. RDF evolutions of c Li–S interaction for Li/LPSC interface and d Li–S for Li-In-S/ LPSC interface during the simulation. Electrostatic potential plots and the corre- sponding work functions of e LixIn and f Li2S models. Schematic diagram for the",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    44.2,
+    543.9,
+    526.0
+   ],
+   "w": 2127,
+   "h": 2008,
+   "dpi": 300,
+   "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
+   "blank": 0.665
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Electrochemical performance of the all-solid-state cell with LCO and NCM811 positive electrodes at stacking pressures of 10 MPa. a Long-term cycling performances of the Li|LPSC|LCO and Li-In-S|LPSC|LCO cells at 1 C and b the corresponding charge−discharge curves of the Li-In-S|LPSC|LCO cell. c Rate per- formances of the Li|LPSC|NCM811 and Li-In-S|LPSC|NCM811 cells and",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    352.7,
+    538.5
+   ],
+   "w": 1330,
+   "h": 2066,
+   "dpi": 300,
+   "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
+   "blank": 0.909
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}
