@@ -13,7 +13,7 @@
    "label": "1",
    "page": 3,
    "file": "fig_1.png",
-   "caption": "Fig. 1 | The analysis of the component characterization of the Li-In-S foil. a Schematic illustration of the reconstruction mechanism of the Li-In-S composite. b Digital photographs of the as-prepared Li-In-S foil. c XRD patterns of the Li-In-S foil. XPS spectra of d In 3d and e S 2p for the Li-In-S foil. f TOF-SIMS secondary ion",
+   "caption": "Fig. 1 | The analysis of the component characterization of the Li-In-S foil. a Schematic illustration of the reconstruction mechanism of the Li-In-S composite. b Digital photographs of the as-prepared Li-In-S foil. c XRD patterns of the Li-In-S foil. XPS spectra of d In 3d and e S 2p for the Li-In-S foil. f TOF-SIMS secondary ion 3D images of the Li-In-S foil. g Depth profile of LiInS−, LiS−, and Li3InO2− secondary ion fragments. h TEM and i HRTEM images of the Li-In-S foil and j the corresponding SAED image.",
    "rotated_deg": 0,
    "bbox": [
     55.0,
@@ -26,7 +26,11 @@
    "dpi": 300,
    "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
    "blank": 0.609,
-   "manual_crop": "2026-11-23 litdb-curator: auto bbox top edge (y 62.3) cut panel labels a/b and the top of panels a,b (raster starts y 54.6, labels y 49.7); re-cropped to the full figure (caption starts y 512.1)"
+   "manual_crop": "2026-11-23 litdb-curator: auto bbox top edge (y 62.3) cut panel labels a/b and the top of panels a,b (raster starts y 54.6, labels y 49.7); re-cropped to the full figure (caption starts y 512.1)",
+   "caption_auto": "Fig. 1 | The analysis of the component characterization of the Li-In-S foil. a Schematic illustration of the reconstruction mechanism of the Li-In-S composite. b Digital photographs of the as-prepared Li-In-S foil. c XRD patterns of the Li-In-S foil. XPS spectra of d In 3d and e S 2p for the Li-In-S foil. f TOF-SIMS secondary ion",
+   "caption_fix": "2026-11-23 litdb-curator: auto caption stopped at the column break ('f TOF-SIMS secondary ion'); completed with the right-column continuation (f 3D images · g · h · i · j) as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-23 litdb-curator: Read (original auto crop) + zoom render of panel c + red-star centroids read by pixel (XRD 2θ)"
   },
   {
    "key": "f2",
@@ -34,7 +38,7 @@
    "label": "2",
    "page": 4,
    "file": "fig_2.png",
-   "caption": "Fig. 2 | Electrochemical performance of the Li and the Li-In-S symmetric cells at stacking pressures of 10 MPa. a Tafel curves of symmetric Li|LPSC|Li and Li-In-S| LPSC|Li-In-S cells. Critical current density (CCD) tests of b the Li symmetric cell and c the Li-In-S symmetric cell. Galvanostatic Li plating/stripping performance of the Li-In-S|LPSC|Li-In-S cell under d 0.2 mA cm−2 and e 0.5 mA cm−2. DRT transition",
+   "caption": "Fig. 2 | Electrochemical performance of the Li and the Li-In-S symmetric cells at stacking pressures of 10 MPa. a Tafel curves of symmetric Li|LPSC|Li and Li-In-S|LPSC|Li-In-S cells. Critical current density (CCD) tests of b the Li symmetric cell and c the Li-In-S symmetric cell. Galvanostatic Li plating/stripping performance of the Li-In-S|LPSC|Li-In-S cell under d 0.2 mA cm−2 and e 0.5 mA cm−2. DRT transition result based on PEIS test under 0.1 mA cm−2 at different Li plating/stripping times of f Li|LPSC|Li and g Li-In-S|LPSC|Li-In-S symmetric cells at 25 °C. h The comparison of the Li-In-S symmetric cell performance with literature-reported results (Supplementary Table 2).",
    "rotated_deg": 0,
    "bbox": [
     55.0,
@@ -47,7 +51,11 @@
    "dpi": 300,
    "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
    "blank": 0.842,
-   "manual_crop": "2026-11-23 litdb-curator: auto bbox right edge (x 531.5) cut the right-axis title of panel c and the last x tick of panel h (vector extent to x 533.4); widened to x 537 (caption starts y 505.7)"
+   "manual_crop": "2026-11-23 litdb-curator: auto bbox right edge (x 531.5) cut the right-axis title of panel c and the last x tick of panel h (vector extent to x 533.4); widened to x 537 (caption starts y 505.7)",
+   "caption_auto": "Fig. 2 | Electrochemical performance of the Li and the Li-In-S symmetric cells at stacking pressures of 10 MPa. a Tafel curves of symmetric Li|LPSC|Li and Li-In-S| LPSC|Li-In-S cells. Critical current density (CCD) tests of b the Li symmetric cell and c the Li-In-S symmetric cell. Galvanostatic Li plating/stripping performance of the Li-In-S|LPSC|Li-In-S cell under d 0.2 mA cm−2 and e 0.5 mA cm−2. DRT transition",
+   "caption_fix": "2026-11-23 litdb-curator: auto caption stopped at the column break ('DRT transition'); completed (f · g · h) as printed — note: printed caption says 'e 0.5 mA cm−2' but the panel label, text and abstract say 1 mA cm−2 (kept as printed)",
+   "viewed": true,
+   "viewed_how": "2026-11-23 litdb-curator: Read (original auto crop) + zoom renders of a, b, c, h + Fig. 2a curves and Fig. 2h star read from PDF vector paths (V/i constant check)"
   },
   {
    "key": "f3",
@@ -55,7 +63,7 @@
    "label": "3",
    "page": 6,
    "file": "fig_3.png",
-   "caption": "Fig. 3 | Composition analysis and structure characterization at the negative electrode/electrolyte interface. High-resolution XPS spectra of the LPSC elec- trolyte interface from the symmetric cells after Li plating/stripping. The Li|LPSC|Li and Li-In-S|LPSC|Li-In-S symmetric cells were disassembled after Li plating/strip- ping at a current density of 0.2 mA cm−2/0.2 mAh cm−2 for 100 h under 25 °C, and the Li or Li-In-S electrodes were peeled off to expose the cycled LPSC electrolyte interface for XPS measurements. a S 2p and P 2p XPS spectra of the Li/LPSC interface and b S 2p and P 2p XPS spectra of the Li-In-S/LPSC interface after Li plating/stripping collected at different sputtering times. c TOF-SIMS depth proﬁl- ing results of several representative fragments for the Li/LPSC and Li-In-S/LPSC interface before and after Li plating/stripping. The symmetric cells were",
+   "caption": "Fig. 3 | Composition analysis and structure characterization at the negative electrode/electrolyte interface. High-resolution XPS spectra of the LPSC electrolyte interface from the symmetric cells after Li plating/stripping. The Li|LPSC|Li and Li-In-S|LPSC|Li-In-S symmetric cells were disassembled after Li plating/stripping at a current density of 0.2 mA cm−2/0.2 mAh cm−2 for 100 h under 25 °C, and the Li or Li-In-S electrodes were peeled off to expose the cycled LPSC electrolyte interface for XPS measurements. a S 2p and P 2p XPS spectra of the Li/LPSC interface and b S 2p and P 2p XPS spectra of the Li-In-S/LPSC interface after Li plating/stripping collected at different sputtering times. c TOF-SIMS depth profiling results of several representative fragments for the Li/LPSC and Li-In-S/LPSC interface before and after Li plating/stripping. The symmetric cells were disassembled under the same testing conditions mentioned above, and the Li or Li-In-S electrodes were peeled off to expose the electrode interface for TOF-SIMS measurements. Raman spectroscopy detection at the d Li/LPSC and e Li-In-S/LPSC interface in the Li symmetric cell after lithiation. The symmetric cells were disassembled under different lithiation states, and the specific capacity continued to increase by 0.2 mAh cm−2. The Li or Li-In-S electrodes were peeled off to expose the LPSC electrolyte interface for Raman measurements. Top-view SEM images of f the Li and g the Li-In-S electrodes exfoliated from the symmetric cells under the same testing conditions mentioned above. AFM images and corresponding Young's modulus of h the Li and i the Li-In-S foil.",
    "rotated_deg": 0,
    "bbox": [
     55.0,
@@ -68,7 +76,11 @@
    "dpi": 300,
    "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
    "blank": 0.762,
-   "manual_crop": "2026-11-23 litdb-curator: auto bbox top edge (y 72.9) cut panel labels a/b and the column headers 'Li/LPSC interface' / 'Li-In-S/LPSC interface' / 'S 2p' / 'P 2p' (text y 49.6-72.8); re-cropped (caption starts y 470.0)"
+   "manual_crop": "2026-11-23 litdb-curator: auto bbox top edge (y 72.9) cut panel labels a/b and the column headers 'Li/LPSC interface' / 'Li-In-S/LPSC interface' / 'S 2p' / 'P 2p' (text y 49.6-72.8); re-cropped (caption starts y 470.0)",
+   "caption_auto": "Fig. 3 | Composition analysis and structure characterization at the negative electrode/electrolyte interface. High-resolution XPS spectra of the LPSC elec- trolyte interface from the symmetric cells after Li plating/stripping. The Li|LPSC|Li and Li-In-S|LPSC|Li-In-S symmetric cells were disassembled after Li plating/strip- ping at a current density of 0.2 mA cm−2/0.2 mAh cm−2 for 100 h under 25 °C, and the Li or Li-In-S electrodes were peeled off to expose the cycled LPSC electrolyte interface for XPS measurements. a S 2p and P 2p XPS spectra of the Li/LPSC interface and b S 2p and P 2p XPS spectra of the Li-In-S/LPSC interface after Li plating/stripping collected at different sputtering times. c TOF-SIMS depth proﬁl- ing results of several representative fragments for the Li/LPSC and Li-In-S/LPSC interface before and after Li plating/stripping. The symmetric cells were",
+   "caption_fix": "2026-11-23 litdb-curator: auto caption stopped at the column break ('The symmetric cells were'); completed (rest of c · d · e · f · g · h · i) as printed; hyphenation 'elec- trolyte', 'proﬁl- ing' joined",
+   "viewed": true,
+   "viewed_how": "2026-11-23 litdb-curator: Read (original auto crop) + Fig. 3c bar tops read by pixel (axis from tick-label glyphs)"
   },
   {
    "key": "f4",
@@ -76,7 +88,7 @@
    "label": "4",
    "page": 7,
    "file": "fig_4.png",
-   "caption": "Fig. 4 | Mechanism investigation at the electrode/electrolyte interface. Snap- shots of a Li/LPSC interface and b Li-In-S/LPSC interface after AIMD simulations. RDF evolutions of c Li–S interaction for Li/LPSC interface and d Li–S for Li-In-S/ LPSC interface during the simulation. Electrostatic potential plots and the corre- sponding work functions of e LixIn and f Li2S models. Schematic diagram for the",
+   "caption": "Fig. 4 | Mechanism investigation at the electrode/electrolyte interface. Snapshots of a Li/LPSC interface and b Li-In-S/LPSC interface after AIMD simulations. RDF evolutions of c Li–S interaction for Li/LPSC interface and d Li–S for Li-In-S/LPSC interface during the simulation. Electrostatic potential plots and the corresponding work functions of e LixIn and f Li2S models. Schematic diagram for the charge transfer at g Li/LPSC interface and h Li-In-S/LPSC interface. i The local electronic structure of the LixIn/Li2S interface. KPFM images and contact potential differences of j LixIn, k Li2S, and l Li-In-S. m Adsorption energies of Li2S, LixIn, and LixIn/Li2S for Li+.",
    "rotated_deg": 0,
    "bbox": [
     33.7,
@@ -88,7 +100,11 @@
    "h": 2008,
    "dpi": 300,
    "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
-   "blank": 0.665
+   "blank": 0.665,
+   "caption_auto": "Fig. 4 | Mechanism investigation at the electrode/electrolyte interface. Snap- shots of a Li/LPSC interface and b Li-In-S/LPSC interface after AIMD simulations. RDF evolutions of c Li–S interaction for Li/LPSC interface and d Li–S for Li-In-S/ LPSC interface during the simulation. Electrostatic potential plots and the corre- sponding work functions of e LixIn and f Li2S models. Schematic diagram for the",
+   "caption_fix": "2026-11-23 litdb-curator: auto caption stopped at the column break ('Schematic diagram for the'); completed (g · h · i · j–l · m) as printed; 'Snap- shots' joined",
+   "viewed": true,
+   "viewed_how": "2026-11-23 litdb-curator: Read + zoom renders of a,b · e · f · i · j–l · m + Fig. 4f potential curve read by pixel (two vacuum plateaus, inner maxima)"
   },
   {
    "key": "f5",
@@ -96,7 +112,7 @@
    "label": "5",
    "page": 9,
    "file": "fig_5.png",
-   "caption": "Fig. 5 | Electrochemical performance of the all-solid-state cell with LCO and NCM811 positive electrodes at stacking pressures of 10 MPa. a Long-term cycling performances of the Li|LPSC|LCO and Li-In-S|LPSC|LCO cells at 1 C and b the corresponding charge−discharge curves of the Li-In-S|LPSC|LCO cell. c Rate per- formances of the Li|LPSC|NCM811 and Li-In-S|LPSC|NCM811 cells and",
+   "caption": "Fig. 5 | Electrochemical performance of the all-solid-state cell with LCO and NCM811 positive electrodes at stacking pressures of 10 MPa. a Long-term cycling performances of the Li|LPSC|LCO and Li-In-S|LPSC|LCO cells at 1 C and b the corresponding charge−discharge curves of the Li-In-S|LPSC|LCO cell. c Rate performances of the Li|LPSC|NCM811 and Li-In-S|LPSC|NCM811 cells and d corresponding charge-discharge curves of the Li-In-S|LPSC|NCM811 cells at various rates. e Long-term cycling performances of the Li|LPSC|NCM811 and Li-In-S|LPSC|NCM811 cells at 1 C. f Cycling performance of the Li-In-S|LPSC|NCM811 cell under high positive electrode loading at 0.1 C. g The voltage profiles and h cycling performance of the Li-In-S|LPSC|NCM811 pouch cells.",
    "rotated_deg": 0,
    "bbox": [
     55.0,
@@ -109,7 +125,11 @@
    "dpi": 300,
    "src": "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf",
    "blank": 0.91,
-   "manual_crop": "2026-11-23 litdb-curator: auto bbox right edge (x 352.7) dropped the whole right column - panels d and h missing, a/c/e/g cut (cycles >1000 in a, >600 in e, right CE axes); vector extent x 60.5-539.8; re-cropped full width (caption starts y 541.6)"
+   "manual_crop": "2026-11-23 litdb-curator: auto bbox right edge (x 352.7) dropped the whole right column - panels d and h missing, a/c/e/g cut (cycles >1000 in a, >600 in e, right CE axes); vector extent x 60.5-539.8; re-cropped full width (caption starts y 541.6)",
+   "caption_auto": "Fig. 5 | Electrochemical performance of the all-solid-state cell with LCO and NCM811 positive electrodes at stacking pressures of 10 MPa. a Long-term cycling performances of the Li|LPSC|LCO and Li-In-S|LPSC|LCO cells at 1 C and b the corresponding charge−discharge curves of the Li-In-S|LPSC|LCO cell. c Rate per- formances of the Li|LPSC|NCM811 and Li-In-S|LPSC|NCM811 cells and",
+   "caption_fix": "2026-11-23 litdb-curator: auto caption stopped at the column break ('NCM811 cells and'); completed (d · e · f · g · h) as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-23 litdb-curator: Read (recropped full figure) + markers of a, c, e, f, h read from PDF vector paths"
   }
  ],
  "missing_labels": [],

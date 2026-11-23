@@ -289,21 +289,21 @@ Tafel 0.1 mV s⁻¹ · ±0.1 V · **iR 보정 언급 없음**. operando PEIS 0.1
 | # | 항목 | 이 논문 | 우리 | 판정 |
 |---|---|---|---|---|
 | **A** | **Li 금속 쪽 LPSC 환원 산물** | XPS: Li₂S (160.2) · 환원 P (130.2 · 131.2) · Li₃P (128.2) / DFT 서사 (`Fig. 4g` 설명): *"Li₂S and P₂S₅"* / Raman: 486 cm⁻¹ *"Li₂Sₙ (-S-S-)"* | 계단: P⁵⁺ 가 P → LiP₇ → Li₃P₇ → LiP → Li₃P 로 환원 · S 는 Li₂S · Cl 은 LiCl (8 Li/f.u.) | ✅ **XPS 산물 = 우리 계단** (진짜 일치 · [Chaney24SEI] 8 Li/f.u. 과도 같다) / ❌ **'P₂S₅' 는 환원 산물이 아니다** (P 가 +5 그대로 · 우리 계단 어디에도 없다 — 서사 오류) / ❌ **'Li₂Sₙ (S–S)' 는 0 V 산물이 아니다** (S–S 는 산화 쪽 — [Zeng22Cl] 행과 같은 판정 · 귀속 또는 시료 취급 확인 필요) |
-| **B** | **LixIn 은 LPSC 를 환원하나** | `Fig. S20`·`S21` (본문 서술): LixIn/LPSC · Li₂S/LPSC 최적화에서도 PS₄ 분해 | LixIn 전위 ≈0.6 V vs Li (In/InLi 평탄 · [Zuo] digest 용어집) < 가장자리 1.717 V → **열역학적으로 환원된다** | ✅ LixIn 부분은 같은 방향 (진짜). ⇒ **보호는 열역학이 아니라 동역학** (피복 · 접촉 기하). 포일엔 Li 금속까지 남아 Fermi 준위는 0 V 다 |
+| **B** | **LixIn 은 LPSC 를 환원하나** | `Fig. S20`·`S21` (본문 서술): LixIn/LPSC · Li₂S/LPSC 최적화에서도 PS₄ 분해 | LixIn 전위 ≲0.6 V vs Li (상한 = In/InLi 2 상 평탄 ≈0.6 V · [Zuo] digest 용어집 · Li 가 많을수록 더 낮다) < 가장자리 1.717 V → **열역학적으로 환원된다** | ✅ LixIn 부분은 같은 방향 (진짜). ⇒ **보호는 열역학이 아니라 동역학** (피복 · 접촉 기하). 포일엔 Li 금속까지 남아 Fermi 준위는 0 V 다 |
 | **C** | **Li₂S/LPSC 에서 PS₄ 분해** | `Fig. S20` (본문 서술 · SI 미입수) | Li₂S 는 LPSC 자기분해 산물 집합 안에 있다 (1.717 V `Li₃PS₄ + Li₂S + LiCl`) · Li₂S 에는 줄 전자가 없다 | ⚠ **모형 인공물 의심** — 극성 Li₂S 슬랩의 Li 종단 면 (전자 과잉) 을 붙였다면 그 면이 전자 공여체다 (§5.8 과 같은 뿌리 · 확인 불가) |
 | **D** | **전자가 들어가는 자리** | *"Li metal easily transfers electrons to PS₄³⁻"* | CBM = P–S σ\* → P–S 절단 → P 환원 + S²⁻ (Li₂S) | ✅ 같은 그림 (진짜). 그 결과는 P 환원 (XPS 와 맞음) 이지 P₂S₅ 가 아니다 |
 | **E** | **계면 산물의 전자 성격** | Li/LPSC 에 Li₃P · Li-In-S/LPSC 엔 거의 없음 · TOF-SIMS LiP⁻ 3.7× vs 1.9× | Li₃P = conductor-LEAK (MP 0.70 eV) · Li₂S = marginal | ✅ 같은 독법 — '누설 산물이 적으면 자기제한적' . 단 XPS · SIMS 는 두께를 안 준다 |
 | **F** | **금속성 상의 평가** | LixIn (금속) 을 일부러 넣고 'Li₂S 와 짝지으면 BIEF 로 무해' | cascade 축 ③ ⓑ 금속성 → F1_Li 위험 표시 | ⚠ **평가 방향이 반대**. 같은 화학 (In → Li–In) · 다른 기하 (SE 안 도펀트가 만든 산물 vs 음극에 미리 만든 합금). 이 논문은 반증이 아니다 (대조 없음 · 기전 계산 미달) → **F1_Li 유지**. 그러나 In 계 Li 계면 장수명 사례가 둘째다 ([Liu26InLSPS] In 계면 농축) — 공통 후보 설명은 Li–In 혼합전도 골격 · 접촉이다 |
 | **G** | **일함수 · 띠 정렬** | Li₂S 3.78 · LixIn 3.48 eV (PBE 슬랩) · KPFM 3.75 · 3.18 eV | 없음 (벌크 띠 가장자리만 · 진공 기준 아님) | **n/a** — 그리고 그들 Li₂S 값은 방법 인공물 (극성 슬랩) 이라 우리가 같은 양을 계산해도 '면 · 종단 선언' 없이는 비교 불가 |
 | **H** | **AIMD 프로토콜** | NVT · Nosé · 4 fs · 'Time (ps)' 0–500 · T 미기재 | 우리 MLIP-MD (UMA) 는 벌크 확산용 (Langevin · 2 fs · 200 ps · 600–1000 K) — 계면 반응 MD 아님 | **n/a** (목적 다름). 관측창 §5.7 |
-| **I** | **기계 — '6 GPa 문턱'** | 음극 포일 AFM 영률 Li 2.4 · Li-In-S 7.2 GPa | LPSCl E_VRH 22.06 / 27.66 GPa (PBE relaxed-ion) | ⚠ **문턱 논증 자체가 안 맞는다** — SE 가 이미 문턱의 3–4 배인데 같은 논문 Li\|LPSC 가 0.5 mA cm⁻² 에서 단락. 음극 영률 ≠ SE 영률 · 값 비교 아님 (재료가 다르다) |
+| **I** | **기계 — '6 GPa 문턱'** | 음극 포일 AFM 영률 Li 2.4 · Li-In-S 7.2 GPa | LPSCl E_VRH 22.06 / 27.66 GPa (PBE relaxed-ion) | ⚠ **문턱 논증 자체가 안 맞는다** — SE 가 이미 문턱의 ≈4 배 (3.7–4.6) 인데 같은 논문 Li\|LPSC 가 0.5 mA cm⁻² 에서 단락. 음극 영률 ≠ SE 영률 · 값 비교 아님 (재료가 다르다) |
 | **J** | **흡착 −3.63 eV** | Li₂S/LixIn '이종계면' 자리 | 우리 흡착 규율 (`D-2026-10-05-adsorption-site-coordination`) | ⚠ **배위 미확인** → '그 자리의 결합 포화 에너지' 로만 |
 | **K** | **띠틈 · ESW (산화)** | 없음 | comp1/modelc 띠틈 · 산화 onset | **n/a** — 이 논문은 LPSC 전자구조 · 산화창을 계산하지 않는다 |
 | **L** | **양극 쪽** | 코팅 언급 없는 LCO 2.5–4.2 V · NCM811 **2.5–4.3 V** | 우리 작동창 2.5–4.25 V — 창 전체가 열역학적 산화 구간 (onset 2.256 V) | ⚠ 풀셀 열화에 **양극 계면 몫이 두 셀 공통으로 섞여 있다** — 상대 비교 (Li vs Li-In-S) 는 유효, 절대 용량 · 보존율을 음극 효과로만 읽지 않는다. NCM811 4.3 V 는 우리 창 상한 위 |
 
 ### 7c. 🔑 층위를 갈라 쓴 결론
 
-> **"우리 grand-potential 환원 계단 (가장자리 1.717 V · 0 V 에서 Li₃P + 5 Li₂S + LiCl) 과 CBM = P–S σ\* 는 이 논문의 사이클 뒤 XPS (Li₂S · 환원 P · Li₃P) 를 그대로 설명하고, 같은 논문의 DFT 서사 ('Li₂S 와 P₂S₅') 는 반박한다. LixIn (≈0.6 V) 과 포일의 잔류 Li (0 V) 는 모두 1.717 V 아래라 LPSC 환원의 열역학 구동력은 남는다 — Li-In-S 의 보호는 동역학 (전자 절연 Li₂S 피복 · 접촉 기하) 의 몫이고, '일함수 차 내장 전기장' 은 이 논문 안에서 계산으로 세워지지 않았다."**
+> **"우리 grand-potential 환원 계단 (가장자리 1.717 V · 0 V 에서 Li₃P + 5 Li₂S + LiCl) 과 CBM = P–S σ\* 는 이 논문의 사이클 뒤 XPS (Li₂S · 환원 P · Li₃P) 를 그대로 설명하고, 같은 논문의 DFT 서사 ('Li₂S 와 P₂S₅') 는 반박한다. LixIn (≲0.6 V) 과 포일의 잔류 Li (0 V) 는 모두 1.717 V 아래라 LPSC 환원의 열역학 구동력은 남는다 — Li-In-S 의 보호는 동역학 (전자 절연 Li₂S 피복 · 접촉 기하) 의 몫이고, '일함수 차 내장 전기장' 은 이 논문 안에서 계산으로 세워지지 않았다."**
 
 | 층위 | 누가 보나 | Li-In-S 의 효과 |
 |---|---|---|
@@ -389,7 +389,7 @@ Tafel 0.1 mV s⁻¹ · ±0.1 V · **iR 보정 언급 없음**. operando PEIS 0.1
 
 ④ **ELF 는 전하이동의 척도가 아니다.** `Fig. 4i` 는 S²⁻ 고립쌍 (높은 ELF) 과 금속 전자기체 (≈0.5) 라는 **두 벌크 상의 교과서 ELF** 를 보여줄 뿐 '전자가 계면에 갇혔다' 의 양을 말하지 않는다.
 
-⑤ **열역학이 그대로다.** 포일에 Li 금속이 남아 있어 (XRD · 비용량 = Li 박리) 포일 전체의 Fermi 준위는 0 V vs Li 이다. LixIn (≈0.6 V) 도 우리 LPSC 환원 가장자리 1.717 V 아래 — 저자 자신의 `Fig. S20`·`S21` 도 LixIn/LPSC 분해를 보였다. ≈0.3 V 의 계면 쌍극자로 ≳1.7 V 의 환원 구동력을 막는다는 그림은 크기가 맞지 않는다. 남는 보호는 **동역학** (전자 절연 Li₂S 피복 · 접촉 기하) 이고, 그것은 본문 2 쪽에 저자가 직접 쓴 *'Li₂S 의 낮은 전자전도가 전자 전달을 막는다'* 와 같은 설명이다. **결정적 대조 (Li₂S 만 · LixIn 만 · 같은 Li₂S 분율)** 가 없다.
+⑤ **열역학이 그대로다.** 포일에 Li 금속이 남아 있어 (XRD · 비용량 = Li 박리) 포일 전체의 Fermi 준위는 0 V vs Li 이다. LixIn (≲0.6 V · In/InLi 평탄이 상한) 도 우리 LPSC 환원 가장자리 1.717 V 아래 — 저자 자신의 `Fig. S20`·`S21` 도 LixIn/LPSC 분해를 보였다. ≈0.3 V 의 계면 쌍극자로 ≳1.7 V 의 환원 구동력을 막는다는 그림은 크기가 맞지 않는다. 남는 보호는 **동역학** (전자 절연 Li₂S 피복 · 접촉 기하) 이고, 그것은 본문 2 쪽에 저자가 직접 쓴 *'Li₂S 의 낮은 전자전도가 전자 전달을 막는다'* 와 같은 설명이다. **결정적 대조 (Li₂S 만 · LixIn 만 · 같은 Li₂S 분율)** 가 없다.
 
 ⑥ **AIMD 비교는 대칭이 아니다.** `Fig. 4b` 접촉면의 대부분이 Li₂S 영역 (자기분해 산물 · 줄 전자 없음) 이라 반응이 안 보이는 것은 BIEF 없이도 기대된다. RDF 지표는 Li-In-S 쪽에서 감도가 없다 (전극이 처음부터 Li–S 투성이). P–S 결합 수를 직접 세지 않았다. T · 길이 · 원자 수 미기재 · 4 fs. 관측창: 500 ps · 300 K 이면 **기대 사건 1 ≈0.22 eV (검출 63 %) · 95 % 검출 ≈0.19 eV** (ν₀ 10¹³ s⁻¹ 가정 · n = 1) — '무반응' 은 이 정도 장벽의 반응까지만 말해 준다 (500 K 0.37 / 0.32 · 800 K 0.59 / 0.51 eV).
 
@@ -403,7 +403,7 @@ Tafel 0.1 mV s⁻¹ · ±0.1 V · **iR 보정 언급 없음**. operando PEIS 0.1
 
 ⑪ **보존율 기준선이 첫 (낮은) 사이클이다.** NCM811 87.7 % · LCO 93 % · 파우치 93.4 % 모두 활성화 중인 첫 사이클 기준이고, **최대 기준이면 0.77 · 0.86 · 0.83** (`우리 판독 (벡터)`). 파우치는 5 → 20 사이클에 17 % (≈1.2 %/사이클) 를 잃었다. 첫 CE 파우치 ≈77 % · 고로딩 ≈79 % 는 본문에 없다. `Fig. 5g` 의 전압곡선은 1 사이클이 아니다. 코인형 N/P ≈6–9 (Li 과잉) 라 Li 재고 손실은 수명에 안 드러난다.
 
-⑫ **기계 논증의 문턱이 틀린 자리에 쓰였다.** *"계면 물질 영률 > 6 GPa 면 덴드라이트 억제"* 는 액체계 SEI 문헌 (ref 39) 의 말이고, 음극 포일 자체의 영률에 적용했다. 황화물 SSB 에서 SE 영률은 우리 PBE 로 22–28 GPa (canonical) — 이미 '문턱' 의 3–4 배인데도 같은 논문 Li\|LPSC 가 0.5 mA cm⁻² 에서 단락한다. AFM 색막대는 음수 눈금 · 패널마다 다른 범위 · 평균 산출법 없음. 더 단단한 음극은 10 MPa 저압에서 크리프로 접촉을 메우는 데 오히려 불리할 수 있다 (논의 없음).
+⑫ **기계 논증의 문턱이 틀린 자리에 쓰였다.** *"계면 물질 영률 > 6 GPa 면 덴드라이트 억제"* 는 액체계 SEI 문헌 (ref 39) 의 말이고, 음극 포일 자체의 영률에 적용했다. 황화물 SSB 에서 SE 영률은 우리 PBE 로 22–28 GPa (canonical) — 이미 '문턱' 의 ≈4 배 (3.7–4.6) 인데도 같은 논문 Li\|LPSC 가 0.5 mA cm⁻² 에서 단락한다. AFM 색막대는 음수 눈금 · 패널마다 다른 범위 · 평균 산출법 없음. 더 단단한 음극은 10 MPa 저압에서 크리프로 접촉을 메우는 데 오히려 불리할 수 있다 (논의 없음).
 
 ⑬ **그림–본문 · 서지 오류**: `Fig. 2e` 캡션 '0.5' ↔ 표지 · 본문 '1 mA cm⁻²' · HRTEM LiInS₂ (112) **0.227 (본문) ↔ 0.272 nm (그림)** · '50 cm⁻²' (cm²) · PEIS '0.1 mA cm⁻¹' · `Fig. 5f` 범례 색 뒤바뀜 · `Fig. 5a,e` 'ar 1 C' · `Fig. 3c` 캡션 'depth profiling' ↔ 막대 1 개 · XPS 'P-S-P' 표지 · PBE 인용 ref 50 = Dudarev (LSDA+U) · ref 49 저자명 잘림 · 본문 *"pristine LPSC (Fig. 3a)"* ↔ 그림에 사이클 전 스펙트럼 없음.
 
@@ -424,7 +424,7 @@ Tafel 0.1 mV s⁻¹ · ±0.1 V · **iR 보정 언급 없음**. operando PEIS 0.1
 | Li 쪽 환원 산물 | XPS Li₂S · 환원 P · Li₃P | 계단 → 0 V Li₃P + 5 Li₂S + LiCl | ✅ 일치 |
 | '산물 = Li₂S + P₂S₅' (DFT 서사) | `Fig. 4g` 설명 | P₂S₅ 는 계단에 없다 | ❌ 서사 오류 |
 | Raman 'Li₂Sₙ (S–S)' | 486 cm⁻¹ | 0 V 산물 아님 | ❌ 귀속 의심 |
-| LixIn 의 LPSC 환원 | `Fig. S20`·`S21` | ≈0.6 V < 1.717 V | ✅ 같은 방향 → 보호는 동역학 |
+| LixIn 의 LPSC 환원 | `Fig. S20`·`S21` | ≲0.6 V < 1.717 V | ✅ 같은 방향 → 보호는 동역학 |
 | 누설 산물 (Li₃P) 감소 | TOF-SIMS LiP⁻ 3.7× → 1.9× | Li₃P conductor-LEAK | ✅ 같은 독법 |
 | 금속성 Li–In 상 | 일부러 넣음 · 무해 주장 | F1_Li 위험 표시 | ⚠ 반대 평가 · 규칙 유지 |
 | 일함수 · BIEF | 극성 슬랩 · ELF | 계산 없음 | n/a · 방법 반례 |
@@ -449,7 +449,7 @@ Tafel 0.1 mV s⁻¹ · ±0.1 V · **iR 보정 언급 없음**. operando PEIS 0.1
 
 - "Replacing Li foil with a Li₂S/LixIn composite foil (from 5 wt% In₂S₃ in molten Li) raised the critical current density of Li₆PS₅Cl symmetric cells at 10 MPa from 0.5 to 4 mA cm⁻² and extended the short-circuit-free lifetime at 0.2 mA cm⁻² from ≈150 h to >2000 h (single cells) [Liu26LiInS]."
 - "After cycling, the Li₆PS₅Cl surface facing Li metal showed Li₂S, reduced P and Li₃P — the products of our grand-potential reduction ladder (Li₃P + 5 Li₂S + LiCl at 0 V vs Li) — whereas the surface facing the Li₂S/LixIn composite showed much weaker reduction signals."
-- "Because the composite foil still contains Li metal and LixIn (≈0.6 V vs Li) lies below the 1.717 V reduction edge of Li₆PS₅Cl, the thermodynamic driving force for electrolyte reduction is unchanged; the protection is kinetic, consistent with an electronically insulating Li₂S cover."
+- "Because the composite foil still contains Li metal and LixIn (≤ ≈0.6 V vs Li) lies below the 1.717 V reduction edge of Li₆PS₅Cl, the thermodynamic driving force for electrolyte reduction is unchanged; the protection is kinetic, consistent with an electronically insulating Li₂S cover."
 - ⚠ (조건부) "The proposed built-in electric field rests on a work-function difference (3.78 vs 3.48 eV) between separately computed slabs; the Li₂S slab is polar (vacuum levels differ by ≈3.9 eV), so the value refers to one termination and should not be taken as a material property."
 
 ## 14. 주의 / 한계 (인용 규율)
