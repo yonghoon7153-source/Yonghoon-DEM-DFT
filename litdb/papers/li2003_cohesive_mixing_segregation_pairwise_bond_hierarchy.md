@@ -386,7 +386,7 @@
 - 결합 규칙 · 점착 측정: `begat2004_cohesive_adhesive_balance_afm_colloid_probe` · `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` · `johnson1971_jkr_surface_energy_contact_elastic_solids` · `mohammadijam2014_inverse_gas_chromatography_review` · `deng2021_mechanical_surface_energy_tester_bond_number` · `pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament` (γ_SE 사전값).
 - 정렬 · 상호작용 혼합 · 코팅: `hersey1975_ordered_mixing_concept` · `egermann1983_ordered_vs_interactive_mixture_nomenclature` · `pfeffer2001_dry_particle_coating_engineered_particulates` · `otani2025_dem_se_dispersion_aggregation_compression` · `matsusaka2010_triboelectric_charging_powders_review` (덱에 없는 힘).
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` · `chandratilleke2012_particle_scale_mixing_index` · `jadidi2023_dem_batch_solid_mixers_review` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing`.
-- 같은 저자 (다른 해): H. Li, J.J. McCarthy, *"Phase diagrams for cohesive particle mixing and segregation"*, Phys. Rev. E 71, 021305 (2005) — 후보 표 N-112 둘째 (제목 = 지시서 · 이 논문 밖 · 다른 에이전트가 카드를 만든다 · 이 카드 push 시점에 카드 없음) · H. Li, J.J. McCarthy, *"Cohesive particle mixing and segregation under shear"*, Powder Technol. 164 (2006) 58–64 — 후보 표 N-151 (서지 = 후보 표 · 카드 없음).
+- 같은 저자 (다른 해): `li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation` — H. Li, J.J. McCarthy, *"Phase diagrams for cohesive particle mixing and segregation"*, Phys. Rev. E 71, 021305 (2005) (후보 표 N-112 둘째 · 이 논문을 ref [12] 로 인용 · ℜ1 · ℜ2 와 경계식 7–8 인쇄 · IS 정량 · 3D DEM) · H. Li, J.J. McCarthy, *"Cohesive particle mixing and segregation under shear"*, Powder Technol. 164 (2006) 58–64 — 후보 표 N-151 (서지 = 후보 표 · 카드 없음).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
