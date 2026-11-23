@@ -387,6 +387,7 @@
 - 정렬 · 상호작용 혼합 · 코팅: `hersey1975_ordered_mixing_concept` · `egermann1983_ordered_vs_interactive_mixture_nomenclature` · `pfeffer2001_dry_particle_coating_engineered_particulates` · `otani2025_dem_se_dispersion_aggregation_compression` · `matsusaka2010_triboelectric_charging_powders_review` (덱에 없는 힘).
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` · `chandratilleke2012_particle_scale_mixing_index` · `jadidi2023_dem_batch_solid_mixers_review` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing`.
 - 같은 저자 (다른 해): `li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation` — H. Li, J.J. McCarthy, *"Phase diagrams for cohesive particle mixing and segregation"*, Phys. Rev. E 71, 021305 (2005) (후보 표 N-112 둘째 · 이 논문을 ref [12] 로 인용 · ℜ1 · ℜ2 와 경계식 7–8 인쇄 · IS 정량 · 3D DEM) · H. Li, J.J. McCarthy, *"Cohesive particle mixing and segregation under shear"*, Powder Technol. 164 (2006) 58–64 — 후보 표 N-151 (서지 = 후보 표 · 카드 없음).
+- 같은 그룹 (건식 vdW 판): `figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram` — I. Figueroa, H. Li, J. McCarthy, *"Predicting the impact of adhesive forces on particle mixing and segregation"*, Powder Technol. 195 (2009) 203–212 (이 논문을 ref [14] 로 인용 · 같은 Bo 위계를 반데르발스 점착 · 기하평균 결합 규칙으로 · DEM 9 케이스 · 크기비 0.5 에서 절대 점착 세기 효과).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
