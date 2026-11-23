@@ -1,0 +1,834 @@
+{
+  "cross_sha256": "4bb6fe0cdff8964c6bf02cfbf3f9dd9f7bdec5199cfddce0e3d8160b0dd4f391",
+  "definition": "K = -sum(normal geometry coefficient); effective compression = yy_MPa / K",
+  "layers": {
+    "boundaries": "lower inclusive, upper exclusive; first and last bins open outward",
+    "edge_distance": [
+      0.0,
+      0.003125,
+      0.00625,
+      0.009375,
+      0.0125,
+      0.01875
+    ],
+    "origin_y": 0.15,
+    "unit": "normalized model length"
+  },
+  "probe_sha256": "fcf9fd337d57c77cb9b4f751a6b938ce60a1d9010e438026ac10ffa762104cfd",
+  "samples": [
+    {
+      "contrasts": {
+        "F16_target": {
+          "layer_stress_difference_MPa": [
+            0.0,
+            0.0008066607557082019,
+            -0.006845634377195183,
+            0.019097523485069268,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal_product_split": {
+            "effective_compression_MPa": 0.016360775086669724,
+            "geometry_MPa": -0.003302225223087438,
+            "yy_difference_MPa": 0.013058549863582288
+          },
+          "summed_stress_difference_MPa": 0.013058549863582286
+        },
+        "F8_target": {
+          "layer_stress_difference_MPa": [
+            0.0,
+            0.000388605705586967,
+            -0.0028951188994503566,
+            0.020360616600116954,
+            -0.0017855154211458674,
+            0.015882748749371796,
+            0.0
+          ],
+          "normal_product_split": {
+            "effective_compression_MPa": 0.03291297422503539,
+            "geometry_MPa": -0.0009592585912542287,
+            "yy_difference_MPa": 0.03195371563378116
+          },
+          "summed_stress_difference_MPa": 0.031951336734479495
+        },
+        "native": {
+          "layer_stress_difference_MPa": [
+            0.0,
+            0.0003522771721470747,
+            -0.006845634377195183,
+            0.020691899055134966,
+            0.0,
+            0.017638569362010706,
+            0.0
+          ],
+          "normal_product_split": {
+            "effective_compression_MPa": 0.023241521979818287,
+            "geometry_MPa": 0.008595589232279276,
+            "yy_difference_MPa": 0.03183711121209756
+          },
+          "summed_stress_difference_MPa": 0.03183711121209756
+        }
+      },
+      "corners": [
+        {
+          "layers": [
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.16522531656200629,
+              "K_abs": 0.16522531656200629,
+              "active_points": 7,
+              "effective_compression_solver_units": 0.002555764780230391,
+              "masked_volume": 0.00024232161936348247,
+              "stress_MPa": 0.00042227704487159286,
+              "yx_MPa": 3.76411850066794e-20,
+              "yy_MPa": 0.0004222770448715928
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 2.224121666383939,
+              "K_abs": 2.224121666383939,
+              "active_points": 49,
+              "effective_compression_solver_units": 0.011195494718149682,
+              "masked_volume": 0.0009555231458689456,
+              "stress_MPa": 0.02490014236852366,
+              "yx_MPa": 1.6594162293497621e-18,
+              "yy_MPa": 0.02490014236852366
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 1.71190649649747,
+              "K_abs": 1.71190649649747,
+              "active_points": 93,
+              "effective_compression_solver_units": 0.010303465404272315,
+              "masked_volume": 0.0003732030973374118,
+              "stress_MPa": 0.017638569362010706,
+              "yx_MPa": -4.129922152566956e-20,
+              "yy_MPa": 0.017638569362010706
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            }
+          ],
+          "source_cells": 8,
+          "target_cells": 8,
+          "total": {
+            "K": 4.1012534794434155,
+            "K_abs": 4.1012534794434155,
+            "active_points": 149,
+            "effective_compression_solver_units": 0.01047508743137628,
+            "masked_volume": 0.0015710478625698399,
+            "stress_MPa": 0.04296098877540595,
+            "yx_MPa": 1.655758192830772e-18,
+            "yy_MPa": 0.04296098877540595
+          }
+        },
+        {
+          "layers": [
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.34303817366417216,
+              "K_abs": 0.34303817366417216,
+              "active_points": 7,
+              "effective_compression_solver_units": 0.0025555774713602398,
+              "masked_volume": 0.0002404033888803113,
+              "stress_MPa": 0.0008766606284327201,
+              "yx_MPa": 1.6123268718759458e-19,
+              "yy_MPa": 0.00087666062843272
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 2.0790587664891333,
+              "K_abs": 2.0790587664891333,
+              "active_points": 49,
+              "effective_compression_solver_units": 0.011209768176882254,
+              "masked_volume": 0.00022330225692274936,
+              "stress_MPa": 0.02330576679845796,
+              "yx_MPa": 1.486272002340118e-18,
+              "yy_MPa": 0.02330576679845796
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            }
+          ],
+          "source_cells": 8,
+          "target_cells": 16,
+          "total": {
+            "K": 2.4220969401533057,
+            "K_abs": 2.4220969401533057,
+            "active_points": 56,
+            "effective_compression_solver_units": 0.009984087352573124,
+            "masked_volume": 0.0004637056458030606,
+            "stress_MPa": 0.024182427426890682,
+            "yx_MPa": 1.6475046895277127e-18,
+            "yy_MPa": 0.024182427426890682
+          }
+        },
+        {
+          "layers": [
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.040898615348341105,
+              "K_abs": 0.040898615348341105,
+              "active_points": 7,
+              "effective_compression_solver_units": 0.0008232880012646102,
+              "masked_volume": 5.987864533368242e-05,
+              "stress_MPa": 3.3671339284625856e-05,
+              "yx_MPa": 5.535645949582663e-23,
+              "yy_MPa": 3.3671339284625856e-05
+            },
+            {
+              "K": 0.7316028373854688,
+              "K_abs": 0.7316028373854688,
+              "active_points": 77,
+              "effective_compression_solver_units": 0.003953982064247017,
+              "masked_volume": 0.0005359609961815994,
+              "stress_MPa": 0.0028951188994503566,
+              "yx_MPa": 2.3744022759858265e-06,
+              "yy_MPa": 0.0028927444971743707
+            },
+            {
+              "K": 1.1779115729968253,
+              "K_abs": 1.1779115729968253,
+              "active_points": 105,
+              "effective_compression_solver_units": 0.003853876532393099,
+              "masked_volume": 0.0005045061420791188,
+              "stress_MPa": 0.004539525768406706,
+              "yx_MPa": 8.185680231204729e-19,
+              "yy_MPa": 0.0045395257684067054
+            },
+            {
+              "K": 1.2396069309233377,
+              "K_abs": 1.2396069309233377,
+              "active_points": 133,
+              "effective_compression_solver_units": 0.0014403883816750706,
+              "masked_volume": 0.0003572513008535273,
+              "stress_MPa": 0.0017855154211458674,
+              "yx_MPa": -2.0372256459783645e-20,
+              "yy_MPa": 0.0017855154211458674
+            },
+            {
+              "K": 1.0580640366788923,
+              "K_abs": 1.0580640366788923,
+              "active_points": 308,
+              "effective_compression_solver_units": 0.0016594611051373353,
+              "masked_volume": 0.00021847640242566668,
+              "stress_MPa": 0.0017558206126389087,
+              "yx_MPa": 4.497025684230721e-09,
+              "yy_MPa": 0.0017558161156132246
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            }
+          ],
+          "source_cells": 16,
+          "target_cells": 8,
+          "total": {
+            "K": 4.248083993332865,
+            "K_abs": 4.248083993332865,
+            "active_points": 630,
+            "effective_compression_solver_units": 0.002591114761125276,
+            "masked_volume": 0.0016760734868735948,
+            "stress_MPa": 0.011009652040926465,
+            "yx_MPa": 2.3788993016708557e-06,
+            "yy_MPa": 0.011007273141624795
+          }
+        },
+        {
+          "layers": [
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.08502553241783263,
+              "K_abs": 0.08502553241783263,
+              "active_points": 7,
+              "effective_compression_solver_units": 0.0008232806162333053,
+              "masked_volume": 5.938591260905076e-05,
+              "stress_MPa": 6.999987272451812e-05,
+              "yx_MPa": 5.795586512340546e-22,
+              "yy_MPa": 6.999987272451812e-05
+            },
+            {
+              "K": 1.724804901133715,
+              "K_abs": 1.724804901133715,
+              "active_points": 77,
+              "effective_compression_solver_units": 0.003968932586343849,
+              "masked_volume": 0.00035948051327278736,
+              "stress_MPa": 0.006845634377195183,
+              "yx_MPa": 8.767600275692694e-20,
+              "yy_MPa": 0.006845634377195183
+            },
+            {
+              "K": 1.0901600506473426,
+              "K_abs": 1.0901600506473426,
+              "active_points": 105,
+              "effective_compression_solver_units": 0.003860206866771366,
+              "masked_volume": 0.00011673110092443337,
+              "stress_MPa": 0.004208243313388693,
+              "yx_MPa": 7.745363473859559e-19,
+              "yy_MPa": 0.004208243313388692
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            }
+          ],
+          "source_cells": 16,
+          "target_cells": 16,
+          "total": {
+            "K": 2.89999048419889,
+            "K_abs": 2.89999048419889,
+            "active_points": 189,
+            "effective_compression_solver_units": 0.0038358324359748087,
+            "masked_volume": 0.0005355975268062715,
+            "stress_MPa": 0.011123877563308394,
+            "yx_MPa": 8.627919087941169e-19,
+            "yy_MPa": 0.011123877563308394
+          }
+        }
+      ],
+      "steps": [
+        269,
+        538
+      ]
+    },
+    {
+      "contrasts": {
+        "F16_target": {
+          "layer_stress_difference_MPa": [
+            0.0,
+            0.0008415614492977393,
+            -0.00710683470348505,
+            0.01995810817124291,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal_product_split": {
+            "effective_compression_MPa": 0.017129274412109145,
+            "geometry_MPa": -0.00343643949505355,
+            "yy_difference_MPa": 0.013692834917055594
+          },
+          "summed_stress_difference_MPa": 0.0136928349170556
+        },
+        "F8_target": {
+          "layer_stress_difference_MPa": [
+            0.0,
+            0.0004054521459264679,
+            -0.003005223250424096,
+            0.021257705074238874,
+            -0.0018826228939731002,
+            0.016579984404665075,
+            0.0
+          ],
+          "normal_product_split": {
+            "effective_compression_MPa": 0.03435421598986329,
+            "geometry_MPa": -0.0009964496214241436,
+            "yy_difference_MPa": 0.03335776636843916
+          },
+          "summed_stress_difference_MPa": 0.03335529548043322
+        },
+        "native": {
+          "layer_stress_difference_MPa": [
+            0.0,
+            0.00036663086358316554,
+            -0.00710683470348505,
+            0.021601516427175955,
+            0.0,
+            0.018441912986255655,
+            0.0
+          ],
+          "normal_product_split": {
+            "effective_compression_MPa": 0.024326128499992508,
+            "geometry_MPa": 0.008977097073537207,
+            "yy_difference_MPa": 0.033303225573529716
+          },
+          "summed_stress_difference_MPa": 0.03330322557352972
+        }
+      },
+      "corners": [
+        {
+          "layers": [
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.16521271605157173,
+              "K_abs": 0.16521271605157173,
+              "active_points": 7,
+              "effective_compression_solver_units": 0.0026719171170831416,
+              "masked_volume": 0.00024232540707160483,
+              "stress_MPa": 0.0004414346839779912,
+              "yx_MPa": -2.333190364653651e-20,
+              "yy_MPa": 0.0004414346839779912
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 2.224139854222003,
+              "K_abs": 2.224139854222003,
+              "active_points": 49,
+              "effective_compression_solver_units": 0.011689312619761326,
+              "masked_volume": 0.0009557735161310378,
+              "stress_MPa": 0.025998666066071374,
+              "yx_MPa": -1.4934518952630477e-18,
+              "yy_MPa": 0.025998666066071374
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 1.7135503516383244,
+              "K_abs": 1.7135503516383244,
+              "active_points": 95,
+              "effective_compression_solver_units": 0.010762399230710294,
+              "masked_volume": 0.00037367777408487947,
+              "stress_MPa": 0.018441912986255655,
+              "yx_MPa": 9.52030955849247e-20,
+              "yy_MPa": 0.018441912986255655
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            }
+          ],
+          "source_cells": 8,
+          "target_cells": 8,
+          "total": {
+            "K": 4.102902921911899,
+            "K_abs": 4.102902921911899,
+            "active_points": 151,
+            "effective_compression_solver_units": 0.010939087419448516,
+            "masked_volume": 0.001571776697287522,
+            "stress_MPa": 0.044882013736305015,
+            "yx_MPa": -1.4215807033246594e-18,
+            "yy_MPa": 0.044882013736305015
+          }
+        },
+        {
+          "layers": [
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.3429878768099878,
+              "K_abs": 0.3429878768099878,
+              "active_points": 7,
+              "effective_compression_solver_units": 0.0026717132926544315,
+              "masked_volume": 0.00024041115889327007,
+              "stress_MPa": 0.000916365269692565,
+              "yx_MPa": -8.104551733167977e-20,
+              "yy_MPa": 0.0009163652696925651
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 2.080784919773367,
+              "K_abs": 2.080784919773367,
+              "active_points": 49,
+              "effective_compression_solver_units": 0.01170484156180401,
+              "masked_volume": 0.00022354455620782852,
+              "stress_MPa": 0.02435525781013833,
+              "yx_MPa": -1.5039257473349887e-18,
+              "yy_MPa": 0.02435525781013833
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            }
+          ],
+          "source_cells": 8,
+          "target_cells": 16,
+          "total": {
+            "K": 2.423772796583355,
+            "K_abs": 2.423772796583355,
+            "active_points": 56,
+            "effective_compression_solver_units": 0.010426564369174687,
+            "masked_volume": 0.00046395571510109856,
+            "stress_MPa": 0.025271623079830895,
+            "yx_MPa": -1.5849712646666686e-18,
+            "yy_MPa": 0.025271623079830895
+          }
+        },
+        {
+          "layers": [
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.04089815969927596,
+              "K_abs": 0.04089815969927596,
+              "active_points": 7,
+              "effective_compression_solver_units": 0.0008798082436007581,
+              "masked_volume": 5.987878245152054e-05,
+              "stress_MPa": 3.5982538051523293e-05,
+              "yx_MPa": -1.3272569470884135e-21,
+              "yy_MPa": 3.5982538051523293e-05
+            },
+            {
+              "K": 0.7315769674857463,
+              "K_abs": 0.7315769674857463,
+              "active_points": 77,
+              "effective_compression_solver_units": 0.004104499342327334,
+              "masked_volume": 0.0005359733507963603,
+              "stress_MPa": 0.003005223250424096,
+              "yx_MPa": 2.466068517024769e-06,
+              "yy_MPa": 0.003002757181907071
+            },
+            {
+              "K": 1.1779168036194798,
+              "K_abs": 1.1779168036194798,
+              "active_points": 105,
+              "effective_compression_solver_units": 0.004024869139539031,
+              "masked_volume": 0.0005045696184341287,
+              "stress_MPa": 0.004740960991832501,
+              "yx_MPa": 1.35194719585171e-19,
+              "yy_MPa": 0.004740960991832501
+            },
+            {
+              "K": 1.239791555171025,
+              "K_abs": 1.239791555171025,
+              "active_points": 133,
+              "effective_compression_solver_units": 0.001518499530119318,
+              "masked_volume": 0.00035735483959306336,
+              "stress_MPa": 0.0018826228939731002,
+              "yx_MPa": 2.9123582916661687e-19,
+              "yy_MPa": 0.0018826228939731
+            },
+            {
+              "K": 1.0587045716578636,
+              "K_abs": 1.0587045716578636,
+              "active_points": 308,
+              "effective_compression_solver_units": 0.0017586811391453688,
+              "masked_volume": 0.0002186306615266968,
+              "stress_MPa": 0.0018619285815905798,
+              "yx_MPa": 4.819488918626257e-09,
+              "yy_MPa": 0.0018619237621016612
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            }
+          ],
+          "source_cells": 16,
+          "target_cells": 8,
+          "total": {
+            "K": 4.2488880576333905,
+            "K_abs": 4.2488880576333905,
+            "active_points": 630,
+            "effective_compression_solver_units": 0.002712297243784014,
+            "masked_volume": 0.0016764072528017697,
+            "stress_MPa": 0.011526718255871801,
+            "yx_MPa": 2.4708880059438204e-06,
+            "yy_MPa": 0.011524247367865857
+          }
+        },
+        {
+          "layers": [
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.085023713938601,
+              "K_abs": 0.085023713938601,
+              "active_points": 7,
+              "effective_compression_solver_units": 0.0008797994927490989,
+              "masked_volume": 5.938619416612867e-05,
+              "stress_MPa": 7.480382039482565e-05,
+              "yx_MPa": -4.937908240526644e-21,
+              "yy_MPa": 7.480382039482565e-05
+            },
+            {
+              "K": 1.7248170475084488,
+              "K_abs": 1.7248170475084488,
+              "active_points": 77,
+              "effective_compression_solver_units": 0.0041203411769098015,
+              "masked_volume": 0.0003595141618389693,
+              "stress_MPa": 0.00710683470348505,
+              "yx_MPa": -5.356309331536089e-19,
+              "yy_MPa": 0.007106834703485051
+            },
+            {
+              "K": 1.090598087570079,
+              "K_abs": 1.090598087570079,
+              "active_points": 105,
+              "effective_compression_solver_units": 0.004031869933581623,
+              "masked_volume": 0.00011679225282969845,
+              "stress_MPa": 0.00439714963889542,
+              "yx_MPa": 1.4396256667437674e-19,
+              "yy_MPa": 0.00439714963889542
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            },
+            {
+              "K": 0.0,
+              "K_abs": 0.0,
+              "active_points": 0,
+              "effective_compression_solver_units": null,
+              "masked_volume": 0.0,
+              "stress_MPa": 0.0,
+              "yx_MPa": 0.0,
+              "yy_MPa": 0.0
+            }
+          ],
+          "source_cells": 16,
+          "target_cells": 16,
+          "total": {
+            "K": 2.900438849017129,
+            "K_abs": 2.900438849017129,
+            "active_points": 189,
+            "effective_compression_solver_units": 0.003992081462672105,
+            "masked_volume": 0.0005356926088347964,
+            "stress_MPa": 0.011578788162775296,
+            "yx_MPa": -3.966062747197587e-19,
+            "yy_MPa": 0.011578788162775296
+          }
+        }
+      ],
+      "steps": [
+        270,
+        540
+      ]
+    }
+  ],
+  "scope": "Development, two incoming snapshot pairs; fixed particle data and target wall masks",
+  "stage3_go": false,
+  "stencil_sha256": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+  "u6_qualified": false
+}
