@@ -773,5 +773,12 @@
   "①_출력 (사용자 붙여넣기 2026-11-23)": "판 지문 셋 OK · pw.x 없음 · 새 자리 · 후보 해시 3 개 확인 · 목적 b2o3_bo/stage11a_phonon_relax · run_anneal 자가시험 통과 · queue 6/6 · inputs 3/3 · VRAM 사용 4436 / 49140 MiB (여유 44704) · ⑤ 발사 2026-11-22 22:01:09 (gabia) · 첫 구조 cfg0015 MD 0 걸음 (TIME_PS 0) → 이완 시작",
   "GPU_공유": "발사 전부터 다른 python3 (PID 1191552 · 4420 MiB · GPU 사용률 100 %) 가 돌고 있었다 — 11-20 MD-0 때 본 그 잡 (DEM 쪽으로 보임 · 우리 잡 아님) · pw.x 가 아니라 공존 금지 규칙에는 안 걸린다 · 우리 이완 python 1504 MiB · 포논 시간 어림 (구조당 10–30 분) 이 늘어날 수 있다",
   "감시 (사용자에게 줌)": "watch -n 30 'R=/data/work/runs/b2o3_bo_2026_11_09; O=$R/s11a_phonon; … 이완 로그 끝 두 줄 · 포논 run.log · 구조별 캐시 변위 수 / 769 · verdict 줄 · nvidia-smi 계산 프로세스 · 메모리 · 사용률'"
+ },
+ "11a_포논_watch_2026_11_23": {
+  "출처": "사용자 2026-11-23 '포논 관련 watch도 부탁해요'",
+  "감시 (사용자에게 줌 · 포논만)": "watch -n 30 'O=/data/work/runs/b2o3_bo_2026_11_09/s11a_phonon; tmux has-session -t b2o3_s11ph 2>/dev/null && echo \"== tmux b2o3_s11ph 도는 중\" || echo \"== tmux b2o3_s11ph 없음 = 끝났거나 멈춤\"; cat $O/run.log 2>/dev/null; for n in cfg0040_E-2252.241_O-bo4 cfg0015_E-2254.436_O-bo4 cfg0019_E-2254.209_O-bo4; do f=$(ls -t $O/${n}_cache/* 2>/dev/null | head -1); echo \"-- ${n%%_E*}: 변위 $(ls $O/${n}_cache 2>/dev/null | wc -l) / 769${f:+ · 마지막 $(date -r $f +%T)}\"; grep -a -E \"^(n_modes|lowest|verdict)\" $O/$n.log 2>/dev/null | cut -c1-130; grep -a -E \"Error|⛔\" $O/$n.log 2>/dev/null | tail -2 | cut -c1-130; done; echo \"== GPU\"; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader; nvidia-smi --query-compute-apps=pid,used_memory,process_name --format=csv,noheader'",
+  "확인": "본문을 로컬 dash 로 가짜 폴더에 돌려 봤다 (진행 중 · 끝난 구조 · 안 시작한 구조 세 경우 출력 정상) · 769 = 128 원자 × 3 × ± 2 + 기준 1 (uma_phonon.py · ASE Vibrations nfree 2 · 캐시 = <out>_cache/ 안 파일 하나가 변위 하나)",
+  "읽는_법": "변위 N / 769 가 늘면 도는 중 · '마지막' 시각이 멈추고 tmux 없음이면 멈춤 · 구조가 끝나면 run.log rc 와 n_modes · lowest · verdict 세 줄 · 판정 어휘는 11a_포논_블록_2026_11_22 의 결과 전 규칙 그대로 (STABLE · SOFT 보류 · UNSTABLE)",
+  "by": "agent · 2026-11-23"
  }
 }
