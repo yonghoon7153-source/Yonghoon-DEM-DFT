@@ -18055,6 +18055,16 @@
    "decision_note": "Codex 실무 고침 9fd6aa9d3 (반입 ⑰ = stoic b5597f0e0 · 11-20 1저자 \"반입해야되는거 있음 진행해\") — 완료 영수증 쓰기 실패 전파 · 발행 해시 뒤 restore=0 · kebase=0 · 필요 시 select=0 · end (실패 0 · reader_rc 0) 각 한 번 순서대로 · 마지막 LF 검사. 원 독립 탐침 재생 rc1 → rc0 (정상만 허용 · 누락 · 중복 · 모순 거부 4/4) · 합성 회귀 11/11 · 공유 기록 제안 docs/reviews/p1_rt_a5r01_20261120/ledger_proposal.json · docs/reviews/p1_rt_a5r01_closure_20261120/ledger_proposal.json. 11-20 Claude Linux: 깨끗한 언로딩 키트 폴더 사본으로 조립한 143 파일 키트 (A5_SHA256SUMS sha256 26bdbdc05ba3… = 1저자 ibb 사전 점검 고정 키트) 로 test_a5r01 통과 (게이트 단계 69).",
    "verification_note": "독립 Codex 반박 창 재확인 (수정 핀 9fd6aa9d3bee) = CLOSABLE_LIMITED — 완료 영수증 쓰기 실패 전파 · 완전한 발행 뒤 영수증 소비 범위 · kebase · end 쓰기 실패 = 각각 rc2 · 후속 관문이 두 영수증 모두 거부 · 새 지적 0 · 이 지적 때문의 A5 봉인 후보 HOLD 해제 근거. 운영 봉인 · 새 RJ 발사 · 현장 자격 · 물리 판정 GO 아님. verified 전환에는 원장의 독립 검증자 조건이 따로 필요하다 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다).",
    "verified_in": "docs/reviews/p1_rt_a5r01_intake_20261120/FINAL_REVIEW_A5R01_9fd6aa9d3bee_20261120.md"
+  },
+  {
+   "id": "SELF-187",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "본 세션 (11-23 저녁 · kgy 시도 9 U01_corner.log)",
+   "opened_in": "docs/data/rint2_r_ops_20261121/README.md",
+   "title": "kgy 재부팅 뒤 봉인 (4) 절차 (등록 → 바로 실행) 를 손 블록으로 줄 때 venv 켜기 줄 (`. ~/dem-venv/bin/activate && unset SIGMA_VGCF_OVERRIDE` · 봉인 명령 문서에 있음) 을 뺐다 — 1저자 창의 conda base (python 3.13 · scipy 없음) 가 러너의 런 영수증 줄 (venv 켜기 전) 에 쓰여 시도 9 가 1–2 분 만에 RUNNER_RC rc 2 로 멈췄다",
+   "note": "영향 = 몇 분 · 시도 수 1 (이 대상 3/8) · 결과 전 멈춘 재실행이라 사슬 끝 (시도 7) 그대로 · 값 · 원장 무결 · 고침 = 시도 10 블록 (conda 끔 · venv 켬 · python3 경로 · numpy · scipy 판 확인 뒤에만 등록 · 실행) · 닫는 조건 = 시도 10 이 정상 끝 (그룹 2/2) 이고 손 경로 블록에 같은 확인을 계속 쓴 커밋"
   }
  ]
 }

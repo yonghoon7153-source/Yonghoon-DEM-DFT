@@ -76,3 +76,21 @@
 채택 단위 4/12 (시도 3 · 4 · 5 · 6) · 도는 중 2 (kgy 시도 7 · gabia 시도 8) · 남음 6.  다음 = kgy 시도 7 끝 (rc 3 예상) → 넘김 ⑧ gabia → kgy → RECOVER_UNIT 7 → kgy `P0_c1_R_j0` · gabia 시도 8 끝 → gabia `P1_c1_R_j_lo`.
 
 **1저자 중간 열람 (11-23 09:5x KST · 판정 아님).**  1저자가 등록 R 밖에서 채택 단위 시도 3–6 의 런별 σ_e 를 열람했다 (합치기 · 넘침 · 재검산 전 값).  값은 이 기록 · 리포 어디에도 적지 않는다.  등록 R · 봉인 · 단위 순서 · 판정 규칙은 바꾼 것이 없다.  판정 문장에는 *"1저자 중간 열람 (11-23 · 시도 3–6 · 판정 전 값)"* 한정어를 붙인다.
+
+## 11-23 저녁 — kgy 재부팅 뒤 손 회복 (Claude 기록 · 1저자 현장 실행)
+
+| 시각 (KST) | 기계 | 일 | 결과 |
+|---|---|---|---|
+| 16:34 | kgy | 비정상 재부팅 (`last -x` = reboot 줄 · shutdown 줄 없음 · 원인 미확인) | 시도 7 `P0_c0_R_j_hi` 의 사슬 · 러너가 끝남 (부모 사망) · 그때 그룹 1/0 · 팔 JSON 2 |
+| 18:45 | kgy | uwatch | groups 1/0 · chain_procs 0 · GPU 30 % · 851 MiB (아무것도 안 돌 때 값) → `uptime` 2:18 로 재부팅 확인 |
+| 19:12 | gabia → kgy | 넘김 ⑧ — **수동** (봉인 명령 문서 `docs/reviews/rint2_kgy_commands_20261020.md` (5)) | 운영 도구에 재부팅 경로가 없다 (넘김 = 받는 쪽 시도가 park 로 끝났다는 증거를 요구 · 회복 = `unit_summary.json` 을 요구) → flock 아래 묶음 · park · 전송 · `pull --ff-only` · T `20261123T101251Z` · tip `a8279d298b1f3ddaf577b1eef062a15576e13027` · 묶음 sha256 `69e7c4ea62c27c7089f28a1873d889d0d8e0b555b2ac34a56d30699b367e31a9` · PARKED_OK · RECV_OK |
+| 19:1x | kgy | `--stage recover` 시도 7 (다른 부팅 · `--operator-confirm 7`) | 결과 줄 interrupted · 원인 parent_dead · 재실행 자격 True · rc 0 · 원장 kgy ACTIVE · tip `bf0b6d54b0605058c950e1d1bd764879f8cde1d8` (넘김 전에 한 번 = 원장 없음 rc 3 · 무해) |
+| 19:16 | WSL | 도구 launch | ALREADY_REGISTERED_NO_RETRY (도구가 같은 단위의 재등록을 막는다) → 봉인 (4) 절차 (등록 → 바로 실행) |
+| 19:18 | kgy | `ledger --add` (새 시도) | ATTEMPT_AFTER_ADOPTED (시도 7 = 채택 시도 · 원장 무변경) |
+| 19:1x | kgy | `ledger --add --resume 7` | ATTEMPT_ADDED n=9 · resume_of 7 · commit `fa5ed05703c7e0ee73037c229a2ced845d0f1206` |
+| 19:1x–19:20 | kgy | 시도 9 nohup predict | 1–2 분 만에 `RUNNER_RC` rc 2 — 러너가 venv 를 켜기 **전** 런 영수증 줄의 `python3` = 1저자 창의 conda base (python 3.13 · scipy 없음) → `ModuleNotFoundError: scipy` · 결과 줄 stopped · side=pre · runner_rc · resume_ok False · 결과 전 멈춘 재실행 = 기록만 (`adoption` PC5-05 · 사슬 끝 = 시도 7 그대로) · 원인 = 내가 준 블록에서 venv 켜기 줄 누락 (`SELF-187`) |
+| 19:3x | kgy | `--resume 7` 다시 → 시도 10 (conda 끔 · venv 켬 · python3 경로 · numpy · scipy 판을 확인한 뒤에만 등록 · 실행) | ATTEMPT_ADDED n=10 · `[p2] 런 영수증` · `[p2] 규율 검사 통과` · groups 1/0 · chain_procs 2 (19:33) |
+
+손실 = 시도 7 의 계산 약 7 시간 + 빈 시간 약 3 시간 (추정 · 재부팅 16:34 → 시도 10 19:3x).  시도 7 의 첫 런 (`U01_corner`) 은 끝 기록이 없어 시도 10 이 처음부터 다시 돈다 (추정 · 재실행 요약 `resume` 칸으로 확인).
+운영 도구의 빈 곳 (이번에 고치지 않음 · 기록만): 넘김 · 회복 · launch 세 곳이 정상 끝만 가정한다.  재부팅 뒤 손 경로 = 위 표 (봉인 (5) 넘김 · `--operator-confirm` 회복 · `--resume` 재등록 · **venv 켬 확인 뒤** 실행).
+도는 중 2 (kgy 시도 10 · gabia 시도 8) · 채택 4/12 · 다음 = gabia 시도 8 끝 → 넘김 kgy → gabia → RECOVER 8 → gabia `P1_c1_R_j_lo` · 12-05 어림은 gabia 시도 8 시간을 본 뒤 다시.
