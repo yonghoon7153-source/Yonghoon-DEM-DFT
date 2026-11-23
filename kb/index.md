@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-23 · managed-files: 643
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-23 · managed-files: 644
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 434건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 435건)
 - 2026-11-23 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-23 · `kb/reviews/codex_EO_reply_wad_a5_en_fixes_2026_11_23.md` — EO 회신 — W_ad a5 묶음 (EN 고침) 확인: NO-GO (P0 1 · P1 4 · P2 1) — EN 의 재시작 모순 · 잘못된 행 머리는 막힘 · c2 첫 전자 반복행이 SDA: 에서 잘려도 1 행으로 세어 c1 보조 채택 · 영수증 판독 불일치 · 시작 기록 잡 이름 · 중단 시간 상한 · 장부 ↔ 보존 폴더 부분 복구 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 없음) · NO-…
 - 2026-11-23 · `kb/reviews/codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` — EP 프롬프트 — W_ad a5 묶음 Codex EO (NO-GO) 재승인 조건 ①–④ 고침 확인: 완전한 전자행 계수 · 영수증 · 시작 기록 일치 판독 · 중단 시간 · 상한 · 장부 ↔ 보존 폴더 (+ P2 끝 기록 시도 ID) — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
@@ -15,6 +15,7 @@
 - 2026-11-23 · `kb/reviews/codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md` — EQ 회신 — W_ad a5 묶음 (EP 고침) 확인: NO-GO — EP 원래 반례는 막힘 · 위협 범위 §1b 수용 (GO) · 범위 안 지적: 앞 공백 두 칸 뒤 'SDA' 절단 → 0 스텝 · 310 자리 숫자 행 → RUN_FAILED · 648,001 s 완료 시도에 남의 killed.json → c2 채택 · run/ 하나를 옛 체크포인트로 복구하면 유효한 기존 반송본을 덮어씀 · 0 바이트 status.tsv · 잘린 종료 기록으로 계속 · 재포장이 현장 오류를 지움 · final.json code 0 + REVIEW · 공백 세 칸 잡 ID · 저장 뒤 사유 바이트 손상 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…
 - 2026-11-23 · `kb/reviews/codex_ER_prompt_wad_a5_eq_fixes_2026_11_23.md` — ER 프롬프트 — W_ad a5 묶음 Codex EQ (NO-GO) 고침 확인: 트리 관문 하나 (러너 모든 진입점 — 다시 돌림 · 단 발사 직전 · PACK_ONLY · 포장 덮어쓰기 전 · 기록 명령 · 검사기 같은 규칙 · 같은 낱말) — 기록 문법 엄격 · 끝 기록 원자적 쓰기 · 끝 기록 + 끊김 기록 공존 거부 · 끊김 기록 결속 · 잔여 · 모르는 파일 · 기존 반송본 대조 · 끝 기록 code/state 조합 · 앞 빈칸 머리 조각 · 칸 길이 ≤ 24 · 필수 칸 빈칸 문자 · 기록 UTF-8 · 장부 단 순서 — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
 - 2026-11-23 · `kb/reviews/codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md` — ER 회신 — W_ad a5 묶음 (EQ 고침 · 트리 관문 하나) 확인: NO-GO — EQ 반례 (남의 killed.json · 완료 반송본 옆 과거 복구 · 잘린 종료 기록 · 재포장 .part) 는 막힘 · 필수 칸 · UTF-8 · 장부 순서 GO · 범위 안 지적: 준비 폴더 이름으로 옮긴 중단 c1 을 러너가 지움 · 마지막 단 종결 (final.json OK · A5 WAVECAR 삭제) 이 검사보다 먼저 · 첫 행 콜론 한 바이트 손상 ('SDA;' · 'SDA') 이 0 스텝 · attempt.json 648,001 → 48,001 한 자리 유실 (이력 행과 대조 안 함) · 기록 명령 둘 겹침 (잠금 없음) · 중간 반송본 전자행 7 개 후퇴 · 확정 영수증 UNKNOWN 후퇴 · 종료 기록 job/stage/attempt · POTCAR.sha256 대조 없음 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…
+- 2026-11-23 · `kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` — ES 프롬프트 — W_ad a5 묶음 Codex ER (NO-GO) 고침 확인: 같은 트리 관문 위에 — 준비 폴더의 실행 기록 보존 · 끝 기록 · WAVECAR 지우기 전 관문 · 0 스텝은 0 행으로 설명될 때만 · 이력 줄 벽시계 = 끝 기록 · 기록 명령 · 포장 배타 잠금 · 중간 반송본 대비 관측 사실 후퇴 거부 · 끝 기록 잡 · 변형 · stage · POTCAR 해시 — 업체 발송 GO 여부 · 발송 대기 (사용자) · 기준 cc3873047 (ER 가 본 묶음 …
 - 2026-11-23 · `kb/reports/weekly_2026_11_22.md` — 주간 정리 2026-11-16 ~ 11-22 (주간보고 초안) · 초안 (2026-11-23 · 도는 계산은 마지막 보고 기준 — ga…
 - 2026-11-22 · `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부 · 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 …
 - 2026-11-22 · `kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` — EN 회신 — W_ad a5 묶음 (EM 고침) 확인: NO-GO (P0 1 · P1 3 · P2 1 · P3 1) — EM 의 기존 반례는 막힘 · c2 재시작 실패 뒤 스케줄러 끊김을 --killed 경로가 놓쳐 c1 보조 채택 · 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-G…
@@ -26,7 +27,6 @@
 - 2026-11-20 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…
 - 2026-11-17 · `kb/projects/handoff_2026_11_17_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-12 를 friendly 로 · fast-forward (2026-11-17) · litdb 정리 세션 · 로컬 웹앱 맞추기 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…
 - 2026-11-16 · `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 쪽별 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑 · 검토 완료 · 전달 여부는 사용자 몫
-- 2026-11-15 · `kb/reviews/internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` — EL 프롬프트 (내부 반박 리뷰) — li2s-3 카드 개정 4: 큐 끝 줄 유실 인정이 '끝 줄 하나만 빠진 완료 큐' 만 받는가 (판독 보류 처리 · 결과 전) · 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (298)
+## reviews/ (299)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-23 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -411,6 +411,7 @@
 - `kb/reviews/codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md` — EQ 회신 — W_ad a5 묶음 (EP 고침) 확인: NO-GO — EP 원래 반례는 막힘 · 위협 범위 §1b 수용 (GO) · 범위 안 지적: 앞 공백 두 칸 뒤 'SDA' 절단 → 0 스텝 · 310 자리 숫자 행 → RUN_FAILED · 648,001 s 완료 시도에 남의 killed.json → c2 채택 · run/ 하나를 옛 체크포인트로 복구하면 유효한 기존 반송본을 덮어씀 · 0 바이트 status.tsv · 잘린 종료 기록으로 계속 · 재포장이 현장 오류를 지움 · final.json code 0 + REVIEW · 공백 세 칸 잡 ID · 저장 뒤 사유 바이트 손상  (2026-11-23 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…)
 - `kb/reviews/codex_ER_prompt_wad_a5_eq_fixes_2026_11_23.md` — ER 프롬프트 — W_ad a5 묶음 Codex EQ (NO-GO) 고침 확인: 트리 관문 하나 (러너 모든 진입점 — 다시 돌림 · 단 발사 직전 · PACK_ONLY · 포장 덮어쓰기 전 · 기록 명령 · 검사기 같은 규칙 · 같은 낱말) — 기록 문법 엄격 · 끝 기록 원자적 쓰기 · 끝 기록 + 끊김 기록 공존 거부 · 끊김 기록 결속 · 잔여 · 모르는 파일 · 기존 반송본 대조 · 끝 기록 code/state 조합 · 앞 빈칸 머리 조각 · 칸 길이 ≤ 24 · 필수 칸 빈칸 문자 · 기록 UTF-8 · 장부 단 순서 — 업체 발송 GO 여부  (2026-11-23 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…)
 - `kb/reviews/codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md` — ER 회신 — W_ad a5 묶음 (EQ 고침 · 트리 관문 하나) 확인: NO-GO — EQ 반례 (남의 killed.json · 완료 반송본 옆 과거 복구 · 잘린 종료 기록 · 재포장 .part) 는 막힘 · 필수 칸 · UTF-8 · 장부 순서 GO · 범위 안 지적: 준비 폴더 이름으로 옮긴 중단 c1 을 러너가 지움 · 마지막 단 종결 (final.json OK · A5 WAVECAR 삭제) 이 검사보다 먼저 · 첫 행 콜론 한 바이트 손상 ('SDA;' · 'SDA') 이 0 스텝 · attempt.json 648,001 → 48,001 한 자리 유실 (이력 행과 대조 안 함) · 기록 명령 둘 겹침 (잠금 없음) · 중간 반송본 전자행 7 개 후퇴 · 확정 영수증 UNKNOWN 후퇴 · 종료 기록 job/stage/attempt · POTCAR.sha256 대조 없음  (2026-11-23 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…)
+- `kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` — ES 프롬프트 — W_ad a5 묶음 Codex ER (NO-GO) 고침 확인: 같은 트리 관문 위에 — 준비 폴더의 실행 기록 보존 · 끝 기록 · WAVECAR 지우기 전 관문 · 0 스텝은 0 행으로 설명될 때만 · 이력 줄 벽시계 = 끝 기록 · 기록 명령 · 포장 배타 잠금 · 중간 반송본 대비 관측 사실 후퇴 거부 · 끝 기록 잡 · 변형 · stage · POTCAR 해시 — 업체 발송 GO 여부  (2026-11-23 · 발송 대기 (사용자) · 기준 cc3873047 (ER 가 본 묶음 …)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
 - `kb/reviews/codex_G_reply_to_F_2026_08_27.md` — 교차리뷰 G — 회신 F 수용 보고 + 후속 질문 (R3 설계·D_inc 오차·N_eff)  (2026-08-27 · 회신수령-반영완료 (→ codex_H_reply_to_G_2026_0…)
