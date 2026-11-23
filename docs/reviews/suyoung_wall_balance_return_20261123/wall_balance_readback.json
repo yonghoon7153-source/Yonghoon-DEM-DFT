@@ -1,0 +1,453 @@
+{
+  "balance_return_sha256": "1f680f4f255910bb2c93ce7e2edea004c89b4177fb3a4b8af93bd59edeab209e",
+  "previous_full_fine_return_sha256": "c1506ea6fb6f16181fe36e85e76043101380b75c9cf435b2811a5b53b761d673",
+  "release": "0c4eb97d447f9afa984303425e1c5ab221ae9cec",
+  "prior_release": "e8e2f2535aa12b9fb089d714e1325d862cb1161b",
+  "width_code": 0.7024180763115129,
+  "diameter_code": 0.1,
+  "sign": "Positive is upward impulse on material. Only the floor equivalent is the reported bottom pressure.",
+  "per_step_conversion": "10 * J / (width * native dt) MPa. J is in native impulse units.",
+  "bottom_row_initial_body_ids": [
+    0,
+    7,
+    14,
+    21,
+    28,
+    35,
+    42
+  ],
+  "gaps": "At step entry: commanded lid position minus maximum tracked material surface y, and minimum surface y minus floor. Positive-gap threshold is 1e-12 code length.",
+  "native_pressure_union": {
+    "union_points": 1139,
+    "fixed_reference_MPa": 0.6636991102836952,
+    "threshold_MPa": 0.03318495551418476,
+    "first_above_5_pct": {
+      "F24_step": 930,
+      "F12_step_if_native": 465,
+      "displacement_D": 0.13903441876842115,
+      "F12_minus_F24_MPa": 0.03346852173358579,
+      "absolute_percent_fixed_reference": 5.042725116699316
+    },
+    "maximum_in_observed_prefix": {
+      "F24_step": 1138,
+      "F12_step_if_native": 569,
+      "displacement_D": 0.17013028877254088,
+      "F12_minus_F24_MPa": 0.09719855047759547,
+      "absolute_percent_fixed_reference": 14.644972242926222
+    }
+  },
+  "arms": {
+    "F12": {
+      "dt_code": 0.001497578010986372,
+      "projected_steps": 569,
+      "identical_previous_native_prefix_data_rows_including_initial": 570,
+      "full_trace_sha256": "e54f7e4683f0fcf5cc05693b049d51f57f1445b7eeb5e21eb12dad8696b36838",
+      "native_prefix_sha256": "88f1c1e07da0940539c5e0702f2d7ec09526ee2729fafabd4df4866860140521",
+      "observer_table_sha256": "ebb68cd5282d908750119350404d8f1765fbf15bfecd8e4d7dd14cc8617b1b75",
+      "first_lid_down_step": 1,
+      "first_floor_up_step": 416,
+      "first_lid_impulse_code": -1.549961826621776e-06,
+      "first_top_gap_D": 0.0014281986153252824,
+      "steps_with_downward_lid_during_positive_gap": 8,
+      "positive_gap_step_intervals": [
+        [
+          1,
+          8
+        ]
+      ],
+      "downward_lid_during_positive_gap_J": -1.30545723431718e-05,
+      "positive_gap_fraction_of_downward_lid_pct": 0.1612279515856946,
+      "maximum_absolute_step_residuals": {
+        "floor_vs_native_J": 3.7269449679189215e-20,
+        "all_floor_outside_bottom_row_J": 6.776263578034403e-21,
+        "bottom_row_lid_J": 0,
+        "interbody_global_J": 5.082197683525802e-21,
+        "reconstructed_pressure_MPa": 0,
+        "grid_vs_demand_all_J": 6.776263578034403e-21,
+        "particles_vs_grid_all_J": 6.140988867593677e-19,
+        "grid_vs_demand_bottom_row_J": 4.235164736271502e-21,
+        "particles_vs_grid_bottom_row_J": 1.7406527066075872e-19
+      }
+    },
+    "F24": {
+      "dt_code": 0.000748789005493186,
+      "projected_steps": 1138,
+      "identical_previous_native_prefix_data_rows_including_initial": 1139,
+      "full_trace_sha256": "25445d62cc848f4aca5b73802cd3295c3c9dcfc9be7435fcb7b340c883842d6b",
+      "native_prefix_sha256": "25ccfeb535c44d1d0ae03086823e91b7abe7ee9dbcbedb9bc7c821914605d892",
+      "observer_table_sha256": "8201670d00964ff0a693ccc47086ac833bdf4404879877f8059dd109836a1e9a",
+      "first_lid_down_step": 1,
+      "first_floor_up_step": 901,
+      "first_lid_impulse_code": -1.4937966222799529e-06,
+      "first_top_gap_D": 0.0015776979903459054,
+      "steps_with_downward_lid_during_positive_gap": 61,
+      "positive_gap_step_intervals": [
+        [
+          1,
+          61
+        ]
+      ],
+      "downward_lid_during_positive_gap_J": -0.0001879816019404192,
+      "positive_gap_fraction_of_downward_lid_pct": 2.485568126241681,
+      "maximum_absolute_step_residuals": {
+        "floor_vs_native_J": 1.6093625997831706e-20,
+        "all_floor_outside_bottom_row_J": 1.6940658945086007e-21,
+        "bottom_row_lid_J": 0,
+        "interbody_global_J": 2.117582368135751e-21,
+        "reconstructed_pressure_MPa": 0,
+        "grid_vs_demand_all_J": 3.3881317890172014e-21,
+        "particles_vs_grid_all_J": 7.148958074826295e-19,
+        "grid_vs_demand_bottom_row_J": 1.9058241313221758e-21,
+        "particles_vs_grid_bottom_row_J": 1.8634724839594607e-19
+      }
+    }
+  },
+  "matched_comparisons": [
+    {
+      "snapshots": {
+        "F12": {
+          "step": 465,
+          "time_code": 0.6963737751086629,
+          "plate_displacement_D": 0.13903441876842115,
+          "top_gap_before_D": -0.02157801277264726,
+          "floor_gap_before_D": 0.0,
+          "native_floor_pressure_MPa": 0.04055630355276699,
+          "single_step_signed_J": {
+            "floor_all": 4.266222472042147e-06,
+            "floor_bottom_row": 4.266222472042148e-06,
+            "lid_all": -1.7091390816624925e-05,
+            "lid_bottom_row": 0.0,
+            "contact_all": -1.4823076576950256e-21,
+            "contact_bottom_row": -1.2317563999942648e-05,
+            "grid_change_all": -1.2825168344582782e-05,
+            "grid_change_bottom_row": -8.051341527900502e-06,
+            "particle_change_all": -1.282516834458258e-05,
+            "particle_change_bottom_row": -8.051341527900376e-06
+          },
+          "single_step_signed_equivalent_MPa": {
+            "floor_all": 0.040556303552766994,
+            "floor_bottom_row": 0.040556303552767,
+            "lid_all": -0.16247714193071897,
+            "lid_bottom_row": 0.0,
+            "contact_all": -1.409136999254843e-17,
+            "contact_bottom_row": -0.11709536197093419,
+            "grid_change_all": -0.12192083837795202,
+            "grid_change_bottom_row": -0.0765390584181672,
+            "particle_change_all": -0.1219208383779501,
+            "particle_change_bottom_row": -0.07653905841816601
+          },
+          "signed_J_since_initial": {
+            "floor_all": 9.904340427423772e-05,
+            "floor_bottom_row": 9.904340427423772e-05,
+            "lid_all": -0.006535952879795325,
+            "lid_bottom_row": 0.0,
+            "contact_all": 3.099342761556409e-20,
+            "contact_bottom_row": -0.0006828976887753622,
+            "grid_change_all": -0.006436909475521087,
+            "grid_change_bottom_row": -0.0005838542845011245,
+            "particle_change_all": -0.0064369094755210325,
+            "particle_change_bottom_row": -0.000583854284501118
+          },
+          "time_average_signed_equivalent_MPa_since_initial": {
+            "floor_all": 0.0020248248978030603,
+            "floor_bottom_row": 0.0020248248978030603,
+            "lid_all": -0.1336198025386284,
+            "lid_bottom_row": 0.0,
+            "contact_all": 6.336238577834779e-19,
+            "contact_bottom_row": -0.013961033074508192,
+            "grid_change_all": -0.1315949776408253,
+            "grid_change_bottom_row": -0.011936208176705132,
+            "particle_change_all": -0.1315949776408242,
+            "particle_change_bottom_row": -0.011936208176704998
+          }
+        },
+        "F24": {
+          "step": 930,
+          "time_code": 0.6963737751086629,
+          "plate_displacement_D": 0.13903441876842115,
+          "top_gap_before_D": -0.014086241838751068,
+          "floor_gap_before_D": 0.0,
+          "native_floor_pressure_MPa": 0.0070877818191811956,
+          "single_step_signed_J": {
+            "floor_all": 3.727910512675355e-07,
+            "floor_bottom_row": 3.7279105126753545e-07,
+            "lid_all": -7.5387073480787236e-06,
+            "lid_bottom_row": 0.0,
+            "contact_all": -1.0587911840678754e-21,
+            "contact_bottom_row": -3.531577087431973e-06,
+            "grid_change_all": -7.165916296811189e-06,
+            "grid_change_bottom_row": -3.1587860361644374e-06,
+            "particle_change_all": -7.165916296810763e-06,
+            "particle_change_bottom_row": -3.158786036164508e-06
+          },
+          "single_step_signed_equivalent_MPa": {
+            "floor_all": 0.007087781819181196,
+            "floor_bottom_row": 0.007087781819181195,
+            "lid_all": -0.14333153304019036,
+            "lid_bottom_row": 0.0,
+            "contact_all": -2.013052856078347e-17,
+            "contact_bottom_row": -0.06714498051449619,
+            "grid_change_all": -0.13624375122100918,
+            "grid_change_bottom_row": -0.060057198695314985,
+            "particle_change_all": -0.13624375122100107,
+            "particle_change_bottom_row": -0.06005719869531633
+          },
+          "signed_J_since_initial": {
+            "floor_all": 6.043012449155908e-06,
+            "floor_bottom_row": 6.043012449155908e-06,
+            "lid_all": -0.006116477270913435,
+            "lid_bottom_row": 0.0,
+            "contact_all": 1.884406215632282e-20,
+            "contact_bottom_row": -0.00032057020202594925,
+            "grid_change_all": -0.00611043425846428,
+            "grid_change_bottom_row": -0.00031452718957679333,
+            "particle_change_all": -0.006110434258464166,
+            "particle_change_bottom_row": -0.0003145271895767994
+          },
+          "time_average_signed_equivalent_MPa_since_initial": {
+            "floor_all": 0.0001235422202462346,
+            "floor_bottom_row": 0.0001235422202462346,
+            "lid_all": -0.12504412137026533,
+            "lid_bottom_row": 0.0,
+            "contact_all": 3.8524449466844156e-19,
+            "contact_bottom_row": -0.0065536774640604385,
+            "grid_change_all": -0.12492057915001911,
+            "grid_change_bottom_row": -0.006430135243814204,
+            "particle_change_all": -0.1249205791500168,
+            "particle_change_bottom_row": -0.006430135243814328
+          }
+        }
+      },
+      "F12_minus_F24_native_endpoint_equivalent_MPa": {
+        "floor_all": 0.0334685217335858,
+        "floor_bottom_row": 0.033468521733585804,
+        "lid_all": -0.019145608890528604,
+        "lid_bottom_row": 0.0,
+        "contact_all": 6.039158568235039e-18,
+        "contact_bottom_row": -0.049950381456438,
+        "grid_change_all": 0.014322912843057159,
+        "grid_change_bottom_row": -0.016481859722852217,
+        "particle_change_all": 0.01432291284305097,
+        "particle_change_bottom_row": -0.016481859722849677
+      },
+      "F12_minus_F24_since_initial_signed_J": {
+        "floor_all": 9.300039182508182e-05,
+        "floor_bottom_row": 9.300039182508182e-05,
+        "lid_all": -0.0004194756088818901,
+        "lid_bottom_row": 0.0,
+        "contact_all": 1.2149365459241269e-20,
+        "contact_bottom_row": -0.0003623274867494129,
+        "grid_change_all": -0.0003264752170568071,
+        "grid_change_bottom_row": -0.0002693270949243311,
+        "particle_change_all": -0.0003264752170568661,
+        "particle_change_bottom_row": -0.00026932709492431855
+      },
+      "identical_step_window": {
+        "F12_steps": [
+          465
+        ],
+        "F24_steps": [
+          929,
+          930
+        ],
+        "F24_interval_average_signed_equivalent_MPa": {
+          "floor_all": 0.006979772494310975,
+          "floor_bottom_row": 0.006979772494310975,
+          "lid_all": -0.14370856306854107,
+          "lid_bottom_row": 0.0,
+          "contact_all": -8.052211424313388e-18,
+          "contact_bottom_row": -0.06686552034447152,
+          "grid_change_all": -0.1367287905742301,
+          "grid_change_bottom_row": -0.05988574785016054,
+          "particle_change_all": -0.13672879057422346,
+          "particle_change_bottom_row": -0.059885747850162
+        },
+        "F12_minus_F24_interval_average_signed_equivalent_MPa": {
+          "floor_all": 0.03357653105845602,
+          "floor_bottom_row": 0.033576531058456024,
+          "lid_all": -0.018768578862177893,
+          "lid_bottom_row": 0.0,
+          "contact_all": -6.039158568235042e-18,
+          "contact_bottom_row": -0.05022984162646267,
+          "grid_change_all": 0.014807952196278076,
+          "grid_change_bottom_row": -0.01665331056800666,
+          "particle_change_all": 0.014807952196273358,
+          "particle_change_bottom_row": -0.01665331056800401
+        }
+      }
+    },
+    {
+      "snapshots": {
+        "F12": {
+          "step": 569,
+          "time_code": 0.8521218882512457,
+          "plate_displacement_D": 0.17013028877254088,
+          "top_gap_before_D": -0.02201895041649027,
+          "floor_gap_before_D": 0.0,
+          "native_floor_pressure_MPa": 0.24110266925725715,
+          "single_step_signed_J": {
+            "floor_all": 2.5362213405774743e-05,
+            "floor_bottom_row": 2.536221340577474e-05,
+            "lid_all": -1.5289362950831982e-05,
+            "lid_bottom_row": 0.0,
+            "contact_all": -3.3881317890172014e-21,
+            "contact_bottom_row": -1.645266519702385e-05,
+            "grid_change_all": 1.0072850454942756e-05,
+            "grid_change_bottom_row": 8.909548208750888e-06,
+            "particle_change_all": 1.007285045494292e-05,
+            "particle_change_bottom_row": 8.909548208750888e-06
+          },
+          "single_step_signed_equivalent_MPa": {
+            "floor_all": 0.24110266925725743,
+            "floor_bottom_row": 0.2411026692572574,
+            "lid_all": -0.14534639227699547,
+            "lid_bottom_row": 0.0,
+            "contact_all": -3.2208845697253553e-17,
+            "contact_bottom_row": -0.15640517773165777,
+            "grid_change_all": 0.09575627698026193,
+            "grid_change_bottom_row": 0.08469749152559963,
+            "particle_change_all": 0.09575627698026348,
+            "particle_change_bottom_row": 0.08469749152559963
+          },
+          "signed_J_since_initial": {
+            "floor_all": 0.0016765307734776388,
+            "floor_bottom_row": 0.0016765307734776388,
+            "lid_all": -0.008096965950865622,
+            "lid_bottom_row": 0.0,
+            "contact_all": 2.7287658471326526e-20,
+            "contact_bottom_row": -0.002268207403245496,
+            "grid_change_all": -0.006420435177387982,
+            "grid_change_bottom_row": -0.0005916766297678572,
+            "particle_change_all": -0.006420435177387899,
+            "particle_change_bottom_row": -0.0005916766297678412
+          },
+          "time_average_signed_equivalent_MPa_since_initial": {
+            "floor_all": 0.02801006580249244,
+            "floor_bottom_row": 0.02801006580249244,
+            "lid_all": -0.13527729563462845,
+            "lid_bottom_row": 0.0,
+            "contact_all": 4.558992423338245e-19,
+            "contact_bottom_row": -0.03789530119200895,
+            "grid_change_all": -0.10726722983213599,
+            "grid_change_bottom_row": -0.009885235389516507,
+            "particle_change_all": -0.1072672298321346,
+            "particle_change_bottom_row": -0.009885235389516241
+          }
+        },
+        "F24": {
+          "step": 1138,
+          "time_code": 0.8521218882512457,
+          "plate_displacement_D": 0.17013028877254088,
+          "top_gap_before_D": -0.015343605282800432,
+          "floor_gap_before_D": 0.0,
+          "native_floor_pressure_MPa": 0.1439041187796617,
+          "single_step_signed_J": {
+            "floor_all": 7.568823235559997e-06,
+            "floor_bottom_row": 7.568823235559997e-06,
+            "lid_all": -7.0489216240421255e-06,
+            "lid_bottom_row": 0.0,
+            "contact_all": 2.117582368135751e-22,
+            "contact_bottom_row": -6.149759820764017e-06,
+            "grid_change_all": 5.199016115178728e-07,
+            "grid_change_bottom_row": 1.4190634147959807e-06,
+            "particle_change_all": 5.199016115179004e-07,
+            "particle_change_bottom_row": 1.4190634147958363e-06
+          },
+          "single_step_signed_equivalent_MPa": {
+            "floor_all": 0.14390411877966158,
+            "floor_bottom_row": 0.14390411877966158,
+            "lid_all": -0.1340193611457267,
+            "lid_bottom_row": 0.0,
+            "contact_all": 4.026105712156694e-18,
+            "contact_bottom_row": -0.11692382556324009,
+            "grid_change_all": 0.009884757633934888,
+            "grid_change_bottom_row": 0.026980293216421522,
+            "particle_change_all": 0.009884757633935414,
+            "particle_change_bottom_row": 0.026980293216418778
+          },
+          "signed_J_since_initial": {
+            "floor_all": 0.0007261243078295721,
+            "floor_bottom_row": 0.0007261243078295721,
+            "lid_all": -0.007562922937246463,
+            "lid_bottom_row": 0.0,
+            "contact_all": 2.5090930142323286e-20,
+            "contact_bottom_row": -0.0013737650303102008,
+            "grid_change_all": -0.006836798629416892,
+            "grid_change_bottom_row": -0.0006476407224806287,
+            "particle_change_all": -0.006836798629416785,
+            "particle_change_bottom_row": -0.0006476407224806598
+          },
+          "time_average_signed_equivalent_MPa_since_initial": {
+            "floor_all": 0.012131474092125795,
+            "floor_bottom_row": 0.012131474092125795,
+            "lid_all": -0.12635495422015783,
+            "lid_bottom_row": 0.0,
+            "contact_all": 4.191981533833683e-19,
+            "contact_bottom_row": -0.022951710463586655,
+            "grid_change_all": -0.11422348012803205,
+            "grid_change_bottom_row": -0.01082023637146086,
+            "particle_change_all": -0.11422348012803027,
+            "particle_change_bottom_row": -0.01082023637146138
+          }
+        }
+      },
+      "F12_minus_F24_native_endpoint_equivalent_MPa": {
+        "floor_all": 0.09719855047759585,
+        "floor_bottom_row": 0.09719855047759582,
+        "lid_all": -0.011327031131268761,
+        "lid_bottom_row": 0.0,
+        "contact_all": -3.6234951409410246e-17,
+        "contact_bottom_row": -0.03948135216841768,
+        "grid_change_all": 0.08587151934632704,
+        "grid_change_bottom_row": 0.05771719830917811,
+        "particle_change_all": 0.08587151934632807,
+        "particle_change_bottom_row": 0.05771719830918086
+      },
+      "F12_minus_F24_since_initial_signed_J": {
+        "floor_all": 0.0009504064656480666,
+        "floor_bottom_row": 0.0009504064656480666,
+        "lid_all": -0.0005340430136191584,
+        "lid_bottom_row": 0.0,
+        "contact_all": 2.19672832900324e-21,
+        "contact_bottom_row": -0.0008944423729352951,
+        "grid_change_all": 0.0004163634520289094,
+        "grid_change_bottom_row": 5.596409271277152e-05,
+        "particle_change_all": 0.000416363452028886,
+        "particle_change_bottom_row": 5.596409271281858e-05
+      },
+      "identical_step_window": {
+        "F12_steps": [
+          569
+        ],
+        "F24_steps": [
+          1137,
+          1138
+        ],
+        "F24_interval_average_signed_equivalent_MPa": {
+          "floor_all": 0.14369240633006272,
+          "floor_bottom_row": 0.14369240633006272,
+          "lid_all": -0.1335708967128821,
+          "lid_bottom_row": 0.0,
+          "contact_all": 1.0065264280391735e-17,
+          "contact_bottom_row": -0.11678186871837691,
+          "grid_change_all": 0.010121509617180618,
+          "grid_change_bottom_row": 0.0269105376116858,
+          "particle_change_all": 0.010121509617179964,
+          "particle_change_bottom_row": 0.02691053761168315
+        },
+        "F12_minus_F24_interval_average_signed_equivalent_MPa": {
+          "floor_all": 0.09741026292719471,
+          "floor_bottom_row": 0.09741026292719468,
+          "lid_all": -0.011775495564113364,
+          "lid_bottom_row": 0.0,
+          "contact_all": -4.227410997764529e-17,
+          "contact_bottom_row": -0.03962330901328086,
+          "grid_change_all": 0.08563476736308132,
+          "grid_change_bottom_row": 0.057786953913913836,
+          "particle_change_all": 0.08563476736308352,
+          "particle_change_bottom_row": 0.057786953913916486
+        }
+      }
+    }
+  ]
+}
