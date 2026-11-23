@@ -38,3 +38,48 @@ console.log(JSON.stringify(C.map(c => {{ const p = popularity(c, S); const sh = 
     assert np.allclose(js[:, 2], pct, atol=1e-9)
     assert out[-3][3] is True and out[-3][4] == 6        # 1..6: 같은 간격, 6개 연속
     assert out[-2][3] is True and out[-2][4] == 1        # 7·14·…·42: 같은 간격
+
+
+def _node(prog: str):
+    return json.loads(subprocess.run(["node", "-e", prog], capture_output=True, text=True, check=True).stdout)
+
+
+def _core() -> str:
+    return re.search(r"// <core>\n(.*?)// </core>", MAKE_JS.read_text(encoding="utf-8"), re.S).group(1)
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node 없음")
+def test_after_tax_follows_withholding_rates():
+    cases = [1_500_000, 2_000_000, 2_000_001, 50_000_000, 300_000_000, 300_001_000, 2_000_000_000]
+    got = _node(_core() + f"console.log(JSON.stringify({cases}.map(v => afterTax(v).tax)));")
+    assert got == [0, 0, 439_780, 10_999_780, 65_999_780, 66_000_000, 626_999_670]
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node 없음")
+def test_backtest_matches_python_reference():
+    L = dataset.load_lotto()
+    rounds = [[d.round, *d.numbers, d.bonus, *d.prize, d.price] for d in L]
+    P = [1, 6, 228, 11115, 182780]
+
+    def ref(c):
+        counts, won, spent, exp, unknown = [0] * 5, 0, 0, 0.0, 0
+        for d in L:
+            m, b = len(set(d.numbers) & set(c)), d.bonus in c
+            tier = {6: 1, 5: 2 if b else 3, 4: 4, 3: 5}.get(m, 0)
+            if tier:
+                counts[tier - 1] += 1
+                if tier == 1 and d.prize[0] == 0:
+                    unknown += 1
+                else:
+                    won += d.prize[tier - 1]
+            spent += d.price
+            exp += sum(P[k] / 8145060 * d.prize[k] for k in range(5))
+        return counts, won, spent, exp, unknown
+
+    combos = [list(L[0].numbers), list(L[-1].numbers), [1, 2, 3, 4, 5, 6], [7, 11, 19, 27, 33, 42]]
+    got = _node(_core() + f"const R = {json.dumps(rounds)}; console.log(JSON.stringify({json.dumps(combos)}.map(c => simulate(c, R))));")
+    for c, g in zip(combos, got):
+        counts, won, spent, exp, unknown = ref(c)
+        assert g["counts"] == counts and g["won"] == won and g["spent"] == spent and g["unknownFirst"] == unknown, c
+        assert abs(g["expectedWon"] - exp) < 1e-6 * exp
+    assert got[0]["counts"][0] >= 1 and got[0]["unknownFirst"] >= 1   # 1회 번호: 1회는 1등이 없어 이월된 회차

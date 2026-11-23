@@ -31,6 +31,7 @@
 .verdict { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 16px 0 0; font-size: var(--fs-sm); font-weight: 600; color: var(--ink); }
 .verdict .chip { font-size: var(--fs-2xs); line-height: 1.9; padding: 0 10px; }
 .chip.v-same { color: var(--ink-2); }
+.chip.v-ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, var(--line)); background: var(--ok-soft); }
 .chip.v-diff { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, var(--line)); background: var(--warn-soft); }
 .ctags { display: flex; flex-wrap: wrap; gap: 5px; margin: -4px 0 12px; }
 .ctag { font-size: var(--fs-3xs); color: var(--ink-3); background: var(--surface-2); border: 1px solid var(--line-2); border-radius: 5px; padding: 1px 7px; }
@@ -139,3 +140,7 @@ details.tv .tablewrap { margin-top: 8px; }
 /* 좁은 화면에서는 떠 있는 'PDF 로 저장' 버튼이 생성기 칸을 가린다 — 숨긴다 (인쇄는 넓은 화면에서). */
 @media (max-width: 720px) { .pdfbtn { display: none; } }
 @media print { .maker { display: none; } }
+
+/* 긴 설명이 든 표는 칸 안에서 줄을 바꾼다 (본체 table.data 는 nowrap) */
+table.data.wrapcells td { white-space: normal; word-break: keep-all; min-width: 9em; }
+.stale-note { border-left-color: var(--warn); background: var(--warn-soft); }

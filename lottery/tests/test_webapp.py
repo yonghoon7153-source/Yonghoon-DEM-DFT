@@ -10,7 +10,7 @@ sys.path.insert(0, str(dataset.ROOT / "webapp"))
 import app as A  # noqa: E402
 import content as C  # noqa: E402
 
-PAGES = ["/", "/make", "/random", "/ml", "/people", "/pension", "/data", "/all"]
+PAGES = ["/", "/make", "/history", "/random", "/ml", "/people", "/pension", "/data", "/all"]
 
 
 @pytest.fixture(scope="module")
@@ -43,7 +43,9 @@ def test_score_api_has_what_make_js_reads(client):
     for k in ("beta", "theta", "center", "gamma0", "gamma1", "eta_percentiles", "pct", "mu_avg",
               "share_avg", "latest_numbers", "pool1_recent_mean"):
         assert k in d["score"], k
-    assert len(d["score"]["beta"]) == 45 and len(d["past"]) == len(dataset.load_lotto())
+    L = dataset.load_lotto()
+    assert len(d["score"]["beta"]) == 45 and len(d["rounds"]) == len(L)
+    assert d["rounds"][0] == [1, 10, 23, 29, 33, 37, 40, 16, *L[0].prize, 2000]   # [회차, 번호, 보너스, 1~5등, 가격]
     assert all(len(c) == 6 for c in d["ddpm_pool"])
 
 
@@ -60,9 +62,14 @@ def test_static_site_for_cloudflare_pages_matches_app(client, tmp_path, monkeypa
     monkeypatch.setattr(freeze, "DIST", tmp_path / "dist")
     out = freeze.build_site(client)
     names = {p.name for p in out.iterdir()}
-    assert {"index.html", "make.html", "random.html", "ml.html", "people.html", "pension.html", "data.html",
+    assert {"index.html", "make.html", "history.html", "random.html", "ml.html", "people.html", "pension.html", "data.html",
             "all.html", "404.html", "favicon.svg", "_headers", "api", "static"} <= names
     csp = client.get("/").headers["Content-Security-Policy"]
     assert f"Content-Security-Policy: {csp}\n" in (out / "_headers").read_text(encoding="utf-8")
     assert (out / "static" / "fonts" / "OFL-Pretendard.txt").exists()  # OFL: 폰트와 라이선스를 같이 배포
     assert (out / "make.html").read_bytes() == client.get("/make").data
+
+
+def test_analysis_snapshot_matches_raw_data():
+    """분석(results/analysis.json)이 지금 원본(data/raw)과 같은 스냅샷에서 나왔는가 — 다르면 화면에 경고가 뜬다."""
+    assert C.view()["stale"] is False

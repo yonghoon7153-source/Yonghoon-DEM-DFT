@@ -68,6 +68,26 @@
         학습해서 1·2·3·4·5·6 처럼 극단적으로 인기 있는 조합의 쏠림은 과소평가한다 — 그런 모양은 생성기에서 규칙으로 따로 뺀다.</figcaption></figure>
   </div>
 
+  <div class="panel" id="refs">
+    <h2 class="panel-h">다른 나라 연구와 비교</h2>
+    <div class="tablewrap full"><table class="data wrapcells">
+      <thead><tr><th>연구</th><th>그 연구의 결과</th><th>이 데이터</th></tr></thead>
+      <tbody>
+      <tr><td class="rowh"><a href="https://ideas.repec.org/a/inm/ormnsc/v39y1993i12p1521-1525.html">Clotfelter &amp; Cook (1993)</a><br><span class="src-of">Management Science 39(12)</span></td>
+        <td>미국 메릴랜드 숫자 복권 — 방금 나온 번호에 거는 돈이 크게 줄었다가 몇 달에 걸쳐 회복 (도박사의 오류)</td>
+        <td>지난주 당첨번호가 섞인 조합이 덜 팔린다 (겹침 1개당 {{ (t5.theta.prev_overlap * 100)|signed(1) }}%)</td></tr>
+      <tr><td class="rowh"><a href="https://doaj.org/article/d41876e1e6a04332a54ab62780a99547">Wang 외 (2016)</a><br><span class="src-of">Judgment and Decision Making 11(3)</span></td>
+        <td>네덜란드 로또 온라인 259만 건 — 개인적 의미가 있는 번호·용지 가운데 선호, 자주 사는 사람은 최근 당첨번호를 피함, 번호를 범위 전체에 고르게 퍼뜨림</td>
+        <td>생일 범위(31 이하)와 7 선호, 지난주 번호 회피</td></tr>
+      <tr><td class="rowh"><a href="https://ideas.repec.org/a/cup/judgdm/v16y2021i4p1039-1059_9.html">Polin 외 (2021)</a><br><span class="src-of">Judgment and Decision Making 16(4)</span></td>
+        <td>이스라엘 로또 수동 선택 8억 건 — 번호별 선호가 회차마다 일정, 용지 첫 줄이 인기·마지막 줄이 비인기</td>
+        <td>번호 효과가 전·후반기에 일정 (상관 {{ '%.2f'|format(t5.era_beta_r) }}), 1~7 인기·43~45 비인기 — 같은 방향이지만 생일 효과와 겹쳐 따로 가르지 못한다</td></tr>
+      </tbody>
+    </table></div>
+    <p class="pnote">세 연구는 판매 기록(어떤 번호를 샀나)을 직접 봤고, 이 화면은 그 기록 없이 등수별 당첨자 수로 거꾸로 추정했다.
+      다른 자료와 다른 방법으로 같은 방향이 나온다는 점이 이 추정의 또 다른 점검이다.</p>
+  </div>
+
   <div class="panel" id="checks">
     <h2 class="panel-h">모델 점검</h2>
     {{ M.course('머신러닝 2 일반화 · 교차검증') }}

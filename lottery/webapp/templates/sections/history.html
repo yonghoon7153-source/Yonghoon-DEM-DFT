@@ -1,0 +1,61 @@
+{% import "_macros.html" as M %}
+{% set ld = V.latest_draw %}
+<header class="phead">
+  <p class="eyebrow">도구 · 누적 히스토리</p>
+  <h1>회차별 당첨번호</h1>
+  <p class="lead">로또 6/45 전 {{ V.history|length|num }}회와 연금복권720+ 전 {{ V.phistory|length }}회. 동행복권 원본(<code>data/raw</code>)을 그대로 옮긴
+    표다. 특정 회차는 브라우저의 찾기(Ctrl/⌘ + F)로 회차 번호를 치면 된다.</p>
+</header>
+
+<div class="panel" id="latest">
+  <h2 class="panel-h">최신 {{ ld.round }}회 <span class="src-of">{{ ld.date }} 추첨</span></h2>
+  <p><span class="balls">{% for n, c in ld.nums %}{{ M.ball(n, c) }}{% endfor %}<span class="plus">+</span>{{ M.ball(ld.bonus[0], ld.bonus[1]) }}</span></p>
+  <div class="tablewrap full"><table class="data">
+    <thead><tr><th>등수</th><th>조건</th><th>당첨 게임</th><th>1인당 당첨금</th></tr></thead>
+    <tbody>
+    {% for k, cond in [(1, '6개 일치'), (2, '5개 + 보너스'), (3, '5개 일치'), (4, '4개 일치'), (5, '3개 일치')] %}
+    <tr><td class="rowh">{{ k }}등</td><td>{{ cond }}</td><td class="num">{{ ld.w[k-1]|num }}</td><td class="num">{{ ld.prize[k-1]|num }}원</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</div>
+
+<div class="lgrid">
+  <div class="panel" id="prizes">
+    <h2 class="panel-h">1등 1인당 당첨금 — 최근 104회</h2>
+    {{ M.course('확률과통계 5주 포아송분포') }}
+    {{ M.legend([('bar', 'k-accent', '1인당 1등 당첨금'), ('line', 'k-ref', '평균 ' ~ V.prize_avg1|won ~ '원')]) }}
+    <figure class="chart-fig">{{ M.columns(V.prize_chart) }}
+      <figcaption>같은 1등인데 {{ V.prize_minmax[0].prize[0]|won }}원({{ V.prize_minmax[0].round }}회, {{ V.prize_minmax[0].winners[0] }}명)부터
+        {{ V.prize_minmax[1].prize[0]|won }}원({{ V.prize_minmax[1].round }}회, {{ V.prize_minmax[1].winners[0] }}명)까지 차이가 난다. 판매액은 회차마다 비슷하니,
+        차이의 대부분은 <b>당첨자 수</b>다 — 그 당첨번호를 얼마나 많은 사람이 골랐느냐 (사람들의 선택 화면).</figcaption></figure>
+  </div>
+  <div class="panel" id="winners">
+    <h2 class="panel-h">1등 당첨자 수 — 최근 104회</h2>
+    {{ M.course('확률과통계 5주 포아송분포') }}
+    {{ M.legend([('bar', 'k-accent', '1등 당첨 게임 수'), ('line', 'k-ref', '모두 무작위로 샀다면 평균')]) }}
+    <figure class="chart-fig">{{ M.columns(V.winners_chart) }}
+      <figcaption>주황 선은 '모든 사람이 무작위로 샀다면' 기대되는 1등 수(판매 게임 ÷ 8,145,060)다. 그보다 크게 튀는 회차는
+        많은 사람이 고른 조합이 나온 주다.</figcaption></figure>
+  </div>
+</div>
+
+<div class="panel" id="all-rounds">
+  <h2 class="panel-h">로또 6/45 전 회차 <span class="src-of">최신순 · {{ V.history|length|num }}회</span></h2>
+  <div class="tablewrap"><table class="data">
+    <thead><tr><th>회차</th><th>추첨일</th><th>당첨번호</th><th>보너스</th><th>1등</th><th>자동·수동·반자동</th><th>1인당 1등</th><th>2등</th><th>3등</th><th>4등</th><th>5등</th><th>판매액</th></tr></thead>
+    <tbody>
+    {% for r in V.history %}<tr><td class="rowh">{{ r.round }}</td><td>{{ r.date }}</td><td class="mono">{{ r.nums }}</td><td class="mono">{{ r.bonus }}</td><td class="num">{{ r.w[0] }}</td><td class="num">{% if r.split %}{{ r.split|join('·') }}{% else %}–{% endif %}</td><td class="num">{% if r.w[0] %}{{ r.p1|won }}{% else %}이월{% endif %}</td><td class="num">{{ r.w[1]|num }}</td><td class="num">{{ r.w[2]|num }}</td><td class="num">{{ r.w[3]|num }}</td><td class="num">{{ r.w[4]|num }}</td><td class="num">{{ r.sales|won }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <p class="pnote">1~87회는 한 게임 2,000원이었다. 1등 자동·수동·반자동 구분은 262회부터 기록돼 있다. '이월'은 1등이 없어 다음 회차로 넘어간 회차다.</p>
+</div>
+
+<div class="panel" id="pension-rounds">
+  <h2 class="panel-h">연금복권720+ 전 회차 <span class="src-of">최신순 · {{ V.phistory|length }}회</span></h2>
+  <div class="tablewrap"><table class="data">
+    <thead><tr><th>회차</th><th>추첨일</th><th>1등</th><th>보너스 (각 조)</th></tr></thead>
+    <tbody>{% for d in V.phistory %}<tr><td class="rowh">{{ d.round }}</td><td>{{ d.date }}</td><td class="mono">{{ d.group }}조 {{ d.number }}</td><td class="mono">{{ d.bonus }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</div>

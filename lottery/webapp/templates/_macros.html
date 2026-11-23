@@ -105,3 +105,8 @@
   <tbody>{% for r in rows %}<tr>{% for c in r %}<td{% if loop.index0 in num_cols %} class="num"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
 </table></div></details>
 {% endmacro %}
+
+{# 화면 링크 — 한 장짜리(onepage)면 #앵커, 아니면 /경로#앵커. nav 는 content.SECTIONS #}
+{% macro href(nav, onepage, page, anchor=none) -%}
+{%- if onepage -%}#{{ anchor or page }}{%- else -%}{%- for n in nav if n[0] == page -%}{{ n[1] }}{%- endfor -%}{%- if anchor -%}#{{ anchor }}{%- endif -%}{%- endif -%}
+{%- endmacro %}

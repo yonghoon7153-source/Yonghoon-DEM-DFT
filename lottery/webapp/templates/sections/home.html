@@ -13,7 +13,7 @@
   <div class="stat is-static"><b>1/8,145,060</b><span>로또 1등 확률 — 어떤 조합이든 같다</span></div>
   <div class="stat is-static"><b>{{ f.n_tests }}개 통과</b><span>무작위성 검정 · 보정 후 최소 p {{ f.min_holm|p }}</span></div>
   <div class="stat is-static"><b>{{ '%.2f'|format(f.hit_lo) }}~{{ '%.2f'|format(f.hit_hi) }}개</b><span>예측 전략 {{ f.n_models }}개의 평균 적중 (무작위 0.80개)</span></div>
-  <div class="stat is-static"><b>+{{ f.gain10|pct }}</b><span>인기 하위 10% 조합의 1등 기대 수령액 (평균 대비)</span></div>
+  <div class="stat is-static"><b>+{{ f.gain20|pct }}</b><span>생성기 기본값(인기 하위 20%)으로 고른 조합의 1등 기대 수령액 — 평균 조합 대비</span></div>
 </div>
 
 <div class="cards">
@@ -35,6 +35,20 @@
   {% endfor %}
 </div>
 
+<div class="panel" id="myths" style="margin-top:22px">
+  <h2 class="panel-h">흔한 주장, 이 데이터의 답 <span class="src-of">국내 로또 앱·사이트의 공통 기능과 동행복권 '복권의 오해와 진실'을 참고</span></h2>
+  <div class="tablewrap full"><table class="data wrapcells">
+    <thead><tr><th>다른 사이트·앱에서 흔한 것</th><th>판정</th><th>근거</th></tr></thead>
+    <tbody>
+    {% for claim, verdict, why, page, anchor in V.myths %}
+    <tr><td class="rowh">{{ claim }}</td>
+      <td><span class="chip {{ 'v-ok' if '채택' in verdict and '안' not in verdict else 'v-same' }}">{{ verdict }}</span></td>
+      <td>{{ why }}{% if page %} · <a href="{{ M.href(nav, onepage, page, anchor) }}">근거 보기</a>{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</div>
+
 <div class="panel" style="margin-top:22px">
   <h2 class="panel-h">최근 로또 당첨번호 <span class="src-of">동행복권 · {{ m.source.fetched_at_utc[:10] }} 받음</span></h2>
   <div class="tablewrap"><table class="data">
@@ -47,4 +61,11 @@
     {% endfor %}
     </tbody>
   </table></div>
+</div>
+
+<div class="panel" id="responsible">
+  <h2 class="panel-h">건전하게 사기</h2>
+  <p class="pnote">로또는 판매액의 절반을 당첨금으로 돌려주는 게임이라 한 장의 기대값은 구입액보다 작다 — 이 사이트의 어떤 기능도 그 사실을
+    바꾸지 않는다. 동행복권 사이트의 '건전구매 프로그램'(셀프 진단·구매계획·휴식계획)을 쓸 수 있고, 도박 문제 상담은
+    한국도박문제예방치유원 국번 없이 <b>1336</b>(24시간)이다.</p>
 </div>

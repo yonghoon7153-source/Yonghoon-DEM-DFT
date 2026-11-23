@@ -17,16 +17,21 @@ from __future__ import annotations
 
 import json
 import math
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]  # lottery/
 RESULTS = ROOT / "results" / "analysis.json"
+sys.path.insert(0, str(ROOT))
+import dataset  # noqa: E402  — 원본(data/raw) 검증 파서. 표준 라이브러리만 쓴다 (Pages 빌드에서도 돈다)
 W = 760  # SVG viewBox 폭 — CSS 가 칸에 맞춰 늘이고 줄인다 (본체 .chart 규칙)
 
 _cache: dict = {"mtime": None, "data": None, "view": None}
+_raw: dict = {"mtime": None, "lotto": None, "pension": None, "manifest": None}
 
 SECTIONS = [  # (이름, 경로, 메뉴 제목, 메뉴 꼬리표, 아이콘, 무리)
     ("make", "/make", "번호 만들기", "수동 구매용", "i-dice", "도구"),
+    ("history", "/history", "회차별 당첨번호", "누적 히스토리", "i-list", "도구"),
     ("home", "/", "한눈에 보기", "처음이면 여기", "i-home", "근거"),
     ("random", "/random", "추첨기는 무작위인가", None, "i-chart", "근거"),
     ("ml", "/ml", "머신러닝 대결", "SVM·확산 모델", "i-flow", "근거"),
@@ -41,6 +46,18 @@ def load() -> dict:
     if _cache["mtime"] != mt:
         _cache.update(mtime=mt, data=json.loads(RESULTS.read_text(encoding="utf-8")), view=None)
     return _cache["data"]
+
+
+def raw() -> dict:
+    """원본 정본(data/raw) — 회차별 2~5등 당첨금·당첨자 수까지 필요한 화면(누적 히스토리·백테스트)용.
+    analysis.json 의 draws 는 1등 금액만 있는 사본이다. mtime 이 바뀌면 다시 읽고 다시 검증한다."""
+    p = dataset.RAW_DIR / "lotto645.json"
+    mt = p.stat().st_mtime
+    if _raw["mtime"] != mt:
+        _raw.update(mtime=mt, lotto=dataset.load_lotto(), pension=dataset.load_pension(),
+                    manifest=json.loads((dataset.RAW_DIR / "MANIFEST.json").read_text(encoding="utf-8")))
+        _cache["view"] = None
+    return _raw
 
 
 # ───────────────────────────── 숫자 표기 ─────────────────────────────
@@ -261,7 +278,10 @@ def _build_view(D: dict) -> dict:
     v["facts"] = {
         "n_tests": len(all_summary), "min_holm": min(r["p_holm"] for r in all_summary),
         "n_models": len(hits), "hit_lo": min(hits), "hit_hi": max(hits),
-        "gain10": S["share_at_pct"][i10] / S["share_avg"] - 1,
+        # 생성기 기본값(인기 하위 20% 안에서 균등하게 고름)으로 얻는 1등 기대 수령액의 평균 배수 − 1.
+        # (하위 10% '경계' 조합의 값 share_at_pct[i10] 와 다르다 — 경계값을 쓰면 기본값의 효과를 낮춰 말하게 된다)
+        "gain20": sum(x for q, x in zip(S["pct"], S["share_at_pct"]) if q <= 20)
+                  / sum(1 for q in S["pct"] if q <= 20) / S["share_avg"] - 1,
         "r2_5": pop["tiers"]["5"]["r2_oof"],
     }
     v["recent"] = [{"round": d[0], "date": d[1], "nums": [(x, _ball_cls(x)) for x in d[2:8]],
@@ -374,19 +394,89 @@ def _build_view(D: dict) -> dict:
                             f"{ps['positions'][i]['counts'][j]}회 (기대 {pn / 10:.1f})",
         aria="연금복권 자리별 숫자 표준점수")
     v["pen_min_pos_holm"] = min(r["p_holm"] for r in ps["positions"])
+
+    # ── 원본 정본과 분석 스냅샷이 같은가 (fetch 만 하고 build_results 를 안 돌리면 갈라진다)
+    R = raw()
+    want = {k: f["sha256"] for k, f in R["manifest"]["files"].items()}
+    have = {k: f["sha256"] for k, f in meta["source"]["files"].items()}
+    v["stale"] = want != have
+    v["raw_latest"] = R["lotto"][-1].round
+
+    # ── 회차별 당첨번호 (누적 히스토리 — 동행복권 '누적히스토리'·'1등 당첨금 비교' 를 참고)
+    L = R["lotto"]
+    v["history"] = [{"round": d.round, "date": d.date.isoformat(), "nums": " · ".join(f"{x:02d}" for x in d.numbers),
+                     "bonus": f"{d.bonus:02d}", "w": d.winners, "p1": d.prize[0],
+                     "split": None if d.first_auto is None else (d.first_auto, d.first_manual, d.first_semi),
+                     "sales": d.sales} for d in reversed(L)]
+    v["latest_draw"] = {"round": L[-1].round, "date": L[-1].date.isoformat(),
+                        "nums": [(x, _ball_cls(x)) for x in L[-1].numbers], "bonus": (L[-1].bonus, _ball_cls(L[-1].bonus)),
+                        "w": L[-1].winners, "prize": L[-1].prize}
+    recent = L[-104:]
+    paid = [d for d in recent if d.winners[0] > 0]
+    avg1 = sum(d.prize[0] for d in paid) / len(paid)
+    v["prize_chart"] = columns(
+        [d.prize[0] / 1e8 for d in recent], [str(d.round) for d in recent], x_every=13, ref=avg1 / 1e8,
+        y_fmt=lambda t: f"{t:g}억", aria="최근 104회 1등 1인당 당첨금",
+        titles=[f"{d.round}회 ({d.date}): 1인당 {won(d.prize[0])}원 · 1등 {d.winners[0]}명" for d in recent])
+    v["winners_chart"] = columns(
+        [d.winners[0] for d in recent], [str(d.round) for d in recent], x_every=13,
+        ref=sum(d.games for d in recent) / len(recent) / dataset.N_COMB, y_fmt=lambda t: f"{t:g}명",
+        aria="최근 104회 1등 당첨자 수",
+        titles=[f"{d.round}회: 1등 {d.winners[0]}명 · 판매 {won(d.games)}게임" for d in recent])
+    v["prize_avg1"] = avg1
+    v["prize_minmax"] = (min(paid, key=lambda d: d.prize[0]), max(paid, key=lambda d: d.prize[0]))
+    v["phistory"] = [{"round": d.round, "date": d.date.isoformat(), "group": d.group, "number": d.number,
+                      "bonus": d.bonus} for d in reversed(R["pension"])]
+
+    # ── 흔한 주장 판정표 — 국내 로또 앱·사이트의 공통 기능(출현·미출현 통계, 궁합수, 패턴 필터,
+    #    AI 추천 …)과 동행복권 '복권의 오해와 진실' 을 참고해, 각 주장에 이 데이터의 답을 붙인다.
+    feats = st["features"]
+    v["myths"] = [
+        ("핫·콜드 번호 (많이 나온 번호가 또 나온다)", "다르지 않음",
+         f"번호별 빈도 p = {fmt_p(fq['p_mc'])}. 전반기·후반기 빈도 상관 r = {fq['half_split_r']:.2f} — 많이 나온 번호가 이후에 더 나오지 않았다",
+         "random", "freq"),
+        ("오래 안 나온 번호는 나올 때가 됐다", "다르지 않음",
+         f"출현 간격은 기하분포 그대로 (p = {fmt_p(gp['p_mc'])}). 몇 회를 쉬었든 다음 회 확률은 6/45 = 13.3%",
+         "random", "gaps"),
+        ("궁합수 (같이 잘 나오는 번호)", "다르지 않음",
+         f"990쌍 중 다중비교 보정 후 유의한 쌍 {pr['n_sig_holm']}개. 보정 전 p<0.05 {pr['n_raw_p05']}쌍은 우연 기대 {pr['n_raw_p05_expected']:.0f}쌍보다 적다",
+         "random", "pairs"),
+        ("총합·홀짝·고저·구간 패턴으로 거르기", "확률 불변",
+         f"분포가 814만 조합 전수와 같다 (총합 p = {fmt_p(feats['sum']['p'])}, 홀짝 p = {fmt_p(feats['odd']['p'])}). 거르면 고를 조합 수만 줄고 한 장의 확률은 그대로",
+         "random", "sum"),
+        ("연속번호·이월수", "다르지 않음",
+         f"연번 분포 p = {fmt_p(feats['consec']['p'])}, 이월수 p = {fmt_p(lg['carry_p'])}",
+         "random", "carry"),
+        ("AI·머신러닝 번호 예측", "못 맞힘",
+         f"16개 전략 평균 적중 {v['facts']['hit_lo']:.2f}~{v['facts']['hit_hi']:.2f}개 (무작위 0.8개), 보정 후 모두 p = 1.00",
+         "ml", "board"),
+        ("고정수·제외수 지정", "기능으로 채택",
+         "본인이 고르고 싶은 번호를 반영하는 편의 기능. 당첨 확률은 바뀌지 않는다", "make", None),
+        ("내 번호로 지난 회차를 다시 사 보기 (백테스트)", "기능으로 채택",
+         "1회부터 매주 같은 번호를 샀다면 — 등수별 횟수와 받은 돈 vs 쓴 돈. 과거 성적은 운이다", "make", "check"),
+        ("세금·실수령액 계산", "기능으로 채택",
+         "동행복권 당첨자 가이드의 원천징수 세율 (200만 원 이하 비과세, 3억까지 22%, 초과분 33%)", "make", "tax"),
+        ("휠링 (번호 여러 개를 여러 게임으로 덮기)", "채택 안 함",
+         "한 장의 기대값은 그대로이고 작은 당첨을 고르게 만들 뿐이다 (위키백과 Lottery wheeling)", None, None),
+        ("명당 판매점", "판정 안 함",
+         "판매점별 판매량 자료가 없어 이 데이터로는 판정할 수 없다", None, None),
+    ]
     return v
 
 
 def generator_payload() -> dict:
-    """번호 생성기(make.js)가 받는 값 — 인기도 점수 계수, 확산 모델 번호 풀, 과거 1등."""
-    D = load()
-    lo = D["lotto"]
+    """번호 생성기(make.js)가 받는 값 — 인기도 점수 계수, 확산 모델 번호 풀, 전 회차(백테스트용).
+
+    rounds 는 원본 정본에서: [회차, 번호 6개, 보너스, 1~5등 1인당 당첨금, 게임 가격]. 1등 당첨자가
+    없던 회차의 1등 금액은 0 으로 기록돼 있다 (이월) — 백테스트는 그 회차 1등을 금액 미상으로 따로 센다.
+    """
+    D, R = load(), raw()
     return {
-        "score": lo["popularity"]["score"],
-        "ddpm_pool": lo["ddpm_pool"],
-        "past": [[d[0], *d[2:8]] for d in lo["draws"]],
-        "pension_past": [[d[0], d[3]] for d in D["pension"]["draws"]],
-        "latest_round": lo["draws"][-1][0],
+        "score": D["lotto"]["popularity"]["score"],
+        "ddpm_pool": D["lotto"]["ddpm_pool"],
+        "rounds": [[d.round, *d.numbers, d.bonus, *d.prize, d.price] for d in R["lotto"]],
+        "pension_past": [[d.round, d.number] for d in R["pension"]],
+        "latest_round": R["lotto"][-1].round,
     }
 
 
@@ -404,6 +494,8 @@ def palette_items(onepage: bool = False) -> list[dict]:
         ("ml", "board", "전략별 적중 수"), ("ml", "ddpm", "확산 모델"), ("ml", "em", "EM·SVR"),
         ("people", "numbers", "번호별 인기도"), ("people", "manual", "수동 비율 검증"),
         ("people", "payoff", "인기도별 기대 수령액"), ("data", "course", "강의와의 연결"),
+        ("history", "prizes", "1등 1인당 당첨금 추이"), ("history", "all-rounds", "전 회차 당첨번호 표"),
+        ("make", "tax", "당첨금 세금 계산"), ("make", "check", "내 번호 백테스트"), ("home", "myths", "흔한 주장 판정표"),
     ]:
         items.append({"t": title, "d": dict((s[0], s[2]) for s in SECTIONS)[name], "u": u(name, anchor), "k": "카드"})
     return items

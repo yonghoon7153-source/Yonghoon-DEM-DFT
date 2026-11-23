@@ -43,6 +43,34 @@ function comboShape(c) {
   for (i = 0; i < d.length; i++) { run = d[i] === 1 ? run + 1 : 1; if (run > maxRun) maxRun = run; }
   return { arithmetic: d.every(function (x) { return x === d[0]; }), maxRun: maxRun };
 }
+// 세후 금액 — 동행복권 당첨자 가이드의 원천징수 세율. 200만 원 이하는 과세최저한(비과세),
+// 넘으면 (당첨금 − 구입비 1,000원) 에 3억까지 22%, 3억 초과분 33%.
+function afterTax(prize) {
+  if (prize <= 2000000) return { tax: 0, net: prize };
+  var income = prize - 1000;
+  var tax = Math.floor(Math.min(income, 3e8) * 0.22 + Math.max(0, income - 3e8) * 0.33);
+  return { tax: tax, net: prize - tax };
+}
+// 백테스트 — rounds: [회차, 번호 6개, 보너스, 1~5등 1인당 당첨금, 게임 가격].
+// 같은 조합을 1회부터 매 회 1게임씩 샀다면. 'expected' 는 평균적인(무작위) 번호의 기대값이다.
+var TIER_P = [1, 6, 228, 11115, 182780].map(function (k) { return k / 8145060; });
+function simulate(c, rounds) {
+  var out = { counts: [0, 0, 0, 0, 0], won: 0, spent: 0, expectedWon: 0, unknownFirst: 0, n: rounds.length };
+  for (var r = 0; r < rounds.length; r++) {
+    var d = rounds[r], m = 0, k;
+    for (k = 1; k <= 6; k++) if (c.indexOf(d[k]) >= 0) m++;
+    var bonus = c.indexOf(d[7]) >= 0;
+    var tier = m === 6 ? 1 : m === 5 ? (bonus ? 2 : 3) : m === 4 ? 4 : m === 3 ? 5 : 0;
+    if (tier) {
+      out.counts[tier - 1]++;
+      if (tier === 1 && d[8] === 0) out.unknownFirst++;   // 1등 없던(이월) 회차 — 금액 미기재
+      else out.won += d[7 + tier];
+    }
+    out.spent += d[13];
+    for (k = 0; k < 5; k++) out.expectedWon += TIER_P[k] * d[8 + k];
+  }
+  return out;
+}
 // </core>
 
 (function () {
@@ -50,7 +78,7 @@ function comboShape(c) {
   var root = document.getElementById("maker");
   if (!root) return;
 
-  var S = null, POOL = [], PAST = {}, PPAST = {}, LATEST = 0;
+  var S = null, POOL = [], PAST = {}, PPAST = {}, LATEST = 0, ROUNDS = [];
   var ui = { mode: "unpopular", maxPct: 20, count: 5, inc: [], exc: [] };
   var lastLotto = [], lastPension = [];
   var HELP = {
@@ -84,6 +112,27 @@ function comboShape(c) {
   function key(c) { return c.join("-"); }
   function msg(t) { $("lotto-msg").textContent = t || ""; }
 
+  function backtest(c) {
+    var r = simulate(c, ROUNDS), wrap = el("div", "backtest");
+    var first = ROUNDS[0][0], last = ROUNDS[ROUNDS.length - 1][0];
+    wrap.appendChild(el("p", "pnote", first + "회~" + last + "회 매주 이 번호 1게임: 쓴 돈 " + r.spent.toLocaleString("ko-KR") +
+      "원 · 받은 돈 " + r.won.toLocaleString("ko-KR") + "원 (회수율 " + Math.round(r.won / r.spent * 100) + "%). 평균적인 번호라면 약 " +
+      Math.round(r.expectedWon).toLocaleString("ko-KR") + "원 (" + Math.round(r.expectedWon / r.spent * 100) + "%)." +
+      (r.unknownFirst ? " 1등이 없어 이월된 회차의 1등 " + r.unknownFirst + "번은 금액을 알 수 없어 빼고 셌다." : "") +
+      " 과거 성적은 운이고, 다음 회 확률과는 무관하다."));
+    var tw = el("div", "tablewrap full"), tb = el("table", "data"), th = el("thead"), hr = el("tr");
+    ["", "1등", "2등", "3등", "4등", "5등"].forEach(function (h) { hr.appendChild(el("th", null, h)); });
+    th.appendChild(hr); tb.appendChild(th);
+    var body = el("tbody");
+    [["이 번호", r.counts.map(String)], ["평균적인 번호 (기대)", TIER_P.map(function (p) { var x = p * r.n; return x < 0.01 ? x.toFixed(4) : x.toFixed(2); })]]
+      .forEach(function (row) {
+        var tr = el("tr"); tr.appendChild(el("td", "rowh", row[0]));
+        row[1].forEach(function (v) { tr.appendChild(el("td", "num", v)); }); body.appendChild(tr);
+      });
+    tb.appendChild(body); tw.appendChild(tb); wrap.appendChild(tw);
+    return wrap;
+  }
+
   function ticket(label, c, detail) {
     var pop = popularity(c, S), sh = comboShape(c), low = pop.pct <= 50;
     var row = el("div", "ticket");
@@ -95,7 +144,8 @@ function comboShape(c) {
     var p = low ? pop.pct : 100 - pop.pct;
     info.appendChild(el("span", "tk-chip " + (low ? "tk-low" : "tk-high"),
       (low ? "▼ 인기 하위 " : "▲ 인기 상위 ") + Math.max(0.5, p).toFixed(p < 10 ? 1 : 0) + "%"));
-    info.appendChild(el("span", "tk-chip", "1등 시 기대 " + won(S.pool1_recent_mean * pop.share) + "원 (평균의 " + (pop.share / S.share_avg).toFixed(2) + "배)"));
+    var gross = S.pool1_recent_mean * pop.share;
+    info.appendChild(el("span", "tk-chip", "1등 시 기대 " + won(gross) + "원 · 세후 " + won(afterTax(gross).net) + "원 (평균의 " + (pop.share / S.share_avg).toFixed(2) + "배)"));
     if (PAST[key(c)]) info.appendChild(el("span", "tk-chip tk-flag", "⚑ 과거 1등 조합 (" + PAST[key(c)] + "회)"));
     if (sh.arithmetic) info.appendChild(el("span", "tk-chip tk-flag", "⚑ 같은 간격 수열"));
     if (sh.maxRun >= 4) info.appendChild(el("span", "tk-chip tk-flag", "⚑ " + sh.maxRun + "개 연속"));
@@ -237,9 +287,16 @@ function comboShape(c) {
       if (uniq.length !== 6 || uniq.some(function (x) { return x < 1 || x > 45; })) {
         box.appendChild(el("p", "empty", "1~45 사이 서로 다른 번호 6개를 입력하세요.")); return;
       }
-      box.appendChild(ticket("검", uniq.sort(function (a, b) { return a - b; }), true));
+      var c = uniq.sort(function (a, b) { return a - b; });
+      box.appendChild(ticket("검", c, true));
+      box.appendChild(backtest(c));
     });
     $("my-numbers").addEventListener("keydown", function (e) { if (e.key === "Enter") $("check-go").click(); });
+    $("tax-go").addEventListener("click", function () {
+      var v = +($("tax-in").value.replace(/[^0-9]/g, "") || 0), t = afterTax(v);
+      $("tax-out").textContent = v ? ("세금 " + t.tax.toLocaleString("ko-KR") + "원 → 실수령 " + t.net.toLocaleString("ko-KR") + "원 (" + won(t.net) + "원)") : "금액을 원 단위 숫자로 넣어 주세요.";
+    });
+    $("tax-in").addEventListener("keydown", function (e) { if (e.key === "Enter") $("tax-go").click(); });
     $("pension-go").addEventListener("click", makePension);
     $("pension-group").addEventListener("change", function () { $("pension-count").disabled = this.value === "all"; });
     $("pension-copy").addEventListener("click", function () {
@@ -250,8 +307,8 @@ function comboShape(c) {
   fetch(root.getAttribute("data-score-url"))
     .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(function (d) {
-      S = d.score; POOL = d.ddpm_pool; LATEST = d.latest_round;
-      d.past.forEach(function (r) { PAST[r.slice(1).join("-")] = r[0]; });
+      S = d.score; POOL = d.ddpm_pool; LATEST = d.latest_round; ROUNDS = d.rounds;
+      d.rounds.forEach(function (r) { PAST[r.slice(1, 7).join("-")] = r[0]; });
       d.pension_past.forEach(function (r) { PPAST[r[1]] = r[0]; });
       wire();
       makeLotto();      // 처음 열었을 때도 결과가 보이게 한 번 뽑아 둔다 (새로고침마다 바뀐다)
