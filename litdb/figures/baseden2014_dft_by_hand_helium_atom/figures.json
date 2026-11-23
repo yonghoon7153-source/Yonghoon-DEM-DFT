@@ -25,7 +25,10 @@
    "h": 372,
    "dpi": 300,
    "src": "f2ac5e92-Introduction_to_Density_Functional_Theory_Calculations_by_Hand_on_the_Helium_Atom.pdf",
-   "blank": 0.967
+   "blank": 0.967,
+   "page_printed": 2118,
+   "viewed": true,
+   "viewed_how": "2026-11-23 litdb-curator: whole-image Read of fig_1 (tool crop, kept) and of the tool crops tab_1/tab_2 plus the re-cut tab_1/tab_2; all 8 PDF pages also read as page renders; table numbers taken from PDF text"
   },
   {
    "key": "t1",
@@ -33,19 +36,31 @@
    "label": "1",
    "page": 5,
    "file": "tab_1.png",
-   "caption": "Table 1. Comparison of Basis Sets and Methods for Calculation of the Total Electronic Energy and Atomic Orbital Energy of Heliuma",
+   "caption": "Table 1. Comparison of Basis Sets and Methods for Calculation of the Total Electronic Energy and Atomic Orbital Energy of Helium.ᵃ ᵃEquations 21 and 22 give values of -2.3021 and -2.2025 au for entries 3 and 7 due to rounding of constants.",
    "rotated_deg": 0,
    "bbox": [
     319.5,
     412.4,
     565.5,
-    581.9
+    603.3
    ],
-   "w": 1026,
-   "h": 707,
+   "w": 1025,
+   "h": 796,
    "dpi": 300,
    "src": "f2ac5e92-Introduction_to_Density_Functional_Theory_Calculations_by_Hand_on_the_Helium_Atom.pdf",
-   "blank": 0.855
+   "blank": 0.855,
+   "page_printed": 2120,
+   "auto_bbox": [
+    319.5,
+    412.4,
+    565.5,
+    581.9
+   ],
+   "recrop": "2026-11-23 litdb-curator: auto crop ended at y 581.9, cutting footnote a (y 579.8-600.3: 'Equations 21 and 22 give values of -2.3021 and -2.2025 au for entries 3 and 7 due to rounding of constants') in half; re-rendered with pdftoppm 300 dpi from the same page, bottom extended to 603.3 pt (footnote + rule); extract_figures.py not re-run (shared _sources.json untouched, figure count unchanged)",
+   "caption_auto": "Table 1. Comparison of Basis Sets and Methods for Calculation of the Total Electronic Energy and Atomic Orbital Energy of Heliuma",
+   "caption_fixed": "auto caption merged the footnote mark into the word ('Heliuma'); now title + footnote a as printed (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-23 litdb-curator: whole-image Read of fig_1 (tool crop, kept) and of the tool crops tab_1/tab_2 plus the re-cut tab_1/tab_2; all 8 PDF pages also read as page renders; table numbers taken from PDF text"
   },
   {
    "key": "t2",
@@ -53,19 +68,31 @@
    "label": "2",
    "page": 6,
    "file": "tab_2.png",
-   "caption": "Table 2. Computeda Energy Components For Selected Closed-Shell Atoms atom N ET EV EJ EX Etot %HFb %SICc He 2 2.7 −6.5 2.1 −0.9 −2.6 90 100 Be 4 14.3 −33.1 7.6 −2.5 −13.6 91 50 Ne 10 121.5 −299.1 67.3 −11.7 −122.1 95 20 Ar 18 491.2 −1197.5 229.0 −28.8 −506.2 96 11 Kr 36 2741.2 −6558.8 1172.1 −93.0 −2738.4 99 6 aThese results were calculated using the X-Alpha method as implemented in Gaussian 09 using the STO-2G basis set in each case. bPercent of HF exchange energy obtained from the X-Alpha using the same basis set. cPercent of exchange interactions due to self-exchange interactions. It is not the percentage of the total exchange energy due to self-exchange interactions. ■ACKNOWLEDGMENTS Helium Is the Exception That Proves the Rule Table 2 illustrates three reasons that the helium atom is the worst-case scenario for density functional theory: (1) The helium atom has the largest percent of",
+   "caption": "Table 2. Computedᵃ Energy Components For Selected Closed-Shell Atoms. ᵃThese results were calculated using the X-Alpha method as implemented in Gaussian 09 using the STO-2G basis set in each case. ᵇPercent of HF exchange energy obtained from the X-Alpha using the same basis set. ᶜPercent of exchange interactions due to self-exchange interactions. It is not the percentage of the total exchange energy due to self-exchange interactions.",
    "rotated_deg": 0,
    "bbox": [
     55.5,
     59.5,
     569.5,
-    350.7
+    188.2
    ],
    "w": 2142,
-   "h": 1215,
+   "h": 537,
    "dpi": 300,
    "src": "f2ac5e92-Introduction_to_Density_Functional_Theory_Calculations_by_Hand_on_the_Helium_Atom.pdf",
-   "blank": 0.845
+   "blank": 0.845,
+   "page_printed": 2121,
+   "auto_bbox": [
+    55.5,
+    59.5,
+    569.5,
+    350.7
+   ],
+   "recrop": "2026-11-23 litdb-curator: auto crop ran to y 350.7 and swallowed the body text below the table ('Helium Is the Exception That Proves the Rule', ACKNOWLEDGMENTS, REFERENCES (1)); table + footnotes a-c end at y 185.2, body heading starts at y 197.1; re-rendered with pdftoppm 300 dpi, bottom cut at 188.2 pt; extract_figures.py not re-run (shared _sources.json untouched, figure count unchanged)",
+   "caption_auto": "Table 2. Computeda Energy Components For Selected Closed-Shell Atoms atom N ET EV EJ EX Etot %HFb %SICc He 2 2.7 −6.5 2.1 −0.9 −2.6 90 100 Be 4 14.3 −33.1 7.6 −2.5 −13.6 91 50 Ne 10 121.5 −299.1 67.3 −11.7 −122.1 95 20 Ar 18 491.2 −1197.5 229.0 −28.8 −506.2 96 11 Kr 36 2741.2 −6558.8 1172.1 −93.0 −2738.4 99 6 aThese results were calculated using the X-Alpha method as implemented in Gaussian 09 using the STO-2G basis set in each case. bPercent of HF exchange energy obtained from the X-Alpha using the same basis set. cPercent of exchange interactions due to self-exchange interactions. It is not the percentage of the total exchange energy due to self-exchange interactions. ■ACKNOWLEDGMENTS Helium Is the Exception That Proves the Rule Table 2 illustrates three reasons that the helium atom is the worst-case scenario for density functional theory: (1) The helium atom has the largest percent of",
+   "caption_fixed": "auto caption carried the whole table body plus the following body text and ACKNOWLEDGMENTS heading (the webapp shows this field next to the image); now title + footnotes a-c as printed (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-23 litdb-curator: whole-image Read of fig_1 (tool crop, kept) and of the tool crops tab_1/tab_2 plus the re-cut tab_1/tab_2; all 8 PDF pages also read as page renders; table numbers taken from PDF text"
   }
  ],
  "missing_labels": [],
@@ -76,5 +103,6 @@
    "below_adjacent": 2,
    "caption_below": false
   }
- ]
+ ],
+ "note_manual": "2026-11-23 litdb-curator: tab_1 and tab_2 re-cut by hand (see recrop); fig_1 kept as the tool cut it. No SI was received (paper advertises SI with orbital-energy activities) - SI figures/tables: none."
 }
