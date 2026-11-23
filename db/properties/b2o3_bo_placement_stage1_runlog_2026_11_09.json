@@ -847,5 +847,14 @@
   "감시": "watch -n 30 'O=/data/work/runs/b2o3_bo_2026_11_09/s11b_md; tmux has-session -t b2o3_s11b 2>/dev/null && echo \"== tmux b2o3_s11b 도는 중\" || echo \"== tmux b2o3_s11b 없음 = 끝났거나 멈춤\"; tail -4 $O/queue.log 2>/dev/null | cut -c1-150; for u in $O/*/s[12]; do [ -d \"$u\" ] || continue; c=$(ls -td $u/d0.00_cfg0/T* 2>/dev/null | head -1); n=$(head -1 $c/traj.xyz 2>/dev/null); f=; [ -n \"$n\" ] && f=$(( $(wc -l < $c/traj.xyz) / (n + 2) )); s=\"도는 중\"; [ -e $u.done.json ] && s=\"끝\"; [ -e $u.fail.json ] && s=\"실패\"; echo \"-- $(basename $(dirname $u) | cut -c1-16)/$(basename $u): $s · 온도 $(ls -d $u/d0.00_cfg0/T* 2>/dev/null | sed \"s#.*/T##\" | sort -n | tr \"\\n\" \" \")· 지금 ${c##*/} 프레임 ${f:-평형 중} / 4000\"; done; echo \"== GPU\"; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'",
   "로컬_시험": "블록 둘 bash -n · 실행기 selftest 18/18 · 깨기 9/9 · 계획을 실행기 자신의 검사로 통과 · 대조 검사를 실제 11a run_anneal 기록에 돌려 통과 (출력 해시 6881ef8b 일치) + 설정 다르면 거부 · 감시 줄을 watch 가 넘기는 꼴 (shlex → sh -c) 로 가짜 폴더에 돌려 봄",
   "by": "agent · 2026-11-23"
+ },
+ "11b_발사_2026_11_23": {
+  "출처": "사용자 붙여넣은 gabia 11b watch 화면 (2026-11-23 10:03:17) — 블록 A · B 출력 자체는 안 받음 (블록 B 의 검사 사슬이 대조 이완 rc 0 · check_rc 0 · 해시 · 자가시험 · DRY_RUN 을 통과해야 tmux 를 띄우므로 통과로 읽는다)",
+  "큐": "10:01:08 DRY_RUN 끝 종료 0 → 10:01:08 큐 머리줄 (계획 4a33eb41 · 드라이버 c3e2d358 · 단위 8 · 줄 2 · 상한 150 h) → 10:01:09 줄 1 ctrl_s1 (드라이버 --seed 11001) · 줄 2 ctrl_s2 (--seed 11002) 시작",
+  "대조_이완_구조": "MD 시작 파일 (s11b_ctrl_relax/modelc_1x2x5_124/post_relax.xyz) sha256 앞 16 자리 37e1f95dbfe63fe0 — 실행기가 대조 이완 기록 (converged · fmax ≤ 0.01 · TIME 0 · 셀 포함 · 목적 · 입력 해시 8f10f1b5 · 출력 해시) 을 대조한 뒤의 값 · fmax · 걸음 · 부피는 회수 때",
+  "GPU": "7744 MiB · 100 % · 계산 프로세스 셋 — 남의 python3 PID 1314219 4420 MiB (11a · 11-20 MD-0 때 본 그 잡 · pw.x 아님 → 공존 금지 규칙 밖) · 우리 두 줄 1654 · 1644 MiB · 화면의 'GPU 여유 4470' 은 감시 줄 cut -c1-150 이 자른 숫자 (실제 ≈ 41,000 MiB)",
+  "⚠": "GPU 를 셋이 같이 써서 런 속도가 어림 (단독 turbo ≈ 145 ps/h) 보다 느릴 수 있다 — 첫 생산 프레임 속도로 끝 시각을 다시 잰다 · 큐 상한 150 h 는 실행기가 센다",
+  "다음": "속도 재기 (한두 시간 뒤 watch) → 8 단위 끝 → 회수 블록 → 판독 (11b_판독_계약_결과_전_2026_11_23 그대로)",
+  "by": "agent · 2026-11-23"
  }
 }
