@@ -658,3 +658,6 @@ kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low-resistance lifepo4 thic
 #   ⚠ 크롭 74 장 = 도구 7 (전부 다시 자름: 쪽 clip 사각형 안의 래스터 잉크 + 25 px · 그림 8 은 도구가 놓쳐 손으로) + 손 67 (그림 8 · 숨은 그림 4g 래스터 · 패널 20 · 식 25 · 근거 문단 20) + digitized.csv 90 행 — --inbox --run 으로 다시 뽑지 말 것
 sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure-resolved_modeling_of_fused_filament_fabrication
 sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure-resolved modeling of fused filament fabrication
+# ── 냉간분무 NMC622 : PVDF : CB 단일 입자 충돌 · 탄소성 결합구 DEM (Gallegos Tovar … Curtis · Surf. Coat. Technol. 541 (2026) 134102 · 최종판 15 쪽 + SI 9 쪽) — litdb 2026-11-23 기존 카드 보강 (처음 2026-11-02 = Journal Pre-proof) · 최종판 파일 이름이 자동 매칭에 안 붙는다
+#   ⚠ 크롭 55 장 = Pre-proof 렌더 그림 16 · SI 8 (최종판과 내용 같아 그대로) + 최종판에서 다시 렌더한 표 2 · 식 10 + 근거 문단 19 — 손작업 (manual_crop · recrop) · --inbox --run 으로 다시 뽑지 말 것
+tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond	cold_spray_deposition_of_cathode_composites_modeled_via_a_dem

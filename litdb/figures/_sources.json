@@ -3707,11 +3707,13 @@
   ]
  },
  "tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond": {
-  "figures": 36,
+  "figures": 55,
   "generated": "2026-11-02",
   "pdfs": [
    "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
-   "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf"
+   "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "2a8911cb-Cold_Spray_Deposition_of_Cathode_Composites_Modeled_via_a_DEM_Plastic_Elastic_Bond_Framework.pdf",
+   "6a8cf469-Sup_Cold_Spray_Deposition_of_Cathode_Composites_Modeled_via_a_DEM_Plastic_Elastic_Bond_Framework.pdf"
   ]
  },
  "trevisanello2021_sc_pc_ncm_cracking_diffusion": {
