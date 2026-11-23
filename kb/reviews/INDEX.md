@@ -166,7 +166,7 @@ evidenceScope: multi-source-primary
 | EL | 2026-11-14 | `internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` | `internal_EL_reply_li2s3_endline_ack_2026_11_14.md` | 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전트와 다른 독립 에이전트) · 회신은 `internal_EL_reply_li2s3_endline_ack_2026_11_14.md` · 회신 전에는 개정 4 를 활성하지 않는다 · ✅ 회신 수령 2026-11-15 (조건부 GO · P0 1 · P1 1 · P2 8) → 고친 판 (dbac0855) → 재확인 GO 2026-11-15 → N-P2-1 시험 더한 판 8e1f16a49a2df8a3 | 회신 본문의 `요청:` 역링크 |
 | EM | 2026-11-20 | `internal_EM_prompt_wad_a5_package_2026_11_20.md` | `internal_EM_reply_wad_a5_package_2026_11_20.md` | 발송 · 회신 수령 2026-11-20 | 같은 라벨 · 주제 토큰 일치 ['a5', 'package', 'wad'] |
 | EN | 2026-11-22 | `codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` | `codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` | 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 · 묶음 MANIFEST 8439e129… → 회신 수령 NO-GO (P0 1 · P1 3 · P2 1 · P3 1 — codex_EN_reply_wad_a5_em_fixes_2026_11_22.md) | 같은 라벨 · 주제 토큰 일치 ['a5', 'em', 'fixes', 'wad'] |
-| EO | 2026-11-22 | `codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md` | — | 발송 2026-11-23 (사용자) · 회신 대기 · 기준 커밋 68f683462 → 고침 b84907868 (도구) · 8fd051a22 (묶음) · 묶음 MANIFEST b01d0861… · 돌연변이 84/84 | — |
+| EO | 2026-11-22 | `codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md` | `codex_EO_reply_wad_a5_en_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (`codex_EO_reply_wad_a5_en_fixes_2026_11_23.md`) · 기준 커밋 68f683462 → 고침 b84907868 (도구) · 8fd051a22 (묶음) · 묶음 MANIFEST b01d0861… · 돌연변이 84/84 | 같은 라벨 · 주제 토큰 일치 ['a5', 'en', 'fixes', 'wad'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

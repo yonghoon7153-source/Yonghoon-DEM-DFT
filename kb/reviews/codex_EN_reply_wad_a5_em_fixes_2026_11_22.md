@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 ---
 
 > 원문 그대로 보존 (사용자 붙여넣기 2026-11-22). 링크의 C:/ 경로는 Codex 쪽 작업 폴더다 (저장소 밖).
-> 첨부 둘 (사용자 업로드) 은 `kb/reviews/codex_EN_evidence_2026_11_22/` 에 그대로: `em_probes.json` (sha256 34f1f443…) · `g5.log` (sha256 0bbc7f9f…).
+> 첨부 둘 (사용자 업로드) 은 `kb/reviews/codex_EN_evidence_2026_11_22/` 에 그대로: `em_probes.json` (sha256 0bbc7f9f…) · `g5.log` (sha256 34f1f443…). ⏩ 2026-11-23 정정: 두 해시가 바뀌어 적혀 있었다 (사용자 재업로드 대조).
 > 회신이 가리키는 `independent.json` · `missing_start.json` · `terminal.json` 은 업로드되지 않았다 (Codex 쪽에만 있다).
 > ⛔ 점착 W 값은 회신에 없다.
 
