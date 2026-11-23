@@ -1,0 +1,277 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "gate": "U6(b)",
+  "setting": 2,
+  "release": "c858862722bf6e5eb587ccbd54e1eef7dd59aa27",
+  "return_sha256": "120b5afb767007c3c99d2e51ae95742d665d366a173c492189f800373f068307",
+  "screen_sha256": "a69e28af79a485197133cadb99e68457f23c8b83689e68c83b40ffd37a91f116",
+  "reused_f_return_sha256": "882c078ba22efab1699773b1c657996933aa2b87b34c8058c62a6a5860f8a0af",
+  "grid_order": [
+    8,
+    12,
+    16,
+    24
+  ],
+  "targets": {
+    "0.84": {
+      "common": true,
+      "arms": {
+        "S": {
+          "pressures_MPa": [
+            0.36535826203315586,
+            0.3378386529904409,
+            0.32481034036245043,
+            0.2747422086016011
+          ],
+          "resolution": {
+            "rule": "UNCONVERGED",
+            "interval": null,
+            "d0_d1_d2": [
+              -0.0783099885091687,
+              -0.03932697962290854,
+              -0.16740820912836218
+            ],
+            "bias_signal": false,
+            "noise_signal": false,
+            "suspect_asymptotic": false
+          }
+        },
+        "F": {
+          "pressures_MPa": [
+            0.3522693743422084,
+            0.32608261093769203,
+            0.3096392986063508,
+            0.26455859734663034
+          ],
+          "resolution": {
+            "rule": "UNCONVERGED",
+            "interval": null,
+            "d0_d1_d2": [
+              -0.07724539389875895,
+              -0.05174268990546538,
+              -0.15734530031839156
+            ],
+            "bias_signal": false,
+            "noise_signal": false,
+            "suspect_asymptotic": false
+          }
+        }
+      },
+      "ln_S_over_F_interval": null
+    },
+    "0.90": {
+      "common": true,
+      "arms": {
+        "S": {
+          "pressures_MPa": [
+            0.6196543037125404,
+            0.48941041627883847,
+            0.4922677413464981,
+            0.45292663855032805
+          ],
+          "resolution": {
+            "rule": "UNCONVERGED",
+            "interval": null,
+            "d0_d1_d2": [
+              -0.23596031332363565,
+              0.005821323647675736,
+              -0.08329259164004876
+            ],
+            "bias_signal": true,
+            "noise_signal": true,
+            "suspect_asymptotic": false
+          }
+        },
+        "F": {
+          "pressures_MPa": [
+            0.6007325061248127,
+            0.4854726435398925,
+            0.4870576887660867,
+            0.4489796469845586
+          ],
+          "resolution": {
+            "rule": "UNCONVERGED",
+            "interval": null,
+            "d0_d1_d2": [
+              -0.21302681497289377,
+              0.0032596343311773746,
+              -0.0814050164332295
+            ],
+            "bias_signal": true,
+            "noise_signal": true,
+            "suspect_asymptotic": false
+          }
+        }
+      },
+      "ln_S_over_F_interval": null
+    },
+    "0.95": {
+      "common": false,
+      "arms": {
+        "S": {
+          "pressures_MPa": [
+            null,
+            0.6560448621138734,
+            0.7062805121188247,
+            0.6496925237679244
+          ],
+          "resolution": null
+        },
+        "F": {
+          "pressures_MPa": [
+            null,
+            0.6490695915658313,
+            0.6944581165092508,
+            0.6422087992882777
+          ],
+          "resolution": null
+        }
+      },
+      "ln_S_over_F_interval": null
+    }
+  },
+  "elapsed_seconds_by_arm": {
+    "S8": 104.50631393899675,
+    "S12": 452.43107628496364,
+    "S16": 1126.943664725055,
+    "S24": 4426.162400471047,
+    "F8": 148.4068963699974,
+    "F12": 402.45897392590996,
+    "F16": 895.1607021889649,
+    "F24": 3002.944842695957
+  },
+  "new_s_total_seconds": 6110.043455420062,
+  "operator_seconds": 6248,
+  "timeout_count": 0,
+  "automatic_retries": 0,
+  "trace_sha256": {
+    "S8": "12e2b2931e7848268233498d1a86102172501a9a6ccebec91d61661daa28a814",
+    "S12": "af587522f7c1efa23e6c5c7835aef6ab4d6084eda8ffefffed1e4e353ae1f310",
+    "S16": "381a79dc296486d9edab5c00be281c02a51210079b06e17728ebf5bde465fc8a",
+    "S24": "21664e9bd166d06246834bdfa1a2a7307988c1208d15f7af361a58b2986ba83c",
+    "F8": "0b8912adf24e6fca836210563bbfc3fee961d74b3b7b898f0bbbcc36d2b679ec",
+    "F12": "627a488910a3c1b260f30211624b2b5dd6949dcb012b7f72f56036a75aeaa43c",
+    "F16": "7508fe658e67414781ed2304e123d31c8bb53623095fe3071b072aa05d0a716c",
+    "F24": "18470cdfd6464462b54bfe3e60c7f821c8a02eb3f2863a6585877d6ab1eeff24"
+  },
+  "requested_target_cells_by_arm": {
+    "S": 12,
+    "F": 12
+  },
+  "reached_target_cells_by_arm": {
+    "S": 11,
+    "F": 11
+  },
+  "target_steps": {
+    "S8": {
+      "0.84": [
+        1118,
+        1119
+      ],
+      "0.90": [
+        2088,
+        2089
+      ],
+      "0.95": null
+    },
+    "S12": {
+      "0.84": [
+        1678,
+        1679
+      ],
+      "0.90": [
+        3132,
+        3133
+      ],
+      "0.95": [
+        4203,
+        4204
+      ]
+    },
+    "S16": {
+      "0.84": [
+        2237,
+        2238
+      ],
+      "0.90": [
+        4176,
+        4177
+      ],
+      "0.95": [
+        5605,
+        5606
+      ]
+    },
+    "S24": {
+      "0.84": [
+        3356,
+        3357
+      ],
+      "0.90": [
+        6264,
+        6265
+      ],
+      "0.95": [
+        8407,
+        8408
+      ]
+    },
+    "F8": {
+      "0.84": [
+        1118,
+        1119
+      ],
+      "0.90": [
+        2088,
+        2089
+      ],
+      "0.95": null
+    },
+    "F12": {
+      "0.84": [
+        1678,
+        1679
+      ],
+      "0.90": [
+        3132,
+        3133
+      ],
+      "0.95": [
+        4203,
+        4204
+      ]
+    },
+    "F16": {
+      "0.84": [
+        2237,
+        2238
+      ],
+      "0.90": [
+        4176,
+        4177
+      ],
+      "0.95": [
+        5605,
+        5606
+      ]
+    },
+    "F24": {
+      "0.84": [
+        3356,
+        3357
+      ],
+      "0.90": [
+        6264,
+        6265
+      ],
+      "0.95": [
+        8407,
+        8408
+      ]
+    }
+  },
+  "new_compression_runs_during_readback": 0,
+  "u6_qualified": false,
+  "stage3_go": false,
+  "three_dimensional_go": false
+}
