@@ -134,6 +134,8 @@ details.tv .tablewrap { margin-top: 8px; }
 .pd { width: 1.9em; height: 2.3em; display: inline-grid; place-items: center; border: 1px solid var(--line); border-radius: 5px;
   background: var(--surface-2); font-family: var(--mono); font-weight: 700; }
 
+/* 860px 이하에서 메뉴 버튼(style.css: fixed, left 12px, 38px)이 서랍의 브랜드 글자를 가린다 — 비켜 준다. */
+@media (max-width: 860px) { .sidebar-header { padding-left: 52px; } }
 /* 좁은 화면에서는 떠 있는 'PDF 로 저장' 버튼이 생성기 칸을 가린다 — 숨긴다 (인쇄는 넓은 화면에서). */
 @media (max-width: 720px) { .pdfbtn { display: none; } }
 @media print { .maker { display: none; } }
