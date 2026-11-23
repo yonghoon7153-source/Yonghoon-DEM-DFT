@@ -428,6 +428,7 @@
 - 같은 UNSW · Yu 그룹 DEM: `chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer` · `chandratilleke2012_particle_scale_mixing_index`.
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` · `egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity` · `nadeem2023_gnn_mixing_index`.
 - 믹서 DEM 리뷰 · 전극 믹싱 DEM: `jadidi2023_dem_batch_solid_mixers_review` · `hare2026_dem_pept_dry_mixing_nmc622_eirich` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing`.
+- 드럼 운동 꼴 전이 기준식으로 이 논문 조건을 놓으면 15 rpm (Fr 0.0088) 은 구름 ↔ 폭포 경계를 걸치고 (Fr·D/d ≈ 2 식으로는 구름 · 원문 측정 Fr_c·D/d 0.37 로는 폭포) 35 rpm 은 폭포 — 순환 주기 모형의 '구름 영역' 전제를 확인할 지도 · 우리 드럼 (Fr 0.0827 · 30 %) = 폭포 꼴 창 [그 카드 산술] (Mellmann, Powder Technol. 118 (2001) 251–270 · 2026-11-24 카드): `mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

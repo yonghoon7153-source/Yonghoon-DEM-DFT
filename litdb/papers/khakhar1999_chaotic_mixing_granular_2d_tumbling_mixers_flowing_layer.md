@@ -382,6 +382,7 @@
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` (이 논문 ref 3) · `chandratilleke2012_particle_scale_mixing_index` · `nadeem2023_gnn_mixing_index`.
 - 믹서 DEM 리뷰: `jadidi2023_dem_batch_solid_mixers_review`.
 - 포물선 흐름층 모형을 아무 충전율 + 비혼합 핵으로 넓혀 (Ding 2002 경유) 순환 주기의 평균 · 표준편차를 낸 액교 점착 3D 드럼 DEM (최대 층 두께 6d · 8d → k ≈ 0.23 · 0.30 at 40 % · Fr 8.8 × 10⁻³ · L/d 26.6 [그 카드 산술] · 바퀴 단위라 유량이 ω 와 무관 · 이 논문 1997 판을 인용 · 2026-11-24 카드): `liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period`.
+- 회전 드럼 가로 운동 일곱 꼴과 전이 기준식 · Bed Behavior Diagram (자유유동 단분산 · 무배플 원통 · BBD 는 이 카드 참고 [14] Henein 1983 이 먼저 낸 것과 비슷한 꼴 — 원문 *"a similar form of which was already proposed by Henein et al."*) — 위 Henein 행의 *"우리 Fr 0.083 이 구르기 영역인지"* 에 대한 답 = 식으로 놓으면 구름이 아니라 **폭포 (cascading) 꼴 창** (구름 ↔ 폭포 Fr·D/d ≈ 2 · 폭포 ↔ 던짐 sin(Θ+ε−90°) · 그 카드 산술 · 원문 범위 밖 외삽) → 이 카드 흐름층 모형의 우리 드럼 대입은 덤프로 꼴을 확인한 뒤 (Mellmann, Powder Technol. 118 (2001) 251–270 · 2026-11-24 카드): `mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
