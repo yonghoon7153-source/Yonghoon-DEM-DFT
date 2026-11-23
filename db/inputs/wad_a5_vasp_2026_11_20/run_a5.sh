@@ -10,14 +10,14 @@
 #   필수: VASP_CMD · POTCAR_DIR (PAW_PBE: <POTCAR_DIR>/{Li_sv,P,S,Cl,Ag}/POTCAR) · W0_WAVECAR (보존 ⓐ WAVECAR 경로 — 없으면 W0_WAVECAR=none)
 #   선택: PERF_TAGS_FILE (외주 2차와 같은 NCORE = 4 · KPAR = 2 — 세 단 모두 같은 배치라야 NBANDS 872 가 그대로다) · PACK_ONLY=1 · WATCH_S (기본 60)
 #   경로는 절대 경로를 권한다 (상대 경로는 이 스크립트를 부른 폴더 기준으로 푼다)
-#   기록 명령 (README): --infra-abort · --infra-wall · --killed · --reset-w0 · --unlock
+#   기록 명령 (README): --infra-abort · --infra-wall · --killed · --reset-w0 · --unlock — 영수증 · 끊김 기록은 한 줄 JSON (손으로 넣은 글은 JSON 이스케이프)
 #   종료: 0 c1 또는 c2 주 기준 수렴 (끝) · 1 주 기준 값 없음 — 사다리 끝 (끝 · 실패도 기록) · 2 인자 · 묶음 · 환경 오류 (아무것도 띄우지 않음)
 #         3 준비 실패 (그 단은 소모 안 함 — 원인을 고친 뒤 다시) · 4 포장 실패 (PACK_ONLY=1 로 다시)
 #         5 누적 상한 180 h (끝) 또는 끊긴 시도 · 벽시계 미상 (--killed · --infra-abort · --infra-wall 로 기록한 뒤 다시)
 #         6 공통 환경 고장 (VASP 빌드 · PP — 전체 정지) · 7 전자 반복행 0 (--infra-abort 또는 연락) · 8 1저자 검토 멈춤 (끝)
 #   끝 (0 · 1 · 5 상한 · 8 · 돈 뒤의 6 — VASP 빌드 다름) 뒤에 다시 돌리면 run/final.json 을 찍고 같은 코드로 끝낸다 — 아무것도 띄우지 않는다 (포장만: PACK_ONLY=1)
 #   보내는 것: 끝 뒤 `sha256sum -c a5_return.tgz.sha256` 까지 통과한 쌍
-#   지원 환경: Linux · bash ≥ 4 · GNU coreutils (find sort grep cmp sha256sum od stat mv -T) · GNU tar · awk (mawk/gawk) · sed -E
+#   지원 환경: Linux · bash ≥ 4 · GNU coreutils (find sort grep cmp sha256sum od stat mv -T tr tail wc) · GNU tar · awk (mawk/gawk) · sed -E
 # =============================================================================
 set -u
 ORIG_PWD=$PWD
@@ -202,21 +202,194 @@ done < SEALED_ENV.tsv
 incar_of(){ case "$1" in A5c) echo INCAR.a5A5c;; A5f) echo INCAR.a5A5f;; c1) echo INCAR.a5c1;; c2) echo INCAR.a5c2;; esac; }
 stage_hdr(){ case "$1" in A5|c1) echo 'DAV|RMM';; c2) echo 'SDA|CGA';; esac; }
 
-# ── 행 머리 관문 (검사기 row_gate 와 같다): 줄 맨 앞 1–4 글자 + ':' 를 행으로 보고, 그 단의 허용 머리 밖이면 SCF_UNVERIFIED ──
-hdr_gate(){ awk -v A="^(${2})\$" '/^[ \t]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:/ { n++; h = $0; sub(/^[ \t]*/, "", h); sub(/:.*/, "", h); gsub(/ /, "", h)
-    if (bad == "" && h !~ A) bad = "row_header_" h }
-  END { print n + 0, (bad == "" ? "-" : bad) }' "$1/OSZICAR" 2>/dev/null; }
-osz_feed(){ sed -E "s/^([[:space:]]*)(${HDR}):/\1DAV:/" "$1/OSZICAR" 2>/dev/null; }
-judge5(){ # $1 시도 폴더 · $2 단 → "상태 행수 dE deps 사유" (judge 와 같은 꼴)
+# ── 한 줄 기록 문법 REC1 (killed.json · infra_abort.json · attempt.start · final.json) — 검사기 rec_parse 와 같은 문법 · 다음 단을 띄우기 전에 전체를 읽는다 (Codex EO P1) ──
+#   파일 = 한 줄 (+ 끝 줄바꿈 하나) · NUL 없음 · { "키": 값 (, "키": 값)* } (빈칸 · 탭은 JSON 처럼 토큰 사이 어디든 — "run_id":"x" 도 받는다) · 키 [a-z][a-z0-9_]* ·
+#   값 = 문자열 (제어 바이트 0x00–0x1F 날것 금지 · 이스케이프 \" \\ \/ \b \f \n \r \t \uXXXX 만) 또는 음 아닌 정수 (선행 0 없음 · 16 자리 이하) · 같은 키 두 번 금지.
+#   값 비교는 원문 (이스케이프를 풀지 않은 것) 으로 한다 — 검사기도 같다. LC_ALL=C (바이트 단위 · mawk · gawk 같은 답)
+rec5(){ # $1 파일 → 맞으면 '키<TAB>꼴<TAB>원문' 줄들 (꼴 s 문자열 · i 정수) · 아니면 출력 없이 1
+  [ -f "$1" ] || return 1
+  tr -d '\000' < "$1" 2>/dev/null | cmp -s - "$1" 2>/dev/null || return 1          # NUL 이 있으면 거부 (awk 마다 NUL 을 다르게 다룬다 · 검사기도 거부)
+  LC_ALL=C awk 'BEGIN { for (k = 1; k < 256; k++) ord[sprintf("%c", k)] = k; E1 = "\"\\/bfnrt" }
+    function sk() { while (i <= L && (substr(s, i, 1) == " " || substr(s, i, 1) == "\t")) i++ }
+    { m++; s = $0 }
+    END {
+      if (m != 1) exit 1
+      L = length(s); i = 1; sk()
+      if (substr(s, i, 1) != "{") exit 1
+      i++; nk = 0
+      while (1) {
+        sk(); if (substr(s, i, 1) != "\"") exit 1
+        j = i + 1; while (j <= L && substr(s, j, 1) != "\"") j++
+        if (j > L) exit 1
+        key = substr(s, i + 1, j - i - 1); if (key !~ /^[a-z][a-z0-9_]*$/) exit 1
+        i = j + 1; sk(); if (substr(s, i, 1) != ":") exit 1
+        i++; sk(); if (i > L) exit 1
+        if (substr(s, i, 1) == "\"") {
+          j = i + 1
+          while (1) {
+            if (j > L) exit 1
+            c = substr(s, j, 1)
+            if (c == "\"") break
+            if (!(c in ord) || ord[c] < 32) exit 1
+            if (c == "\\") {
+              e = substr(s, j + 1, 1)
+              if (e != "" && index(E1, e)) { j += 2; continue }
+              if (e == "u" && substr(s, j + 2, 4) ~ /^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { j += 6; continue }
+              exit 1
+            }
+            j++
+          }
+          t = "s"; v = substr(s, i + 1, j - i - 1); i = j + 1
+        } else {
+          j = i; while (j <= L && substr(s, j, 1) ~ /^[0-9]$/) j++
+          v = substr(s, i, j - i)
+          if (v !~ /^(0|[1-9][0-9]*)$/ || length(v) > 16) exit 1
+          t = "i"; i = j
+        }
+        if (key in seen) exit 1
+        seen[key] = 1; nk++; K[nk] = key; T[nk] = t; W[nk] = v
+        sk(); c = substr(s, i, 1)
+        if (c == ",") { i++; continue }
+        if (c == "}") { i++; break }
+        exit 1
+      }
+      sk(); if (i <= L) exit 1
+      for (k = 1; k <= nk; k++) printf "%s\t%s\t%s\n", K[k], T[k], W[k]
+    }' "$1"
+}
+rf(){ printf '%s\n' "$1" | LC_ALL=C awk -F'\t' -v K="$2" -v T="$3" '$1 == K && $2 == T { print substr($0, length(K) + length(T) + 3); f = 1; exit } END { exit !f }'; }   # rec5 출력 · 키 · 꼴 → 원문 (없으면 1)
+rhas(){ printf '%s\n' "$1" | LC_ALL=C awk -F'\t' -v K="$2" '$1 == K { f = 1; exit } END { exit !f }'; }                                                              # rec5 출력에 그 키가 (꼴과 관계없이) 있나
+rget(){ local r; r=$(rec5 "$1") || return 1; rf "$r" "$2" "$3"; }                                                                                                  # 파일 · 키 · 꼴 → 원문
+jstr(){ # JSON 문자열 본문 — 따옴표 · 역슬래시 · 제어 바이트 (0x01–0x1F · 0x7F) 를 이스케이프하고 나머지 바이트는 그대로 (검사기 rec_parse · json 이 받는다 · Codex EO P1)
+  printf '%s' "$1" | od -An -v -tx1 | LC_ALL=C awk 'BEGIN { for (k = 1; k < 256; k++) c[sprintf("%02x", k)] = sprintf("%c", k)
+      for (k = 1; k < 32; k++) c[sprintf("%02x", k)] = sprintf("\\u%04x", k)
+      c["7f"] = "\\u007f"; c["22"] = "\\\""; c["5c"] = "\\\\" }
+    { for (i = 1; i <= NF; i++) printf "%s", c[$i] }'
+}
+start_id(){ # $1 시도 폴더 · $2 단 → '-' 또는 사유 — attempt.start 가 이 폴더의 시도인가 (REC1 · 잡 · stage a5 · 변형 · run_id 꼴 · t_start 정수 · 검사기 start_problem 과 같은 순서 · Codex EO P1 Q-EO-2b)
+  local R v
+  R=$(rec5 "$1/attempt.start") || { echo start_form; return; }
+  [ "$(rf "$R" job s)" = "$JOB" ] || { echo start_job; return; }
+  [ "$(rf "$R" stage s)" = a5 ] || { echo start_stage; return; }
+  v=$(rf "$R" attempt s)
+  case "$2:$v" in A5:A5c|A5:A5f|c1:c1|c2:c2) ;; *) echo "start_variant_${v:-none}"; return;; esac
+  [[ "$(rf "$R" run_id s)" =~ ^[[:digit:]]{8}T[[:digit:]]{6}-[[:digit:]]+-[[:digit:]]+$ ]] || { echo start_run_id; return; }
+  rf "$R" t_start i > /dev/null || { echo start_t; return; }
+  echo -
+}
+receipt5(){ # $1 run_aborted/<잡>_<단>_<k> → '-' 또는 사유 — 중단 영수증 전체 (검사기 abort_receipt_problem 과 같은 순서 · Codex EN P1 · EO P1)
+  local d=$1 b r R k w t0 rs fs
+  b=${d##*/}; r=${b#"${JOB}"_}; r=${r%_*}
+  [ -e "$d/infra_abort.json" ] || [ -L "$d/infra_abort.json" ] || { echo receipt_missing; return; }
+  R=$(rec5 "$d/infra_abort.json") || { echo receipt_form; return; }
+  for k in job rung run_id sched_job_id cancel_utc reason wall_s oszicar recorded_utc; do rf "$R" "$k" s > /dev/null || { echo "receipt_field_$k"; return; }; done
+  rf "$R" recorded_s i > /dev/null || { echo receipt_field_recorded_s; return; }
+  { [ "$(rf "$R" job s)" = "$JOB" ] && [ "$(rf "$R" rung s)" = "$r" ]; } || { echo receipt_job_rung; return; }
+  k=$(start_id "$d" "$r"); [ "$k" = - ] || { echo "receipt_$k"; return; }
+  [ "$(rf "$R" run_id s)" = "$(rget "$d/attempt.start" run_id s)" ] || { echo receipt_run_id; return; }
+  w=$(rf "$R" wall_s s); { [ "$w" = UNKNOWN ] || secs_ok "$w"; } || { echo receipt_wall_s; return; }
+  t0=$(rget "$d/attempt.start" t_start i); rs=$(rf "$R" recorded_s i)
+  [ "$rs" -ge "$t0" ] 2>/dev/null || { echo receipt_recorded_s; return; }
+  if rhas "$R" wall_s_filled_utc || rhas "$R" wall_s_filled_s; then
+    { rf "$R" wall_s_filled_utc s > /dev/null && fs=$(rf "$R" wall_s_filled_s i) && secs_ok "$w" && [ "$fs" -ge "$rs" ]; } 2>/dev/null || { echo receipt_filled; return; }
+  fi
+  echo -
+}
+ledger5(){ # 중단 장부 (run/infra_aborts.tsv) ↔ 보존 폴더 (run_aborted/) ↔ 영수증 양방향 대조 → '-' 또는 사유 (검사기 ledger_problems + abort_receipt_problem · Codex EO P1 Q-EO-3)
+  local L=run/infra_aborts.tsv d b lst rows x n w
+  lst=$(for d in run_aborted/*; do b=${d#run_aborted/}; [[ "$b" =~ ^${JOB}_(A5|c1|c2)_[[:digit:]]+$ ]] && [ -d "$d" ] && printf '%s\n' "$b"; done | LC_ALL=C sort)
+  if [ ! -e "$L" ] && [ ! -L "$L" ]; then
+    [ -z "$lst" ] && { echo -; return; }
+    echo "ledger_missing_but_folder_$(printf '%s\n' "$lst" | head -1)"; return
+  fi
+  [ -f "$L" ] || { echo ledger_not_file; return; }
+  tr -d '\000' < "$L" 2>/dev/null | cmp -s - "$L" 2>/dev/null || { echo ledger_nul; return; }
+  [ "$(tail -c 1 "$L" | od -An -tx1 | tr -d ' \n')" = 0a ] || { echo ledger_no_final_newline; return; }
+  rows=$(LC_ALL=C awk -F'\t' -v J="$JOB" -v M="$INFRA_MAX" 'BEGIN { H = "recorded_utc\tjob\trung\tsched_job_id\tcancel_utc\twall_s\treason\tdir" }
+    NR == 1 { if ($0 != H) { print "BAD ledger_header"; exit } next }
+    { i++
+      if (NF != 8) { print "BAD ledger_row_" i "_fields"; exit }
+      if ($2 != J || ($3 != "A5" && $3 != "c1" && $3 != "c2")) { print "BAD ledger_row_" i "_job_rung"; exit }
+      if ($8 != J "_" $3 "_" i) { print "BAD ledger_row_" i "_dir"; exit }
+      if (!($6 == "UNKNOWN" || ($6 ~ /^(0|[1-9][0-9]*)$/ && length($6) <= 9))) { print "BAD ledger_row_" i "_wall_s"; exit }
+      if (i > M) { print "BAD ledger_over_max"; exit }
+      print $8 "\t" $6 }' "$L")
+  x=$(printf '%s\n' "$rows" | grep -m1 '^BAD ' | cut -c5-); [ -z "$x" ] || { echo "$x"; return; }
+  x=$(printf '%s\n' "$rows" | cut -f1 | LC_ALL=C sort)
+  [ "$x" = "$lst" ] || { echo ledger_folders_differ; return; }
+  while IFS=$'\t' read -r b n; do
+    [ -n "$b" ] || continue
+    x=$(receipt5 "run_aborted/$b"); [ "$x" = - ] || { echo "${b}_$x"; return; }
+    w=$(rget "run_aborted/$b/infra_abort.json" wall_s s); [ "$w" = "$n" ] || { echo "${b}_ledger_wall_s_differs"; return; }
+  done <<< "$rows"
+  echo -
+}
+wall_of(){ # $1 시도 폴더 → 초 · UNKNOWN · BAD — 검사기 wall_of 와 같은 출처 순서 (Codex EO P1 Q-EO-2c): 중단 영수증 (스케줄러 장부 값 · attempt.json 보다 먼저) → 끊김 기록 → attempt.json elapsed_s → 미상
+  local d=$1 w
+  if [ -e "$d/infra_abort.json" ] || [ -L "$d/infra_abort.json" ]; then
+    w=$(rget "$d/infra_abort.json" wall_s s) || { echo BAD; return; }
+    if [ "$w" = UNKNOWN ] || secs_ok "$w"; then echo "$w"; else echo BAD; fi; return
+  fi
+  if [ -e "$d/killed.json" ] || [ -L "$d/killed.json" ]; then
+    w=$(rget "$d/killed.json" wall_s s) || { echo BAD; return; }
+    if secs_ok "$w"; then echo "$w"; else echo BAD; fi; return
+  fi
+  if [ -f "$d/attempt.json" ]; then
+    w=$(grep -o '"elapsed_s": [^,}]*[,}]' "$d/attempt.json" | head -1 | sed 's/^"elapsed_s": //; s/[,}]$//')
+    if [[ "$w" =~ ^(0|[1-9][0-9]{0,11})$ ]]; then echo "$w"; else echo BAD; fi; return
+  fi
+  echo UNKNOWN
+}
+att5(){ # 이 사다리의 시도 목록 '경로=run_id' (경로 바이트 순 · 빈칸으로 · run_id 를 못 읽으면 -) — 끝 기록 final.json 에 묶는다 (검사기 attempts_of 와 같다 · Codex EO P2)
+  local d out="" rid lst
+  lst=$(for d in "run/${JOB}_A5" "run/${JOB}_c1" "run/${JOB}_c2" run_aborted/*; do
+          case "$d" in run_aborted/*) [[ "${d#run_aborted/}" =~ ^${JOB}_(A5|c1|c2)_[[:digit:]]+$ ]] || continue;; esac
+          [ -d "$d" ] && printf '%s\n' "$d"; done | LC_ALL=C sort)
+  for d in $lst; do
+    rid=$(rget "$d/attempt.start" run_id s) || rid=-
+    [ -n "$rid" ] || rid=-
+    out="$out${out:+ }$d=$rid"
+  done
+  printf '%s' "$out"
+}
+
+# ── 완전한 전자 반복행 (검사기 row_gate 와 같은 규칙 · selftest 가 같은 탐침으로 대조 · Codex EO P0) ──
+#   행꼴 = 줄 맨 앞 1–4 글자 + ':' · 완전한 행 = 줄바꿈으로 끝난 행꼴 줄 · 머리가 그 단의 허용 머리 그대로 · ':' 뒤 빈칸 · 칸 ≥ 6 (N E dE d eps ncg rms) · N 정수.
+#   사유: '-' · row_header_<머리> (허용 밖 머리) · incomplete_row (줄바꿈 있는 덜 쓴 행꼴 줄 · 또는 완전한 행 0 인데 행꼴 끝 조각) · nul_bytes.
+#   완전한 행 ≥ 1 뒤 줄바꿈 없는 끝 조각 (행꼴) 은 세지 않고 넘어간다 (스케줄러 끊김의 잘린 꼬리).
+row_scan(){ # $1 시도 폴더 · $2 단 → "완전한행수 사유"
+  local f=$1/OSZICAR H nl
+  H=$(stage_hdr "$2"); [ -n "$H" ] || { echo "0 unknown_stage"; return; }
+  { [ -f "$f" ] && [ -r "$f" ]; } || { echo "0 -"; return; }
+  tr -d '\000' < "$f" 2>/dev/null | cmp -s - "$f" 2>/dev/null || { echo "0 nul_bytes"; return; }
+  nl=$(tr -dc '\n' < "$f" | wc -c | tr -d ' ')
+  LC_ALL=C awk -v A="^(${H})\$" -v F="^[ \t]*(${H}):[ \t]+" -v NL="${nl:-0}" '
+    /^[ \t]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:/ {
+      h = $0; sub(/^[ \t]*/, "", h); sub(/:.*/, "", h); gsub(/ /, "", h)
+      if (h !~ A) { if (bad == "") bad = "row_header_" h; next }
+      if (NR > NL) { tp = 1; next }
+      r = $0
+      if (r !~ F) { p++; next }
+      sub(F, "", r); sub(/[ \t]+$/, "", r)
+      k = (r == "") ? 0 : split(r, t, /[ \t]+/)
+      if (k >= 6 && t[1] ~ /^[0-9]+$/) n++; else p++
+    }
+    END { if (bad != "") print n + 0, bad; else if (p > 0 || (tp && n == 0)) print n + 0, "incomplete_row"; else print n + 0, "-" }' "$f"
+}
+osz_feed(){ # 판정 계약 입력 — 줄바꿈으로 끝난 줄만 (끝 조각은 뺀다) · 그 단의 허용 머리 → DAV: (검사기 feed5 와 같다 · row_scan 사유가 없을 때만 쓴다)
+  local nl; nl=$(tr -dc '\n' < "$1/OSZICAR" 2>/dev/null | wc -c | tr -d ' ')
+  LC_ALL=C awk -v H="^[ \t]*(${HDR}):" -v NL="${nl:-0}" 'NR > NL { exit }
+    { if (match($0, H)) { l = $0; sub(/[^ \t].*$/, "", l); print l "DAV:" substr($0, RLENGTH + 1) } else print }' "$1/OSZICAR" 2>/dev/null
+}
+judge5(){ # $1 시도 폴더 · $2 단 → "상태 행수 dE deps 사유" (judge 와 같은 꼴) — 완전한 행 판독 (row_scan) 뒤 외주 2차 판정 계약에 완전한 행만
   local d=$1 HDR g n why
   HDR=$(stage_hdr "$2"); [ -n "$HDR" ] || { echo "SCF_UNVERIFIED 0 NA NA unknown_stage"; return; }
   [ -f "$d/OSZICAR" ] || { judge_r2 "$d"; return; }
-  g=$(hdr_gate "$d" "$HDR"); n=${g%% *}; why=${g#* }
+  g=$(row_scan "$d" "$2"); n=${g%% *}; why=${g#* }
   [ -n "$g" ] || { judge_r2 "$d"; return; }
   if [ "$why" != "-" ]; then echo "SCF_UNVERIFIED ${n:-0} NA NA $why"; return; fi
   judge_r2 "$d"
 }
-rows_of(){ local n; n=$(grep -acE '^[[:space:]]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:' "$1/OSZICAR" 2>/dev/null); echo "${n:-0}"; }   # 전자 반복행 수 (관문과 같은 꼴 · 없으면 0)
 stat5(){ # $1 시도 폴더 · $2 단 · $3 시작 WAVECAR sha (c1 · c2) → 상태. 순서 (검사기와 같다): 행 0 → SCF_UNVERIFIED (재시작 확인 전 · 리뷰 P2(f)) →
   #        c1 · c2 재시작 (sha 셋 · 문구 · c 단 OUTCAR NKPTS·NBANDS·ENCUT = 시작 WAVECAR 머리 — 리뷰 P3) → 판정. A5 는 재시작이 자격이 아니다
   local d=$1 st=$2 ss=${3:-} j n
@@ -352,22 +525,24 @@ if [ "${1:-}" = "--reset-w0" ]; then
 fi
 
 # ── 0 스텝 인프라 중단 기록 (외주 2차 --infra-abort 와 같은 확인 · 단 이름만 a5 · 뒤 단이 있으면 거부) ──
+#    영수증은 REC1 한 줄 · 손으로 넣은 글 (잡 id · 취소 시각 · 사유) 은 JSON 이스케이프 (jstr) · run_id = 그 시도의 attempt.start (Codex EO P1) · 장부는 탭 · 줄바꿈 없앤 글
 if [ "${1:-}" = "--infra-abort" ]; then
   [ $# -ge 5 ] || { echo "⛔ 쓰는 법: [WALL_S=<초>] bash run_a5.sh --infra-abort <A5|c1|c2> <스케줄러 잡 id> <취소 UTC> <사유…>"; exit 2; }
-  st=$2; sid=$(clean "$3"); when=$(clean "$4"); shift 4; why=$(clean "$*")
+  st=$2; sid_r=$3; when_r=$4; shift 4; why_r="$*"; sid=$(clean "$sid_r"); when=$(clean "$when_r"); why=$(clean "$why_r")
   case "$st" in A5|c1|c2) ;; *) echo "⛔ 모르는 단 $st"; exit 2;; esac
   src=run/${JOB}_$st
   [ -d "$src" ] || { echo "⛔ $src 가 없다"; exit 2; }
   lx=$(later5 "$st"); [ -z "$lx" ] || { echo "⛔ 뒤 단 ($lx) 이 이미 있다 — $st 의 0 스텝 중단은 뒤 단을 띄우기 전에만 기록한다 (1저자에게 알린다)"; exit 2; }
   [ -f "$src/attempt.start" ] || { echo "⛔ $src 에 시작 표지 (attempt.start) 가 없다 — 이 러너가 띄운 시도가 아니다 (연락)"; exit 2; }
+  x=$(start_id "$src" "$st"); [ "$x" = - ] || { echo "⛔ $src/attempt.start 가 이 폴더의 시도가 아니다 ($x) — 기록하지 않는다 (연락)"; exit 2; }
+  x=$(ledger5); [ "$x" = - ] || { echo "⛔ 중단 장부 · 보존 폴더 · 영수증이 이미 어긋났다 ($x) — 기록하지 않는다 (1저자)"; exit 2; }
   if [ -e "$src/OSZICAR" ]; then
-    n=$(grep -acE '^[[:space:]]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:' "$src/OSZICAR" 2>/dev/null); g=$?
-    [ "$g" -le 1 ] && [ -n "$n" ] || { echo "⛔ $src/OSZICAR 를 읽지 못했다 (grep $g) — 0 행인지 확인할 수 없어 기록하지 않는다 (1저자)"; exit 2; }
-    osz=zero_rows
+    { [ -f "$src/OSZICAR" ] && [ -r "$src/OSZICAR" ]; } || { echo "⛔ $src/OSZICAR 를 읽지 못했다 — 0 행인지 확인할 수 없어 기록하지 않는다 (1저자)"; exit 2; }
+    g=$(row_scan "$src" "$st"); osz=zero_rows
   else
-    n=0; osz=missing
+    g="0 -"; osz=missing
   fi
-  [ "$n" = 0 ] || { echo "⛔ 전자 반복행 $n 개 — 0 스텝 중단이 아니다 (끊긴 시도면 --killed · 실행 실패는 사다리가 다룬다)"; exit 2; }
+  [ "$g" = "0 -" ] || { echo "⛔ OSZICAR 완전한 전자 반복행 ${g%% *} · 판독 ${g#* } — 0 스텝 중단이 아니다 (행꼴 조각 · 남의 머리도 0 스텝이 아니다 · 끊긴 시도면 --killed · 실행 실패는 사다리가 다룬다)"; exit 2; }
   so=$(grep -acE '^[[:space:]]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:[[:space:]]+[0-9]' "$src/stdout.log" 2>/dev/null); so=${so:-0}
   oi=$(grep -acE 'Iteration +[0-9]+\(' "$src/OUTCAR" 2>/dev/null); oi=${oi:-0}
   [ "$so" = 0 ] && [ "$oi" = 0 ] || { echo "⛔ OSZICAR 는 $osz 인데 stdout.log 전자 반복행 $so · OUTCAR Iteration $oi — 출력 유실이지 0 스텝이 아니다 · 기록하지 않는다"; exit 2; }
@@ -380,8 +555,9 @@ if [ "${1:-}" = "--infra-abort" ]; then
   else
     w=UNKNOWN
   fi
-  k=$(awk -F'\t' -v j="$JOB" '$2 == j' run/infra_aborts.tsv 2>/dev/null | wc -l); k=${k:-0}
+  k=$(awk -F'\t' -v j="$JOB" 'NR > 1 && $2 == j' run/infra_aborts.tsv 2>/dev/null | wc -l); k=${k:-0}
   [ "$k" -lt "$INFRA_MAX" ] || { echo "⛔ 0 스텝 중단 기록이 이미 $INFRA_MAX 회 — 상한 (1저자에게 알린다)"; exit 2; }
+  rid=$(rget "$src/attempt.start" run_id s)
   mkdir -p run_aborted; dst=run_aborted/${JOB}_${st}_$((k + 1))
   mkdir "$dst" || exit 2
   shopt -s dotglob nullglob
@@ -389,8 +565,9 @@ if [ "${1:-}" = "--infra-abort" ]; then
   shopt -u dotglob nullglob
   rm -f "$dst/POTCAR" "$dst/WAVECAR" "$dst/CHGCAR" "$dst/CHG" "$dst/vasprun.xml" "$dst/.running"     # WAVECAR 는 복사본이다 (보존 ⓐ 원본 · A5 끝 WAVECAR 는 이 폴더 밖)
   if [ "$w" = ATTEMPT_JSON ]; then w=$(grep -o '"elapsed_s": [^,}]*[,}]' "$dst/attempt.json" | head -1 | sed 's/^"elapsed_s": //; s/[,}]$//'); secs_ok "$w" || w=UNKNOWN; fi
-  printf '{"job": "%s", "rung": "%s", "sched_job_id": "%s", "cancel_utc": "%s", "reason": "%s", "wall_s": "%s", "oszicar": "%s", "recorded_utc": "%s", "recorded_s": %d}\n' \
-    "$JOB" "$st" "$sid" "$when" "$why" "$w" "$osz" "$(utc)" "$(date +%s)" > "$dst/infra_abort.json"
+  printf '{"job": "%s", "rung": "%s", "run_id": "%s", "sched_job_id": "%s", "cancel_utc": "%s", "reason": "%s", "wall_s": "%s", "oszicar": "%s", "recorded_utc": "%s", "recorded_s": %d}\n' \
+    "$JOB" "$st" "$rid" "$(jstr "$sid_r")" "$(jstr "$when_r")" "$(jstr "$why_r")" "$w" "$osz" "$(utc)" "$(date +%s)" > "$dst/infra_abort.json.part" \
+    && mv -f "$dst/infra_abort.json.part" "$dst/infra_abort.json" || { echo "⛔ 영수증 (infra_abort.json) 쓰기 실패 — 연락 (다시 돌리면 장부 대조가 멈춘다)"; exit 2; }
   [ -f run/infra_aborts.tsv ] || printf "recorded_utc\tjob\trung\tsched_job_id\tcancel_utc\twall_s\treason\tdir\n" > run/infra_aborts.tsv
   printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$(utc)" "$JOB" "$st" "$sid" "$when" "$w" "$why" "$(basename "$dst")" >> run/infra_aborts.tsv
   if [ "$w" = UNKNOWN ]; then
@@ -401,25 +578,31 @@ if [ "${1:-}" = "--infra-abort" ]; then
   exit 0
 fi
 
+# ── 0 스텝 중단의 벽시계 채우기 (미상일 때만 · 스케줄러 장부 값) — 영수증을 REC1 로 읽고 같은 칸 순서로 다시 쓴다 + 채운 시각 (wall_s_filled_utc · wall_s_filled_s) ──
+#    검사기는 채운 시각 ≤ 다음 시도 시작 · 미상 영수증 뒤에 시도가 없음을 본다 (Codex EO P1 Q-EO-2c)
 if [ "${1:-}" = "--infra-wall" ]; then
   [ $# -eq 3 ] || { echo "⛔ 쓰는 법: bash run_a5.sh --infra-wall <run_aborted 폴더 이름> <초>"; exit 2; }
-  dd=run_aborted/$(basename "$2"); sec=$3
+  b=$(basename "$2"); dd=run_aborted/$b; sec=$3
   [ -f "$dd/infra_abort.json" ] || { echo "⛔ $dd/infra_abort.json 이 없다"; exit 2; }
   secs_ok "$sec" || { echo "⛔ 초 '$sec' — 0 이상의 10진 정수 (선행 0 없이 · 9 자리 이하) 여야 한다"; exit 2; }
-  grep -q '"wall_s": "UNKNOWN"' "$dd/infra_abort.json" || { echo "⛔ $dd 의 벽시계는 미상이 아니다 — 고치지 않는다"; exit 2; }
-  sed "s/\"wall_s\": \"UNKNOWN\"/\"wall_s\": \"$sec\", \"wall_s_filled_utc\": \"$(utc)\"/" "$dd/infra_abort.json" > "$dd/infra_abort.json.part" \
-    && mv -f "$dd/infra_abort.json.part" "$dd/infra_abort.json" || { echo "⛔ infra_abort.json 고치기 실패"; exit 2; }
-  if [ -f run/infra_aborts.tsv ]; then
-    awk -F'\t' -v OFS='\t' -v d="$(basename "$dd")" -v w="$sec" 'NR > 1 && $8 == d && $6 == "UNKNOWN" { $6 = w } { print }' run/infra_aborts.tsv > run/infra_aborts.tsv.part \
-      && mv -f run/infra_aborts.tsv.part run/infra_aborts.tsv || { echo "⛔ infra_aborts.tsv 고치기 실패"; exit 2; }
-  fi
+  x=$(ledger5); [ "$x" = - ] || { echo "⛔ 중단 장부 · 보존 폴더 · 영수증이 어긋난다 ($x) — 고치지 않는다 (1저자)"; exit 2; }
+  R=$(rec5 "$dd/infra_abort.json") || { echo "⛔ $dd/infra_abort.json 을 읽지 못했다 — 고치지 않는다"; exit 2; }
+  [ "$(rf "$R" wall_s s)" = UNKNOWN ] || { echo "⛔ $dd 의 벽시계는 미상이 아니다 — 고치지 않는다"; exit 2; }
+  { printf '%s\n' "$R" | LC_ALL=C awk -F'\t' -v W="$sec" -v U="$(utc)" -v S="$(date +%s)" 'BEGIN { printf "{" }
+      { v = substr($0, length($1) + length($2) + 3); if ($1 == "wall_s") v = W
+        printf "%s\"%s\": %s", (NR > 1 ? ", " : ""), $1, ($2 == "i" ? v : "\"" v "\"") }
+      END { printf ", \"wall_s_filled_utc\": \"%s\", \"wall_s_filled_s\": %s}\n", U, S }'; } > "$dd/infra_abort.json.part" \
+    && rec5 "$dd/infra_abort.json.part" > /dev/null && mv -f "$dd/infra_abort.json.part" "$dd/infra_abort.json" || { rm -f "$dd/infra_abort.json.part"; echo "⛔ infra_abort.json 고치기 실패"; exit 2; }
+  LC_ALL=C awk -F'\t' -v OFS='\t' -v d="$b" -v w="$sec" 'NR > 1 && $8 == d && $6 == "UNKNOWN" { $6 = w } { print }' run/infra_aborts.tsv > run/infra_aborts.tsv.part \
+    && mv -f run/infra_aborts.tsv.part run/infra_aborts.tsv || { echo "⛔ infra_aborts.tsv 고치기 실패"; exit 2; }
+  x=$(ledger5); [ "$x" = - ] || { echo "⛔ 고친 뒤 장부 대조가 어긋난다 ($x) — 연락"; exit 2; }
   echo "✓ $dd 벽시계 $sec 초 (스케줄러 장부) — 다시 돌리면 누적 상한 장부에 들어간다"; exit 0
 fi
 
-# ── 전자 스텝 뒤 끊긴 시도의 벽시계 기록 (그 단 소모 · 값 없음 · 전자 반복행 ≥ 1 이어야 한다 · 뒤 단이 있으면 거부) ──
+# ── 전자 스텝 뒤 끊긴 시도의 벽시계 기록 (그 단 소모 · 값 없음 · 완전한 전자 반복행 ≥ 1 · 행 손상 없음 · 뒤 단이 있으면 거부) ──
 if [ "${1:-}" = "--killed" ]; then
   [ $# -ge 5 ] || { echo "⛔ 쓰는 법: WALL_S=<초> bash run_a5.sh --killed <A5|c1|c2> <스케줄러 잡 id> <취소 UTC> <사유…>"; exit 2; }
-  st=$2; sid=$(clean "$3"); when=$(clean "$4"); shift 4; why=$(clean "$*")
+  st=$2; sid_r=$3; when_r=$4; shift 4; why_r="$*"; sid=$(clean "$sid_r"); when=$(clean "$when_r"); why=$(clean "$why_r")
   case "$st" in A5|c1|c2) ;; *) echo "⛔ 모르는 단 $st"; exit 2;; esac
   src=run/${JOB}_$st
   [ -f "$src/attempt.start" ] || { echo "⛔ $src 에 시작 표지 (attempt.start) 가 없다 — VASP 가 뜨지 않은 시도다"; exit 2; }
@@ -427,12 +610,14 @@ if [ "${1:-}" = "--killed" ]; then
   [ ! -f "$src/killed.json" ] || { echo "⛔ $src 는 이미 기록했다 — 고치지 않는다"; exit 2; }
   lx=$(later5 "$st"); [ -z "$lx" ] || { echo "⛔ 뒤 단 ($lx) 이 이미 있다 — $st 의 끊김은 뒤 단을 띄우기 전에만 기록한다 (1저자에게 알린다)"; exit 2; }
   secs_ok "${WALL_S:-}" || { echo "⛔ WALL_S=<초> (스케줄러 장부의 그 시도 벽시계) 가 있어야 한다"; exit 2; }
-  n=$(rows_of "$src")
+  x=$(start_id "$src" "$st"); [ "$x" = - ] || { echo "⛔ $src/attempt.start 가 이 폴더의 시도가 아니다 ($x) — 기록하지 않는다 (연락)"; exit 2; }
+  g=$(row_scan "$src" "$st"); n=${g%% *}; rw=${g#* }
+  [ "$rw" = - ] || { echo "⛔ $src OSZICAR 행 판독 $rw (완전한 행 $n) — 잘린 첫 행 · 손상 · 남의 머리는 기록하지 않는다 (다시 돌리면 1저자 검토 멈춤 8)"; exit 2; }
   [ "$n" -ge 1 ] 2>/dev/null || { echo "⛔ $src OSZICAR 전자 반복행 0 — 0 스텝 중단이면 --infra-abort (OUTCAR 에만 반복 흔적이 있으면 출력 유실 — 연락)"; exit 2; }
   [ -n "$sid" ] && [ -n "$when" ] && [ -n "$why" ] || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다"; exit 2; }
-  rid=$(grep -o '"run_id": "[^"]*"' "$src/attempt.start" | head -1 | sed 's/.*: "//; s/"$//')
+  rid=$(rget "$src/attempt.start" run_id s)
   printf '{"job": "%s", "rung": "%s", "run_id": "%s", "wall_s": "%s", "sched_job_id": "%s", "cancel_utc": "%s", "reason": "%s", "osz_rows": "%s", "recorded_utc": "%s", "recorded_s": %d}\n' \
-    "$JOB" "$st" "$rid" "$WALL_S" "$sid" "$when" "$why" "$n" "$(utc)" "$(date +%s)" > "$src/killed.json.part" && mv -f "$src/killed.json.part" "$src/killed.json" \
+    "$JOB" "$st" "$rid" "$WALL_S" "$(jstr "$sid_r")" "$(jstr "$when_r")" "$(jstr "$why_r")" "$n" "$(utc)" "$(date +%s)" > "$src/killed.json.part" && mv -f "$src/killed.json.part" "$src/killed.json" \
     || { echo "⛔ killed.json 쓰기 실패"; exit 2; }
   log "✎ $src 끊긴 시도 벽시계 $WALL_S 초 (스케줄러 $sid · $why · 전자 반복행 $n) — 그 단 소모 · 값 없음 · 다시 돌리지 않는다"
   echo "✓ $src 벽시계 $WALL_S 초 기록 — 다시 돌리면 다음 단부터 이어 간다"; exit 0
@@ -465,7 +650,7 @@ ret_has_final(){ # a5_return.tgz 가 .sha256 (한 줄 · 그 이름) 과 맞고,
   tar xzf a5_return.tgz -O run/final.json 2>/dev/null | cmp -s - run/final.json
 }
 if [ -f run/final.json ]; then
-  fc=$(grep -o '"code": [0-9]*' run/final.json | head -1 | grep -o '[0-9]*$')
+  fc=$(rget run/final.json code i)                                         # 끝 기록도 REC1 로 읽는다 (검사기 load_final 과 같다)
   log "■ 다시 돌림 — 이 사다리는 이미 끝났다: $(tr -d '\n' < run/final.json | cut -c1-240)"
   case "$fc" in 0|1|5|6|8) ;; *) echo "⛔ run/final.json 의 코드 '$fc' 를 읽을 수 없다 — 연락"; exit 2;; esac
   if ! ret_has_final; then
@@ -502,16 +687,12 @@ fi
 rm -rf "run/.prep_${JOB}_A5" "run/.prep_${JOB}_c1" "run/.prep_${JOB}_c2"     # 앞 실행의 남은 준비 폴더 (VASP 를 띄운 적 없음 · 잠금 아래)
 
 # ── 누적 벽시계 (a5 의 모든 시도 · 0 스텝 중단 · 끊긴 시도 · 미상은 0 초가 아니다) ──
-wall5(){ local d w tot=0 unk="" dirs=run lst
-  [ -d run_aborted ] && dirs="run run_aborted"
-  lst=$(find $dirs -path 'run/.prep_*' -prune -o \( -name attempt.json -o -name attempt.start -o -name infra_abort.json -o -name killed.json \) -type f -print 2>/dev/null) \
-    || { echo "UNKNOWN (반송 폴더 열거 실패)"; return; }
-  for d in $(printf '%s\n' "$lst" | sed 's#/[^/]*$##' | LC_ALL=C sort -u); do
-    if [ -f "$d/attempt.json" ]; then w=$(grep -o '"elapsed_s": [^,}]*[,}]' "$d/attempt.json" | head -1 | sed 's/^"elapsed_s": //; s/[,}]$//')
-    elif [ -f "$d/infra_abort.json" ]; then w=$(grep -o '"wall_s": "[^"]*"' "$d/infra_abort.json" | head -1 | sed 's/.*: "//; s/"$//')
-    elif [ -f "$d/killed.json" ]; then w=$(grep -o '"wall_s": "[^"]*"' "$d/killed.json" | head -1 | sed 's/.*: "//; s/"$//')
-    else w=""; fi
-    if [[ "$w" =~ ^(0|[1-9][0-9]{0,11})$ ]]; then tot=$((tot + w)); else [ -n "$unk" ] || unk=$d; fi
+wall5(){ # 시도 폴더 (run/<잡>_<단> · run_aborted/<잡>_<단>_<k>) 마다 wall_of (영수증 → 끊김 기록 → attempt.json → 미상 · 검사기 wall_of 와 같은 출처 순서 · Codex EO P1 Q-EO-2c)
+  local d w tot=0 unk=""
+  for d in "run/${JOB}_A5" "run/${JOB}_c1" "run/${JOB}_c2" run_aborted/*; do
+    [ -d "$d" ] || continue
+    w=$(wall_of "$d")
+    case "$w" in UNKNOWN|BAD) [ -n "$unk" ] || unk="$d ($w)";; *) tot=$((tot + w));; esac
   done
   if [ -n "$unk" ]; then echo "UNKNOWN $unk"; else echo "$tot"; fi
 }
@@ -526,7 +707,8 @@ cap_ok(){ # → 0 띄워도 된다 · 1 누적 > 상한 · 2 벽시계 미상 ·
 # ── 끝 · 멈춤 ──
 fin5(){ # $1 코드 (0 · 1 · 5 상한 · 6 · 8) · $2 상태 · $3 사유 — 끝: run/final.json 을 쓰고 포장한다 (다시 돌려도 아무것도 띄우지 않는다)
   log "■ 끝 [$1 $2] $3"
-  printf '{"code": %d, "state": "%s", "why": "%s", "written_utc": "%s", "written_s": %d}\n' "$1" "$2" "$(clean "$3")" "$(utc)" "$(date +%s)" > run/final.json.part \
+  #  attempts = 이 사다리의 시도 폴더 · run_id 목록 (att5) — 같은 시각의 다른 실행 묶음과 끝 기록이 같아지지 않게 (ret_has_final 이 바이트로 대조 · Codex EO P2)
+  printf '{"code": %d, "state": "%s", "why": "%s", "attempts": "%s", "written_utc": "%s", "written_s": %d}\n' "$1" "$2" "$(jstr "$3")" "$(att5)" "$(utc)" "$(date +%s)" > run/final.json.part \
     && mv -f run/final.json.part run/final.json || { echo "⛔ run/final.json 쓰기 실패 — 디스크를 확인한 뒤 다시 돌려 주세요 (기록에서 같은 판정을 다시 낸다)"; exit 4; }
   finish "$1"
 }
@@ -636,16 +818,12 @@ run_one5(){ # $1 단 (A5|c1|c2) · $2 변형 (A5c|A5f|c1|c2) · $3 시도 폴더
 }
 
 # ── 단의 갈래 (개정 5 해석 1 · 사용자 2026-11-20 — 러너와 검사기가 같은 순서로 본다) ──
-var_of(){ grep -o '"attempt": "[^"]*"' "$1/attempt.start" 2>/dev/null | head -1 | sed 's/.*: "//; s/"$//'; }
-kf5(){ grep -o "\"$2\": \"[^\"]*\"" "$1" 2>/dev/null | awk 'NR == 1 { v = $0 } END { if (NR == 1) { sub(/^"[^"]*": "/, "", v); sub(/"$/, "", v); print v } }'; }   # 한 줄 JSON 기록의 문자열 필드 ($1 파일 · $2 키 · 두 번 나오면 빈칸)
-ki5(){ grep -oE "\"$2\": [0-9]+[,}]" "$1" 2>/dev/null | awk 'NR == 1 { v = $0 } END { if (NR == 1) { sub(/^"[^"]*": /, "", v); sub(/[,}]$/, "", v); print v } }'; }    # 같은 기록의 정수 필드 (따옴표 없음 · 뒤가 , 또는 } · 두 번 나오면 빈칸)
-killed5(){ # $1 시도 폴더 · $2 단 · $3 행 수 → "-" (맞음) 또는 "상태 행수 사유" — 끊긴 시도도 원문에 남은 증거를 본다 (Codex EN P0 · P1 — 검사기 killed_problems 와 같은 순서):
-  #   ① 행 머리 — 그 단의 허용 머리 밖이면 SCF_UNVERIFIED ② c1 · c2 재시작 원문 — OUTCAR ISTART 1 job · ICHARG 0 charge · 'WAVECAR not read' 없음 · 등록부 문구 ·
-  #      NKPTS·NBANDS·ENCUT = 시작점 머리 (끝 기록이 없어 sha 셋은 못 본다 · 시작 복사본 sha 는 띄우기 전에 확인했다) — 아니면 RESTART_NOT_HONOURED
-  #   ③ killed.json — 한 줄 꼴 · 잡 · 단 · run_id = attempt.start · osz_rows = 지금 행 수 · wall_s 초 · recorded_s ≥ 시작 시각 — 아니면 KILLED_RECORD_MISMATCH
-  local d=$1 st=$2 n=$3 g why is ic f=$1/killed.json t0 rs
-  g=$(hdr_gate "$d" "$(stage_hdr "$st")"); why=${g#* }
-  { [ -n "$g" ] && [ "$why" = - ]; } || { echo "SCF_UNVERIFIED $n ${why:-row_gate_unreadable}"; return; }
+killed5(){ # $1 시도 폴더 · $2 단 · $3 완전한 행 수 → "-" (맞음) 또는 "상태 행수 사유" — 끊긴 시도도 원문에 남은 증거를 본다 (Codex EN P0 · P1 · EO P1 — 검사기 killed_problems 와 같은 순서):
+  #   ① c1 · c2 재시작 원문 — OUTCAR ISTART 1 job · ICHARG 0 charge · 'WAVECAR not read' 없음 · 등록부 문구 · NKPTS·NBANDS·ENCUT = 시작점 머리
+  #      (끝 기록이 없어 sha 셋은 못 본다 · 시작 복사본 sha 는 띄우기 전에 확인했다) — 아니면 RESTART_NOT_HONOURED
+  #   ② killed.json — 한 줄 기록 문법 (REC1) 전체 · 칸 · 잡 · 단 · run_id = attempt.start · osz_rows = 지금 완전한 행 수 · wall_s 초 · recorded_s ≥ 시작 시각 — 아니면 KILLED_RECORD_MISMATCH
+  #   행 머리 · 행 손상 · attempt.start 의 잡 · 단 · 변형은 그 앞 (gate5) 에서 본다
+  local d=$1 st=$2 n=$3 is ic K S0 k t0 rs
   case "$st" in c1|c2)
     is=$(grep -aE '^[[:space:]]*ISTART *= *[0-9]+[[:space:]]+job' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ISTART *= *[0-9]+' | grep -oE '[0-9]+$')
     ic=$(grep -aE '^[[:space:]]*ICHARG *= *[0-9]+[[:space:]]+charge' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ICHARG *= *[0-9]+' | grep -oE '[0-9]+$')
@@ -655,32 +833,40 @@ killed5(){ # $1 시도 폴더 · $2 단 · $3 행 수 → "-" (맞음) 또는 "�
     { [ "$(out_num "$d" NKPTS)" = "${SP_NK:-x}" ] && [ "$(out_num "$d" NBANDS)" = "${SP_NB:-x}" ] && enc_eq "$(out_num "$d" ENCUT)" "${SP_EN:-x}"; } \
       || { echo "RESTART_NOT_HONOURED $n dims_ne_start_head"; return; };;
   esac
-  t0=$(ki5 "$d/attempt.start" t_start); rs=$(ki5 "$f" recorded_s)
-  { [ "$(awk 'END { print NR }' "$f" 2>/dev/null)" = 1 ] && grep -qx '{"job": ".*}' "$f" 2>/dev/null; } || { echo "KILLED_RECORD_MISMATCH $n killed_json_form"; return; }
-  [ "$(kf5 "$f" job)" = "$JOB" ] && [ "$(kf5 "$f" rung)" = "$st" ] || { echo "KILLED_RECORD_MISMATCH $n job_or_rung"; return; }
-  [ -n "$(kf5 "$d/attempt.start" run_id)" ] && [ "$(kf5 "$f" run_id)" = "$(kf5 "$d/attempt.start" run_id)" ] || { echo "KILLED_RECORD_MISMATCH $n run_id"; return; }
-  [ "$(kf5 "$f" osz_rows)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows_$(kf5 "$f" osz_rows)"; return; }
-  secs_ok "$(kf5 "$f" wall_s)" || { echo "KILLED_RECORD_MISMATCH $n wall_s"; return; }
+  K=$(rec5 "$d/killed.json") || { echo "KILLED_RECORD_MISMATCH $n killed_json_form"; return; }
+  for k in job rung run_id wall_s sched_job_id cancel_utc reason osz_rows recorded_utc; do rf "$K" "$k" s > /dev/null || { echo "KILLED_RECORD_MISMATCH $n killed_json_field_$k"; return; }; done
+  rf "$K" recorded_s i > /dev/null || { echo "KILLED_RECORD_MISMATCH $n killed_json_field_recorded_s"; return; }
+  S0=$(rec5 "$d/attempt.start")
+  [ "$(rf "$K" job s)" = "$JOB" ] && [ "$(rf "$K" rung s)" = "$st" ] || { echo "KILLED_RECORD_MISMATCH $n job_or_rung"; return; }
+  [ "$(rf "$K" run_id s)" = "$(rf "$S0" run_id s)" ] || { echo "KILLED_RECORD_MISMATCH $n run_id"; return; }
+  [ "$(rf "$K" osz_rows s)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows"; return; }
+  secs_ok "$(rf "$K" wall_s s)" || { echo "KILLED_RECORD_MISMATCH $n wall_s"; return; }
+  t0=$(rf "$S0" t_start i); rs=$(rf "$K" recorded_s i)
   { [ -n "$t0" ] && [ -n "$rs" ] && [ "$rs" -ge "$t0" ]; } 2>/dev/null || { echo "KILLED_RECORD_MISMATCH $n recorded_s"; return; }
   echo -
 }
 gate5(){ # $1 시도 폴더 · $2 단 → "갈래 상태 행수 사유" (빈칸 없는 낱말 넷)
   #   NEW 띄울 차례 · WAIT5 끊김 (끝 기록 없음) · ZERO 전자 반복행 0 (멈춤 7) · ENV 다른 VASP 빌드 (끝 6) · REVIEW 1저자 (끝 8) · BAD2 이 러너가 띄운 시도가 아님 ·
   #   OK 주 기준 수렴 · NEXT 다음 단 (SCF_NOT_CONVERGED · 행 ≥ 1 실행 실패 · 행 ≥ 1 끊김 기록)
-  local d=$1 st=$2 n var ver e s
+  #   순서 (검사기 check_attempt5 · a5_class 와 같다): attempt.start 가 이 폴더의 것 (아니면 BAD2 · Codex EO P1) → 완전한 행 판독 (row_scan) →
+  #   끝난 시도: 빌드 → 행 손상 · 남의 머리 (REVIEW · Codex EO P0) → 행 0 (ZERO) → 설정 에코 → 판정 · 끝 기록 없는 시도: 행 손상 · 남의 머리 (REVIEW — 기록 전이라도) → 끊김 기록
+  local d=$1 st=$2 n why g var ver e s
   [ -e "$d" ] || { echo "NEW - 0 -"; return; }
   { [ -d "$d" ] && [ -f "$d/attempt.start" ]; } || { echo "BAD2 - 0 no_start_marker"; return; }
-  var=$(var_of "$d")
-  case "$st:$var" in A5:A5c|A5:A5f|c1:c1|c2:c2) ;; *) echo "BAD2 - 0 variant_${var:-none}"; return;; esac
-  n=$(rows_of "$d"); ver=$(clean "$(ver_of "$d")")
+  e=$(start_id "$d" "$st"); [ "$e" = - ] || { echo "BAD2 - 0 $e"; return; }
+  var=$(rget "$d/attempt.start" attempt s)
+  g=$(row_scan "$d" "$st"); [ -n "$g" ] || g="0 -"
+  n=${g%% *}; why=${g#* }; ver=$(clean "$(ver_of "$d")")
   if [ -f "$d/attempt.json" ]; then
     if [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then echo "ENV VERSION_MISMATCH $n vasp_build"; return; fi
+    [ "$why" = - ] || { echo "REVIEW SCF_UNVERIFIED $n $why"; return; }
     [ "$n" -ge 1 ] 2>/dev/null || { echo "ZERO SCF_UNVERIFIED 0 no_rows"; return; }
     e=$(echo5 "$d" "$var"); [ "$e" = "-" ] || { echo "REVIEW SETTINGS_ECHO $n $e"; return; }
     s=$(stat5 "$d" "$st" "$SS")
     case "$s" in OK) echo "OK OK $n -";; SCF_NOT_CONVERGED|RUN_FAILED) echo "NEXT $s $n -";; *) echo "REVIEW $s $n -";; esac
     return
   fi
+  [ "$why" = - ] || { echo "REVIEW SCF_UNVERIFIED $n $why"; return; }       # 끝 기록이 없어도 — 잘린 첫 행 (완전한 행 0 + 행꼴 조각) 은 기록할 수 없고 다음 단으로 넘기지 않는다 (Codex EO P0)
   [ -f "$d/killed.json" ] || { echo "WAIT5 INCOMPLETE_ATTEMPT $n no_end_record"; return; }
   if [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then echo "ENV VERSION_MISMATCH $n vasp_build"; return; fi
   [ "$n" -ge 1 ] 2>/dev/null || { echo "REVIEW KILLED_NO_ROWS 0 -"; return; }
@@ -747,6 +933,8 @@ sp_write(){
 log "════ W_ad a5 · $JOB ════"
 pp_ok "$JOB" || env6_pre
 w0_check
+# 중단 장부 ↔ 보존 폴더 ↔ 영수증 — 시작점을 쓰거나 어느 단이든 (다시) 띄우기 전에 양방향으로 (부분 복구 · 손댄 기록이면 1저자 · Codex EO P1 Q-EO-3)
+x=$(ledger5); [ "$x" = - ] || fin5 8 REVIEW "중단 장부 (run/infra_aborts.tsv) · 보존 폴더 (run_aborted/) · 영수증이 어긋난다 ($x) — 부분 복구 · 손댄 기록 · 시작점을 쓰거나 다시 띄우지 않는다 (1저자)"
 W0OK=0; grep -q '"verified": 1' run/w0_check.json && W0OK=1
 A=run/${JOB}_A5; C1=run/${JOB}_c1; C2=run/${JOB}_c2
 SS=""; SPF=""; S=""; SPH=""; SP_NK=""; SP_NB=""; SP_EN=""; SPWHY="-"

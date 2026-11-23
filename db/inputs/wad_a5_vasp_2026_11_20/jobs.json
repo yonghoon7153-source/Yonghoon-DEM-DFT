@@ -18,7 +18,12 @@
  },
  "start_point_rule": "첫 c 단을 띄울 때 한 번 run/start_point.json (from A5|W0 · path · sha256 · head) 에 두고 다시 정하지 않는다 · 검사기는 c 단을 그 기록에 대조하고, 그 기록이 규칙 (A5 자격 → A5 · 아니면 ⓪ · 둘 다 아니면 닫음) 과 같은지 따로 본다",
  "final_record": "끝 (0 · 1 · 5 상한 · 8 · 돈 뒤의 6 — VASP 빌드 다름) 에 run/final.json — 다시 돌려도 아무것도 띄우지 않는다 · 검사기는 끝 기록이 기록으로 낸 사다리 판정과 같은지 본다 (보수 쪽으로만)",
- "tool_sha256": "83695d512a7a066f035ef595a7551c5e3284ef7f9a43e37312521a69e167cc7f",
+ "complete_row_rule": "완전한 전자 반복행만 센다 (러너 row_scan = 검사기 row_gate · Codex EO P0): 줄바꿈까지 쓰임 · 그 단의 머리 그대로 · ':' 뒤 빈칸 · 칸 ≥ 6 (N E dE d eps ncg rms) · N 정수 · 완전한 행 ≥ 1 뒤 줄바꿈 없는 끝 조각은 세지 않음 · 완전한 행 0 + 행꼴 조각 · 줄바꿈 있는 덜 쓴 행 · 남의 머리 · NUL = 손상 → 끝 기록과 관계없이 멈춤 8",
+ "record_grammar": "한 줄 기록 REC1 (killed.json · infra_abort.json · attempt.start · final.json — 러너 rec5 = 검사기 rec_parse · Codex EO P1): 한 줄 · NUL 없음 · {\"키\": 값, …} · 토큰 사이 빈칸/탭 · 키 [a-z][a-z0-9_]* · 값 = JSON 문자열 (제어 바이트 날것 금지) 또는 음 아닌 정수 (16 자리 이하) · 같은 키 금지 · 값 비교는 원문 · 러너는 손으로 넣은 글을 JSON 이스케이프 (jstr) 해서 쓴다",
+ "time_source_rule": "벽시계 출처 (러너 wall_of = 검사기 wall_of · Codex EO P1): 중단 영수증 wall_s → 끊김 기록 wall_s → attempt.json elapsed_s → 미상 · 검사기는 띄운 시도마다 앞 시도들의 합이 알려졌고 ≤ 상한인지 · 미상 영수증 뒤 시도 없음 · 채운 시각 ≤ 다음 시작을 본다",
+ "ledger_rule": "중단 장부 (run/infra_aborts.tsv) ↔ 보존 폴더 (run_aborted/) ↔ 영수증 양방향 (러너 ledger5 = 검사기 ledger_problems + abort_receipt_problem · Codex EO P1) — 어긋나면 러너 멈춤 8 · 검사기 LADDER_VIOLATION",
+ "final_attempts_rule": "run/final.json attempts = 시도 폴더=run_id 목록 (경로 바이트 순 · 러너 att5 = 검사기 attempts_of · Codex EO P2) — 다른 실행의 묶음이면 다시 돌림 종료 4 · 반송과 다르면 STOPPED_FOR_REVIEW",
+ "tool_sha256": "35592b07ed0f0fd8448dd3799c3a6998ca3b1e90689bf70ecf379498d1632d30",
  "round2_tool_sha256": "9dc2f98dd44232fba4f3e6068f2e625d67e10713fe4e2a03f7f1621bfbf85358",
  "v5_tool_sha256": "90065ed5c4f7d052a248a1ca7b17af6f4bf67a9d548ddc27ce70415ba664d013",
  "sources": {
