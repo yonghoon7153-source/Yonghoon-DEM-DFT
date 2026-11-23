@@ -113,10 +113,10 @@ N-106	대피	차례 기다림		PDF 받음 (+SI 1) · Walther 2020 Chem Mater 32 
 N-107	대피	차례 기다림		PDF 받음 (+SI 1) · Chouchane 2024 ACS Energy Lett 9 1480 (+ 참고 저장소 LESCOpenAccess/Codes-and-Data · 읽기 전용)
 N-108	대피	차례 기다림		PDF 받음 (+SI 1) · Rosner Adv Funct Mater 36 e18517 (표 2025 · PDF 문서 정보 2026 — 에이전트가 첫 쪽에서 확인)
 N-109	대피	차례 기다림		PDF 받음 (+SI 1) · Strauss 2020 RSC Adv 10 1114
-N-110	대피	차례 기다림		PDF 받음 · Figueroa 2009 Powder Technol 195 203 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사)
+N-110	대피	도는 중		PDF 받음 · Figueroa 2009 Powder Technol 195 203 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사) · 시작 11-23 23:43 KST
 N-111	대피	차례 기다림		PDF 받음 · Capece 2015 Powder Technol 286 561 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사)
 N-112 첫째	대피	끝	li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy · 7bfb6e2f4	정독 149 · 새 카드 · 392 줄 · 크롭 20 · 의도 대조 일부 (상태도 축 = R1/R2 × cosθ 비 · Bo 축 아님) · 공백 검사 G1 반례 (섞임↔분리) / 일부 (덮임↔뭉침) · G2 반례 (정성 · 접촉각) · G3 없음 · G4 일부 · 혼합쌍 규칙별 문턱 min 0.556 / 기하평균 0.309 / 산술 0.111 · 카드 문제 jarray2019 L322
-N-112 둘째	대피	도는 중		PDF 받음 · Li–McCarthy 2005 PRE 71 021305 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사) · 시작 11-23 22:51 KST
+N-112 둘째	대피	끝	li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation · 69b5bf668	정독 150 · 새 카드 · 480 줄 · 크롭 39 (식 10) · 의도 대조 일부 · 공백 검사 G1 반례 (섞임↔분리 · 11/11 + DEM 2) / 덮임↔뭉침 일부 · G2 반례 (접촉각 → ℜ → 상 · 힘 측정 없음) · G3 없음 · G4 일부 (재료 축만 · 크기비 0.25 까지) · 우리 산술 B-U = E · B-C = M · SE/AM_P 크기비 0.111 = 검증 밖 · 카드 문제 jarray2019 L322 일부
 N-113	대피	차례 기다림		PDF 받음 · Egermann 1980 Powder Technol 27 203 · 1저자 11-23 = 먼저 읽기 (3 순위에서 앞당김 · 믹서 공백 검사)
 N-114	대피	차례 기다림		PDF 받음 (그 밖 1) · Thiel–Lai–Hersey 1981 Powder Technol 28 117 (+ 114-2 번 파일 = Egermann 1980 Powder Technol 26 235 — 다른 논문 · 후보 밖 · 한 에이전트가 카드 둘)
 N-115	대피	차례 기다림		PDF 받음 · Buslik 1973 Powder Technol 7 111
