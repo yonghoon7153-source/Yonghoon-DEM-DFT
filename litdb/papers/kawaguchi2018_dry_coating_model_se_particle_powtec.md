@@ -414,6 +414,7 @@ NCM-03 + 습식 분쇄 Na₂SO₄ (D50 0.95 µm) → 세 방법 (A 진동 1 min 
 - 혼합 상태 · 응집 · AM–AM 접촉: `otani2025_dem_se_dispersion_aggregation_compression` · `park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` · `frankenberg2024_dem_high_intensity_mixer_assb` · `grey1969_hausner_ratio_metal_powders`.
 - 같은 계의 전자 · 이온 측정: `asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity`.
 - 메카노퓨전 장치 속 충돌 장소 · 빈도 · 세기의 2D DEM (2004 · Walton–Braun · host 만 · 점착 없음 · 게스트 · 막 형성 없음 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
+- Hybridizer 꼴의 축소 3D DEM (2003 · 날 = 겹친 구 셋 · 공기 없음 · 평균 충돌 속도 ∝ rpm 2.5–12.7 m/s 판독 · 계산 rpm 이 실험실 장치 최대 16,000 을 넘어 25,000 까지 · 게스트 · 막 형성 없음 · 2026-11-24 카드): `dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

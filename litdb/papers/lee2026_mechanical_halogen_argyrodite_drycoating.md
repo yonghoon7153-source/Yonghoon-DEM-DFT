@@ -659,3 +659,4 @@ SEM + AFM 토포그래피 → NCM 표면 깊이 프로파일 재구성 → **SE 
 
 ## 🔗 관련 카드
 - 메카노퓨전 장치 속 host 충돌의 2D DEM (2004 · 법선 충돌 속도 0.07–0.42 m/s 판독 = 이 논문 FEM 15 m/s 와 다른 장치 · 규모 · 점착 · 게스트 없음 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
+- 건식 코팅 장치 셋의 DEM 개관 (2003 · Hybridizer 축소 3D 평균 충돌 속도 2.5–12.7 m/s 판독 = 이 논문 FEM 15 m/s 와 다른 장치 · 규모 · 점착 · 게스트 없음 · 게스트 수준 = 덩어리 하나의 충돌 셋 (host · 벽 · 두 벽 사이 압축) · 2026-11-24 카드): `dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices`.

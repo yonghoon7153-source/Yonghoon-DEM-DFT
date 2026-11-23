@@ -316,6 +316,7 @@
 - 혼합 지표: [`chandratilleke2012_particle_scale_mixing_index`](chandratilleke2012_particle_scale_mixing_index.md) · [`jarray2019_cohesion_driven_mixing_segregation_drum`](jarray2019_cohesion_driven_mixing_segregation_drum.md).
 - 참고 [116] 의 원문 (2026-11-16 카드): [`walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem`](walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem.md) — O. R. Walton, *"Numerical simulation of inclined chute flows of monodisperse, inelastic, frictional spheres"*, Mech. Mater. 16 (1993) 239–247 · 이력 법선 F_N = K₁α / K₂(α − α₀) · e = √(K₁/K₂) · 식 (1) 접선 (감소 가지 분자 = T* − T) · 위 §3-8 · §10 의 8 항과의 대조는 그 카드 §0-1.
 - 이 총설의 메카노퓨전 원리를 장치 DEM 으로 돌린 같은 NJIT 그룹의 후속 (2004 · 2D Walton–Braun · host 만 · 점착 없음 · 이 총설 = 그 논문 ref [2] · 2026-11-24 카드): [`chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`](chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency.md) — 긁개 = 원심 벽 층 깨기 (법선 충돌 속도 ≈2 배) · 안쪽 조각 힘 ∝ ω^≈2 · 입자당 충돌 ≈1.5 × 10⁴ /s.
+- 같은 NJIT 그룹의 건식 코팅 장치 셋 DEM 개관 (2003 · 메카노퓨전 2D · Hybridizer 축소 3D · MAIC 자석 100 개 쌍극자 · 이 총설 = 그 논문 ref [6] · 2026-11-24 카드): [`dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices`](dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices.md) — 게스트는 시간 간격 ≤10⁻⁹ s 라 못 넣고 덩어리 하나의 충돌로 미룸 · MAIC 쪽은 이 총설보다 적게 (자석만).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

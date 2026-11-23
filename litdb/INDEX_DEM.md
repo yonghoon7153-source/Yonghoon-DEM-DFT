@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 375편 · 생성 2026-11-23
+> digest 376편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -235,7 +235,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (84편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (85편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -248,6 +248,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency` | 메카노퓨전 (회전 챔버 + 고정 안쪽 조각 + 고정 긁개) 장치의 2D DEM — Walton–Braun 부분 걸쇠 스프링 (K1 20,000 N/m · e 0.85 · 점착 없음) · host 1500 개 (반지름 0.2 mm · 1.20 g/cm³) · 챔버 25 mm · 안쪽 원통 10 mm · 틈 1.6 mm ·  | DEM (2-D soft-sphere · Walton–Braun partially latching sprin | 2026-11-24 | 🖼 55 |
 | `cho2024_conflicting_roles_conductive_additive` | 필독 / 우리-랩 — Conflicting roles of conductive additives in controlling cathode performance in ASSBs — Cho, Yun, Kang, Kim, Lee (Electrochimica Acta 2024) | exp + AC-impedance decoupling (modified TLM) + DC-polarizati | 2026-06-26 | 🖼 6 |
 | `cottrino2013_insitu_xct_granulated_alumina_die_compaction` | 분무 건조한 나노 알루미나 과립을 흑연 금형 (안지름 3.5 mm) 안에서 누르며 실험실 X 선 단층 촬영 (복셀 2.5 µm · 7 → 113 MPa · 단계마다 꺼내지 않고 한 번씩) 으로 따라간 압밀 — 바인더 (PEO 계 5 %) · 습도 (R.H. 5 / 90 %) 다섯 배치: 과립 항복 압력 Py 1.5–5 M | experiment (in situ X-ray tomography · uniaxial die compacti | 2026-11-12 | 🖼 73 |
+| `dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices` | 건식 입자 코팅 장치 셋 — 메카노퓨전 (2D · host 1500 개 · 400 µm · 2000 rpm: 긁개가 있으면 편차 운동 에너지 ≈2 배 · 안쪽 조각 힘 ∝ 회전² [판독] ↔ 본문 '선형') · Hybridizer (축소 3D · 공기 없음 · 10,000 rpm: 입자–경계 충돌 ≈10⁶ /s ≫ 입자– | DEM (Walton-type soft-sphere code [9, 10] · normal loading s | 2026-11-24 | 🖼 46 |
 | `demirtas2021_mpfem_hollow_sphere_die_compaction` | 중공(hollow) 구의 다이 압밀을 3D MPFEM(입자마다 FE 메시 = 진짜 형상 소성)으로 — ★★★ 저자들이 본문에서 "DEM 은 압밀 중 변형된 입자 표면을 보정할 수 없다" 고 명시 = 우리 3층 지도 층③(입자 형상 소성 = 연속체 소관) 의 제3자 근거 — Demirtas & Klinzing (Merck, | MPFEM (Abaqus/Explicit 3D 다입자 유한요소; 입자당 C3D8R ~1650 요소, elas | 2026-08-25 | 🖼 14 |
 | `diener2022_roll_gap_springback_calendering` | 캘린더링 롤 간극을 직접 재서 본 NMC622 양극의 순간 탄성 회복 (springback) · 탄성/소성 변형 분율 — 질량 200–350 g/m² · PVDF 1.5–4 wt% 변수, 선하중 ≈60–1000 N/mm, SB 선형 경험식 — Diener · Ivanov · Haselrieder · Kwade (Energ | experiment (파일럿 캘린더 GKL400 · 롤 위치 직접 측정 센서 4 개 · 접촉식 두께 · Me | 2026-10-13 | 🖼 11 |
 | `dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review` | 등방 가압 (CIP · WIP · HIP) 을 전고체전지 양산 공정으로 — Focus Review + 자체 시연 한 건 + 기술경제: 단축 금형 가압은 벽 마찰로 압분체 밀도가 고르지 않다 (인용 · 개념도) · 문헌의 CIP 는 대개 200–250 MPa '임의 선택' · 압력 ↔ 펠릿 밀도 상관 없음 · 황화물 SE  | review + own demonstration experiment (ACS Energy Lett. Focu | 2026-11-12 | 🖼 53 |

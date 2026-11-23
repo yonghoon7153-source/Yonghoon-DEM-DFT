@@ -417,6 +417,7 @@
 - 같은 그룹 · 같은 저자: `pfeffer2001_dry_particle_coating_engineered_particulates` (NJIT 총설 · 이 논문 ref [2] · MF 원리 · MAIC DEM) · `walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem` (공저자 Walton · ref [10] · 같은 법선 법칙의 3D 판).
 - 메카노퓨전 · 고속 믹서 건식 코팅 실험 · DEM: `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` (AMS-Mini · LPSCl → NCM811) · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` (Nobilta · Rocky DEM · SI ∝ n^1.76) · `frankenberg2024_dem_high_intensity_mixer_assb` (SI ∝ n^2.17) · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kawaguchi2018_dry_coating_model_se_particle_powtec` (Hybridizer 날 끝 속도 창) · `lee2026_mechanical_halogen_argyrodite_drycoating` (우리 랩 · FEM 단일 충돌 15 m/s).
 - 드럼 · 접촉 법칙 이웃: `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` (같은 Walton–Braun 법칙 + 상수 인력 점착) · `mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude` (드럼 운동 꼴 — MF 는 원심 꼴 쪽) · `luding2008_cohesive_frictional_contact_models` (hooke/hysteresis 정의서).
+- 같은 그룹 · 앞선 개관 (2003 · 메카노퓨전 2D · Hybridizer 축소 3D · MAIC 자석 쌍극자 · 이 카드의 그림 7 · 11a · 12 와 같은 자료 · 그림 8 (편차 운동 에너지) 은 다른 값 · 힘 ∝ rpm 을 본문은 '선형' · 2026-11-24 카드): `dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

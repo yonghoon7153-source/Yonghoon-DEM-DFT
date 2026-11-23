@@ -549,6 +549,7 @@ LIC 수계 합성 → (CB + LIC 예비혼합 5,000 rpm · 10 min) → NCM 과 �
 - 혼합 DEM · 보정: `hare2026_dem_pept_dry_mixing_nmc622_eirich` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing` · `otani2025_dem_se_dispersion_aggregation_compression` · `so2022_dem_compaction_coated_particles_assb` · `thorntonning1998_adhesive_elastoplastic_contact`.
 - 탄소 매트릭스 · 수송: `reisacher2023_percolation_sulfide_carbon_matrix` · `kaiser2018_ion_transport_limitations_assb_sulfide_electrodes` · `schlautmann2023_se_particle_size_composite_transport`.
 - 회전 챔버 + 고정 안쪽 조각 + 긁개 메카노퓨전의 2D DEM (2004 · host 만 · 점착 없음 · 안쪽 조각 힘 ∝ ω^1.98 · 기능 영역별 입자당 충돌 빈도 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
+- 건식 코팅 장치 셋 (메카노퓨전 2D · Hybridizer 축소 3D · MAIC) 의 DEM 개관 (2003 · 안쪽 조각 힘 ∝ ω^≈2 · Hybridizer 충돌 속도 ∝ rpm^1.01 · 게스트 시간 간격 ≤10⁻⁹ s · 점착 없음 · 2026-11-24 카드): `dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

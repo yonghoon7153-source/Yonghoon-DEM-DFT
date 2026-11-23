@@ -251,6 +251,7 @@ NCM + 분쇄 Na₂SO₄ → 막자 30 min 예비 혼합 → Hybridizer (선속�
 - SE 기계 물성: `sakuda2013_sulfide_mechanical_property`.
 - 이 논문의 ref 18 (모델 물질 선정 · 기전 원전 · 2026-11-12 카드): `kawaguchi2018_dry_coating_model_se_particle_powtec` — 압입 수치는 그 논문 SI 에 있다 (압분 펠릿 · Berkovich: 상대 잔류 깊이 0.80 (75Li₂S·25P₂S₅) ↔ 0.94 (Na₂SO₄) · 하중 기울기 6.06 ↔ 6.79 ×10⁻² N^0.5/µm — 경도 · 영률 값은 없다) · 이 논문 Run 3 과 명목상 같은 조건 (16,000 rpm · 5 min · 70 : 30) 을 그 논문은 '연속 막 ≈0.5 µm' 로 적는다.
 - 메카노퓨전 장치 속 충돌 장소 · 빈도 · 세기의 2D DEM (2004 · Walton–Braun · host 만 · 점착 없음 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
+- Hybridizer 꼴의 축소 3D DEM (2003 · 날 = 겹친 구 셋 · 공기 없음 · 400 µm 2500 kg/m³ · 입자–경계 충돌 ≈10⁶ /s ≫ 입자–입자 ≈10³ /s · 평균 충돌 속도 ∝ rpm 2.5–12.7 m/s 판독 · 게스트 · 점착 없음 · 2026-11-24 카드): `dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
