@@ -654,3 +654,7 @@ tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode	unraveling the im
 #   ⚠ 크롭 75 장 = 도구 20 (전부 다시 자름: 래스터 사각 / 벡터 상자 + 6 pt → 내용 + 20 px · 표 S2 아래 괘선 · 표 S3 오른쪽 절반 잘림) + 손 55 (그림 1 · S5 · 표 S1 · 패널 33 · 식 1 · 근거 문단 18) + digitized.csv 225 행 — --inbox --run 으로 다시 뽑지 말 것
 kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low_resistance_lifepo4_thick_film_electrode_processed_with_dry
 kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low-resistance lifepo4 thick film electrode processed with dry
+# ── FFF 3D 프린팅 입자 모델 (LAMMPS RHEO: SPH 점성 BC + 고체 구 AM · 가정 냉각 상태 · BC 결합) · 압출 DEM 필라멘트 입력 · 한 가닥 17 / 한 층 9 / 두 층 18 · 두 층 빈 곳 38.6–40.2 % · τ_Y 1.73–1.82 · σ_e 0.0985–0.1912 S/m (P. Sun · F. Fernandez · P. Vigneaux · A.A. Franco · ChemRxiv 2026 · 동료 심사 전 · 10.26434/chemrxiv.15012329/v1) — litdb 2026-11-23 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 74 장 = 도구 7 (전부 다시 자름: 쪽 clip 사각형 안의 래스터 잉크 + 25 px · 그림 8 은 도구가 놓쳐 손으로) + 손 67 (그림 8 · 숨은 그림 4g 래스터 · 패널 20 · 식 25 · 근거 문단 20) + digitized.csv 90 행 — --inbox --run 으로 다시 뽑지 말 것
+sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure-resolved_modeling_of_fused_filament_fabrication
+sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure-resolved modeling of fused filament fabrication
