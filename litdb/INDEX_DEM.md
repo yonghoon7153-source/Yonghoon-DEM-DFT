@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 361편 · 생성 2026-11-23
+> digest 362편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -226,7 +226,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (80편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (81편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -309,6 +309,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `xu2023_dem_bonded_particle_fracture_calendering` | NMC111 2 차 입자를 1.59 µm 1 차 구의 결합 입자 모델 (BPM · Potyondy–Cundall 결합 파단) 로 묶은 LIGGGHTS 캘린더링 DEM — 결합 강도 법선 0.1 · 접선 0.038 GPa · 전극 전체 끊긴 결합 1.8 · 4.5 · 11.1 % (50 · 100 · 150 MPa) · 고 | DEM (LIGGGHTS 수정판 · 결합 입자 모델 BPM · 헤르츠 + SJKR 점착) + 실험 (나노 X | 2026-11-16 | 🖼 61 |
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 | `zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane` | 건식 PTFE 0.2 wt% · 80 °C 열 캘린더링 (hot calendering) 황화물 SE 막 30 µm — Li₅.₄PS₄.₄Cl₁.₆ (= 우리 DFT modelc 조성) 분말 펠릿 10.8 → 막 8.4 mS cm⁻¹ (25 °C · 시험 중 360 MPa 로 누른 채 · 막만 도선 · 접촉 1.04 Ω 를 | experiment (dry process · PTFE binder 0.2 wt% fibrillation b | 2026-11-22 | 🖼 52 |
+| `zhang2026_mixing_sequence_shear_speed_ptfe_fibrillation_dry_graphite_anode` | 건식 PTFE 흑연 음극 (인조 흑연 : Super P : PTFE = 95 : 3 : 2 · 15.4 mg/cm² · 90 µm) 에서 PTFE 를 넣는 순서 (TSM = 흑연 + Super P 먼저 → PTFE · OSM = 셋 한꺼번에) 와 고속 전단 rpm (2000 rpm 10 min 예비 혼합 뒤 5000 /  | experiment (dry process 건식 전극 · PTFE binder 섬유화 · 고속 mixer 투 | 2026-11-23 | 🖼 50 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 62 |
 
 ## 화학-기계 열화 · 계면 (28편)
