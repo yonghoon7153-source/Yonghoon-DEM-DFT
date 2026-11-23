@@ -52,11 +52,11 @@ def load() -> dict:
 def raw() -> dict:
     """원본 정본(data/raw) — 회차별 2~5등 당첨금·당첨자 수까지 필요한 화면(누적 히스토리·백테스트)용.
     analysis.json 의 draws 는 1등 금액만 있는 사본이다. mtime 이 바뀌면 다시 읽고 다시 검증한다."""
-    p = dataset.RAW_DIR / "lotto645.json"
-    mt = p.stat().st_mtime
-    if _raw["mtime"] != mt:
-        _raw.update(mtime=mt, lotto=dataset.load_lotto(), pension=dataset.load_pension(),
-                    manifest=json.loads((dataset.RAW_DIR / "MANIFEST.json").read_text(encoding="utf-8")))
+    d = dataset.RAW_DIR  # 확인하는 폴더와 읽는 폴더가 같아야 한다 (load_* 의 기본 인자는 import 때 고정된다)
+    mt = tuple((d / f).stat().st_mtime for f in ("lotto645.json", "pension720.json", "MANIFEST.json"))
+    if _raw["mtime"] != mt:  # 세 파일 중 하나라도 바뀌면 (연금만 바뀌어도) 다시 읽는다
+        _raw.update(mtime=mt, lotto=dataset.load_lotto(d), pension=dataset.load_pension(d),
+                    manifest=json.loads((d / "MANIFEST.json").read_text(encoding="utf-8")))
         _cache["view"] = None
     return _raw
 
@@ -98,7 +98,13 @@ def num(x, d=0) -> str:
     return f"{x:,.{d}f}"
 
 
-FILTERS = {"p": fmt_p, "won": won, "pct": pct, "signed": signed, "num": num}
+def josa(n, pair: str = "이가") -> str:
+    """숫자 뒤 조사 — 한국어로 읽은 끝소리에 맞춘다: 끝자리 2(이)·4(사)·5(오)·9(구)는 받침이 없다.
+    값에서 만든 문장이 '2 이 1위다' 처럼 되지 않게 (pair: "이가" · "을를" · "은는")."""
+    return f"{n} {pair[1] if int(n) % 10 in (2, 4, 5, 9) else pair[0]}"
+
+
+FILTERS = {"p": fmt_p, "won": won, "pct": pct, "signed": signed, "num": num, "josa": josa}
 
 
 # ───────────────────────────── 차트 좌표 ─────────────────────────────
@@ -261,6 +267,7 @@ def _ball_cls(n: int) -> str:
 
 def view() -> dict:
     D = load()
+    raw()  # 원본(data/raw)이 바뀌었으면 다시 읽고 화면을 다시 만든다 — 받기만 하고 분석을 안 돌려도 /history 가 따라간다
     if _cache["view"] is None:
         _cache["view"] = _build_view(D)
     return _cache["view"]
@@ -339,10 +346,10 @@ def _build_view(D: dict) -> dict:
         "n_tests": len(all_summary), "min_holm": min(r["p_holm"] for r in all_summary),
         "n_sig": sum(r["p_holm"] < dataset.ALPHA for r in all_summary),
         "n_models": len(hits), "hit_lo": min(hits), "hit_hi": max(hits),
-        # 생성기 기본값(인기 하위 20% 안에서 균등하게 고름)으로 얻는 1등 기대 수령액의 평균 배수 − 1.
-        # (하위 10% '경계' 조합의 값 share_at_pct[i10] 와 다르다 — 경계값을 쓰면 기본값의 효과를 낮춰 말하게 된다)
-        "gain20": sum(x for q, x in zip(S["pct"], S["share_at_pct"]) if q <= 20)
-                  / sum(1 for q in S["pct"] if q <= 20) / S["share_avg"] - 1,
+        # 생성기 기본값(인기 하위 20% 안에서 균등하게 고름)의 1등 기대 수령액 ÷ 자동(무작위) 구매 − 1.
+        # popularity.fit 이 make.js 규칙 그대로 전 조합을 열거한 구간 평균 (자체 리뷰 J1 — 전에는 백분위 격자
+        # 평균으로 근사했고 기준이 '인기도 0 인 조합' 이라 +14% 로 보였다)
+        "gain20": S["bucket_gain"]["20"] - 1,
         "r2_5": pop["tiers"]["5"]["r2_oof"],
     }
     v["recent"] = [{"round": d[0], "date": d[1], "nums": [(x, _ball_cls(x)) for x in d[2:8]],
@@ -385,6 +392,8 @@ def _build_view(D: dict) -> dict:
     v["feature_rows"] = [(f["label"], f"{f['obs_mean']:.2f}", f"{f['exp_mean']:.2f}", fmt_p(f["p"]))
                          for f in st["features"].values()]
     v["alpha"] = dataset.ALPHA
+    # ── 값에서 만드는 문장의 재료 (자체 리뷰 L1 — 고정 문장은 값이 바뀌어도 그대로 남았다)
+    v["era_top_distinct"] = len({t[0] for t in st["eras"]["top_by_era"]}) == len(st["eras"]["top_by_era"])
     band = fq["band_bonferroni"]
     v["freq_in_band"] = band[0] <= min(fq["counts"]) and max(fq["counts"]) <= band[1]
     v["feature_sig"] = [r["question"] for r in st["summary"]
@@ -405,9 +414,25 @@ def _build_view(D: dict) -> dict:
         ref=0.8, ref_label="무작위 기대 0.8", aria="전략별 평균 적중 수")
     v["ml_roi"] = (min(r["won"] / r["spent"] for r in real["rows"]), max(r["won"] / r["spent"] for r in real["rows"]))
     v["ml_best_raw_p"] = min(r["p_better"] for r in real["rows"])
+    v["logloss_better"] = [r["model"] for r in real["rows"] if r.get("dlogloss") is not None and r["dlogloss"] < 0]
+    svr = lo["svr"]["r2_oof"]
+    ols = next(v_ for k, v_ in svr.items() if k.startswith("OLS"))
+    v["svr_better"] = [k for k, r2 in svr.items() if k.startswith("SVR") and r2 > ols]
     dd = lo["ddpm"]
     # 확산 모델 적중의 판정 — 양측 검정, 기준은 ALPHA (고정 문구 "무작위와 같음" 대신, 자체 리뷰 K1)
     v["ddpm_hits_same"] = abs(dd["hits_one_per_draw"]["z"]) < NormalDist().inv_cdf(1 - dataset.ALPHA / 2)
+    # 학습 데이터의 우연한 빈도와의 상관 — 45개 번호의 상관이라 r 만으로는 판정할 수 없다 (Fisher z, 양측)
+    r = dd["corr_with_train_freq"]
+    v["ddpm_corr_p"] = math.erfc(abs(math.atanh(r) * math.sqrt(45 - 3)) / math.sqrt(2))
+    # 번호 사용 편차 = X² / 39 (비복원 6개 추출이라 균등 무작위일 때 X² 의 기대가 39) — 기록된 값으로 판정한다
+    # (전에는 analysis.json 에 없는 '학습을 4배로 늘려도 3배 이상' 을 적었다). X²·44/39 ~ χ²(44), 임계값은
+    # Wilson–Hilferty 근사 (웹앱은 scipy 없이 돈다).
+    eg = dd["n_generated"] * 6 / 45
+    gx2 = sum((c - eg) ** 2 / eg for c in dd["number_counts"])
+    zq = NormalDist().inv_cdf(1 - dataset.ALPHA)
+    crit = 44 * (1 - 2 / (9 * 44) + zq * math.sqrt(2 / (9 * 44))) ** 3
+    v["ddpm_disp"], v["train_disp"] = gx2 / 39, st["frequency"]["chi2"] / 39
+    v["ddpm_disp_sig"] = gx2 * 44 / 39 > crit
     v["ddpm_chart"] = columns(
         dd["number_counts"], [str(i + 1) for i in range(45)], x_every=5, ref=dd["n_generated"] * 6 / 45,
         aria="확산 모델 번호 사용 횟수",
@@ -440,13 +465,13 @@ def _build_view(D: dict) -> dict:
         y_fmt=lambda t: f"{t:.1f}", aria="인기도 10분위별 1등 당첨자 수 비율",
         titles=[f"인기도 {k + 1}분위: 실제 1등 평균 {c['obs']:.1f}명 (무작위 기대 {c['exp_uniform']:.1f}, "
                 f"모델 {c['pred']:.1f})" for k, c in enumerate(cal)])
-    shares = [s / S["share_avg"] for s in S["share_at_pct"]]
+    shares = [s / S["share_auto_mean"] for s in S["share_at_pct"]]  # 기준 = 자동(무작위) 구매의 평균 몫
     i90 = S["pct"].index(90.0)
     v["payoff_chart"] = line_chart(
         S["pct"], shares, ref=1.0, x_ticks=[0, 25, 50, 75, 100], x_fmt=lambda t: f"{t:g}%",
         y_fmt=lambda t: f"{t:.2f}배",
-        marks=[{"x": 10.0, "label": f"하위 10%: {shares[i10]:.2f}배"},
-               {"x": 90.0, "label": f"상위 10%: {shares[i90]:.2f}배", "anchor": "end"}],
+        marks=[{"x": 10.0, "label": f"10% 지점: {shares[i10]:.2f}배"},  # 곡선 위의 점 (구간 평균은 bucket_gain)
+               {"x": 90.0, "label": f"90% 지점: {shares[i90]:.2f}배", "anchor": "end"}],
         titles=lambda i: f"인기도 {S['pct'][i]:g}%: {shares[i]:.3f}배 (1등 시 약 {won(S['pool1_recent_mean'] * S['share_at_pct'][i])}원)",
         aria="인기도 백분위별 1등 기대 수령액")
     v["shares10"] = (shares[i10], shares[i90])
@@ -498,6 +523,13 @@ def _build_view(D: dict) -> dict:
 
     # ── 흔한 주장 판정표 — 국내 로또 앱·사이트의 공통 기능(출현·미출현 통계, 궁합수, 패턴 필터,
     #    AI 추천 …)과 동행복권 '복권의 오해와 진실' 을 참고해, 각 주장에 이 데이터의 답을 붙인다.
+    b5 = pop["number_effect"]["beta"]
+    th, thp = pop["tiers"]["5"]["theta"], pop["tiers"]["5"]["theta_p"]
+    v["birthday_more"] = sum(b5[:31]) / 31 > sum(b5[31:]) / 14
+    v["avoid_prev"] = th["prev_overlap"] < 0 and thp["prev_overlap"] < dataset.ALPHA
+    v["pref_prev"] = th["prev_overlap"] > 0 and thp["prev_overlap"] < dataset.ALPHA
+    v["row1_more"] = sum(b5[:7]) / 7 > sum(b5) / 45 > sum(b5[42:]) / 3  # 용지 첫 줄 인기 · 마지막 줄 비인기
+    v["number_effect_sig"] = pop["number_effect"]["wald_p"] < dataset.ALPHA
     feats, sig = st["features"], v["sig"]
     check = "차이 있음 — 검토"  # 보정 후 유의: 원인을 확인하기 전까지 그 주장을 판정하지 않는다
     hot, half = sig("특정 번호가 더 잘 나오나"), sig("과거 빈도가 미래 빈도를 예고하나")
@@ -546,14 +578,17 @@ def _build_view(D: dict) -> dict:
 def generator_payload() -> dict:
     """번호 생성기(make.js)가 받는 값 — 인기도 점수 계수, 확산 모델 번호 풀, 전 회차(백테스트용).
 
-    rounds 는 원본 정본에서: [회차, 번호 6개, 보너스, 1~5등 1인당 당첨금, 게임 가격]. 1등 당첨자가
-    없던 회차의 1등 금액은 0 으로 기록돼 있다 (이월) — 백테스트는 그 회차 1등을 금액 미상으로 따로 센다.
+    rounds 는 원본 정본에서: [회차, 번호 6개, 보너스, 1~5등 1인당 당첨금, 게임 가격, 1~3등 당첨자 수].
+    1~3등은 나눠 갖는 몫이라 백테스트가 '내가 한 명 더' 로 1인당 × w/(w+1) 을 쓴다 (자체 리뷰 H1). 그 등수
+    당첨자가 없던 회차는 금액이 0 으로 기록돼 있어 금액 미상으로 따로 센다. backtest 는 같은 규칙으로 814만
+    조합 전부의 회수율 분포 — 내 번호의 순위를 매기는 기준이다.
     """
     D, R = load(), raw()
     return {
         "score": D["lotto"]["popularity"]["score"],
         "ddpm_pool": D["lotto"]["ddpm_pool"],
-        "rounds": [[d.round, *d.numbers, d.bonus, *d.prize, d.price] for d in R["lotto"]],
+        "rounds": [[d.round, *d.numbers, d.bonus, *d.prize, d.price, *d.winners[:3]] for d in R["lotto"]],
+        "backtest": D["lotto"]["backtest"],
         "pension_past": [[d.round, d.number] for d in R["pension"]],
         "latest_round": R["lotto"][-1].round,
     }

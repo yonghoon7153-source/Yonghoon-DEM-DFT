@@ -32,7 +32,7 @@ def _mut_pension(fn) -> bytes:
 
 def test_real_snapshot_passes_and_matches_manifest():
     lotto, pension = dataset.parse_lotto(RAW_L), dataset.parse_pension(RAW_P)
-    man = json.loads((dataset.RAW_DIR / "MANIFEST.json").read_text())
+    man = json.loads((dataset.RAW_DIR / "MANIFEST.json").read_text(encoding="utf-8"))
     assert len(lotto) == man["files"]["lotto645.json"]["records"]
     assert len(pension) == man["files"]["pension720.json"]["records"]
     assert lotto[0].numbers == (10, 23, 29, 33, 37, 40) and lotto[0].bonus == 16
@@ -40,7 +40,7 @@ def test_real_snapshot_passes_and_matches_manifest():
 
 def test_manifest_sha256_matches_raw_bytes():
     import hashlib
-    man = json.loads((dataset.RAW_DIR / "MANIFEST.json").read_text())
+    man = json.loads((dataset.RAW_DIR / "MANIFEST.json").read_text(encoding="utf-8"))
     for name in ("lotto645.json", "pension720.json"):
         assert hashlib.sha256((dataset.RAW_DIR / name).read_bytes()).hexdigest() == man["files"][name]["sha256"]
 

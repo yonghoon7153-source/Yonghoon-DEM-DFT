@@ -87,3 +87,35 @@ def rank_of(combo: tuple[int, ...]) -> int:
             r += comb(45 - y, 5 - pos)
         prev = x
     return r
+
+
+def backtest_distribution(lotto) -> dict:
+    """'1회부터 매주 같은 조합을 샀다면' 의 회수율을 814만 조합 전부에 대해 — 생성기 백테스트의 비교 기준.
+
+    전에는 '평균적인 번호' 의 기대값(회수율 약 57%) 하나와 비교했는데, 드문 1등이 평균을 끌어올려 조합의 96% 가
+    그보다 적게 받는다 (자체 리뷰 H1). 그래서 전 조합의 분포(백분위)를 내고, 내 번호의 순위로 비교한다.
+    규칙은 make.js simulate 와 같다: 4·5등은 정액, 1~3등은 당첨자끼리 나누므로 내가 한 명 더 → 1인당 × w/(w+1).
+    그 등수 당첨자가 없던 회차(1등 이월 14회 · 2등 2회)는 받았을 금액이 기록에 없어 0 으로 센다 — 회차마다 조합
+    하나(2등은 여섯)뿐이라 분포에는 영향이 없다. 평균은 tests/test_site_js.py 가 정확한 식과 대조한다.
+    """
+    A = all_combos()
+    mask = np.zeros(len(A), np.int64)
+    for i in range(6):
+        mask |= np.left_shift(np.int64(1), A[:, i].astype(np.int64) - 1)
+    pay = np.zeros(len(A))
+    for d in lotto:
+        win = sum(1 << (x - 1) for x in d.numbers)
+        split = [d.prize[k] * d.winners[k] / (d.winners[k] + 1) if d.winners[k] else 0.0 for k in range(3)]
+        lut = np.array([0.0, 0.0, 0.0, d.prize[4], d.prize[3], split[2], split[0]])  # 맞힌 개수 → 금액 (5개는 3등)
+        m = np.bitwise_count(mask & win)
+        pay += lut[m]
+        five = np.nonzero(m == 5)[0]
+        pay[five[(mask[five] >> (d.bonus - 1)) & 1 == 1]] += split[1] - split[2]  # 5개 + 보너스 = 2등
+    spent = sum(d.price for d in lotto)
+    ret = pay / spent
+    pct = np.linspace(0, 100, 201)
+    mean = float(ret.mean())
+    return {"rounds": [lotto[0].round, lotto[-1].round], "spent": spent,
+            "pct": pct.tolist(), "ret": np.percentile(ret, pct).tolist(),
+            "median": float(np.median(ret)), "mean": mean, "below_mean": float((ret < mean).mean()),
+            "rule": "4·5등 정액 · 1~3등 1인당 × w/(w+1) · 그 등수 당첨자가 없던 회차는 0"}

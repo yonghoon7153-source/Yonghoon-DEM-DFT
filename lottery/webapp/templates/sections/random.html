@@ -15,7 +15,7 @@
   <div class="tablewrap full"><table class="data">
     <thead><tr><th>질문</th><th>p</th><th>보정 p (Holm)</th><th>판정</th></tr></thead>
     <tbody>{% for r in st.summary %}<tr><td>{{ r.question }}</td><td class="num">{{ r.p|p }}</td><td class="num">{{ r.p_holm|p }}</td>
-      <td>{% if r.p_holm < 0.05 %}<span class="chip v-diff">● 차이 있음</span>{% else %}<span class="chip v-same">○ 무작위와 같음</span>{% endif %}</td></tr>{% endfor %}</tbody>
+      <td>{% if r.p_holm < V.alpha %}<span class="chip v-diff">● 차이 있음</span>{% else %}<span class="chip v-same">○ 구분 안 됨</span>{% endif %}</td></tr>{% endfor %}</tbody>
   </table></div>
 </div>
 
@@ -77,11 +77,13 @@
   <div class="panel" id="power">
     <h2 class="panel-h">얼마나 작은 편향까지 잡을 수 있나</h2>
     {{ M.course('확률과통계 10주 제2종 오류·검정력') }}
-    <p class="pnote">'차이 없음'은 '차이가 0'이라는 뜻이 아니다. {{ st.n_draws|num }}회로는 어떤 번호가 <b>{{ pw.single_number_rel_bias|pct }}</b> 더
-      잘 나와야 80% 확률로 잡아낼 수 있고, 번호 쌍은 <b>{{ pw.pair_rel_bias|pct }}</b> 이상 차이가 나야 한다. 5% 편향을 잡으려면 약
+    <p class="pnote">'차이 없음'은 '차이가 0'이라는 뜻이 아니다. {{ st.n_draws|num }}회로 이 화면의 판정(빈도 검정 + 질문
+      {{ pw.n_questions }}개 Holm 보정)이 80% 확률로 잡아내려면 어떤 번호가 <b>{{ pw.single_number_rel_bias|pct }}</b> 더 잘 나와야 한다
+      (빈도 차트의 띠 — 45개 동시 보정 — 를 벗어나는 데는 {{ pw.single_number_rel_bias_band|pct }}). 번호 쌍 하나는 990쌍 동시 보정
+      기준으로 <b>{{ pw.pair_rel_bias|pct }}</b> 이상 차이가 나야 한다. 5% 편향을 이 판정으로 잡으려면 약
       <b>{{ pw.years_needed_for_5pct|num }}년</b>치 추첨이 필요하다. 그만큼 작은 편향은 번호 하나의 출현 확률을 13.3%에서 14% 정도로 바꿀 뿐이라
       실전에서 쓸모가 없다.</p>
-    <p class="pnote">시대별(약 250회씩 5구간)로 가장 많이 나온 번호도 매번 달랐다:
+    <p class="pnote">시대별(약 {{ (st.n_draws / st.eras.top_by_era|length)|round|int }}회씩 {{ st.eras.top_by_era|length }}구간)로 가장 많이 나온 번호도 {{ '매번 달랐다' if V.era_top_distinct else '시대마다 겹치기도 했다' }}:
       {% for t in st.eras.top_by_era %}<b>{{ st.eras.edges_round[loop.index0] }}회~</b> {{ t[:3]|join('·') }}{% if not loop.last %} · {% endif %}{% endfor %}
       (동질성 p = {{ st.eras.p_mc|p }}).</p>
   </div>

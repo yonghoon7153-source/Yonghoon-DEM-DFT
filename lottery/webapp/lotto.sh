@@ -21,7 +21,9 @@ SHARE=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --port)  PORT="${2:-}"; shift 2 ;;
+    --port)  # 값이 없으면 shift 2 가 실패해 같은 인자를 영원히 돌았다 (자체 리뷰 소)
+      [[ $# -ge 2 && -n "$2" ]] || { echo "--port 에 포트 번호가 필요하다 (예: --port 5071)" >&2; exit 2; }
+      PORT="$2"; shift 2 ;;
     --share) SHARE=1; shift ;;
     --stop)
       if [[ -f "$PIDF" ]] && kill -0 "$(cat "$PIDF")" 2>/dev/null; then

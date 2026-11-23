@@ -17,7 +17,7 @@
   <div class="stat is-static"><b>1/8,145,060</b><span>로또 1등 확률 — 어떤 조합이든 같다</span></div>
   <div class="stat is-static"><b>{% if f.n_sig %}{{ f.n_sig }}/{{ f.n_tests }}개 유의{% else %}{{ f.n_tests }}개 통과{% endif %}</b><span>무작위성 검정 · 보정 후 최소 p {{ f.min_holm|p }}</span></div>
   <div class="stat is-static"><b>{{ '%.2f'|format(f.hit_lo) }}~{{ '%.2f'|format(f.hit_hi) }}개</b><span>예측 전략 {{ f.n_models }}개의 평균 적중 (무작위 0.80개)</span></div>
-  <div class="stat is-static"><b>+{{ f.gain20|pct }}</b><span>생성기 기본값(인기 하위 20%)으로 고른 조합의 1등 기대 수령액 — 평균 조합 대비</span></div>
+  <div class="stat is-static"><b>+{{ f.gain20|pct }}</b><span>생성기 기본값(인기 하위 20%)으로 고른 조합의 1등 기대 수령액 — 자동(무작위) 구매 대비</span></div>
 </div>
 
 <div class="cards">
@@ -29,7 +29,8 @@
       {% if name == 'make' %}수동으로 살 번호를 고른다. 사람들이 덜 고르는 조합 · 완전 무작위 · 확산 모델(실험) 중에서 고르고, 번호를 고정하거나 뺄 수 있다.
       {% elif name == 'random' %}번호별 빈도 · 궁합수 990쌍 · 이월수 · 미출현 간격 · 총합·홀짝·AC값을 검정했다. {{ V.verdict.random.card }}
       {% elif name == 'ml' %}로지스틱 회귀 · SVM · 신경망 · 나이브 베이즈 · 부스팅 · 확산 모델 · EM 을 walk-forward 로 겨뤘다. {{ V.verdict.ml.card }}
-      {% elif name == 'people' %}{% if V.verdict.people.kind == 'diff' %}5등 당첨자 수로 그 주 번호의 인기를 {{ f.r2_5|pct }} 설명한다(처음 보는 회차). 7·생일 번호가 인기고 지난주 번호는 피한다.{% else %}5등 당첨자 수로 번호 선택의 인기를 추정했지만 이번 분석에서는 뚜렷한 패턴이 보이지 않는다.{% endif %}
+      {% elif name == 'people' %}{% if V.verdict.people.kind == 'diff' %}5등 당첨자 수로 그 주 번호의 인기를 {{ f.r2_5|pct }} 설명한다(처음 보는 회차). {{ V.pop_rank[0] }}{{ '·생일' if V.birthday_more }} 번호가 인기{% if V.avoid_prev %}고 지난주 번호는 피한다{% elif V.pref_prev %}고 지난주 번호를 더 고른다{% else %}다{% endif %}.{% else %}5등 당첨자 수로 번호 선택의 인기를 추정했지만 이번 분석에서는 뚜렷한 패턴이 보이지 않는다.{% endif %}
+      {% elif name == 'history' %}로또 전 회차 당첨번호와 1~5등 당첨자 수 · 1등 1인당 금액 · 자동/수동/반자동 · 판매액, 연금 전 회차. 최근 104회 1등 금액·당첨자 수 차트.
       {% elif name == 'pension' %}{% if V.verdict.pension.kind == 'same' %}자리별 숫자 0~9 와 조 1~5 가 고르게 나온다.{% else %}{{ V.verdict.pension.card }}{% endif %} 당첨금이 고정이라 번호 선택으로 바꿀 것이 없다.
       {% else %}원본 URL · sha256 · 검증 규칙 · 다시 만드는 명령 · 한계 · 강의(확률과통계 · 머신러닝)와의 연결.{% endif %}
       </p>

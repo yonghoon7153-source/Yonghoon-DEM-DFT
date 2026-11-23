@@ -51,11 +51,12 @@ function afterTax(prize) {
   var tax = Math.floor(Math.min(income, 3e8) * 0.22 + Math.max(0, income - 3e8) * 0.33);
   return { tax: tax, net: prize - tax };
 }
-// 백테스트 — rounds: [회차, 번호 6개, 보너스, 1~5등 1인당 당첨금, 게임 가격].
-// 같은 조합을 1회부터 매 회 1게임씩 샀다면. 'expected' 는 평균적인(무작위) 번호의 기대값이다.
+// 백테스트 — rounds: [회차, 번호 6개, 보너스, 1~5등 1인당 당첨금, 게임 가격, 1~3등 당첨자 수].
+// 같은 조합을 1회부터 매 회 1게임씩 샀다면. 1~3등은 당첨자끼리 나누므로 내가 한 명 더 → 1인당 × w/(w+1)
+// (공개 1인당 금액 그대로 쓰면 1등을 부풀린다 — 자체 리뷰 H1). 그 등수 당첨자가 없던 회차는 금액 미상.
 var TIER_P = [1, 6, 228, 11115, 182780].map(function (k) { return k / 8145060; });
 function simulate(c, rounds) {
-  var out = { counts: [0, 0, 0, 0, 0], won: 0, spent: 0, expectedWon: 0, unknownFirst: 0, n: rounds.length };
+  var out = { counts: [0, 0, 0, 0, 0], won: 0, spent: 0, unknown: 0, n: rounds.length };
   for (var r = 0; r < rounds.length; r++) {
     var d = rounds[r], m = 0, k;
     for (k = 1; k <= 6; k++) if (c.indexOf(d[k]) >= 0) m++;
@@ -63,13 +64,18 @@ function simulate(c, rounds) {
     var tier = m === 6 ? 1 : m === 5 ? (bonus ? 2 : 3) : m === 4 ? 4 : m === 3 ? 5 : 0;
     if (tier) {
       out.counts[tier - 1]++;
-      if (tier === 1 && d[8] === 0) out.unknownFirst++;   // 1등 없던(이월) 회차 — 금액 미기재
-      else out.won += d[7 + tier];
+      var w = d[13 + tier];
+      if (tier > 3) out.won += d[7 + tier];                    // 4·5등 정액
+      else if (w === 0) out.unknown++;                          // 그 등수 당첨자가 없던 회차 — 금액 미기재
+      else out.won += d[7 + tier] * w / (w + 1);
     }
     out.spent += d[13];
-    for (k = 0; k < 5; k++) out.expectedWon += TIER_P[k] * d[8 + k];
   }
   return out;
+}
+// 회수율 ret 이 814만 조합 가운데 몇 백분위인가 (D = 분석이 같은 규칙으로 전수 계산한 분포)
+function returnPercentile(ret, D) {
+  return percentileOf(ret, { eta_percentiles: D.ret, pct: D.pct });
 }
 // </core>
 
@@ -78,7 +84,7 @@ function simulate(c, rounds) {
   var root = document.getElementById("maker");
   if (!root) return;
 
-  var S = null, POOL = [], PAST = {}, PPAST = {}, LATEST = 0, ROUNDS = [];
+  var S = null, POOL = [], PAST = {}, PPAST = {}, LATEST = 0, ROUNDS = [], BT = null;
   var ui = { mode: "unpopular", maxPct: 20, count: 5, inc: [], exc: [] };
   var lastLotto = [], lastPension = [];
   var HELP = {
@@ -112,14 +118,22 @@ function simulate(c, rounds) {
   function key(c) { return c.join("-"); }
   function msg(t) { $("lotto-msg").textContent = t || ""; }
 
+  function rankText(p) {             // p = 이 회수율 이하인 조합의 비율(%) — 중앙값 위는 '상위', 아래는 '하위'
+    if (p >= 99) return "상위 1% 안";
+    if (p >= 50) return "상위 약 " + Math.round(100 - p) + "%";
+    return "하위 약 " + Math.max(1, Math.round(p)) + "%";
+  }
+
   function backtest(c) {
     var r = simulate(c, ROUNDS), wrap = el("div", "backtest");
     var first = ROUNDS[0][0], last = ROUNDS[ROUNDS.length - 1][0];
     wrap.appendChild(el("p", "pnote", first + "회~" + last + "회 매주 이 번호 1게임: 쓴 돈 " + r.spent.toLocaleString("ko-KR") +
-      "원 · 받은 돈 " + r.won.toLocaleString("ko-KR") + "원 (회수율 " + Math.round(r.won / r.spent * 100) + "%). 평균적인 번호라면 약 " +
-      Math.round(r.expectedWon).toLocaleString("ko-KR") + "원 (" + Math.round(r.expectedWon / r.spent * 100) + "%)." +
-      (r.unknownFirst ? " 1등이 없어 이월된 회차의 1등 " + r.unknownFirst + "번은 금액을 알 수 없어 빼고 셌다." : "") +
-      " 과거 성적은 운이고, 다음 회 확률과는 무관하다."));
+      "원 · 받은 돈 " + Math.round(r.won).toLocaleString("ko-KR") + "원 (회수율 " + Math.round(r.won / r.spent * 100) + "%). " +
+      "같은 기간 814만 조합 가운데 회수율 " + rankText(returnPercentile(r.won / r.spent, BT)) + " — " +
+      "조합의 절반은 " + Math.round(BT.median * 100) + "% 이하를 돌려받았다 (평균은 " + Math.round(BT.mean * 100) +
+      "% 이지만 드문 1등이 끌어올린 값이라 조합의 " + Math.round(BT.below_mean * 100) + "% 가 그보다 적다)." +
+      (r.unknown ? " 그 등수 당첨자가 없던 회차의 당첨 " + r.unknown + "번은 받았을 금액이 기록에 없어 빼고 셌다." : "") +
+      " 1~3등은 그 회차 당첨자와 나눈 몫으로 셌다. 과거 성적은 운이고, 다음 회 확률과는 무관하다."));
     var tw = el("div", "tablewrap full"), tb = el("table", "data"), th = el("thead"), hr = el("tr");
     ["", "1등", "2등", "3등", "4등", "5등"].forEach(function (h) { hr.appendChild(el("th", null, h)); });
     th.appendChild(hr); tb.appendChild(th);
@@ -145,7 +159,7 @@ function simulate(c, rounds) {
     info.appendChild(el("span", "tk-chip " + (low ? "tk-low" : "tk-high"),
       (low ? "▼ 인기 하위 " : "▲ 인기 상위 ") + Math.max(0.5, p).toFixed(p < 10 ? 1 : 0) + "%"));
     var gross = S.pool1_recent_mean * pop.share;
-    info.appendChild(el("span", "tk-chip", "1등 시 기대 " + won(gross) + "원 · 세후 " + won(afterTax(gross).net) + "원 (평균의 " + (pop.share / S.share_avg).toFixed(2) + "배)"));
+    info.appendChild(el("span", "tk-chip", "1등 시 기대 " + won(gross) + "원 · 세후 " + won(afterTax(gross).net) + "원 (자동 평균의 " + (pop.share / S.share_auto_mean).toFixed(2) + "배)"));
     if (PAST[key(c)]) info.appendChild(el("span", "tk-chip tk-flag", "⚑ 과거 1등 조합 (" + PAST[key(c)] + "회)"));
     if (sh.arithmetic) info.appendChild(el("span", "tk-chip tk-flag", "⚑ 같은 간격 수열"));
     if (sh.maxRun >= 4) info.appendChild(el("span", "tk-chip tk-flag", "⚑ " + sh.maxRun + "개 연속"));
@@ -307,7 +321,7 @@ function simulate(c, rounds) {
   fetch(root.getAttribute("data-score-url"))
     .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(function (d) {
-      S = d.score; POOL = d.ddpm_pool; LATEST = d.latest_round; ROUNDS = d.rounds;
+      S = d.score; POOL = d.ddpm_pool; LATEST = d.latest_round; ROUNDS = d.rounds; BT = d.backtest;
       d.rounds.forEach(function (r) { PAST[r.slice(1, 7).join("-")] = r[0]; });
       d.pension_past.forEach(function (r) { PPAST[r[1]] = r[0]; });
       wire();

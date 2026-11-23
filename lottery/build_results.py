@@ -11,13 +11,14 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import sys
 import time
 import warnings
 
 import numpy as np
-from scipy import stats
+from scipy import optimize, stats
 
 import combos
 import dataset
@@ -63,16 +64,54 @@ def _clean(o):
     return o
 
 
-def power_summary(n_lotto: int) -> dict:
-    """10주 '검정력': 이 회차 수로 몇 % 편향까지 80% 확률로 잡아내나 (Bonferroni 양측 5%)."""
+# 분석 숫자를 정하는 파일 — 결과 파일에 이 파일들의 지문과 라이브러리 판본을 남긴다 (자체 리뷰: 전에는 어떤 코드로
+# 만들었는지 기록이 없었고, 실행마다 다른 실행 시간이 정본 안에 있었다 — 실행 시간은 화면 출력에만 남긴다).
+ANALYSIS_FILES = ("build_results.py", "combos.py", "dataset.py", "generative.py", "ml_backtest.py",
+                  "popularity.py", "stats_tests.py", "requirements.txt")
+
+
+def source_digest() -> str:
+    h = hashlib.sha256()
+    for name in ANALYSIS_FILES:
+        h.update(name.encode() + b"\0" + hashlib.sha256((dataset.ROOT / name).read_bytes()).digest())
+    return h.hexdigest()
+
+
+def code_identity() -> dict:
+    import platform
+    import scipy
+    import sklearn
+    import statsmodels
+    return {"source_sha256": source_digest(), "files": list(ANALYSIS_FILES),
+            "versions": {"python": platform.python_version(), "numpy": np.__version__, "scipy": scipy.__version__,
+                         "sklearn": sklearn.__version__, "statsmodels": statsmodels.__version__}}
+
+
+def power_summary(n_lotto: int, n_questions: int) -> dict:
+    """10주 '검정력': 이 회차 수로 번호 하나의 편향을 80% 확률로 잡으려면 몇 % 여야 하나.
+
+    single_number_rel_bias — 화면의 판정 그대로: 빈도 X²/(39/44) ~ χ²(44) 의 p 가 Holm 첫 단계 α/질문 수
+      아래. 번호 하나가 (1+δ) 배 나오면 비중심도 λ = n · p1 · δ² · 45/39 (tests/test_numbers.py 가 편향을
+      심은 시뮬레이션으로 80% 를 확인한다). 전에는 아래 띠 기준만 내서 판정보다 훨씬 작은 편향을 잡는 것처럼
+      보였다 (자체 리뷰 G1: 29.6% 를 심으면 판정은 16% 만 잡는다).
+    single_number_rel_bias_band — 빈도 차트의 띠: 번호 하나가 45개 동시 보정(Bonferroni) 범위를 벗어남.
+    pair_rel_bias — 쌍 하나가 990쌍 동시 보정 범위를 벗어남 (화면의 '보정 후 유의한 쌍' 기준).
+    """
     zb = stats.norm.isf(0.2)
     p1, p2 = 6 / 45, 1 / 66
     za1, za2 = stats.norm.isf(0.025 / 45), stats.norm.isf(0.025 / 990)
-    rel1 = (za1 + zb) * np.sqrt(n_lotto * p1 * (1 - p1)) / (n_lotto * p1)
+    band1 = (za1 + zb) * np.sqrt(n_lotto * p1 * (1 - p1)) / (n_lotto * p1)
     rel2 = (za2 + zb) * np.sqrt(n_lotto * p2 * (1 - p2)) / (n_lotto * p2)
-    need5 = ((za1 + zb) / 0.05) ** 2 * (1 - p1) / p1  # 5% 편향 검출에 필요한 회차 수
-    return {"single_number_rel_bias": float(rel1), "pair_rel_bias": float(rel2),
-            "draws_needed_for_5pct": float(need5), "years_needed_for_5pct": float(need5 / 52.18)}
+    band_need5 = ((za1 + zb) / 0.05) ** 2 * (1 - p1) / p1
+    crit = stats.chi2.isf(dataset.ALPHA / n_questions, 44)
+    lam = optimize.brentq(lambda x: stats.ncx2.sf(crit, 44, x) - 0.8, 1e-6, 1e4)
+    k = p1 * 45 / 39  # λ = n · k · δ²
+    need5 = lam / (k * 0.05 ** 2)
+    return {"single_number_rel_bias": float(np.sqrt(lam / (n_lotto * k))),
+            "draws_needed_for_5pct": float(need5), "years_needed_for_5pct": float(need5 / 52.18),
+            "n_questions": n_questions, "alpha": dataset.ALPHA,
+            "single_number_rel_bias_band": float(band1), "band_years_needed_for_5pct": float(band_need5 / 52.18),
+            "pair_rel_bias": float(rel2)}
 
 
 def main() -> int:
@@ -93,7 +132,7 @@ def main() -> int:
         return out
 
     L, P = dataset.load_lotto(), dataset.load_pension()
-    manifest = json.loads((dataset.RAW_DIR / "MANIFEST.json").read_text())
+    manifest = json.loads((dataset.RAW_DIR / "MANIFEST.json").read_text(encoding="utf-8"))
     draws = np.array([d.numbers for d in L])
     bonus = np.array([d.bonus for d in L])
     rounds = np.array([d.round for d in L])
@@ -125,6 +164,7 @@ def main() -> int:
     ddpm = step("확산 모델 평가", lambda: generative.evaluate_ddpm(draws, epochs=E))
     pool = step("확산 모델 번호 풀", lambda: generative.train_generator_pool(draws, epochs=E))
     em = step("EM 군집 검정", lambda: generative.em_cluster_test(draws, b_null=10 if args.quick else 30))
+    backtest = step("백테스트 분포 (814만 조합 전수)", lambda: combos.backtest_distribution(L))
 
     # 확산 모델 번호의 인기도 vs 균등 무작위 번호 (1등 시 기대 몫)
     gen = ddpm.pop("generated")
@@ -138,7 +178,7 @@ def main() -> int:
     data = {
         "meta": {
             "built_at_utc": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
-            "quick": args.quick, "seconds": round(time.time() - t_all, 1), "timings": tm,
+            "quick": args.quick, "code": code_identity(),
             "source": manifest, "b_mc": B, "ddpm_epochs": E,
             "lotto_range": [L[0].round, L[-1].round, L[0].date.isoformat(), L[-1].date.isoformat()],
             "pension_range": [P[0].round, P[-1].round, P[0].date.isoformat(), P[-1].date.isoformat()],
@@ -151,11 +191,11 @@ def main() -> int:
                        int(round(d.games)), d.first_auto, d.first_manual, d.first_semi] for d in L],
             "draw_columns": ["round", "date", "n1", "n2", "n3", "n4", "n5", "n6", "bonus",
                              "w1", "w2", "w3", "w4", "w5", "prize1", "games", "auto", "manual", "semi"],
-            "stats": lotto_stats, "power": power_summary(len(L)),
+            "stats": lotto_stats, "power": power_summary(len(L), len(lotto_stats["summary"])),
             "exact": {k: {str(v): p for v, p in d.items()} for k, d in combos.exact_distributions().items()},
             "ml": {"real": ml_real, "null": ml_null},
             "popularity": pop, "popularity_recovery": recovery, "svr": svr,
-            "ddpm": ddpm, "ddpm_pool": pool, "em": em,
+            "ddpm": ddpm, "ddpm_pool": pool, "em": em, "backtest": backtest,
         },
         "pension": {
             "draws": [[d.round, d.date.isoformat(), d.group, d.number, d.bonus] for d in P],
@@ -181,7 +221,6 @@ def write_results_md(d: dict) -> None:
     sig_pe = [f"(연금) {r['question']}" for r in pe["stats"]["summary"] if r["p_holm"] < dataset.ALPHA]
     sig_ml = [r["model"] for r in ml["real"]["rows"] if r["p_bonferroni"] < dataset.ALPHA]
     sc = pop["score"]
-    i10, i1 = sc["pct"].index(10.0), sc["pct"].index(1.0)
     lines = [
         "# 로또·연금복권 분석 결과 (자동 생성 — `build_results.py`)",
         "",
@@ -204,9 +243,11 @@ def write_results_md(d: dict) -> None:
         + (" (" + " · ".join(sig_lo + sig_pe) + ")" if sig_lo + sig_pe else ""),
         f"- 궁합수: 990쌍 중 보정 전 p<0.05 {lo['stats']['pairs']['n_raw_p05']}쌍 (우연 기대 "
         f"{lo['stats']['pairs']['n_raw_p05_expected']:.1f}), Holm 유의 {lo['stats']['pairs']['n_sig_holm']}쌍",
-        f"- 검출력: 번호 하나가 {lo['power']['single_number_rel_bias'] * 100:.0f}% 더 잘 나와야 80% 확률로 잡힌다. "
-        f"쌍은 {lo['power']['pair_rel_bias'] * 100:.0f}%. 5% 편향을 잡으려면 약 "
-        f"{lo['power']['years_needed_for_5pct']:.0f}년치 추첨이 필요하다.",
+        f"- 검출력 (이 판정 — 빈도 X² + 로또 질문 {lo['power']['n_questions']}개 Holm): 번호 하나가 "
+        f"{lo['power']['single_number_rel_bias'] * 100:.0f}% 더 잘 나와야 80% 확률로 잡힌다 (빈도 차트의 띠 — 45개 "
+        f"동시 보정 — 를 벗어나는 데는 {lo['power']['single_number_rel_bias_band'] * 100:.0f}%). 5% 편향을 이 판정으로 "
+        f"잡으려면 약 {lo['power']['years_needed_for_5pct']:,.0f}년치 추첨이 필요하다. 쌍 하나는 990쌍 동시 보정 기준 "
+        f"{lo['power']['pair_rel_bias'] * 100:.0f}%.",
         "",
         "## 2. 머신러닝으로 다음 번호를 맞힐 수 있나 (walk-forward)",
         "",
@@ -237,9 +278,9 @@ def write_results_md(d: dict) -> None:
         "자동(기계 무작위)이 대조군",
         f"- 양성 대조(선호를 아는 가상 구매자) 복원 상관 {lo['popularity_recovery']['corr']:.4f}",
         f"- SVR(커널) vs 선형: " + ", ".join(f"{k} {v:.3f}" for k, v in lo["svr"]["r2_oof"].items()),
-        f"- 생성기 효과: 인기 하위 10% 조합은 1등 시 기대 수령액이 평균의 "
-        f"{sc['share_at_pct'][i10] / sc['share_avg']:.2f}배, 하위 1% 는 {sc['share_at_pct'][i1] / sc['share_avg']:.2f}배 "
-        "(당첨 확률은 모든 조합이 같다)",
+        "- 생성기 효과 (1등 시 기대 수령액, 자동·무작위 구매 대비 — make.js 규칙 그대로 814만 조합 전수의 구간 평균): "
+        + " · ".join(f"하위 {q}% {sc['bucket_gain'][str(q)]:.3f}배" for q in (30, 20, 10, 1))
+        + " (당첨 확률은 모든 조합이 같다)",
         "",
         "## 4. 생성 모델",
         "",

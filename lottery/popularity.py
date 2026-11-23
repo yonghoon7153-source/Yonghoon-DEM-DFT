@@ -182,6 +182,19 @@ def fit(lotto: list[dataset.LottoDraw]) -> dict:
 
     mu_avg = g_next * Q[1]
     mu_q = mu_avg * np.exp(eta_q)
+
+    # 생성기 효과 = make.js '비인기 조합' 규칙 그대로 전 조합을 열거한 구간 평균 (자체 리뷰 J1·J2 — 전에는 홈이
+    # 백분위 격자 평균(근사), RESULTS 가 구간 경계값을 썼고 기준이 '인기도 0 인 조합' 이었다). 규칙: 과거 당첨 조합 ·
+    # 같은 간격 수열 · 4개 이상 연속을 빼고 인기 백분위 ≤ q 안에서 균등. 기준 = 전 조합 평균 몫 = 자동(무작위) 구매.
+    share_all = share(mu_avg * np.exp(eta_all))
+    pct_all = np.interp(eta_all, eta_q, pct)
+    d = np.diff(A.astype(np.int16), axis=1)
+    one = d == 1
+    excluded = (d == d[:, :1]).all(1) | (one[:, :-2] & one[:, 1:-1] & one[:, 2:]).any(1)
+    excluded[[combos.rank_of(x.numbers) for x in allL]] = True
+    share_auto = float(share_all.mean())
+    bucket_gain = {str(q): float(share_all[(pct_all <= q) & ~excluded].mean() / share_auto)
+                   for q in (1, 10, 20, 30, 50)}
     return {
         "first_round": FIRST_ROUND, "n_draws": len(L),
         "tiers": {k: {"r2_in": v["r2_in"], "r2_oof": v["r2_oof"], "sd_log_ratio": v["sd_y"],
@@ -208,7 +221,8 @@ def fit(lotto: list[dataset.LottoDraw]) -> dict:
             "center": center, "gamma0": g0, "gamma1": g1, "latest_numbers": latest.tolist(),
             "latest_round": allL[-1].round, "eta_percentiles": eta_q.tolist(), "pct": pct.tolist(),
             "games_next": g_next, "pool1_recent_mean": pool1, "mu_avg": mu_avg,
-            "share_avg": float(share(mu_avg)), "share_at_pct": share(mu_q).tolist()},
+            "share_avg": float(share(mu_avg)), "share_at_pct": share(mu_q).tolist(),
+            "share_auto_mean": share_auto, "bucket_gain": bucket_gain},
     }
 
 

@@ -33,10 +33,14 @@ HYPER_VAR = 6 * P1 * (39 / 45) * (39 / 44)  # 맞힌 개수 ~ 초기하(45,6,6) 
 
 # ───────────────────────── 공통 도구 ─────────────────────────
 
+# 순위 목록의 argsort 는 전부 kind="stable": 기본 정렬은 CPU 의 SIMD 경로에 따라 동점 순서가 바뀌어 같은 데이터로
+# 궁합수·빈도 상위 목록의 순서가 기계마다 달랐다 (자체 리뷰 N1). 안정 정렬이면 동점은 번호 순이다.
+
+
 def holm(p: np.ndarray) -> np.ndarray:
     """Holm 보정 p (FWER). 단조성 유지."""
     p = np.asarray(p, float)
-    order = np.argsort(p)
+    order = np.argsort(p, kind="stable")
     m = len(p)
     adj = np.empty(m)
     run = 0.0
@@ -57,6 +61,18 @@ def binom_two_sided(k: np.ndarray, n: np.ndarray, p: float) -> np.ndarray:
     lo = stats.binom.cdf(k, n, p)
     hi = stats.binom.sf(k - 1, n, p)
     return np.minimum(1.0, 2 * np.minimum(lo, hi))
+
+
+def pair_null_rejections(n_draws: int, n_pairs: int, alpha: float = 0.05) -> float:
+    """무작위라면 보정 전 p < alpha 가 나올 쌍 수의 기대값 = 쌍 수 × 검정의 정확한 크기.
+
+    쌍마다 함께 나온 횟수는 Binomial(n, 1/66) 이고, 이산 양측 이항검정은 보수적이라 실제 크기가 alpha 보다
+    작다 (1251회: 3.6%). 그래서 alpha × 쌍 수(49.5) 가 아니라 약 36 이다 (자체 리뷰 I1 — 무작위 역사 300개
+    평균과 대조: tests/test_numbers.py). 쌍끼리 독립이 아니어도 기대값은 선형이라 그대로 성립한다.
+    """
+    k = np.arange(n_draws + 1)
+    size = stats.binom.pmf(k, n_draws, P2)[binom_two_sided(k, n_draws, P2) < alpha].sum()
+    return float(n_pairs * size)
 
 
 def chi2_gof(obs: np.ndarray, exp: np.ndarray, min_exp: float = 5.0) -> tuple[float, int, float]:
@@ -194,8 +210,8 @@ def lotto_tests(draws: np.ndarray, bonus: np.ndarray, rounds: np.ndarray, b_mc: 
         "chi2": obs["freq_x2"], "df": 44,
         "p_analytic": float(stats.chi2.sf(obs["freq_x2"] / FREQ_SCALE, 44)),
         "p_mc": mc_p(obs["freq_x2"], null["freq_x2"]),
-        "most": [int(i + 1) for i in np.argsort(-counts)[:6]],
-        "least": [int(i + 1) for i in np.argsort(counts)[:6]],
+        "most": [int(i + 1) for i in np.argsort(-counts, kind="stable")[:6]],
+        "least": [int(i + 1) for i in np.argsort(counts, kind="stable")[:6]],
         "recent100": recent.astype(int).tolist(), "recent100_expected": 100 * P1,
         "current_gap": cur_gap.astype(int).tolist(),
         "current_gap_tail_p": ((1 - P1) ** cur_gap).tolist(),
@@ -220,7 +236,7 @@ def lotto_tests(draws: np.ndarray, bonus: np.ndarray, rounds: np.ndarray, b_mc: 
     sd2 = np.sqrt(n * P2 * (1 - P2))
     z = (P - e2) / sd2
     np.fill_diagonal(z, 0.0)
-    order = np.argsort(-pc)
+    order = np.argsort(-pc, kind="stable")
 
     def _pair_rows(idx):
         return [{"pair": [int(iu[0][k] + 1), int(iu[1][k] + 1)], "count": int(pc[k]),
@@ -230,8 +246,9 @@ def lotto_tests(draws: np.ndarray, bonus: np.ndarray, rounds: np.ndarray, b_mc: 
     pairs = {
         "expected": e2, "n_pairs": int(len(pc)),
         "z_matrix": np.round(z, 2).tolist(),
-        "top": _pair_rows(order[:12]), "bottom": _pair_rows(order[::-1][:12]),
-        "n_raw_p05": int((p_raw < 0.05).sum()), "n_raw_p05_expected": 0.05 * len(pc),
+        # 아래쪽은 오름차순 안정 정렬로 따로 — 내림차순을 뒤집으면 동점이 번호 역순이 된다 (N1)
+        "top": _pair_rows(order[:12]), "bottom": _pair_rows(np.argsort(pc, kind="stable")[:12]),
+        "n_raw_p05": int((p_raw < 0.05).sum()), "n_raw_p05_expected": pair_null_rejections(n, len(pc)),
         "n_sig_holm": int((p_holm < 0.05).sum()), "n_sig_bh": int((q_bh < 0.05).sum()),
         "dispersion": obs["pair_disp"], "p_mc_dispersion": mc_p(obs["pair_disp"], null["pair_disp"]),
         "max_count": int(pc.max()), "p_mc_max": mc_p(obs["pair_max"], null["pair_max"]),
@@ -242,7 +259,7 @@ def lotto_tests(draws: np.ndarray, bonus: np.ndarray, rounds: np.ndarray, b_mc: 
 
     # 4) 세 개 묶음
     tc = triple_counts(draws)
-    top3 = np.argsort(-tc)[:8]
+    top3 = np.argsort(-tc, kind="stable")[:8]
     trip_list = [(a, b, c) for a in range(45) for b in range(a + 1, 45) for c in range(b + 1, 45)]
     triples = {
         "expected": n * P3, "n_triples": int(len(tc)), "max_count": int(tc.max()),
@@ -273,7 +290,7 @@ def lotto_tests(draws: np.ndarray, bonus: np.ndarray, rounds: np.ndarray, b_mc: 
     lag_p = binom_two_sided(M, prev_n[:, None], P1)
     lag_q = bh(lag_p.ravel()).reshape(45, 45)
     lag_z = (M - prev_n[:, None] * P1) / np.sqrt(prev_n[:, None] * P1 * (1 - P1))
-    flat = np.argsort(-lag_z.ravel())[:8]
+    flat = np.argsort(-lag_z.ravel(), kind="stable")[:8]
     lag = {
         "carry_hist": ch.astype(int).tolist(), "carry_expected": ((n - 1) * pmf).tolist(),
         "carry_mean": float(carry.mean()), "carry_mean_expected": 0.8,
@@ -311,7 +328,7 @@ def lotto_tests(draws: np.ndarray, bonus: np.ndarray, rounds: np.ndarray, b_mc: 
     era_out = {"edges_round": [int(rounds[s.start]) for s in eras] + [int(rounds[-1])],
                "counts": era_counts, "chi2": obs["era_x2"],
                "p_mc": mc_p(obs["era_x2"], null["era_x2"]),
-               "top_by_era": [[int(i + 1) for i in np.argsort(-np.array(c))[:6]] for c in era_counts]}
+               "top_by_era": [[int(i + 1) for i in np.argsort(-np.array(c), kind="stable")[:6]] for c in era_counts]}
 
     # 전체 요약용 p 목록 (질문 → p)
     summary = [

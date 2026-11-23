@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""freeze.py — 웹앱을 서버 없이 열리는 정적 사본으로 내보낸다.
+"""freeze.py — 웹앱을 서버 프로그램 없이 서빙되는 정적 사본으로 내보낸다.
 
     python lottery/webapp/freeze.py          # → dist/ (Cloudflare Pages) + export/ (claude.ai 아티팩트)
 
@@ -14,6 +14,8 @@ dist/ — Cloudflare Pages 출력 (`lotto.bmlwork.kr`, nihonchizu 의 nihonchees
 export/ — claude.ai 아티팩트용 한 장 (/all). 아티팩트는 같은 출처의 스크립트 파일을 못 쓰므로
   CSS·JS 를 문서 안에 넣고, <!doctype>·<html>·<head>·<body> 껍데기를 뺀 artifact.html 도 만든다.
 둘 다 파생물이라 git 에 넣지 않는다 (.gitignore). 정본은 results/analysis.json, 화면 정의는 templates/.
+정적 호스팅(Pages · `python3 -m http.server`)으로 열어야 한다 — 파일을 file:// 로 바로 열면 브라우저가
+api/*.json 을 가져오지 못해 번호 생성기 · 세금 계산기 · ⌘K 팔레트가 동작하지 않는다 (읽기 화면은 보인다).
 """
 from __future__ import annotations
 

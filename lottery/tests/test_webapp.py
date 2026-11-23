@@ -41,11 +41,14 @@ def test_read_only_and_404(client):
 def test_score_api_has_what_make_js_reads(client):
     d = client.get("/api/score.json").get_json()
     for k in ("beta", "theta", "center", "gamma0", "gamma1", "eta_percentiles", "pct", "mu_avg",
-              "share_avg", "latest_numbers", "pool1_recent_mean"):
+              "share_auto_mean", "latest_numbers", "pool1_recent_mean"):
         assert k in d["score"], k
     L = dataset.load_lotto()
     assert len(d["score"]["beta"]) == 45 and len(d["rounds"]) == len(L)
-    assert d["rounds"][0] == [1, 10, 23, 29, 33, 37, 40, 16, *L[0].prize, 2000]   # [회차, 번호, 보너스, 1~5등, 가격]
+    # [회차, 번호, 보너스, 1~5등 1인당, 가격, 1~3등 당첨자 수] — 1~3등 당첨자 수는 백테스트의 w/(w+1) 몫 (H1)
+    assert d["rounds"][0] == [1, 10, 23, 29, 33, 37, 40, 16, *L[0].prize, 2000, *L[0].winners[:3]]
+    for k in ("pct", "ret", "median", "mean", "below_mean"):
+        assert k in d["backtest"], k
     assert all(len(c) == 6 for c in d["ddpm_pool"])
 
 

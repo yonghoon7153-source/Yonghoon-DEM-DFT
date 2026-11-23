@@ -16,14 +16,15 @@
     {{ M.legend([('bar', 'pos4', '많이 고름 — 1등을 나눠 가질 사람이 많다'), ('bar', 'neg4', '덜 고름'), ('line', 'k-err', '95% 구간')]) }}
     <figure class="chart-fig">{{ M.columns(V.pop_chart) }}
       <figcaption>많이 고르는 번호: <b>{{ V.pop_rank[:6]|join(', ') }}</b>. 덜 고르는 번호: <b>{{ V.pop_rank[-6:]|reverse|join(', ') }}</b>.
-        생일·날짜로 고를 수 있는 31 이하가 대체로 인기이고 7 이 1위다. 45개 효과가 모두 0 이라는 가설은
-        Wald χ² = {{ pop.number_effect.wald_chi2|num }}(44 자유도)로 기각된다. 전반기와 후반기에 따로 추정한 값의 상관은
+        {% if V.birthday_more %}생일·날짜로 고를 수 있는 31 이하가 대체로 인기이고{% else %}31 이하(생일·날짜 범위)가 더 인기라고 할 수 없고{% endif %}
+        {{ V.pop_rank[0]|josa }} 1위다. 45개 효과가 모두 0 이라는 가설은
+        Wald χ² = {{ pop.number_effect.wald_chi2|num }}(44 자유도)로 {{ '기각된다' if V.number_effect_sig else '기각되지 않는다' }}. 전반기와 후반기에 따로 추정한 값의 상관은
         {{ '%.2f'|format(t5.era_beta_r) }}.</figcaption></figure>
     {{ M.tableview(['번호', '인기도 (%)', '95% 구간 ±', '순위'], V.pop_rows, (1, 2, 3)) }}
   </div>
 
   <div class="panel" id="shapes">
-    <h2 class="panel-h">모양 효과 — 지난주 번호는 피한다</h2>
+    <h2 class="panel-h">모양 효과{% if V.avoid_prev %} — 지난주 번호는 피한다{% elif V.pref_prev %} — 지난주 번호를 더 고른다{% endif %}</h2>
     {{ M.course('확률과통계 12주 다중회귀') }}
     <div class="tablewrap full"><table class="data">
       <thead><tr><th>조합의 모양</th><th>5등 당첨자 변화</th><th>p</th></tr></thead>
@@ -63,8 +64,8 @@
     <h2 class="panel-h">그래서 얼마나 득인가 — 인기도별 1등 기대 수령액</h2>
     {{ M.course('확률과통계 5주 포아송분포 · 기대값') }}
     <figure class="chart-fig">{{ M.line(V.payoff_chart) }}
-      <figcaption>x 축은 814만 조합을 모델 인기도로 줄 세운 백분위, y 축은 1등이 됐을 때 받는 기대 금액(평균 조합 = 1).
-        한 주 {{ S.games_next|won }}게임이 팔리면 평균 조합은 약 {{ '%.1f'|format(S.mu_avg) }}명이 함께 산다. 모델은 실제 당첨번호(무작위 표본)로
+      <figcaption>x 축은 814만 조합을 모델 인기도로 줄 세운 백분위, y 축은 1등이 됐을 때 받는 기대 금액(자동·무작위 구매의 평균 = 1).
+        한 주 {{ S.games_next|won }}게임이 팔리면 조합 하나를 평균 약 {{ '%.1f'|format(S.mu_avg) }}명이 함께 산다. 모델은 실제 당첨번호(무작위 표본)로
         학습해서 1·2·3·4·5·6 처럼 극단적으로 인기 있는 조합의 쏠림은 과소평가한다 — 그런 모양은 생성기에서 규칙으로 따로 뺀다.</figcaption></figure>
   </div>
 
@@ -75,13 +76,14 @@
       <tbody>
       <tr><td class="rowh"><a href="https://ideas.repec.org/a/inm/ormnsc/v39y1993i12p1521-1525.html">Clotfelter &amp; Cook (1993)</a><br><span class="src-of">Management Science 39(12)</span></td>
         <td>미국 메릴랜드 숫자 복권 — 방금 나온 번호에 거는 돈이 크게 줄었다가 몇 달에 걸쳐 회복 (도박사의 오류)</td>
-        <td>지난주 당첨번호가 섞인 조합이 덜 팔린다 (겹침 1개당 {{ (t5.theta.prev_overlap * 100)|signed(1) }}%)</td></tr>
+        <td>{% if V.avoid_prev %}지난주 당첨번호가 섞인 조합이 덜 팔린다{% elif V.pref_prev %}지난주 당첨번호가 섞인 조합이 더 팔린다 (반대 방향){% else %}지난주 당첨번호와의 겹침 효과가 유의하지 않다{% endif %}
+          (겹침 1개당 {{ (t5.theta.prev_overlap * 100)|signed(1) }}%)</td></tr>
       <tr><td class="rowh"><a href="https://doaj.org/article/d41876e1e6a04332a54ab62780a99547">Wang 외 (2016)</a><br><span class="src-of">Judgment and Decision Making 11(3)</span></td>
         <td>네덜란드 로또 온라인 259만 건 — 개인적 의미가 있는 번호·용지 가운데 선호, 자주 사는 사람은 최근 당첨번호를 피함, 번호를 범위 전체에 고르게 퍼뜨림</td>
-        <td>생일 범위(31 이하)와 7 선호, 지난주 번호 회피</td></tr>
+        <td>{% if V.birthday_more %}생일 범위(31 이하) 선호, {% endif %}{{ V.pop_rank[0] }} 선호{% if V.avoid_prev %}, 지난주 번호 회피{% elif V.pref_prev %}, 지난주 번호를 오히려 더 고름{% endif %}</td></tr>
       <tr><td class="rowh"><a href="https://ideas.repec.org/a/cup/judgdm/v16y2021i4p1039-1059_9.html">Polin 외 (2021)</a><br><span class="src-of">Judgment and Decision Making 16(4)</span></td>
         <td>이스라엘 로또 수동 선택 8억 건 — 번호별 선호가 회차마다 일정, 용지 첫 줄이 인기·마지막 줄이 비인기</td>
-        <td>번호 효과가 전·후반기에 일정 (상관 {{ '%.2f'|format(t5.era_beta_r) }}), 1~7 인기·43~45 비인기 — 같은 방향이지만 생일 효과와 겹쳐 따로 가르지 못한다</td></tr>
+        <td>번호 효과가 전·후반기에 일정 (상관 {{ '%.2f'|format(t5.era_beta_r) }}){% if V.row1_more %}, 1~7 인기·43~45 비인기 — 같은 방향이지만 생일 효과와 겹쳐 따로 가르지 못한다{% else %} — 용지 첫 줄 인기·마지막 줄 비인기는 이 자료에서 보이지 않는다{% endif %}</td></tr>
       </tbody>
     </table></div>
     <p class="pnote">세 연구는 판매 기록(어떤 번호를 샀나)을 직접 봤고, 이 화면은 그 기록 없이 등수별 당첨자 수로 거꾸로 추정했다.

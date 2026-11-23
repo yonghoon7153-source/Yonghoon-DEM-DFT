@@ -34,7 +34,7 @@
     return fetch((box && box.dataset.src) || "/api/palette.json")
       .then(function (r) { return r.ok ? r.json() : { items: [] }; })
       .then(function (d) { items = d.items || []; })
-      .catch(function () { items = []; })      // 못 가져와도 팔레트는 검색으로 쓸 수 있다
+      .catch(function () { items = []; })      // 못 가져와도 팔레트는 뜬다 (목적지만 비어 있다)
       .then(function () { loading = false; });
   }
 
@@ -85,9 +85,12 @@
         .sort(function (a, b) { return b.sc - a.sc; })
         .slice(0, 20)
         .map(function (x) { return x.it; });
-      // 이름으로 못 찾으면 전문 검색으로 넘어갈 길을 항상 하나 남긴다
-      shown.push({ t: "전문 검색: " + input.value.trim(), k: "검색",
-                   d: "본문까지 훑는다", u: "/search?q=" + encodeURIComponent(input.value.trim()) });
+      // 이름으로 못 찾으면 전문 검색으로 넘어갈 길을 하나 남긴다 — (복권 앱) #cmdk 에 data-search 가 있을 때만.
+      // 이 앱에는 본문 검색 화면이 없어 data-search 를 두지 않는다 (본체의 /search 를 그대로 두면 404 였다).
+      if (box && box.dataset.search) {
+        shown.push({ t: "전문 검색: " + input.value.trim(), k: "검색",
+                     d: "본문까지 훑는다", u: box.dataset.search + "?q=" + encodeURIComponent(input.value.trim()) });
+      }
     }
     if (cur >= shown.length) cur = Math.max(0, shown.length - 1);
 
