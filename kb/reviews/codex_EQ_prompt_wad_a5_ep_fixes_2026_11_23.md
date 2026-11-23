@@ -7,7 +7,7 @@ letter: EQ
 track: wad
 channel: codex
 kind: prompt
-status: 발송 대기 (사용자) · 기준 0fbc49760 (EP 가 본 묶음 · MANIFEST f10dedef…) → 고침 a97eba79f (도구 · 시험) · 891e106e5 (묶음 · 빌드 기록 ⑩) · 묶음 MANIFEST 679d7050… · selftest a5 236/236 · 돌연변이 140/140
+status: 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md · 위협 범위 GO · 범위 안 지적 다수) · 기준 0fbc49760 (EP 가 본 묶음 · MANIFEST f10dedef…) → 고침 a97eba79f (도구 · 시험) · 891e106e5 (묶음 · 빌드 기록 ⑩) · 묶음 MANIFEST 679d7050… · selftest a5 236/236 · 돌연변이 140/140
 confidence: medium
 verificationStatus: unverified
 explored: false
