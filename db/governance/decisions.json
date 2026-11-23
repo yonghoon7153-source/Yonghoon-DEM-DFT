@@ -14582,7 +14582,7 @@
    "title": "B₂O₃-LPSCl1.6 B 자리 (P 4b 대 Li) DFT 형성 에너지 비교 — 10월 UMA 후보 + O 가 B 에 붙은 짝 · Li₂S/Li₃PS₄ 교환 기준 (트랙 우리 DFT · 1저자 = 사용자)",
    "statement": "카드 db/properties/b2o3_site_dft_estimand_2026_11_23.json. 형성 반응 host + B₂O₃ (+ Li₂S/Li₃PS₄) → 도핑 셀 · D = {[E(B-P) − E(B-Li)] − 2[4E(Li₂S) − E(Li₃PS₄)]}/2 (eV/B) · 후보 = 10월 UMA 6 + 6 (O–P 꼴) + 같은 배치에서 O 를 B 결합 S 로 옮긴 짝 6 + 6 (O–B 꼴 · UMA 이완으로 조합 고르기 → 10월과 같은 어닐) · DFT: 자리 × O 꼴 UMA 최저 셋 단일점 12 → 자리마다 최저 (+ 0.30 eV 안 둘째) 고정 기준 셀 이온 이완 · 기준상 넷 vc-relax (사용자 허락) · 9 단계와 같은 설정 · 압력 어림 2² · k 탐침 0.02 eV/B · 판정 |D| ≥ 0.10 eV/B. 원자당 (자유 원자 기준) 형성 에너지는 쓰지 않는다 (조성이 다르다).",
    "rationale": "10-16 UMA 자리 비교가 '경계선' 으로 닫혔다 → 사용자 11-23 '이걸 후보로 뽑아서 dft로 · 새카드여도 ㅇㅇ · B-P, B-Li 포메이션 에너지 비교하라고'. 10월 후보는 O 가 전부 P 에 붙어 있고 (11-23 측정) 9 단계 DFT 는 B-P 조성에서 O–B 꼴이 0.471 eV/B₂O₃ 낮았다 → O–B 짝을 두 자리에 넣는다 (사용자 선택).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -14615,21 +14615,37 @@
    "cost_cap": {
     "uma_GPU_h": "20 (kgy)",
     "dft_GPU_h": "150 — 넘으면 멈추고 다시 묻는다",
-    "machine": "UMA kgy · DFT kgy (메모리 프로브 통과 시) 아니면 gabia 줄 (11b → 이어 돌리기 → 개정 6 이완 셋 → 이것)"
+    "machine": "kgy (사용자 11-23 'kgy에서 진행하자') — UMA · DFT 둘 다 · DFT 는 메모리 프로브 (disk_io medium) 에서 안 들어가면 다시 묻는다"
    },
    "exceptions": [
     "기준상 넷 vc-relax (Li₂S · Li₃PS₄ 다형 셋 · argyrodite 아님) — 사용자 허락 2026-11-23 (AskUserQuestion '허락 — 넷 다')"
    ],
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-23",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 11-23 'B-P, B-Li 포메이션 에너지 비교하라고' + AskUserQuestion (후보 = 10월 + O–B 짝 · 기준상 넷 vc-relax 허락) — 카드 작성 (DFT 결과 0 건) · 카드 비준 대기"
+    },
+    {
+     "at": "2026-11-23",
+     "state": "active",
+     "by": "사용자 (우리 DFT 기준선 B₂O₃ · 1저자 = 사용자)",
+     "note": "비준 (결과 전 · DFT 결과 0 건) — 사용자 2026-11-23 (대피 세션 · 채팅): 카드 요약 ('이 카드 이대로 비준해 주시면 … kgy 블록') 뒤 'ㅇㅇ kgy에서 진행하자' · 비준 때 고친 운영 문구 (결과 무관 · 계산 0 건): ① disk_io 'nowf / low' → 'nowf / medium' — QE 설명서상 nowf · low 는 파동함수를 메모리에 두고 medium · high 가 k 점이 둘 이상일 때 디스크에 둔다 (메모리를 줄이는 쪽은 medium) ② 기계 = kgy (사용자 선택 · DFT 도 kgy · 메모리 프로브에서 안 들어가면 다시 묻는다)"
     }
    ],
-   "_note": "proposed — 카드 비준 대기 · 도구 아직 없음"
+   "_note": "active — 사용자 비준 2026-11-23 (채팅 · 결과 전) · 기계 kgy · 내용 커밋 a1856c6c · 비준 때 운영 문구 둘 고침 (disk_io · 기계) · 도구 tools/doping/b2o3_site_dft.py (O–B 짝 · 고르기 · 프로브)",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-23T12:49:00Z",
+    "commit": "a1856c6c25f487bb3c5cbab42f002b9b47ed44e1",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-23 (대피 세션 · 채팅): 카드 요약 ('이 카드 이대로 비준해 주시면 … kgy 블록') 뒤 'ㅇㅇ kgy에서 진행하자'",
+    "decision_digest": "sha256:ba2bcb041f472ceba0121adfc19787110c15ee300c856758020408ab1c03f032"
+   }
   }
  ]
 }
