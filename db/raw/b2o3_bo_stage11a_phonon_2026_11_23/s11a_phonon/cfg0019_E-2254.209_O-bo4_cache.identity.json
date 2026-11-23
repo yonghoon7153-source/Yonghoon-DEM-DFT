@@ -1,0 +1,10 @@
+{
+ "struct_sha256": "8afd48447b437aa7bb46cddd5614ed22a9cafd557ae331c8067b07528ece25a9",
+ "n_atoms": 128,
+ "model": "uma-s-1p1/omat",
+ "delta_A": 0.02,
+ "nfree": 2,
+ "indices": "all",
+ "method": "ase.vibrations.Vibrations (finite displacement · Γ)",
+ "sha256": "08250bccfce65e63accfc92954e593b5253f0b3e4043606f762c35b752d19e68"
+}
