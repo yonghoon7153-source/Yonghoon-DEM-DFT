@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-22 · managed-files: 635
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-23 · managed-files: 636
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 426건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 427건)
+- 2026-11-23 · `kb/reports/weekly_2026_11_22.md` — 주간 정리 2026-11-16 ~ 11-22 (주간보고 초안) · 초안 (2026-11-23 · 도는 계산은 마지막 보고 기준 — ga…
 - 2026-11-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-22 · `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부 · 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 …
 - 2026-11-22 · `kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` — EN 회신 — W_ad a5 묶음 (EM 고침) 확인: NO-GO (P0 1 · P1 3 · P2 1 · P3 1) — EM 의 기존 반례는 막힘 · c2 재시작 실패 뒤 스케줄러 끊김을 --killed 경로가 놓쳐 c1 보조 채택 · 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-G…
@@ -26,7 +27,6 @@
 - 2026-11-13 · `kb/reviews/codex_EG_prompt_b2o3_dft_stage9_v2_2026_11_13.md` — EG 프롬프트 — b2o3 9 단계 DFT 도구 v2 (Codex EF NO-GO 고침) 재확인: 한 출력 = 한 실행 · k 격자 대조 · 전자 수 · BFGS 기준 · 다시 결속 · EOS 보류 대상 null — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia v2 검사 결과 넣음 (HEA…
 - 2026-11-13 · `kb/reviews/codex_EG_reply_b2o3_dft_stage9_v2_2026_11_13.md` — EG 회신 — b2o3 9 단계 DFT 도구 v2: NO-GO (P0 0 · P1 2 · P2 4) · 출력 상태 결속 (끼워 넣은 압력 · 좌표 · 힘 조각) · reject 대상 목록 · G5 캐시 · GPU 조회 종료코드 · 버전 혼합 복구 · DY 확인 4 아직 해제 못 함 · k 격자 대조 찬성 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
 - 2026-11-13 · `kb/reviews/codex_EH_prompt_b2o3_dft_stage9_v3_2026_11_13.md` — EH 프롬프트 — b2o3 9 단계 DFT 도구 v3 (Codex EG NO-GO 고침) 재확인: 한 계산 상태 블록 문법 · 힘 원자 번호 · reject 대상 다시 결속 · G5 원자료 · GPU 조회 종료코드 · QE 판 고정 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia v3 검사 결과 넣음 (HEA…
-- 2026-11-13 · `kb/reviews/codex_EH_reply_b2o3_dft_stage9_v3_2026_11_13.md` — EH 회신 — b2o3 9 단계 DFT 도구 v3: NO-GO (P1 2 · P2 2) · EG 여섯 반례 닫힘 확인 · 유한하지 않은 힘·좌표 승격 · 압력 토큰 앞부분 판독 · BFGS 판독 실패 시 대조 건너뜀 + 판정 저장 뒤 CLI 오류 · 응력 행렬 본문 미검사 · 블록 문법 ≠ 같은 실행 인증 · 판 문자열 ≠ 바이너리 동일성 · DY 확인 4 아직 해제 못 함 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -507,7 +507,7 @@
 - `kb/reviews/vasp_bundle_codex_request_2026_08_11.md` — Codex 검토 요청 — VASP 외주 원샷 번들 (자리 선호 + E_ads)  (2026-08-11 · 회신 대기)
 - `kb/reviews/vasp_bundle_v2_rereview_request_2026_08_11.md` — Codex 재검토 요청 — VASP 번들 v2 (HOLD 10항 반영 완료 · 발송 GO/NO-GO)  (2026-08-11 · 회신 대기 (GO/NO-GO))
 
-## reports/ (10)
+## reports/ (11)
 - `kb/reports/paper_first_author_requests_2026_08.md` — 논문 1저자 요청 — 답변 누적 (2026-08~)
 - `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
@@ -518,6 +518,7 @@
 - `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안)  (2026-10-26 · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…)
 - `kb/reports/weekly_2026_11_01.md` — 주간 정리 2026-10-26 ~ 11-01 (주간보고 초안)  (2026-11-01 · 초안 (2026-11-01 · 도는 계산은 마지막 실측 기준 — kg…)
 - `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안)  (2026-11-09 · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…)
+- `kb/reports/weekly_2026_11_22.md` — 주간 정리 2026-11-16 ~ 11-22 (주간보고 초안)  (2026-11-23 · 초안 (2026-11-23 · 도는 계산은 마지막 보고 기준 — ga…)
 
 ## projects/ (63)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
