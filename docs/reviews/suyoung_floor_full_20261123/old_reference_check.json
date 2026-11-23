@@ -1,0 +1,137 @@
+{
+  "archive_name": "suyoung_contact_pair_result.tar.gz",
+  "archive_sha256": "fc685932f4a1710fe944c5d2dafbcb56bf239f473184f009983a3ff4805dabea",
+  "comparison": {
+    "arms": {
+      "F16": {
+        "end_pressure_MPa": 1.2007847433671013,
+        "end_u": 0.14670373670693737,
+        "first_positive": {
+          "pressure_MPa": 3.3539148612021283e-94,
+          "step": 58,
+          "u": 0.001300644562672315
+        },
+        "last_positive": {
+          "pressure_MPa": 1.2007847433671013,
+          "step": 6542,
+          "u": 0.14670373670693737
+        },
+        "positive_samples": 6414,
+        "steps": 6542,
+        "terminal": "TARGET_BRACKETED"
+      },
+      "F8": {
+        "end_pressure_MPa": 1.2003567092343115,
+        "end_u": 0.11925565145330064,
+        "first_positive": {
+          "pressure_MPa": 2.8218342088541618e-49,
+          "step": 30,
+          "u": 0.00134549437517828
+        },
+        "last_positive": {
+          "pressure_MPa": 1.2003567092343115,
+          "step": 2659,
+          "u": 0.11925565145330064
+        },
+        "positive_samples": 2602,
+        "steps": 2659,
+        "terminal": "TARGET_BRACKETED"
+      }
+    },
+    "both_positive_knots": {
+      "end_u": 0.11925565145330064,
+      "fine_peak_comparison": "EXCEEDS",
+      "fine_peak_exceeding_samples": 3614,
+      "fine_peak_first_exceedance": {
+        "F16_MPa": 0.011443392340219682,
+        "F16_native": true,
+        "F8_MPa": 0.04504276337320029,
+        "F8_minus_F16_MPa": 0.03359937103298061,
+        "F8_native": false,
+        "u": 0.012087024470351482
+      },
+      "fine_peak_ratio": 0.8085856838367982,
+      "first_worst": {
+        "F16_MPa": 0.6636991102836952,
+        "F16_native": true,
+        "F8_MPa": 1.2003567092343115,
+        "F8_minus_F16_MPa": 0.5366575989506163,
+        "F8_native": true,
+        "u": 0.11925565145330064
+      },
+      "fixed_reference_comparison": "EXCEEDS",
+      "fixed_reference_exceeding_samples": 3614,
+      "fixed_reference_first_exceedance": {
+        "F16_MPa": 0.011443392340219682,
+        "F16_native": true,
+        "F8_MPa": 0.04504276337320029,
+        "F8_minus_F16_MPa": 0.03359937103298061,
+        "F8_native": false,
+        "u": 0.012087024470351482
+      },
+      "fixed_reference_ratio": 0.8085856838367982,
+      "max_abs_difference_MPa": 0.5366575989506163,
+      "samples": 5156,
+      "start_u": 0.001323069468925353
+    },
+    "common": {
+      "end_u": 0.11925565145330064,
+      "fine_peak_comparison": "EXCEEDS",
+      "fine_peak_exceeding_samples": 3614,
+      "fine_peak_first_exceedance": {
+        "F16_MPa": 0.011443392340219682,
+        "F16_native": true,
+        "F8_MPa": 0.04504276337320029,
+        "F8_minus_F16_MPa": 0.03359937103298061,
+        "F8_native": false,
+        "u": 0.012087024470351482
+      },
+      "fine_peak_ratio": 0.8085856838367982,
+      "first_worst": {
+        "F16_MPa": 0.6636991102836952,
+        "F16_native": true,
+        "F8_MPa": 1.2003567092343115,
+        "F8_minus_F16_MPa": 0.5366575989506163,
+        "F8_native": true,
+        "u": 0.11925565145330064
+      },
+      "fixed_reference_comparison": "EXCEEDS",
+      "fixed_reference_exceeding_samples": 3614,
+      "fixed_reference_first_exceedance": {
+        "F16_MPa": 0.011443392340219682,
+        "F16_native": true,
+        "F8_MPa": 0.04504276337320029,
+        "F8_minus_F16_MPa": 0.03359937103298061,
+        "F8_native": false,
+        "u": 0.012087024470351482
+      },
+      "fixed_reference_ratio": 0.8085856838367982,
+      "max_abs_difference_MPa": 0.5366575989506163,
+      "samples": 5319,
+      "start_u": 0.0
+    },
+    "fine_peak_on_common_support_MPa": 0.6636991102836952,
+    "fixed_5percent_MPa": 0.03318495551418476,
+    "fixed_reference_MPa": 0.6636991102836952,
+    "label": "DEVELOPMENT_ONLY",
+    "pair": "F8_F16",
+    "stage3_go": false,
+    "u6_qualified": false
+  },
+  "inputs": {
+    "dt16": 0.0011231835082397789,
+    "dt8": 0.0022463670164795577,
+    "speed": 0.01996548746349992,
+    "terminal16": "TARGET_BRACKETED",
+    "terminal8": "TARGET_BRACKETED",
+    "width": 0.7024180763115129
+  },
+  "member_sha256": {
+    "F16/result.json": "a1769bf6e818026006f1b462be94494f0be38239cd667bd0cf7c15e0f55b3709",
+    "F16/trace.csv": "91cbbbd1b249dc9989df8ecf641ca522a3cee2e1131619926c82f7e0746572d9",
+    "F8/result.json": "cadcc43ee45f4226d488f1ff06a49ca114b79a0b8b78284d77f815c87950a9a2",
+    "F8/trace.csv": "56f0f5f836e00cc5c7a94afaaef7885e684f17c7983abf631f06e7e39a1c8132"
+  },
+  "scope": "old lower wall, no new integration",
+  "status": "HISTORICAL_RAW_TRACE_REPLAY_MATCH"
+}
