@@ -513,7 +513,7 @@ eband -0.55700 + deband -2.70933 = -3.26633 Ha  (= E_T + E_V -3.26633)
 
 ### 7.2 `total energy` 네 줄 = 논문의 E_T + E_V / E_J / E_X + E_C / 핵–핵
 
-우리 실제 출력 (`runs/static_ab/a/scf.out` 1203–1212 행 그대로):
+우리 실제 출력 (`runs/static_ab/a/scf.out` 1203–1212 행 그대로 · **출력 형식 예시** — 절대 총에너지는 물성값이 아니고 인용 대상도 아니다):
 
 ```
 !    total energy              =   -1022.94654233 Ry
