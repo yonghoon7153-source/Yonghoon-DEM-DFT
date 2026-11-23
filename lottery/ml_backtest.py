@@ -109,7 +109,7 @@ def _models() -> dict:
     sc = StandardScaler
     return {
         "로지스틱 회귀": ("F", lambda: make_pipeline(sc(), LogisticRegression(C=1.0, max_iter=3000))),
-        "선형 SVM (소프트 마진)": ("F", lambda: make_pipeline(sc(), LinearSVC(C=0.05, loss="hinge", max_iter=20000))),
+        "선형 SVM (소프트 마진)": ("F", lambda: make_pipeline(sc(), LinearSVC(C=0.05, loss="hinge", max_iter=20000, random_state=0))),
         "커널 SVM (RBF)": ("F_sub", lambda: make_pipeline(sc(), SVC(C=1.0, kernel="rbf", gamma="scale"))),
         "나이브 베이즈": ("F", lambda: make_pipeline(sc(), GaussianNB())),
         "신경망 MLP": ("F", lambda: make_pipeline(sc(), MLPClassifier(
@@ -131,6 +131,10 @@ BASELINES = {  # 이름 → F 의 특징 열 (점수 높을수록 선택), 부�
 
 
 def _score(model, Z: np.ndarray) -> np.ndarray:
+    # 예측은 한 스레드로: 랜덤 포레스트가 n_jobs=-1 로 트리별 확률을 더하면 합산 순서가 매번 달라
+    # 마지막 자리가 바뀌고, 동점 순위가 뒤집힐 수 있다 (tests/test_ml.py 결정성 테스트). 학습은 병렬 그대로.
+    if getattr(model, "n_jobs", None) not in (None, 1):
+        model.set_params(n_jobs=1)
     if hasattr(model, "predict_proba"):
         return model.predict_proba(Z)[:, 1]
     return model.decision_function(Z)
@@ -259,7 +263,7 @@ def pension_backtest(first: np.ndarray, *, start=60, block=50, label="real") -> 
     sc = StandardScaler
     models = {
         "로지스틱 회귀": lambda: make_pipeline(sc(), LogisticRegression(max_iter=3000)),
-        "선형 SVM (소프트 마진)": lambda: make_pipeline(sc(), LinearSVC(C=0.05, loss="hinge", max_iter=20000)),
+        "선형 SVM (소프트 마진)": lambda: make_pipeline(sc(), LinearSVC(C=0.05, loss="hinge", max_iter=20000, random_state=0)),
         "커널 SVM (RBF)": lambda: make_pipeline(sc(), SVC(C=1.0, kernel="rbf", gamma="scale")),
         "나이브 베이즈": lambda: make_pipeline(sc(), GaussianNB()),
         "신경망 MLP": lambda: make_pipeline(sc(), MLPClassifier(hidden_layer_sizes=(16,), alpha=1e-3,

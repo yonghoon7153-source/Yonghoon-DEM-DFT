@@ -48,3 +48,18 @@ def test_prize_tiers():
     assert mb._prize(np.array([1, 2, 3, 4, 9, 8]), draw, bonus, prize) == (4, 50_000)
     assert mb._prize(np.array([1, 2, 3, 10, 9, 8]), draw, bonus, prize) == (3, 5_000)
     assert mb._prize(np.array([1, 2, 7, 10, 9, 8]), draw, bonus, prize) == (2, 0)
+
+
+def test_models_are_deterministic_on_real_features():
+    """같은 입력이면 같은 결과. 2026-11-23 weekly_update --force 재실행 비교에서 선형 SVM(liblinear 는
+    random_state 가 없으면 좌표 하강 순서를 매번 다르게 섞는다)만 적중 수가 달랐다 (0.7897 vs 0.7886)."""
+    F, W, X = mb.lotto_features(DRAWS, BONUS, WIN, GAMES)
+    tr, te = slice(100, 400), slice(400, 450)
+    for name, (src, make) in mb._models().items():
+        if src == "F_sub":
+            continue  # RBF SVC(libsvm)는 결정적이고 느리다 — 다른 모델로 충분
+        A = W if src == "W" else F
+        Z, y, Zt = A[tr].reshape(-1, A.shape[2]), X[tr].reshape(-1), A[te].reshape(-1, A.shape[2])
+        s1 = mb._score(make().fit(Z, y), Zt)
+        s2 = mb._score(make().fit(Z, y), Zt)
+        assert np.array_equal(s1, s2), f"{name}: 같은 입력인데 결과가 다르다 (random_state?)"
