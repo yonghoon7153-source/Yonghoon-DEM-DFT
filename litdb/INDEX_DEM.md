@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 362편 · 생성 2026-11-23
+> digest 363편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -312,7 +312,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_mixing_sequence_shear_speed_ptfe_fibrillation_dry_graphite_anode` | 건식 PTFE 흑연 음극 (인조 흑연 : Super P : PTFE = 95 : 3 : 2 · 15.4 mg/cm² · 90 µm) 에서 PTFE 를 넣는 순서 (TSM = 흑연 + Super P 먼저 → PTFE · OSM = 셋 한꺼번에) 와 고속 전단 rpm (2000 rpm 10 min 예비 혼합 뒤 5000 /  | experiment (dry process 건식 전극 · PTFE binder 섬유화 · 고속 mixer 투 | 2026-11-23 | 🖼 50 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 62 |
 
-## 화학-기계 열화 · 계면 (28편)
+## 화학-기계 열화 · 계면 (29편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -342,6 +342,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `tabakovic2026_mechanical_stress_eis_ica_drt_dfn` | 기계 응력(정수압 σ_h 1–10 MPa)이 LIB 의 EIS · DRT · ICA 를 어떻게 바꾸나 — DFN(PyBaMM) + 2-스케일 선형탄성 역학 완전 결합 시뮬레이션 · "우세 전극" 가설 — Tabaković · Katrašnik · Zelič (SSRN 프리프린트, 동료심사 전) | continuum (DFN/P2D in PyBaMM + 2-scale linear-elastic partic | 2026-09-23 | 🖼 10 |
 | `taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode` | 황화물 전고체전지 복합 양극 (NMC811 + Li₆PS₅Cl) 의 전기화학–화학–역학 완전 결합 2D 평면변형 유한요소 phase-field 파괴 모형 (COMSOL · AT-1 · ℓ₀ 100 nm · ≈3.5 M 자유도 · 선형 탄성 · 소성 없음) — 운전 적층압 0 / 5 / 40 MPa · 공극 15 % ↔ 0 | FEM (2D plane-strain · fully coupled electro-chemo-mechanica | 2026-11-12 | 🖼 89 |
 | `tron2023_lpscl_ccd_ambient_pressure` | 상압 (스택압 0.20–0.28 MPa) Li/Li₆PS₅Cl/Li 대칭셀의 임계 전류 밀도 (CCD) — 셀 지그 · 전해질 두께 · Li 원천이라는 '숨은 변수' 와 galvanodynamic 분극 (Tafel 차용) 판정법: CCD 0.023–0.19 mA cm⁻² · 저항은 Li–SE interface 가 지배 · | experiment (Li/Li₆PS₅Cl/Li 대칭셀 · 단계 정전류 + galvanodynamic 분극  | 2026-10-14 | 🖼 19 |
+| `vanpeene2026_4d_nano_holotomography_dvc_graphite_silicon_chemomechanics` | 흑연–Si 복합 음극 (액체 전해질 LIB · Li 금속 반쪽 셀 · 적층압 ≈ 23 kPa) 의 첫 화성 사이클을 중단-operando 싱크로트론 X 선 나노 홀로토모그래피 (복셀 50 nm · 한 장 9 분 · 13 상태) + DVC (창 4 µm · 입자 56 개 추적) 로 본 4D 화학기계 — 두께 60 → 75  | experiment (interrupted-operando synchrotron X-ray nano-holo | 2026-11-23 | 🖼 77 |
 | `wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem` | 다결정 NMC811 2차입자 파괴강도 σ_F = P_f/D² — 평판 압축 207 ± 49 MPa · 원뿔-구형 팁 67 ± 21 MPa (pristine) → 3 사이클 뒤 36 ± 15 · 4.3 V 에서 11 ± 4 MPa, 큰 입자일수록 약함, 파괴 양식은 입계(intergranular) Mode I crackin | exp (in situ SEM micro-indentation of isolated secondary par | 2026-09-26 | 🖼 16 |
 | `yun2023_deciphering_degradation_halide_vs_sulfide` | 필독 / 우리-랩 / ★최애 — Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes: Interfacial reaction versus ionic transport — Yun, Shin, Hoan | exp (impedance decoupling, SSRM/FS local mapping) + FEM (vol | 2026-06-26 | 🖼 5 |
 
