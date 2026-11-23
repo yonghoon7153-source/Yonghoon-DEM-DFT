@@ -1,0 +1,100 @@
+{
+  "F_evidence_sha256": {
+    "F12": {
+      "observation_sha256": "199d3a56cbee2133f07ba870e9db4fa5a1042d595fc9a52b4bc1817b3d6eb65e",
+      "result_sha256": "c7f7e536a4471297fa7ff0b7db08881a3daaa85006dcc20554cdd829e82433b1",
+      "trace_sha256": "627a488910a3c1b260f30211624b2b5dd6949dcb012b7f72f56036a75aeaa43c"
+    },
+    "F16": {
+      "observation_sha256": "e00a631c714e29e08ec468becbf70caa95a07b53c640b252cbb63b6f14e292a5",
+      "result_sha256": "abed5b7c63f8d5a0038627cbfbc2bc6a363c11e24591a868128fafcb8879c96b",
+      "trace_sha256": "7508fe658e67414781ed2304e123d31c8bb53623095fe3071b072aa05d0a716c"
+    },
+    "F24": {
+      "observation_sha256": "acc22c19d11c966b2c93b2009b65b888b500b52c4561233af7a0b4e342f4d66b",
+      "result_sha256": "3d459fc12807d0c8dd45fbbf96f95b58a583482ffe512e0f4c69a2da9dd36e83",
+      "trace_sha256": "18470cdfd6464462b54bfe3e60c7f821c8a02eb3f2863a6585877d6ab1eeff24"
+    },
+    "F8": {
+      "observation_sha256": "10943c8f04e5296747e97d088d18c210ff21fd987925a54017d5e6834bae36a1",
+      "result_sha256": "1a35e8314940699c6d512eef642e2648965c6fc35981a6fadabccf86a21da56b",
+      "trace_sha256": "0b8912adf24e6fca836210563bbfc3fee961d74b3b7b898f0bbbcc36d2b679ec"
+    }
+  },
+  "F_return_sha256": "882c078ba22efab1699773b1c657996933aa2b87b34c8058c62a6a5860f8a0af",
+  "F_screen_sha256": "711488b61bf077172335d60de019ca06f7004de4a118f8c15d70268c84b6758c",
+  "application": "2026-11-23 author direction, selected setting",
+  "force_item": "U6(c) item 6",
+  "full_qualification_granted": false,
+  "historical_fixed_reference_only": {
+    "F12_F24": {
+      "exceeding_knots": 3076,
+      "ratio": 0.29217533438102783,
+      "reference_MPa": 0.6636991102836952
+    },
+    "F8_F16": {
+      "exceeding_knots": 3887,
+      "ratio": 0.7998228422233632,
+      "reference_MPa": 0.6636991102836952
+    }
+  },
+  "historical_rule_scope": "setting-1 dense 2D F, monotone axial loading, one unchanged configuration per pair",
+  "label": "DEVELOPMENT_ONLY",
+  "native_curve_comparison": "EXCEEDS",
+  "new_model_runs": 0,
+  "other_seven_items": "UNASSESSED",
+  "registered_pairs": {
+    "F12_F24": {
+      "coarse_end_u": 0.15189136502012468,
+      "coarse_minus_fine_at_first_max_MPa": 0.1939165094755293,
+      "coarse_samples": 5081,
+      "coarse_samples_in_common": 5081,
+      "common_end_u": 0.15189136502012468,
+      "common_start_u": 0.0,
+      "comparison": "EXCEEDS",
+      "exceeding_knots": 1549,
+      "fine_end_u": 0.15692949395829225,
+      "fine_peak_MPa": 1.0072848238006886,
+      "fine_samples": 10498,
+      "fine_samples_in_common": 10161,
+      "first_exceedance_u": 0.016908379314740207,
+      "max_abs_difference_MPa": 0.1939165094755293,
+      "ratio": 0.19251407833570175,
+      "u_at_first_fine_peak": 0.15189136502012468,
+      "u_at_first_max_abs": 0.15189136502012468,
+      "union_knots": 10161
+    },
+    "F8_F16": {
+      "coarse_end_u": 0.12270908701625816,
+      "coarse_minus_fine_at_first_max_MPa": 0.5308417087682225,
+      "coarse_samples": 2737,
+      "coarse_samples_in_common": 2737,
+      "common_end_u": 0.12270908701625816,
+      "common_start_u": 0.0,
+      "comparison": "EXCEEDS",
+      "exceeding_knots": 3880,
+      "fine_end_u": 0.1495965496135706,
+      "fine_peak_MPa": 0.6697935989719649,
+      "fine_samples": 6672,
+      "fine_samples_in_common": 5473,
+      "first_exceedance_u": 0.015450760408297182,
+      "max_abs_difference_MPa": 0.5308417087682225,
+      "ratio": 0.7925452103199953,
+      "u_at_first_fine_peak": 0.1226642372037523,
+      "u_at_first_max_abs": 0.12270908701625816,
+      "union_knots": 5473
+    }
+  },
+  "selected_setting": 2,
+  "source_pin": "c858862722bf6e5eb587ccbd54e1eef7dd59aa27",
+  "sources_sha256": {
+    "suyoung_floor_full_20261123/full_compare.py": "f3eb1aa342e97e5accd9619230b695e523d9113035937daf676b29c88b498d3a",
+    "suyoung_u6a_setting2_return_20261123/verify_setting2.py": "d2f203e23b56fbeb1609d02f249b9bd0099d1962b2720b5b635789c83be380e3",
+    "suyoung_u6c_doubling_readback_20261122/doubling.py": "9d664ed38a70295b9bd04ecbf5dae4ffda663c5efbc348c30a77bf6b99fa1bda",
+    "suyoung_u6c_force_rule_20261122/force_rule.py": "145b5fe6f456e8b66c2a8cc422ff88648c82d07c4420482f06bc6da7a5b1b6db",
+    "suyoung_u6c_force_rule_20261122/rule.json": "1736322b4b2f4cef384becd97099998668137c19272e504edd951b698502a8f4"
+  },
+  "stage3_go": false,
+  "three_dimensional_go": false,
+  "unchanged_rule_id": "U6c-06-force-displacement-v1"
+}

@@ -1,0 +1,5 @@
+setting	gap_correction	distance_test	phi_m_8	phi_m_12	phi_m_16	phi_m_24	abs_delta_12_16	u6a	disposition	u6b	u6c
+1	off	off	0.9437942470134417	0.9931917927891466	0.9877553066935256	1.001904091871595	0.005436486095620974	FAIL	not_selected	not_applicable	not_applicable
+2	on	off	0.9450900127843758	0.9951632940752458	0.9910339251990935	1.0043866578470217	0.0041293688761523395	PASS	selected	unconverged_0.84_0.90,bias_and_noise_0.90,not_common_0.95	criterion_6_exceeds_5pct_both_pairs
+3	off	on						unmeasured	not_reached	not_applicable	not_applicable
+4	on	on						unmeasured	not_reached	not_applicable	not_applicable
