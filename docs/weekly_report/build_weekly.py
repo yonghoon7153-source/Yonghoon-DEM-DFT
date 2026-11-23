@@ -189,8 +189,9 @@ def slot(slide, x, y, w, h, label, desc, src):
     sh.line.color.rgb = SLOT_LINE; sh.line.width = Pt(1.25); sh.line.dash_style = MSO_LINE.DASH
     sh.shadow.inherit = False
     tf = sh.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    # 넣을 곳 (src) 은 슬라이드에 쓰지 않는다 — 1저자에게 채팅으로 준다 (교수님 화면에 작업 지시가 남지 않게)
     for k, (t, size, bold, col) in enumerate(((label, 15, True, MUTED), (desc, 11.5, False, INK),
-                                               ('넣을 것: ' + src, 9.5, False, MUTED))):
+                                               ('(그림 넣을 자리)', 9.5, False, MUTED))):
         p = tf.paragraphs[0] if k == 0 else tf.add_paragraph()
         p.alignment = PP_ALIGN.CENTER
         p.space_before = Pt(0 if k == 0 else 4)
@@ -222,7 +223,7 @@ def chart(slide, spec, x, y, w, h):
     dl = plot.data_labels
     dl.number_format = spec.get('fmt', '0.00'); dl.number_format_is_linked = False
     dl.position = XL_LABEL_POSITION.OUTSIDE_END
-    dl.font.size = Pt(9)
+    dl.font.size = Pt(9 if len(spec['series']) < 3 else 8)
     va = ch.value_axis
     if 'ymin' in spec:
         va.minimum_scale = spec['ymin']
