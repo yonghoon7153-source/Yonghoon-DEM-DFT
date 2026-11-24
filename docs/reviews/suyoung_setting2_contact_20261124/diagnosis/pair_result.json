@@ -1,0 +1,2924 @@
+{
+  "cases": 112,
+  "disks": 2,
+  "field_runs": 0,
+  "native_projector_calls": 112,
+  "dt16": 0.0011231835082397789,
+  "pinned_gap_sha256": "95036c52c76fd468ec6f72f586f86fa7a4b4b1bdf2f5c49d55faa56d8c3a4297",
+  "pinned_kernel_sha256": "acf5c061032672adb8301fc6b45750c188f8fdc2892350cb7956b64c433f2645",
+  "pinned_material_sha256": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+  "rows": [
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 11,
+      "minimum_projected_gap": -0.03327079453581205,
+      "changed_nodes": 11,
+      "impulse_body_2_xy": [
+        2.5031876368852622e-08,
+        5.284737404254215e-07
+      ],
+      "axial_impulse_over_mU": 0.0033542056867621943,
+      "vertical_impulse_over_mU": 0.0033542056867621943,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 11,
+      "minimum_projected_gap": -0.03327079453581205,
+      "changed_nodes": 11,
+      "impulse_body_2_xy": [
+        -3.596130320670432e-12,
+        5.404240060184783e-07
+      ],
+      "axial_impulse_over_mU": 0.003430053634814036,
+      "vertical_impulse_over_mU": 0.003430053634814036,
+      "net_impulse_over_mU": 6.720113298033058e-19
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 11,
+      "minimum_projected_gap": -0.03327079453581205,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.05,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 19,
+      "impulse_body_2_xy": [
+        0.0,
+        2.2680861172747558e-06
+      ],
+      "axial_impulse_over_mU": 0.014395469009501265,
+      "vertical_impulse_over_mU": 0.014395469009501265,
+      "net_impulse_over_mU": 2.688045319213223e-18
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 13,
+      "minimum_projected_gap": -0.023620248147661102,
+      "changed_nodes": 13,
+      "impulse_body_2_xy": [
+        2.706578612157916e-09,
+        7.790696079824459e-07
+      ],
+      "axial_impulse_over_mU": 0.004944729528802546,
+      "vertical_impulse_over_mU": 0.004944729528802546,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 13,
+      "minimum_projected_gap": -0.023620248147661102,
+      "changed_nodes": 13,
+      "impulse_body_2_xy": [
+        -1.1557902229176241e-11,
+        7.958613603228919e-07
+      ],
+      "axial_impulse_over_mU": 0.005051306236181964,
+      "vertical_impulse_over_mU": 0.005051306236181964,
+      "net_impulse_over_mU": 1.3440226596457277e-18
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 13,
+      "minimum_projected_gap": -0.023620248147661102,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.05,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 19,
+      "nodes_with_negative_projected_gap": 19,
+      "minimum_projected_gap": -1.1102230246251565e-16,
+      "changed_nodes": 19,
+      "impulse_body_2_xy": [
+        0.0,
+        2.1541535571499715e-06
+      ],
+      "axial_impulse_over_mU": 0.013672342746367938,
+      "vertical_impulse_over_mU": 0.013672342746367938,
+      "net_impulse_over_mU": 2.688045319213223e-18
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 12,
+      "minimum_projected_gap": -0.05643472574714703,
+      "changed_nodes": 13,
+      "impulse_body_2_xy": [
+        2.0318531307619308e-07,
+        6.629890021596239e-07
+      ],
+      "axial_impulse_over_mU": 0.004381169676661335,
+      "vertical_impulse_over_mU": 0.004207969689306497,
+      "net_impulse_over_mU": 1.3544821376627784e-18
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 12,
+      "minimum_projected_gap": -0.05643472574714703,
+      "changed_nodes": 13,
+      "impulse_body_2_xy": [
+        2.7222414972810386e-07,
+        6.544369673531071e-07
+      ],
+      "axial_impulse_over_mU": 0.004498708972512132,
+      "vertical_impulse_over_mU": 0.0041536902018180265,
+      "net_impulse_over_mU": 9.503675366762139e-19
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 12,
+      "minimum_projected_gap": -0.05643472574714703,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.05,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 18,
+      "impulse_body_2_xy": [
+        9.713556177995461e-07,
+        2.3450599063789603e-06
+      ],
+      "axial_impulse_over_mU": 0.01611034623903172,
+      "vertical_impulse_over_mU": 0.01488401915191159,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 14,
+      "minimum_projected_gap": -0.06067106138214651,
+      "changed_nodes": 14,
+      "impulse_body_2_xy": [
+        2.609564363359274e-07,
+        6.619197787729087e-07
+      ],
+      "axial_impulse_over_mU": 0.004515219016041857,
+      "vertical_impulse_over_mU": 0.0042011833631566825,
+      "net_impulse_over_mU": 2.125086415617039e-18
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 14,
+      "minimum_projected_gap": -0.06067106138214651,
+      "changed_nodes": 14,
+      "impulse_body_2_xy": [
+        2.7754513523806303e-07,
+        6.700106575196845e-07
+      ],
+      "axial_impulse_over_mU": 0.004602954529142459,
+      "vertical_impulse_over_mU": 0.004252535908093906,
+      "net_impulse_over_mU": 1.3440226596066115e-18
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 14,
+      "minimum_projected_gap": -0.06067106138214651,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.05,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 8,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0,
+      "dt": 0.0022463670164795577,
+      "max_relative_travel": 4.4927340329591154e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 21,
+      "impulse_body_2_xy": [
+        9.814831589675864e-07,
+        2.3695099536203355e-06
+      ],
+      "axial_impulse_over_mU": 0.016278315818635106,
+      "vertical_impulse_over_mU": 0.015039202808591686,
+      "net_impulse_over_mU": 2.688045319213223e-18
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 10,
+      "minimum_projected_gap": -0.008965180793633065,
+      "changed_nodes": 11,
+      "impulse_body_2_xy": [
+        4.032224156554115e-09,
+        1.8190938806857838e-07
+      ],
+      "axial_impulse_over_mU": 0.0011545729849204546,
+      "vertical_impulse_over_mU": 0.0011545729849204546,
+      "net_impulse_over_mU": 1.6800283245082644e-19
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 10,
+      "minimum_projected_gap": -0.008965180793633065,
+      "changed_nodes": 11,
+      "impulse_body_2_xy": [
+        -5.8895173914001665e-09,
+        1.8602527359272352e-07
+      ],
+      "axial_impulse_over_mU": 0.0011806963768226453,
+      "vertical_impulse_over_mU": 0.0011806963768226453,
+      "net_impulse_over_mU": 1.6800283245082644e-19
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 10,
+      "minimum_projected_gap": -0.008965180793633065,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.05,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 21,
+      "impulse_body_2_xy": [
+        0.0,
+        1.0958704042274133e-06
+      ],
+      "axial_impulse_over_mU": 0.00695545390553365,
+      "vertical_impulse_over_mU": 0.00695545390553365,
+      "net_impulse_over_mU": 1.3440226596066115e-18
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 8,
+      "minimum_projected_gap": -0.024593275830416497,
+      "changed_nodes": 8,
+      "impulse_body_2_xy": [
+        -8.203441689808827e-10,
+        5.039771298879538e-08
+      ],
+      "axial_impulse_over_mU": 0.00031987264943523163,
+      "vertical_impulse_over_mU": 0.00031987264943523163,
+      "net_impulse_over_mU": 8.400141622541326e-19
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 8,
+      "minimum_projected_gap": -0.024593275830416497,
+      "changed_nodes": 8,
+      "impulse_body_2_xy": [
+        -1.4409277439438775e-10,
+        5.2096699450981815e-08
+      ],
+      "axial_impulse_over_mU": 0.0003306560613955123,
+      "vertical_impulse_over_mU": 0.0003306560613955123,
+      "net_impulse_over_mU": 4.200070811270663e-19
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 8,
+      "minimum_projected_gap": -0.024593275830416497,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.05,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 20,
+      "nodes_with_negative_projected_gap": 20,
+      "minimum_projected_gap": -1.1102230246251565e-16,
+      "changed_nodes": 20,
+      "impulse_body_2_xy": [
+        0.0,
+        1.2906545575844542e-06
+      ],
+      "axial_impulse_over_mU": 0.008191742608081868,
+      "vertical_impulse_over_mU": 0.008191742608081868,
+      "net_impulse_over_mU": 1.3440226596066121e-18
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 9,
+      "minimum_projected_gap": -0.00657372376368659,
+      "changed_nodes": 10,
+      "impulse_body_2_xy": [
+        9.686135673293583e-08,
+        3.142764962101629e-07
+      ],
+      "axial_impulse_over_mU": 0.0020781295696080866,
+      "vertical_impulse_over_mU": 0.0019947027262986355,
+      "net_impulse_over_mU": 3.756657537725555e-19
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 9,
+      "minimum_projected_gap": -0.00657372376368659,
+      "changed_nodes": 10,
+      "impulse_body_2_xy": [
+        1.324700956747552e-07,
+        3.1305667143921365e-07
+      ],
+      "axial_impulse_over_mU": 0.002157466050363981,
+      "vertical_impulse_over_mU": 0.001986960538048605,
+      "net_impulse_over_mU": 3.360056649016529e-19
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 9,
+      "minimum_projected_gap": -0.00657372376368659,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.05,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 18,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 18,
+      "impulse_body_2_xy": [
+        5.437019543443261e-07,
+        1.3126126320668294e-06
+      ],
+      "axial_impulse_over_mU": 0.00901752826134672,
+      "vertical_impulse_over_mU": 0.008331109794500325,
+      "net_impulse_over_mU": 1.3440226596066115e-18
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 12,
+      "minimum_projected_gap": -0.042931804909332016,
+      "changed_nodes": 12,
+      "impulse_body_2_xy": [
+        7.568453179756094e-08,
+        2.7171110325788735e-07
+      ],
+      "axial_impulse_over_mU": 0.0017770972434071406,
+      "vertical_impulse_over_mU": 0.0017245415580542925,
+      "net_impulse_over_mU": 1.6800283245082651e-19
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 12,
+      "minimum_projected_gap": -0.042931804909332016,
+      "changed_nodes": 12,
+      "impulse_body_2_xy": [
+        1.103069324625103e-07,
+        2.664132537467943e-07
+      ],
+      "axial_impulse_over_mU": 0.001830125169741432,
+      "vertical_impulse_over_mU": 0.0016909162790699217,
+      "net_impulse_over_mU": 6.926934235977041e-19
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 12,
+      "minimum_projected_gap": -0.042931804909332016,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.05,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 12,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0,
+      "dt": 0.0014975780109863718,
+      "max_relative_travel": 2.9951560219727438e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 22,
+      "impulse_body_2_xy": [
+        5.429733611159671e-07,
+        1.310853652413472e-06
+      ],
+      "axial_impulse_over_mU": 0.009005444232633464,
+      "vertical_impulse_over_mU": 0.008319945607701868,
+      "net_impulse_over_mU": 1.3440226596066121e-18
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 11,
+      "minimum_projected_gap": -0.09768033366360918,
+      "changed_nodes": 11,
+      "impulse_body_2_xy": [
+        1.1794006773385573e-08,
+        2.0988688702466427e-07
+      ],
+      "axial_impulse_over_mU": 0.0013321452632030874,
+      "vertical_impulse_over_mU": 0.0013321452632030874,
+      "net_impulse_over_mU": 3.3600566490165293e-19
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 11,
+      "minimum_projected_gap": -0.09768033366360918,
+      "changed_nodes": 11,
+      "impulse_body_2_xy": [
+        -5.560706844268445e-12,
+        2.1577523431846328e-07
+      ],
+      "axial_impulse_over_mU": 0.0013695184124585115,
+      "vertical_impulse_over_mU": 0.0013695184124585115,
+      "net_impulse_over_mU": 3.3600566490165293e-19
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 11,
+      "minimum_projected_gap": -0.09768033366360918,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.05,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 22,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 22,
+      "impulse_body_2_xy": [
+        0.0,
+        6.957550178207135e-07
+      ],
+      "axial_impulse_over_mU": 0.004415934527776037,
+      "vertical_impulse_over_mU": 0.004415934527776037,
+      "net_impulse_over_mU": 1.3440226596066117e-18
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 5,
+      "minimum_projected_gap": -0.0887089731124659,
+      "changed_nodes": 5,
+      "impulse_body_2_xy": [
+        1.0897352135666898e-10,
+        4.512675903454097e-08
+      ],
+      "axial_impulse_over_mU": 0.00028641807567762246,
+      "vertical_impulse_over_mU": 0.00028641807567762246,
+      "net_impulse_over_mU": 4.2000708112706614e-19
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 5,
+      "minimum_projected_gap": -0.0887089731124659,
+      "changed_nodes": 5,
+      "impulse_body_2_xy": [
+        -8.355170855163956e-13,
+        5.069411459006863e-08
+      ],
+      "axial_impulse_over_mU": 0.0003217539007832282,
+      "vertical_impulse_over_mU": 0.0003217539007832282,
+      "net_impulse_over_mU": 8.4001416227858e-20
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 5,
+      "minimum_projected_gap": -0.0887089731124659,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.05,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 21,
+      "minimum_projected_gap": -1.1102230246251565e-16,
+      "changed_nodes": 21,
+      "impulse_body_2_xy": [
+        0.0,
+        8.433884143899082e-07
+      ],
+      "axial_impulse_over_mU": 0.0053529589065650016,
+      "vertical_impulse_over_mU": 0.0053529589065650016,
+      "net_impulse_over_mU": 6.720113298033059e-19
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 10,
+      "minimum_projected_gap": -0.017878884564312025,
+      "changed_nodes": 11,
+      "impulse_body_2_xy": [
+        5.796153927221495e-08,
+        2.1092487135352453e-07
+      ],
+      "axial_impulse_over_mU": 0.0013776098949327038,
+      "vertical_impulse_over_mU": 0.0013387333160660934,
+      "net_impulse_over_mU": 1.7317335589942597e-19
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 10,
+      "minimum_projected_gap": -0.017878884564312025,
+      "changed_nodes": 11,
+      "impulse_body_2_xy": [
+        8.729384863770218e-08,
+        2.1082693090513197e-07
+      ],
+      "axial_impulse_over_mU": 0.0014482802284048759,
+      "vertical_impulse_over_mU": 0.0013381116912173396,
+      "net_impulse_over_mU": 3.4634671179885194e-19
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 10,
+      "minimum_projected_gap": -0.017878884564312025,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.05,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 25,
+      "impulse_body_2_xy": [
+        3.4997665805889596e-07,
+        8.449183943997977e-07
+      ],
+      "axial_impulse_over_mU": 0.005804511791140495,
+      "vertical_impulse_over_mU": 0.005362669640055133,
+      "net_impulse_over_mU": 7.513315075451112e-19
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 24,
+      "nodes_with_negative_projected_gap": 20,
+      "minimum_projected_gap": -0.025826723556083286,
+      "changed_nodes": 20,
+      "impulse_body_2_xy": [
+        1.5638788458781796e-07,
+        4.3687781404735845e-07
+      ],
+      "axial_impulse_over_mU": 0.002941626027890742,
+      "vertical_impulse_over_mU": 0.002772849313417648,
+      "net_impulse_over_mU": 1.021921334215857e-18
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 24,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 24,
+      "nodes_with_negative_projected_gap": 20,
+      "minimum_projected_gap": -0.025826723556083286,
+      "changed_nodes": 20,
+      "impulse_body_2_xy": [
+        1.8233285373534172e-07,
+        4.402291244484031e-07
+      ],
+      "axial_impulse_over_mU": 0.003024294753132902,
+      "vertical_impulse_over_mU": 0.0027941199718163803,
+      "net_impulse_over_mU": 6.720113298033059e-19
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 24,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 24,
+      "nodes_with_negative_projected_gap": 20,
+      "minimum_projected_gap": -0.025826723556083286,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.05,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 16,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0,
+      "dt": 0.0011231835082397789,
+      "max_relative_travel": 2.2463670164795577e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 25,
+      "impulse_body_2_xy": [
+        3.613226837610222e-07,
+        8.723101235289047e-07
+      ],
+      "axial_impulse_over_mU": 0.005992690455214407,
+      "vertical_impulse_over_mU": 0.005536524056248336,
+      "net_impulse_over_mU": 7.513315075451112e-19
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 4,
+      "minimum_projected_gap": -0.036792549537575936,
+      "changed_nodes": 4,
+      "impulse_body_2_xy": [
+        -6.992249528479257e-10,
+        7.766803018428665e-09
+      ],
+      "axial_impulse_over_mU": 4.929564680243863e-05,
+      "vertical_impulse_over_mU": 4.929564680243863e-05,
+      "net_impulse_over_mU": 1.2600212433811984e-19
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 4,
+      "minimum_projected_gap": -0.036792549537575936,
+      "changed_nodes": 4,
+      "impulse_body_2_xy": [
+        -2.547677582750096e-10,
+        1.0422967564506546e-08
+      ],
+      "axial_impulse_over_mU": 6.615423701026721e-05,
+      "vertical_impulse_over_mU": 6.615423701026721e-05,
+      "net_impulse_over_mU": 2.1000354056353308e-20
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 4,
+      "minimum_projected_gap": -0.036792549537575936,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.05,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 17,
+      "impulse_body_2_xy": [
+        0.0,
+        4.353863320765508e-07
+      ],
+      "axial_impulse_over_mU": 0.0027633829257326914,
+      "vertical_impulse_over_mU": 0.0027633829257326914,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 9,
+      "minimum_projected_gap": -0.06542194264485979,
+      "changed_nodes": 9,
+      "impulse_body_2_xy": [
+        -6.06833229962342e-11,
+        1.7399109493688105e-07
+      ],
+      "axial_impulse_over_mU": 0.001104315835283448,
+      "vertical_impulse_over_mU": 0.001104315835283448,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 9,
+      "minimum_projected_gap": -0.06542194264485979,
+      "changed_nodes": 9,
+      "impulse_body_2_xy": [
+        -1.8557374424938005e-09,
+        1.8680493872516155e-07
+      ],
+      "axial_impulse_over_mU": 0.001185644886125849,
+      "vertical_impulse_over_mU": 0.001185644886125849,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 17,
+      "nodes_with_negative_projected_gap": 9,
+      "minimum_projected_gap": -0.06542194264485979,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.05,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 0.0,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 25,
+      "minimum_projected_gap": -1.1102230246251565e-16,
+      "changed_nodes": 25,
+      "impulse_body_2_xy": [
+        0.0,
+        2.984114464947674e-07
+      ],
+      "axial_impulse_over_mU": 0.0018940077704181285,
+      "vertical_impulse_over_mU": 0.0018940077704181285,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 21,
+      "minimum_projected_gap": -0.05784683229121301,
+      "changed_nodes": 21,
+      "impulse_body_2_xy": [
+        8.842015324391435e-08,
+        2.594619639757161e-07
+      ],
+      "axial_impulse_over_mU": 0.001736203618789675,
+      "vertical_impulse_over_mU": 0.0016467966683931202,
+      "net_impulse_over_mU": 3.3600566490165293e-19
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 21,
+      "minimum_projected_gap": -0.05784683229121301,
+      "changed_nodes": 21,
+      "impulse_body_2_xy": [
+        1.1006944194882243e-07,
+        2.6400883386856113e-07
+      ],
+      "axial_impulse_over_mU": 0.0018154492162985852,
+      "vertical_impulse_over_mU": 0.0016756555041022919,
+      "net_impulse_over_mU": 8.400141622541323e-20
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 21,
+      "minimum_projected_gap": -0.05784683229121301,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.05,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0,
+        0.0
+      ],
+      "gap": 0.0,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 25,
+      "impulse_body_2_xy": [
+        1.9503162808963678e-07,
+        4.708480016257066e-07
+      ],
+      "axial_impulse_over_mU": 0.0032346825390312593,
+      "vertical_impulse_over_mU": 0.0029884569919826224,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 18,
+      "minimum_projected_gap": -0.06080300796062249,
+      "changed_nodes": 18,
+      "impulse_body_2_xy": [
+        1.1783134366217751e-07,
+        3.319189022712776e-07
+      ],
+      "axial_impulse_over_mU": 0.0022325152677390124,
+      "vertical_impulse_over_mU": 0.002106678505247883,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.0,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 18,
+      "minimum_projected_gap": -0.06080300796062249,
+      "changed_nodes": 18,
+      "impulse_body_2_xy": [
+        1.418388571107359e-07,
+        3.424289402081276e-07
+      ],
+      "axial_impulse_over_mU": 0.0023524557326638105,
+      "vertical_impulse_over_mU": 0.002173385375086846,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0004999999999999449,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0005,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "comotion",
+      "material_points_each": 709,
+      "shared_nodes": 21,
+      "nodes_with_negative_projected_gap": 18,
+      "minimum_projected_gap": -0.06080300796062249,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.05,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "native_gradient",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 0,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": null,
+      "changed_nodes": 0,
+      "impulse_body_2_xy": [
+        0.0,
+        0.0
+      ],
+      "axial_impulse_over_mU": 0.0,
+      "vertical_impulse_over_mU": 0.0,
+      "net_impulse_over_mU": 0.0
+    },
+    {
+      "cells": 24,
+      "angle_deg": 22.5,
+      "origin_shift": [
+        0.0019,
+        0.0027
+      ],
+      "gap": 0.0,
+      "dt": 0.0007487890054931859,
+      "max_relative_travel": 1.4975780109863719e-05,
+      "normal": "geometric_control",
+      "friction": 0.5,
+      "motion": "approach",
+      "material_points_each": 709,
+      "shared_nodes": 25,
+      "nodes_with_negative_projected_gap": 0,
+      "minimum_projected_gap": 0.0,
+      "changed_nodes": 25,
+      "impulse_body_2_xy": [
+        1.8908910269733356e-07,
+        4.5650147622886163e-07
+      ],
+      "axial_impulse_over_mU": 0.0031361232268185832,
+      "vertical_impulse_over_mU": 0.0028974000606909406,
+      "net_impulse_over_mU": 3.756657537725556e-19
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "status": "DEVELOPMENT_ONLY",
+  "registered_rule_modified": false,
+  "new_simulations": 0,
+  "input_sha256": [
+    "aa0f2ad7126a65654975de6a741a58b49c57a5cc84c42983b226ddca15212b65",
+    "c1506ea6fb6f16181fe36e85e76043101380b75c9cf435b2811a5b53b761d673",
+    "882c078ba22efab1699773b1c657996933aa2b87b34c8058c62a6a5860f8a0af"
+  ],
+  "same_grid_comparison": {
+    "8": {
+      "first_unequal_pressure_step": 261,
+      "first_positive_pressure_step_s1": 261,
+      "first_positive_pressure_step_s2": 332,
+      "peak_abs_s2_minus_s1_at_same_u_MPa": 0.2040046160259233
+    },
+    "12": {
+      "first_unequal_pressure_step": 416,
+      "first_positive_pressure_step_s1": 416,
+      "first_positive_pressure_step_s2": 524,
+      "peak_abs_s2_minus_s1_at_same_u_MPa": 0.1928989983968556
+    },
+    "16": {
+      "first_unequal_pressure_step": 569,
+      "first_positive_pressure_step_s1": 569,
+      "first_positive_pressure_step_s2": 722,
+      "peak_abs_s2_minus_s1_at_same_u_MPa": 0.19282237929931823
+    },
+    "24": {
+      "first_unequal_pressure_step": 901,
+      "first_positive_pressure_step_s1": 901,
+      "first_positive_pressure_step_s2": 1130,
+      "peak_abs_s2_minus_s1_at_same_u_MPa": 0.16603440791127116
+    }
+  },
+  "common_four_curve_window": {
+    "F8_F16": {
+      "four_curve_union_count": 5439,
+      "common_end_u_code": 0.1219466402036572,
+      "s1_max_grid_difference_MPa": 0.5277162139368279,
+      "s2_max_grid_difference_MPa": 0.48611426147661163,
+      "same_u_s2_peak": {
+        "u_code": 0.1219466402036572,
+        "s1_coarse": 1.2026533941729116,
+        "s1_fine": 0.6749371802360837,
+        "s2_coarse": 1.1506676334153292,
+        "s2_fine": 0.6645533719387176,
+        "s1_gap": 0.5277162139368279,
+        "s2_gap": 0.48611426147661163,
+        "delta_gap": -0.04160195246021625
+      },
+      "max_absolute_change_in_grid_difference_MPa": 0.16157599625974156
+    },
+    "F12_F24": {
+      "four_curve_union_count": 10087,
+      "common_end_u_code": 0.15078506964497818,
+      "s1_max_grid_difference_MPa": 0.18498666608153602,
+      "s2_max_grid_difference_MPa": 0.14873581260496876,
+      "same_u_s2_peak": {
+        "u_code": 0.018627622127468046,
+        "s1_coarse": 0.25788031081862867,
+        "s1_fine": 0.199910863616996,
+        "s2_coarse": 0.2125846877169876,
+        "s2_fine": 0.06384887511201884,
+        "s1_gap": 0.05796944720163266,
+        "s2_gap": 0.14873581260496876,
+        "delta_gap": 0.0907663654033361
+      },
+      "max_absolute_change_in_grid_difference_MPa": 0.09572566934799073
+    }
+  }
+}
