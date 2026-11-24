@@ -135,7 +135,7 @@ Ag(111)·Ag(100) 위에 BCC Li 를 Kurdjumov–Sachs · Nishiyama–Wassermann �
 
 - 논문 판독: FCC(111) 이 최대 → 가장 유리, 다음 KS. 같은 Ag 면 안에서는 FCC Li 쪽이 유리 (정합 · 불일치 작음). 그러나 KS–FCC(111) (차 0.0003 eV/Å²) · Pitsch–FCC(100) (차 0) 는 **MACE–DFT 오차 안**이라 "FCC 가 유리하다고 자신 있게 말할 수 없다" (p.4).
 - **DFT 대조**: "정합 계면 둘을 DFT 로 내니 0.093 · 0.106 eV/Å² — MACE 예측보다 더 안정하다. MACE 와 DFT 의 에너지 차, 그중 Ag 슬랩이 가장 크다. Ag 슬랩 차이는 **≈ 0.44 eV/atom** 정도" (p.4). *우리 산수*: (111) MACE/DFT = **0.99** · (100) = **0.43** (차 0.97 J/m²). ⚠ '0.44 eV/atom' 이 무엇의 차인지 (절대 에너지 · 표면 에너지 · 슬랩 전체) 본문이 정의하지 않는다 — 절대 에너지의 일정한 차이라면 W 에서 상쇄된다 (§10-①).
-- 외부 비교: Seymour & Aguadero 의 DFT BCC(111) Li 정합 계면 (LiCl · Li₃OCl · LiMg · Li₂O · γ-Li₃PO₄ · AlSc) 중 **금속 기판 LiMg 0.08301 · AlSc 0.10242 eV/Å²** (*우리 환산* 1.330 · 1.641 J/m²) 와 "비슷하다".
+- 외부 비교: Seymour & Aguadero 의 DFT "BCC (111) Li" 정합 계면 (LiCl · Li₃OCl · LiMg · Li₂O · γ-Li₃PO₄ · AlSc) 중 — ⚠ **Lu 의 인용 오기** (메인 원문 대조 2026-11-24): Seymour 원문 2 절은 LiCl · LiMg · AlSc · Li₃OCl (100) 을 **BCC Li (100)** 과, Li₂O (111) 을 HCP Li (0001) 과, γ-Li₃PO₄ (100) 을 HCP Li (10-10) 과 짝지었다 — BCC Li (111) 은 없다 (`seymour2021_void_suppression_interfacial_adhesion_vacancy_transport` 표 2) · **금속 기판 LiMg 0.08301 · AlSc 0.10242 eV/Å²** (*우리 환산* 1.330 · 1.641 J/m²) 와 "비슷하다".
 - 같은 p.4 안에서 결론이 흔들린다: "FCC 가 선호된다고 결론 내리려면 이완 구조를 더 조심스럽게 봐야 한다" (p.4) ↔ "BCC 로 만든 구조도 조밀 충전으로 바뀌었으니 **FCC 가 선호된다고 확신한다**" (p.6) ↔ 초록 "Li 는 (111) · (100) Ag 면 **모두에서 FCC 로** 도금된다".
 
 ### 3f. 계면 재구성 — 이완 뒤 무엇이 됐나 (p.4–6 본문)

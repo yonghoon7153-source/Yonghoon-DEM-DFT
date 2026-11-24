@@ -1,18 +1,18 @@
-# 끝 보고 — chatterjee2025_diffuse_interface_li_anode_void_model (2026-11-24 · litdb-curator)
+# 끝 보고 — chatterjee2025_diffuse_interface_metal_anode_void_model (2026-11-24 · litdb-curator)
 
-쓴 파일: `litdb/papers/chatterjee2025_diffuse_interface_li_anode_void_model.md` (635 줄 · 표 17 개 · 칸수 검사 0 건) · `litdb/figures/chatterjee2025_diffuse_interface_li_anode_void_model/` (PNG 31 + figures.json) · 이 보고 파일. 공유 파일 · git · 코드 폴더는 안 건드렸다 (메인 체크포인트 커밋에 digest 앞판이 이미 들어가 있어서 지금 ` M` 로 보인다).
+쓴 파일: `litdb/papers/chatterjee2025_diffuse_interface_metal_anode_void_model.md` (635 줄 · 표 17 개 · 칸수 검사 0 건) · `litdb/figures/chatterjee2025_diffuse_interface_metal_anode_void_model/` (PNG 31 + figures.json) · 이 보고 파일. 공유 파일 · git · 코드 폴더는 안 건드렸다 (메인 체크포인트 커밋에 digest 앞판이 이미 들어가 있어서 지금 ` M` 로 보인다).
 웹앱 확인 (읽기만): track **dem** · digested 2026-11-24 · `pis` = `[]` · 원소 태그 `Na` · methods 태그 없음 (`> methods: —`) · 그림 주석 f1–f17 · fS1–fS10 · t1 · t2 · tS1 연결됨.
 ⚠ slug 의 `li_anode` 는 지시대로 고정했지만 **논문이 푼 계는 Na 금속 | Na-β″-alumina** 다 (Li 계산 0). 바꿀지는 메인이 정한다 (바꾸면 figures 폴더 · figures.json 의 slug 도 같이).
 서지: *J. Electrochem. Soc.* **172**, 070522 (2025) · DOI 10.1149/1945-7111/aded38 · 투고 2024-12-22 · 게재 2025-07-23 · 저자 Sourav Chatterjee (UF · LLNL) · Michael Tonks (UF) · William Gardner · Marina Sessim (QuantumScape) · 코드 souravmat-git/MOOSE-BatModelling @ 3e44674.
 
 ## (a) 인덱스
 
-- **축 = DEM** (`webapp/data.py::literature_track` 점수 dem 3 : dft 1 — dem 은 type 문자열의 `fem` · ` continuum` · `multiphysics`, dft 1 은 제목 "Homogeneous" 의 `homo`). 제목을 고치면 뒤집힐 수 있으니 굳히려면 (메인 몫 · litdb 밖) `LIT_TRACK_OVERRIDE` 에 `"chatterjee2025_diffuse_interface_li_anode_void_model": "dem",` 한 줄.
+- **축 = DEM** (`webapp/data.py::literature_track` 점수 dem 3 : dft 1 — dem 은 type 문자열의 `fem` · ` continuum` · `multiphysics`, dft 1 은 제목 "Homogeneous" 의 `homo`). 제목을 고치면 뒤집힐 수 있으니 굳히려면 (메인 몫 · litdb 밖) `LIT_TRACK_OVERRIDE` 에 `"chatterjee2025_diffuse_interface_metal_anode_void_model": "dem",` 한 줄.
 - **`INDEX_DEM.md`**: `python3 tools/litdb/build_index.py` 재생성에 맡긴다 → 묶음 = **"화학-기계 열화 · 계면"** (`group_of` 가 slug 의 `interfac` 로 잡음 · 확인함). 지금 `--check` 는 이 slug 를 "어느 인덱스에도 없음 [dem]" · "DEM 비교문서 미편입" 두 곳에만 띄운다 → (a) · (b) 로 풀린다.
 - `INDEX.md`: **권고 안 함** (argyrodite 축 아님 · LPSCl 계면 실측 아님 · Jeff Sakamoto 공저 아님). 이 배치 (Li | SE 공극 · 점착) 를 `## 🧲 계면 점착 · 인터레이어 트랙` 표에 같이 모으기로 하면 아래 행 (3 칸):
 
 ```
-| `papers/chatterjee2025_diffuse_interface_li_anode_void_model.md` **(본문 25 pp + SI 17 pp · 크롭 31장 (도구 27 + 손 4) · 공개 코드 3e44674 줄 단위 대조)** | **[외부·계산(연속체 상장 · MOOSE)·🔧 방법 원전 — 물성 4축 비교 없음]** ✅ Sourav Chatterjee/Michael Tonks/William Gardner/Marina Sessim (UF · LLNL · **QuantumScape**), "A Diffuse-Interface Model for Predicting the Evolution of Metallic Negative Electrodes and Interfacial Voids in Solid-State Batteries with Homogeneous and Polycrystalline Solid Electrolyte Separators", *J. Electrochem. Soc.* 172, 070522 (2025) — **Na \| Na-β″-alumina** 2D 공극 상장: 계면 에너지 입력은 γ = 0.22 J m⁻² 하나 · 금속 \| SE 경계에 W · 접촉각 칸 없음 (상장 자연 경계 → θ 90° = 암묵 W = γ · 우리 추론) · l_w 0.5→0.7 µm 에 반공극 −13 % > GB 효과 ≤ 10 % · ⚠ 출판본 Fig. 10 = Fig. 12 같은 이미지 · 코드 저전도 κ_gb/κ_g 1.7×10⁻³ ≠ 본문 0.067 | W_ad (DEM-DFT) 공극 모델 자리 · 🔧 방법 원전 |
+| `papers/chatterjee2025_diffuse_interface_metal_anode_void_model.md` **(본문 25 pp + SI 17 pp · 크롭 31장 (도구 27 + 손 4) · 공개 코드 3e44674 줄 단위 대조)** | **[외부·계산(연속체 상장 · MOOSE)·🔧 방법 원전 — 물성 4축 비교 없음]** ✅ Sourav Chatterjee/Michael Tonks/William Gardner/Marina Sessim (UF · LLNL · **QuantumScape**), "A Diffuse-Interface Model for Predicting the Evolution of Metallic Negative Electrodes and Interfacial Voids in Solid-State Batteries with Homogeneous and Polycrystalline Solid Electrolyte Separators", *J. Electrochem. Soc.* 172, 070522 (2025) — **Na \| Na-β″-alumina** 2D 공극 상장: 계면 에너지 입력은 γ = 0.22 J m⁻² 하나 · 금속 \| SE 경계에 W · 접촉각 칸 없음 (상장 자연 경계 → θ 90° = 암묵 W = γ · 우리 추론) · l_w 0.5→0.7 µm 에 반공극 −13 % > GB 효과 ≤ 10 % · ⚠ 출판본 Fig. 10 = Fig. 12 같은 이미지 · 코드 저전도 κ_gb/κ_g 1.7×10⁻³ ≠ 본문 0.067 | W_ad (DEM-DFT) 공극 모델 자리 · 🔧 방법 원전 |
 ```
 
 ## (b) comparison
@@ -21,7 +21,7 @@
 - `comparison_vs_ours_DEM.md` **§I 끝** (`### I-10` 블록과 그 아래 "2026-… 추가" 줄들 뒤 · `## J.` 앞) 에 한 줄 (물성 행이 아니라 🔧 방법 원전):
 
 ```
-> 2026-11-24 추가 — 🔧 방법 원전 · `chatterjee2025_diffuse_interface_li_anode_void_model` — Na | Na-β″-alumina 2D grand-potential 공극 상장 (MOOSE · 코드 공개 3e44674): 계면 에너지 입력은 **γ = 0.22 J m⁻² 하나** (Materials Project 인용 · aux/금속 · 공극/금속 · aux/공극 공통) 이고 **금속 | SE 경계는 상장 밖의 날카로운 고정 경계라 W · 접촉각 칸이 없다** — 공개 입력의 `[BCs]` 에 상장 변수 조건이 없어 자연 경계 → θ = 90° → 암묵 W = γ (우리 추론). 우리 W 를 쓰려면 젖음 경계조건 (Δγ_w = W − γ · 지금 모델 = 0) 을 코드에 넣고 γ 를 **같은 틀 · 같은 금속 면**으로 다시 내야 한다 (MP γ = PBE · 우리 W = PBE+D3 섞지 않음). 민감도: γ · W 시험 없음 · l_w 0.5 → 0.7 µm 에 반공극 −13 % (> GB 전도도 ≤ 10 %) · 우리 차수 어림 (모세관 / 전류 구동 Δμ @ 0.5 mA cm⁻²) 공극 규모 ≈0.4 % · 가장자리 ≈5–20 % → W 는 전체 성장 속도보다 가장자리 기하에 들어간다. 이 γ 는 W_ad 쪽 양이지 G_c 가 아니다 (I 축 규약 그대로) · 값 비교 행 없음.
+> 2026-11-24 추가 — 🔧 방법 원전 · `chatterjee2025_diffuse_interface_metal_anode_void_model` — Na | Na-β″-alumina 2D grand-potential 공극 상장 (MOOSE · 코드 공개 3e44674): 계면 에너지 입력은 **γ = 0.22 J m⁻² 하나** (Materials Project 인용 · aux/금속 · 공극/금속 · aux/공극 공통) 이고 **금속 | SE 경계는 상장 밖의 날카로운 고정 경계라 W · 접촉각 칸이 없다** — 공개 입력의 `[BCs]` 에 상장 변수 조건이 없어 자연 경계 → θ = 90° → 암묵 W = γ (우리 추론). 우리 W 를 쓰려면 젖음 경계조건 (Δγ_w = W − γ · 지금 모델 = 0) 을 코드에 넣고 γ 를 **같은 틀 · 같은 금속 면**으로 다시 내야 한다 (MP γ = PBE · 우리 W = PBE+D3 섞지 않음). 민감도: γ · W 시험 없음 · l_w 0.5 → 0.7 µm 에 반공극 −13 % (> GB 전도도 ≤ 10 %) · 우리 차수 어림 (모세관 / 전류 구동 Δμ @ 0.5 mA cm⁻²) 공극 규모 ≈0.4 % · 가장자리 ≈5–20 % → W 는 전체 성장 속도보다 가장자리 기하에 들어간다. 이 γ 는 W_ad 쪽 양이지 G_c 가 아니다 (I 축 규약 그대로) · 값 비교 행 없음.
 ```
 
 ## (c) pdf_map.tsv
@@ -31,7 +31,7 @@
 ```
 # ── Na | Na-β″-alumina 확산 계면 공극 상장 (Chatterjee … Sessim · J. Electrochem. Soc. 172 (2025) 070522 · 본문 25 쪽 + SI 17 쪽) — litdb 2026-11-24 · 파일 이름 'difint2025' 가 slug 와 안 겹쳐 제목 매칭 (49 %) 에만 기대고 있다
 #   ⚠ 크롭 31 장 중 손작업 4 장 (tab_1 · tab_2 · tab_S1 · fig_A1 — manual_crop) · 다시 뽑을 때 --force_clean 쓰지 말 것
-chatterjee2025_diffuse_interface_li_anode_void_model	difint2025_void_diffuse_interface
+chatterjee2025_diffuse_interface_metal_anode_void_model	difint2025_void_diffuse_interface
 ```
 
 ## (d) 추가로 먹일 만한 논문 (8 편 · 전부 이 논문 참고문헌에서 서지 확인 · 최근 순 · litdb 에 **digest 없음** 8/8)
@@ -63,7 +63,7 @@ chatterjee2025_diffuse_interface_li_anode_void_model	difint2025_void_diffuse_int
 - 직접 본 크롭 **11 장**: Fig. 1 · 7 · 8 · 9 · 10 · 11 · 13 · 15 · 16 · S4 · A·1. 나머지 (Fig. 2–6 · 12 · 14 · 17 · S1–S3 · S5–S10) 는 PDF 쪽 렌더 (저해상도) 로만 봤다. 표 셋은 PDF 텍스트로 전사.
 - **본문과 어긋난 것**: ① 출판본 **Fig. 10 = Fig. 12** (PDF 14 · 16 쪽이 같은 이미지 객체 xref 108 · 해시 동일 — 캡션의 균질 SE 도금 그림은 어디에도 없음) ② Fig. A·1 의 l_w 0.5 패널 라벨 26.73 µm 대 같은 조건 Fig. 7a(iii) 25.1 µm (색막대 최대 12.47 같음) ③ Table 2 "≲2 %" 가 0.5 mA cm⁻² 에서 3.6 % ④ Fig. 13b 저전도 곡선이 대부분 양 (+) — "느려진다" 는 국소 기울기 얘기 ⑤ Fig. 16c 에서 두 다결정 모두 접촉 상실이 늦음 (본문 미언급) ⑥ 표지 · 범례 잔실수 (Fig. 9a (i) ≈0.3 h · Fig. 15c (i) ≈0.19 h · Fig. 11b 도금인데 양 전류 · Fig. 14 "drops to 2%" 인데 그림은 −2 %).
 - 코드 대조에서 나온 것 (그림 아님): 저전도 GB 입력은 Table I Arrhenius 그대로 → κ_gb/κ_g **1.7×10⁻³** (본문 · 그림은 0.067) · 저장소엔 0.5 mA cm⁻² 박리 입력만 (도금 · 순환 · 스윕 · 쌍결정 입력 없음) · 균질 단일 공극만 측정선이 계면에서 0.2 µm 안쪽.
-- scratchpad 충돌 점검: **공용 이름 임시 파일 (main.txt · si.txt 등) 을 읽어 쓴 글자 없음** — PDF 는 Read 쪽 렌더와 fitz 로 `litdb/inbox/difint2025_*` 원본을 직접 읽었다. 내 임시 파일 (chk.py · extract.log · cap.py · build_index_check.log) 은 내 것임을 확인하고 `scratchpad/chatterjee2025_diffuse_interface_li_anode_void_model/` 로 옮겼다 — 다시 대조할 것 없음.
+- scratchpad 충돌 점검: **공용 이름 임시 파일 (main.txt · si.txt 등) 을 읽어 쓴 글자 없음** — PDF 는 Read 쪽 렌더와 fitz 로 `litdb/inbox/difint2025_*` 원본을 직접 읽었다. 내 임시 파일 (chk.py · extract.log · cap.py · build_index_check.log) 은 내 것임을 확인하고 `scratchpad/chatterjee2025_diffuse_interface_metal_anode_void_model/` 로 옮겼다 — 다시 대조할 것 없음.
 
 ## (g) Jeff Sakamoto
 

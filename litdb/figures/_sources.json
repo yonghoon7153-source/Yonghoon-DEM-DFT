@@ -473,8 +473,8 @@
    "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf"
   ]
  },
- "chatterjee2025_diffuse_interface_li_anode_void_model": {
-  "figures": 27,
+ "chatterjee2025_diffuse_interface_metal_anode_void_model": {
+  "figures": 31,
   "generated": "2026-11-24",
   "pdfs": [
    "difint2025_void_diffuse_interface_main.pdf",
@@ -1965,7 +1965,7 @@
   ]
  },
  "kim2026_operando_void_detection_single_frequency_impedance": {
-  "figures": 18,
+  "figures": 19,
   "generated": "2026-11-24",
   "pdfs": [
    "kim2026_void_impedance_main.pdf",
@@ -3452,7 +3452,7 @@
   ]
  },
  "sandoval2025_electro_chemo_mechanics_anode_free_ssb": {
-  "figures": 8,
+  "figures": 9,
   "generated": "2026-11-24",
   "pdfs": [
    "afssb2024_electro_chemo_mechanics_main.pdf",
@@ -3574,7 +3574,7 @@
   ]
  },
  "sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance": {
-  "figures": 9,
+  "figures": 11,
   "generated": "2026-11-24",
   "pdfs": [
    "sharafi2017_llzo_wetting_main.pdf",
@@ -4106,7 +4106,7 @@
   ]
  },
  "wang2020_lithium_free_insitu_plating_llzo": {
-  "figures": 13,
+  "figures": 17,
   "generated": "2026-11-24",
   "pdfs": [
    "wang2020_insitu_plating_main.pdf",

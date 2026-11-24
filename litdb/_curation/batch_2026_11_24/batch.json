@@ -303,7 +303,7 @@
    "n": 13,
    "slug": "sandoval2025_electro_chemo_mechanics_anode_free_ssb",
    "citation": "Sandoval 외, Nat. Mater. Perspective (2025) — Sakamoto 공저 확인 중",
-   "jeff_sakamoto": null,
+   "jeff_sakamoto": true,
    "inbox_files": [
     {
      "inbox": "litdb/inbox/afssb2024_electro_chemo_mechanics_SI.pdf",
@@ -407,7 +407,7 @@
   },
   {
    "n": 18,
-   "slug": "chatterjee<연도>_diffuse_interface_li_anode_void_model (에이전트가 연도를 정함)",
+   "slug": "chatterjee2025_diffuse_interface_metal_anode_void_model",
    "citation": "Chatterjee, Tonks 외, J. Electrochem. Soc. (MOOSE 코드)",
    "jeff_sakamoto": false,
    "inbox_files": [

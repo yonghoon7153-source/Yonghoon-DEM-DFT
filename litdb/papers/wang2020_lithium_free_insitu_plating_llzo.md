@@ -617,6 +617,6 @@ LLZO 펠릿에 Cu·Ni 박을 900–1100 °C 에서 **확산 접합**하고 0.05 
   · `cicvaric2026_li_nucleation_ni111_cu111_anode_free` — Ni(111) · Cu(111) 위 Li 핵생성 (전기화학 + 계산) — 이 논문 `Fig. 1b` (Ni) 의 원자 규모 짝.
   · `sandoval2025_electro_chemo_mechanics_anode_free_ssb` — 무음극 전고체의 전기-화학-역학 종합 (첫 석출 · 적층압 · 온도 · CC 두께).
   · `kazyak2020_li_penetration_ceramic_se_operando_microscopy` — LLZO 를 뚫는 Li (형성 중 0.09 mA cm⁻² 단락의 기구 쪽).
-  · `seymour2021_void_suppression_interfacial_adhesion_vacancy_transport` · `kim2026_operando_void_detection_single_frequency_impedance` · `chatterjee2025_diffuse_interface_li_anode_void_model` — 공극 (점착 · 공공 수송 · operando 검출 · 확산계면 모형) 축.
+  · `seymour2021_void_suppression_interfacial_adhesion_vacancy_transport` · `kim2026_operando_void_detection_single_frequency_impedance` · `chatterjee2025_diffuse_interface_metal_anode_void_model` — 공극 (점착 · 공공 수송 · operando 검출 · 확산계면 모형) 축.
   · `metzler2025_ag_particle_distribution_carbon_interlayer_anode_free` · `metzler2026_sputtered_ag_carbon_interlayers_anode_free` — Ag–C 인터레이어 (LPSCl 무음극) — 이 논문이 '정량 안 됨' 이라 한 Ag–C 쪽 후속.
   · `yang2021_atomistic_li_stripping_plating_interface_md` · `shi2026_argyrodite_stack_pressure_viscoplastic_deformation` — 원자 규모 탈리/도금 MD · argyrodite 적층압 점소성.

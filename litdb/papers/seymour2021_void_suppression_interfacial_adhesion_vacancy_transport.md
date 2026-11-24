@@ -211,7 +211,7 @@
 | Li–Mg 합금 음극 | Li 기공 형성 억제, 단 합금 내 Li 화학확산이 율속 | 83 |
 | SE 입계 덴드라이트 | W 가 크면 SE 입계에 Li 덴드라이트가 우선 생길 수 있다 (입계 에너지 ∝ 표면 에너지 가정) | 88 |
 
-> ⚠ **Yang 문턱의 압력 숫자가 이 논문과 원전 쪽 기록에서 다르다** — 이 논문은 Yang 을 **W > 0.7 J m⁻² + 10–20 MPa** 로 인용한다. 그런데 `wang2022_…` digest 는 같은 Yang 문턱을 **20–30 MPa** 로 적었고, 같은 배치 (2026-11-24) 에서 원전을 직접 읽은 `yang2021_atomistic_li_stripping_plating_interface_md` digest 도 원전 Discussion 을 *'0.7–1.4 J m⁻² 는 20–30 MPa'* 로 옮기면서 원전 지도 (`Fig. 5b`) 와도 어긋난다고 적었다. ⇒ **Seymour 의 '10–20 MPa' 는 원전과 다른 인용일 가능성이 크다.** 압력은 이 논문에서 가져오지 말고 Yang digest 에서 가져온다.
+> ⚠ **Yang 문턱의 압력 숫자가 이 논문과 원전 쪽 기록에서 다르다** — 이 논문은 Yang 을 **W > 0.7 J m⁻² + 10–20 MPa** 로 인용한다. 그런데 `wang2022_…` digest 는 같은 Yang 문턱을 **20–30 MPa** 로 적었고, 같은 배치 (2026-11-24) 에서 원전을 직접 읽은 `yang2021_atomistic_li_stripping_plating_interface_md` digest 도 원전 Discussion 을 *'0.7–1.4 J m⁻² 는 20–30 MPa'* 로 옮기면서 원전 지도 (`Fig. 5b`) 와도 어긋난다고 적었다. ⇒ **Seymour 의 '10–20 MPa' 는 원전에 없는 숫자다** (메인 원문 대조 2026-11-24 — 원전 Discussion *"For common Li–SE interfaces with good adhesion of 0.7–1.4 J m−2, a critical external pressure of around 20–30 MPa is needed"* · 같은 원전 Results *"W > 0.77 J m−2, the critical pressure decreases to 30–50 MPa"* · 원전 어디에도 10–20 MPa 가 없다). 압력은 이 논문에서 가져오지 말고 Yang digest 에서 가져온다.
 
 ---
 

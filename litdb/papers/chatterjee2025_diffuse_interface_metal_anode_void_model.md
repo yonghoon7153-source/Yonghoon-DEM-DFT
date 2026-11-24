@@ -7,7 +7,7 @@
 
 # A Diffuse-Interface Model for Predicting the Evolution of Metallic Negative Electrodes and Interfacial Voids in Solid-State Batteries with Homogeneous and Polycrystalline Solid Electrolyte Separators — Chatterjee, Tonks, Gardner & Sessim (*J. Electrochem. Soc.* **2025**, 172, 070522)
 
-> slug `chatterjee2025_diffuse_interface_li_anode_void_model` · DOI `10.1149/1945-7111/aded38` · type `phase-field · continuum FEM (MOOSE) · electrochemical multiphysics — 계산 전용 (실험 0 · 원자단위 계산 0)` · PDF `litdb/inbox/difint2025_void_diffuse_interface_main.pdf` (25 쪽 · 1 쪽은 표지 광고 · Fig. 1–17 · Fig. A·1 · Table I–II) + `litdb/inbox/difint2025_void_diffuse_interface_SI.pdf` (SI 17 쪽 · Fig. S1–S10 · Table S.1) · 코드 `github.com/souravmat-git/MOOSE-BatModelling` @ `3e44674` · digested `2026-11-24` · status ✅ · 태그 **[외부]**
+> slug `chatterjee2025_diffuse_interface_metal_anode_void_model` · DOI `10.1149/1945-7111/aded38` · type `phase-field · continuum FEM (MOOSE) · electrochemical multiphysics — 계산 전용 (실험 0 · 원자단위 계산 0)` · PDF `litdb/inbox/difint2025_void_diffuse_interface_main.pdf` (25 쪽 · 1 쪽은 표지 광고 · Fig. 1–17 · Fig. A·1 · Table I–II) + `litdb/inbox/difint2025_void_diffuse_interface_SI.pdf` (SI 17 쪽 · Fig. S1–S10 · Table S.1) · 코드 `github.com/souravmat-git/MOOSE-BatModelling` @ `3e44674` · digested `2026-11-24` · status ✅ · 태그 **[외부]**
 > elements: Na
 > methods: — (phase-field · FEM · MOOSE 는 용어집 목록 밖)
 
