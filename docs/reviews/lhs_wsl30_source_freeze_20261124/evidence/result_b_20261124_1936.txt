@@ -1,0 +1,10 @@
+lhs00_100  deck 149 줄 · log.txt 19099 줄 · log.liggghts 22088 줄
+R2 덱 줄 (로그 되풀이에 없음) 28: 30:fix[&] 31:<num>[&] 32:<num> 33:fix[&] 34:<num>[&] 35:<num> 36:fix[&] 37:<num>[&] 38:<num> 39:fix[&] 40:<num>[&] 41:<num> 42:fix[&] 43:<num>[&] 44:<num> 45:fix[&] 46:<num>[&] 47:<num> 65:fix[&] 66:maxattempt[&] 67:vel[&] 68:region[&] 69:volumefraction_region 142:dump[&] 143:<sym>[&] 144:<sym>[&] 145:<sym>[&] 146:<sym>
+R1 화면 사본에만 21: 4:head/Fix 5:head/<sym> 6:head/<sym> 7:head/Fix 8:head/<sym> 9:head/<sym> 13:head/INFO: 18:head/insertion: 19:head/insertion: 20:head/insertion: 21:head/insertion: 22:head/insertion: 23:head/insertion: 24:head/insertion: 25:head/insertion: 26:head/insertion: 27:head/insertion: 28:head/insertion: 279:mid/System 308:mid/Reading 314:mid/Import
+R3 로그에만 (덱 · 명령 아님) 20: 7:head/<blank> 15:head/<blank> 23:head/<blank> 28:head/<blank> 31:head/<blank> 41:head/<blank> 44:head/<blank> 48:head/<blank> 50:head/<blank> 56:head/<blank> 92:mid/<blank> 96:mid/<blank> 332:mid/<blank> 387:mid/<blank> 393:mid/<blank> 629:mid/<blank> 638:mid/<blank> 21951:mid/<blank> 21953:mid/<blank> 21959:mid/<blank>
+패턴이 lhs00_100 과 같은 케이스: 전체 19/30 · 덱 줄 자리만 30/30
+  다른 것 lhs00_104: R2 28 (자리 같음 True) · R1 22 (종류 같음 False) · R3 20 (종류 같음 True)
+  다른 것 lhs00_105: R2 28 (자리 같음 True) · R1 21 (종류 같음 False) · R3 20 (종류 같음 True)
+  다른 것 lhs00_107: R2 28 (자리 같음 True) · R1 22 (종류 같음 False) · R3 20 (종류 같음 True)
+  다른 것 lhs00_108: R2 28 (자리 같음 True) · R1 22 (종류 같음 False) · R3 20 (종류 같음 True)
+  다른 것 lhs00_109: R2 28 (자리 같음 True) · R1 22 (종류 같음 False) · R3 20 (종류 같음 True)

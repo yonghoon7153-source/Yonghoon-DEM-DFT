@@ -1,0 +1,2 @@
+evidence/*.txt -text
+roster.json text eol=lf
