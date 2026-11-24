@@ -3978,3 +3978,17 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   첫 실행 후보 원장 §3-b (차)(처) (면적 노브 ↔ `j₀` 노브 분리 forward · 바인더 짝) · R8 = 계단 · 점진 두 형태.
 - 실행 경계: (차)(처) 는 RUN_SCOPE 밖 버리는 사본 (P3 선례 — 사전 등록 규칙 뒤) · `degradation-degeneracy` 코드로 옮기는 단계만 게이트 루프.
 - 하지 않은 것: 문헌 흡수 (멈춤) · 실행 0 (설계서 전).
+
+## [2026-11-24] create | ASSB 합성 truth 설계서 v1 (문서만)
+- 무엇: `followups/assb-contact-truth/DESIGN_v1.md` (설계서 v1 — §0 물음 · 답하지 않는 것 · §1 truth 꼴 (PyBaMM full DFN 반쪽전지 · 이중층 · 양극 단일 상 · 단일 이온 SE · C1 판 = 검증 프로필 C 핵심 셋) ·
+  §2 노브 (θ · φ · `LAM_PE` · k₀ · `j₀(x)` 모양 · R8 두 형태) + R1–R8 충족 표 · §3 PyBaMM 경로 후보 다섯 + 구현 스파이크 S0–S7 · §4 프로토콜 · 관측 · 잡음 ·
+  §5 C1 = 원장 §3-b (차)(처) 사전 등록 · §6 C2 이후 · §7 위험 · 사용자 결정 D1–D8) + `followups/assb-contact-truth/STATUS.md` (상태판 — 설계서 v1 검토 대기 · C1 대기).
+- 근거: `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §6-3-k 결정 3 (✅ 2026-11-24) · [[assb-synthetic-truth-contact-loss-requirements]] (R1–R8 · 설계 선택지 기록 · 목록 밖 메모 둘) ·
+  [[assb-lampe-contact-product-degeneracy]] (처방 표) · [[assb-contact-loss-vs-lampe]] (옮길 때의 표기 규칙 · 새 제약) · 원장 §3-b (차)(처)(무)(투)(그)(프)(러)(저)(두)(흐)(랴)(키) 행 · [[pybamm]] (판 판정).
+- 설계서의 핵심 판단 (`[해석·대수]` — 실행 0): 1D 균질 truth 의 정적 관측에서 θ 고립 ↔ `LAM_PE` 는 같은 자리 (갈림은 R2 · R4 · R8 · 죽은 재료의 이중층 가정뿐) ·
+  면적 ↔ `j₀` 는 R5 (C_dl ∝ a) 하나로만 갈림 → C1a 는 검출 지도로 한정 · 결론마다 R 조건을 단다.
+- 컴파일: 갱신 [[assb-synthetic-truth-contact-loss-requirements]] (R8 상태 칸 — '미결정' 취소선 → 결정 (2026-11-24 사용자 · 권고대로): 계단 · 점진 두 형태 — 설계서 §2 ·
+  '설계 선택지 기록' 머리의 '승인 대기' 취소선 · 쓰는 법에 설계서 경로 · 주장하지 않는 것 한 줄 · `updated`) · wiki 밖: 큐 문서 §6-3-k 사용자 결정 문단 끝 한 줄.
+- 하지 않은 것: 코드 0 · 설치 0 · 실행 0 · RUN_SCOPE 변경 0 · 새 위키 페이지 0 · raw 변경 0 · 우리 연구 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
+- 사용자가 정할 것: 설계서 §7-3 D1–D8 (C1 승인 · 예산 4 시간 · 환경 · AD 대리 팔 · EIS 새 의존성 · 판정 문턱 · C1b 표적 · C3 판 · 승인 문서 형식).
+- `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).
