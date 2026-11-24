@@ -175,8 +175,11 @@ def test_report_memos_lead_back_to_this_page(tmp_path, monkeypatch):
     assert f'href="/interface-thermo?note={nid}"' in h, "/notes 카드가 이 화면의 그 메모로 안 간다"
     hit = [i for i in D.search_index() if i["t"] == "메모" and i["label"].startswith("보고 메모")]
     assert hit and hit[0]["url"] == "/interface-thermo", hit
-    other = "docs/collab/agc_interlayer_crack_calc_2026_11_16.html"
+    # 2026-11-24 — 사례 A 단독 보고 (agc_…_11_16) 는 이제 공유 보고서 표 (data.COLLAB_REPORTS) 에 들어 '보고' 로 간다.
+    #   딥링크 표 **밖의** docs/collab 파일로 같은 음성 확인을 한다 (앞 판 · 보기 화면 없음).
+    other = "docs/collab/lzo_coated_nca_lpscl_progress_2026_11_17.html"
     assert (D.ROOT / other).is_file(), "전제: 다른 docs/collab 파일이 있다"
+    assert other not in {r["rel"] for r in D.COLLAB_REPORTS}, "전제: 이 파일은 딥링크 표 밖이다"
     assert D.comment_origin(other)["kind"] == "파일" and D.comment_origin(other)["url"].startswith("/files?q=")
 
 

@@ -131,6 +131,11 @@ SECTIONS: list[dict] = [
          "camp": ["ag2s", "hyeokju"],
          "kw": "interface thermo 계면 부반응 열역학 mp materials project grand potential 혼합 반응에너지 ag-c agc 인터레이어 crack ag2s 은 "
                "lzo li2zro3 nca 코팅 양극 혁주 hyeokju 0 v 띠틈"},
+        # 2026-11-24 — 같이 보는 HTML 보고서 목록 (표 = data.COLLAB_REPORTS). 회의록 바탕 문서는 기업 이름 없이 (시험이 본다).
+        {"url": "/reports", "label": "공유 보고서", "icon": "📑", "active": "reports",
+         "sub": "Ag–C crack · LZO 코팅 NCA · 점착 W (DEM) — 같이 보는 HTML 보고서 (메모 · 형광펜)",
+         "kw": "reports report 공유 보고서 html collab 사례 a ag-c agc crack 인터레이어 lzo 혁주 hyeokju nca 코팅 "
+               "wad w_ad 점착 dem dem-dft 박리"},
         {"url": "/composition/modelc_nd_doped", "label": "Nd/O 공치환", "icon": "🧬",
          "sub": "Nd₂O₃-LPSCl · DFT 재채점 중",
          "camp": "nd", "kw": "nd ndo 공치환 neodymium"},

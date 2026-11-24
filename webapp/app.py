@@ -1542,6 +1542,55 @@ def interface_thermo_report():
     return send_from_directory(p.parent, p.name, mimetype="text/html")
 
 
+#: 공유 보고서 (2026-11-24) — 표는 data.COLLAB_REPORTS (집). 보고서마다 **인자 없는** 라우트 둘 (보기 화면 · 원문) 을 단다.
+#:   ⛔ `/reports/<slug>` 처럼 인자를 쓰면 test_v3_surfaces 의 정의역 자동 열거 (인자 없는 GET 만 든다) 에서 빠져
+#:     **결속 음성시험을 피해 간다** — 그래서 표를 돌며 슬러그마다 따로 단다. 원문 경로는 보고서를 **바이트 그대로** 낸다
+#:     (메모 · 형광펜은 화면 쪽 docnote.js 가 iframe 본문에 단다 — /interface-thermo 와 같다).
+#:   ⛔ 못 하는 것: 보고서 내용을 판정하지 않는다 · 원장과 맞는지 다시 재지 않는다.
+def _collab_info(r: dict) -> dict:
+    import hashlib as _h
+    p = D.ROOT / r["rel"]
+    info = {**r, "ok": p.is_file(), "raw": f"/reports/{r['slug']}/raw",
+            "earlier": [{**e, "ok": (D.ROOT / e["rel"]).is_file()} for e in r.get("earlier", ())]}
+    if info["ok"]:
+        b = p.read_bytes()
+        info["sha16"] = _h.sha256(b).hexdigest()[:16]
+        info["kb"] = round(len(b) / 1024)
+    return info
+
+
+@app.route("/reports")
+def collab_reports_page():
+    """공유 보고서 목록 — 통합 보고 (/interface-thermo) 와 COLLAB_REPORTS. 파일이 없으면 그 줄에 '파일 없음' 을 적는다 (빼지 않는다)."""
+    rows = [_collab_info(D.COLLAB_BY_SLUG[r["slug"]]) for r in D.COLLAB_REPORTS]
+    ith = {"ok": (D.ROOT / INTERFACE_THERMO_REL).is_file(), "rel": INTERFACE_THERMO_REL}
+    return render_template("collab_reports.html", active="reports", rows=rows, ith=ith)
+
+
+def _collab_view(slug: str):
+    def view():
+        return render_template("collab_report.html", active="reports", it=_collab_info(D.COLLAB_BY_SLUG[slug]))
+    view.__doc__ = f"공유 보고서 보기 — {slug} (iframe · 여백 메모 · 형광펜)."
+    return view
+
+
+def _collab_raw(slug: str):
+    def raw():
+        p = D.ROOT / D.COLLAB_BY_SLUG[slug]["rel"]
+        if not p.is_file():
+            abort(404)
+        return send_from_directory(p.parent, p.name, mimetype="text/html")
+    raw.__doc__ = f"공유 보고서 원본 — {slug} (바이트 그대로 · iframe 안 · 새 탭)."
+    return raw
+
+
+for _r in D.COLLAB_REPORTS:
+    _ep = _r["slug"].replace("-", "_")
+    app.add_url_rule(f"/reports/{_r['slug']}", endpoint=f"collab_report_{_ep}", view_func=_collab_view(_r["slug"]))
+    app.add_url_rule(f"/reports/{_r['slug']}/raw", endpoint=f"collab_report_raw_{_ep}", view_func=_collab_raw(_r["slug"]))
+del _r, _ep
+
+
 @app.route("/adhesion")
 def adhesion_pipeline_page():
     """점착 파이프라인 — DFT → DEM (→ COMSOL) 을 **원장 하나로 누적**한다.
