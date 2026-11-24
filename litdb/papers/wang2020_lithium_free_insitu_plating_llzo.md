@@ -24,7 +24,7 @@
 
 > **본 digest 에서 실제로 본 그림 (2026-11-24)**: `Fig. 1` `Fig. 2` `Fig. 3` `Fig. 4` `Fig. 5` `Fig. 6` (본문 6 장 전부 · 크롭으로) · `Fig. S1` `Fig. S4` `Fig. S5` `Fig. S6` `Fig. S7` (크롭으로) · `Fig. S2` `Fig. S3` (**SI 쪽 렌더로만** — 크롭 파일은 열지 않았다) · 식 크롭 4 장 (eq_01 · eq_02_03 · eq_04 · eq_S1_S2) — 그림 13 장 전부 + 식 4 장.
 > 그림에서만 읽은 값은 **`figure-read ≈`** 로, 벡터 경로에서 읽은 값은 **`figure-read ≈ (벡터)`** 로 표시했다.
-> 본문 서술과 어긋난 그림 6 곳 → §10 (`Fig. 1b` 범위 · `Fig. 2b` 의 '> 99 %' · `Fig. 3a` '최소 간극' · `Fig. 3b` 33 µm · `Fig. 5b` 'micron range' · `Fig. 6b` 25 % · `Fig. S7b` 용량 축).
+> 본문 서술과 어긋난 그림 7 곳 → §10 (`Fig. 1b` 범위 · `Fig. 2b` 의 '> 99 %' · `Fig. 3a` '최소 간극' · `Fig. 3b` 33 µm · `Fig. 5b` 'micron range' · `Fig. 6b` 25 % · `Fig. S7b` 용량 축).
 
 ---
 
@@ -489,3 +489,134 @@ LLZO 펠릿에 Cu·Ni 박을 900–1100 °C 에서 **확산 접합**하고 0.05 
 | S6 | 80 °C · 0.05 mA cm⁻² 풀셀: 형성 ≈ 2.8 · 방전 ≈ 2.29 → 2.13 mAh cm⁻² | 양극 율속 한계의 증거 |
 | S7 | 대조 Li 박/LLZO/in situ Li (60 °C · 0.85 mAh cm⁻² · C/10 · 50 사이클): ± 0.011 V · 21–40 Ω cm² 불변 · CE 100 % | in situ Li 음극 무퇴화 근거 · (b) 용량 축 0.27 은 그림 오류로 보임 |
 
+---
+
+## 10. 비판 — 이 논문의 약한 곳 ★
+
+**그림 ↔ 본문 불일치 (직접 본 것)**
+1. **`Fig. 1b` 범위** — 본문 *"It is demonstrated in Fig. 1b that ~5 mAh cm⁻² of Li … can be plated without changes in the potential response"* (p.3). `Fig. 1b` 가로축은 **0–0.05 mAh cm⁻² (1 %)** 뿐이다. Ni 셀이 25 µm 까지 갔다는 근거는 `Fig. 1c` 범례 ('25 µm plated') 뿐이고, 5 mAh 전 구간 전위는 Cu 셀 (`Fig. 2a`) 에만 있다.
+2. **`Fig. 2b` 의 '> 99 %'** — *"relatively stable above 99 % over the 12 cycles"* (p.4). 정전압 계열에서도 사이클 3 · 4 · 5 는 **0.976 · 0.975 · 0.983** (벡터 판독). 평균은 0.992 라 '대체로' 는 맞다. 더 중요한 것: **정전류만이면 0.929–0.966** — 무음극 셀에서 정전압 회수 없이 돌리면 매 사이클 ≈ 3–7 % 의 Li 재고가 갇힌다.
+3. **`Fig. 3a` 'minimal gaps'** — 적층 직후 단면에 길이 ≈ 7–9 µm · 열림 ≈ 1 µm 의 공극이 줄지어 있고, 가장 짙은 행에서 계면 길이의 ≈ 47 % 다 (픽셀 판독 · 기울기 보정 전 · 단면 하나). 모형은 '완전히 붙은 확산 접합 계면을 연다' 를 전제하는데, 그림의 계면은 이미 μm 급으로 벌어진 곳이 많다 → 핵생성이 그 공극 가장자리에서 일어났을 가능성 (§6-3) 을 저자가 다루지 않는다.
+4. **`Fig. 3b` 의 33 µm** — 이 패널에서 어두운 띠는 가로 눈금으로 ≈ 20–21 µm, 52° 기울기 보정을 가정해도 ≈ 25–27 µm 다. 33 µm 가 어디서 잰 값인지 · 보정 여부가 없다 → '33 > 25 µm 라서 비균일' 추론을 이 그림으로 확인할 수 없다.
+5. **`Fig. 5b` 'micron range'** — *"assuming a value of ∼1 J m⁻² … critical radii are in the micron range for several mV"* (p.6). 그림 (과 식 (3)) 의 1 J m⁻² 곡선은 2–5 mV 에서 **54–135 nm** 다. micron range 는 10 J m⁻² 곡선이다 — 문장이 한 자릿수 어긋난다.
+6. **`Fig. 6b` 의 '≈ 25 %'** — 방전 용량 0.787 → 0.494 는 **−37 %**, 충전 용량 0.629 → 0.481 이 −24 % (벡터 판독). 25 % 는 첫 충전이 낮았던 충전 기준과만 맞는다.
+7. **`Fig. S7b` 용량 축** — 용량 점이 ≈ 0.27 mAh cm⁻² 에 찍혀 있는데 캡션 · (a) 는 0.85 mAh cm⁻² 순환이다. 0.27 은 C/10 전류밀도 (mA cm⁻²) 와 같은 숫자 — 작성 오류로 보인다.
+
+**방법 · 논리**
+8. **점착값이 재현되지 않는다** — Supp. Eq. 2 의 σ_Y · E · Q · 금속별 Γ 가 없다. 측정 평균선과 측정 박리각으로 낸 상한은 Cu ≈ 69 · Ni ≈ 32 J m⁻² 이고, 식을 그대로 쓰면 그럴듯한 박 물성에서 Cu ≈ 30–60 · Ni ≈ 9–24 J m⁻² 다 (§6-2). 1–10 J m⁻² 는 식의 특이 구간 (λ ≈ 1) 에서만 나온다. 본문 자신도 p.5 '1–10' 과 p.6 '10 s of J m⁻²' 를 같이 쓴다.
+9. **식 (1) 이 종류가 다른 양을 섞는다** — W_adh,CC·LLZO 는 박리 (G_c 부류: 박리 팔 소성 · 계면 거칠기 · 공정역 소산이 섞인 값) 인데, 새 계면 둘은 *"calculated surface energies"* (원자 규모 열역학 값) 로 견준다. 핵 하나가 여는 μm 이하 계면의 일은 거시 박리 에너지가 아니라 **국부 분리일 + 그 규모의 소산**이다 → 거시 박리값을 표면항에 넣으면 핵생성 비용을 과대평가한다.
+10. **모형이 예측을 하지 않는다** — r0 는 측정되지 않았고 (`Fig. 5b` 상자의 세로 범위는 η 에 W 를 넣어 그린 자리), 장벽 ΔG* 는 계산하지 않았다. ΔG* 를 계산하면 W ≥ 0.1 J m⁻² 에서 ≥ 90 eV (η 4.6 mV) 라 **이 모형 그대로는 핵생성이 일어날 수 없다** (§6-3) — 저자 틀은 '왜 수 mV 인가' 를 설명하지 못하고, 이질 자리를 따로 불러와야 한다. 저자도 *"initial framework"* 라고 한정했다.
+11. **식 (2) 단위** — 부피항에 V̄_Li 가 빠져 있다 (식 (3) 에는 있음). 표기 실수지만 그대로 옮겨 쓰면 틀린다.
+12. **Motoyama 비판의 짝** — CC 두께 30 nm → 1 µm 에서 골이 50 → < 10 mV 로 준다는 관찰은 CC 의 기계 일을 가리키는데, 저자 식 (3) 에도 CC 두께 · 강성이 없다. 비판한 모형과 같은 공백이다.
+
+**자료 · 통계 · 제조 주장**
+13. **셀 수 · 오차막대 없음** — CE · 핵 밀도 · 피복률 · CCD 모두 셀 하나의 값으로 보인다. 박리만 '3 시편 평균' 점선.
+14. **그림마다 다른 셀** — `Fig. 1` Ni · `Fig. 2`–`Fig. 3` Cu · `Fig. 4` CC 금속 미기재. 피복률 (Fig. 4) 과 전위 (Fig. 1b) 를 잇는 해석 (식 (4) 포함) 은 셀이 섞인다.
+15. **박리면 SEM 의 가정** — CC 를 떼면 Li 가 LLZO 쪽에 남는다고 본다 (Li/LLZO 강점착, ref 25). CC 쪽 면은 보이지 않았고, '맨 LLZO' 로 보인 곳 일부가 Li 가 CC 에 붙어 떨어져 나간 자리일 가능성은 배제되지 않았다. 공기 노출도 짧게나마 있다.
+16. **'Li-free 제조' 주장의 빈칸** — 형성 전류 상한 ≈ 0.09 mA cm⁻² (그 이상 단락) → 5 mAh cm⁻² 형성에 **55–100 h**. 900–1100 °C 적층 자체도 공정 단계다. 제조 가능성 주장은 이 두 비용을 다루지 않는다 (같은 그룹 후속들이 다룬다).
+17. **풀셀의 CE ≈ 100 % 는 무음극 시험이 아니다** — 2.7 mAh cm⁻² 저장분 위에서 < 0.8 을 돌렸다 (≈ 3.4 배 여유 · 50 사이클 누적 방전 − 충전 ≈ 0.55 mAh cm⁻²). 무음극 가역성의 지표는 `Fig. 2b` 정전류 CE (≈ 0.93–0.97) 쪽이다.
+18. **풀셀 형성 온도** — Methods 는 80 °C, 본문 p.7 은 온도 없이 적는다. Li 크리프 · 젖음이 온도에 민감하므로 25 °C 반쪽셀 결과와 바로 잇지 않는다.
+19. **'다른 CC 금속도 비슷'** (p.3) — 금속 · 데이터가 없다.
+
+---
+
+## 11. 적용 인사이트 — DEM-DFT 보고서 · 연속체 · DEM 입력 ★
+
+> 전부 **LLZO · 2 mm 펠릿 · 25 °C · ≈ 4 MPa · 0.05 mA cm⁻²** 한정이다. 황화물 계에 숫자로 옮기지 않는다 — 틀 · 자릿수 · 검증 표적으로만 쓴다.
+
+**① W_ad 보고서 §7 — Li 친화성 · 핵생성 · 점착과 공극에 바로 쓸 것**
+- (Li 친화성) 식 (1) 의 새 계면 두 항 (W_adh,Li·CC · W_adh,Li·SE) 이 우리 계산의 자리다 — 논문은 0 으로 두었다 (p.6). 같은 방법 · 같은 Li 면으로 2γ_Li 와 함께 내면 '계면을 열 때 얼마나 돌려받나' 를 줄 수 있다. [근거: 본문 p.4–6 · 식 (1) 크롭 `eq_01` · 직접 봄]
+- (핵생성) 고전 장벽 산술 (§6-3): 처녀 계면 균질 핵생성은 mV 에서 불가 → 핵생성의 열역학은 **기존 공극 가장자리에서 Li 가 두 벽을 동시에 적시는 정도** 로 넘어간다 → 보고서 §7 의 젖음각 지표가 바로 그 물음에 닿는다. [근거: `Fig. 5b` · 식 (3) · `Fig. 3a` 공극 — 직접 봄 · 산술은 우리]
+- (점착과 공극) CC/LLZO 실용 박리 에너지 = **G_c 부류 10⁰–10¹·⁸ J m⁻²** (저자 1–10 · 상한 Cu 69 · Ni 32) — 보고서의 W 와 **다른 층위**로 적는다 (같은 박리 계열 `liao2025` Γ 9–41 J m⁻² 와 같은 자릿수). [근거: SI p.9–10 · `Fig. S4` — 직접 봄]
+- (점착과 공극) 탈리 공극 **5–10 µm** (`Fig. 3c` · p.4) · 정전류 CE 가 탈리 전류 0.05 → 0.3 mA cm⁻² 에서 0.955 → 0.932 · 1.8 V 정전압으로 대부분 회수 (`Fig. 2b` 벡터) · 재도금이 공극을 메워 옴 저항 회복 (`Fig. 2c`). [직접 봄]
+
+**② 연속체 · DEM 모형 입력 (단위 · 조건 · 위치)**
+
+| 입력 | 값 | 위치 | 직접 봄 |
+|---|---|---|---|
+| 적층압 | ≈ 4 MPa | p.5 · p.8 | 본문 |
+| Li 항복강도 (인용) | < 1 MPa | p.4 (ref 28) | 본문 |
+| 압력 ↔ 과전압 | η = V̄p/F · 1 mV ≈ 7.4 MPa · 4 MPa → 0.5 mV | p.6 · `eq_04` · §6-6 | 식 크롭 봄 |
+| 핵생성 과전압 | ≈ 4–5 mV (골 −25.9 mV · 정상 −21.3 mV) | `Fig. 1b` | 봄 (벡터) |
+| 핵 밀도 · 지름 | ≈ 10 mm⁻² · ≈ 100 µm (≈ 1 h) | p.6 · `Fig. 4b` | 봄 |
+| 피복률 시계열 | 15 % (30 µAh) → ≈ 50 % (620 µAh) → 합체 ≈ 1000 µAh cm⁻² | p.4 · `Fig. 4` | 봄 |
+| 패치 평균 높이 | ≈ 1 µm (15 %) · ≈ 6 µm (50 %) | p.4 · 우리 산술 | — |
+| 구간 경계 (전위 곡선) | 핵생성 0–0.03 · 옆성장 0.03–1.03 · 합체+수직 > 1.03 mAh cm⁻² | `Fig. 4g` | 봄 |
+| 계면 저항 | Li/LLZO < 10 Ω cm² · 셀 전체 ≈ 350 Ω cm² | p.3 · `Fig. 1c` | 봄 |
+| 탈리 공극 | 5–10 µm | p.4 · `Fig. 3c` | 봄 |
+| 기존 계면 공극 | 길이 ≈ 7–9 µm · 열림 ≈ 1 µm · 계면 ≈ 47 % (단면 하나) | `Fig. 3a` 판독 | 봄 (픽셀) |
+| CC/LLZO 실용 박리 | 1–10 (저자) · 상한 Cu 69 · Ni 32 J m⁻² | SI p.9 · `Fig. S4` | 봄 |
+| 형성 중 단락 문턱 · in situ Li CCD | 0.09 · 0.3 mA cm⁻² (박 ≈ 1) | p.4 · `Fig. S5` | 봄 |
+
+**③ 검증 표적 둘 (보정 표적 아님)**
+- **수축 저항**: 피복률 15 % → 100 % 동안 도금 전위 크기 ≈ 6 mV 감소 (`Fig. 4g` 벡터) vs 고립 원판 추정 1–4 mV (§6-5) — 접촉 면적 → 계면 저항 모형의 자릿수 점검.
+- **성장 기구 셋 (`Fig. 5c–e`)**: 수직 성장 + 간극 / 소성 옆흐름 / 가장자리 도금 — 적층압 · Li 항복 · 계면 점착을 바꾸며 MPM/DEM 이 가를 수 있는 시나리오. 논문은 *"Future research can clarify which mechanisms … are most important and how they depend on boundary conditions such as applied pressure and current density"* (p.6) 로 열어 두었다.
+
+**④ 이 논문에서 가장 날카로운 세 가지 (우리 일 기준)**
+1. **η_nuc 가 W 를 바로 재는 게 아니다** — 식 (3) 은 (W, η) → r0 사상일 뿐이고, 장벽까지 계산하면 처녀 계면 균질 핵생성은 불가능하다. 핵생성 열역학의 실체는 '빈 계면 가장자리의 Li 젖음' 이고, 그건 **DFT 로 낼 수 있는 W_Li·X 와 γ_Li 의 문제**다 (§6-3 · §7a).
+2. **'99 %' 의 절반은 정전압이다** — 정전류 CE ≈ 0.93–0.97 · 탈리 전류가 클수록 낮다. 접촉 손실 (공극) 이 무음극 Li 재고를 결정하고, 그것은 점착 · 적층압 · Li 크리프의 문제다 (DEM · MPM 축).
+3. **G_c 와 W_ad 를 섞으면 숫자가 자릿수로 튄다** — 같은 계면의 박리 상한 32–69 · 저자 1–10 · 원자 규모 < 1 J m⁻². 우리 보고서에서 W 와 G_c 를 다른 줄에 두는 규율이 왜 필요한지 보여 주는 실례다.
+
+---
+
+## 12. 인용 가능 문장 (영문 초안 · 조건 포함)
+
+- *"In LLZO (Li₆.₅La₃Zr₁.₅Ta₀.₅O₁₂) cells with diffusion-bonded Cu or Ni current collectors, Li metal can be plated in situ at the current collector/electrolyte interface up to 5 mAh cm⁻² (≈ 25 µm) at 0.05 mA cm⁻² and 25 °C under ≈ 4 MPa, whereas plating at ≥ 0.09 mA cm⁻² consistently short-circuited the cell (Wang et al., Nat. Commun. 2020)."*
+- *"In situ plated Li grows by sparse nucleation (≈ 10 nuclei mm⁻²), lateral growth of ≈ 100 µm patches, and coalescence near 1 mAh cm⁻², after which growth becomes vertical."*
+- *"The ≈ 99 % plating/stripping efficiency reported for in situ plated Li on LLZO includes a 2 h constant-voltage hold at 1.8 V; under constant current alone the efficiency was ≈ 93–97 % and decreased with stripping current density."* (정전류 값은 그림 판독 — 인용 시 'estimated from Fig. 2b' 를 붙인다)
+- *"Peel tests of diffusion-bonded current collectors on LLZO give a practical (fracture-type) adhesion energy reported as 1–10 J m⁻², which is not comparable to the thermodynamic work of adhesion obtained from DFT."*
+- ⛔ 쓰지 말 것: *"anode-free cells achieve ~100 % Coulombic efficiency"* (Li 저장분 위의 값) · *"Li nucleation overpotential measures the CC/electrolyte work of adhesion"* (모형 가정일 뿐 · 검증 안 됨).
+
+---
+
+## 13. 주의 / 한계 (인용 규율)
+
+- **LLZO 계 값** — LPSCl 셀 설계 · 우리 계산값과 같은 표에 놓지 않는다 (문헌 소환값 규율).
+- **점착 1–10 J m⁻²** = G_c 부류 · 입력 미기재 · 저자 상한 · 재현 안 됨 → 범위째 · 출처 문장째 인용. **DFT W_ad 와 같은 줄 · 비율 금지.**
+- **CE ≈ 99 %** 에는 '1.8 V 2 h 정전압 포함' 을 같이 적는다 · 풀셀 CE ≈ 100 % 에는 'Li 저장분 2.7 vs 순환 < 0.8' 을 같이 적는다.
+- **'25 % 감소'** 는 '충전 용량 기준' 을 붙이거나 방전 기준 −37 % (그림 판독) 를 쓴다.
+- **figure-read 값** (특히 픽셀 판독: 33 µm 재현 실패 · 47 % 공극 · 4 mm⁻²) 은 셀 하나 · 단면 하나 · 기울기 미상이라 '판독 · 대략' 표시 없이는 쓰지 않는다. 벡터 판독 (Fig. 1b · 2a · 2b · 4g · 6b) 은 원자료 좌표라 정밀하지만 그래도 '그림 판독' 이다.
+- **우리 산술** (§6-2 ~ §6-6) 은 가정 (V̄_Li 13.0 · σ_Y · E · 피복률 · 수축 공식) 을 같이 적어서만 쓴다.
+- 장벽 판단 (§6-3) 은 '이 모형 그대로면' 의 산술이다 — 실제 핵생성이 이질이라는 결론은 우리 해석이고 논문 주장 아님.
+
+---
+
+## 14. 기법 용어 미니사전
+
+- **in situ plating / 'Li-free' (anode-free)** — 셀을 방전 상태로 (음극 = 맨 집전체) 조립하고, 첫 충전에서 양극 (또는 이 논문처럼 Li 원) 의 Li 를 집전체에 전기도금해 음극을 만드는 방식. 미리 붙인 Li 의 부피·무게·취급 비용이 없다.
+- **집전체 (CC) 적층 · 확산 접합 (lamination · diffusion bonding)** — 금속 박을 고온 (여기선 900–1100 °C) · 가압 (3–6 MPa) 으로 세라믹에 붙여 원자 확산으로 결합시키는 것. 상온 압착보다 훨씬 센 계면.
+- **차단 / 비차단 전극 (EIS)** — Li⁺ 가 넘어갈 수 없는 전극 (맨 Ni · Cu) 은 저주파에서 축전기처럼 곧게 치솟는 꼬리를 보인다 (차단). Li 금속이 생기면 Li⁺ 가 전하이동으로 넘어가 꼬리가 반원으로 바뀐다 (비차단) — Li 생성의 전기적 판정.
+- **핵생성 과전압 (η_nuc)** — 도금을 시작할 때 전위가 정상값보다 더 깊게 내려갔다가 (골) 돌아오는 몫. 새 상 (Li) 의 핵을 만드는 비용으로 해석한다.
+- **임계 반지름 (r0) · 장벽 (ΔG*)** — 고전 핵생성에서 부피 이득 (∝ r³) 과 표면 비용 (∝ r²) 이 맞서는 크기 · 그때의 에너지 언덕. r > r0 면 자라는 게 유리하다. ΔG* 가 kT 의 수십 배를 넘으면 열적으로는 사실상 안 생긴다.
+- **갈바노스태틱 (정전류) · CC-CV** — 전류를 고정하고 전위를 잰다 · 정전류 뒤 정전압 유지 (꼬리 전류로 남은 용량을 끌어냄).
+- **쿨롱 효율 (CE)** — 꺼낸 전하 ÷ 넣은 전하. 무음극 셀에서는 1 − CE 가 그대로 Li 재고 손실이다.
+- **임계 전류밀도 (CCD)** — 그 이상에서 Li 필라멘트가 전해질을 뚫어 단락되는 전류밀도. 측정법 (반주기 전하량 · 계단 폭 · 온도 · 압력) 에 따라 값이 크게 다르다.
+- **90° 박리 시험 · 박리 팔 소성 보정** — 박을 직각으로 당겨 정상 박리력 P (폭당) 를 잰다. 에너지 수지 G = P(1 − cos φ) 에는 계면 파괴 에너지 Γ 와 박 (박리 팔) 이 굽혀지며 소성 변형한 일 Q 가 섞여 있어 Γ = G − Q 로 뺀다 (Kim–Aravas 류 이상 모형). Q 가 크면 Γ 는 입력에 매우 민감해진다.
+- **열역학 점착일 (W_ad) vs 실용 점착 (G_c)** — W_ad = 두 표면 에너지 합 − 계면 에너지 (가역 · 원자 규모 · DFT 로 계산). G_c = 실제로 계면을 찢는 데 든 에너지 (소성 · 거칠기 · 공정역 소산 포함 · 실험). 보통 G_c ≫ W_ad.
+- **수축 (constriction) 저항** — 전류가 작은 접촉점으로 몰려 들어가며 생기는 추가 저항. 반지름 a 의 원판 하나 ≈ ρ/(4a) (Maxwell/Holm).
+- **FIB-SEM · EDS 와 Li** — 집속 이온빔으로 단면을 깎아 SEM 으로 본다. EDS 는 Li 의 특성 X 선 (에너지가 너무 낮음) 을 못 잡아서, Li 는 '보이는데 원소 신호가 없는 상' 으로 판정한다.
+- **컵–원뿔 (cup-cone) 파면** — 연성 금속이 당겨져 끊어질 때 생기는 파면 모양. CC 를 떼어낼 때 Li 가 찢어졌다는 표지.
+- **PEO-LiTFSI 캐솔라이트** — 양극 기공을 채워 양극 입자와 LLZO 사이 Li⁺ 길을 만드는 고분자 전해질. 상온 전도도가 낮아 (≈ 10⁻⁶ S cm⁻¹) 60–80 °C 에서 돌린다.
+
+---
+
+## 15. 같이 읽을 편 (litdb 안)
+
+- `lee2022_thin_insitu_li_void_rewetting_llzo` — **같은 그룹 후속** (Joule 2022): 얇은 in situ Li 의 탈리 공극과 재젖음 · 이 논문을 ref 40 으로 인용 (같은 배치 정리).
+- `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` — 탄소 인터레이어/LPSCl 박리 Γ 9–41 J m⁻² 와 **Li 석출 위치 문턱 ≈ 10 J m⁻²** · 같은 박리 + 소성 보정 계열 (Michigan).
+- `spencerjolly2023_ag_graphite_interlayer_operando_xrd` — Ag–C 층이 운전 중 무엇으로 바뀌나 (흑연 리튬화 → Li–Ag 합금) — 이 논문이 '정량 안 됨' 이라 한 Ag–C 핵생성 가설의 후속 기전.
+- `kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode` — Ag–C + 다공 CNF 층 음극 · operando 압력 ([우리 그룹]).
+- `lu2026_li_ag_interface_thermodynamics_kinetics` — Li/Ag 계면 DFT W_ad · 공공 (preprint) — 식 (1) 의 새 계면 항을 DFT 로 낸 쪽의 예.
+- `yang2021_flat_li_stripping_lithiophilic_interface_design` — 친Li 계면 설계로 평탄 탈리 (DFT + KMC) — 공극 쪽 계산 대조.
+- `burov2026_li_llzo_charge_transfer_mlmd` — Li/LLZO 계면 전하이동 MLIP-MD (LLZO 계면 저항의 계산 쪽).
+- **같은 배치 (2026-11-24) 로 들어온 편** — 이 논문과 직접 맞물리는 곳:
+  · `sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance` — 이 논문 **ref 24** · 식 (1) 의 새 계면을 *"< 1 J m⁻²"* 로 둔 근거 (계산 표면·계면 에너지) 의 원전.
+  · `masias2019_li_metal_elastic_plastic_creep_properties` — 이 논문 **ref 28** · Li 항복 < 1 MPa 의 원전 (`Fig. 5d` 소성 옆흐름의 근거).
+  · `wang2019_li_se_interface_dynamics_stack_pressure_current_density` — 같은 1저자 · Sakamoto 그룹 · Li/LLZO 계면의 적층압 × 전류 지도 (탈리 공극).
+  · `fuchs2023_cu_llzo_anode_free_li_growth_modes` — 같은 Cu/LLZO 무음극 계면에서 **전류에 따른 Li 성장 모드** (이 논문의 0.05 mA cm⁻² 한 점을 전류 축으로 넓힌 편).
+  · `cicvaric2026_li_nucleation_ni111_cu111_anode_free` — Ni(111) · Cu(111) 위 Li 핵생성 (전기화학 + 계산) — 이 논문 `Fig. 1b` (Ni) 의 원자 규모 짝.
+  · `sandoval2025_electro_chemo_mechanics_anode_free_ssb` — 무음극 전고체의 전기-화학-역학 종합 (첫 석출 · 적층압 · 온도 · CC 두께).
+  · `kazyak2020_li_penetration_ceramic_se_operando_microscopy` — LLZO 를 뚫는 Li (형성 중 0.09 mA cm⁻² 단락의 기구 쪽).
+  · `seymour2021_void_suppression_interfacial_adhesion_vacancy_transport` · `kim2026_operando_void_detection_single_frequency_impedance` · `chatterjee2025_diffuse_interface_li_anode_void_model` — 공극 (점착 · 공공 수송 · operando 검출 · 확산계면 모형) 축.
+  · `metzler2025_ag_particle_distribution_carbon_interlayer_anode_free` · `metzler2026_sputtered_ag_carbon_interlayers_anode_free` — Ag–C 인터레이어 (LPSCl 무음극) — 이 논문이 '정량 안 됨' 이라 한 Ag–C 쪽 후속.
+  · `yang2021_atomistic_li_stripping_plating_interface_md` · `shi2026_argyrodite_stack_pressure_viscoplastic_deformation` — 원자 규모 탈리/도금 MD · argyrodite 적층압 점소성.

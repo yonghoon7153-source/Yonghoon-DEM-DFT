@@ -110,6 +110,7 @@ yang2021_atomistic_li_stripping_plating_interface_md	yang2021mo_li_strip_plate_m
 - 도구 크롭 12 (`Fig. 1`–`5` · `Fig. S3`–`S8` · `Table S1`) · 놓친 2 (`Fig. S1` · `Fig. S2` — 그림과 표가 한 쪽에 섞인 SI 쪽이라 '영역 없음') → 손 크롭 2 (figures.json `manual_crop` 사유 · `missing_labels` 에 `resolved`) = **14 항목 · 오탐 0**. `fig_S3.png` 가 작은 것은 원본 래스터가 346×260 px 라서 (정상).
 - 본 것: 그림 13 장 전부 + `Fig. 5` 패널 2배 확대 · 마커 중심 색 분할로 (W, P) 시험점 회수. `Table S1` 은 SI 쪽 렌더 + PDF 텍스트 (PNG 미개봉 · figures.json `viewed: false`).
 - 동영상: movie1 17 장 · movie2 15 장 (5 s 간격 jpg 32 장 · figures.json `movies` 블록) 중 각 9 장 실독 — S1: 001 · 003 · 005 · 007 · 009 · 011 · 013 · 015 · 017 / S2: 001 · 003 · 005 · 006 · 008 · 010 · 012 · 014 · 015. 시간 · 축척 표시 없음.
+- 프레임 시각 정정: 처음에 '프레임 k ≈ (k−1)×5 s' 로 적었다가 **(k − 0.5)×5 s** 로 고쳤다 (digest §5.8 의 시각 5 곳 · §9 각주 · figures.json `movies.note`). 직접 실측 — `-ss` 정지 화면 0.1 s 간격과 MSE 대조: 001 = 2.4 s (MSE 0) · 010 = 47.4 s (MSE 0) — fps 필터가 10 fps 영상의 5 s 칸마다 마지막 프레임을 남긴다. 기술 내용 (무엇이 보이나) 은 안 바뀐다.
 - 원문 오류 발견: `Fig. S6` / `Fig. S7` 그림 – 캡션 뒤바뀜 (캡션 '도금' 그림에 cyan 없이 슬랩이 얇아짐 · 두께 변화가 18.9 nA nm⁻² × 4 ns ≈ 10 nm 와 맞음) · `Fig. 5b` 의 W ≈ 0.735 등 9 개 W 가 `Fig. S1b` ε 표에 없음.
 - 공용 scratch 점검: 처음 텍스트를 `scratchpad/yang/main.txt` · `si.txt` (slug 가 아닌 겹칠 수 있는 이름) 에 뽑아 읽었다 → PDF 에서 `scratchpad/<slug>/` 로 다시 뽑아 **md5 대조 = 두 파일 모두 바이트 동일** · 제목 · 저자 · DOI · '(n of 12)' 쪽 표기 확인 · digest 수치 50 여 개를 새 텍스트에서 공백 정규화 뒤 재대조 = **미스 0** (본문 p1–4 · SI p3–5 · p11–12 는 PDF 쪽 렌더로도 직접 봤다).
 

@@ -165,7 +165,9 @@
 | 읽는 법 | I_D/I_G > 1 + 높은 D–G 골 + 1100–1250 어깨 = **결함 · 무질서가 많은 나노결정 흑연질** (카본블랙 · 덜 흑연화된 탄소꼴) · 2D 가 보이므로 쌓인 흑연 영역도 일부 있다 — 저자의 '흑연질' 과 '비정질 아님' 은 맞지만, **결함 없는 흑연 기저면은 아니다** | [카드 해석] |
 | 대조 | `kang2026_…` CNF: LC (PR-25-XT-PS) I_D/I_G **0.99** · HC (PR-25-XT-LHT · 1500 °C) **0.19** — 이 논문의 C 는 LC CNF 보다도 무질서하다 (레이저 파장 등 측정 조건은 대조 안 했다) | [다른 카드] |
 
-### 3-3. 풀 셀 전기화학 (p.3–5 · `Fig. 2` · `Fig. S6`–`Fig. S9` · 1 mA cm⁻² · 2.5–4.3 V · 60 °C · 4 MPa)
+### 3-3. 풀 셀 전기화학 (p.3–5 · `Fig. S6`–`Fig. S9` · 1 mA cm⁻² · 2.5–4.3 V · 60 °C · 4 MPa)
+
+> 그림: `Fig. 2` (한 셀씩 · 세 셀 · 100 사이클) · `Fig. S6`–`Fig. S9`.
 
 **구성별 평균 (`Fig. S9` = 셀 3 개 평균 ± std err) — 모든 용량은 mAh g⁻¹_NMC**
 
@@ -199,7 +201,9 @@ C1 · DC1 · C10 · DC10 은 figure-read ≈ (눈금 840 px = 250 mAh g⁻¹) ·
 - `Fig. S6` Ag 500 nm (1 셀): 충전 ≈190 · 방전 ≈148 → 10 번째 ≈88 / 80 · 화살표 −63 % (평균 37 %) · 첫 충전 평탄 시작 ≈3.65–3.7 V (100 nm 셀 ≈3.55 V · `Fig. 2d`) · 방전이 3.6 → 2.5 V 로 길게 기운다 (분극 큼) [figure-read].  저자 해석: 치밀한 500 nm Ag 가 *"diffusion barrier"* 가 되어 Li 확산 길이를 늘리고 (ref 54), 압축 뒤 평평한 면 (Sa 0.075) 이 반응 자리를 줄였을 것 — Zn 은 두께를 1 µm 로 늘렸을 때 좋아졌다는 선행 (ref 53) 과 반대 결과.
 - `Fig. S8` 활성화: SI 서술 = 0.1 mA cm⁻² 로 *"50 % SOC (3.78 V) and 10 % SOC (4.16 V)"* 사이 한 번 → 1 mA cm⁻² 로 *"10 % SOC and 90 % SOC (3.53 V)"* · 그림의 활성화 곡선은 **3.53–3.78 V** (충전 ≈112 · 방전 ≈80) · 그 뒤 3.53–4.15 V 에서 첫 ≈160 / 131 → 10 번째 ≈50 / 46 · 화살표 −69 % (평균 31.3 %) — 활성화가 안정성을 늘리지 못했다 (§10-⑫ SOC 표기).
 
-### 3-4. ★ 핵생성 과전압 — 3 전극 (p.5 · `Fig. 3a,b` · `Fig. 4a,b`)
+### 3-4. ★ 핵생성 과전압 — 3 전극 (p.5)
+
+> 그림: `Fig. 3a,b` · `Fig. 4a,b` · 장치 `Fig. 1c`.
 
 - **장치**: WE (집전체) Ø 2 mm 아랫면 · CE (Li Ø 3 mm) · RE (Li Ø 1 mm) 윗면 (`Fig. 1c`) · 목적 = *"to separate the contribution of working and counter electrodes to the Li plating nucleation overpotential"* (ref 37) · 본문은 축을 *"the voltage versus Li⁺/Li at the counter electrode"* 라고 부른다 — 전작 (ref 30) 의 같은 그림은 *"voltage versus Li⁺/Li counter electrode"* 라 적었으므로 'Li 전극 대비 WE 전압' 의 뜻이고, 3 전극의 목적으로 보아 **WE − RE 전압**으로 읽는다 [카드 해석].
 - **시간 축**: 도금은 figure-read ≈2.42–2.46 h 에 시작 — 그 앞 ≈2.4 h 는 휴지 (OCV) 로 보인다 (본문 미기재 · `Fig. 4a` 에 "OCV" 표지 ≈1.9–2.0 V).
@@ -221,7 +225,9 @@ C1 · DC1 · C10 · DC10 은 figure-read ≈ (눈금 840 px = 250 mAh g⁻¹) ·
 - **iR**: RE 가 CE 쪽 면에 있어 WE–RE 사이 SE 의 iR 이 일부 섞인다.  1 mm 를 다 지나는 iR 은 2 mA cm⁻² 에서 j·t/σ = 125 mV (σ 1.6) · 49 mV (σ 4.1 mS cm⁻¹) [카드 산술] 인데 측정 평탄이 그보다 작으므로 RE 가 보는 몫은 일부이고 크기를 모른다 — **평탄 절대값을 계면 과전압으로 읽지 않는다**.  iR 보정 언급 없음 [미확인].
 - **왕복 효율 (`Fig. 4a,b` · 2 셀)**: 2 mA cm⁻² 2.5 h 도금 (셀 1 ≈ −33 → −26 · 셀 2 ≈ −20 → −15 mV) → 1 mA cm⁻² 탈리 (셀 1 ≈ +12 → +17 · 셀 2 ≈ +8 → +13 mV) → 끝에 급상승해 5 V (셀 2 ≈8.6 h · 셀 1 ≈8.85 h) [figure-read].  본문: *"A peak in voltage after approximately 4 h was attributed to the depletion of Li and indicated a round-trip efficiency of approximately 80%, which was comparable to the initial CE of Ag C-Cu full cells."* · figure-read 탈리 ≈3.7–3.9 h → **74–78 %** [카드 산술 = 1 mA cm⁻² × t ÷ 5 mAh cm⁻²].
 
-### 3-5. ★ 단면 — Li 가 쌓인 위치 · 두께 · Ag 분포 (p.5–7 · `Fig. 3c–j` · `Fig. 4c–i` · `Fig. S10`–`Fig. S12` · SI S-13–S-15)
+### 3-5. ★ 단면 — Li 가 쌓인 위치 · 두께 · Ag 분포 (p.5–7 · `Fig. 4c–i` · `Fig. S10`–`Fig. S12` · SI S-13–S-15)
+
+> 그림: `Fig. 3c–j` (충전 뒤) · `Fig. 4c–i` (방전 뒤) · `Fig. S10`–`Fig. S12`.
 
 **충전 뒤 — Ag C-Cu (100 nm) · 2 mA cm⁻² × 2.5 h (= 5 mAh cm⁻²)**
 - `Fig. 3c` (SE · 10 µm 막대): 위 = 집전체 (Cu) · 가운데 = **Li** · 아래 = 주황 점선의 C 띠 → LPSCl · 본문 *"a Li layer formed (∼20 μm) between the Cu current collector (top of image), and the C coating, which remained largely adjacent to the LPS separator (bottom of image)"* · 그림 화살표 자리의 Li figure-read ≈ **14 µm** (그림 축척 그대로 · 기울기 보정 여부 미기재).  왼쪽 위에 C 조각 하나가 Cu 바로 아래 붙어 있고 왼쪽 가운데에 다른 C 조각이 있어 Li 는 그 둘 사이에 있다 [figure-read] — 본문 *"there were some regions where the C coating remained attached to the Cu (e.g., on the LHS of Figure 3c), but the Li nonetheless plated towards the current collector, in this case, over the C"*.
@@ -293,20 +299,17 @@ C1 · DC1 · C10 · DC10 은 figure-read ≈ (눈금 840 px = 250 mAh g⁻¹) ·
 
 | Fig | 내용 (무엇을 보여주나 — 실독) | 우리 활용 |
 |---|---|---|
-| 1a | 스퍼터 모식: Ag 타깃 · Ar⁺ · 떨어지는 Ag 원자 · 시편대 위 Cu 박 (9 µm) + C 코팅 (1 µm) | 층 순서 (Cu → C → Ag → SE) 의 원문 그림 |
-| 1b,c | 펠릿 풀 셀 (PEEK 몰드 · Ø 5 mm LPS · 양극 위 · Ag C-Cu 아래) · 3 전극 (Ø 2 mm WE 아랫면 · Ø 3 mm CE · Ø 1 mm RE 윗면) | RE 가 CE 쪽 면 → WE–RE 전압에 SE iR 일부가 섞임 (§3-4) |
-| 1d–g | 500 MPa 압축 뒤 단면 BSE + Cu · C · Ag EDS — 층 figure-read ≈0.5–0.75 µm · Ag 가 위쪽 C 입자를 감싼 밝은 띠 · 박리 없음 | 조립 직후 접촉 쌍 = LPSCl\|Ag · Ag\|C · C\|Cu (§0-1 ②) |
+| 1a–c | 스퍼터 모식 (Ag 타깃 · Ar⁺ · 떨어지는 Ag 원자 · 시편대 위 Cu 박 9 µm + C 코팅 1 µm) · 펠릿 풀 셀 (PEEK 몰드 · Ø 5 mm LPS · 양극 위 · Ag C-Cu 아래) · 3 전극 (Ø 2 mm WE 아랫면 · Ø 3 mm CE · Ø 1 mm RE 윗면) | 층 순서 (Cu → C → Ag → SE) 의 원문 그림 · RE 가 CE 쪽 면 → WE–RE 전압에 SE iR 일부가 섞임 (§3-4) |
+| 1d–g | 500 MPa 압축 뒤 단면 BSE + Cu · C · Ag EDS — 층 figure-read ≈0.5–0.75 µm · Ag 가 위쪽 C 입자를 감싼 밝은 띠 · 박리 없음 | 조립 직후 접촉 쌍 = LPSCl–Ag · Ag–C · C–Cu (§0-1 ②) |
 | 2a,b | C-Cu · Ag Cu 풀 셀 1 · 2 · 5 · 10 사이클 (한 셀씩) — 화살표 −62 · −53 % = 세 셀 평균 유지율 · "Polarisation" 꺾임 | 유지율 = C10/C1 (충전) 정의 확인 (§3-3) |
-| 2c | 첫 사이클 세 셀씩: Ag C-Cu 방전 ≈193–212 vs C-Cu ≈160–167 mAh g⁻¹ · 충전 곡선은 겹침 · +25 % | 첫 효율 차 (86 vs 71 %) 가 Ag 효과의 대부분 |
-| 2d | Ag C-Cu 한 셀 1 · 2 · 5 · 10 사이클 — 방전 ≈202 → 160 · 화살표 −41 % (평균) | 이 셀은 세 셀 중 가장 좋은 셀로 보인다 (대표 셀 편향) |
+| 2c,d | (c) 첫 사이클 세 셀씩: Ag C-Cu 방전 ≈193–212 vs C-Cu ≈160–167 mAh g⁻¹ · 충전 곡선은 겹침 · +25 % · (d) Ag C-Cu 한 셀 1 · 2 · 5 · 10 사이클 — 방전 ≈202 → 160 · 화살표 −41 % (평균) | 첫 효율 차 (86 vs 71 %) 가 Ag 효과의 대부분 · (d) 의 셀은 세 셀 중 가장 좋은 셀로 보인다 (대표 셀 편향) |
 | 2e,f | Ag C-Cu 두 셀 100 사이클: 충전 ≈232 / 228 → ≈93 / 64 mAh g⁻¹ · CE 첫 ≈87 / 75 % → ≈99 % | 무음극 = CE 99 % 도 100 사이클에 ≈37 % 남는다 |
-| 3a | 1 mA cm⁻² × 1 h 첫 도금 (steel · Cu · C-Cu · Ag C-Cu · 1 셀씩) — 꼭지 ≈ −26 / −18 / −17.5 / −18 mV · 꼭지 − 평탄 ≈16.7 / 7.5 / 2 / 0 mV · Cu 는 3.25 h 에 "Charging failure" | ★ 핵생성 과전압 순서 앵커 · 판독법 = 꼭지 − 평탄 (§3-4) |
-| 3b | 2 mA cm⁻² × 2.5 h 첫 도금 (C-Cu 3 · Ag C-Cu 3 셀 — 본문 평균은 5 셀) — 꼭지 − 평탄 ≈17 vs ≈3.7 mV · 평탄은 겹침 | ★ 16.1 vs 3.9 mV (n 5 · std err) 의 그림 근거 |
-| 3c–g | 5 mAh cm⁻² 충전 뒤 단면 SE + Cu · S · C · Ag EDS — Cu \| Li (화살표 자리 figure-read ≈14 µm) \| 밀려난 C \| LPSCl · 왼쪽에 Cu 에 붙은 C 조각 · Ag 희미 | ★ Li 위치 = Cu \| C 사이 · C 는 SE 쪽 |
+| 3a,b | (a) 1 mA cm⁻² × 1 h 첫 도금 (steel · Cu · C-Cu · Ag C-Cu · 1 셀씩) — 꼭지 ≈ −26 / −18 / −17.5 / −18 mV · 꼭지 − 평탄 ≈16.7 / 7.5 / 2 / 0 mV · Cu 는 3.25 h 에 "Charging failure" · (b) 2 mA cm⁻² × 2.5 h (C-Cu 3 · Ag C-Cu 3 셀 — 본문 평균은 5 셀) — 꼭지 − 평탄 ≈17 vs ≈3.7 mV · 평탄은 겹침 | ★ 핵생성 과전압 순서 앵커 · 판독법 = 꼭지 − 평탄 (§3-4) · 16.1 vs 3.9 mV (n 5 · std err) 의 그림 근거 |
+| 3c–g | 5 mAh cm⁻² 충전 뒤 단면 SE + Cu · S · C · Ag EDS — 위에서부터 Cu / Li (화살표 자리 figure-read ≈14 µm) / 밀려난 C / LPSCl · 왼쪽에 Cu 에 붙은 C 조각 · Ag 희미 | ★ Li 위치 = Cu–C 사이 · C 는 SE 쪽 |
 | 3h–j | 다른 셀 저배율 (폭 ≈850 µm · Li ≈25–28 µm) + 확대 + EDS 선 (Cu 0–1.3 · Li 1.6–5.4 · C 5.4–6.9 · LPSCl > 7 µm · Ag ≈3,000 cps 는 3.2–4.9 µm) | 같은 셀 안에서 Li 두께가 4–5 배 다르다 · Ag 는 Li 의 C 쪽 절반 |
 | 4a,b | 2 mA cm⁻² 2.5 h 충전 → 1 mA cm⁻² 방전 (2 셀) — OCV ≈1.9–2.0 V · 도금 −15…−33 · 탈리 +8…+17 mV · 끝 ≈8.6–8.9 h 에 5 V | 왕복 효율 ≈80 % (figure-read 74–78 %) |
-| 4c–i | 방전 뒤 단면 — Cu \| 공극 (+ Li 잔여 실) \| C + Ag 덩어리 \| LPSCl · S 지도 위끝 가는 S 줄 · 선 스캔 4.3 µm 의 S 혹 · Ag 혹 = C 혹 | 다음 사이클 핵생성 면 = C 위 Ag 덩어리 · Cu 쪽 S (§10-⑥) |
-| 5 | 작동 모형 모식 (스퍼터 → 충전 시작 (Ag/C 위 · Cu\|C 아래 얇은 Li) → 충전 끝 (Ag 가 퍼진 Li 층 · C 는 SE 쪽) → 방전 끝 (공동 · C 위 Ag · Cu 위 Li 잔여)) | 단계별 접촉 쌍 표 (§0-1) 의 원문 그림 |
+| 4c–i | 방전 뒤 단면 — 위에서부터 Cu / 공극 (+ Li 잔여 실) / C + Ag 덩어리 / LPSCl · S 지도 위끝 가는 S 줄 · 선 스캔 4.3 µm 의 S 혹 · Ag 혹 = C 혹 | 다음 사이클 핵생성 면 = C 위 Ag 덩어리 · Cu 쪽 S (§10-⑥) |
+| 5 | 작동 모형 모식 (스퍼터 → 충전 시작 (Ag/C 위 · Cu–C 사이 얇은 Li) → 충전 끝 (Ag 가 퍼진 Li 층 · C 는 SE 쪽) → 방전 끝 (공동 · C 위 Ag · Cu 위 Li 잔여)) | 단계별 접촉 쌍 표 (§0-1) 의 원문 그림 |
 | S1 | 위에서 본 SE 상 + 사진: C-Cu (≈0.1 µm 입자 응집 · 검정) · Ag 100 nm (둥근 알갱이 ≈0.15–0.25 µm · 은빛) · Ag 500 nm (마디 ≈0.3–0.4 µm · 틈 메움) | 탄소 형상 = 카본블랙꼴 응집체 · Ag 막 형태 |
 | S2 | 스퍼터 직후 (압축 전) 단면 SE · BSE + Ag · C · Cu EDS — 층 figure-read ≈2.1–3.2 µm · Ag **89.32 nm** · Ag 는 위쪽에 몰림 | ★ Ag 위치 = C 윗면 · 두께가 '∼1 µm' 와 어긋남 (§10-①) |
 | S3 | 압축 전 · 뒤 단면 SE 와 기공 문턱 지도 (ROI ≈1.5 × 11.4 / 0.5 × 5.7 µm) — 26.7 → 18.5 % | 2D 문턱 기공률의 한계 (§10-②) · DEM 입력으로 안 씀 |
@@ -317,7 +320,7 @@ C1 · DC1 · C10 · DC10 은 figure-read ≈ (눈금 840 px = 250 mAh g⁻¹) ·
 | S8 | 0.1 mA cm⁻² 활성화 (3.53–3.78 V) 뒤 1 mA cm⁻² (3.53–4.15 V) — ≈160 → ≈50 · −69 % | 활성화 효과 없음 · SOC 표기 뒤바뀜 (§10-⑫) |
 | S9 | 다섯 구성 C1 / DC1 / C10 / DC10 평균 ± std err | ★ 유지율 정의 역산의 근거 (§3-3) |
 | S10 | SIMS ⁷Li 단면: 기준 Li/LPS 이중층 Li 38 : LPS 100 · 도금 층 평균 42 : 100 (프로파일 ≈20–70 출렁) | Li 함유 확인일 뿐 — 금속 Li 판정은 약하다 |
-| S11 | C-Cu (Ag 없음) 충전 뒤 단면 + C · Cu · S — Li ≈10 µm · 기둥 · 섬유꼴 + 빈 곳 · Cu\|Li 경계 S 줄 | Ag 없을 때 Li 형태 대조 · Cu 쪽 S (§10-⑥) |
+| S11 | C-Cu (Ag 없음) 충전 뒤 단면 + C · Cu · S — Li ≈10 µm · 기둥 · 섬유꼴 + 빈 곳 · Cu–Li 경계 S 줄 | Ag 없을 때 Li 형태 대조 · Cu 쪽 S (§10-⑥) |
 | S12 | 다른 Ag C-Cu 셀 방전 뒤 + Cu · C · Ag · S — Cu 곁 남은 층 ≈1.5 µm + 공극 ≈2 µm + C/Ag · 남은 층이 S 지도에서 밝다 | '남은 Li' 에 S — 정체 미확인 (§10-⑥) |
 | Table S1 | 조도 Sa · Sq — 10 구성 (steel · Cu · Ag-Cu · C-Cu · Ag C-Cu 100 / 500 nm · 압축 전 · 뒤) | DEM · 접촉 모델의 표면 거칠기 입력 (§3-2) |
 

@@ -118,7 +118,7 @@
 | 목표 | 인터레이어 = **zero or minimal (< 1 MPa)** 운전의 레버 · 저압 (< 1 MPa) 연구 시급 | p. 678 | refs 37 · 81 (결론 문장은 인용 없음) |
 | 온도 | 수치 없음 — 고온은 Li 수송 · 크리프 · 핵 밀도를 바꾼다는 정성 서술 | p. 675 | refs 44–50 |
 
-### 3.5 인터레이어 · 석출량 — `Fig. 4` · `Table S3` [인쇄]
+### 3.5 인터레이어 · 석출량 — 그림 4 · `Table S3` [인쇄]
 
 **`Fig. 4` 패널** (캡션):
 
@@ -154,7 +154,7 @@
 
 - 두께 범위 **4 nm (ALD) – 13 µm** · 제법 8 종 · 전해질이 고분자 · 겔 · LiPON · LGPS · LLZO · LPSC 로 섞여 있다 → **순위표가 아니라 목록**이다. 우리 계 (LPSCl) 행은 1 · 3 · 9 · 10 · 11 · 15 (16 은 LPS).
 
-### 3.6 figure-read — `Fig. 4` 단면의 Li 층 두께 (우리 판독)
+### 3.6 figure-read — 그림 4 단면의 Li 층 두께 (우리 판독)
 
 방법: 300 dpi 크롭 (`fig_4.png`, 2224 × 516 px) 에서 패널마다 **축척 막대 길이 (흰 픽셀 연속 구간)** 와 **패널 가운데 띠의 밝기 단면**으로 Li 층 위·아래 경계를 잡았다. 치밀 Li 기대값은 `Table S2` 상수 (0.53 g cm⁻³ · 3,860 mAh g⁻¹) 로 ✎ **4.89 µm per mAh cm⁻²** (§13-2).
 
@@ -173,14 +173,14 @@
 ## 4. ★ 주장 → 1 차 출처 지도 (사용자 요청 5 축 + 보조 축)
 
 > 읽는 법: '주장' 은 이 관점 논문의 문장 요지 (번역) 다 — **1 차 논문의 원문은 확인하지 않았다** [1차]. 숫자를 쓸 때는 오른쪽 출처로 간다.
-> litdb 칸: ✅ = digest 있음 (slug) · 📥 = PDF 가 `litdb/inbox/` 에 있음 (2026-11-24 묶음 · 이 시점 digest 미확인) · — = 없음.
+> litdb 칸: ✅ = digest 있음 (slug) · '(같은 묶음)' = 2026-11-24 같은 병렬 묶음에서 다른 에이전트가 쓴 digest (이 카드 마감 때 파일 존재만 확인 · 내용은 안 읽음) · — = 없음.
 > 참고문헌 전체 (98 편) 와 역할은 §14.
 
 ### 4.1 방전 중 공극 (void) ★
 
 | 주장 | 쪽 · 그림 | 인용 1 차 출처 | litdb |
 |---|---|---|---|
-| Li 과잉 셀: 박리가 Li 보급보다 빠르면 **공극 → 접촉 상실 · 고저항**. 액체 전지엔 없는 고체 고유 현상 | p. 674 | 20 Kasemchainan 2019 *Nat. Mater.* 18, 1105 · 21 Wang, Choudhury, Sakamoto 2019 *Joule* 3, 2165 | 20 — · 21 📥 `wang2019_li_se_stack_pressure_*` |
+| Li 과잉 셀: 박리가 Li 보급보다 빠르면 **공극 → 접촉 상실 · 고저항**. 액체 전지엔 없는 고체 고유 현상 | p. 674 | 20 Kasemchainan 2019 *Nat. Mater.* 18, 1105 · 21 Wang, Choudhury, Sakamoto 2019 *Joule* 3, 2165 | 20 — · 21 ✅ `wang2019_li_se_interface_dynamics_stack_pressure_current_density` (같은 묶음) |
 | 공극 = **임계 박리 전류밀도** 위에서 — Li 를 공공 확산이나 기계적 변형으로 계면에 충분히 빨리 못 보낼 때 | p. 676 | 20 · 21 | 〃 |
 | 무음극도 같은 공극 (고전류 박리 · `Fig. 3c`) — 그러나 **거의 100 % DoD 로 다 벗겨야** 해서 차이가 생긴다 | p. 676 · `Fig. 3c` | 73 Heubner 2021 *Adv. Funct. Mater.* 31, 2106608 | — |
 | ★ **무음극 고유**: 불균일 박리 → 박리 끝 무렵 다 벗겨진 곳 옆에 Li 가 남는다 → 벗겨진 곳은 (CC 가 SE 에 닿든 말든) 더 박리 못 함 → **남은 Li 섬으로 전류 집중 → 섬이 옆으로 줄며 공극 가속** | p. 676 · `Fig. 3d` | **23 Lewis 2023 *Adv. Energy Mater.* 13, 2204186** | — |
@@ -206,7 +206,7 @@
 |---|---|---|---|
 | 다음 충전 때 불완전 접촉 → 불균일 석출 · **공극 둘레 전류 집중 → 수지상·필라멘트가 SSE 를 뚫고 단락** | p. 674 | 14 Kazyak 2022 *Matter* 5, 3912 · 20 · 22 Krauskopf 2019 *ACS AMI* 11, 14463 | — |
 | 필라멘트는 대개 **불균일 고체 접촉 + 전류 집중**에서 시작해 SSE 침투·파괴 확률을 높인다 | p. 676 | 22 · 69 Lewis 2021 *Nat. Mater.* 20, 503 · 70 Vishnugopi 2022 *AEM* 13, 2203671 · 71 Eckhardt 2022 *ACS AMI* 14, 35545 · 72 Vishnugopi 2021 *ACS Energy Lett.* 6, 3734 | — |
-| 공극 성장 → 전류 집중 → 다음 석출에서 필라멘트 (Li 과잉의 사슬) | p. 676 | 20 · 21 | 21 📥 |
+| 공극 성장 → 전류 집중 → 다음 석출에서 필라멘트 (Li 과잉의 사슬) | p. 676 | 20 · 21 | 21 ✅ |
 | 무음극: 고전류 공극 (`Fig. 3c`) · 불균일 박리 고립 섬 (`Fig. 3d`) 둘 다 **다음 석출에서 필라멘트** | p. 677 · `Fig. 3c,d` | 23 (도식) | — |
 | SSE 파괴 · 필라멘트는 Li 과잉 셀에서 많이 연구됐고 **무음극도 같은 기전으로 '예상'** 된다 (직접 증거 제시 없음) | p. 676 | 52 Ning 2023 *Nature* 618, 287 | — |
 | **두꺼운 CC** → 옆 성장은 좋지만 SSE 에 응력 축적 → **균열 전파 · 필라멘트** | p. 676 · `Fig. 2e` | 52 | — |
@@ -221,10 +221,10 @@
 
 | 주장 | 쪽 · 그림 | 인용 1 차 출처 | litdb |
 |---|---|---|---|
-| 실험실 적층압 범위 **~1 MPa – 수백 MPa** | p. 675 | 10 Wang 2020 *Nat. Commun.* 11, 5201 · 20 · 22 · 36 Lee 2022 *Joule* 6, 2547 | 10 📥 `wang2020_insitu_plating_*` · 36 📥 `lee2022_thin_li_void_rewetting_*` |
+| 실험실 적층압 범위 **~1 MPa – 수백 MPa** | p. 675 | 10 Wang 2020 *Nat. Commun.* 11, 5201 · 20 · 22 · 36 Lee 2022 *Joule* 6, 2547 | 10 ✅ `wang2020_lithium_free_insitu_plating_llzo` (같은 묶음) · 36 ✅ `lee2022_thin_insitu_li_void_rewetting_llzo` (같은 묶음) |
 | 실용에서는 **> ~1 MPa 가 걸기 어렵다** | p. 675 | 37 | — |
-| 무음극에서 **> 1 MPa 가 석출 Li 크리프를 촉진** (`Fig. 2c`) | p. 675 · `Fig. 2c` | 10 · 20 · 36 | 10 📥 · 36 📥 |
-| Li 의 **점소성** → 옆으로 자라 공극을 메우고 밀착 유지 | p. 675 | 14 · 21 · 38 Lee C. 2021 *ACS Energy Lett.* 6, 3261 | 21 📥 |
+| 무음극에서 **> 1 MPa 가 석출 Li 크리프를 촉진** (`Fig. 2c`) | p. 675 · `Fig. 2c` | 10 · 20 · 36 | 10 ✅ · 36 ✅ |
+| Li 의 **점소성** → 옆으로 자라 공극을 메우고 밀착 유지 | p. 675 | 14 · 21 · 38 Lee C. 2021 *ACS Energy Lett.* 6, 3261 | 21 ✅ |
 | 고압 + 고온 사이클로 이 기전을 이용한 시도 | p. 675 | 39 · 40 Chang 2021 *Nat. Commun.* 12, 6369 | — |
 | 지그 정렬 불량 · 계면 불균일 → **불균일 적층압** → 불균일 핵생성·성장 · **공칭 적층압 ≠ 국부 응력** | p. 675 | 14 | — |
 | 섬이 합쳐질 때 석출 안 국부 응력이 시공간으로 변함 → 몰부피 (열역학) · 계면 반응속도 | p. 675 | 14 | — |
@@ -272,12 +272,12 @@
 | 첫 충전 석출 = **이질 CC (Cu 박)** 위 핵생성·성장 · CC\|SSE 국부 화학-역학 환경이 균일성 · 형태를 정한다 | p. 674 | 25 Yoon 2024 *ACS AMI* 16, 18790 | — |
 | SSE\|CC 화학-역학 상호작용 → 첫 핵생성 · 이후 성장 (`Fig. 2a`) | p. 674 · `Fig. 2a` | 28 Motoyama 2015 *JES* 162, A7067 | — |
 | CC 구속에서 오는 응력 → Li 소성 변형 → 형태 | p. 674 | 14 | — |
-| ★ 변형시킬 과잉 Li 가 없으니 **첫 핵생성은 CC–SSE 접촉 영역에서만** — 접촉 형성 · **SSE–CC 점착력**이 핵심 | p. 674 | 10 · 14 | 10 📥 |
+| ★ 변형시킬 과잉 Li 가 없으니 **첫 핵생성은 CC–SSE 접촉 영역에서만** — 접촉 형성 · **SSE–CC 점착력**이 핵심 | p. 674 | 10 · 14 | 10 ✅ |
 | 접촉 형성: 황화물 압착 ~10–500 MPa · LLZO 900 °C 접합 · 산업은 롤 압착 · 실험실과 산업 공정은 달라야 한다 | p. 674 | 29 · 30 · 10 · 31 Zaman & Hatzell 2022 *Curr. Opin. Solid State Mater. Sci.* 26, 101003 | — |
 | 석출 중 계면 응력 → **CC/SSE 박리 · CC 소성 변형 또는 파단 · SSE 균열** | p. 674 | (서술 · `Fig. 2a` K_c,SSE/CC) | — |
-| ★ **얇은 CC** = 응력 축적 시 기계적 실패 → **비가역 용량 손실** | p. 676 · `Fig. 2e` | 16 Neudecker 2000 *JES* 147, 517 · 28 · 32 Fuchs 2023 *AEM* 13, 2203174 | 32 📥 `fuchs2023_cu_llzo_growth_*` |
+| ★ **얇은 CC** = 응력 축적 시 기계적 실패 → **비가역 용량 손실** | p. 676 · `Fig. 2e` | 16 Neudecker 2000 *JES* 147, 517 · 28 · 32 Fuchs 2023 *AEM* 13, 2203174 | 32 ✅ `fuchs2023_cu_llzo_anode_free_li_growth_modes` (같은 묶음) |
 | **두꺼운 CC** = 파단 없이 변형 견딤 → 옆 성장 · 균일 석출 · 그러나 SSE 응력 → 균열 · 필라멘트 · 질량·부피↑ → 에너지밀도↓ | p. 676 | 14 · 51 Cheng 2023 *Nat. Nanotechnol.* 18, 1448 · 52 | — |
-| Cu 위 Li 석출은 **불균일**할 수 있다 → CE↓ · 수지상 | p. 676 | 10 · 23 · 29 | 10 📥 |
+| Cu 위 Li 석출은 **불균일**할 수 있다 → CE↓ · 수지상 | p. 676 | 10 · 23 · 29 | 10 ✅ |
 | ★ **DFT 는 Cu · Cu₂O 표면 둘 다 친Li 로 예측 · sessile drop 은 깨끗한 Cu 에서만 쉽게 젖는다** → Cu₂O 표면 산화막이 Li 와 자발 전환해 **Li₂O** 가 되고 Li 은 Li₂O 를 잘 못 적신다 → Cu 위 Li 는 **친Li (Cu) + 소Li (Li₂O) 혼재 기판**을 만난다 (`Fig. 2f`) · Li₂O 전환 = 비가역 용량 손실 | p. 676 · `Fig. 2f` | **25 Yoon 2024 *ACS AMI* 16, 18790** | — |
 | 석출 Li 와 CC 사이 열역학 · 점착 · 젖음이 성장에 영향 | p. 676 | 25 | — |
 | 앞으로: 석출 전 **CC 를 제어 전위에 두어** 계면상 형성 조절 · SSE 표면 조성 개질 · 얇은 '인공 SEI' · CC · SSE 계면 미세구조 공학 | p. 679 | (권고 · 폐루프 제어는 37) | — |
@@ -287,9 +287,9 @@
 
 | 주장 | 쪽 · 그림 | 인용 1 차 출처 | litdb |
 |---|---|---|---|
-| 석출 **전류밀도가 핵 밀도**를 바꾼다 (`Fig. 2b`) | p. 674 · `Fig. 2b` | 10 · 32 | 10 📥 · 32 📥 |
+| 석출 **전류밀도가 핵 밀도**를 바꾼다 (`Fig. 2b`) | p. 674 · `Fig. 2b` | 10 · 32 | 10 ✅ · 32 ✅ |
 | 고전류 → 과전압↑ → **핵 면밀도↑** | p. 674 | 33 Pei 2017 *Nano Lett.* 17, 1132 (⚠ **액체 전해질** 연구) | — |
-| 전류 펄스 → 핵 밀도↑ | p. 674 | 32 | 32 📥 |
+| 전류 펄스 → 핵 밀도↑ | p. 674 | 32 | 32 ✅ |
 | 핵이 촘촘하면 미세 결정립 또는 두께 균일 Li 기대 — 그러나 Li 는 상온에서 **상동 온도 (homologous T) 가 높아 조대화** → 막지 않으면 큰 결정립 | p. 674 | (서술) | — |
 | 미세구조 = CC 상호작용 + 석출 조건 (전류 · 온도) · 고전류 · 저온 · 불순물이 결정립을 줄일 수 있다 (연구 필요) · 사이클 간 '미세구조 기억' 은 불명 | p. 674–675 | 35 Singh 2023 *Matter* 6, 1463 | — |
 | 고온 → SSE\|CC 계면으로 · 계면을 따라 Li 수송 가속 | p. 675 | 44 Wang M. 2019 *Electrochim. Acta* 296, 842 · 45 Luo 2022 *Int. J. Heat Mass Transf.* 199, 123450 · 46 Kinzer 2021 *Matter* 4, 1947 | — |
@@ -327,7 +327,7 @@
 - 셀 정의 (`Table S2` 로 읽은 것 · ✎ 재현으로 확인 §13-1): 단면 1 cm² 당 **Al CC 5 µm + 복합양극 + SE 분리막 20 µm + (Li 20 µm 또는 0) + Cu CC 5 µm** · 포장 · 탭 없음 · 부피는 **조립 (방전) 상태 두께** 기준 (충전 때 석출 Li 두께는 안 넣음 — 논문은 기준 상태를 적지 않는다).
 - 복합양극 = CAM 75 vol % + SE 25 vol % (고체 기준) · 상대밀도 95 % → 두께 ✎ 75.9 µm.
 
-### 5.3 `Fig. 4` 원 출처와 기법 (이 논문은 재수록만)
+### 5.3 그림 4 의 원 출처와 기법 (이 논문은 재수록만)
 
 | 패널 | 원 논문 (본문 ref) | 기법 | 이 논문이 붙인 해석 |
 |---|---|---|---|
@@ -347,13 +347,11 @@
 | Fig | 내용 (무엇을 보여주나 · 본 그림) | 우리가 참고할 점 |
 |---|---|---|
 | 1a,b | Li 과잉 SSB (위에서 음극 CC / Li 박 / SE / 복합양극 / 양극 CC) vs 무음극 SSB (CC 가 SE 위에 바로) 도식 · 아래에 1,208 vs 1,435 Wh l⁻¹ | 셀 단위 형상 입력: SE 20 µm · 복합양극 ✎ ≈75.9 µm · Cu / Al 5 µm · Li 0 / 20 µm (`Table S2`). 부피는 조립 (방전) 상태 기준 |
-| 2a | Li 석출 하나가 CC 를 렌즈 모양으로 들어 올린 단면 · 적층압 F (화살표 셋) · 매개변수 11 개 = t_CC · σ_Li (사방 압축 요소) · σ_CC (경사면 따라) · σ_SSE · γ_SSE/Li · γ_Li/CC · **K_c,SSE/CC (석출 가장자리, CC 가 SE 에서 떨어지는 선단)** · K_c,SSE (석출 아래 SE 로 파고드는 Li 쐐기) · d_SSE · V_LiΔG_V · 계면상 (빨강 · 분홍 · 청록 구 — **석출 아래에만**) | 연속체 · DEM 입력 체크리스트. γ ↔ DFT W (Dupré W = γ_A + γ_B − γ_AB) · K_c,SSE/CC ↔ CC\|SE 계면 G_c (석출이 자라려면 CC 를 벗겨야 한다 = 블리스터 문제) · K_c,SSE ↔ SE 파괴 (`song2025_…` K_Ic) · d_SSE ↔ DEM 입도 |
+| 2a | Li 석출 하나가 CC 를 렌즈 모양으로 들어 올린 단면 · 적층압 F (화살표 셋) · 매개변수 11 개 = t_CC · σ_Li (사방 압축 요소) · σ_CC (경사면 따라) · σ_SSE · γ_SSE/Li · γ_Li/CC · **K_c,SSE/CC (석출 가장자리, CC 가 SE 에서 떨어지는 선단)** · K_c,SSE (석출 아래 SE 로 파고드는 Li 쐐기) · d_SSE · V_LiΔG_V · 계면상 (빨강 · 분홍 · 청록 구 — **석출 아래에만**) | 연속체 · DEM 입력 체크리스트. γ ↔ DFT W (Dupré W = γ_A + γ_B − γ_AB) · K_c,SSE/CC ↔ CC/SE 계면 G_c (석출이 자라려면 CC 를 벗겨야 한다 = 블리스터 문제) · K_c,SSE ↔ SE 파괴 (`song2025_…` K_Ic) · d_SSE ↔ DEM 입도 |
 | 2b–g | 첫 성장 조건 여섯: b 전류 (저 = 성긴 큰 핵 · 고 = 촘촘한 작은 핵, 화살표 길이로 전류) · c 압력 (저 = CC 가 물결치고 Li 섬 사이 틈 · 고 = 연속 Li 층) · d 온도 (저 = 촘촘한 작은 핵 · 고 = 성긴 큰 핵 · 사이에 '?' 양방향 화살표) · e CC 두께 (얇음 = CC 가 찢어지고 Li 가 버섯처럼 솟음 · 두꺼움 = 균일층) · f 화학 불균일 (CC 아래 표면 산화막 + Li₂O 혹) · g SE 미세구조 (Li 가 거친 SE 표면을 따라감) | 정성 방향표 — 숫자 없음. e 는 **CC 를 변형 · 파단하는 판**으로 모델링하라는 근거. d 의 '?' = 방향 미확정 (본문도 '바뀔 수 있다' 만 씀) |
 | 3a–d | 사이클 도식: a 첫 석출 뒤 균일 Li 층 → b 균일 박리 (CC 가 SE 위에 평평히 · 검은 화살표 a↔b = 장수명) · c 고전류 박리 → Li 층 아래 반원 공극들 → 확대 원: 남은 Li 층에서 SE 로 **쐐기형** 필라멘트 · d 불균일 박리 → **고립 Li 섬 + 섬 가장자리 공극** · CC 가 섬 사이로 내려앉아 SE 에 닿음 → 확대 원: CC–SE 접촉 옆에서 **입자 경계를 따라 지그재그** 필라멘트 (빨간 화살표 a↔c · a↔d = 열화) | 무음극 고유 고장 = 방전 끝 **접촉 면적 축소** (ref 23). 연속체 모델은 박리 말기 접촉 분율을 추적해야 한다 · CC 는 남은 Li 를 따라 휘는 순응층으로 그려져 있다 |
-| 4a | 탄소 인터레이어 2 mAh cm⁻² PFIB-SEM (LPSCl · ref 88): 위에서 CC (밝음) / 두꺼운 Li / Carbon (결이 보이는 층) / LPSCl | **Li 가 CC 와 탄소 사이에** 있다 (CC 쪽 석출 · `liao2025_…` 의 고 Γ 경우와 같은 꼴). figure-read ≈ Li 7.8 µm (치밀 기대 9.8 µm 의 0.8) |
-| 4b | Au 100 nm 를 입힌 Cu 위 1 mAh cm⁻² cryo-FIB-SEM (ref 29): CC (결정립 대비) / 'Au' 밝은 입자 띠 / Li (검정) / 밝은 입자 띠 / SSE | Au 가 입자로 쪼개져 **CC\|Li · Li\|SSE 두 경계에 띠로** 보인다 — Li 층 가운데는 비어 보인다 (figure-read · 본문 *"distributed throughout"* 과 결이 다름 → §10-④). figure-read ≈ Li 4.8 µm (기대 4.9 µm) |
-| 4c | Cu₂Te 인터레이어 3 mAh cm⁻² cryo-FIB-SEM (ref 95): CC / 얇은 Li₂Te–Cu 층 / Li / SSE | 화합물층은 **CC 에 붙은 채** 남고 Li 는 그 아래 (SE 쪽) 로 자란다. figure-read ≈ Li 12.5 µm (기대 14.7 의 0.85). ⚠ **석출 1 회 뒤** 단면 — '사이클 중 구조 유지' 의 직접 증거는 아니다 (§10-⑤) |
-| 4d | Ag–C 인터레이어 5 mAh cm⁻² 단면 SEM (SUS CC · ref 30): 위에서 SSE / Ag–C / 밝은 얇은 선 / 'Li deposits' / SUS (방향이 a–c 와 반대) | Li 는 **Ag–C 아래 SUS 쪽** · Ag–C 는 SSE 에 붙어 남는다 → 점착 트랙 '어느 계면이 벌어지나' 의 그림 근거 (Ag–C\|SE 유지 · Ag–C\|CC 사이로 Li). figure-read ≈ Li 24 µm (기대 24.4 µm) · 밝은 선의 정체는 캡션에 없음 |
+| 4a,d | 탄소 계열 (본 그림): a 탄소 2 mAh cm⁻² PFIB-SEM (ref 88) = 위에서 CC / Li / Carbon / LPSCl · d Ag–C 5 mAh cm⁻² SEM (ref 30 · 방향 반대) = SSE / Ag–C / 밝은 선 / Li / SUS → **둘 다 Li 가 CC 쪽 (인터레이어 아래)** · figure-read ≈ Li 7.8 µm (기대 9.8) · ≈24 µm (기대 24.4) | 점착 트랙 '어느 계면이 벌어지나' 의 그림 근거 (인터레이어/SE 는 붙어 남는다 · `liao2025_…` 고 Γ 와 같은 꼴) · W 쌍에 Li/IL · CC/IL 이 필요 |
+| 4b,c | 시드 계열 (본 그림): b Au 100 nm/Cu 1 mAh cm⁻² cryo-FIB-SEM (ref 29) = CC / Au 입자 띠 / Li / 밝은 입자 띠 / SSE · c Cu₂Te 3 mAh cm⁻² cryo-FIB-SEM (ref 95) = CC / Li₂Te–Cu / Li / SSE → **시드는 CC 쪽에 남고 Li 는 그 아래 SE 쪽** · figure-read ≈ 4.8 µm (기대 4.9) · ≈12.5 µm (기대 14.7) | W_ad 보고서 §7 방법 3 (합금 · 화합물) 의 그림 근거 · ⚠ b 는 입자가 두 경계로 갈라져 보임 (본문 'throughout' 과 결이 다름 §10-④) · c 는 석출 1 회 뒤 사진 (§10-⑤) |
 | S1 | 부피 에너지밀도 막대 (Wh/L): Li-ion ≈784 · Li Excess ≈1,208 · **Reservoir Free** ≈1,436 | 막대 한 벌 = LPSCl · LLZO 공통 (부피는 SE 밀도와 무관). SI 는 무음극을 'Reservoir Free' 로 표기 |
 | S2 | 중량 에너지밀도 막대 (Wh/kg): ≈290 · ≈464 · ≈479 | **LPSCl 값만** 그림 (LLZO 329 · 337 은 `Table S1` 에만) · 무음극 이득 +3 % 가 눈으로도 보인다 |
 | Table S1 | 에너지 지표 5 행 (Li-ion · LPSCl/LLZO × Li 과잉/무음극) | `Table S2` 로 ✎ 재현 (§13-1) · 1436 vs `Fig. 1` 1,435 |
@@ -450,6 +448,8 @@
 - `kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode` ✅ — Ag–C + 다공 CNF · operando 하중 셀 ΔP — 이 논문의 '탄성층 · 내부 압력 조절' (refs 14 · 43) 과 같은 질문.
 - `ahn2026_cej_agno3_pvp_li3n_anodefree` ✅ (자체 · 미출판 투고본) — 무음극 · 전구체 전환으로 핵생성 + 수송을 함께 조절 — 이 논문 §4.4 '합금 · 화합물 인터레이어 · 핵생성 과전압' 틀 안에 놓이는 원고.
 - 서론 · 계면 안정 인용 중 litdb 에 있는 것: `famprikis2019_…` (ref 2) · `janek2016_…` (6) · `richards2016_…` (17) · `xiao2020_…` (18) · `zhu2016_…` (54) · `zhu2015_…` (68).
+- **이 논문이 인용한 것 중 같은 묶음 (2026-11-24) 에 들어온 digest** — ref 10 `wang2020_lithium_free_insitu_plating_llzo` · ref 21 `wang2019_li_se_interface_dynamics_stack_pressure_current_density` · ref 32 `fuchs2023_cu_llzo_anode_free_li_growth_modes` · ref 36 `lee2022_thin_insitu_li_void_rewetting_llzo` (파일 존재만 확인 · 내용은 이 카드에서 안 읽었다 — 값은 그 카드에서).
+- **같은 묶음이지만 이 논문이 인용하지 않은 이웃** (제목만 확인 · 축 대응은 이 카드의 판단): `seymour2021_void_suppression_interfacial_adhesion_vacancy_transport` (점착 ↔ 공공 수송 → 공극 · W_ad '점착과 공극' 절) · `sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance` (표면 화학 ↔ Li 젖음 — Cu₂O → Li₂O 와 같은 '표면 오염이 젖음을 뒤집는다' 계열) · `cicvaric2026_li_nucleation_ni111_cu111_anode_free` (Cu(111) · Ni(111) Li 핵생성 실험 + 계산 — CC 친Li) · `lu2026_li_ag_interface_thermodynamics_kinetics` (Li–Ag 계면 열역학 · 동역학 — 미심사 preprint) · `metzler2025_ag_particle_distribution_carbon_interlayer_anode_free` · `metzler2026_sputtered_ag_carbon_interlayers_anode_free` (Ag–C 인터레이어 · Li 석출 위치) · `masias2019_li_metal_elastic_plastic_creep_properties` (`Fig. 2a` σ_Li 칸의 Li 역학) · `chatterjee2025_diffuse_interface_li_anode_void_model` (공극 연속체 모델) · `yang2021_atomistic_li_stripping_plating_interface_md` · `yang2021_flat_li_stripping_lithiophilic_interface_design` (박리 중 평탄 유지 · 친Li 계면 설계) · `kazyak2020_li_penetration_ceramic_se_operando_microscopy` (침투) · `kim2026_operando_void_detection_single_frequency_impedance` (공극 검출) · `shi2026_argyrodite_stack_pressure_viscoplastic_deformation` (argyrodite 점소성 · 적층압).
 
 ---
 
@@ -620,7 +620,7 @@ Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 
 ## 14. 참고문헌 지도 (본문 98 편 · 이 관점 논문 안의 역할 · litdb 상태)
 
 > ★ = 사용자 5 축에서 무게 있는 1 차 출처 · ★★ = W_ad · DEM 보고서에 바로 걸리는 것. 쪽 · 문장 위치는 §4. 서지는 PDF 참고문헌 목록 그대로 (첫 저자 · 연도 · 저널 권, 쪽).
-> litdb: ✅ digest 있음 · 📥 PDF 가 inbox 에 있음 (2026-11-24 묶음 · 이 시점 digest 미확인) · — 없음.
+> litdb: ✅ digest 있음 · '(같은 묶음)' = 2026-11-24 같은 병렬 묶음의 digest (파일 존재만 확인) · — 없음.
 
 | # | 1 차 출처 | 이 논문에서의 역할 | litdb |
 |---|---|---|---|
@@ -633,7 +633,7 @@ Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 
 | 7 | Kim 2023 · *Adv. Mater.* 35, 2206625 | 서론 — Li 박 제조 = 비싼 분위기 제어 | — |
 | 8 | Albertus 2018 · *Nat. Energy* 3, 16–21 | 서론 — Li 박 제조 | — |
 | 9 | Duffner 2021 · *Nat. Energy* 6, 123–134 | 서론 — Li 박 제조 | — |
-| 10 | Wang 2020 · *Nat. Commun.* 11, 5201 | ★ 무음극 에너지밀도 · CC 접촉·점착 · LLZO 900 °C 접합 · 전류 → 핵 밀도 · 적층압 범위 · > 1 MPa 크리프 · Cu 위 불균일 석출 | 📥 inbox `wang2020_insitu_plating_*` |
+| 10 | Wang 2020 · *Nat. Commun.* 11, 5201 | ★ 무음극 에너지밀도 · CC 접촉·점착 · LLZO 900 °C 접합 · 전류 → 핵 밀도 · 적층압 범위 · > 1 MPa 크리프 · Cu 위 불균일 석출 | ✅ `wang2020_lithium_free_insitu_plating_llzo` (같은 묶음) |
 | 11 | McDowell 2020 · *Chem. Mater.* 32, 8755–8771 | 서론 — 무음극 에너지밀도 | — |
 | 12 | Nanda 2021 · *Adv. Energy Mater.* 11, 2000804 | 서론 — 무음극 에너지밀도 | — |
 | 13 | Qian 2016 · *Adv. Funct. Mater.* 26, 7094–7102 | 서론 — 무음극 에너지밀도 | — |
@@ -644,7 +644,7 @@ Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 
 | 18 | Xiao 2020 · *Nat. Rev. Mater.* 5, 105–126 | SSE–Li 계면 안정 · CE | ✅ `xiao2020_interface_stability_ssb_review` |
 | 19 | Lin 2017 · *Nat. Nanotechnol.* 12, 194–206 | 액체 무음극 = 사이클마다 SEI | — |
 | 20 | Kasemchainan 2019 · *Nat. Mater.* 18, 1105–1111 | ★ Li 과잉 공극 (임계 박리 전류) · 필라멘트 · 적층압 범위 · 크리프 · 공극 회복 | — |
-| 21 | Wang 2019 · *Joule* 3, 2165–2178 | ★ 공극 · 임계 박리 전류 · 점소성 측방 성장 (적층압 · 전류 함수) | 📥 inbox `wang2019_li_se_stack_pressure_*` |
+| 21 | Wang 2019 · *Joule* 3, 2165–2178 | ★ 공극 · 임계 박리 전류 · 점소성 측방 성장 (적층압 · 전류 함수) | ✅ `wang2019_li_se_interface_dynamics_stack_pressure_current_density` (같은 묶음) |
 | 22 | Krauskopf 2019 · *ACS Appl. Mater. Interfaces* 11, 14463–14477 | 필라멘트 · 적층압 범위 · 전류 집중 (LLZO) | — |
 | 23 | Lewis 2023 · *Adv. Energy Mater.* 13, 2204186 | ★★ 무음극 국부 Li 고갈 → 가속 단락 (Fig. 3d 기전) · 시연 적음 · 인터레이어 공극 완화 · 과잉 Li · 방전 제한 | — |
 | 24 | Haslam 2023 · *J. Electrochem. Soc.* 170, 040524 | ★ Au 150 nm 시드 (LLZO) · 무음극 추가 인자 · 인터레이어 부류 · 고체-고체 이점 | — |
@@ -655,11 +655,11 @@ Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 
 | 29 | Sandoval 2023 · *Joule* 7, 2054–2073 | ★ Au · Ag 100 nm 합금층 진화 (Fig. 4b) · 황화물 압착 10–500 MPa · Cu 위 불균일 · 인터레이어 공극 완화 | — |
 | 30 | Lee 2020 · *Nat. Energy* 5, 299–308 | ★ Ag–C 복합 음극 (Fig. 4d) · 압착 10–500 MPa · 1,000 사이클 · CE · 탄소 유지 | — |
 | 31 | Zaman 2022 · *Curr. Opin. Solid State Mater. Sci.* 26, 101003 | 산업 롤 압착 | — |
-| 32 | Fuchs 2023 · *Adv. Energy Mater.* 13, 2203174 | ★ Cu\|LLZO 전류 의존 성장 모드 · 펄스 → 핵 밀도 · 얇은 CC | 📥 inbox `fuchs2023_cu_llzo_growth_*` |
+| 32 | Fuchs 2023 · *Adv. Energy Mater.* 13, 2203174 | ★ Cu\|LLZO 전류 의존 성장 모드 · 펄스 → 핵 밀도 · 얇은 CC | ✅ `fuchs2023_cu_llzo_anode_free_li_growth_modes` (같은 묶음) |
 | 33 | Pei 2017 · *Nano Lett.* 17, 1132–1139 | 과전압↑ → 핵 면밀도↑ (⚠ 액체 전해질) | — |
 | 34 | Yoon 2023 · *J. Mater. Chem. A* 11, 23288–23299 | Li 입계 확산 → 수지상 최소화 (결정립 → 접촉) | — |
 | 35 | Singh 2023 · *Matter* 6, 1463–1483 | 방전 중 Li 금속 음극 불안정 원인 (미세구조 · 석출 조건) | — |
-| 36 | Lee 2022 · *Joule* 6, 2547–2565 | ★ 얇은 in situ Li 공극 · 재젖음 (LLZO) · 적층압 범위 · > 1 MPa 크리프 (⚠ 저자 줄 "Neil, P.") | 📥 inbox `lee2022_thin_li_void_rewetting_*` |
+| 36 | Lee 2022 · *Joule* 6, 2547–2565 | ★ 얇은 in situ Li 공극 · 재젖음 (LLZO) · 적층압 범위 · > 1 MPa 크리프 (⚠ 저자 줄 "Neil, P.") | ✅ `lee2022_thin_insitu_li_void_rewetting_llzo` (같은 묶음) |
 | 37 | Wang 2021 · *Joule* 5, 1371–1390 | ★ 실험실 → 시장: > 1 MPa 어려움 · CE > 99.95 % (1,000 사이클) · < 1 MPa 레버 · 폐루프 제어 · SI 에너지밀도 계산기 | — |
 | 38 | Lee 2021 · *ACS Energy Lett.* 6, 3261–3269 | 적층압 측정으로 Li\|SSE 계면 진화 | — |
 | 39 | Zhang 2020 · *Cell Rep. Phys. Sci.* 1, 100012 | 압력 구동 계면 진화 · 공극 회복 | — |

@@ -362,7 +362,7 @@
   }
  ],
  "movies": {
-  "note": "SI movies are not figures - frames kept here for the digest Figure set rows MovieS1/MovieS2. Regenerate: ffmpeg -v error -i litdb/inbox/yang2021mo_li_strip_plate_md_movieN.mov -vf fps=1/5 -q:v 4 litdb/figures/yang2021_atomistic_li_stripping_plating_interface_md/movieN_%03d.jpg . Frame k is at video time ~ (k-1)*5 s. Frames carry no time stamp or scale bar.",
+  "note": "SI movies are not figures - frames kept here for the digest Figure set rows MovieS1/MovieS2. Regenerate: ffmpeg -v error -i litdb/inbox/yang2021mo_li_strip_plate_md_movieN.mov -vf fps=1/5 -q:v 4 litdb/figures/yang2021_atomistic_li_stripping_plating_interface_md/movieN_%03d.jpg . Frame k is at video time ~ (k-0.5)*5 s (measured by MSE against -ss stills: 001 = 2.4 s, 010 = 47.4 s - the fps filter keeps the last 10-fps input frame of each 5 s slot; corrected 2026-11-24, was (k-1)*5 s). Frames carry no time stamp or scale bar.",
   "MovieS1": {
    "src": "yang2021mo_li_strip_plate_md_movie1.mov",
    "duration_s": 83.2,
