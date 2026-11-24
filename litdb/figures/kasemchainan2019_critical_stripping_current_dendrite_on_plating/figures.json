@@ -33,7 +33,9 @@
     550.9,
     366.7
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop top (y 66.5) cut panel labels a,b (y 54.2), the 'Pressure' arrow (y 61.5) and the 140 mV tick (y 68.8); clip = vector drawings (72.8,60.3,510.9,339.9) + figure text (x 84.6-505.1, bottom y 360.7) + margin, above caption (y 371.0)"
+   "recrop": "2026-11-24 litdb-curator: auto crop top (y 66.5) cut panel labels a,b (y 54.2), the 'Pressure' arrow (y 61.5) and the 140 mV tick (y 68.8); clip = vector drawings (72.8,60.3,510.9,339.9) + figure text (x 84.6-505.1, bottom y 360.7) + margin, above caption (y 371.0)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - schematic a + panels b-d, checked against text values 12/19/130 mV)"
   },
   {
    "key": "f2",
@@ -60,7 +62,9 @@
     299.2,
     519.1
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop top (y 64.6) cut panel label a (y 52.3); only the top edge moved to y 49.5 (rasters start y 68.7, drawings y 51.6), sides/bottom = auto"
+   "recrop": "2026-11-24 litdb-curator: auto crop top (y 64.6) cut panel label a (y 52.3); only the top edge moved to y 49.5 (rasters start y 68.7, drawings y 51.6), sides/bottom = auto",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - SEM a (5 tiles + dendrite inset), b, c (4 tiles))"
   },
   {
    "key": "f3",
@@ -80,7 +84,9 @@
    "h": 293,
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_main.pdf",
-   "blank": 0.402
+   "blank": 0.402,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - 3 XCT slices a-c with 50 um bars)"
   },
   {
    "key": "f4",
@@ -107,7 +113,9 @@
     52.0,
     293.0,
     297.0
-   ]
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop - all six schematic frames + arrows)"
   },
   {
    "key": "f5",
@@ -134,7 +142,9 @@
     551.0,
     338.0
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop top (y 66.9) cut panel labels a,b (y 52.9), the 60 mV tick (y 57.4) and the first legend line '1.0 mA cm-2' (y 62.8); clip = figure text (x 87.5-501.1, y 52.9-332.0) + margin, above caption (y 342.2)"
+   "recrop": "2026-11-24 litdb-curator: auto crop top (y 66.9) cut panel labels a,b (y 52.9), the 60 mV tick (y 57.4) and the first legend line '1.0 mA cm-2' (y 62.8); clip = figure text (x 87.5-501.1, y 52.9-332.0) + margin, above caption (y 342.2)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - panels a-d incl. 60 mV ticks and full legends)"
   },
   {
    "key": "f6",
@@ -161,7 +171,9 @@
     552.1,
     668.4
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop kept only the bottom strip of panels c,d (bbox y 609.6-668.4); clip = union of lower-half vector drawings (116.0,395.5,493.8,642.7) + panel labels a/c (x 91.2, y 387.2) + x-axis titles (y 662.4) + margin, above caption (y 672.7)"
+   "recrop": "2026-11-24 litdb-curator: auto crop kept only the bottom strip of panels c,d (bbox y 609.6-668.4); clip = union of lower-half vector drawings (116.0,395.5,493.8,642.7) + panel labels a/c (x 91.2, y 387.2) + x-axis titles (y 662.4) + margin, above caption (y 672.7)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - panels a-d)"
   },
   {
    "key": "fS1",
@@ -173,15 +185,24 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
+    401.3,
+    529.2,
+    709.7
+   ],
+   "w": 1930,
+   "h": 1286,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "blank": 0.956,
+   "auto_bbox": [
+    66.0,
     304.0,
     529.2,
     709.7
    ],
-   "w": 1931,
-   "h": 1691,
-   "dpi": 300,
-   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
-   "blank": 0.961
+   "recrop": "2026-11-24 litdb-curator: auto crop (y 304.0-709.7) also took the e-mail line (y 310.0) and the 'Supplementary Information' heading (y 374.1) above the plot; clip = embedded raster (72.0,407.3,523.2,703.7) + 6 pt margin (geometric, the raster is the whole figure)",
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)"
   },
   {
    "key": "fS2",
@@ -201,7 +222,9 @@
    "h": 748,
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
-   "blank": 0.942
+   "blank": 0.942,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)"
   },
   {
    "key": "fS3",
@@ -228,7 +251,9 @@
     595.3,
     582.3
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop kept only row e,f (bbox y 408.3-582.3, full page width); clip = text extent of all six panels a-f (y-axis ticks x 79.6, top tick y 77.3, bottom axis title y 576.3) + margin, above caption (y 599.0)"
+   "recrop": "2026-11-24 litdb-curator: auto crop kept only row e,f (bbox y 408.3-582.3, full page width); clip = text extent of all six panels a-f (y-axis ticks x 79.6, top tick y 77.3, bottom axis title y 576.3) + margin, above caption (y 599.0)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - XPS a-f)"
   },
   {
    "key": "fS4",
@@ -248,7 +273,9 @@
    "h": 745,
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
-   "blank": 0.926
+   "blank": 0.926,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)"
   },
   {
    "key": "fS5",
@@ -268,7 +295,9 @@
    "h": 581,
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
-   "blank": 0.588
+   "blank": 0.588,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - a voltage, b SEM)"
   },
   {
    "key": "fS6",
@@ -288,7 +317,9 @@
    "h": 730,
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
-   "blank": 0.931
+   "blank": 0.931,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - Nyquist a, b)"
   },
   {
    "key": "fS7",
@@ -308,7 +339,9 @@
    "h": 1543,
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
-   "blank": 0.925
+   "blank": 0.925,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)"
   }
  ],
  "missing_labels": [

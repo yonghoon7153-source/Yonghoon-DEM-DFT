@@ -431,14 +431,14 @@
     311.0,
     604.0,
     560.0,
-    752.0
+    756.0
    ],
    "w": 1039,
-   "h": 618,
+   "h": 634,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.907,
-   "manual_crop": "2026-11-24 litdb-curator: auto extractor returned no table for TABLE I (Roman-numeral caption, right column of p.3, not detected - table_caption_vote 0/0); clip = caption top (y 608) to the bottom rule (y 750)",
+   "blank": 0.909,
+   "manual_crop": "2026-11-24 litdb-curator: auto extractor returned no table for TABLE I (Roman-numeral caption, right column of p.3, not detected - table_caption_vote 0/0); clip = caption top (y 608) to below the bottom double rule (y 749.7/751.7)",
    "viewed": false
   },
   {
@@ -453,14 +453,14 @@
     311.0,
     66.0,
     560.0,
-    398.0
+    402.0
    ],
    "w": 1039,
-   "h": 1384,
+   "h": 1400,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.914,
-   "manual_crop": "2026-11-24 litdb-curator: auto extractor returned no table for TABLE II (Roman-numeral caption, top of the right column of p.4, not detected - table_caption_vote 0/0); clip = caption top (y 69) to the bottom rule (y 396), above the resumed body text (y 424)",
+   "blank": 0.913,
+   "manual_crop": "2026-11-24 litdb-curator: auto extractor returned no table for TABLE II (Roman-numeral caption, top of the right column of p.4, not detected - table_caption_vote 0/0); clip = caption top (y 69) to below the bottom double rule (y 395.6/397.6), above the resumed body text (y 424)",
    "viewed": false
   }
  ],
