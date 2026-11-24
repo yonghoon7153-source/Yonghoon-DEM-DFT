@@ -148,6 +148,28 @@
    "blank": 0.747
   },
   {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "FIG. 8. Interface energy for the γ -Li3PS4[010]/Li interface. The large negative value of \u0002γab is due to chemical reactions that occur at the interface. The bond breaking and bond formation at the interface dominates lattice strain effects.",
+   "rotated_deg": 0,
+   "bbox": [
+    330.0,
+    558.0,
+    542.0,
+    707.0
+   ],
+   "w": 884,
+   "h": 621,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.951,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f8 as a number gap ('p7 그래픽 없음(img0/draw5)') - Fig. 8 is a vector-only line plot (53 paths) in the right column of p.7 between the body text ending at y 541 and its caption (y 713); clip = union of vector paths (369,563,537,681) + axis tick/label text (334..523, 570..702) + margin",
+   "viewed": false
+  },
+  {
    "key": "f9",
    "kind": "figure",
    "label": "9",
@@ -188,6 +210,28 @@
    "blank": 0.962
   },
   {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "file": "fig_11.png",
+   "caption": "FIG. 11. (Color online) Partial densities of states for bulk (a) Li2O, (b) Li2S, (c) β-Li3PO4, and (d) γ -Li3PS4. In this case, the N s(E) sets are deﬁned by the atom types, and NLi(E) has been scaled by a factor of 10. The energy scale is adjusted so the E = 0 corresponds to the top of the valence band of each material.",
+   "rotated_deg": 0,
+   "bbox": [
+    328.0,
+    66.0,
+    542.0,
+    612.0
+   ],
+   "w": 893,
+   "h": 2275,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.925,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f11 as a number gap ('p9 영역 없음') - Fig. 11 is a 4-panel vector PDOS stack (784 paths) filling the right column of p.9 above its caption (y 621); clip = union of vector paths (352,71,537,608) + panel letters (a)-(d) at x 333 + margin",
+   "viewed": false
+  },
+  {
    "key": "f12",
    "kind": "figure",
    "label": "12",
@@ -208,6 +252,72 @@
    "blank": 0.938
   },
   {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 10,
+   "file": "fig_13.png",
+   "caption": "FIG. 13. (Color online) Partial densities of states for the Li2O/Li interfaces in the (a) \u0002\u00021 and (b) \u0002\u00022 conﬁgurations.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    450.0,
+    280.0,
+    726.0
+   ],
+   "w": 892,
+   "h": 1150,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.896,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f13 as a number gap ('p10 영역 없음') - Fig. 13 is a 2-panel vector PDOS stack in the left column of p.10 between the body text ending at y 441 and its caption (y 735); clip = vector cluster (89,454,274,721) + panel letters (a),(b) at x 70 + margin",
+   "viewed": false
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 11,
+   "file": "fig_14.png",
+   "caption": "FIG. 14. (Color online) Partial densities of states for the Li2S/Li interfaces for the (a) \u0002\u00021, (b) \u0002\u00022, (c) \u0002\u00023, and (d) \u0002\u00024 conﬁgurations.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    280.0,
+    612.0
+   ],
+   "w": 892,
+   "h": 2275,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.895,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f14 as a number gap ('p11 영역 없음') - Fig. 14 is a 4-panel vector PDOS stack (792 paths) filling the left column of p.11 above its caption (y 621); clip = vector cluster (89,71,275,608) + panel letters (a)-(d) at x 71 + margin",
+   "viewed": false
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 11,
+   "file": "fig_15.png",
+   "caption": "FIG. 15. (Color online) Partial density of states for Li3PO4/Li interface in the \u0002\u00021 conﬁguration.",
+   "rotated_deg": 0,
+   "bbox": [
+    328.0,
+    66.0,
+    541.0,
+    220.0
+   ],
+   "w": 889,
+   "h": 642,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.902,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f15 as a number gap ('p11 영역 없음') - Fig. 15 is a single vector PDOS plot (152 paths) at the top of the right column of p.11 above its caption (y 226); clip = vector cluster (334,71,537,215) + y-label text at x 332 + margin",
+   "viewed": false
+  },
+  {
    "key": "f16",
    "kind": "figure",
    "label": "16",
@@ -226,6 +336,28 @@
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.854
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 12,
+   "file": "fig_17.png",
+   "caption": "FIG. 17. (Color online) Partial density of states for the γ -Li3PS4/Li2S interface. The zero of energy is set to the top of the valence band of γ -Li3PS4",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    562.0,
+    280.0,
+    716.0
+   ],
+   "w": 892,
+   "h": 643,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.883,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f17 as a number gap ('p12 영역 없음') - Fig. 17 is a single vector PDOS plot in the left column of p.12 between Eq. (9) (ends y 551) and its caption (y 724); clip = vector cluster (71,568,275,713) + y-label text at x 69 + margin",
+   "viewed": false
   },
   {
    "key": "f18",
@@ -286,6 +418,50 @@
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.936
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "I",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "TABLE I. Lattice parameters (in ˚A) and heats of formation [13] (\u0006H in eV per formula unit) calculated for bulk materials in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.0,
+    604.0,
+    560.0,
+    752.0
+   ],
+   "w": 1039,
+   "h": 618,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.907,
+   "manual_crop": "2026-11-24 litdb-curator: auto extractor returned no table for TABLE I (Roman-numeral caption, right column of p.3, not detected - table_caption_vote 0/0); clip = caption top (y 608) to the bottom rule (y 750)",
+   "viewed": false
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "II",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "TABLE II. Summary of the calculated values of \u0002γ lim ab in meV/ ˚A 2 (N.B. 1 meV/ ˚A 2 = 16.02 mJ/m2.) Also included are the calculated strain energies σ expressed in units of meV/ ˚A 2/formula unit of material b. The ﬁnal column lists the corresponding structural diagrams.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.0,
+    66.0,
+    560.0,
+    398.0
+   ],
+   "w": 1039,
+   "h": 1384,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.914,
+   "manual_crop": "2026-11-24 litdb-curator: auto extractor returned no table for TABLE II (Roman-numeral caption, top of the right column of p.4, not detected - table_caption_vote 0/0); clip = caption top (y 69) to the bottom rule (y 396), above the resumed body text (y 424)",
+   "viewed": false
   }
  ],
  "missing_labels": [
@@ -298,7 +474,8 @@
    "near_miss": [],
    "refs": [
     "p7"
-   ]
+   ],
+   "resolved": "manual_crop fig_8.png (2026-11-24, litdb-curator) - see figures[f8].manual_crop"
   },
   {
    "key": "f11",
@@ -310,7 +487,8 @@
    "refs": [
     "p9",
     "p10"
-   ]
+   ],
+   "resolved": "manual_crop fig_11.png (2026-11-24, litdb-curator) - see figures[f11].manual_crop"
   },
   {
    "key": "f13",
@@ -321,7 +499,8 @@
    "near_miss": [],
    "refs": [
     "p10"
-   ]
+   ],
+   "resolved": "manual_crop fig_13.png (2026-11-24, litdb-curator) - see figures[f13].manual_crop"
   },
   {
    "key": "f14",
@@ -333,7 +512,8 @@
    "refs": [
     "p10",
     "p11"
-   ]
+   ],
+   "resolved": "manual_crop fig_14.png (2026-11-24, litdb-curator) - see figures[f14].manual_crop"
   },
   {
    "key": "f15",
@@ -347,7 +527,8 @@
     "p11",
     "p12",
     "p14"
-   ]
+   ],
+   "resolved": "manual_crop fig_15.png (2026-11-24, litdb-curator) - see figures[f15].manual_crop"
   },
   {
    "key": "f17",
@@ -359,7 +540,8 @@
    "refs": [
     "p11",
     "p12"
-   ]
+   ],
+   "resolved": "manual_crop fig_17.png (2026-11-24, litdb-curator) - see figures[f17].manual_crop"
   }
  ],
  "table_caption_vote": [

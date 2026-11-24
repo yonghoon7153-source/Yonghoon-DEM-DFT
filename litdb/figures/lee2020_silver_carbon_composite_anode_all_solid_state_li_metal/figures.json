@@ -1,0 +1,654 @@
+{
+ "slug": "lee2020_silver_carbon_composite_anode_all_solid_state_li_metal",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "lee2020_ag_c_composite_anode_main.pdf",
+  "lee2020_ag_c_composite_anode_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | All-solid-state lithium metal battery. a, Schematic of an ASSB composed of a NMC cathode with a high areal capacity (>6.8 mAh cm−2), SSE and a Ag–C nanocomposite anode layer that does not require excess Li. Al and SUS foil were used as current collectors for the cathode and anode, respectively. b, A cross-sectional SEM image of the ASSB structure shows the intimate contact between the densely integrated components. c, Arrhenius plot of SSE ionic conductivities with temperature. d, Raman spectrum and XRD pattern of the argyrodite solid electrolyte. e, TEM image of an LZO-coated NMC particle. An LZO layer of 5 nm thickness was uniformly coated on the NMC. f, Schematic of the Ag–C nanocomposite anode layer on the SUS current collector for stable Li plating and stripping. g, Schematic of ASSB that comprises a Ag–C nanocomposite anode layer and exhibits a higher volumetric energy den",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    48.0,
+    558.3,
+    467.8
+   ],
+   "w": 2175,
+   "h": 1750,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_main.pdf",
+   "blank": 0.67,
+   "bbox_auto": [
+    36.5,
+    319.5,
+    558.3,
+    467.8
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop kept only panels e-g (bbox y 319.5-467.8) - panels a-d (rasters y 57.8-330.6 · label 'a' y 54) were lost; clip top moved to 48 (below the running header band, which ends at y 43.5), other edges unchanged · caption starts below 467.8"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Morphology of direct Li plating on the current collector with the SSE. a, Schematic of Li plating on the SUS current collector when the current collector is directly assembled with the SSE. b, Top view of plated Li after 0.05 C (0.34 mA cm−2) charging and at 50% SOC. Inset: photograph of plated Li on the SUS current collector. c, Cross-sectional view of plated Li on the SUS current collector after 0.05 C charging at 100% SOC. d, Capacity retention of the SUS|SSE|NMC pouch-type full cell (20 mAh) with a charge/discharge rate of 0.1 C/0.33 C (voltage window, 2.5–4.25 V versus Li+/Li at 60 °C).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    48.0,
+    555.6,
+    305.0
+   ],
+   "w": 2163,
+   "h": 1071,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_main.pdf",
+   "blank": 0.571,
+   "bbox_auto": [
+    36.5,
+    66.5,
+    555.6,
+    305.0
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel label 'a' (y 54.2) and the top 7 pt of the panel-a raster (y 59.2); clip top moved to 48 (below running header, ends y 43.5), other edges unchanged"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Stable Li plating and stripping through the Ag–C nanocomposite layer. a, Schematic of Li plating–stripping on the current collector with a Ag–C nanocomposite layer during charging and discharging processes. b–d, Cross-sectional SEM and corresponding EDS images for the Ag–C nanocomposite layer. Pristine (b), after 0.1 C (0.68 mA cm−2) charging (c) and after 0.1 C (0.68 mA cm−2) discharging (voltage window, 2.5–4.25 V versus Li+/Li at 60 °C) (d). e,f, Distribution of Ag in the Ag–C nanocomposite layer after 1 cycle (e) and 100 cycles (f). Cracks or empty spaces below the Ag–C nanocomposite layer were formed during the sample preparation.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    48.0,
+    553.7,
+    390.7
+   ],
+   "w": 2156,
+   "h": 1428,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_main.pdf",
+   "blank": 0.413,
+   "bbox_auto": [
+    36.5,
+    66.5,
+    553.7,
+    390.7
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel label 'a' (y 54.2), the 'SSE' label of the charged schematic (y 64.7) and the top 8 pt of the four panel-a rasters (y 58.4); clip top moved to 48, other edges unchanged"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Morphological variation of the Ag–C nanocomposite layer. Morphological changes of the Ag NPs in the Ag–C nanocomposite layer during the charging process was monitored by SEM as a function of cutoff voltage. a, Voltage profiles with cutoff voltages during a 0.1 C (0.68 mA cm−2) charging. b–g, Cross-sectional SEM images of the middle part of the Ag–C nanocomposite layer when pristine (b), at 3.5 V (c), 3.55 V (d), 3.6 V (e), 4.0 V (f) and 4.25 V (g). h–j, Cross-sectional SEM images of plated Li at 3.6 V (h), 4.0 V (i) and 4.25 V (j).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    48.0,
+    549.3,
+    520.0
+   ],
+   "w": 2137,
+   "h": 1967,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_main.pdf",
+   "blank": 0.54,
+   "bbox_auto": [
+    36.5,
+    71.7,
+    549.3,
+    520.0
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 71.7 cut panel label 'a' (y 54.2) and the 4.3 V tick (y 62.2) of the voltage axis; clip top moved to 48, other edges unchanged"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Characterization of Ag and C particles in the Ag–C nanocomposite layer after cycling. a–l, The Ag–C nanocomposite layer was characterized by TEM and the corresponding EELS mapping. Pristine (a–c), after 0.1 C charging (d–f), after 1 cycle (0.1 C/0.1 C charge/discharge) (g–i) and after 100 cycles (0.5 C/0.5 C charge/discharge) (j–l). Bright-field TEM (a,d,g,j), high-angle annular dark field (b,e,h,k) and EELS maps of Ag (green), C (blue) and Li (red) (c,f,i,l). m, Selected area diffraction patterns of Ag NPs in a Ag–C nanocomposite layer during cycling. n, X-ray diffraction patterns of the ASSB identify the phase transformation of the Ag–Li alloy. a.u., arbitrary units.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    48.0,
+    558.3,
+    670.1
+   ],
+   "w": 2175,
+   "h": 2593,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_main.pdf",
+   "blank": 0.358,
+   "bbox_auto": [
+    36.5,
+    66.5,
+    558.3,
+    670.1
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel labels 'a b c' (y 54.2) and the top 1 pt of the three TEM rasters (y 65.1); clip top moved to 48, other edges unchanged"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Electrochemical performance of ASSB with SSEs. a, Characterization of a 0.6 Ah class prototype pouch cell and illustration of a bi-cell structure. b, X-ray CT of the bi-cell and symmetric structure based on an aluminium current collector. c, Schematic of pressurization process during the fabrication and operation of ASSB. After the cell assembly and stacking, pressurization was applied by using the WIP. During operation, an external pressure of 2 MPa was uniformly applied to the prototype pouch cell using a pressure jig. d,e, Rate capability of ASSBs at 60 °C. A 0.1 C constant current and 4.25 V constant voltage (CC–CV) mode was adopted for all the charging sequences. Voltage profiles were plotted with cell capacity (d) and specific capacity (e). f, Discharge capacities were monitored under 0.1 C/0.1 C charge/discharge conditions as the discharging temperature was varied from 60 to −10 °C. The charging temperature was fixed at 60 °C. g, Cycling performance and Coulombic efficiency of the Ag–C|SSE|NMC prototype pouch cell (0.6 Ah) are plotted against the cycle numbers. A CC mode with the charge/discharge rate of 0.5 C/0.5 C was applied (voltage window, 2.5–4.25 V versus Li+/Li at 60 °C). The areal capacity loading of the NMC cathode was 6.8 mAh cm−2 (1.0 C = 6.8 mA cm−2).",
+   "rotated_deg": 0,
+   "bbox": [
+    38.0,
+    47.0,
+    557.0,
+    463.0
+   ],
+   "w": 2163,
+   "h": 1735,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_main.pdf",
+   "blank": 0.847,
+   "manual_crop": "2026-11-24 litdb-curator: 도구가 f6 을 '끝 번호 · p8 영역 없음' 으로 보고 — Fig. 6 은 p.8 위쪽 (패널 a–g · 래스터 사진 2 + 벡터 그래프 8,088 path) 에 있고 캡션은 y 469.9 에서 시작. clip = 머리글 (y ≤ 43) 아래 47 ~ 'Cycle number' 라벨 아래 463 · x 38–557 (벡터 합집합 36.8–558.4 에서 머리글 띠 제외) · 300 dpi"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Fig. 1 | Photographs of free-standing films of SSE. a, Before and b, After WIP. The mechanical strength of the SSE film was improved due to an increase in density after pressurisation through WIP.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    522.1,
+    265.9
+   ],
+   "w": 1902,
+   "h": 779,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.504
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Fig. 2 | Effect of solvents on uniformity of SSE film. SSE dispersion was enhanced and pinhole free SSE film was acquired using a solvent mixture of xylene and isobutyl isobutyrate.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    424.3,
+    518.1,
+    594.9
+   ],
+   "w": 1885,
+   "h": 712,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.508
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Fig. 3 | Raman spectra of the argyrodite powder and the SSE sheet comprising argyrodite and acrylate-type binder.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    477.9,
+    283.8
+   ],
+   "w": 1717,
+   "h": 854,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Fig. 4 | a,b, Cyclic voltammograms of Cu and SUS current collectors in contact with sulfide solid electrolyte. (scan rate: 2 mV s-1, number of cycles: 5) c,d, Initial charge-discharge profiles of Ag-C|Li half cell and Ag-C|NMC full cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    362.4,
+    515.7,
+    686.2
+   ],
+   "w": 1875,
+   "h": 1351,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Fig. 5 | Cross-sectional SEM images after 100 cycles in a, fully charged and b, fully discharged states.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    260.1,
+    531.8,
+    494.0
+   ],
+   "w": 1943,
+   "h": 976,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.54
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Fig. 6 | Charge-discharge profiles for the pouch-type full cell with various charge/discharge rate and cross-sectional SEM images after 0.1C (0.68 mA cm-2) charging. a,b, Carbon single layer c,d, Ag single layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    79.0,
+    530.8,
+    358.1
+   ],
+   "w": 1943,
+   "h": 1163,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.568
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Fig. 7 | Initial charge-discharge profiles for the pouch-type full cell at a 0.1C/0.2C charge/discharge rate with and without the Ag-C nanocomposite layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    79.1,
+    530.8,
+    319.2
+   ],
+   "w": 1943,
+   "h": 1001,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Fig. 8 | a, TEM image and b, SADP of C in pristine Ag-C nanocomposite layer. c, XRD pattern for C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    95.1,
+    534.8,
+    272.3
+   ],
+   "w": 1955,
+   "h": 739,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.643
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Fig. 9 | SADP of Ag in Ag-C nanocomposite layer after charging. Some fragmented Ag particles still displayed crystallinity at this stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    405.4,
+    481.9,
+    559.1
+   ],
+   "w": 1734,
+   "h": 641,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.374
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Fig. 10 | Effect of isostatic pressure on solid electrolyte and electrodes. Changes in interfacial properties between each component in the cell after pressurisation using WIP (490 MPa) as observed by SEM.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.0,
+    438.0,
+    419.0,
+    776.0
+   ],
+   "w": 1013,
+   "h": 1409,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.267,
+   "manual_crop": "2026-11-24 litdb-curator: 도구가 fS10 을 '번호 공백 · p11 그래픽 없음' 으로 보고 — 그림 (박힌 래스터 586×826 px 한 장) 은 SI p.10 아래 bbox (182,444,413,770) 에 있고 캡션만 p.11 맨 위로 넘어갔다 (쪽을 넘긴 짝이라 같은 쪽 캡션 기준 도구가 못 짝지음). clip = 래스터 bbox + 6 pt · 300 dpi"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 11,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Fig. 11 | a, Rate capability and b, Cycle performance as a function of external pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    237.3,
+    532.0,
+    571.5
+   ],
+   "w": 1942,
+   "h": 1394,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 12,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Fig. 12 | Charge-discharge curves for 0.6 Ah pouch-type full cell at a 0.1 C/0.1 C charge/discharge rate without external pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    507.9,
+    300.8
+   ],
+   "w": 1843,
+   "h": 925,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 13,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Fig. 13 | Optimisation of the Ag-C layer composition. Ag-C layer composition was optimised as a function of the ratio of Ag and C. a, Rate capability (1.0 C/0.33 C) and b,c, Capacity retention (b) and Coulombic efficiency (c) of Ag-C|SSE|NMC pouch-type full cell (20 mAh) with the charge/discharge rate of 0.5 C/0.5C (voltage window: 2.5–4.25 V vs. Li+/Li, at 60 °C). The areal capacity loading of NMC cathode was 6.8 mAh cm-2 (1.0 C = 6.8 mA cm-2).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    208.2,
+    532.1,
+    560.4
+   ],
+   "w": 1942,
+   "h": 1468,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 14,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Fig. 14 | Charge-discharge curves for pouch-type full cell at a 0.1C/0.2C charge/discharge rate with Ag-C layer composition. The variation in the composition of Ag-C composite layer does not significantly change the capacity for early lithiation (< 3.6 V); however, a small plateau appears near 3.5 V when the amount of Ag is increased.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    526.9,
+    298.0
+   ],
+   "w": 1922,
+   "h": 913,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 14,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Fig. 15 | Nyquist plot of ASSB after charging with temperature. Interfacial resistance after charging was measured with an AC impedance method using 0.6 Ah pouch- type full cells at various temperatures. The interfacial resistance at 25 oC (50 Ω cm2) is about 10 times higher than at 60 °C (5 Ω cm2).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    433.5,
+    529.2,
+    655.2
+   ],
+   "w": 1930,
+   "h": 924,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.977
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 15,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Fig. 16 | Charge-discharge curves for 0.6 Ah pouch-type full cell at a 0.5 C/0.5 C charge/discharge rate plotted with selected cycle numbers.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    507.9,
+    318.0
+   ],
+   "w": 1843,
+   "h": 996,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 15,
+   "file": "fig_S17.png",
+   "caption": "Supplementary Fig. 17 | Energy density and capacity of prototype cell as a function of stack numbers.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    451.0,
+    524.0,
+    686.9
+   ],
+   "w": 1910,
+   "h": 984,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 17,
+   "file": "fig_S18.png",
+   "caption": "Supplementary Fig. 18 | a, Photograph and b, Charge-discharge curves for 5 Ah class all- solid-state Li metal battery.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    509.6,
+    273.0
+   ],
+   "w": 1850,
+   "h": 809,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 18,
+   "file": "fig_S19.png",
+   "caption": "Supplementary Fig. 19 | Heating tests of a, LIB using liquid electrolyte and b, ASSB based on SSE. Temperature was increased from room temperature to 210 °C at 5 °C min-1.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    149.6,
+    529.3,
+    396.4
+   ],
+   "w": 1932,
+   "h": 1029,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.707
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1 | Sheet resistivity of Ag-C nanocomposite layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    487.7,
+    497.0,
+    650.7
+   ],
+   "w": 1792,
+   "h": 680,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 11,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2 | Change in thickness after pressurisation (490 MPa) using WIP.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    203.7,
+    512.8,
+    326.8
+   ],
+   "w": 1858,
+   "h": 514,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 16,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3 | Calculation basis for energy density of prototype cell with stack numbers.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    78.4,
+    529.8,
+    546.0
+   ],
+   "w": 1935,
+   "h": 1949,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.925
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f6",
+   "why": "끝 번호 — 본문이 Fig. 6 까지 가리키는데 추출 최대는 5 (남의 논문 그림 참조일 수도 있다 · 확인)",
+   "skipped": [
+    "p8 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p4",
+    "p5",
+    "p6",
+    "p8"
+   ],
+   "resolved": "manual_crop fig_6.png (2026-11-24, litdb-curator) - see figures[f6].manual_crop"
+  },
+  {
+   "key": "fS10",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p11 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p5",
+    "p10",
+    "p11"
+   ],
+   "resolved": "manual_crop fig_S10.png (2026-11-24, litdb-curator) - see figures[fS10].manual_crop"
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "lee2020_ag_c_composite_anode_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

@@ -1751,6 +1751,14 @@
    "204ad35b-2._Integration_of_experimental_insights_and_computational_modeling_for_all-solid-state_batteries.pdf"
   ]
  },
+ "kasemchainan2019_critical_stripping_current_dendrite_on_plating": {
+  "figures": 12,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "kasemchainan2019_critical_stripping_current_main.pdf",
+   "kasemchainan2019_critical_stripping_current_SI.pdf"
+  ]
+ },
  "kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity": {
   "figures": 59,
   "generated": "2026-11-16",
@@ -2051,6 +2059,14 @@
    "DEM 논문/13. Drucker-Prager Elastoplasticity for Sand Animation.pdf"
   ]
  },
+ "ko2025_metal_interlayer_anode_less_li_plating_stripping_mechanism": {
+  "figures": 35,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "ko2025_metal_interlayer_anode_less_main.pdf",
+   "ko2025_metal_interlayer_anode_less_SI.pdf"
+  ]
+ },
  "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation": {
   "figures": 44,
   "generated": "2026-11-12",
@@ -2177,6 +2193,14 @@
   "generated": "2026-09-26",
   "pdfs": [
    "628309c4-nn7004427.pdf"
+  ]
+ },
+ "lee2020_silver_carbon_composite_anode_all_solid_state_li_metal": {
+  "figures": 26,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "lee2020_ag_c_composite_anode_main.pdf",
+   "lee2020_ag_c_composite_anode_SI.pdf"
   ]
  },
  "lee2022_thin_insitu_li_void_rewetting_llzo": {
@@ -4423,6 +4447,14 @@
   "generated": "2026-09-12",
   "pdfs": [
    "112. Banerjee2020_Understanding_Interface_Stability_in_Solid_State_Batteries_REVIEW.pdf"
+  ]
+ },
+ "xie2024_agc_buffer_layer_lithiation_delithiation_mechanism": {
+  "figures": 26,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "xie2024_agc_buffer_lithiation_mechanism_SI.pdf"
   ]
  },
  "xu2017_nmc532_nanoindentation_modulus_hardness_toughness": {

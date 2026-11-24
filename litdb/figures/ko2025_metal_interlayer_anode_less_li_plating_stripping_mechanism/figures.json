@@ -1,0 +1,764 @@
+{
+ "slug": "ko2025_metal_interlayer_anode_less_li_plating_stripping_mechanism",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "ko2025_metal_interlayer_anode_less_main.pdf",
+  "ko2025_metal_interlayer_anode_less_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Operando SEM of metal | LLZO | Li cells. a Charge/discharge proﬁles and corresponding SEM images of (b) Cu, (c) Au, (d) Ag, and (e) Zn interlayer cells with schematics of the cross-sectional morphologies at EoLP. Note that the same scale",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    546.5,
+    390.1
+   ],
+   "w": 2138,
+   "h": 1448,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_main.pdf",
+   "blank": 0.48
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Operando XPS of metal | LLZO | Li cells. a Charge/discharge profiles and corresponding XPS spectrum according to the Li plating/stripping states during the first cycle and spectra from four cycles along with their composition profiles: b Li 1 s with Au 4 f, c Li 1 s with Ag 3 d, and d Li 1 s with Zn 2p3. Red and green profiles correspond to the intermediate states between the pristine state and EoLP and EoLS.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.0,
+    45.0,
+    548.0,
+    417.0
+   ],
+   "w": 2068,
+   "h": 1551,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_main.pdf",
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f2 as a number gap ('p5 영역 없음') - Fig. 2 on PDF p.5 is an embedded raster (xref 131, 92.4-540.2 x 58.2-395.5 pt) plus vector axes/text labels (words 60.5-539.1 x 50.2-413.4 pt); clip = label 'a' top to the 'Binding energy (eV)' axis titles, above the caption block at y 421.7"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Microstructural evolution determined via post-mortem analysis of the Ag | LLZO | Li cell. a Charge/discharge proﬁles (Li content x in LixAg) and corre- sponding post-mortem (b) surface and (c) cross-sectional SEM images with (d) STEM-EELS spectrum image maps (Li: Red, Ag: Green, and La: Blue). e Schematics",
+   "rotated_deg": 0,
+   "bbox": [
+    52.0,
+    45.0,
+    548.0,
+    387.5
+   ],
+   "w": 2068,
+   "h": 1428,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_main.pdf",
+   "blank": 0.64,
+   "recrop": "2026-11-24 litdb-curator: auto crop [33.7, 312.0, 545.2, 387.4] caught only panel e (schematic strip, 2132x316); panels a-d (profile, surface SEM, CP cross-sections, STEM-EELS) were missing; clip = full figure above the caption block at y 389.4"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Electrochemical performances. a Co-plot of areal capacity and coulombic efﬁciency vs. cycling of the Ag|LLZO|Li half-cell. b Charge/discharge proﬁles and (c) co-plot of areal capacity and coulombic efﬁciency vs. cycling of the Ag|LLZO|NCM",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    47.4,
+    513.0,
+    357.2
+   ],
+   "w": 1998,
+   "h": 1292,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_main.pdf",
+   "blank": 0.887,
+   "recrop": "2026-11-24 litdb-curator: auto crop right edge x 502.5 cut the right-axis title 'Coulombic efficiency (%)' of panels a and c (vector paths end at x 509.3); widened to 513.0"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Operando XRD of the Ag|LLZO|Li cell. a Operando XRD patterns and pattern image acquired at 2θ of 10–60° at 30 min/spectra during the ﬁrst three cycles. Inset shows the charge/discharge proﬁle. b Operando XRD pattern image",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    516.6,
+    498.3
+   ],
+   "w": 2013,
+   "h": 1899,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_main.pdf",
+   "blank": 0.687
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Microstructure of the Li-Ag alloy. HAADF-STEM images and corre- sponding overlaid EELS-SIelemental maps of Li and Ag (inset) of a 200-nm-thick Ag| LLZO|Li cell at (a) EoLP and (b) state III. c HAADF-STEM image of a 30-nm-thick Ag| LLZO|Li cell at state III. d SADPs acquired for the Li-Ag alloy region in (a) (left half)",
+   "rotated_deg": 0,
+   "bbox": [
+    52.0,
+    45.0,
+    548.0,
+    380.5
+   ],
+   "w": 2068,
+   "h": 1399,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_main.pdf",
+   "blank": 0.316,
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 68.7 cut the panel letters a-d and the state labels (EoLP / Stage III, y 49.9-58.5); clip starts at y 45.0, ends above the caption block at y 381.9"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1. Experimental set-up for operando SEM. Modified vacuum transfer module and sample holder installed in E-SEM designed to perform operando SEM during electrochemical cycling without exposure to air.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    370.3
+   ],
+   "w": 1952,
+   "h": 1220,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.361
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. Experimental set-up for operando XPS. Custom-made airtight vessel and modified sample holder installed in the XPS instrument designed to conduct operando XPS during electrochemical cycling without exposure to air.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    86.5,
+    531.0,
+    269.2
+   ],
+   "w": 1943,
+   "h": 762,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.492
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. Charge/discharge profiles of (a) Cu, (b) Au, (c) Ag, and (d) Zn|LLZO|Li cells acquired during operando SEM.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    517.8,
+    651.7
+   ],
+   "w": 1888,
+   "h": 2393,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4. Surface and FIB cross-sectional SEM images after operando SEM of (a) the Cu interlayer cell, (b) the Au interlayer cell, (c) the Ag interlayer cell, and (d) the Zn interlayer cell. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    519.2,
+    686.0
+   ],
+   "w": 1894,
+   "h": 2589,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.337
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5. Operando XPS of metal|LLZO|Li cells. Charge/discharge profiles, corresponding XPS spectrum images, and corresponding chemical composition profiles of (a–c) Au, (d–f) Ag, and (g–i) Zn.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    570.0
+   ],
+   "w": 1952,
+   "h": 2052,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.807
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6. Charge/discharge profiles of the Ag|LLZO|Li cell obtained by coin cell experiments and during operando SEM, XPS, and XRD.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    86.5,
+    530.4,
+    367.7
+   ],
+   "w": 1940,
+   "h": 1172,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure 7. (a) Charge/discharge profile of post-mortem Ag|LLZO|Li cell. (b) Operando and (c) post-mortem SEM images at each state of Li plating and stripping.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    86.5,
+    530.4,
+    304.0
+   ],
+   "w": 1940,
+   "h": 907,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.616
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure 8. CP cross-sectioned SEM and BSE images corresponding XEDS elemental mapping images of post-mortem Ag interlayer cell at (a–b) the pristine state, (c–d) EoLS, and (e–f) EoLS.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    484.6
+   ],
+   "w": 1952,
+   "h": 1696,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.319
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Figure 9. (a) Charge/discharge profiles of the Au|LLZO|Li half-cell at the current density of 0.1 mA cm−2. (b) Charge/discharge profiles and (c) co-plot of areal capacity and coulombic efficiency vs. cycling of the Au|LLZO|NCM full cell at different current densities. The cell failed in the early stages of discharge at 0.3 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    406.0
+   ],
+   "w": 1952,
+   "h": 1369,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Figure 10. Charge/discharge profiles of the Ag|LLZO|Li half-cell for CCD performance. The cell failed in the early stages of discharge at 0.9 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    86.5,
+    530.4,
+    369.1
+   ],
+   "w": 1940,
+   "h": 1178,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 13,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Figure 11. (a) Galvanostatic intermittent titration technique (GITT) profiles and (b) calculated Li diffusion coefficients of Li-rich Li-Ag and Li-Au alloys.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    90.2,
+    533.3,
+    326.5
+   ],
+   "w": 1952,
+   "h": 985,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 14,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Figure 12. Operando XRD of the Ag|LLZO|Li cell. (a) Charge/discharge profiles acquired during operando XRD. (b) Operando XRD patterns and (c) pattern image obtained at 2θ of 10–60° at 30 min/spectra during five cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    579.2
+   ],
+   "w": 1952,
+   "h": 2091,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.655
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 15,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Figure 13. Phase identification of the Li-Ag alloy from the operando XRD patterns. The powder patterns of LLZO, Ag, and the  and 3-phases were obtained from the ICDD database (LLZO: PDF# 01-080-6142, Ag: PDF# 00-004-0783, : PDF# 04-003-6862, 3: PDF# 04-003-2052). The powder patterns of the 2- and -phases were simulated from the structures that retain the same - brass space group as the 3-phase1 with lattice parameters obtained from the experimental XRD patterns. The powder pattern of the Li3Ag was also simulated from the crystal structure taken from the Materials Project database (mp-865875), the lattice parameters of which were refined by fitting the experimental XRD patterns.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    505.9
+   ],
+   "w": 1952,
+   "h": 1785,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 16,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Figure 14. Binary phase diagrams of (a) Li-Ag, (b) Li-Zn, (c) Li-Au, and (d) Li-Cu. (a and b) are reproduced from Ref. [1] with permission from the American Chemical Society.2 (c and d) are reproduced from Ref. [2] with permission from Springer Nature.3 [1] Ye, Y. et al. Solid-solution or intermetallic compounds: Phase dependence of the Li-alloying reactions for Li-metal batteries. J. Am. Chem. Soc. 145, 24775–24784 (2023) (DOI 10.1021/jacs.3c08711). [2] Yan, K. et al. Selective deposition and stable encapsulation of lithium through heterogeneous seeded growth. Nat. Energy 1, 16010 (2016) (DOI 10.1038/nenergy.2016.10) 16",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    655.3
+   ],
+   "w": 1952,
+   "h": 2408,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.689
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 18,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Figure 15. Operando XRD of the Zn|LLZO|Li cell. (a) Charge/discharge profile acquired during operando XRD. (b) Operando XRD patterns and (c) pattern image obtained at 2θ of 10–60° at 30 min/spectra during five cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    579.2
+   ],
+   "w": 1952,
+   "h": 2091,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.654
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 19,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Figure 16. Operando XRD of the Au|LLZO|Li cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    86.5,
+    530.4,
+    578.4
+   ],
+   "w": 1940,
+   "h": 2050,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.756
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 20,
+   "file": "fig_S17.png",
+   "caption": "Supplementary Figure 17. (a) Charge/discharge profiles and corresponding (b) dQ/dVcurves of the Ag|LLZO|Li cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    86.5,
+    530.4,
+    277.6
+   ],
+   "w": 1940,
+   "h": 797,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 21,
+   "file": "fig_S18.png",
+   "caption": "Supplementary Figure 18. Operando XRD of the Ag|LLZO|Li cell according to the interval of XRD pattern. (a) Charge/discharge profile. (b) Operando XRD patterns and corresponding (c) pattern image acquired at 2θ of 36–42° at 5 min/spectra during five cycles. (d) Pattern image obtained at 2θ of 10–60° at 30 min/spectra in Fig. 5(a).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    533.3,
+    667.1
+   ],
+   "w": 1952,
+   "h": 2510,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.599
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 22,
+   "file": "fig_S19.png",
+   "caption": "Supplementary Figure 19. Operando XRD of the Ag|LLZO|Li cell with respect to the current density. (a) Charge/discharge profile with the current density profile acquired during operando XRD. (b) Operando XRD pattern image obtained at 2θ of 36–42° at 5 min/spectra. The current density for each cycle was continuously increased to 0.01, 0.05, 0.1, and 0.2 mA cm−2. (c and d) XRD pattern images and voltage with the intensity profiles of the indexed phases vs. areal capacity plots of the first cycle (J = 0.01 mA cm−2) and second cycle (J = 0.05 mA cm−2), respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    645.5
+   ],
+   "w": 1952,
+   "h": 2367,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.659
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 23,
+   "file": "fig_S20.png",
+   "caption": "Supplementary Figure 20. Calculated formation energy convex hull as a function of Li content in the Li-Ag alloy.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    454.0
+   ],
+   "w": 1952,
+   "h": 1569,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 24,
+   "file": "fig_S21.png",
+   "caption": "Supplementary Figure 21. Schematics of the crystal structures of (a) Ag, (b) -LiAg, (c) Li3Ag, (d) 3-Li9Ag4, (e) -Li10Ag3, and (f) 1-Li12Ag.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    395.2
+   ],
+   "w": 1952,
+   "h": 1324,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.712
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 25,
+   "file": "fig_S22.png",
+   "caption": "Supplementary Figure 22. Microstructural changes during TEM sample preparation using the conventional FIB process. FIB-SEM images for (a–c) the slope milling and lift-out process with the deposition of a surface protective layer. Although the surface protective layer of Pt was intended to be deposited with a thickness of approximately 500 nm (according to the experimental protocol developed on a Si substrate), its thickness was more than 2 m, as shown in (b). The thicker Pt layer is attributed to the reaction of Li and Pt. During final thinning after lifting out the sample onto the TEM grid, (d and e) the microstructure of the Li-Ag layer was changed by the Ga+ beam, and (f) dendritic Li grew from the surface protective layer (Pt and C deposition). The TEM sample was transferred from the glove box to FIB without exposure to air using an airtight chamber.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    284.4
+   ],
+   "w": 1952,
+   "h": 862,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.363
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 26,
+   "file": "fig_S23.png",
+   "caption": "Supplementary Figure 23. TEM sample preparation using cryo-FIB. FIB-SEM images of (a–c) the process of slope milling for lift-out without the deposition of surface protective layer, (d) after lift- out onto the TEM grid, and (e–i) the process of stepwise final thinning.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    279.4
+   ],
+   "w": 1952,
+   "h": 841,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.41
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 27,
+   "file": "fig_S24.png",
+   "caption": "Supplementary Figure 24. Microstructural analysis via TEM. (a) HAADF-STEM image III of the 30-nm-thick Ag|LLZO|Li cell at state III and (b) high-magnification images from the red dotted rectangle in (a). (c) STEM-EELS elemental maps from the yellow dotted rectangle in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    311.6
+   ],
+   "w": 1952,
+   "h": 976,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.473
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 28,
+   "file": "fig_S25.png",
+   "caption": "Supplementary Figure 25. Spontaneous reaction between Li and Ag nanoparticles. SEM images (a) before and (b) after the spontaneous reaction for 15 h. (c and d) HAADF-STEM images and (e) corresponding STEM-EELS elemental maps of Li and Ag. Bright-field TEM images (f) before and (g) after the spontaneous reaction and (h) corresponding SADPs with indices for phase identification.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    530.2
+   ],
+   "w": 1952,
+   "h": 1886,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.296
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 29,
+   "file": "fig_S26.png",
+   "caption": "Supplementary Figure 26. Experimental set-up for in-situ electrical probing TEM.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    449.1,
+    492.2
+   ],
+   "w": 1602,
+   "h": 1728,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.402
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 30,
+   "file": "fig_S27.png",
+   "caption": "Supplementary Figure 27. SADPs with phase identifications at (a) 0 min, (b) 6 min, (c) 14 min, and (d) 17 min from the Fig. 6(k and l).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    509.4
+   ],
+   "w": 1952,
+   "h": 1800,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.268
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 31,
+   "file": "fig_S28.png",
+   "caption": "Supplementary Figure 28. (a) Experimental XRD pattern of LLZO pellet with the simulated pattern (PDF# 04-018-9024). (b) Raman spectra of LLZO pellet. (c) XPS survey spectra of LLZO pellet. (d) Fractured surface SEM image of LLZO pellet with the plasma-FIB cross-sectioned BSE image (inset). The XRD pattern of the LLZO pellet and the Raman spectra were well matched to cubic garnet-phase LLZO, and other crystalline phases such as pyrochlore oxide (La2Zr2O7), lithium zirconate (Li2ZrO3) and precursor powders (La2O3 and ZrO2), which form during the synthesis of LLZO, were not detected. The sample was checked for impurities by an XPS survey scan, and only Cl was detected, which was a residue of the HCl used to wash the surface after surface polishing. The grain size was ~ 10 m, and some voids with diameters several hundred nanometers were observed, but overall, the grains were close-packed an",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    77.5,
+    533.3,
+    366.0
+   ],
+   "w": 1952,
+   "h": 1202,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 32,
+   "file": "fig_S29.png",
+   "caption": "Supplementary Figure 29. (a) SEM image of Ag|LLZO|Li cell after continuous e-beam exposure with a current of 10 nA at 5 kV. SEM images of three different regions with the fields of view of (b) 150 m, (c) 30 m, and (d) 6 m.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    86.5,
+    530.4,
+    305.8
+   ],
+   "w": 1940,
+   "h": 914,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.282
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 33,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1. Measured (XRD) and calculated lattice parameters of Ag and Li-Ag alloys. Phase (Space group) Measured lattice parameter (nm) Calculated lattice parameter (nm) References (nm) Ag (Fm-3m) 0.4083 0.4067 (-0.39%) 0.4086a 𝛽-LiAg (Pm-3m) 0.3173 0.3111 (-1.95%) 3.1870a, 0.3169b 𝛾3-Li9Ag4 (I-43m) 0.9588 0.9517 (-0.74%) 0.9601a, 0.9490b 𝛾2-Li10Ag3 (I-43m) 0.9679 0.9593 (-0.89%) 0.9680b Li3Ag (Fm-3m) 0.6532 0.6374 (-2.42%) 0.6400c 𝛾1-Li12Ag (I-43m) 0.9841–0.9898 0.9958 (+0.61%) 0.9800b a PDF 00-004-0783(Ag), PDF 014-019-3267 (LiAg), and PDF 00-002-1097(Li10Ag3) b Freeth, W. E. & Raynor, G. V. The systems magnesium-lithium and magnesium-lithium-silver. J. Inst. Metals 82, 569–574 (1954)4 c The Materials Project mp-865875",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    78.7,
+    525.8,
+    370.3
+   ],
+   "w": 1917,
+   "h": 1216,
+   "dpi": 300,
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "blank": 0.927
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p5 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p4",
+    "p5"
+   ],
+   "resolved": "manual_crop fig_2.png (2026-11-24, litdb-curator) - see figures[f2].manual_crop"
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "ko2025_metal_interlayer_anode_less_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  }
+ ]
+}
