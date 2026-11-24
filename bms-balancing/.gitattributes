@@ -292,3 +292,5 @@ reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_
 reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/** -text
 # 2026-11-24: REIL · COMSOL 인계 묶음의 최상위 파일 (인계문 · 메시지 · 방향 요약 · manifest · 원본 식별 — COMSOL 사용자 보류 · 새 실행 권한 없음) + 이 저장소의 반입 기록 INTAKE — bytes 그대로
 reviews/handoff_reil_comsol_20261124/** -text
+# 2026-11-24 반입: REIL C4-A 구현 요청서 v3 재검토 회신 (REVISION_REQUIRED_BOOTSTRAP_ALLOWLIST_CYCLE · 세부 12 중 11 + C2 문서 범위 종결 · N1 bootstrap 하나 OPEN · 제출 커밋 c7062ce · 실행 승인 아님 · source/ · input/ · basis/ 의 *.py · 검토자 도구 decode_sources.py · package_review.py · static_audit.py = 실행하지 않음 · outside_zip/ = 사용자가 준 DELIVERY_RECORDS.json 원본 + 그 안 raw_base64 셋을 푼 파일) — bytes 그대로
+reviews/review_reil_c4a_impl_v3_prereview_20261124/** -text
