@@ -25,7 +25,9 @@
    "h": 1368,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.832
+   "blank": 0.832,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened (structure diagram / bulk-Li or field-corrected PDOS - outside the W / Li|Li2S axis)"
   },
   {
    "key": "f2",
@@ -45,7 +47,9 @@
    "h": 617,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.944
+   "blank": 0.944,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) + marker centres / fit-line ends read from PDF vector paths (p5)"
   },
   {
    "key": "f3",
@@ -65,7 +69,9 @@
    "h": 2292,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.877
+   "blank": 0.877,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG)"
   },
   {
    "key": "f4",
@@ -85,7 +91,9 @@
    "h": 618,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.925
+   "blank": 0.925,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) + marker centres / fit-line ends read from PDF vector paths (p6)"
   },
   {
    "key": "f5",
@@ -105,7 +113,9 @@
    "h": 895,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.821
+   "blank": 0.821,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened (structure diagram / bulk-Li or field-corrected PDOS - outside the W / Li|Li2S axis)"
   },
   {
    "key": "f6",
@@ -125,7 +135,9 @@
    "h": 641,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.93
+   "blank": 0.93,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) + marker centres / fit-line ends read from PDF vector paths (p7) - slope of the beta-Li3PO4 line = 1.55 vs Table II 1.8"
   },
   {
    "key": "f7",
@@ -145,7 +157,9 @@
    "h": 529,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.747
+   "blank": 0.747,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG)"
   },
   {
    "key": "f8",
@@ -167,7 +181,8 @@
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.951,
    "manual_crop": "2026-11-24 litdb-curator: tool reported f8 as a number gap ('p7 그래픽 없음(img0/draw5)') - Fig. 8 is a vector-only line plot (53 paths) in the right column of p.7 between the body text ending at y 541 and its caption (y 713); clip = union of vector paths (369,563,537,681) + axis tick/label text (334..523, 570..702) + margin",
-   "viewed": false
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) + marker centres / fit-line ends read from PDF vector paths (p7) - intercept -226 vs Table II -216"
   },
   {
    "key": "f9",
@@ -187,7 +202,9 @@
    "h": 1536,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.697
+   "blank": 0.697,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG)"
   },
   {
    "key": "f10",
@@ -207,7 +224,9 @@
    "h": 640,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.962
+   "blank": 0.962,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) + marker centres / fit-line ends read from PDF vector paths (p8)"
   },
   {
    "key": "f11",
@@ -229,7 +248,8 @@
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.925,
    "manual_crop": "2026-11-24 litdb-curator: tool reported f11 as a number gap ('p9 영역 없음') - Fig. 11 is a 4-panel vector PDOS stack (784 paths) filling the right column of p.9 above its caption (y 621); clip = union of vector paths (352,71,537,608) + panel letters (a)-(d) at x 333 + margin",
-   "viewed": false
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) (manual crop QA)"
   },
   {
    "key": "f12",
@@ -249,7 +269,9 @@
    "h": 660,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.938
+   "blank": 0.938,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened (structure diagram / bulk-Li or field-corrected PDOS - outside the W / Li|Li2S axis)"
   },
   {
    "key": "f13",
@@ -271,7 +293,8 @@
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.896,
    "manual_crop": "2026-11-24 litdb-curator: tool reported f13 as a number gap ('p10 영역 없음') - Fig. 13 is a 2-panel vector PDOS stack in the left column of p.10 between the body text ending at y 441 and its caption (y 735); clip = vector cluster (89,454,274,721) + panel letters (a),(b) at x 70 + margin",
-   "viewed": false
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) (manual crop QA) + E_Fermi line x read from PDF vector paths (p10)"
   },
   {
    "key": "f14",
@@ -293,7 +316,8 @@
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.895,
    "manual_crop": "2026-11-24 litdb-curator: tool reported f14 as a number gap ('p11 영역 없음') - Fig. 14 is a 4-panel vector PDOS stack (792 paths) filling the left column of p.11 above its caption (y 621); clip = vector cluster (89,71,275,608) + panel letters (a)-(d) at x 71 + margin",
-   "viewed": false
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) (manual crop QA) + E_Fermi line x read from PDF vector paths (p11)"
   },
   {
    "key": "f15",
@@ -315,7 +339,8 @@
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.902,
    "manual_crop": "2026-11-24 litdb-curator: tool reported f15 as a number gap ('p11 영역 없음') - Fig. 15 is a single vector PDOS plot (152 paths) at the top of the right column of p.11 above its caption (y 226); clip = vector cluster (334,71,537,215) + y-label text at x 332 + margin",
-   "viewed": false
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) (manual crop QA) + E_Fermi line x read from PDF vector paths (p11)"
   },
   {
    "key": "f16",
@@ -335,7 +360,9 @@
    "h": 825,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.854
+   "blank": 0.854,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG)"
   },
   {
    "key": "f17",
@@ -357,7 +384,8 @@
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.883,
    "manual_crop": "2026-11-24 litdb-curator: tool reported f17 as a number gap ('p12 영역 없음') - Fig. 17 is a single vector PDOS plot in the left column of p.12 between Eq. (9) (ends y 551) and its caption (y 724); clip = vector cluster (71,568,275,713) + y-label text at x 69 + margin",
-   "viewed": false
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) (manual crop QA)"
   },
   {
    "key": "f18",
@@ -377,7 +405,9 @@
    "h": 776,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.932
+   "blank": 0.932,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG)"
   },
   {
    "key": "f19",
@@ -397,7 +427,9 @@
    "h": 807,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.904
+   "blank": 0.904,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened (structure diagram / bulk-Li or field-corrected PDOS - outside the W / Li|Li2S axis)"
   },
   {
    "key": "f20",
@@ -417,7 +449,9 @@
    "h": 652,
    "dpi": 300,
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
-   "blank": 0.936
+   "blank": 0.936,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG)"
   },
   {
    "key": "t1",
@@ -439,7 +473,8 @@
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.909,
    "manual_crop": "2026-11-24 litdb-curator: auto extractor returned no table for TABLE I (Roman-numeral caption, right column of p.3, not detected - table_caption_vote 0/0); clip = caption top (y 608) to below the bottom double rule (y 749.7/751.7)",
-   "viewed": false
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) (manual crop QA) + PDF text layer"
   },
   {
    "key": "t2",
@@ -461,7 +496,8 @@
    "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
    "blank": 0.913,
    "manual_crop": "2026-11-24 litdb-curator: auto extractor returned no table for TABLE II (Roman-numeral caption, top of the right column of p.4, not detected - table_caption_vote 0/0); clip = caption top (y 69) to below the bottom double rule (y 395.6/397.6), above the resumed body text (y 424)",
-   "viewed": false
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG) (manual crop QA) + PDF page render p4 + PDF text layer"
   }
  ],
  "missing_labels": [

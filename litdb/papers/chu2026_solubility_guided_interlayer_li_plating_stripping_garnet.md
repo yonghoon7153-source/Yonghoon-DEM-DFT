@@ -2,25 +2,23 @@
      ① 본문 21 쪽 · SI 79 쪽을 쪽 단위로 다 읽었다 (SI 쪽 지도는 §4h).
      ② 크롭 44장 (그림 39 + 표 5) — 그림 39장은 전부 봤다 (22장 원해상도 · 17장 접촉 시트). 표 5장 중 이미지로 본 것은 1장 (나머지 4장은 PDF 글자로 읽었다).
         도구가 놓친 첫 쪽 5장 (Fig. S23 · Fig. S25 · Table S1 두 쪽 · Table S2) 은 손으로 잘랐고, 본문 글 한 줄이 섞인 SI 크롭 6장은 다시 잘랐다 (figures.json 의 manual_crop · recrop).
-     ③ 보조 영상 5편 (b7 · b10 · b11 · b12 · b13) 은 2 초 간격 + 끝 장면 52장을 뽑아 직접 봤다 (§9b). ⚠ 받은 5편은 **전부 도금 영상**이다 — 박리 영상 (Video S10–S12) 은 없다.
-     ④ 우리 점착 (W) 값은 싣지 않는다 — 위치만 (§7). -->
+     ③ 보조 영상 6편 (b4 · b7 · b10 · b11 · b12 · b13) 은 2 초 간격 + 끝 장면 (b4 는 처음 4 s 를 0.5 s 간격으로 더) 77장을 뽑아 직접 봤다 (§9b). b4 = Cu 도금 → 박리 (Video S10) · 나머지 다섯은 도금 (S3 · S6–S9).
+     ④ 우리 점착 (W) 값은 위치만 적었다 (§7). -->
 
 # Solubility-guided interlayer design toward balanced lithium metal plating and stripping in garnet solid-state batteries — Chu et al. (*Energy Environ. Sci.* **2026**, 19, 5836–5856)
 
-> slug `chu2026_solubility_guided_interlayer_li_plating_stripping_garnet` · DOI `10.1039/D6EE03852B` · type `exp 주 (CCD · EIS · DRT · CA · LSV · GITT · operando SEM · post-mortem SEM) + 계산 보조 (FHI-aims DFT 흡착 · PET-OAM-XL 무작위 배치 · PET-MAD MD)` · PDF `litdb/inbox/chu2026_solubility_interlayer_main.pdf` (본문 21 pp) + `litdb/inbox/chu2026_solubility_interlayer_SI.pdf` (SI 79 pp · Fig. S1–S28 · Table S1–S2) + 보조 영상 5편 `litdb/inbox/chu2026_solubility_interlayer_video_b{7,10,11,12,13}.mp4` (= Video S3 · S6 · S7 · S8 · S9 — §9b 에서 확인) · digested `2026-11-24` · status ✅ · 태그 **[외부]**
+> slug `chu2026_solubility_guided_interlayer_li_plating_stripping_garnet` · DOI `10.1039/D6EE03852B` · type `exp 주 (CCD · EIS · DRT · CA · LSV · GITT · operando SEM · post-mortem SEM) + 계산 보조 (FHI-aims DFT 흡착 · PET-OAM-XL 무작위 배치 · PET-MAD MD)` · PDF `litdb/inbox/chu2026_solubility_interlayer_main.pdf` (본문 21 pp) + `litdb/inbox/chu2026_solubility_interlayer_SI.pdf` (SI 79 pp · Fig. S1–S28 · Table S1–S2) + 보조 영상 6편 `litdb/inbox/chu2026_solubility_interlayer_video_b{4,7,10,11,12,13}.mp4` (= Video S10 · S3 · S6 · S7 · S8 · S9 — §9b 에서 확인) · digested `2026-11-24` · status ✅ · 태그 **[외부]**
 
 > elements: Li, Cu, Au, Ag, Pt, Pd, La, Zr, Ta, O
 > methods: DFT, MD, MLIP, Raman
 
 > **저자**: **Hyunwon Chu** (1저자 · MIT DMSE + TUM 화학) · Christian Lerch (JLU Giessen 물리화학 · ZfM) · **Sanggyu Chong** (EPFL 계산과학·모델링 연구실 + Oxford 무기화학 — DFT · MD 담당) · Lea Schulz (TUM) · **Till Fuchs** (JLU Giessen 실험물리 I · ZfM) · Kun Joong Kim (TUM) · Moran Balaish (TUMint) · Harry L. Tuller (MIT) · **Jürgen Janek** (JLU Giessen) · **Jennifer L. M. Rupp\*** (MIT · TUM · TUMint · Fritz Haber 연구소 · 교신 `jrupp@tum.de`).
 >
-> **공저 PI 표지**: 없음 — Michigan 사카모토 교수는 이 논문 저자 아님 (참고문헌에만 · §2 · Crossref 저자 메타 10 명으로 확인).
->
 > **서지**: 투고 2026-06-12 · 수락 2026-07-27 · 온라인 2026-08-17 · *Energy Environ. Sci.* 2026, **19** (17), 5836–5856 · OA (PDF 표기 CC-BY 4.0 · Crossref 메타 CC BY 3.0 URL) · 참고문헌 본문 103 · SI 158 · 자금 MIT MRSEC (NSF DMR-1419807) · US DOE–BMBF 공동과제 CatSE/CatSE2 · **LiSI2 (03XP0509B)** · 관정재단 · 바이에른 경제부 · US DHS CWMD (22CWDARI00046) · DFG EXC 2089/1 · 데이터는 SI + 요청 시
 >
 > **계보**: [Yan16] (Cui 그룹 *Nat. Energy* 1, 16010 — 액체 전해질에서 '용해도로 친Li 성을 매긴다' 의 출발점 · ref 36) · [Krauskopf19Joule] (LLZO 위 Li 성장 동역학 · ref 42) · [Fuchs23CuLLZO] (같은 Giessen operando SEM 미세전극 · ref 71 = SI ref 121 · `fuchs2023_cu_llzo_anode_free_li_growth_modes.md`) · [Haslam25] (합금 인터레이어 무음극 · ref 48) → **본 논문** (Cu · Au · Ag 세 금속을 **같은 조건**에서 견주고, M 의 Li 속 고용도로 친Li 성을 매겨 '화산형' CCD 를 보인 뒤 Pt · Pd 로 예측을 시험)
 
-> **본 digest 에서 실제로 본 그림 (2026-11-24)**: 본문 9장 전부 원해상도. SI 그림 28 개 (크롭 30장 — S23 · S25 가 두 쪽) 전부: 원해상도 13장 (`Fig. S4` · `Fig. S5` · `Fig. S9` · `Fig. S13` · `Fig. S16` · `Fig. S17` · `Fig. S18` · `Fig. S20` · `Fig. S21` · `Fig. S22` · `Fig. S23` 두 쪽 · `Fig. S24`) · 접촉 시트 (≈1000 px 폭) 17장 (S1 · S2 · S3 · S6 · S7 · S8 · S10 · S11 · S12 · S14 · S15 · S19 · S25 두 쪽 · S26 · S27 · S28 — S12 · S26 은 표 부분을 다시 확대). 표: `Table S1` 둘째 쪽 (`tab_S1_cont1.png`) 만 이미지로 봤고, 나머지 넷은 PDF 글자 층 (표 추출) 으로 읽었다. 영상: 5편 52장 전부 접촉 시트 (640 px 폭) + 원해상도 4장 (b7 첫 장 · b10 · b11 · b13 끝 장) + b7 · b12 끝 장 (68 % 축소).
+> **본 digest 에서 실제로 본 그림 (2026-11-24)**: 본문 9장 전부 원해상도. SI 그림 28 개 (크롭 30장 — S23 · S25 가 두 쪽) 전부: 원해상도 13장 (`Fig. S4` · `Fig. S5` · `Fig. S9` · `Fig. S13` · `Fig. S16` · `Fig. S17` · `Fig. S18` · `Fig. S20` · `Fig. S21` · `Fig. S22` · `Fig. S23` 두 쪽 · `Fig. S24`) · 접촉 시트 (≈1000 px 폭) 17장 (S1 · S2 · S3 · S6 · S7 · S8 · S10 · S11 · S12 · S14 · S15 · S19 · S25 두 쪽 · S26 · S27 · S28 — S12 · S26 은 표 부분을 다시 확대). 표: `Table S1` 둘째 쪽 (`tab_S1_cont1.png`) 만 이미지로 봤고, 나머지 넷은 PDF 글자 층 (표 추출) 으로 읽었다. 영상: 6편 77장 전부 접촉 시트 (640 px 폭) + 원해상도 5장 (b4 · b7 첫 장 · b10 · b11 · b13 끝 장) + b7 · b12 끝 장 · b4 14 / 22 / 32 s 장 (68 % 축소).
 > 그림에서만 읽은 값은 **`figure-read ≈`**, 논문 값으로 우리가 계산한 값은 **`우리 산수`** 로 표시했다. 본문 명시값은 쪽을 단다 (p.N = 본문 PDF N 쪽 = 저널 5835+N · SI p.N = SI PDF N 쪽).
 
 ---
@@ -402,7 +400,7 @@ D_Li (`Fig. S24` · 원해상도): D(t) 는 평탄에서 0 이고 **평탄 사�
 | 전류 · 전하 | 50–1000 µA cm⁻² · 16 µAh cm⁻² | 100–1000 µA cm⁻² · 50 µAh cm⁻² | 전류 범위 겹침 · 전하 3 배 |
 | Cu 핵 밀도 | ≈0.7 → ≈6.1 ×10⁷ cm⁻² (전류 ↑ 에 **증가**) | 1.52 · 1.44 · 0.71 ×10⁷ cm⁻² (전류 ↑ 에 **감소**) | 차수는 같고 방향이 반대 — 저자는 위스커가 전류를 끌어간다고 해석 · 세는 시점 (전하 3 배 · 합쳐짐) 차이도 있다 |
 | Cu 위스커 | 100 · 400 nm Cu 를 뚫고 위스커 | 0.5 · 1 mA cm⁻² 에서 위스커 · 영상 b11 에서 원판 밖까지 (≈12–25 µm) | 같은 현상 (얇은 Cu 막 관통) |
-| 벗기기 CE | 13 % (50 µA cm⁻² · 얇은 막 · 그 논문 SI 첫 그림) | Cu 7 % (0.5 mA cm⁻²) · Au 30 % · Ag 72 % | 같은 '덮임 낮으면 dead Li' 결론을 금속별로 확장 |
+| 벗기기 CE | 13 % (50 µA cm⁻² · 얇은 막 · 그 논문 SI 첫 그림) | Cu 7 % (0.5 mA cm⁻²) · Au 30 % · Ag 72 % · Cu 박리 영상 (b4 = S10) 에서 고립 위스커는 박리 구간 내내 남는다 | 같은 '덮임 낮으면 dead Li' 결론을 금속별로 확장 |
 | 빔 조건 | 미기재 | 영상 데이터바에서만 (2 kV · InLens · 조리개 30 µm) | 여전히 빔 전류 · 선량 없음 |
 | 반복 수 | 조건당 1 | 조건당 1 (operando) · 대칭 셀 2 | 같은 한계 |
 | CCD 해석 | — | Fuchs 의 다른 편 (*Adv. Energy Mater.* 13, 2302383 (2023) · ref 30 · CCD 시험 평가) 을 인용하면서도 CCD 절차의 반주기 시간을 안 적음 | 같은 그룹이 지적한 CCD 절차 의존성을 이 논문은 통제하지 않았다 (§10-⑧) |
@@ -473,7 +471,7 @@ D_Li (`Fig. S24` · 원해상도): D(t) 는 평탄에서 0 이고 **평탄 사�
 | S15 | Cu 셀 단면 10000 · 5000 · 2000× — 박리 쪽 최대 25 µm 공극 | 공극 크기 차수 (Cu ≫ Ag) |
 | S16 | 전류 과도 세 단계 도식 · 무차원 곡선 (Au · Ag 는 모형 밖) · t_m · I_m · N₀ 표 | ⛔ N₀ 재현식 = 1.81×10⁴ / (t_m I_m)² — 핵 밀도 아님 |
 | S17 | Au 0.5 mA cm⁻² 합금 단계 전위 + SEM 0 · 1 · 3 · 5 min · operando 핵 밀도 표 | 미세전극 과전압 ≈0.5 V · Au 핵 밀도는 못 셈 |
-| S18 | 박리 전 · 도금 · 박리 SEM · 전압–용량 (CE Cu 7 · Au 30 · Ag 72 %) | **유일한 박리 직접 영상 — Ag 가 가장 가역적** (§10-③) |
+| S18 | 박리 전 · 도금 · 박리 SEM · 전압–용량 (CE Cu 7 · Au 30 · Ag 72 %) | **Ag 박리의 유일한 직접 영상 — Ag 가 가장 가역적** (§10-③) · 박리 영상은 Cu 한 편만 받았다 (b4 = S10 · 이 그림과 다른 원판 · §9b) |
 | S19 | Ag 0.56 정 · 역 EIS 표 (R_int 186.4 → 214.1 → 183.2 Ω · C_int −23 %) | 정방향 (박리) 중 접촉 손실 → 역방향 회복 |
 | S20 | Ag 셀 단면 10000 · 5000 · 2000× — 박리 쪽 공극 띠 시야 전체 · 도금 쪽 고른 띠 | 보고서 8-1 · DEM 계면 공극 분포의 정성 표적 (서브 µm · 넓게 흩어짐) |
 | S21 | Li–Au 상평형도 · MP 에너지 · 평형 전압 표 ('Li/Ag' 오기) · GITT OCV (≈0.4 · 0.25 · 0.12 V) | GITT 0 V 도달 ≈0.029 '(mAh cm⁻²)' — 시간축과 0.28 배 어긋남 |
@@ -487,43 +485,49 @@ D_Li (`Fig. S24` · 원해상도): D(t) 는 평탄에서 0 이고 **평탄 사�
 | Table S1 | 인터레이어 없음 57 행 (조성 · 합성 · 소결 · 밀도 · 입경 · σ · R · CCD · 주기 · 온도 · 참고문헌) — 3 쪽 | 문헌 CCD 기준 범위 (LLZO) · Evap · Rub 처리 포함 |
 | Table S2 | 합금 인터레이어 37 행 (Au 20 · Sr 음극 4 · Al 3 · Mg 음극 2 · Ag · Zn · Zn,Cu · Sb · C · In · W 각 1) — 2 쪽 | Au 문헌 산포 (R < 10 에서 CCD 0.48–1.40) |
 
-### 9b. 영상 판독 ★ (받은 5편 · 직접 본 장면만)
+### 9b. 영상 판독 ★ (받은 6편 · 직접 본 장면만)
 
-**받은 것 · 안 받은 것.** 받은 영상 5편 (`b7` · `b10` · `b11` · `b12` · `b13`). b4 와 Cu · Au 도금 6 편 (합 7 편 · b2 · b3 · b4 · b5 · b6 · b8 · b9) 은 받지 않았다 (본문 · SI 그림으로 대신). ⚠ 아래 확인 결과대로라면 **안 받은 b2–b5 안에 박리 영상 셋 (Video S10–S12) 이 있다.**
+**받은 것 · 받을 수 있는 것.** 받은 영상 6편 (`b4` · `b7` · `b10` · `b11` · `b12` · `b13`). b4 는 사용자 PC 에서 반으로 자른 두 조각을 붙인 파일이다 (41.2 MB · 32.3 s · 전체 디코드 오류 0 · sha256 `4796e5b3…0307455b`). 나머지 b2 · b3 · b5 · b6 · b8 · b9 는 사용자 PC 에 없다 (검색 확인) — **더 받을 수 있는 영상은 없다.**
 
-**뽑은 방법 (`--clean` 때 지워지므로 명령을 남긴다)** — 1920×1080 · 24 fps · H.264 · AAC 오디오 트랙은 있지만 **무음** (mean −91.0 dB · max −90.3 dB):
+**뽑은 방법 (`--clean` 때 지워지므로 명령을 남긴다)** — 1920×1080 · 24 fps · H.264 · AAC 오디오 트랙은 있지만 **무음** (mean −91.0 dB · max −90.3 … −91.0 dB):
 ```
 D=litdb/figures/chu2026_solubility_guided_interlayer_li_plating_stripping_garnet/video_frames; mkdir -p $D
-for b in b7 b10 b11 b12 b13; do f=litdb/inbox/chu2026_solubility_interlayer_video_$b.mp4
+for b in b4 b7 b10 b11 b12 b13; do f=litdb/inbox/chu2026_solubility_interlayer_video_$b.mp4
   ffmpeg -hide_banner -nostdin -y -i $f -vf "fps=1/2,showinfo" -q:v 2 $D/${b}_%03d.jpg
   ffmpeg -hide_banner -nostdin -y -sseof -0.1 -i $f -frames:v 1 -q:v 2 $D/${b}_end.jpg; done
+# b4 만: 처음 4 s 를 0.5 s 간격으로 더
+ffmpeg -hide_banner -nostdin -y -t 4 -i litdb/inbox/chu2026_solubility_interlayer_video_b4.mp4 -vf "fps=2,showinfo" -q:v 2 $D/b4_h%03d.jpg
 ```
-장면 시각 = ffmpeg showinfo 출력 시각 그대로: `_001` = 0 s · `_002` = 2 s · … (`_k` = 2(k−1) s) · `_end` = 길이 − 0.1 s. 길이 b7 19.25 · b10 18.09 · b11 18.92 · b12 19.67 · b13 18.29 s → 52장 (b7 10 + 끝 · b10 9 + 끝 · b11 9 + 끝 · b12 10 + 끝 · b13 9 + 끝).
+장면 시각 = ffmpeg showinfo 출력 시각 그대로: `_001` = 0 s · `_002` = 2 s · … (`_k` = 2(k−1) s) · `b4_h001` = 0 s · `b4_h002` = 0.5 s · … (`b4_hk` = 0.5(k−1) s · 3.5 s 까지) · `_end` = 길이 − 0.1 s. 길이 b4 32.33 · b7 19.25 · b10 18.09 · b11 18.92 · b12 19.67 · b13 18.29 s → 77장 (b4 16 + 0.5 s 8 + 끝 · b7 10 + 끝 · b10 9 + 끝 · b11 9 + 끝 · b12 10 + 끝 · b13 9 + 끝).
 
-**어느 영상인가 — 'bN = Video S(N−1)' 가정은 틀렸다.** 화면에 시간 · 전류 · 전압 표시는 없고, 아래 SEM 데이터바 (GeminiSEM 560 · 2.00 kV · InLens · WD 6.7 mm · 조리개 30 µm · 1.40 kX (b12 1.34 kX) · 폭 81.66 µm (b12 85.13 µm) · ≈2.6–4.4×10⁻⁶ mbar · 2024-07-17 · Physikalisch-Chemisches Institut) 와 파일 이름, 그리고 **끝 장면을 `Fig. 6c` 와 맞대어** 정했다.
+**어느 영상인가 — 처음 가정 'bN = Video S(N−1)' 과, 다섯 편으로 세운 두 가설 (글자 순 · 되감기) 이 다 틀렸다.** 화면에 시간 · 전류 · 전압 표시는 없다. 아래 SEM 데이터바와 파일 이름, 그리고 **끝 장면을 `Fig. 6c` · `Fig. S18a` 와 맞대어** 정했다.
+- b7 · b10–b13 데이터바: GeminiSEM 560 · 2.00 kV · InLens · WD 6.7 mm · 조리개 30 µm · 1.40 kX (b12 1.34 kX) · 폭 81.66 µm (b12 85.13 µm) · ≈2.6–4.4×10⁻⁶ mbar · **2024-07-17**.
+- b4 데이터바: 2.00 kV · **SE2** · WD 4.9 mm · 조리개 **60 µm** · 1.20 kX · 폭 95.27 µm · 2.33×10⁻⁶ mbar · **2026-02-27** — 다른 날 · 다른 검출기 · 다른 탐침 방향 (오른쪽에서 수평) 이다. `Fig. S18a` 의 영상 꼴 (밝은 배경 · 오른쪽 탐침) 과 같은 계열이다.
 
-| 파일 | 데이터바 파일 이름 (판독) | 끝 장면이 맞는 그림 | 판정 | 가정 (S(N−1)) |
+| 파일 | 데이터바 파일 이름 (판독) | 맞댄 그림 | 판정 | 처음 가정 (S(N−1)) |
 |---|---|---|---|---|
+| **b4** | `CL_Cu025.tif` | `Fig. S18a` 계열 (2026 판 · SE2 · 오른쪽 탐침) · ⚠ `Fig. S18a` Cu 칸과는 **다른 원판** (긁힘 무늬 · 가운데 이물 · 위스커 꼴이 다름) | **Video S10 · Cu 도금 → 박리** (Cu 박리 영상 · 전류 표시 없음 — 캡션대로면 0.5 mA cm⁻²) | S3 (Ag 0.1) ✗ |
 | b7 | `Ag_LLZO_05.tif` | `Fig. 6c` **Ag 0.1** (매끈한 원판 · 오른쪽 밖 물결 선 · 왼쪽 점) | **Video S3 · Ag 0.1 mA cm⁻² 도금** | S6 ✗ |
 | b10 | `Ag_LLZO_11.tif` | `Fig. 6c` **Ag 0.5** (촘촘한 패인 결 · 탐침 끝 검은 삼각) | **Video S6 · Ag 0.5 도금** | S9 ✗ |
 | b11 | `Cu_LLZO_01.tif` | `Fig. 6c` **Cu 1** (왼쪽 가장자리 갈고리 위스커 · 가운데 긴 고리) | **Video S7 · Cu 1 도금** | S10 (박리) ✗ |
 | b12 | `Au_LLZO_12.tif` | `Fig. 6c` **Au 1** (고운 결 · 탐침 위 세로 긁힘 · 오른쪽 아래 가장자리 덩어리 · 밖의 검은 얼룩) | **Video S8 · Au 1 도금** | S11 (박리) ✗ |
 | b13 | `Ag_LLZO_01.tif` | `Fig. 6c` **Ag 1** (패인 결 + 위스커 덩어리 둘 · 왼쪽 위 밖 부스러기) | **Video S9 · Ag 1 도금** | S12 (박리) ✗ |
-⇒ b7 → S3 · b10 → S6 · b11 → S7 · b12 → S8 · b13 → S9 = **bN = S(N−4)**. 이것은 RSC 가 파일을 **글자 순** (S1 · S10 · S11 · S12 · S2 · … · S9) 으로 번호를 매겼다고 보면 다 맞는다: **b2 = S1 (Cu 0.1) · b3 = S10 (Cu 박리) · b4 = S11 (Au 박리) · b5 = S12 (Ag 박리) · b6 = S2 (Au 0.1) · b8 = S4 (Cu 0.5) · b9 = S5 (Au 0.5)** (가설 — 다른 가능성은 '넷 밀림 · 되감기' 로 b2–b4 = S10–S12 · b5 = S1). 어느 쪽이든 **Ag 박리 영상은 b4 또는 b5** 다. 확인 방법: b3 첫 장면이 Cu 원판이고 이미 Li (위스커) 가 올라와 있으면 글자 순 가설이 맞다.
+⇒ **b4 = S10 (Cu 박리)** · b7 → S3 · b10 → S6 · b11 → S7 · b12 → S8 · b13 → S9. 글자 순 가설 (b4 = S11 Au 박리) 도, 되감기 가설 (b4 = S12 Ag 박리) 도 아니다 — 판정의 근거는 데이터바의 **Cu** 와 2026 판 촬영 조건이다. 남은 넷 (b2 · b3 · b5 · b6) 은 S1 · S2 · S11 · S12 이고, 번호가 이어진다고 보면 **b5 = S11 (Au 박리) · b6 = S12 (Ag 박리) · b2 = S1 · b3 = S2** 가 가장 단순하다 (가설). 어느 쪽이든 넷 다 사용자 PC 에 없다 → **Au · Ag 박리 영상은 받을 수 없다.**
 
-**장면별 판독 (접촉 시트로 52장 전부 · 원해상도 b7_001 · b10_end · b11_end · b13_end · 축소 b7_end · b12_end)**
+**장면별 판독 (접촉 시트로 77장 전부 · 원해상도 b4_001 · b7_001 · b10_end · b11_end · b13_end · 축소 b7_end · b12_end · b4 14 / 22 / 32 s 나란히 (68 %) · `Fig. S18a` Cu 칸 대조)**
 
 | 영상 | 본 장면 | 판독 | 논문 서술과 |
 |---|---|---|---|
+| **b4 (S10 · Cu 도금 → 박리)** | 0–3.5 s 0.5 s 간격 8장 · 0–30 s 2 s 간격 16장 + 끝 | **0 s** 맨 Cu 원판 (지름 `figure-read ≈`54 µm) — 연마 긁힘 · 검은 점 몇 개 · 가운데 불규칙한 이물 · 탐침 끝 부스러기. **0.5–1 s** 원판 전체에 작은 돌기가 한꺼번에 돋는다 → **1.5–3.5 s** 돌기가 촘촘해지며 어두워지고 가운데 이물 자리에서 위스커가 솟는다 (3.5 s 에 `figure-read ≈`5–8 µm). **4–14 s** 원판 전체가 어두운 둥근 덩이 (`figure-read ≈`1–2 µm) 로 덮이고 위스커는 길어져 굽은 채 원판 밖 왼쪽까지 (`figure-read ≈`≥ 20 µm) · 왼쪽 아래에 작은 위스커 하나 더. **14–22 s** 덩이 밭은 그대로인데 긴 위스커의 꼴이 C 자에서 L 자로 바뀌며 자리를 옮긴다. **22–32 s** 덩이가 작고 납작해지며 원판이 밝아지고 (고운 뼈대 결 · 검은 구멍) **두 위스커는 꼴 그대로 남는다** | ✅ SI p.46 *"isolated Li chunks fail to maintain continuous electrical pathways and remain trapped … as 'dead Li'"* — 덩이 밭은 줄고 고립된 위스커는 안 줄어드는 장면과 맞다 · ⚠ **CE 7 % 는 영상으로 확인 못 한다** (전압 · 전하 표시 없음 · 위에서 보는 SEM 으로는 줄어든 부피를 못 잰다) · ⚠ `Fig. S18a` 의 Cu 원판과 다른 원판이라 `Fig. S18b` 의 CE 7 % 곡선과 같은 실행인지 알 수 없다 · ⚠ 도금 → 박리 전환 시점이 화면에 없다 (14–22 s 사이로 보임) · `Fig. 6c` Cu (2024 판 · 띄엄띄엄한 입자) 보다 핵이 훨씬 촘촘하다 — 촬영일 · 전극이 다르다 |
 | b7 (S3 · Ag 0.1) | 0–18 s 10장 + 끝 | 0 s 매끈한 원판 (가장자리 고운 결) → 2–8 s 원판이 밝아지며 고운 결 · 연마 긁힘이 십자로 드러남 → **10 s 화면 전체가 어두워짐 (배경 · 탐침도 같이)** → 12 s 전체가 밝게 포화 → 14–16 s 가로 띠 (주사 흔들림) → 18 s · 끝 다시 회색 고운 결 · **낱개 핵은 끝까지 안 보인다** | ✅ `Fig. 6c` Ag 0.1 '매끈' · `Fig. S17b` Ag 0.1 핵 밀도 '—' 와 맞다 · ⚠ '명암 변화 = 표면 아래 합금' (p.7) 은 이 영상에서 **화면 전체 밝기 변화 (영상 처리 · 대전)** 와 섞여 있어 그것만으로 가를 수 없다 |
 | b10 (S6 · Ag 0.5) | 0–16 s 9장 + 끝 | 0 s 탐침 끝 검은 삼각 결함 · 긁힘 → 2 s 고운 알갱이 → 4–8 s **어두운 점 (≈0.5–1 µm) 이 원판 전체에 고르게 생겨 촘촘해짐** → 10 s 이후 스펀지 같은 패인 결로 굳음 · 위스커 없음 | ✅ '고르고 고운 결' (p.8) · ⚠ SI 의 *"after ~15 s"* 는 영상 시각인지 실제 시각인지 알 수 없다 (시간 표시 없음 · 패인 결은 영상 4–6 s 부터) · ⚠ Ag 의 '핵' 은 **어두운 점**으로 보이고 Cu 의 Li 입자 (밝은 윤곽 · 돌출) 와 명암이 반대다 — 같은 잣대로 셌는지 논문은 말하지 않는다 (`우리 판독`) |
-| b11 (S7 · Cu 1) | 0–16 s 9장 + 끝 | 0 s 원판에 작은 검은 점 둘 → 2–4 s 그 자리에서 꼬인 위스커가 솟음 · 탐침 둘레에 작은 입자 무리 → 6–16 s 위스커가 길어지고 굽어 가운데 긴 고리 (`figure-read ≈` ≈25 µm) · 왼쪽 갈고리는 원판 밖으로 (≈12 µm · 굵기 ≈1–1.4 µm) | ✅ *"pronounced filament growth"* (p.8) · 얇은 Cu 막 (100 nm) 을 Li 가 뚫고 나오는 [Fuchs23CuLLZO] 와 같은 현상 · 위스커가 **처음부터 있던 결함점**에서 시작한다 |
-| b12 (S8 · Au 1) | 0–18 s 10장 + 끝 | 0–2 s 고운 결 원판 → 4 s 아래 · 왼쪽 테두리가 밝아지고 오른쪽 아래가 명암이 바뀜 (번지는 경계) → 6–18 s 고운 결이 전체를 덮고 작은 검은 점 몇 개 · 오른쪽 아래 가장자리에 작은 덩어리 하나 | ✅ *"Au and Ag maintained much finer structures"* (p.8) · 명암 경계가 번지는 장면은 '합금 → 금속 Li' 순서와 맞지만 S5 (0.5 mA cm⁻²) 의 '가운데에서 바깥으로 어두워짐' 은 받지 않은 영상이라 확인 못 함 |
+| b11 (S7 · Cu 1) | 0–16 s 9장 + 끝 | 0 s 원판에 작은 검은 점 둘 → 2–4 s 그 자리에서 꼬인 위스커가 솟음 · 탐침 둘레에 작은 입자 무리 → 6–16 s 위스커가 길어지고 굽어 가운데 긴 고리 (`figure-read ≈` ≈25 µm) · 왼쪽 갈고리는 원판 밖으로 (≈12 µm · 굵기 ≈1–1.4 µm) | ✅ *"pronounced filament growth"* (p.8) · 얇은 Cu 막 (100 nm) 을 Li 가 뚫고 나오는 [Fuchs23CuLLZO] 와 같은 현상 · 위스커가 **처음부터 있던 결함점**에서 시작한다 (b4 도 같다 — 가운데 이물 자리) |
+| b12 (S8 · Au 1) | 0–18 s 10장 + 끝 | 0–2 s 고운 결 원판 → 4 s 아래 · 왼쪽 테두리가 밝아지고 오른쪽 아래가 명암이 바뀜 (번지는 경계) → 6–18 s 고운 결이 전체를 덮고 작은 검은 점 몇 개 · 오른쪽 아래 가장자리에 작은 덩어리 하나 | ✅ *"Au and Ag maintained much finer structures"* (p.8) · 명암 경계가 번지는 장면은 '합금 → 금속 Li' 순서와 맞지만 S5 (0.5 mA cm⁻²) 의 '가운데에서 바깥으로 어두워짐' 은 받지 못한 영상이라 확인 못 함 |
 | b13 (S9 · Ag 1) | 0–16 s 9장 + 끝 | 0 s 원판 가운데 오른쪽 · 아래에 작은 검은 결함 · 왼쪽 위 밖 부스러기 (처음부터) → 2 s 그 결함 자리에서 구겨진 조각 (위스커) 이 솟음 → 4–16 s 두 덩어리 (≈5–8 µm) 로 자라고, 나머지 원판은 b10 처럼 어두운 점의 패인 결 | ✅ main *"only minor whisker signs on Ag"* (p.8) · SI *"emerging from filament-like surface defects"* (SI p.44) · ✗ SI *"whisker growth rapidly dominates the morphology"* — 위스커는 결함 두 곳에 국한되고 원판 대부분은 고른 결이다 |
 
 **본문 · SI 서술과 맞는지 — 요청된 셋**
-- **Ag 박리 때 공공 · 공극이 뭉친다**: 받은 영상에 **박리 장면이 없다** (전부 도금). 영상으로 판정 불가. 박리 쪽 시각 자료는 `Fig. S18a` 정지 사진 (Ag 박리 뒤 알갱이 결이 남지만 밝아짐 · CE 72 %) 과 파괴 셀 단면 (`Fig. 7c` · `Fig. S20`) 뿐이다. 도금 영상 b10 · b13 의 어두운 점 (패인 결) 이 공극인지 Li 핵인지는 위에서 보는 SEM 으로 가를 수 없다.
-- **Cu dead Li · CE 7 %**: 박리 영상 (S10) 이 없어 영상으로는 확인 못 함. `Fig. S18a` (원해상도) 의 Cu 도금 · 박리 사진이 거의 같다는 것은 봤다 (dead Li 와 맞다). b11 (Cu 1 도금) 은 위스커 · 고립 입자가 많은 형태 — '덮임이 낮아 끊긴 Li 가 남는다' 는 해석의 앞 단계와 맞다.
+- **Ag 박리 때 공공 · 공극이 뭉친다**: Ag 박리 영상 (S12) 은 받을 수 없다 → **영상으로 판정 불가로 닫는다.** 박리 쪽 시각 자료는 `Fig. S18a` 정지 사진 (Ag 박리 뒤 알갱이 결이 남지만 밝아짐 · CE 72 %) 과 파괴 셀 단면 (`Fig. 7c` · `Fig. S20`) 뿐이다. 도금 영상 b10 · b13 의 어두운 점 (패인 결) 이 공극인지 Li 핵인지는 위에서 보는 SEM 으로 가를 수 없다.
+- **Cu dead Li · CE 7 %**: b4 (S10) 에서 **고립된 위스커 둘이 박리 구간 내내 꼴 그대로 남고, 원판을 덮은 덩이 밭만 작아지는 것** 을 봤다 — 'dead Li' 서술과 맞다. 'CE 7 %' 라는 양은 영상으로 확인 못 한다 (전압 · 전하 표시 없음 · b4 원판은 `Fig. S18a` 의 Cu 원판과 다르다). `Fig. S18a` 정지 사진 (원해상도) 의 Cu 도금 · 박리 사진이 거의 같다는 것도 봤다.
 - **Ag 1 mA cm⁻² 위스커**: b13 에서 확인 — 단 '국한' (main) 이 맞고 '지배' (SI) 는 과장이다.
 
 ---
@@ -575,7 +579,7 @@ for b in b7 b10 b11 b12 b13; do f=litdb/inbox/chu2026_solubility_interlayer_vide
 
 ⑭ **혼성 전지는 인터레이어를 시험하지 않는다.** 양극 쪽 액체 전해질 · 셀 하나 · 0.23–0.37 mA cm⁻² (CCD 아래) · 평균 CE 99.1 % 는 액체 혼성 셀로는 높지 않다.
 
-⑮ **영상.** 시간 · 전압 표시가 없어 장면을 전하에 못 맞춘다. 화면 전체 밝기 변화 · 주사 띠 (b7) 가 '명암 변화' 와 섞인다. Ag 의 핵은 어두운 점 · Cu 의 핵은 밝은 입자 — 세는 기준이 같았는지 모른다. 공개 영상 번호 (bN) 와 SI 번호가 넷 밀려 있다 (§9b).
+⑮ **영상.** 시간 · 전압 표시가 없어 장면을 전하에 못 맞춘다. 화면 전체 밝기 변화 · 주사 띠 (b7) 가 '명암 변화' 와 섞인다. Ag 의 핵은 어두운 점 · Cu 의 핵은 밝은 입자 — 세는 기준이 같았는지 모른다. Cu 박리 영상 (b4 = S10) 의 원판은 `Fig. S18a` 의 Cu 원판과 다르다 — 영상과 CE 7 % 곡선이 같은 실행인지 알 수 없다. 공개 영상 번호 (bN) 와 SI 번호의 대응은 단순 규칙이 아니다 (b4 = S10 · b7–b13 = S3–S9 · §9b).
 
 ---
 
@@ -614,7 +618,7 @@ for b in b7 b10 b11 b12 b13; do f=litdb/inbox/chu2026_solubility_interlayer_vide
 4. **MLIP 공극 MD 를 설계할 때 이 논문을 거꾸로 쓴다**: 순간 고갈 대신 점진 제거 (전류에 맞춘 속도) · 평형상 (B2 LiAg 등) · DFT 대조 · 관측창 표기 · 끝 상태 포화 확인.
 5. **CA 로 '핵 밀도' 를 내는 고체 전해질 논문은 표면 원자 밀도와 견줘 본다** — 넘으면 그 숫자는 쓰지 않는다 (이번 검산이 표본).
 6. **흡수량 · 전하 숫자는 그림 면적 · 이론 용량과 대조한 뒤 인용한다** (이번에 두 자릿수 차를 잡았다).
-7. **영상은 끝 장면을 본문 그림과 맞대어 번호를 확인한다** — 공개 파일 번호가 SI 번호와 넷 밀려 있었다.
+7. **영상은 끝 장면 · SEM 데이터바 (파일 이름 · 촬영일 · 검출기) 를 본문 그림과 맞대어 번호를 확인한다** — 공개 파일 번호와 SI 번호의 대응이 단순 규칙이 아니었다 (b4 = S10 · b7–b13 = S3–S9).
 
 ---
 
@@ -635,7 +639,7 @@ for b in b7 b10 b11 b12 b13; do f=litdb/inbox/chu2026_solubility_interlayer_vide
 - ⛔ **MD 공극 부피 · MSD 를 확산계수 · 공극 속도로 인용하지 않는다** — 검증 없는 MLIP · 100 ps · 비평형 초기 상태 (§10-④).
 - ⚠ 'Pt 가 Au 보다 낫다' 는 반복 차 안이다 · 화산 꼭대기는 두 점이다.
 - ⚠ operando 박리 CE 는 Ag 가 최고 (72 %) — Ag 박리 공극 서술과 함께 적는다.
-- ⚠ 영상 번호: 공개 파일 b7 · b10 · b11 · b12 · b13 = Video S3 · S6 · S7 · S8 · S9 (§9b).
+- ⚠ 영상 번호: 공개 파일 b4 = Video S10 (Cu 도금 → 박리) · b7 · b10 · b11 · b12 · b13 = Video S3 · S6 · S7 · S8 · S9 (§9b) · Au · Ag 박리 영상 (S11 · S12) 은 받을 수 없다.
 - ⚠ 우리 W 값은 이 digest 에 없다 — 위치만 (`docs/collab/wad_dem_interface_adhesion_report_2026_11_24.html` §2 · `db/properties/adhesion.json`).
 
 ## 15. 기법 용어 미니사전

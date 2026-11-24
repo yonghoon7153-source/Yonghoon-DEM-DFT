@@ -14,7 +14,7 @@
    "label": "1",
    "page": 2,
    "file": "fig_1.png",
-   "caption": "Fig. 1 | All-solid-state lithium metal battery. a, Schematic of an ASSB composed of a NMC cathode with a high areal capacity (>6.8 mAh cm−2), SSE and a Ag–C nanocomposite anode layer that does not require excess Li. Al and SUS foil were used as current collectors for the cathode and anode, respectively. b, A cross-sectional SEM image of the ASSB structure shows the intimate contact between the densely integrated components. c, Arrhenius plot of SSE ionic conductivities with temperature. d, Raman spectrum and XRD pattern of the argyrodite solid electrolyte. e, TEM image of an LZO-coated NMC particle. An LZO layer of 5 nm thickness was uniformly coated on the NMC. f, Schematic of the Ag–C nanocomposite anode layer on the SUS current collector for stable Li plating and stripping. g, Schematic of ASSB that comprises a Ag–C nanocomposite anode layer and exhibits a higher volumetric energy den",
+   "caption": "Fig. 1 | All-solid-state lithium metal battery. a, Schematic of an ASSB composed of a NMC cathode with a high areal capacity (>6.8 mAh cm−2), SSE and a Ag–C nanocomposite anode layer that does not require excess Li. Al and SUS foil were used as current collectors for the cathode and anode, respectively. b, A cross-sectional SEM image of the ASSB structure shows the intimate contact between the densely integrated components. c, Arrhenius plot of SSE ionic conductivities with temperature. d, Raman spectrum and XRD pattern of the argyrodite solid electrolyte. e, TEM image of an LZO-coated NMC particle. An LZO layer of 5 nm thickness was uniformly coated on the NMC. f, Schematic of the Ag–C nanocomposite anode layer on the SUS current collector for stable Li plating and stripping. g, Schematic of ASSB that comprises a Ag–C nanocomposite anode layer and exhibits a higher volumetric energy density than those of conventional LIBs and Li metal batteries.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -33,7 +33,11 @@
     558.3,
     467.8
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop kept only panels e-g (bbox y 319.5-467.8) - panels a-d (rasters y 57.8-330.6 · label 'a' y 54) were lost; clip top moved to 48 (below the running header band, which ends at y 43.5), other edges unchanged · caption starts below 467.8"
+   "recrop": "2026-11-24 litdb-curator: auto crop kept only panels e-g (bbox y 319.5-467.8) - panels a-d (rasters y 57.8-330.6 · label 'a' y 54) were lost; clip top moved to 48 (below the running header band, which ends at y 43.5), other edges unchanged · caption starts below 467.8",
+   "caption_raw": "Fig. 1 | All-solid-state lithium metal battery. a, Schematic of an ASSB composed of a NMC cathode with a high areal capacity (>6.8 mAh cm−2), SSE and a Ag–C nanocomposite anode layer that does not require excess Li. Al and SUS foil were used as current collectors for the cathode and anode, respectively. b, A cross-sectional SEM image of the ASSB structure shows the intimate contact between the densely integrated components. c, Arrhenius plot of SSE ionic conductivities with temperature. d, Raman spectrum and XRD pattern of the argyrodite solid electrolyte. e, TEM image of an LZO-coated NMC particle. An LZO layer of 5 nm thickness was uniformly coated on the NMC. f, Schematic of the Ag–C nanocomposite anode layer on the SUS current collector for stable Li plating and stripping. g, Schematic of ASSB that comprises a Ag–C nanocomposite anode layer and exhibits a higher volumetric energy den",
+   "caption_fix": "2026-11-24 litdb-curator: truncated at 900 chars by the extractor — completed from the PDF text (main p.300)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (re-cropped, full figure a–g) · panel b layer thicknesses and panel c Arrhenius slope read against the axes"
   },
   {
    "key": "f2",
@@ -60,7 +64,9 @@
     555.6,
     305.0
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel label 'a' (y 54.2) and the top 7 pt of the panel-a raster (y 59.2); clip top moved to 48 (below running header, ends y 43.5), other edges unchanged"
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel label 'a' (y 54.2) and the top 7 pt of the panel-a raster (y 59.2); clip top moved to 48 (below running header, ends y 43.5), other edges unchanged",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (re-cropped) · panel d retention read against the axes · panel c Li thickness against the 10 µm bar"
   },
   {
    "key": "f3",
@@ -87,7 +93,9 @@
     553.7,
     390.7
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel label 'a' (y 54.2), the 'SSE' label of the charged schematic (y 64.7) and the top 8 pt of the four panel-a rasters (y 58.4); clip top moved to 48, other edges unchanged"
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel label 'a' (y 54.2), the 'SSE' label of the charged schematic (y 64.7) and the top 8 pt of the four panel-a rasters (y 58.4); clip top moved to 48, other edges unchanged",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (re-cropped) + pixel measurement of the C-EDS band (50 % of max) against the 10 µm bar (67 px) in b–d"
   },
   {
    "key": "f4",
@@ -114,7 +122,9 @@
     549.3,
     520.0
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop top y 71.7 cut panel label 'a' (y 54.2) and the 4.3 V tick (y 62.2) of the voltage axis; clip top moved to 48, other edges unchanged"
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 71.7 cut panel label 'a' (y 54.2) and the 4.3 V tick (y 62.2) of the voltage axis; clip top moved to 48, other edges unchanged",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (re-cropped, 4.3 V tick and label a restored) · capacity markers in a and Li/Ag–C thickness in h–j read against bars"
   },
   {
    "key": "f5",
@@ -141,7 +151,9 @@
     558.3,
     670.1
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel labels 'a b c' (y 54.2) and the top 1 pt of the three TEM rasters (y 65.1); clip top moved to 48, other edges unchanged"
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 66.5 cut panel labels 'a b c' (y 54.2) and the top 1 pt of the three TEM rasters (y 65.1); clip top moved to 48, other edges unchanged",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (re-cropped) · EELS maps c,f,i,l inspected for the red (Li) channel · XRD n peak positions read against the axis"
   },
   {
    "key": "f6",
@@ -162,7 +174,9 @@
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_main.pdf",
    "blank": 0.847,
-   "manual_crop": "2026-11-24 litdb-curator: 도구가 f6 을 '끝 번호 · p8 영역 없음' 으로 보고 — Fig. 6 은 p.8 위쪽 (패널 a–g · 래스터 사진 2 + 벡터 그래프 8,088 path) 에 있고 캡션은 y 469.9 에서 시작. clip = 머리글 (y ≤ 43) 아래 47 ~ 'Cycle number' 라벨 아래 463 · x 38–557 (벡터 합집합 36.8–558.4 에서 머리글 띠 제외) · 300 dpi"
+   "manual_crop": "2026-11-24 litdb-curator: 도구가 f6 을 '끝 번호 · p8 영역 없음' 으로 보고 — Fig. 6 은 p.8 위쪽 (패널 a–g · 래스터 사진 2 + 벡터 그래프 8,088 path) 에 있고 캡션은 y 469.9 에서 시작. clip = 머리글 (y ≤ 43) 아래 47 ~ 'Cycle number' 라벨 아래 463 · x 38–557 (벡터 합집합 36.8–558.4 에서 머리글 띠 제외) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop, all panels a–g) + p.8 page preview · capacities in d–f and retention/CE in g read against the axes"
   },
   {
    "key": "fS1",
@@ -182,7 +196,9 @@
    "h": 779,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.504
+   "blank": 0.504,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS2",
@@ -202,7 +218,9 @@
    "h": 712,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.508
+   "blank": 0.508,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS3",
@@ -222,7 +240,9 @@
    "h": 854,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.969
+   "blank": 0.969,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS4",
@@ -242,7 +262,9 @@
    "h": 1351,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.92
+   "blank": 0.92,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS5",
@@ -269,7 +291,9 @@
     531.8,
     494.0
    ],
-   "recrop": "2026-11-24 litdb-curator: auto crop top y 260.1 took in the last body line of SI p.5 ('formation of Ag2S is not significant.' y 262-277); clip top moved to 311 (raster starts y 317.8), other edges unchanged"
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 260.1 took in the last body line of SI p.5 ('formation of Ag2S is not significant.' y 262-277); clip top moved to 311 (raster starts y 317.8), other edges unchanged",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (re-cropped) · layer thicknesses against the 20 µm / 10 µm bars"
   },
   {
    "key": "fS6",
@@ -289,7 +313,9 @@
    "h": 1163,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.568
+   "blank": 0.568,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read · discharge capacities read against the axes"
   },
   {
    "key": "fS7",
@@ -309,7 +335,9 @@
    "h": 1001,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.97
+   "blank": 0.97,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS8",
@@ -329,7 +357,9 @@
    "h": 739,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.643
+   "blank": 0.643,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS9",
@@ -349,7 +379,9 @@
    "h": 641,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.374
+   "blank": 0.374,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS10",
@@ -370,7 +402,9 @@
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
    "blank": 0.267,
-   "manual_crop": "2026-11-24 litdb-curator: 도구가 fS10 을 '번호 공백 · p11 그래픽 없음' 으로 보고 — 그림 (박힌 래스터 586×826 px 한 장) 은 SI p.10 아래 bbox (182,444,413,770) 에 있고 캡션만 p.11 맨 위로 넘어갔다 (쪽을 넘긴 짝이라 같은 쪽 캡션 기준 도구가 못 짝지음). clip = 래스터 bbox + 6 pt · 300 dpi"
+   "manual_crop": "2026-11-24 litdb-curator: 도구가 fS10 을 '번호 공백 · p11 그래픽 없음' 으로 보고 — 그림 (박힌 래스터 586×826 px 한 장) 은 SI p.10 아래 bbox (182,444,413,770) 에 있고 캡션만 p.11 맨 위로 넘어갔다 (쪽을 넘긴 짝이라 같은 쪽 캡션 기준 도구가 못 짝지음). clip = 래스터 bbox + 6 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) + pixel measurement of the Ag–C band in b against the 10 µm bar (245 px)"
   },
   {
    "key": "fS11",
@@ -381,16 +415,25 @@
    "caption": "Supplementary Fig. 11 | a, Rate capability and b, Cycle performance as a function of external pressure.",
    "rotated_deg": 0,
    "bbox": [
+    92.0,
+    389.0,
+    503.0,
+    572.0
+   ],
+   "w": 1713,
+   "h": 764,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.947,
+   "bbox_auto": [
     66.0,
     237.3,
     532.0,
     571.5
    ],
-   "w": 1942,
-   "h": 1394,
-   "dpi": 300,
-   "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.947
+   "recrop": "2026-11-24 litdb-curator: auto crop (bbox y 237.3-571.5) took in the whole of Supplementary Table 2 (y 203-327) above the figure; clip = embedded raster bbox (98,395,497,566) + 6 pt, below the table and above the caption (y 595)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (re-cropped) + SI p.11 page preview"
   },
   {
    "key": "fS12",
@@ -410,7 +453,9 @@
    "h": 925,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.966
+   "blank": 0.966,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS13",
@@ -430,7 +475,9 @@
    "h": 1468,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.941
+   "blank": 0.941,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS14",
@@ -450,7 +497,9 @@
    "h": 913,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.963
+   "blank": 0.963,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS15",
@@ -458,7 +507,7 @@
    "label": "S15",
    "page": 14,
    "file": "fig_S15.png",
-   "caption": "Supplementary Fig. 15 | Nyquist plot of ASSB after charging with temperature. Interfacial resistance after charging was measured with an AC impedance method using 0.6 Ah pouch- type full cells at various temperatures. The interfacial resistance at 25 oC (50 Ω cm2) is about 10 times higher than at 60 °C (5 Ω cm2).",
+   "caption": "Supplementary Fig. 15 | Nyquist plot of ASSB after charging with temperature. Interfacial resistance after charging was measured with an AC impedance method using 0.6 Ah pouch- type full cells at various temperatures. The interfacial resistance at 25 °C (50 Ω cm2) is about 10 times higher than at 60 °C (5 Ω cm2).",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -470,7 +519,11 @@
    "h": 924,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.977
+   "blank": 0.977,
+   "caption_raw": "Supplementary Fig. 15 | Nyquist plot of ASSB after charging with temperature. Interfacial resistance after charging was measured with an AC impedance method using 0.6 Ah pouch- type full cells at various temperatures. The interfacial resistance at 25 oC (50 Ω cm2) is about 10 times higher than at 60 °C (5 Ω cm2).",
+   "caption_fix": "2026-11-24 litdb-curator: '25 oC' -> '25 °C' (superscript o lost in extraction)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS16",
@@ -490,7 +543,9 @@
    "h": 996,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.942
+   "blank": 0.942,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS17",
@@ -510,7 +565,9 @@
    "h": 984,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.966
+   "blank": 0.966,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read · energy-density points compared with Table S3"
   },
   {
    "key": "fS18",
@@ -518,7 +575,7 @@
    "label": "S18",
    "page": 17,
    "file": "fig_S18.png",
-   "caption": "Supplementary Fig. 18 | a, Photograph and b, Charge-discharge curves for 5 Ah class all- solid-state Li metal battery.",
+   "caption": "Supplementary Fig. 18 | a, Photograph and b, Charge-discharge curves for 5 Ah class all-solid-state Li metal battery.",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -530,7 +587,11 @@
    "h": 809,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.845
+   "blank": 0.845,
+   "caption_raw": "Supplementary Fig. 18 | a, Photograph and b, Charge-discharge curves for 5 Ah class all- solid-state Li metal battery.",
+   "caption_fix": "2026-11-24 litdb-curator: line-break hyphen 'all- solid-state' -> 'all-solid-state'",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read"
   },
   {
    "key": "fS19",
@@ -550,7 +611,9 @@
    "h": 1029,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.707
+   "blank": 0.707,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read · cell-temperature plateau read against the right axis"
   },
   {
    "key": "tS1",
@@ -570,7 +633,9 @@
    "h": 680,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.952
+   "blank": 0.952,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not read as an image — values taken from the SI PDF text (tables are text)"
   },
   {
    "key": "tS2",
@@ -590,7 +655,9 @@
    "h": 514,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.924
+   "blank": 0.924,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not read as an image — values taken from the SI PDF text (tables are text) · Table S2 was also seen inside the old auto crop of Fig. S11 and the SI p.11 preview"
   },
   {
    "key": "tS3",
@@ -610,7 +677,9 @@
    "h": 1949,
    "dpi": 300,
    "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.925
+   "blank": 0.925,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not read as an image — values taken from the SI PDF text (tables are text)"
   }
  ],
  "missing_labels": [
@@ -657,5 +726,10 @@
    "below_adjacent": 0,
    "caption_below": false
   }
- ]
+ ],
+ "video_frames": {
+  "dir": "video_frames/",
+  "note": "outside the figures list (not captioned in the PDF) — commands and the MOESM ↔ SI-video pairing are in the digest §5b",
+  "files": 34
+ }
 }
