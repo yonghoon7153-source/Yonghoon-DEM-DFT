@@ -4,58 +4,144 @@
   "claim": "AM–SE 표면의 점착 대비를 설계 변수로 써서 SE-on-AM 피복 ↔ SE–SE 응집을 예측한 연구는 없다",
   "verdict": "weakened",
   "verdict_note": null,
-  "verdict_reason": "쓰인 대로는 'AM–SE' 라는 재료 이름 덕에만 선다.  개념 — 손님–숙주 접착 ÷ 손님 자기 응집 이 숙주 표면에 고르게 붙음 ↔ 손님끼리 덩어리 를 가른다 — 은 약학 운반체 혼합에서 이미 수로 이름 붙고 (Λ₁₂ · CAB) 결과와 대조됐다.  전지 쪽에는 부분 반례만 있다.",
+  "verdict_reason": "11-24 카드 14 편 (큐 → 정본) 을 대조한 뒤에도 덮임 ↔ 뭉침 (SE-on-AM 피복 ↔ SE–SE 응집) 을 점착 대비로 예측한 직접 반례 없음.  그러나 점착 대비로 섞임 ↔ 분리 상을 예측하는 해석 경계는 모델 입상계에 이미 있고 (Li–McCarthy 2003 · 2005 · 2006 액체 다리 · Figueroa 2009 건식 vdW · 기하평균 결합 — 그 위 경계가 논지 §2-3 판가름 수와 같은 식), 같은 · 다른 쌍 점착을 따로 둔 DEM (Chaudhuri 2006) 과 약학의 수 (Λ₁₂ · CAB — Begat 2004 · Jones 2008) 도 있다.  쓰인 대로는 'AM–SE' 재료 이름과 덮임 · 군집 관측량 덕에만 선다.",
   "strongest_counterexample": {
    "slug": "begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery",
    "line_ref": "L29–L30",
    "summary_ko": "약학 · Λ₁₂ = 접착 ÷ 자기 응집이 '운반체 위 고른 분포 ↔ 덩어리' 를 가름",
-   "also": []
+   "also": [
+    {
+     "slug": "figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram",
+     "line_ref": "L80",
+     "summary_ko": "건식 vdW · 기하평균 결합 · 위 경계 = 논지 §2-3 판가름 수와 같은 식 · 섞임 ↔ 분리"
+    },
+    {
+     "slug": "li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation",
+     "line_ref": "L84",
+     "summary_ko": "젖음비 → 섞임 ↔ 분리 상 · 11 쌍 IS 변화 부호 · 액체 다리"
+    }
+   ]
   },
-  "narrowed_wording": "황화물 SE 복합 양극의 건식 혼합에서, 같은 SE 탐침으로 잰 AM–SE 접착 ÷ SE–SE 응집 비가 'SE 가 AM 을 덮는가 ↔ SE 끼리 뭉치는가' 를 가르는 경계를 점착 크기 × 회전 속도 위에서 입자 수준으로 그리고 그 비를 측정 입력으로 쓴 연구는 없다 — 같은 꼴의 수 (CAB · Λ₁₂) 는 약학 운반체 혼합에 (Begat 2004 Part I · II), 쌍별 점착에 따른 혼합 ↔ 분리는 모델 입상계에 (Jarray 2019 · Li–McCarthy 2003 / 2005 [카드 전]) 이미 있다.",
-  "pending_cards": [
+  "narrowed_wording": "황화물 SE 복합 양극의 건식 혼합에서 AM–SE 접착 ÷ SE–SE 응집 비 (같은 SE 탐침으로 잰 값) 로 'SE 가 AM 을 덮는가 ↔ SE 끼리 뭉치는가' 를 덮임 · 군집의 정량 지표로 예측한 연구는 없다 — 점착 대비로 섞임 ↔ 분리 상을 예측하는 해석 경계는 액체 다리 (Li–McCarthy 2003 · 2005 · 2006) 와 건식 vdW · 기하평균 결합 규칙 (Figueroa 2009 — 그 위 경계가 논지 판가름 수 0.31 · 0.39 와 같은 식) 에, 쌍별 점착 DEM 은 Chaudhuri 2006 에, 같은 꼴의 수 (Λ₁₂ · CAB) 는 약학 운반체 혼합에 (Begat 2004 Part I · II · Jones 2008 — CAB 는 혼합 균일도와 무관) 이미 있고, 그 경계는 크기비 0.5 아래 (우리 0.11–0.25) 에서 아직 서지 않았다 (Figueroa 2009).",
+  "pending_cards": [],
+  "evidence_cards": [
    {
-    "slug": "N-112-1",
-    "in_summary_table": true,
-    "note_ko": "Li & McCarthy 2003 PRL — 쌍별 점착으로 혼합 ↔ 분리를 '조절' (점착 대비를 설계 변수로 쓴 꼴) · 액체 다리 (습윤) 점착 · 카드 작성 중 (status.tsv L118)"
+    "slug": "begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery",
+    "n_id": null,
+    "verdict": "contradicts",
+    "line_ref": "L29–L30",
+    "note_ko": "약학 · Λ₁₂ (접착 ÷ 자기 응집) 이 '운반체 위 고른 분포 ↔ 덩어리' 를 가름 · 두 약물 (n = 2)",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-112-2",
-    "in_summary_table": true,
-    "note_ko": "Li & McCarthy 2005 PRE — 점착 혼합 · 분리 상태도 · 경계가 역학 · 표면 성질로 정해지는 식"
+    "slug": "begat2004_cohesive_adhesive_balance_afm_colloid_probe",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L22",
+    "note_ko": "AFM CAB 로 혼합 결과를 예측한 글 · 혼합 시험은 Part II",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-110",
-    "in_summary_table": true,
-    "note_ko": "Figueroa · Li · McCarthy 2009 — 제목 자체가 '점착력 → 혼합 · 분리 예측'"
+    "slug": "jarray2019_cohesion_driven_mixing_segregation_drum",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L7 · L81–L82",
+    "note_ko": "종 사이 점착 대비 (F_AA ↔ F_AB) 로 혼합 ↔ 분리를 뒤집음 · mm 유리구 · 결과 = 혼합지수",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-150",
-    "in_summary_table": true,
-    "note_ko": "Chaudhuri 2006 — 같은 쌍 ↔ 다른 쌍 힘의 대비로 혼합 무늬가 달라짐"
+    "slug": "lee2026_mechanical_halogen_argyrodite_drycoating",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L40",
+    "note_ko": "황화물 건식 코팅 · 단일 W_ad 가 피복을 정함 (대비 아님) · 우리 랩 논문",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-152",
-    "in_summary_table": false,
-    "note_ko": "Jones 2008 — AFM CAB 로 16 제형 (약학)"
+    "slug": "alizadeh2018_dem_adhesion_calibration_segregation_heap",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L16 · L28 · L30",
+    "note_ko": "쌍별 점착 (코팅 ↔ 비코팅) 으로 분리 · 덩어리를 DEM 으로 · 더미 형성",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-113",
-    "in_summary_table": false,
-    "note_ko": "Egermann 1980 — 제목 = PDF 파일명 'Effects of adhesion on mixing homogeneity part I'"
+    "slug": "mohammadijam2014_inverse_gas_chromatography_review",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L30",
+    "note_ko": "IGC W_adh ↔ W_co 비교로 혼합물 해석 (예측 아님)",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram",
+    "n_id": "N-110",
+    "verdict": "partial",
+    "line_ref": "L80",
+    "note_ko": "건식 vdW · 기하평균 결합 · 위 경계 = 논지 §2-3 판가름 수와 같은 식 · 섞임 ↔ 분리 (덮임 관측 없음)",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy",
+    "n_id": "N-112-1",
+    "verdict": "partial",
+    "line_ref": "L75",
+    "note_ko": "젖음비 (점착 대비) → M / E 상 · 액체 다리 · 사진 정성",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation",
+    "n_id": "N-112-2",
+    "verdict": "partial",
+    "line_ref": "L84",
+    "note_ko": "11 쌍 IS 변화 부호 + DEM 2 쌍 · 덮임 ↔ 뭉침은 말로만",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram",
+    "n_id": "N-151",
+    "verdict": "partial",
+    "line_ref": "L81",
+    "note_ko": "전단 흐름까지 섞임 ↔ 분리 부호 · 덮임 관측 없음",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed",
+    "n_id": "N-150",
+    "verdict": "partial",
+    "line_ref": "L92",
+    "note_ko": "쌍별 점착을 따로 둔 DEM · 혼합 ↔ '섬' 사후 관찰 · 규칙 · 문턱 없음",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum",
+    "n_id": "N-152",
+    "verdict": "supports",
+    "line_ref": "L76",
+    "note_ko": "CAB ↔ 혼합 균일도 관계 없음 (약학) → 관측량을 접촉 · 군집으로",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity",
+    "n_id": "N-113",
+    "verdict": "supports",
+    "line_ref": "L78",
+    "note_ko": "완전 · 무작위 부착 가정 · 배분이 무작위면 균질도 상한 = 무작위",
+    "since": "2026-11-24"
    }
   ],
   "source": {
    "file": "gap_check.md",
    "section_lines": [
-    20,
-    48
+    21,
+    53
    ],
-   "verdict_line": 22,
-   "narrowed_line": 48,
-   "summary_table_line": 13,
+   "verdict_line": 23,
+   "narrowed_line": 53,
+   "summary_table_line": 14,
    "candidate_lines": [
-    39,
-    44
+    49,
+    49
    ]
   }
  },
@@ -63,8 +149,8 @@
   "id": "G2",
   "claim": "점착을 독립 측정 (AFM · IGC · 접촉각) 하고 그것으로 혼합 결과를 런 전에 예측한 연구는 없다",
   "verdict": "broken",
-  "verdict_note": "(분야를 한정하지 않으면) — 전지 · 황화물로 좁히면 holds",
-  "verdict_reason": "약학은 AFM · 표면 에너지 (IGC) · 원심 탈착으로 잰 점착에서 혼합 결과를 예측했다.  전지 쪽 가장 가까운 것은 사후 상관이다.",
+  "verdict_note": "(분야를 한정하지 않으면) — 전지 · 황화물 · 같은 SE 탐침 AFM 쌍별 · 압밀 뒤 이온 경로로 좁히면 holds",
+  "verdict_reason": "측정 → 예측의 꼴은 약학 (AFM CAB · IGC 표면 에너지 → 혼합 결과 · 흡입 성능 · 혼합물 흐름: Begat 2004 · Jones 2008 · Capece 2015) 과 모델 입상계 (따로 잰 접촉각 → 섞임 ↔ 분리 상 · 변화 부호: Li–McCarthy 2003 · 2005 · 2006) 에 이미 있다.  전지 쪽 가장 가까운 것은 여전히 사후 상관이다.",
   "strongest_counterexample": {
    "slug": "begat2004_cohesive_adhesive_balance_afm_colloid_probe",
    "line_ref": "L22",
@@ -74,44 +160,147 @@
      "slug": "begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery",
      "line_ref": "L30",
      "summary_ko": "실제 혼합으로 대조"
+    },
+    {
+     "slug": "jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum",
+     "line_ref": "L77",
+     "summary_ko": "같은 배치 AFM CAB 16 값 → 흡입 성능 · 혼합 균일도와는 무관"
+    },
+    {
+     "slug": "li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation",
+     "line_ref": "L85",
+     "summary_ko": "따로 잰 접촉각 → 상 · 변화 부호 11/11 · 모델 입상계"
     }
    ]
   },
-  "narrowed_wording": "전지 — 황화물 SE 복합 양극 — 에서 AM · SE 쌍의 점착을 독립 측정 (같은 SE 탐침 AFM · IGC · 접촉각) 하고 그 값을 혼합 런 전에 등록해 혼합 결과 (SE 피복 ↔ SE–SE 응집) 를 예측 · 검증한 연구는 없다 — 약학 운반체 혼합에는 측정 → 예측 선례가 있고 (Begat 2004 · Jones 2008 [카드 전] · Ahfat 1997 [카드 인용]), 전지 쪽 가장 가까운 것은 AFM-FS W_ad 와 잔류 SE 의 사후 상관이다 (Lee 2026 · 실리콘 탐침 · 5 조성).",
-  "pending_cards": [
+  "narrowed_wording": "전지 · 황화물 — 황화물 SE 복합 양극 — 에서 AM · SE 쌍의 점착을 같은 SE 탐침 AFM 으로 쌍별 (SE–SE · SE–AM · SE–코팅 AM) 독립 측정하고 그 값을 맞춤 없이 혼합 런 전에 등록해 혼합 결과 (SE 피복 ↔ SE–SE 응집) 와 압밀 뒤 이온 경로를 예측 · 검증한 연구는 없다 — 측정 → 예측의 꼴은 약학 (Begat 2004 · Jones 2008 AFM CAB → 혼합 결과 · 흡입 성능 · Capece 2015 IGC → 혼합물 흐름 · Ahfat 1997 [카드 인용]) 과 모델 입상계 (Li–McCarthy 2003 · 2005 · 2006 접촉각 → 섞임 ↔ 분리 상 · 액체 다리) 에 이미 있고, 전지 쪽 가장 가까운 것은 AFM-FS W_ad 와 잔류 SE 의 사후 상관이다 (Lee 2026 · 실리콘 탐침 · 5 조성).",
+  "pending_cards": [],
+  "evidence_cards": [
    {
-    "slug": "N-152",
-    "in_summary_table": true,
-    "note_ko": "Jones 2008 — 콜로이드 탐침 AFM 으로 잰 점착 · 응집 비 (CAB) 로 16 제형 성능 예측 (결과가 흡입 성능인지 혼합 균질도인지 카드 전 미확인)"
+    "slug": "begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery",
+    "n_id": null,
+    "verdict": "contradicts",
+    "line_ref": "L30",
+    "note_ko": "AFM Λ₁₂ → 실제 혼합 RSD · SEM 대조 (약학 · 두 편 접수일 같음)",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-110",
-    "in_summary_table": false,
-    "note_ko": "Figueroa 2009 — 제목의 'Predicting' (측정 입력 → 사전 예측인지 미확인)"
+    "slug": "begat2004_cohesive_adhesive_balance_afm_colloid_probe",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L22",
+    "note_ko": "AFM 비로 혼합 결과 예측 (글)",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-111",
-    "in_summary_table": false,
-    "note_ko": "Capece 2015 — 다성분 Bond 수로 흐름 예측 (측정 입력 → 사전 예측인지 미확인)"
+    "slug": "lee2026_mechanical_halogen_argyrodite_drycoating",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L94–L95 · L230",
+    "note_ko": "AFM-FS W_ad ↔ 잔류 SE 사후 상관 · 실리콘 탐침 · 5 조성",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-112-1",
-    "in_summary_table": false,
-    "note_ko": "Li & McCarthy 2003 — queue 메모의 실험 (습윤 · 접촉각) (측정 입력 → 사전 예측인지 미확인)"
+    "slug": "jarray2019_cohesion_driven_mixing_segregation_drum",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L42 · L284",
+    "note_ko": "미세저울 점착 → Bo_g · ΔW 상태도 · 에너지 장부만으로는 예측 못 함",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "deng2021_mechanical_surface_energy_tester_bond_number",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L285 · L320",
+    "note_ko": "분말 점착 측정 장치 · 혼합 예측에는 안 씀",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "mohammadijam2014_inverse_gas_chromatography_review",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L168",
+    "note_ko": "IGC 측정 경로 · 혼합 결과 예측 사례 없음",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum",
+    "n_id": "N-152",
+    "verdict": "contradicts",
+    "line_ref": "L77",
+    "note_ko": "같은 배치 AFM CAB 16 값 → 흡입 성능 (FPD) 담체별 내부 최대 · 혼합 균일도와는 무관",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy",
+    "n_id": "N-112-1",
+    "verdict": "contradicts",
+    "line_ref": "L76",
+    "note_ko": "따로 잰 접촉각 → 예측 상이 실험을 이끈 순서 (정성 · 액체 다리)",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation",
+    "n_id": "N-112-2",
+    "verdict": "contradicts",
+    "line_ref": "L85",
+    "note_ko": "접촉각 → ℜ → 상 · 변화 부호 11/11 · '미리' 등록 표지 없음",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram",
+    "n_id": "N-151",
+    "verdict": "contradicts",
+    "line_ref": "L82",
+    "note_ko": "접촉각 → 정적 · 전단 상태도의 상 · 부호 · γ · κ 숫자 없음",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function",
+    "n_id": "N-111",
+    "verdict": "partial",
+    "line_ref": "L78",
+    "note_ko": "IGC γ_d → 혼합물 흐름 ff_c 를 맞춤 없이 예측 · 혼합 상태는 결과 아님",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram",
+    "n_id": "N-110",
+    "verdict": "supports",
+    "line_ref": "L81",
+    "note_ko": "Γ = Bo 범위를 맞춘 고른 값 (측정 아님)",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed",
+    "n_id": "N-150",
+    "verdict": "supports",
+    "line_ref": "L93",
+    "note_ko": "K = '무게의 몇 배' 로 고른 수",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period",
+    "n_id": "N-153",
+    "verdict": "supports",
+    "line_ref": "L78",
+    "note_ko": "γ 고른 값 · S_min 맞춤 매개변수",
+    "since": "2026-11-24"
    }
   ],
   "source": {
    "file": "gap_check.md",
    "section_lines": [
-    52,
-    71
+    57,
+    84
    ],
-   "verdict_line": 54,
-   "narrowed_line": 71,
-   "summary_table_line": 14,
+   "verdict_line": 59,
+   "narrowed_line": 84,
+   "summary_table_line": 15,
    "candidate_lines": [
-    69,
-    70
+    82,
+    82
    ]
   }
  },
@@ -120,43 +309,189 @@
   "claim": "황화물 복합체 혼합의 회전 속도 최적을 입자 수준에서 SE 탈응집 ↔ SE 벽 손실 (또는 비슷한) 상충으로 설명한 연구는 없다",
   "verdict": "weakened",
   "verdict_note": null,
-  "verdict_reason": "그 상충 자체는 황화물 복합체에서 실험으로 이미 관찰 · 해석됐다 (Hayakawa 2022).  쓰인 대로 남는 것은 입자 수준 (DEM) 설명 과 내부 최적 두 요소다.",
+  "verdict_reason": "상충 관찰은 황화물 복합체 실험에 이미 있다 (Hayakawa 2022).  11-24 카드로 더해진 것 — 벽 부착 ↔ 충돌 세기의 입자 수준 대조 (무점착 코팅 장치 DEM · 원심 · 긁개 유무: Chen 2004 · Dave 2003), 회전 세기에 따른 방향 · 꼴 바뀜의 힘 비 설명 (Li–McCarthy 2006 · Mellmann 2001), 점착 혼합에서 빠른 회전이 회전당 낫다는 DEM 관찰 · 제안 (Chaudhuri 2006 · Liu 2013) — 은 모두 단조이고 최적 · 맞교환이 없다.  쓰인 대로 남는 것은 점착 대비가 있는 계에서 rpm 축의 맞교환과 내부 최적 을 한 운동 꼴 안 에서 입자 수준으로 보이는 것이다.",
   "strongest_counterexample": {
    "slug": "hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode",
    "line_ref": "L31 · L34 · L36 · L102",
    "summary_ko": "황화물 · 칼날 rpm ↑ = SE 가 AM 에 더 붙고 벽 부착 손실도 커짐",
-   "also": []
+   "also": [
+    {
+     "slug": "chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency",
+     "line_ref": "L73",
+     "summary_ko": "벽 부착 (원심) 이 법선 충돌 세기를 반으로 · 긁개 유무 · 무점착 2D"
+    },
+    {
+     "slug": "dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices",
+     "line_ref": "L72",
+     "summary_ko": "같은 대조 + 덩어리 풀림의 낮은 속도 쪽 되튐 · rpm 단조"
+    },
+    {
+     "slug": "mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude",
+     "line_ref": "L73",
+     "summary_ko": "rpm 경계 = 운동 꼴 전이 · 힘 · 모멘트 균형"
+    }
+   ]
   },
-  "narrowed_wording": "황화물 복합 양극 건식 혼합에서 회전 세기를 올리면 SE 탈응집 (AM 위 부착) 과 SE 벽 부착 손실이 함께 커진다는 관찰은 있다 (Hayakawa 2022 · 모델 물질 Kawaguchi 2017) — 그러나 두 효과를 입자 수준 (점착 DEM) 에서 함께 풀어 회전 세기의 내부 최적을 예측한 연구는 없다 (기존 혼합기 DEM = 할라이드 · 단조 · 벽 손실 없음: Frankenberg 2024 · Kissel 2026).",
-  "pending_cards": [
+  "narrowed_wording": "황화물 복합 양극 건식 혼합에서, 점착 대비가 있는 계에서 rpm 축의 SE 탈응집 (AM 위 부착) ↔ SE 벽 점착 손실 맞교환과 그 내부 최적을 한 운동 꼴 안 (Mellmann 2001 의 꼴 · 우리 드럼 = 폭포 꼴 [카드 산술]) 에서 입자 수준 (점착 DEM · 끊긴 SE–SE 결합 · 벽에 붙은 SE 몫) 으로 보인 연구는 없다 — 회전 세기를 올리면 SE 탈응집과 SE 벽 부착 손실이 함께 커진다는 관찰은 있고 (Hayakawa 2022 · 모델 물질 Kawaguchi 2017), 벽 부착 ↔ 충돌 세기의 입자 수준 대조는 무점착 코팅 장치 DEM 에 (Chen 2004 · Dave 2003 — 원심 · 긁개 유무 · rpm 단조), 회전 세기에 따른 방향 · 꼴 바뀜의 힘 비 설명은 모델 입상계에 (Li–McCarthy 2006 · Mellmann 2001 · Chaudhuri 2006 · Liu 2013) 있으며, 기존 혼합기 DEM 은 할라이드 · 단조 · 벽 손실 없음이다 (Frankenberg 2024 · Kissel 2026).",
+  "pending_cards": [],
+  "evidence_cards": [
    {
-    "slug": "N-150",
-    "in_summary_table": true,
-    "note_ko": "Chaudhuri 2006 — 점착 × 회전 속도 → 혼합 속도 (점착이 커지면 혼합 속도가 올랐다 내려감)"
+    "slug": "hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L31 · L34 · L36 · L102",
+    "note_ko": "황화물 · rpm ↑ = SE 해쇄 + 벽 부착 손실 함께 · DEM 없음 · 가장 빠른 조건이 최선",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-153",
-    "in_summary_table": true,
-    "note_ko": "Liu · Yang · Yu 2013 — 점착 (액교) × 회전 속도 × 충전율 DEM"
+    "slug": "kawaguchi2017_dry_coating_parametric_na2so4_model_se",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L83",
+    "note_ko": "벽 부착의 속도 의존 (50 m/s 덜 붙음) · 모델 물질",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-151",
-    "in_summary_table": false,
-    "note_ko": "Li & McCarthy 2006 — 어떤 조건에서는 느린 전단이 더 잘 섞음"
+    "slug": "frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L160 · L185",
+    "note_ko": "황화물 공정 세기 최적 (E_m) 을 경쟁 기전으로 · 볼밀 · 벽 손실 아님",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L33",
+    "note_ko": "회전수 → 피복을 DEM 응력으로 · 단조 · 할라이드",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "frankenberg2024_dem_high_intensity_mixer_assb",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L30",
+    "note_ko": "회전 → 용량을 DEM 응력으로 · 단조 · 포화 · 할라이드",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "lischka2025_dem_eirich_intensive_mixer_dry_mixing",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L105",
+    "note_ko": "툴 속도 ↑ → 충돌률 ↓ (원심) · 수확체감 · SE 없음",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "hare2026_dem_pept_dry_mixing_nmc622_eirich",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L30",
+    "note_ko": "속도 수확체감 (DEM + PEPT) · SE 없음",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L20",
+    "note_ko": "혼합 시간 역 U · PTFE 섬유화 · SE 없음",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "zhang2026_mixing_sequence_shear_speed_ptfe_fibrillation_dry_graphite_anode",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L25",
+    "note_ko": "전단 rpm 역 U · 흑연 · SE 없음",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "nakamura2020_dry_coating_ncm_li3ps4_core_shell",
+    "n_id": null,
+    "verdict": "supports",
+    "line_ref": "L30",
+    "note_ko": "벽 부착 손실 관측 · 회전수 고정",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf",
+    "n_id": null,
+    "verdict": "supports",
+    "line_ref": "L97–L98",
+    "note_ko": "SE 벽 부착 손실 관측 · 회전수 고정",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency",
+    "n_id": "N-155",
+    "verdict": "partial",
+    "line_ref": "L73",
+    "note_ko": "벽 부착 (원심) 이 법선 충돌 세기를 반으로 · 긁개 유무 · rpm 단조",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "dave2003_dry_coating_dem_mechanofusion_hybridizer_maic_three_devices",
+    "n_id": "N-156",
+    "verdict": "partial",
+    "line_ref": "L72",
+    "note_ko": "같은 대조 + 덩어리 풀림 낮은 속도 쪽 되튐 (미보고) · rpm 단조",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude",
+    "n_id": "N-154",
+    "verdict": "partial",
+    "line_ref": "L73",
+    "note_ko": "rpm 경계 = 운동 꼴 전이 (힘 · 모멘트 균형) · 점착 · 최적 없음",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram",
+    "n_id": "N-151",
+    "verdict": "partial",
+    "line_ref": "L83",
+    "note_ko": "전단 세기가 혼합 방향을 뒤집음 (6c → 6e) · 두 속도",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed",
+    "n_id": "N-150",
+    "verdict": "partial",
+    "line_ref": "L94",
+    "note_ko": "K 120 에서 빠른 회전이 회전당 혼합을 도움 · 세 속도 단조",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period",
+    "n_id": "N-153",
+    "verdict": "partial",
+    "line_ref": "L79",
+    "note_ko": "회전당 혼합의 rpm 의존을 벽 미끄럼으로 읽는 제안 · 3 점 단조",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram",
+    "n_id": "N-110",
+    "verdict": "supports",
+    "line_ref": "L82",
+    "note_ko": "5 rpm 고정 · [판독] 위쪽 벽에 붙은 작은 입자 (원문 논의 없음)",
+    "since": "2026-11-24"
    }
   ],
   "source": {
    "file": "gap_check.md",
    "section_lines": [
-    75,
-    98
+    88,
+    117
    ],
-   "verdict_line": 77,
-   "narrowed_line": 98,
-   "summary_table_line": 15,
+   "verdict_line": 90,
+   "narrowed_line": 117,
+   "summary_table_line": 16,
    "candidate_lines": [
-    93,
-    96
+    115,
+    115
    ]
   }
  },
@@ -165,74 +500,218 @@
   "claim": "SE 물질 사이에 옮겨 쓸 수 있는 공정 × 재료 지도 (회전 세기 × 점착 / Bond) 는 없다",
   "verdict": "weakened",
   "verdict_note": null,
-  "verdict_reason": "점착 (Bo · Co) × 회전 세기 지도는 모델 입상계에서 이미 그려졌다 (카드 수준 = 무차원 수 · 상태도 · 카드 전 = Li–McCarthy · Chaudhuri · Liu).  쓰인 대로 남는 것은 SE 물질 사이의 전이 와 'SE-on-AM 피복 ↔ SE–SE 응집' 결과 축.",
+  "verdict_reason": "점착 × 회전 세기의 무차원 수 · 지도 조각은 모델 입상계에 있고 (Nase 2001 Co · Jarray 2019 Bo_g 상태도 · Liu 2013 rpm × 균일 γ · Li–McCarthy 2006 흐름 세기로 상태도 고르기), 점착 대비 (Bo 비 ℜ) 의 재료 × 재료 상태도는 점착 종류를 넘어 옮겨 갔으며 (Li–McCarthy 2003 · 2005 → Figueroa 2009), 무점착 층의 공정 (Fr · 충전율) × 흐름 물성 상태도와 그 재료 간 이전은 반례에 가깝다 (Mellmann 2001 BBD · 세 재료).  쓰인 대로 남는 것은 점착 축을 넣은 상태도 의 황화물 SE 물질 사이 전이 와 'SE-on-AM 피복 ↔ SE–SE 응집' 결과 축 이다.",
   "strongest_counterexample": {
-   "slug": "nase2001_granular_bond_collision_number_wet_cohesion",
-   "line_ref": "L31",
-   "summary_ko": "Co = 점착 γ × 회전 ω 한 무차원 수",
+   "slug": "mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude",
+   "line_ref": "L74",
+   "summary_ko": "BBD = 공정 (Fr · 충전율) × 흐름 물성 상태도 · 세 재료 · 점착 축 없음",
    "also": [
+    {
+     "slug": "nase2001_granular_bond_collision_number_wet_cohesion",
+     "line_ref": "L31",
+     "summary_ko": "Co = 점착 γ × 회전 ω 한 무차원 수"
+    },
     {
      "slug": "jarray2019_cohesion_driven_mixing_segregation_drum",
      "line_ref": "L144",
      "summary_ko": "Bo_g 상태도"
+    },
+    {
+     "slug": "liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period",
+     "line_ref": "L80",
+     "summary_ko": "rpm × 균일 γ 지도 · 차원 축 · 한 재료"
+    },
+    {
+     "slug": "figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram",
+     "line_ref": "L83",
+     "summary_ko": "ℜ 상태도가 액체 다리 → 건식 vdW 로 · 공정 축 없음"
     }
    ]
   },
-  "narrowed_wording": "점착 (Bo · Co) × 회전 세기 지도는 모델 입상계 (유리구 · 습윤 액교) 에서 그려졌다 (Nase 2001 Co · Jarray 2019 Bo_g 상태도 · Li–McCarthy 2003 / 2005 · Chaudhuri 2006 · Liu 2013 [카드 전]) — 실측 점착이 다른 황화물 SE 물질들 사이에 옮겨 쓸 수 있는 회전 세기 × 점착 지도를 'SE-on-AM 피복 ↔ SE–SE 응집' 결과 축으로 세운 연구는 없다.",
-  "pending_cards": [
+  "narrowed_wording": "공정 (회전 세기) 축에 점착 축을 넣은 상태도 — 점착 세기 · 대비 (Bo · ℜ) × 회전 세기 (Fr · Co) — 를 'SE-on-AM 피복 ↔ SE–SE 응집' 결과 축으로 세우고 그것이 실측 점착이 다른 황화물 SE 물질 사이로 옮겨 감을 보인 연구는 없다 — 무점착 층의 공정 (Fr · 충전율) × 흐름 물성 상태도와 그 재료 간 이전은 있고 (Mellmann 2001 BBD · 세 재료), 점착 대비 (Bo 비 ℜ) 의 재료 × 재료 상태도는 액체 다리에서 건식 vdW 로 옮겨 갔으며 (Li–McCarthy 2003 · 2005 → Figueroa 2009 · DEM), 공정 축은 영역 선택 (Li–McCarthy 2006 · 한 재료) · 차원 축 지도 (Liu 2013 · rpm × 균일 γ · 한 재료) · 흐름의 무차원 수 (Nase 2001 Co · Jarray 2019 Bo_g 상태도) 로만 있다.",
+  "pending_cards": [],
+  "evidence_cards": [
    {
-    "slug": "N-112-2",
-    "in_summary_table": true,
-    "note_ko": "Li & McCarthy 2005 PRE — 점착 혼합 · 분리 상태도 (회전 드럼) = '공정 × 재료 지도' 꼴에 가장 가까움"
+    "slug": "nase2001_granular_bond_collision_number_wet_cohesion",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L30 · L31",
+    "note_ko": "Co = 점착 γ × 회전 ω 무차원 수 · 드럼 흐름 (혼합 아님)",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-112-1",
-    "in_summary_table": false,
-    "note_ko": "Li & McCarthy 2003 PRL — 점착 혼합 상태도 (Bo 축)"
+    "slug": "jarray2019_cohesion_driven_mixing_segregation_drum",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L144",
+    "note_ko": "Bo_g × ΔW 상태도 · 재료 축 · 유리구",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-110",
-    "in_summary_table": false,
-    "note_ko": "Figueroa 2009 — 점착력 → 혼합 · 분리 예측"
+    "slug": "jadidi2023_dem_batch_solid_mixers_review",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L55 · L56",
+    "note_ko": "점착 세기 문턱 모음 (한 축)",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-150",
-    "in_summary_table": true,
-    "note_ko": "Chaudhuri 2006 — '점착 × rpm 지도' 의 가장 가까운 선례"
+    "slug": "kawaguchi2017_dry_coating_parametric_na2so4_model_se",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L22",
+    "note_ko": "공정 창 (선속도 × 시간 × 게스트 비율) · 재료 하나",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-153",
-    "in_summary_table": false,
-    "note_ko": "Liu 2013 — 드럼과 같은 꼴의 공정 축 선례 (G4 일부 후보)"
+    "slug": "frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L28",
+    "note_ko": "공정 지도 rpm × 시간 → E_m · 재료 하나",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-151",
-    "in_summary_table": false,
-    "note_ko": "Li & McCarthy 2006 — 전단 × 점착 상태도"
+    "slug": "frankenberg2024_dem_high_intensity_mixer_assb",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L26–L36",
+    "note_ko": "공정 축 응력 지도 (SI · SN vs n) · 재료 하나",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-154",
-    "in_summary_table": false,
-    "note_ko": "Mellmann 2001 — Froude 수 · 충전율 · 벽 마찰로 가르는 드럼 운동 지도 (점착 축 없음)"
+    "slug": "kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L33",
+    "note_ko": "회전수 × 시간 공정 지도 · 재료 하나",
+    "since": "2026-11-23"
    },
    {
-    "slug": "N-111",
-    "in_summary_table": false,
-    "note_ko": "Capece 2015 — 다성분 Bond 수 · 흐름"
+    "slug": "lee2026_mechanical_halogen_argyrodite_drycoating",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L127–L135",
+    "note_ko": "SE 5 조성 재료 축 · 공정 축 없음",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "kawaguchi2018_dry_coating_model_se_particle_powtec",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L23 · L38",
+    "note_ko": "모델 물질 → 황화물 전이를 압입 응답 유사성으로 가정",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode",
+    "n_id": null,
+    "verdict": "partial",
+    "line_ref": "L33",
+    "note_ko": "공정 × NCM 크기에서 껍질 유무 · 한 SE",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "lischka2025_dem_eirich_intensive_mixer_dry_mixing",
+    "n_id": null,
+    "verdict": "supports",
+    "line_ref": "L64 · L68",
+    "note_ko": "점착 축 환산 규칙이 비물리적 γ 를 냄 = 전이 규칙 불안",
+    "since": "2026-11-23"
+   },
+   {
+    "slug": "mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude",
+    "n_id": "N-154",
+    "verdict": "partial",
+    "line_ref": "L74",
+    "note_ko": "BBD = 공정 (Fr · 충전율) × 흐름 물성 상태도 · 세 재료 이전 · 점착 축 없음 (반례에 가까움)",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period",
+    "n_id": "N-153",
+    "verdict": "partial",
+    "line_ref": "L80",
+    "note_ko": "rpm × 균일 γ 지도 · 차원 축 · 한 재료",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram",
+    "n_id": "N-151",
+    "verdict": "partial",
+    "line_ref": "L84",
+    "note_ko": "흐름 세기로 상태도를 고름 (영역 선택) · 한 재료",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy",
+    "n_id": "N-112-1",
+    "verdict": "partial",
+    "line_ref": "L78",
+    "note_ko": "재료 × 재료 상태도 (크기비 × 젖음비 · 밀도비)",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "li2005_cohesive_mixing_phase_diagrams_bond_ratio_dem_validation",
+    "n_id": "N-112-2",
+    "verdict": "partial",
+    "line_ref": "L87",
+    "note_ko": "ℜ 상태도를 유리 → 아크릴 → DEM 으로 · 크기비 0.25 까지",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram",
+    "n_id": "N-110",
+    "verdict": "partial",
+    "line_ref": "L83",
+    "note_ko": "ℜ 틀이 액체 다리 → 건식 vdW (DEM) 로 · 공정 축 없음",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum",
+    "n_id": "N-152",
+    "verdict": "partial",
+    "line_ref": "L79",
+    "note_ko": "점착 비 축 경향이 다른 약물 · 장치 · 농도로 (외삽)",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function",
+    "n_id": "N-111",
+    "verdict": "partial",
+    "line_ref": "L80",
+    "note_ko": "Bond 수 → 흐름 곡선이 다른 부형제 1 종으로",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed",
+    "n_id": "N-150",
+    "verdict": "supports",
+    "line_ref": "L95",
+    "note_ko": "상태도 없음 · '최적 Bond 수는 규모 의존' (G4 의 필요성)",
+    "since": "2026-11-24"
+   },
+   {
+    "slug": "khakhar1999_chaotic_mixing_granular_2d_tumbling_mixers_flowing_layer",
+    "n_id": "N-118",
+    "verdict": "supports",
+    "line_ref": "L89",
+    "note_ko": "옮기는 규칙 = 크기 (Pe) 뿐 · 비점착",
+    "since": "2026-11-24"
    }
   ],
   "source": {
    "file": "gap_check.md",
    "section_lines": [
-    102,
-    123
+    121,
+    149
    ],
-   "verdict_line": 104,
-   "narrowed_line": 123,
-   "summary_table_line": 16,
+   "verdict_line": 123,
+   "narrowed_line": 149,
+   "summary_table_line": 17,
    "candidate_lines": [
-    117,
-    121
+    147,
+    147
    ]
   }
  }

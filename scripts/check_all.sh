@@ -255,6 +255,8 @@ run '반입 ⑫ · ⑬ · ⑭ 새 시험 열하나 (unittest · RT · LHS · 믹
 #    언로딩 키트 `python3 -I` selftest 가 남기는 캐시에 걸린다 → 그 폴더만 HEAD 에서 `git archive` 로 꺼낸 깨끗한 사본으로 돈다 (`A5_TEST_REPO` ·
 #    docs/reviews 는 링크).  A5R-01 시험 = 그 사본으로 조립한 143 파일 키트 (`A5R01_KIT`).  실측 (11-20 · 컨테이너) 여섯 = 54 시험 약 4 s.
 run '반입 ⑮ · ⑯ · ⑰ · ⑱ 새 시험 여섯 (수영 반복 · 형상 · B1 쌍 · A5 · A5R-01)' sh -c 'set -e; for t in docs/reviews/suyoung_u6_repeat_20261120/test_repeat.py scripts/test_mixer_b1_collection_commit.py scripts/test_mixer_b1_pair_ibb.py scripts/test_suyoung_shape_cycle_dev.py; do python3 -I -X utf8 -B "$t"; done; T=$(mktemp -d); trap "rm -rf $T" EXIT; mkdir -p "$T/repo/docs"; git archive HEAD docs/data/ps45_unload_20261009 | tar -x -C "$T/repo"; ln -s "$PWD/docs/reviews" "$T/repo/docs/reviews"; A5_TEST_REPO="$T/repo" python3 -I -X utf8 -B docs/reviews/p1_rt_a5_preseal_20261120/test_a5.py; python3 -I -X utf8 -B docs/reviews/p1_rt_a5_preseal_20261120/build_a5.py "$T/kit" --repo "$T/repo"; A5R01_KIT="$T/kit" python3 -I -X utf8 -B docs/reviews/p1_rt_a5r01_20261120/test_a5r01.py'
+# ★ 2026-11-24 (반입 ㉔ · codex/mixer-b2-flow-prep-1124) — B2 흐름 판독 새 시험 둘 · 실측 (컨테이너) 각 rc 0.
+run '반입 ㉔ B2 흐름 판독 시험 둘 (흐름층 관측기 · B2-U 판독)' sh -c 'set -e; for t in docs/reviews/mixer_b2_flow_20261124/test_flow_observer.py docs/reviews/mixer_b2_flow_20261124/test_read_b2_u.py; do python3 -I -X utf8 -B "$t"; done'
 #  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의
 #    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`
 #    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`

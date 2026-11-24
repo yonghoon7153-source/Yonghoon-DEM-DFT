@@ -4,7 +4,9 @@
 
 {#  1저자 11-23 Q4 — 믹서 원고의 문제 정의 · 공백 근거 (G1–G4) 를 보이는 읽기 전용 화면.  자료 = docs/data/mixer_lit_matrix_20261123/.
     라벨 · 빈칸 지도 · 거르기는 여기 (app.py 는 봉인 32 라 읽기만 한다) · 회귀 webapp/test_mixer_lit_page.py.
-    글은 자료에서 그대로 — 판정 · 숫자를 여기에 베끼지 않는다 (자료를 고치면 화면이 같이 바뀐다). #}
+    글은 자료에서 그대로 — 판정 · 숫자를 여기에 베끼지 않는다 (자료를 고치면 화면이 같이 바뀐다).
+    11-24 (1저자 11-24 — litdb 새 카드 14 편 반영): 고친 날 · 갱신 메모 = meta.updated · meta.update_note · 공백 카드의 근거 카드 목록 =
+    gap_summary.json evidence_cards · 카드 전 후보가 비면 '없음' 안내 (옛 고정 문장 'N-110 · N-112 · N-150–N-153 카드가 나오면 …' 은 지웠다). #}
 {%- set ST_ORDER = ['method_comparison', 'one_factor_sweep', 'multi_factor_doe', 'process_window', 'dem_model',
                     'dem_validation', 'mechanism_theory', 'definition_index', 'review', 'coating_effect'] -%}
 {%- set ST_LABEL = {'method_comparison': '방법 비교', 'one_factor_sweep': '한 인자 스윕', 'multi_factor_doe': '다인자 실험 설계',
@@ -71,7 +73,12 @@
                 border-radius:0 8px 8px 0; font-size:12.5px; }
   .lit-dim { color:var(--dim,#7c8194); font-size:11.5px; }
   .lit-lref { font:600 11.5px/1.4 var(--mono,monospace); color:var(--dim,#7c8194); }
-  code.lit-slug, code.lit-nslug, code.lit-pslug { font:11.5px/1.45 var(--mono,monospace); background:rgba(127,127,127,.16);
+  .lit-new { display:inline-block; padding:0 6px; border-radius:6px; font-size:10.5px; font-weight:700; white-space:nowrap;
+             color:var(--yellow,#fbbf24); border:1px solid rgba(251,191,36,.6); background:rgba(251,191,36,.10); }
+  .lit-gap details.lit-ev { margin:2px 0 0; }
+  .lit-gap details.lit-ev ul { margin-top:4px; }
+  .lit-upd { border-left:3px solid var(--yellow,#fbbf24); padding-left:10px; }
+  code.lit-slug, code.lit-nslug, code.lit-pslug, code.lit-eslug { font:11.5px/1.45 var(--mono,monospace); background:rgba(127,127,127,.16);
               padding:1px 5px; border-radius:4px; overflow-wrap:anywhere; word-break:break-all; }
   .lit-btn { margin-top:10px; border:1px solid var(--border,#2a2d3e); background:transparent; color:inherit; padding:5px 11px;
              border-radius:8px; cursor:pointer; font-size:12.5px; font-weight:600; }
@@ -143,13 +150,15 @@
     <span title="{{ meta.get('ref_note', '') }}">litdb 정본 기준 커밋 <code>{{ meta.get('ref_sha', '') }}</code></span>
     <span>{{ rows|length }} 행 = 카드 {{ n_card }} · 카드 전 {{ n_pre }}</span>
     {% if meta.get('date') %}<span>만든 날 {{ meta.get('date') }}</span>{% endif %}
+    {% if meta.get('updated') %}<span>고친 날 {{ meta.get('updated') }}</span>{% endif %}
     {% if redacted %}<span>⟨인용금지 가림 적용⟩</span>{% endif %}
   </div>
   <p class="lit-note">
     카드 행 = litdb 정본 카드 — 숫자는 카드에 인쇄된 그대로 ([인쇄] · [판독] · [카드 산술] 표지도 그대로).
     <span class="lit-pre">카드 전</span> 행 = 아직 카드가 없는 큐 항목 — 제목 · 후보 표 설명으로만 분류했다 (원문 · 카드로 확인하지 않음).
-    N-110 · N-112 · N-150–N-153 카드가 나오면 판정이 더 좁아질 수 있다.
+    카드 전 행이 카드가 되면 판정이 다시 좁아질 수 있다 (자료 폴더 README).
   </p>
+  {% if meta.get('update_note') %}<p class="lit-note lit-upd">{{ meta.get('update_note') }}</p>{% endif %}
   <details>
     <summary>포함 · 제외 규칙과 표지</summary>
     {% if meta.get('inclusion_rule') %}<p>{{ meta.get('inclusion_rule') }}</p>{% endif %}
@@ -182,11 +191,27 @@
         </ul>
         <h4>좁힌 문장 (권고)</h4>
         <blockquote class="lit-narrow">{{ g.narrowed_wording }}</blockquote>
+        {#- 11-24 — 근거 카드 (gap_summary.json evidence_cards · 판정 = 그 카드 행의 G 표지 · since 2026-11-24 = 이번에 더한 카드) -#}
+        {%- set ev = g.evidence_cards if (g.evidence_cards is sequence and g.evidence_cards is not string) else [] -%}
+        {%- set ev_new = ev|select('mapping')|selectattr('since', 'equalto', '2026-11-24')|list -%}
+        <h4>근거 카드 <span class="lit-dim">(그 공백 절의 카드 · 표지 = 그 카드 행의 판정 · 노란 '11-24' = 이번에 더한 카드)</span></h4>
+        {% if ev %}
+        <details class="lit-ev">
+          <summary>{{ ev|length }} 장 보기 (11-24 새 카드 {{ ev_new|length }})</summary>
+          <ul>
+            {% for e in ev if e is mapping %}
+            <li data-ev="{{ e.slug }}" data-v="{{ e.verdict }}"><span class="gb gb-{{ e.verdict }}">{{ GV_LABEL.get(e.verdict, e.verdict) }}</span> <code class="lit-eslug" title="{{ (BY.get(e.slug) or {}).get('title', '') }}">{{ e.slug }}</code>{% if e.n_id %} <span class="lit-dim">{{ e.n_id }}</span>{% endif %} <span class="lit-lref">{{ e.line_ref }}</span> — {{ e.note_ko }}{% if e.since == '2026-11-24' %} <span class="lit-new">11-24</span>{% endif %}</li>
+            {% endfor %}
+          </ul>
+        </details>
+        {% else %}<p class="lit-dim">근거 카드 목록 없음 (gap_summary.json 의 evidence_cards)</p>{% endif %}
         <h4>판정을 바꿀 수 있는 카드 전 후보 <span class="lit-dim">(노란 점 = 요약 표에 오른 것)</span></h4>
         <ul>
           {% for p in (g.pending_cards or []) %}
           {%- set pr = BY.get(p.slug) -%}
           <li{% if p.in_summary_table %} class="top"{% endif %}><code class="lit-pslug" title="{{ pr.title if pr else '' }}">{{ p.slug }}</code> — {{ p.note_ko }}</li>
+          {% else %}
+          <li class="lit-dim">없음 — 카드 전 후보가 남지 않았다</li>
           {% endfor %}
         </ul>
         <button type="button" class="lit-btn" data-gap="{{ g.id }}">표에서 {{ g.id }} 반례 · 부분 행만 보기</button>
