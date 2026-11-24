@@ -206,6 +206,9 @@ jobs:
       # ★ 2026-11-24 (반입 ㊲) — 믹서 사다리 두 팔 발사 · 반환 단위 시험 열하나 (check_all.sh 단계 76 에도 같이)
       - name: 반입 ㊲ 믹서 사다리 두 팔 발사 · 반환 단위 시험 (regression)
         run: python -B docs/reviews/mixer_ladder_pair_20261124/test_ladder.py
+      # ★ 2026-11-24 (반입 ㊳) — 7:3 탈압 NP6 병렬 단위 시험 여덟 (check_all.sh 단계 77 에도 같이)
+      - name: 반입 ㊳ 7:3 탈압 NP6 병렬 단위 시험 (regression)
+        run: python -B docs/reviews/ps73_parallel_20261124/test_parallel.py
       # ★ 2026-11-24 (반입 ㉕) — 수영 설정 ② 접촉 후보 시험 셋 (check_all.sh 단계 71 에도 같이)
       - name: 반입 ㉕ 수영 설정 ② 접촉 후보 시험 셋 (regression)
         run: |

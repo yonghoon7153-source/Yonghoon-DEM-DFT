@@ -271,6 +271,8 @@ run '반입 ㉝ 수영 F32 · F48 블록 회귀 시험' python3 -I -X utf8 -B do
 run '반입 ㉞ LHS WSL30 §5 동결 판독기 합성 시험' python3 -I -X utf8 -B docs/reviews/lhs_wsl30_source_freeze_20261124/test_synthetic.py
 # ★ 2026-11-24 (반입 ㊲ · codex/mixer-ladder-1124 · 1c545fa47 → 62f364f70) — 믹서 사다리 두 팔 (0.20 · 0.50) 한 번 발사 · 팔별 반환 검산 단위 시험 열하나 (임시 폴더 · 현장 0).
 run '반입 ㊲ 믹서 사다리 두 팔 발사 · 반환 단위 시험' python3 -I -X utf8 -B docs/reviews/mixer_ladder_pair_20261124/test_ladder.py
+# ★ 2026-11-24 (반입 ㊳ · codex/ps73-parallel-1124 · 70e5dbede · 2b11ccd23 → 66b0e8a2f · b44386801) — 7:3 탈압 UT · UC NP6 병렬 · UVa 선행 · 5 일 한도 이어 돌기 단위 시험 여덟 (임시 폴더 · 현장 0 · 흐름 시험 13 = 1저자 A5 키트가 있어야 돌아 게이트 밖).
+run '반입 ㊳ 7:3 탈압 NP6 병렬 단위 시험' python3 -I -X utf8 -B docs/reviews/ps73_parallel_20261124/test_parallel.py
 #  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의
 #    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`
 #    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`
