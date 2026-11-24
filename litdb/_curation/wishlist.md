@@ -765,12 +765,12 @@ litdb 확인 = 정본 `litdb/papers/` 파일 목록 611 장 (`git ls-tree`) + `g
 - [n] R. Schlenker, A.-L. Hansen, A. Senyshyn, T. Zinkevich, M. Knapp, T. Hupfer, H. Ehrenberg and S. Indris, *Chem. Mater.*, 2020, **32**, 8420–8430. (원문 참고 26) | m — 국소 단사 구조 (Model 4 의 근거 · p.2 · p.4) — Li₆PS₅Cl 국소 구조 · PS₄ 비틀림 실측 | papers/ 에 없음 (grep 'Schlenker' = 인용 카드 셋뿐).
 
 ## 2026-11-24 배치 18 편 (Li 금속 음극 · 공극 · 점착 · Ag–C 층 · W_ad 보고서) — 전체 목록은 따로
-전체 (99 편 합침 · 최근 2 년 발견 검색 14 편 · 서지 확인 표시) = `litdb/_curation/batch_2026_11_24/extra_papers_2026_11_24.md`. 여기는 우선순위만 (최근 먼저 · 서지 표시는 그 파일).
+전체 (99 편 합침 · 최근 2 년 발견 검색 14 편 · 서지 확인 표시) = `litdb/_curation/batch_2026_11_24/extra_papers_2026_11_24.md`. 여기는 우선순위만 (최근 먼저 · 서지 표시는 그 파일 · 11-24 Crossref 로 다시 맞춤 — 건별 기록 `litdb/_curation/batch_2026_11_24/verify_log.md`).
 - [본 세션 · 11-24] Baer, Shantsila, Figiel, Karasulu, *J. Mater. Chem. A*, 2026, **14**, 20245. | W_ad — Li \| Li₆PS₅Cl 종단 28 개 훑기 + MLIP · 우리 슬랩 종단 선택 대조
-- [본 세션 · 11-24] Chu, Lerch, Chong et al., *Energy Environ. Sci.*, 2026, **19**, 5836. [DOI 미확인] | W_ad §7 — 친Li 최고 Ag 가 박리 때 공공 · 공극을 뭉치게 함 (가넷) · 'W 클수록 좋다' 의 반례 후보
+- [본 세션 · 11-24] Chu, Lerch, Chong et al., *Energy Environ. Sci.*, 2026, **19**, 5836. DOI 10.1039/D6EE03852B | W_ad §7 — 친Li 최고 Ag 가 박리 때 공공 · 공극을 뭉치게 함 (가넷) · 'W 클수록 좋다' 의 반례 후보
 - [본 세션 · 11-24] Becker, Schuster, Kremer, Fuchs, Janek, *Energy Environ. Sci.*, 2026, **19**, 2367. | Au · Ag · Bi 층별 석출 Li 결정립 · 방위 (EBSD) · Li 면 선택 근거
 - [본 세션 · 11-24] Haslam et al., *ACS Energy Lett.*, 2025, **10**, 2285. 🏷 Jeff Sakamoto | 합금 층과 Li 젖음 · 형태 · §7 Ag 의 실험 짝
-- [본 세션 · 11-24] Choi S. H. … Choi J. W., *Nat. Commun.*, 2025, **16**. [논문 번호 미확인] | Ag 도핑 아지로다이트에서 Ag 석출 → 친Li 씨앗
+- [본 세션 · 11-24] Choi S. H. … Choi J. W., *Nat. Commun.*, 2025, **16**, 5871. | Ag 도핑 아지로다이트에서 Ag 석출 → 친Li 씨앗
 - [본 세션 · 11-24] Hiraoka, Sakabe, Suzuki, Seki, *J. Mater. Chem. A*, 2025, **13**, 27960. | 카본블랙도 Li 를 먹는다 (operando Raman) · 탄소 종류 축
 - [본 세션 · 11-24] Sandoval et al. (McDowell), *EES Batteries*, 2025, **1**, 1809. | LPSCl 무음극 operando μCT · DEM 공극 대조
 - [본 세션 · 11-24] Ko et al., *Nat. Commun.*, 2025, **16**, 1066. | 금속 층 위치 ↔ Li 석출 위치
