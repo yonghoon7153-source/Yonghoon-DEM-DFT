@@ -1,0 +1,160 @@
+[
+  {
+    "cells": 8,
+    "points": 9653,
+    "seed_position_sha256": "474424dea2a36388e28e02b9a5d47f9dad183bb1672dbf4e33ea84bdf7a6efc9",
+    "all_same_body": true,
+    "unchanged_initial_polygons": true,
+    "old_median_distance_over_h": 0.3343660509158874,
+    "old_max_distance_over_h": 0.47788958773806556,
+    "bottom_marker_count": 7,
+    "bottom_owner_distance_over_h": [
+      0.0,
+      0.0,
+      0.0,
+      8.881784197001252e-15,
+      0.0,
+      8.881784197001252e-15,
+      0.0
+    ],
+    "bottom_carrier_counts": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "policy": "reference_quadratic_bspline_same_body_material_carriers_v1",
+    "vertices": 12544,
+    "pitch": 0.00625,
+    "nearest_ties_64eps": 72,
+    "carriers_histogram": {
+      "2": 1176,
+      "3": 2548,
+      "4": 5292,
+      "5": 3528
+    },
+    "partition_error": 3.3306690738754696e-16
+  },
+  {
+    "cells": 12,
+    "points": 21609,
+    "seed_position_sha256": "499e377a027ae742a609a8612d2eb324e00fcc7923ba8499aa041adbe5749b72",
+    "all_same_body": true,
+    "unchanged_initial_polygons": true,
+    "old_median_distance_over_h": 0.3382922011557229,
+    "old_max_distance_over_h": 0.5117486348685875,
+    "bottom_marker_count": 7,
+    "bottom_owner_distance_over_h": [
+      0.0,
+      0.0,
+      0.0,
+      1.3322676295501878e-14,
+      0.0,
+      1.3322676295501878e-14,
+      0.0
+    ],
+    "bottom_carrier_counts": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "policy": "reference_quadratic_bspline_same_body_material_carriers_v1",
+    "vertices": 12544,
+    "pitch": 0.004166666666666667,
+    "nearest_ties_64eps": 0,
+    "carriers_histogram": {
+      "2": 392,
+      "3": 5096,
+      "4": 3724,
+      "5": 2352,
+      "6": 980
+    },
+    "partition_error": 4.440892098500626e-16
+  },
+  {
+    "cells": 16,
+    "points": 39053,
+    "seed_position_sha256": "ce12e262721141b2c4fc36cc72733686055a9e22ce62a8cc733a1e2ad591858a",
+    "all_same_body": true,
+    "unchanged_initial_polygons": true,
+    "old_median_distance_over_h": 0.30549909604470193,
+    "old_max_distance_over_h": 0.5094688941077946,
+    "bottom_marker_count": 7,
+    "bottom_owner_distance_over_h": [
+      0.0,
+      0.0,
+      0.0,
+      1.7763568394002505e-14,
+      0.0,
+      1.7763568394002505e-14,
+      0.0
+    ],
+    "bottom_carrier_counts": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "policy": "reference_quadratic_bspline_same_body_material_carriers_v1",
+    "vertices": 12544,
+    "pitch": 0.003125,
+    "nearest_ties_64eps": 0,
+    "carriers_histogram": {
+      "2": 392,
+      "3": 4312,
+      "4": 3724,
+      "5": 2744,
+      "6": 1372
+    },
+    "partition_error": 4.440892098500626e-16
+  },
+  {
+    "cells": 24,
+    "points": 87857,
+    "seed_position_sha256": "09b0d2c662fa9efac2c59329c007c5c548fff49a8e0cf18712cca5c1daad20c1",
+    "all_same_body": true,
+    "unchanged_initial_polygons": true,
+    "old_median_distance_over_h": 0.32741417220053376,
+    "old_max_distance_over_h": 0.493601048867861,
+    "bottom_marker_count": 7,
+    "bottom_owner_distance_over_h": [
+      0.0,
+      0.0,
+      0.0,
+      2.6645352591003757e-14,
+      0.0,
+      2.6645352591003757e-14,
+      0.0
+    ],
+    "bottom_carrier_counts": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "policy": "reference_quadratic_bspline_same_body_material_carriers_v1",
+    "vertices": 12544,
+    "pitch": 0.0020833333333333333,
+    "nearest_ties_64eps": 43,
+    "carriers_histogram": {
+      "3": 5684,
+      "4": 2940,
+      "5": 3136,
+      "6": 784
+    },
+    "partition_error": 4.440892098500626e-16
+  }
+]
