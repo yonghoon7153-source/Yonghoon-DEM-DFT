@@ -1,13 +1,13 @@
 ---
 title: "ES 프롬프트 — W_ad a5 묶음 Codex ER (NO-GO) 고침 확인: 같은 트리 관문 위에 — 준비 폴더의 실행 기록 보존 · 끝 기록 · WAVECAR 지우기 전 관문 · 0 스텝은 0 행으로 설명될 때만 · 이력 줄 벽시계 = 끝 기록 · 기록 명령 · 포장 배타 잠금 · 중간 반송본 대비 관측 사실 후퇴 거부 · 끝 기록 잡 · 변형 · stage · POTCAR 해시 — 업체 발송 GO 여부"
 date: 2026-11-23
-updated: 2026-11-23
+updated: 2026-11-24
 tags: [review, wad, adhesion, vasp, a5, runner, checker, codex, prompt, letter]
 letter: ES
 track: wad
 channel: codex
 kind: prompt
-status: 발송 대기 (사용자) · 기준 cc3873047 (ER 가 본 묶음 · MANIFEST 8e295bae…) → 고침 19ddec83c (도구 · 시험) · a6b34ffa6 (pack 관문 홀로 시험) · 1da64d0be (묶음 · 빌드 기록 ⑮) · 묶음 MANIFEST 50beb026… · selftest a5 279/279 · 돌연변이 210/210 (전체 한 번 209/210 · 남은 m158 은 pack 관문 홀로 시험 더한 뒤 빨강)
+status: 발송 · 회신 수령 2026-11-24 — NO-GO (P0 2 · P1 2 · P2 1 · 회신 codex_ES_reply_wad_a5_er_fixes_2026_11_24.md) · 기준 1da64d0be · MANIFEST 50beb026…
 confidence: medium
 verificationStatus: unverified
 explored: false

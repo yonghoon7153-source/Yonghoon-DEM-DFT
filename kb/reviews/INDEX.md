@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-11-23
-updated: 2026-11-23
+date: 2026-11-24
+updated: 2026-11-24
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-11-23
+verifiedAt: 2026-11-24
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -170,7 +170,7 @@ evidenceScope: multi-source-primary
 | EP | 2026-11-23 | `codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` | `codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md · 재승인 조건 ①–④) · 기준 8fd051a22 (EO 가 본 묶음) → 고침 df5ea438b (도구 · 시험) · 0fbc49760 (묶음 · 빌드 기록 ⑧) · 묶음 MANIFEST f10dedef… · selftest a5 211/211 · 돌연변이 113/113 | 같은 라벨 · 주제 토큰 일치 ['a5', 'eo', 'fixes', 'wad'] |
 | EQ | 2026-11-23 | `codex_EQ_prompt_wad_a5_ep_fixes_2026_11_23.md` | `codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md · 위협 범위 GO · 범위 안 지적 다수) · 기준 0fbc49760 (EP 가 본 묶음 · MANIFEST f10dedef…) → 고침 a97eba79f (도구 · 시험) · 891e106e5 (묶음 · 빌드 기록 ⑩) · 묶음 MANIFEST 679d7050… · selftest a5 236/236 · 돌연변이 140/140 | 같은 라벨 · 주제 토큰 일치 ['a5', 'ep', 'fixes', 'wad'] |
 | ER | 2026-11-23 | `codex_ER_prompt_wad_a5_eq_fixes_2026_11_23.md` | `codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md · Q-ER-6 GO · 범위 안 P0 셋 · P1 둘) · 기준 891e106e5 (EQ 가 본 묶음 · MANIFEST 679d7050…) → 고침 c14d52abb (도구 · 시험) · cc3873047 (묶음 · 빌드 기록 ⑬) · 묶음 MANIFEST 8e295bae… · selftest a5 266/266 · 돌연변이 191 (첫 전체 판 186 · 살아남은 5 시험 떼어 5/5) | 같은 라벨 · 주제 토큰 일치 ['a5', 'eq', 'fixes', 'wad'] |
-| ES | 2026-11-23 | `codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` | — | 발송 대기 (사용자) · 기준 cc3873047 (ER 가 본 묶음 · MANIFEST 8e295bae…) → 고침 19ddec83c (도구 · 시험) · a6b34ffa6 (pack 관문 홀로 시험) · 1da64d0be (묶음 · 빌드 기록 ⑮) · 묶음 MANIFEST 50beb026… · selftest a5 279/279 · 돌연변이 210/210 (전체 한 번 209/210 · 남은 m158 은 pack 관문 홀로 시험 더한 뒤 빨강) | — |
+| ES | 2026-11-23 | `codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` | `codex_ES_reply_wad_a5_er_fixes_2026_11_24.md` | 발송 · 회신 수령 2026-11-24 — NO-GO (P0 2 · P1 2 · P2 1 · 회신 codex_ES_reply_wad_a5_er_fixes_2026_11_24.md) · 기준 1da64d0be · MANIFEST 50beb026… | 같은 라벨 · 주제 토큰 일치 ['a5', 'er', 'fixes', 'wad'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
