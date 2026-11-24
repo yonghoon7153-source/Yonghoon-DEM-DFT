@@ -579,3 +579,57 @@ Eq. 1 (Ω_ed):
 ⑬ **금속 안 Na 수송 · 열역학의 물리 대응이 불분명하다 (우리 차수 검토 · 확신 낮음).** bulk 에서 c_Na 를 **D* (자기확산) 로 Fick 확산**시킨다 (A.4). 공공 기구로 보면 c_Na 편차 = 공공 편차이고 그 확산계수는 D_v ≈ D*/c_v 라, 모델의 c_Na 편차는 "공공 상대 편차 Δc_v/c_v" 로 읽어야 차수가 맞는다 (0.5 mA cm⁻² · 10 µm 에 Δc_Na ≈ 1.9 % · 우리 계산). 그렇게 읽으면 이상 희박 공공의 μ ≈ RT·Δc_v/c_v 인데 모델은 μ = A^m v_m Δc = **11 RT·Δc** 라 같은 플럭스에 구동력이 ≈11 배다. 공극 성장 속도 자체는 확산 지배 극한에서 D 와 전류 분포가 주로 정하지만, 모세관 · 젖음 같은 **μ 단위 항의 상대 비중**은 이 11 배에 직접 걸린다 (⑥).
 
 ⑭ **검증 범위**: Faraday · 질량 · 전하 보존 (보존형 모델이면 당연히 맞는 것) + 공극 모양의 **정성** 일치 + C_crit 한 점. 공극 속도 · 합쳐짐 시간 · GB 효과는 실험 대조가 없다.
+
+---
+
+## 11. 적용 인사이트 ★ (우리 연구에 어떻게)
+
+- ① **DEM-DFT 점착 보고서의 "공극 모델 입력" 문장을 구체화한다.** 보고서 §7 은 *"공극 모델에 Li–벽 접촉각 같은 입력이 있으면 재료별 값으로 줄 수 있다"* 고 한다. 공개 연속체 공극 모델 (이 논문 · MOOSE) 은 **그 입력이 없다** — 금속 | SE 경계에서 상장이 자연 경계라 접촉각이 90° 로 고정된다 (= W 가 γ 로 박혀 있다). 그래서 우리 W 가 쓰이려면 모델 쪽에 젖음 경계조건 (`Δγ_w = W − γ`) 이 먼저 들어가야 한다. 이 문장 하나가 "DFT W → 연속체" 사슬의 **빠진 고리**를 정확히 가리킨다.
+- ② **W 와 γ 는 쌍으로 넘긴다.** 접촉각은 W/γ 비로만 정해진다 (cos θ = W/γ − 1). 이 모델의 γ (MP · PBE) 옆에 우리 W (PBE+D3) 를 꽂으면 θ 가 함수 차이를 먹는다 — 넘길 때는 **같은 틀의 γ_금속 을 같이** 낸다 (보고서 §7 규칙과 같다).
+- ③ **민감도는 "어디에" 를 먼저 묻는다.** 이 모델 체제 (0.3–0.6 mA cm⁻²) 에서 모세관 항은 공극 규모로 ≈0.4 %, 가장자리 규모로 ≈5–20 % (§10-⑥ · 우리 어림) — W 는 **전체 성장 속도보다 가장자리 기하 · 국소 속도**에 들어간다. W 가 더 중요해질 곳은 **저전류 · 휴지 · 핵생성 · 공극 모양 이완 (표면 확산과 함께)** — 모두 이 모델이 안 푸는 것이다. 우리 W 의 쓰임새를 말할 때 이 구분을 같이 적는다.
+- ④ **정규화 길이를 먼저 박는다.** 전하이동 저항이 없는 모델의 접촉 가장자리 전류는 특이점이라 결과가 l_w · Δx 에 묶인다 (−13 %). 우리 DEM/MPM 에서 입자 접촉 가장자리 전류 · 플럭스 집중을 읽을 때도 같은 함정이 있다 — "봉우리 값" 을 인용하려면 **정규화 길이 (요소 크기 · 계면 폭) 와 그 수렴**을 같이 적는다.
+- ⑤ **고장 지표 정의를 빌릴 수 있다.** C_crit = i_app · t_f (Agier 2022) 와 `FeatureFloodCount` 로 공극 수 · 평균 면적을 세는 방식은 우리 미세구조 (SE 기공 · 접촉 상실) 지표에도 그대로 쓸 수 있다. 단 ⑧ 처럼 **배열 앙상블** 없이 곡선 모양을 말하지 않는다.
+- ⑥ **다결정 SE 처리의 선례.** h_gb = 16 Σ ξ_i² ξ_j² 보간 · 0.5 µm GB · 폭 보정 미적용 — 우리 SE 입계 채널 모델링 (B-Rint ② "전하 채널 계면" 축) 에서 **입계 폭 10³ 배 문제를 어떻게 다룰지** 의 반면교사 (보정식은 ref 65 Eq. 26 · 원문 미확인).
+- ⑦ **코드가 공개돼 있다** — γ · W (젖음 조건 추가) · l_w 스윕을 우리가 직접 돌려 민감도를 잴 수 있다. 다만 MOOSE 앱 빌드 (phase field module · 사용자 객체 등록 `"yourApp"` 교체) 가 먼저고, 저장소 입력은 재현 세트가 아니므로 (§5c) **카드 (보고량 · 판정 기준) 를 먼저** 쓴다. 계 (Na | NBA) 도 우리 계가 아니다 — Li | LPSCl 로 옮기려면 D · c_v^eq · γ · κ 를 전부 새로 넣는다.
+
+## 12. 인용 가능 문장 (영문 초안 · 랩 표기 *J. Electrochem. Soc.*, 172, 070522 (2025))
+
+- "In a two-dimensional grand-potential phase-field model of a Na | Na-β″-alumina half-cell, an interfacial void grew along the interface during stripping, and its growth accelerated with time as the Na flux concentrated at the void edges (*J. Electrochem. Soc.*, 172, 070522 (2025))."
+- "In that model, the metal | electrolyte interface is a sharp, stationary boundary that carries no interfacial-energy or adhesion term; the only interfacial energy is a single value (0.22 J m⁻²) shared by all diffuse interfaces." — ⚠ 뒤 절 ("no … term") 은 **공개 코드를 우리가 읽은 결과**다. 논문 인용으로만 쓰지 말고 "(our reading of the published input files)" 를 붙인다.
+- "Grain-boundary conductivity (κ_gb/κ_g = 0.067–10) changed the predicted half-void size by at most about 10 %, whereas changing the diffuse-interface width from 0.5 to 0.7 µm changed it by about 13 %." — 두 수를 **같이** 인용한다 (앞 절만 떼면 과대).
+- "The predicted critical stripping capacity decreased from about 0.78 (extrapolated to 0.1 mA cm⁻²) to 0.58 mAh cm⁻² at 0.6 mA cm⁻² for a single seven-void configuration without stack pressure." — 조건 (배열 1 개 · 압력 0 · 2D) 을 빼지 않는다.
+
+## 13. 주의 / 한계 (인용 규율)
+
+- **문헌 수치는 소환값**이다 — 이 논문의 γ · D · κ · C_crit 를 우리 db 값과 같은 표에 넣지 않는다 (계도 Na | NBA 로 다르다).
+- **이 모델의 γ (0.22 J m⁻²) 는 W_ad 쪽 양** (열역학 계면 에너지) 이다 — G_c (박리 인성) 와 같은 줄에 두지 않는다 (`comparison_vs_ours_DEM.md` §I 규약).
+- **"W = γ 가 박혀 있다" 는 우리 추론**이다 (자연 경계조건 → 90° 접촉각). 논문은 접촉각을 말하지 않는다 (Eq. 19 의 한계로만 언급). 외부 문서에 쓸 땐 "published input files impose a natural (zero-gradient) boundary condition on the phase fields at the metal | SE interface" 꼴로 근거를 같이 적는다.
+- **`Fig. 10` 은 인용 금지** (이미지가 `Fig. 12` 와 같다). 도금 공극 거동은 `Fig. 11` + 본문으로만.
+- **κ_gb/κ_g = 0.067 의 출처가 흔들린다** (코드는 1.7×10⁻³) — "저전도 GB 0.067" 결과를 인용할 땐 "as stated in the paper" 를 붙인다.
+- **C_crit 의 실험 대조 ("22 % lower") 는 Li/LLZO 0.7 MPa 실측과의 비교**다 — "Na 모델이 실험을 재현했다" 로 쓰지 않는다.
+- **GB 영향 "≤ 10 %"** 는 반공극 크기 지표 · 이 배열 · 이 계면 폭에서의 값이다 — 고장 시각 지표로는 다결정이 9–12 % 늦다 (`figure-read` · §10-⑨).
+- **모든 값은 2D** (공극 = 종이 면에 수직으로 무한한 띠) · 위 · 아래 거울 경계 (= 80 µm 주기 배열) 다. 3D 원판 공극의 가장자리 (고리) 집중과 차수가 다를 수 있다.
+- 이 digest 의 차수 어림 (§10-⑥ · ⑬) 은 **우리 계산 · 확신 낮음** 표시 그대로만 옮긴다.
+
+## 14. 기법 용어 미니사전
+
+| 용어 | 뜻 (이 논문에서) |
+|---|---|
+| 상장 (phase-field) · 확산 계면 | 상의 경계를 0 → 1 로 매끄럽게 변하는 변수 (ξ) 로 나타내 계면을 따로 추적하지 않는 방법. 계면 폭 l_w 는 물리 폭이 아니라 계산 편의 값 |
+| grand potential (대퍼텐셜) | Ω = F − μN. 농도 c 대신 **확산 퍼텐셜 μ** 를 독립 변수로 쓰면 계면 안 두 상이 같은 μ 를 가져 계면 에너지와 bulk 구동력이 분리된다 → µm 규모 계면 폭을 써도 결과가 덜 흔들린다 (Plapp 2011) |
+| 확산 퍼텐셜 μ_M^ed | 금속 원자 M 의 화학 퍼텐셜 (J/mol) — 여기선 Na 하나라 사실상 Na 화학 퍼텐셜. 코드 변수 `w` |
+| Allen–Cahn 식 | 상장 변수의 이완 방정식 (Eq. 5) — 자유 에너지를 줄이는 쪽으로 ξ 가 변한다. 계수 L_φ = 이완 속도 |
+| 보간 함수 h_p | 상별 성질을 섞는 가중치 h_p = ξ_p²/Σξ² (Moelans) — 전도도 · 이동도 · grand potential 을 이 가중치로 섞는다 |
+| aux (auxiliary) 상 | 집전체와 금속 사이 "빈 공간" 상 — 금속이 줄면 이 상이 넓어진다. 날카로운 금속 \| SE 계면을 고정해 두려고 만든 장치 |
+| 포물선 자유에너지 · A^p | f = (A/2)(c − c_eq)² — A 가 클수록 농도가 평형에 붙어 있다. 실험 근거 없이 고른 값 · 너무 크면 불안정 (`Fig. S10`) |
+| 열역학 인자 · susceptibility | dμ/dc = v_m d²f/dc² (= v_m A) · 그 역수 dc/dμ 가 이동도 M = D dc/dμ 에 들어간다 |
+| 자연 경계조건 (natural BC) | 아무 조건도 안 주면 약형식에서 자동으로 생기는 "법선 기울기 0". 상장에선 **계면이 벽과 90° 로 만난다** = 벽 에너지 없음 |
+| 젖음 경계조건 (wetting BC) | 벽 위 상장에 벽 에너지 f_s(ξ) 를 주어 접촉각 θ 를 정하는 조건 (Cahn 형). cos θ = (γ_SE/v − γ_SE/m)/γ = W/γ − 1 — 이 모델엔 없다 |
+| Young–Dupré | W = γ(1 + cos θ) — 점착일 W 를 접촉각으로 바꾸는 식 (W_ad 보고서 §7) |
+| 1 차 전류분포 | 전극 표면 반응 저항 없이 전해질 옴 저항만으로 정해지는 전류 분포 — 절연체와 도체가 만나는 가장자리에서 전류가 발산한다 |
+| Voronoi 테셀레이션 | 점 (결정립 중심) 마다 가장 가까운 영역을 나눠 다결정을 만드는 방법 (코드 24 개) |
+| CCS · CCP | 임계 박리 전류 · 임계 도금 전류 (Kasemchainan 2019) — CCS 위에서 박리하면 공극 → 다음 도금에서 덴드라이트 |
+| C_crit (임계 박리 용량) | i_app × t_f (t_f = 공극 하나만 남는 시각 = 접촉 상실) — Agier 2022 정의 |
+| BDF2 · Newton · LU (MUMPS) | 2 차 후진 차분 시간 적분 · 비선형 뉴턴 반복 · 직접 해법 (MUMPS 분해) — 코드 설정 |
+| FeatureFloodCount | MOOSE 후처리기 — 문턱 0.5 로 이어진 영역 (공극) 을 세고 번호를 붙인다 · `AverageGrainVolume` 으로 평균 면적 |
+| 무차원화 (l_c · τ · f_c) | l_c = 1 nm · τ = l_c²/D (1.58 µs) · f_c = RT/v_m 로 길이 · 시간 · 에너지를 나눠 수렴을 돕는다 |

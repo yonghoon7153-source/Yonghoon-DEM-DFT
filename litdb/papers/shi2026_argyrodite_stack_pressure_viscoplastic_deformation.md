@@ -1,6 +1,6 @@
 <!-- 2026-11-24 litdb-curator (병렬 배치 · 이 편에서 쓴 파일 = 이 digest + litdb/figures/<slug>/ 둘뿐).
      크롭 25장 (도구 24 + 손 크롭 tab_S2 1) 중 그림 10장을 Read 로 실독 + 패널 확대 3장 (Fig. 2C 길이 · Fig. 2D · Fig. 5D).
-     SI3 (MATLAB 스크립트 3 + .mat 29) 를 읽기만 해서 Fig. 2C · Fig. 5D 를 다시 냈다 (§8b) — 데이터는 litdb 로 복사하지 않았다. -->
+     SI3 (MATLAB 스크립트 3 + .mat 28) 를 읽기만 해서 Fig. 2C · Fig. 5D 를 다시 냈다 (§8b) — 데이터는 litdb 로 복사하지 않았다. -->
 
 # Stack pressure effects and viscoplastic deformation in argyrodite solid-state electrolyte — Shi et al. (*Matter* **2026**, 9, 102767)
 
@@ -275,7 +275,7 @@ Li\|Li₆PS₅Cl\|Li 대칭셀을 3–8 MPa 스택압에서 돌리면서 반주�
 2. **Berkovich 역해석**: §3a (1) 참조. 적합 = 상대 깊이 변화 (`Fig. S10`).
 3. **균열 구동력**: 대칭 반쪽 (그림의 노란 영역) · CPE8R ≈100,000 · 균열 끝 세분 · 균열 벽에 시간 의존 균일 압력 p(t) · 영역 J-적분 → **G_net** (`Fig. 6`). 균열 길이 · 형상 값은 **미기재**.
 4. **Li–SE 접촉**: LPSCl = `Table 2` · Li = 식 1 (E 5 GPa · ν 0.3 · ε̇₀ 0.05 s⁻¹ · n 6.6 · Y₀ 1 · 2 · 4 · 8 · 16 MPa) · **마찰 없는 경접촉** · 거친 LPSCl 면이 Li 를 압입하며 접촉 면적이 늘어남 · 8 MPa (`Fig. 5E–F` · `Fig. S12` · Video S1–S3). Video S4 = 속도 무관 완전 탄–소성 Li (`Fig. S13`) → 공극 완전 닫힘.
-- ⚠ **받은 SI3 에는 FEM (UMAT · 입력 파일) 이 없다** — MATLAB 공극 분석 스크립트 3 개와 .mat 29 개뿐이다 (§8b).
+- ⚠ **받은 SI3 에는 FEM (UMAT · 입력 파일) 이 없다** — MATLAB 공극 분석 스크립트 3 개와 .mat 28 개뿐이다 (§8b).
 
 ---
 
@@ -417,7 +417,7 @@ Li 가 찬 덴드라이트 균열 안 압력 상승 속도 ṗ 를 전류에 비
 - 위치: `litdb/inbox/shi2026_sup3/codes/` (git 무시 — `.gitignore` 11 행 `litdb/inbox/`) · 39 MB.
 - 받은 zip sha256 (사용자가 Windows 에서 원본 38 MB zip 을 코드 · 데이터로 나눠 보냄): code `1C1516C90432591F731E5C1BE928C4572CC381507AFD0409CB54C48600F25699` · data part1 `958E0538F748D0832DE8DFF81E388A0136958F53BF34C1E49777BB890B8B6571` · part2 `87AF7D1968B94D6B96667D1EF5EDFE6510FD6E76328571D34A92731321BCE531`.
 - 스크립트 3 개 (sha256 앞 16 자리): `script_sparse.m` 40 줄 `52ff1d2964088a83` · `script_for_pore.m` 298 줄 `396d6067df655e40` · `script_2D_void_fraction.m` 56 줄 `f0a5bdfb1d223e51`.
-- `.mat` 29 개 (MATLAB 5.0 · MACI64 · 2024-05-27 생성): `DataPoint.mat` 1 + 이미지 파일 28 (아래 이름 규칙). `script_for_pore.m` 머리말 *"develop by Chenjie; modified 01/23/2025"*.
+- `.mat` **28 개** (MATLAB 5.0 · MACI64 · 2024-05-27 생성): `DataPoint.mat` 1 + 이미지 파일 27 (아래 이름 규칙) — 폴더 실측 (`ls` 28 · 전체 파일 31 = .m 3 + .mat 28). 전달 메시지의 "29 개" 와 1 개 다르다. `script_for_pore.m` 머리말 *"develop by Chenjie; modified 01/23/2025"*.
 - ⚠ **FEM 코드는 없다.** 본문은 *"The modeling code is shared in Code S1"* · *"The modeling code is provided"* 라 하지만 받은 SI3 는 **공극 영상 분석**뿐이다 (UMAT · Abaqus 입력 없음). Video S1–S4 도 없다.
 
 ### 파일 이름 규칙 (본문 · SI 와 맞춰 확인)
@@ -428,9 +428,9 @@ Li 가 찬 덴드라이트 균열 안 압력 상승 속도 ṗ 를 전류에 비
 | `DP1`–`DP3` | **data point = 이미지 번호** (한 조건의 서로 다른 FIB-SEM 이미지) | Methods *"Three to five images were analyzed … for each hold time"* |
 | `_1` · `_2` | 같은 DP 번호 아래 **다른 원본 이미지** — 원본 변수 이름이 다르다 (예: `h5_PLT_DP2_1` = `x1_067` · `h5_PLT_DP2_2` = `x1_070`) | 파일 안 원본 이미지 변수 |
 | 원본 이미지 변수 `x1_NNN` | 1094 × 1536 uint8 회색조 SEM 원본 · NNN = 이미지 일련번호 (h0 330–346 · h1/h5 037–106 · min12 436–451) | 변수 크기 · 이름 |
-- 조건별 이미지 수: h0 PLT **2** (DP2 없음 — `DataPoint.mat` 에는 3 개) · h0 STR 3 · min12 PLT 3 · STR 3 · h1 PLT 3 · STR 4 · h5 PLT 5 · STR 4 = 28 파일 (`DataPoint.mat` 은 29 항목 중 h0 PLT 둘째만 파일이 없다 — 27/28 항목이 파일의 `DataPoint` 와 정확히 같다).
+- 조건별 이미지 수: h0 PLT **2** (DP2 없음 — `DataPoint.mat` 에는 3 개) · h0 STR 3 · min12 PLT 3 · STR 3 · h1 PLT 3 · STR 4 · h5 PLT 5 · STR 4 = **27 파일** (`DataPoint.mat` 은 28 항목 — plt 3 · 3 · 3 · 5 · str 3 · 3 · 4 · 4 — 중 h0 PLT 둘째만 파일이 없고, 나머지 27 항목은 파일 안 `DataPoint` 와 정확히 같다).
 
-### `.mat` 변수 (이미지 파일 27/28 에 공통)
+### `.mat` 변수 (이미지 파일 27 개 공통)
 | 변수 | 크기 · 형 | 뜻 (스크립트로 확인 / ⁽ᵗ⁾ = 추정) | 단위 |
 |---|---|---|---|
 | `x1_NNN` | 1094 × 1536 uint8 (0–255) | 원본 FIB-SEM 이미지 | px |
