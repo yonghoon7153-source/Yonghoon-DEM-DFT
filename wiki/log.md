@@ -4079,3 +4079,18 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 사용자가 정할 것: (가) C1 을 닫고 C2 설계 (문서만) 로 · (나) C1 안의 남은 선택을 새 사전 등록으로 · (다) 멈춤 — `followups/assb-contact-truth/STATUS.md` ·
   근거 [[assb-synthetic-truth-contact-loss-requirements]] · [[pybamm]] 비균일 입자 격자는 설계서 §8-13.
 - `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).
+
+## [2026-11-24] decision | ASSB 합성 truth — 사용자 (가): C1 을 6 차 결과로 닫고 (진단 전용) C2 설계서 v1 (문서만)
+- 사용자 원문 "ASSB: C1을 (가)·(나)·(다) 가운데 어떻게 할지(권고: 가). … 권고대로 하고" (2026-11-24) — 6 차 보고 '다음' 의 (가). (나) · (다) 는 고르지 않음.
+- 무엇: `followups/assb-contact-truth/DESIGN_v1.md` §8-15 (닫는 것 · 넘어가는 것 — 덧붙이기만) · 새 파일 `followups/assb-contact-truth/DESIGN_C2_v1.md` (C2 설계서 v1 —
+  C2a 펄스 역문제 (면적 ↔ `j₀` 분할의 적합 · 근최적 폭) · C2b OCV 만의 3 매개 적합 (θ 손실 · `LAM_PE` · `LLI`) · 실행 전 고정 판정 · 중단 규칙 · 시험 먼저 · C1 실측에 기댄
+  예산 · C1 에서 넘어온 주의 · 사용자가 정할 것) · `followups/assb-contact-truth/STATUS.md` (C1 닫음 · C2 설계 중 · 사용자가 정할 것) · 원장
+  `bms-balancing/docs/ASSB_WANTED_PAPERS.md` §4 2026-11-24 줄.
+- 설계의 핵심 판단 (`[해석]` · 실행 0): C2a 에서 순수 truth 의 분리는 C1a 의 정합 필터로 거의 정해져 있어, 새로 주는 것은 섞인 손실의 분할 폭 · 군더더기 매개의 몫 ·
+  다중 시작의 행동 · 오적합 지문이다. C2b 는 반쪽전지 · 무음극 모두에서 OCV 만으로는 θ 고립 ↔ `LAM_PE` 가 구성상 비식별이라는 항등을 근최적 폭으로 확인하는 시험이고,
+  정답 폭을 아는 축퇴에서 폭 측정기 · 다중 시작 진단을 시험하는 자리이기도 하다 ([[near-optimal-set-width-measurement]]).
+- 원장 §3-b (아)(자): "C1 결과를 본 뒤 판단" 의 시점이 와서 권고만 설계서에 적었다 (결정 아님 · 원장 행 꼬리 변경 0).
+- 하지 않은 것: 코드 0 · 설치 0 · 실행 0 · RUN_SCOPE 변경 0 · C1 기록 수정 0 · 위키 페이지 수정 0 · 수치 복사 0 · 문헌 검색 · 내려받기 0 · 커밋 · push 0 (호출자가 검토 뒤).
+- 사용자가 정할 것: C2 승인 · 순서 (권고 C2b → C2a) · 예산 · 선택 팔 · D4 EIS · 70 · 85 wt% 쌍 · 첫 충전 상한 넓히기 · 폭 측정 구현 · (아)(자) — 설계서 §10 ·
+  `followups/assb-contact-truth/STATUS.md` · 근거 [[assb-synthetic-truth-contact-loss-requirements]] · [[assb-lampe-contact-product-degeneracy]].
+- `python3 -I -B wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).
