@@ -1,0 +1,148 @@
+{
+  "lock": {
+    "high": 0,
+    "low": 2,
+    "wall": "648001",
+    "resume": 5,
+    "c2": false
+  },
+  "truncated_owner": {
+    "record": 2,
+    "pack": 0,
+    "first_alive_when_second_finished": true,
+    "owner_still_present": true,
+    "receipt_written_under_pack": false,
+    "record_after": null
+  },
+  "rows": {
+    "same_count_changed_token": {
+      "rc": 8,
+      "archive_osz_changed": false,
+      "source_rows": 7,
+      "packed_rows": 7,
+      "old_hist": 1,
+      "packed_hist": 1,
+      "checker_problems": []
+    },
+    "append_row": {
+      "rc": 0,
+      "archive_osz_changed": true,
+      "source_rows": 7,
+      "packed_rows": 8,
+      "old_hist": 1,
+      "packed_hist": 1,
+      "checker_problems": []
+    },
+    "history_restored_to_header": {
+      "rc": 8,
+      "archive_osz_changed": false,
+      "source_rows": 7,
+      "packed_rows": 7,
+      "old_hist": 1,
+      "packed_hist": 1,
+      "checker_problems": []
+    },
+    "wall_different_spelling": {
+      "rc": 8,
+      "archive_osz_changed": false,
+      "source_rows": 7,
+      "packed_rows": 7,
+      "old_hist": 1,
+      "packed_hist": 1,
+      "checker_problems": [
+        "시도 이력 (run/status.tsv) 1 째 줄 벽시계 '00' ≠ 그 시도 끝 기록 elapsed_s '0' (status_row_1_elapsed) — 합산 전에 (Codex ER Q-ER-3①)"
+      ]
+    }
+  },
+  "three_sources": {
+    "malformed_first_row": {
+      "pack": 0,
+      "before": 2,
+      "after": 8,
+      "resume": 8,
+      "same_start": true,
+      "archive_unchanged": true,
+      "aborted_folder": false,
+      "adopted": null
+    },
+    "outcar_iteration_only": {
+      "pack": 0,
+      "before": 2,
+      "after": 8,
+      "resume": 8,
+      "same_start": true,
+      "archive_unchanged": true,
+      "aborted_folder": false,
+      "adopted": null
+    },
+    "stdout_iteration_only": {
+      "pack": 0,
+      "before": 2,
+      "after": 8,
+      "resume": 8,
+      "same_start": true,
+      "archive_unchanged": true,
+      "aborted_folder": false,
+      "adopted": null
+    }
+  },
+  "potcar": {
+    "runner": 8,
+    "c1": false,
+    "sidecar_wrong": true,
+    "checker": {
+      "status": "LADDER_VIOLATION",
+      "adopted": null
+    },
+    "end_has_wrong_value": false
+  },
+  "history": {
+    "pack": [
+      8,
+      "⛔ 트리 관문 (PACK_ONLY 포장) — status_row_1_elapsed — 아무것도 쓰거나 띄우거나 포장하지 않고 멈춘다 (종료 8 · run/ · run_aborted/ · a5_return.tgz 그대로). 이 줄을 그대로 보내 주세요 (1저자)"
+    ],
+    "checker": [
+      "시도 이력 (run/status.tsv) 1 째 줄 벽시계 '00' ≠ 그 시도 끝 기록 elapsed_s '0' (status_row_1_elapsed) — 합산 전에 (Codex ER Q-ER-3①)"
+    ]
+  },
+  "title": {
+    "full": {
+      "checked": [
+        0,
+        null
+      ],
+      "record": 0
+    },
+    "partial": {
+      "checked": [
+        0,
+        null
+      ],
+      "record": 0
+    },
+    "partial_tab": {
+      "checked": [
+        0,
+        null
+      ],
+      "record": 0
+    },
+    "partial_n": {
+      "checked": [
+        0,
+        null
+      ],
+      "record": 0
+    }
+  },
+  "m201": {
+    "False": [
+      8,
+      "⛔ 트리 관문 (PACK_ONLY 포장) — tgz_rows_lost_run/V5_s_outer_A_G4_e70_far_a5_c1 — 아무것도 쓰거나 띄우거나 포장하지 않고 멈춘다 (종료 8 · run/ · run_aborted/ · a5_return.tgz 그대로). 이 줄을 그대로 보내 주세요 (1저자)"
+    ],
+    "True": [
+      0,
+      ""
+    ]
+  }
+}

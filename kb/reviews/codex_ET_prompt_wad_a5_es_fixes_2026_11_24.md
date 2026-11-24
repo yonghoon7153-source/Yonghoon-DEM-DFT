@@ -7,7 +7,7 @@ letter: ET
 track: wad
 channel: codex
 kind: prompt
-status: 발송 대기
+status: 발송 · 회신 수령 2026-11-24 — GO (codex_ET_reply_wad_a5_es_fixes_2026_11_24.md · 업체 발송은 사용자)
 confidence: medium
 verificationStatus: unverified
 explored: false
