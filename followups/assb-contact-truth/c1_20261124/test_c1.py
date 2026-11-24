@@ -112,13 +112,14 @@ def test_t1_unknown_arm_rejected(base):
 
 
 def test_t1_j0_shape_normalised_at_x_mid():
-    """두 g 가 x_mid 에서 같은 j₀ → 같은 신품 R_ct,기하 = 66 Ω cm² (§1-4 · §2-6)."""
+    """두 g 가 x_mid 에서 같은 j₀ → 같은 신품 R_ct,기하 = 66 Ω cm² (§1-4 · §2-6).
+    2 차 (§8-4 S5′ · 사후): 기준 함수 = PyBaMM 26.8 이 실제로 쓰는 정칙화된 g (g_reg) — k₀ 정규화도 g_reg 로."""
     for x_mid in (0.45, 0.6, 0.7):
         j = []
         for shape in ("G05", "G2"):
             b = tr.base_inputs(shape=shape, Wa=10.0, x_mid=x_mid)
-            j.append(b["k0"] * tr.g_shape(shape, x_mid))
-            rct = tr.VT / (tr.A_SURF0 * b["k0"] * tr.g_shape(shape, x_mid) * tr.L_PE)
+            j.append(b["k0"] * tr.g_reg(shape, x_mid))
+            rct = tr.VT / (tr.A_SURF0 * b["k0"] * tr.g_reg(shape, x_mid) * tr.L_PE)
             assert rct == pytest.approx(tr.RCT_GEO0, rel=1e-12)
         assert j[0] == pytest.approx(j[1], rel=1e-14)
     x = np.array([0.3, 0.5, 0.8])
@@ -321,3 +322,56 @@ def test_t6_model_lithium_balance_short_pulse():
     """모형 안 Li 보존 (§3-2 S5): F·ΔN_Li,입자 + ΔQ_dl = ∫ I dt — 상대 ≤ 1e-6."""
     rel = tr.li_balance_check(shape="G05", Wa=10.0, x_mid=0.6, x0=0.6, I_A=0.5, t_pulse=10.0, t_rest=20.0)
     assert rel["rel_with_dl"] <= 1e-6
+
+
+# --------------------------------------------------------------------------------------------
+# 2 차 (§8-4 · 결과를 본 뒤의 사후 규칙 변경) — S4′ (c_e 되먹임) · S5′ (정칙화 g)
+# --------------------------------------------------------------------------------------------
+def test_s5p_g_reg_matches_pybamm_regpower():
+    """g_reg = PyBaMM RegPower(y = x(1−x), p) — y·(y² + δ²)^((p−1)/2) · 척도 1 · δ = settings reg_power."""
+    import pybamm
+    assert tr.REG_DELTA == pybamm.settings.tolerances["reg_power"]
+    for shape, p in (("G05", 0.5), ("G2", 2.0)):
+        for x in (1e-4, 0.0123, 0.261417, 0.5, 0.625854, 0.844516, 0.99, 0.999795):
+            y = x * (1 - x)
+            ref = float(pybamm.RegPower(pybamm.Scalar(y), p).evaluate())
+            assert float(tr.g_reg(shape, x)) == pytest.approx(ref, rel=1e-14)
+    # 정칙화는 x_mid 근처에서 작고 창 끝에서 커진다 (진단 — 크기만)
+    assert abs(tr.g_reg("G05", 0.6) / tr.g_shape("G05", 0.6) - 1) < 1e-4
+    assert abs(tr.g_reg("G2", 0.999795) / tr.g_shape("G2", 0.999795) - 1) > 1.0
+
+
+def test_s5p_model_j0_equals_k0_g_reg_and_not_plain_g():
+    """모형 j₀ (t = 0 · I = 0 · 균일 x) = k₀·g_reg (상대 ≤ 1e-12) · 음성 대조: k₀·g 와는 > 1e-7 다르다."""
+    xs = np.array([0.30, 0.407192, 0.625854, 0.844516, 0.95])
+    for shape in ("G05", "G2"):
+        r = tr.model_j0_at(shape=shape, xs=xs, x_mid=0.625854)
+        k0 = tr.base_inputs(shape=shape, Wa=10.0, x_mid=0.625854)["k0"]
+        rel_reg = np.max(np.abs(r / (k0 * tr.g_reg(shape, xs)) - 1))
+        rel_plain = np.max(np.abs(r / (k0 * tr.g_shape(shape, xs)) - 1))
+        assert rel_reg <= 1e-12, (shape, rel_reg)
+        assert rel_plain > 1e-7, (shape, rel_plain)
+
+
+def test_s4p_common_max_abs_dv():
+    """공통 출력 시각에서만 max |ΔV| — 끝 시각이 달라도 (사건 종료) 공통 구간만 본다."""
+    t = np.arange(0, 100, 10.0)
+    va = np.sin(t / 30.0)
+    vb = va.copy()
+    vb[3] += 2e-6
+    tb = t.copy()
+    out = tr.common_max_abs_dv(t, va, tb[:-2], vb[:-2])
+    assert out["max_abs_dv"] == pytest.approx(2e-6, rel=1e-9)
+    assert out["t_at_max"] == pytest.approx(30.0)
+    assert out["n_common"] == 8
+    out2 = tr.common_max_abs_dv(t, va, t + 5.0, va)     # 공통 시각 없음
+    assert out2["n_common"] == 0 and np.isnan(out2["max_abs_dv"])
+
+
+def test_s4p_feedback_pulse_below_threshold_and_negative_control():
+    """S4′: t₊ = 1 truth 에서 D_e × 10 · c_e0 × 2 변형의 펄스 V 차 ≤ 1e-6 V.
+    음성 대조: κ 를 c_e 에 의존시키면 (κ ∝ c_e) 같은 진단이 문턱을 넘는다 — 진단이 되먹임을 잡을 수 있다."""
+    ok = tr.feedback_pulse(shape="G05", Wa=0.1, x_mid=0.625854, x0=0.625854, I_A=2.0)
+    assert ok["max_abs_dv"] <= 1e-6, ok
+    bad = tr.feedback_pulse(shape="G05", Wa=0.1, x_mid=0.625854, x0=0.625854, I_A=2.0, kappa_ce_exp=1.0)
+    assert bad["max_abs_dv"] > 1e-6, bad

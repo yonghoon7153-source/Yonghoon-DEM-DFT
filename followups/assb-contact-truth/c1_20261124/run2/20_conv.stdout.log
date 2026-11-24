@@ -1,0 +1,2 @@
+conv: worst τ̂ change 2.952e-02 (limit 0.01) · worst z change 4.964e-03 (limit 0.05) · Li {'std|fresh': 4.2473950930507745e-11, 'std|A_k8': 4.7954223339206757e-11, 'std|K_k8': 4.8553500131523385e-11, 'fine|fresh': 4.571623832100486e-11, 'fine|A_k8': 5.6565703102755684e-11, 'fine|K_k8': 4.3821907163086477e-11}
+STOP rule 5 (격자 수렴)

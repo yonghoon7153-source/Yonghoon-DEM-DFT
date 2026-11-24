@@ -57,7 +57,7 @@ SHAPES = ("G05", "G2")
 
 
 def g_shape(shape: str, x):
-    """j₀(x) = k₀·g(x) 의 모양 (§2-6). c_e 인자는 상수 (단일 이온 · c_e 균일 가정)."""
+    """j₀(x) = k₀·g(x) 의 설계 모양 (§2-6 · 정칙화 전). c_e 인자는 상수 (단일 이온 · c_e 균일 가정)."""
     x = np.asarray(x, dtype=float)
     if shape == "G05":
         return np.sqrt(x * (1.0 - x))
@@ -66,14 +66,35 @@ def g_shape(shape: str, x):
     raise ValueError(shape)
 
 
+def _reg_delta() -> float:
+    import pybamm
+    return float(pybamm.settings.tolerances["reg_power"])
+
+
+REG_DELTA = _reg_delta()
+SHAPE_P = {"G05": 0.5, "G2": 2.0}
+
+
+def g_reg(shape: str, x):
+    """PyBaMM 26.8 이 j₀ FunctionParameter 에 붙이는 RegulariseSqrtAndPower 후처리 뒤의 g (§8-4 S5′ · 사후):
+    RegPower(y, p) = y·(y² + δ²)^((p−1)/2) · y = x(1 − x) (사전에 없는 상태 의존 밑수 → 척도 1) · δ = reg_power."""
+    if shape not in SHAPE_P:
+        raise ValueError(shape)
+    p = SHAPE_P[shape]
+    x = np.asarray(x, dtype=float)
+    y = x * (1.0 - x)
+    return y * (y * y + REG_DELTA ** 2) ** ((p - 1.0) / 2.0)
+
+
 def j0_target() -> float:
     """신품 x_mid 의 실제 접촉 면적당 j₀ — R_ct,기하 = RT/(F·a·j₀·L) = RCT_GEO0."""
     return VT / (A_SURF0 * L_PE * RCT_GEO0)
 
 
 def base_inputs(*, shape: str, Wa: float, x_mid: float) -> dict:
-    """신품 (모든 배수 1) 의 InputParameter 사전. Wa = R_ct,기하 / (L/κ_eff) (§5-2 정의)."""
-    k0 = j0_target() / float(g_shape(shape, x_mid))
+    """신품 (모든 배수 1) 의 InputParameter 사전. Wa = R_ct,기하 / (L/κ_eff) (§5-2 정의).
+    k₀ 정규화는 모형이 실제로 쓰는 g_reg 로 (§8-4 S5′ · 1 차 g 정규화와의 차 ≤ 1e-5 상대)."""
+    k0 = j0_target() / float(g_reg(shape, x_mid))
     kappa_eff = Wa * L_PE / RCT_GEO0
     kappa = kappa_eff / EPS_SE ** BRUGG_E
     return {"k0": k0, "c_dl": C_DL0, "D_s": D_S0, "eps_am": EPS_CAM0, "eps_se": EPS_SE,
@@ -143,8 +164,9 @@ INPUT_NAMES = ("k0", "c_dl", "D_s", "eps_am", "eps_se", "sigma_s", "kappa", "I",
 
 
 def build_model(shape: str, *, var_pts=None, rtol: float = 1e-8, atol: float = 1e-8, D_e: float = D_E,
-                ce0: float = CE0):
-    """g 모양 하나의 truth 모형을 만들어 (model, solver, sim) 를 돌려준다."""
+                ce0: float = CE0, kappa_ce_exp: float = 0.0):
+    """g 모양 하나의 truth 모형을 만들어 (model, solver, sim) 를 돌려준다.
+    kappa_ce_exp ≠ 0 은 시험의 음성 대조 전용 (κ ∝ (c_e/CE0)^n — truth 는 0)."""
     import pybamm
     pv = _chen()
     k0 = pybamm.InputParameter("k0")
@@ -186,12 +208,20 @@ def build_model(shape: str, *, var_pts=None, rtol: float = 1e-8, atol: float = 1
         "Initial temperature [K]": T_K,
         "Reference temperature [K]": T_K,
     })
+    if kappa_ce_exp != 0.0:
+        def kappa_fun(c_e, T):
+            return pybamm.InputParameter("Electrolyte conductivity [S.m-1]") * (c_e / CE0) ** kappa_ce_exp
+        pv.update({"Electrolyte conductivity [S.m-1]": kappa_fun})
     _rename = {"kappa": "Electrolyte conductivity [S.m-1]", "c_dl": "Positive electrode double-layer capacity [F.m-2]",
                "D_s": "Positive particle diffusivity [m2.s-1]", "eps_am": "Positive electrode active material volume fraction",
                "eps_se": "Positive electrode porosity", "sigma_s": "Positive electrode conductivity [S.m-1]",
                "I": "Current function [A]", "c0": "Initial concentration in positive electrode [mol.m-3]",
                "V_lo": "Lower voltage cut-off [V]", "V_hi": "Upper voltage cut-off [V]"}
     model = pybamm.lithium_ion.DFN({"working electrode": "positive", "surface form": "differential"})
+    if var_pts is not None:                       # 정밀판: 기본 사전에 덮어쓴다 (반쪽전지도 x_n 키를 요구 — 배관 점검 결함 수정)
+        vp = dict(model.default_var_pts)
+        vp.update(var_pts)
+        var_pts = vp
     solver = pybamm.IDAKLUSolver(rtol=rtol, atol=atol)
     sim = pybamm.Simulation(model, parameter_values=pv, solver=solver, var_pts=var_pts)
     sim.build()
@@ -279,6 +309,50 @@ def run_cc(model, solver, sim, d_inputs: dict, *, x_start: float, I_A: float, t_
     for k in keep:
         out[k] = np.asarray(s[k].entries)
     return out
+
+
+def model_j0_at(*, shape: str, xs, x_mid: float, Wa: float = 10.0) -> np.ndarray:
+    """균일 x · I = 0 의 t = 0 에서 모형이 계산한 양극 j₀ (x 격자 평균) — §8-4 S5′ 확인용."""
+    model, solver, sim = build_model(shape)
+    b = base_inputs(shape=shape, Wa=Wa, x_mid=x_mid)
+    out = []
+    for x in np.atleast_1d(xs):
+        d = dict(b)
+        d.update({"I": 0.0, "c0": float(x) * C_MAX, "V_lo": 0.0, "V_hi": 10.0})
+        s = solver.solve(model, t_eval=[0.0, 1e-3], t_interp=np.array([0.0, 1e-3]),
+                         inputs=to_pybamm_inputs(sim, d))
+        j = np.asarray(s["Positive electrode exchange current density [A.m-2]"].entries)[:, 0]
+        out.append(float(j.mean()))
+    return np.array(out)
+
+
+def common_max_abs_dv(t_a, v_a, t_b, v_b, *, ndig: int = 9) -> dict:
+    """공통 출력 시각 (반올림 ndig 자리 일치) 에서만 max |V_a − V_b| (§8-4 S4′)."""
+    ka = np.round(np.asarray(t_a, float), ndig)
+    kb = np.round(np.asarray(t_b, float), ndig)
+    common, ia, ib = np.intersect1d(ka, kb, return_indices=True)
+    if common.size == 0:
+        return {"max_abs_dv": float("nan"), "t_at_max": float("nan"), "n_common": 0}
+    dv = np.abs(np.asarray(v_a, float)[ia] - np.asarray(v_b, float)[ib])
+    i = int(np.argmax(dv))
+    return {"max_abs_dv": float(dv[i]), "t_at_max": float(common[i]), "n_common": int(common.size)}
+
+
+FEEDBACK_VARIANTS = (("D_e_x10", {"D_e": D_E * 10}), ("ce0_x2", {"ce0": CE0 * 2}))
+
+
+def feedback_pulse(*, shape: str, Wa: float, x_mid: float, x0: float, I_A: float, kappa_ce_exp: float = 0.0,
+                   t_on: float = 10.0, t_off: float = 60.0) -> dict:
+    """S4′: 기준 · 진단 변형 (D_e × 10 · c_e0 × 2) 의 펄스 V 차 (공통 시각 max |ΔV|)."""
+    b = base_inputs(shape=shape, Wa=Wa, x_mid=x_mid)
+    m0, s0, sim0 = build_model(shape, kappa_ce_exp=kappa_ce_exp)
+    r0 = run_pulse(m0, s0, sim0, b, x_start=x0, I_A=I_A, t_on=t_on, t_off=t_off, keep=("Voltage [V]",))
+    per = {}
+    for lab, kw in FEEDBACK_VARIANTS:
+        m1, s1, sim1 = build_model(shape, kappa_ce_exp=kappa_ce_exp, **kw)
+        r1 = run_pulse(m1, s1, sim1, b, x_start=x0, I_A=I_A, t_on=t_on, t_off=t_off, keep=("Voltage [V]",))
+        per[lab] = common_max_abs_dv(r0["t"], r0["Voltage [V]"], r1["t"], r1["Voltage [V]"])
+    return {"max_abs_dv": max(v["max_abs_dv"] for v in per.values()), "per_variant": per}
 
 
 def seed_for(key: str, base: int = 101) -> int:

@@ -4004,3 +4004,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 하지 않은 것: RUN_SCOPE 변경 0 · 격자 0 · 위키 페이지 수정 0 · 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
 - 사용자가 정할 것: (가) 결과를 본 뒤의 규칙 변경으로 격자 · (나) truth 수정 → 새 스파이크 · (다) C1 닫기 — `followups/assb-contact-truth/STATUS.md`.
 - `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).
+
+## [2026-11-24] update | ASSB 합성 truth C1 2 차 — 사후 규칙 변경 S4′ · S5′ 로 스파이크 통과 · 격자 수렴 (§5-8 규칙 5) 에서 중단
+- 승인: 사용자 원문 "권고대로 ㅇㅇ" (2026-11-24) — 1 차 보고의 (가) (S4 → 'c_e 의 전압 되먹임' · S5 → PyBaMM 이 실제로 쓰는 정칙화 g) · **결과를 본 뒤의 사후 변경**으로 표시 · 새 시계 원점.
+- 무엇: `followups/assb-contact-truth/DESIGN_v1.md` §8-4 (사후 규칙 변경) · §8-5 (격자 구현 해석 · 실행 전 예측 · 배관 점검 결과) · §8-6 (2 차 결과 · 중단 · 사후 발견) 덧붙임 ·
+  `followups/assb-contact-truth/c1_20261124/` 2 차 (README 2 차 절 · 격자 구동 · 후처리 · 배관 점검 · 순서 스크립트 · `run2/` · `spikes2/` · `run2_tables/conv.json` ·
+  `LARGE_OUTPUTS_SHA256.txt` 2 차 절) · `followups/assb-contact-truth/STATUS.md` (C1 행 · 격자 수렴 행 · 사용자가 정할 것).
+- 결과 (수치는 옮기지 않는다 — 진단 전용 · 인용 금지 · 정본 아님): 새 시험 RED → GREEN 뒤 스파이크 전부 통과 · 배관 점검이 코드 결함 둘을 격자 전에 잡아 고침 ·
+  격자 첫 단계 '격자 수렴' 에서 τ̂ 변화가 문턱을 넘어 멈췄다 (Tafel 진폭 펄스에서만 — 설계서 §8-6). C1a 검출 지도 · C1b 재현 판정은 없다. [[pybamm]] 26.8 의 정칙화 · 사건 뒤 step 동작은 설계서 §8-4 · §8-5.
+- 하지 않은 것: RUN_SCOPE 변경 0 · C1a · DC · C1b · AD 실행 0 · 위키 페이지 수정 0 · 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
+- 사용자가 정할 것: (가) 표준 해상도 올리기 (규칙 그대로) · (나) 수렴 판정 바꾸기 (사후 규칙 변경) · (다) C1 닫기 — `followups/assb-contact-truth/STATUS.md`.
+- `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).

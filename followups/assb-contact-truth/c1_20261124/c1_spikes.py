@@ -319,20 +319,127 @@ def s5(out: Path) -> dict:
     return res
 
 
+# ------------------------------------------------------------------ 2 차 (§8-4 · 사후 규칙 변경) — S4′ · S5′
+S4P_LIMIT = 1e-6        # V = 0.01 × σ_V,min (0.1 mV) — 판정 잡음 바닥의 1 % (호출자 · 사용자 승인 (가))
+
+
+def s4p(out: Path) -> dict:
+    """S4′: t₊ = 1 truth 의 c_e 되먹임 — 진단 변형 (D_e × 10 · c_e0 × 2) 과 기준의 max |ΔV| (공통 출력 시각)
+    · 범위 = C1 프로토콜: C/10 방전 (G½ × Wa 10 · 0.1) + 12 펄스 묶음 (G½ · G2 × Wa 10 · 0.1)."""
+    t0 = time.time()
+    R = reg(out)
+    rows = []
+    for shape in tr.SHAPES:
+        base_m = {}
+        for Wa in (10.0, 0.1):
+            d = tr.base_inputs(shape=shape, Wa=Wa, x_mid=R["x_mid"])
+            m0 = tr.build_model(shape)
+            mv = {lab: tr.build_model(shape, **kw) for lab, kw in tr.FEEDBACK_VARIANTS}
+            if shape == "G05":
+                r0 = tr.run_cc(*m0, d, x_start=R["x_top"], I_A=R["I_C10_A"], t_max=12.5 * 3600, dt_out=10.0,
+                               V_lo=tr.V_LOW, V_hi=10.0)
+                for lab, mm in mv.items():
+                    r1 = tr.run_cc(*mm, d, x_start=R["x_top"], I_A=R["I_C10_A"], t_max=12.5 * 3600, dt_out=10.0,
+                                   V_lo=tr.V_LOW, V_hi=10.0)
+                    c = tr.common_max_abs_dv(r0["t"], r0["Voltage [V]"], r1["t"], r1["Voltage [V]"])
+                    rows.append({"protocol": "C/10", "shape": shape, "Wa": Wa, "variant": lab, **c,
+                                 "t_end_base": float(r0["t"][-1]), "t_end_var": float(r1["t"][-1])})
+            for s in SOCS:
+                x = R["soc_x"][str(s)]
+                for amp in ("lin", "taf"):
+                    for sgn in ("+", "-"):
+                        I = R["pulse_I_A"][amp + sgn]
+                        r0 = tr.run_pulse(*m0, d, x_start=x, I_A=I, keep=("Voltage [V]",))
+                        for lab, mm in mv.items():
+                            r1 = tr.run_pulse(*mm, d, x_start=x, I_A=I, keep=("Voltage [V]",))
+                            c = tr.common_max_abs_dv(r0["t"], r0["Voltage [V]"], r1["t"], r1["Voltage [V]"])
+                            rows.append({"protocol": f"pulse SOC{s} {amp}{sgn}", "shape": shape, "Wa": Wa,
+                                         "variant": lab, **c})
+    worst = max(rows, key=lambda r: r["max_abs_dv"])
+    by_proto = {}
+    for r in rows:
+        k = "C/10" if r["protocol"] == "C/10" else "pulse"
+        by_proto[k] = max(by_proto.get(k, 0.0), r["max_abs_dv"])
+    res = {"spike": "S4p", "limit_V": S4P_LIMIT, "max_abs_dv_V": worst["max_abs_dv"], "worst": worst,
+           "max_by_protocol": by_proto, "n_comparisons": len(rows), "rows": rows,
+           "pass": bool(worst["max_abs_dv"] <= S4P_LIMIT and all(r["n_common"] > 0 for r in rows)),
+           "elapsed_s": time.time() - t0}
+    jdump(res, out / "s4p.json")
+    print(f"S4′ max|ΔV| = {worst['max_abs_dv']:.3e} V (limit {S4P_LIMIT:.0e}) · by protocol {by_proto} · worst {worst['protocol']} "
+          f"{worst['shape']} Wa{worst['Wa']} {worst['variant']} t={worst['t_at_max']} · n={len(rows)}")
+    print("S4′ PASS" if res["pass"] else "S4′ FAIL")
+    return res
+
+
+def s5p(out: Path) -> dict:
+    """S5′: 모형 j₀ = k₀·g_reg (SOC 점 셋 + 창 [x_top, x_end] 조밀 201 점 · 상대 ≤ 1e-12) · 두 g 의 x_mid j₀ = 목표 (≤ 1e-12)
+    · 진단 |g_reg/g − 1| (창 · [x_top, x0]) · Li 보존 (이중층 항 포함) ≤ 1e-6 (S3 출력)."""
+    t0 = time.time()
+    R = reg(out)
+    S3 = json.loads((out / "s3.json").read_text())
+    x_top, x_end, x0 = R["x_top"], R["x_end_C10"], R["x0_assembled"]
+    soc_pts = np.array([R["soc_x"][str(s)] for s in SOCS])
+    dense = np.linspace(x_top, x_end, 201)
+    res_shape = {}
+    for shape in tr.SHAPES:
+        k0 = tr.base_inputs(shape=shape, Wa=10.0, x_mid=R["x_mid"])["k0"]
+        js = tr.model_j0_at(shape=shape, xs=soc_pts, x_mid=R["x_mid"])
+        jd = tr.model_j0_at(shape=shape, xs=dense, x_mid=R["x_mid"])
+        jm = tr.model_j0_at(shape=shape, xs=np.array([R["x_mid"]]), x_mid=R["x_mid"])[0]
+        rel_soc = float(np.max(np.abs(js / (k0 * tr.g_reg(shape, soc_pts)) - 1)))
+        rel_dense = float(np.max(np.abs(jd / (k0 * tr.g_reg(shape, dense)) - 1)))
+        rel_mid = abs(jm / tr.j0_target() - 1)
+        reg_soc = np.abs(tr.g_reg(shape, soc_pts) / tr.g_shape(shape, soc_pts) - 1)
+        xw = np.linspace(x_top, x_end, 20001)
+        xf = np.linspace(x_top, x0, 20001)
+        reg_win = np.abs(tr.g_reg(shape, xw) / tr.g_shape(shape, xw) - 1)
+        reg_full = np.abs(tr.g_reg(shape, xf) / tr.g_shape(shape, xf) - 1)
+        res_shape[shape] = {"k0": k0, "rel_model_vs_k0greg_soc": rel_soc, "rel_model_vs_k0greg_dense": rel_dense,
+                            "rel_j0_x_mid_vs_target": rel_mid,
+                            "reg_effect_soc": {str(s): float(v) for s, v in zip(SOCS, reg_soc)},
+                            "reg_effect_window_max": float(reg_win.max()),
+                            "reg_effect_window_x_at_max": float(xw[np.argmax(reg_win)]),
+                            "reg_effect_x_top_to_x0_max": float(reg_full.max()),
+                            "soc_points_flag_reg_gt_1e-3": [str(s) for s, v in zip(SOCS, reg_soc) if v > 1e-3]}
+    li_with = max(r["li_rel_with_dl"] for rows in S3["rows"].values() for r in rows)
+    ok_impl = all(v["rel_model_vs_k0greg_soc"] <= 1e-12 and v["rel_model_vs_k0greg_dense"] <= 1e-12
+                  and v["rel_j0_x_mid_vs_target"] <= 1e-12 for v in res_shape.values())
+    res = {"spike": "S5p", "shapes": res_shape, "li_rel_with_dl_max": li_with,
+           "physical_area_impl": "없음 (26.8 · spherical a = 3ε/R) → 미확인 · 대수로만 (조건부 8 실행 안 함)",
+           "pass_impl": bool(ok_impl), "pass_li": bool(li_with <= 1e-6), "pass": bool(ok_impl and li_with <= 1e-6),
+           "elapsed_s": time.time() - t0}
+    jdump(res, out / "s5p.json")
+    for sh, v in res_shape.items():
+        print(f"S5′ {sh}: model/k0·g_reg soc {v['rel_model_vs_k0greg_soc']:.2e} dense {v['rel_model_vs_k0greg_dense']:.2e} · "
+              f"x_mid vs target {v['rel_j0_x_mid_vs_target']:.2e} · |g_reg/g−1| soc {v['reg_effect_soc']} window max "
+              f"{v['reg_effect_window_max']:.2e} @x={v['reg_effect_window_x_at_max']:.6f} · x_top→x0 max {v['reg_effect_x_top_to_x0_max']:.3e}")
+    print(f"S5′ Li (dl 포함) max {li_with:.2e}")
+    print("S5′ PASS" if res["pass"] else "S5′ FAIL")
+    return res
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("which", choices=["s1", "s2", "s3", "s4", "s5", "s6", "all"])
+    ap.add_argument("which", choices=["s1", "s2", "s3", "s4", "s5", "s6", "s4p", "s5p", "all", "all2"])
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    order = ["s6", "s1", "s2", "s3", "s4", "s5"] if a.which == "all" else [a.which]
+    if a.which == "all":
+        order = ["s6", "s1", "s2", "s3", "s4", "s5"]
+    elif a.which == "all2":     # 2 차: S4 (1 차 판정 — 정보로만 다시 잼) + S4′ · S5′ (판정)
+        order = ["s6", "s1", "s2", "s3", "s4", "s4p", "s5p"]   # 1 차 S5 는 다시 재지 않는다 (k₀ 정규화가 g_reg 로 바뀌어 같은 식이 자명해짐)
+    else:
+        order = [a.which]
+    info_only = {"s4"} if a.which == "all2" else set()
     status = {}
     for w in order:
         r = globals()[w](out)
-        status[w] = r.get("pass", True) if w != "s6" else None
+        status[w] = None if (w == "s6" or w in info_only) else r.get("pass", True)
+        if w in info_only:
+            status[w + "_info_pass"] = r.get("pass")
     jdump(status, out / "spike_status.json")
-    fails = [k for k, v in status.items() if v is False]
+    fails = [k for k, v in status.items() if v is False and not k.endswith("_info_pass")]
     print("SPIKES FAIL: " + ",".join(fails) if fails else "SPIKES ALL PASS")
     return 3 if fails else 0
 

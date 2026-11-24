@@ -9,3 +9,15 @@ e830703bcf0911f73d47330171f38e35b7f608bc457f4e541ab77d51c1aba700  out/spikes/s5.
 7029935c3d6e323b56a9ea4603a077e7418725b54b934852167187dc1e6633df  out/spikes/spike_status.json (82 B)
 2c88936a7ac494d60f8a3abc758f9db448814d5da60e308d0996299796e21a68  run/pip_freeze.txt (545 B)
 # 사본 base bf61565ba79f3aa66b16fd097da3105752c3248f · 사본 크기 536039199 B · venv 728426680 B
+
+# 2 차 (T0₂ 2026-11-24T06:04:42Z) — 스크래치패드 out2/ · 규칙 5 (격자 수렴) 중단 · 격자 truth 파형은 수렴 6 해만 (저장 안 함 — conv.json 요약만)
+d7d81fce85db49f183c59f237ecea701a1df5daa032b9e84aee4546265e00f5d  out2/spikes/s1.json (489 B)
+27bf57eab6e804e6f371905b77da96286df65a57f08c8c1287c0b2bbe7e1ae49  out2/spikes/s2.json (667 B)
+a7b6fa14e8554a861e8fd0cc727a684e5c65e9deba72ec0b96c3085595c39d3a  out2/spikes/s3.json (11264 B)
+efb04b30a81eae9e033d59af96ff723e8c2b14b56941dd6bc4245d9b67cd61af  out2/spikes/s4.json (986 B)
+32801179ec9b694fc40e59590e67ca8303174a8dffb4c0f97b5ff7666993f029  out2/spikes/s4p.json (19283 B)
+f0f51858c53f136f8fc7567c0a88cde9f135313a341bae6372761320c6257508  out2/spikes/s5p.json (1344 B)
+bf02d8083f44d3f04f628b2a403405ac96324d46367ec7748656a90ce6eb3c4b  out2/spikes/s6_registered.json (3095 B)
+1fc889d33063d2e3f310ff837e07e3c0b32d95d8687af6a2fe477ee80136fc1a  out2/spikes/spike_status.json (119 B)
+78a64afd169deaec8312acb29425ca2cf86ad52b8797a2e6271f182f7c5d96f5  out2/grid/conv/conv.json (8396 B)
+# 배관 점검 산출 (out2/plumb) 은 결과 버림 원칙대로 지웠다 (06:23Z)

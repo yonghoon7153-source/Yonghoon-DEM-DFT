@@ -1,0 +1,68 @@
+.........F..............FFFF                                             [100%]
+=================================== FAILURES ===================================
+_____________________ test_t1_j0_shape_normalised_at_x_mid _____________________
+
+    def test_t1_j0_shape_normalised_at_x_mid():
+        """두 g 가 x_mid 에서 같은 j₀ → 같은 신품 R_ct,기하 = 66 Ω cm² (§1-4 · §2-6).
+        2 차 (§8-4 S5′ · 사후): 기준 함수 = PyBaMM 26.8 이 실제로 쓰는 정칙화된 g (g_reg) — k₀ 정규화도 g_reg 로."""
+        for x_mid in (0.45, 0.6, 0.7):
+            j = []
+            for shape in ("G05", "G2"):
+                b = tr.base_inputs(shape=shape, Wa=10.0, x_mid=x_mid)
+>               j.append(b["k0"] * tr.g_reg(shape, x_mid))
+                                   ^^^^^^^^
+E               AttributeError: module 'c1_truth' has no attribute 'g_reg'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:121: AttributeError
+____________________ test_s5p_g_reg_matches_pybamm_regpower ____________________
+
+    def test_s5p_g_reg_matches_pybamm_regpower():
+        """g_reg = PyBaMM RegPower(y = x(1−x), p) — y·(y² + δ²)^((p−1)/2) · 척도 1 · δ = settings reg_power."""
+        import pybamm
+>       assert tr.REG_DELTA == pybamm.settings.tolerances["reg_power"]
+               ^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'REG_DELTA'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:333: AttributeError
+______________ test_s5p_model_j0_equals_k0_g_reg_and_not_plain_g _______________
+
+    def test_s5p_model_j0_equals_k0_g_reg_and_not_plain_g():
+        """모형 j₀ (t = 0 · I = 0 · 균일 x) = k₀·g_reg (상대 ≤ 1e-12) · 음성 대조: k₀·g 와는 > 1e-7 다르다."""
+        xs = np.array([0.30, 0.407192, 0.625854, 0.844516, 0.95])
+        for shape in ("G05", "G2"):
+>           r = tr.model_j0_at(shape=shape, xs=xs, x_mid=0.625854)
+                ^^^^^^^^^^^^^^
+E           AttributeError: module 'c1_truth' has no attribute 'model_j0_at'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:348: AttributeError
+__________________________ test_s4p_common_max_abs_dv __________________________
+
+    def test_s4p_common_max_abs_dv():
+        """공통 출력 시각에서만 max |ΔV| — 끝 시각이 달라도 (사건 종료) 공통 구간만 본다."""
+        t = np.arange(0, 100, 10.0)
+        va = np.sin(t / 30.0)
+        vb = va.copy()
+        vb[3] += 2e-6
+        tb = t.copy()
+>       out = tr.common_max_abs_dv(t, va, tb[:-2], vb[:-2])
+              ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'common_max_abs_dv'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:363: AttributeError
+_________ test_s4p_feedback_pulse_below_threshold_and_negative_control _________
+
+    def test_s4p_feedback_pulse_below_threshold_and_negative_control():
+        """S4′: t₊ = 1 truth 에서 D_e × 10 · c_e0 × 2 변형의 펄스 V 차 ≤ 1e-6 V.
+        음성 대조: κ 를 c_e 에 의존시키면 (κ ∝ c_e) 같은 진단이 문턱을 넘는다 — 진단이 되먹임을 잡을 수 있다."""
+>       ok = tr.feedback_pulse(shape="G05", Wa=0.1, x_mid=0.625854, x0=0.625854, I_A=2.0)
+             ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'feedback_pulse'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:374: AttributeError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_j0_shape_normalised_at_x_mid
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_s5p_g_reg_matches_pybamm_regpower
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_s5p_model_j0_equals_k0_g_reg_and_not_plain_g
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_s4p_common_max_abs_dv
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_s4p_feedback_pulse_below_threshold_and_negative_control
+5 failed, 23 passed in 16.59s

@@ -1,0 +1,5 @@
+T0_2 2026-11-24T06:04:42Z
+disk_free_T0_2 26253221888
+repo_head_T0_2 0856bc3b76332592ea5d4a37bbf38a12d1b21214 dirty 0
+copy_base bf61565ba79f3aa66b16fd097da3105752c3248f (1 차와 같은 사본 · git diff e9b1d29 0856bc3b -- degradation-degeneracy = 0 줄)
+scratch_out2 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/out2

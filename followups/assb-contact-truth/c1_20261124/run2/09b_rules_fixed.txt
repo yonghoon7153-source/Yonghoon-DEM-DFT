@@ -1,0 +1,12 @@
+2026-11-24T06:21:40Z
+e48ae69a71d89549ba4a7db316872a95b09a0667e9f7cf969202219436b86ea4  followups/assb-contact-truth/DESIGN_v1.md (8-4 · 8-5 · 배관 점검 줄 — 시각 정정)
+93e30e064fdc6e17350cea43947e5ebeeea6886302c57bf35c67b164901119e7  followups/assb-contact-truth/c1_20261124/test_c1.py
+4d19230ff0820a18fa14382a094284be9fd80891272459a24610766bacb7e679  followups/assb-contact-truth/c1_20261124/c1_truth.py
+91762c467ee07f2e7caaa8c0c33e1eda0567cf3025b698fca91bb361338bc410  followups/assb-contact-truth/c1_20261124/c1_observe.py
+c24da27e99c41c40a34c454255d0c4647eff74b259e5e0e2bed68d887cfbcf85  followups/assb-contact-truth/c1_20261124/c1_spikes.py
+1a58fce9ad4321c08449a5d91339aa016ed5be1fdb1dcf5fb6c42ce4b1b55eac  followups/assb-contact-truth/c1_20261124/c1_grid.py
+0db3ef73dda13c4a5620a5f17341dadbde3e558a5c9a41ba0a4106f06522a42e  followups/assb-contact-truth/c1_20261124/c1_analyze.py
+86d62297f792c96d07eed3a4b1032a5551ae80639fe5dc79a8d36a63d211a7f6  followups/assb-contact-truth/c1_20261124/c1_plumb.py
+5453232210631d5390d09ee50178d0a3a95474694fd3c3d5e9f4e3561415e5d9  followups/assb-contact-truth/c1_20261124/c1_run2.sh
+2b61ca24027f3d3761bff90ab682419e014bb3856192365b3915eb0b7c524777  followups/assb-contact-truth/c1_20261124/run_step.sh
+spikes: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/out2/spikes (10_spikes 06:18:02Z · ALL PASS)

@@ -1,0 +1,3 @@
+06:21:46Z start · budget left 222 min
+06:22:17Z 20_conv rc=3
+06:22:17Z STOP at 20_conv
