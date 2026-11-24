@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Narration intake, re-timing, loudness and QC for AVI episodes.
 
-prep():  EP_DIR/audio_in/<ep>_sNN.(wav|mp3|m4a|flac)  (one file per scene)  or  <ep>_full.*
+prep():  EP_DIR/audio_in/<ep>_<line id>.wav (one file per sentence, e.g. ep01_s01_l01.wav from the TTS API)
+         or <ep>_sNN.(wav|mp3|m4a|flac)  (one file per scene)  or  <ep>_full.*
          -> sentence alignment (pauses chosen by dynamic programming against the
             syllable-proportional expectation) -> each sentence's speech kept as is,
             pauses between sentences set to the TSV targets (or kept with --keep-pauses)
@@ -17,6 +18,7 @@ import glob
 import json
 import math
 import os
+import re
 import subprocess
 import wave
 
@@ -244,14 +246,38 @@ def _find_inputs(ep, in_dir):
     return per, full
 
 
+def _find_line_inputs(ep, in_dir):
+    """One file per sentence (TTS API output): <ep>_<line id>.<ext>, e.g. ep01_s01_l01.wav."""
+    name = ep["episode"].split("_")[0]
+    exts = (".wav", ".mp3", ".m4a", ".flac", ".aac", ".ogg")
+    got = {}
+    for sc in ep["scenes"]:
+        for ln in sc["lines"]:
+            for ext in exts:
+                p = os.path.join(in_dir, f"{name}_{ln['id']}{ext}")
+                if os.path.exists(p):
+                    got[ln["id"]] = p
+                    break
+    return got
+
+
 def prep(ep, ep_dir, in_dir=None, bgm=None, bgm_lufs=-28.0, keep_pauses=False, target_lufs=-14.0, threads=1,
          fade_ms=8.0, pad_s=0.04):
     in_dir = in_dir or os.path.join(ep_dir, "audio_in")
     out_dir = os.path.join(ep_dir, "audio")
     os.makedirs(out_dir, exist_ok=True)
     per, full = _find_inputs(ep, in_dir)
+    per_line = _find_line_inputs(ep, in_dir)
+    all_lines = [ln for sc in ep["scenes"] for ln in sc["lines"]]
     groups = []                     # (file, [lines])
-    if full and not per:
+    if per_line and len(per_line) == len(all_lines):
+        # one file per sentence: the sentence boundary is the file itself (no pause search needed)
+        groups = [(per_line[ln["id"]], [ln]) for ln in all_lines]
+    elif per_line and not per and not full:
+        missing = [ln["id"] for ln in all_lines if ln["id"] not in per_line]
+        raise SystemExit(f"sentence files incomplete: {len(missing)} of {len(all_lines)} missing "
+                         f"(first: {missing[:6]}) in {in_dir}")
+    elif full and not per:
         groups.append((full, [ln for sc in ep["scenes"] for ln in sc["lines"]]))
     else:
         missing = [sc["id"] for sc in ep["scenes"] if sc["id"] not in per]
@@ -337,6 +363,40 @@ def audition_lines(ep_dir):
     return out
 
 
+#: 이음매 점검 (1저자 11-24 밤 "14–17 초처럼 ai틱 · 전체적으로 확인 · avi 스킬에 넣어줭").  ep01 v1 (preset 섞음 · 문장별 빠르기)
+#: = 이음매 112 중 27 곳이 이웃 문장보다 2.5 반음 넘게 높거나 낮았다 (톤 바뀜 18 · 최대 ±6.7) · 1저자가 짚은 14 초 = −3.3 ·
+#: 같은 구간 smart (앞뒤 문맥) = 최대 0.8.  문턱은 그 둘 사이 — 귀로 들은 것과 맞춘 경험값이지 표준이 아니다.
+JOIN_JUMP_ST = 2.5
+_CONT_END = re.compile(r"(도요|는데요|인데요|고요|지만요|면요|서요|니까요|거든요|데요)[.]?$")
+
+
+def joins(rows, lid, ledger=None, t_end=None):
+    """이웃 문장 이음매마다: 목소리 높이 (F0 중앙) 차 · 원장의 톤 / 빠르기 / 방식 바뀜 · '…요.' 로 이어지는 말이 끊긴 자리.
+    rows = qc 문장 행 (id · f0_med · pause_after) · lid = id → 대본 줄 (say) · ledger = id → typecast 원장 줄 · t_end = id → 끝 시각."""
+    ledger, t_end = ledger or {}, t_end or {}
+    out = []
+    for a, b in zip(rows, rows[1:]):
+        why, d = [], None
+        if a.get("f0_med") and b.get("f0_med"):
+            d = round(12 * math.log2(b["f0_med"] / a["f0_med"]), 2)
+            if abs(d) >= JOIN_JUMP_ST:
+                why.append(f"높이 {d:+.1f} 반음")
+        la, lb = ledger.get(a["id"]), ledger.get(b["id"])
+        if la and lb:
+            if la.get("mode") != lb.get("mode"):
+                why.append(f"방식 {la.get('mode')}→{lb.get('mode')}")
+            if la.get("preset") != lb.get("preset"):
+                why.append(f"톤 {la.get('preset')}→{lb.get('preset')}")
+            if la.get("tempo") is not None and lb.get("tempo") is not None and abs(la["tempo"] - lb["tempo"]) >= 0.06:
+                why.append(f"빠르기 {la['tempo']}→{lb['tempo']}")
+        say = ((lid.get(a["id"]) or {}).get("say") or "").strip()
+        if _CONT_END.search(say) and (a.get("pause_after") or 0.0) < 0.6:
+            why.append("이어지는 말 끊김 (앞 문장이 '…요.' 로 뒤에 이어짐)")
+        out.append(dict(a=a["id"], b=b["id"], t=t_end.get(a["id"]), d_st=d,
+                        jump=bool(d is not None and abs(d) >= JOIN_JUMP_ST), why=why))
+    return out
+
+
 def qc(ep, ep_dir, wav=None, text_lines=None):
     out_dir = os.path.join(ep_dir, "audio")
     path = wav or os.path.join(out_dir, "narration.wav")
@@ -392,6 +452,16 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
                          pause_after=round(d.get("pause_after", 0.0), 2), f0_med=round(med, 1) if med else None,
                          range_st=round(rng, 1) if rng else None, final_st=round(fin, 1) if fin is not None else None,
                          internal_pauses=len(sil), question=q))
+    # 이음매 (원장이 있으면 톤 · 빠르기 · 방식 바뀜도)
+    led_path = os.path.join(ep_dir, "audio_in", "typecast_ledger.json")
+    try:
+        led = json.load(open(led_path, encoding="utf-8")).get("lines", {}) if (tj is not None and wav is None
+                                                                            and os.path.exists(led_path)) else {}
+    except (OSError, ValueError):
+        led = {}
+    js = joins(rows, lid, led, {d["id"]: d["t1"] for d in lines})
+    jumps = [j for j in js if j["jump"]]
+    dsts = np.array([abs(j["d_st"]) for j in js if j["d_st"] is not None])
     # summary + flags
     rates = np.array([r["rate"] for r in rows if r["rate"]])
     pauses = np.array([r["pause_after"] for r in rows[:-1]]) if len(rows) > 1 else np.array([0.0])
@@ -413,6 +483,9 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
     longs = [r["id"] for r in rows if r["syl"] and r["syl"] > 40 and r["internal_pauses"] == 0]
     if longs:
         flags.append(f"40 음절 넘는 문장에 숨 (쉼) 이 없다: {', '.join(longs)}")
+    if jumps:
+        flags.append(f"이웃 문장보다 목소리 높이가 {JOIN_JUMP_ST} 반음 넘게 뛴 이음매 {len(jumps)} 곳 (최대 {dsts.max():.1f}) — "
+                     "'## 이음매' 시각을 귀로 확인 · 그 문장을 앞뒤 문맥 (smart) 으로 다시 만든다")
     if clip:
         flags.append(f"클리핑 표본 {clip} 개")
     if abs(L - (-14.0)) > 1.0 and tj is not None:
@@ -426,7 +499,9 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
                 pause_hist=np.histogram(pauses, [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.5, 3.0])[0].tolist(),
                 final_st_median=round(float(np.median(fins)), 2) if len(fins) else None,
                 final_st_sd=round(float(fins.std()), 2) if len(fins) else None,
-                clipping=clip, flags=flags)
+                clipping=clip, join_n=len(js), join_jumps=len(jumps),
+                join_max_st=round(float(dsts.max()), 2) if len(dsts) else None,
+                join_p95_st=round(float(np.percentile(dsts, 95)), 2) if len(dsts) else None, flags=flags)
     md = [f"# 음성 QC — {summ['file']}", "",
           f"- 음량 {summ['lufs']} LUFS (스테레오 L=R 기준) · 참 최고점 {summ['true_peak_dbtp']} dBTP · 클리핑 {clip}",
           f"- 빠르기 중앙 {summ['rate_median']} 음절/s (변동계수 {summ['rate_cv']}) · 레퍼런스 8.37 (0.15)",
@@ -434,7 +509,15 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
           f"(구간 0 · 0.2 · 0.3 · 0.4 · 0.5 · 0.6 · 0.8 · 1.0 · 1.5 · 3.0 s) · 레퍼런스 문장 끝 0.335 s (80 % 가 0.24–0.46)",
           f"- 문장 끝 억양 중앙 {summ['final_st_median']} 반음 (표준편차 {summ['final_st_sd']}) · 레퍼런스 −4.1 반음",
           "", "## 알림", ""] + ([f"- ⚠ {f}" for f in flags] or ["- 없음"]) + [
-          "", "## 문장별", "", "| 문장 | 음절 | 길이 s | 음절/s | 뒤 쉼 s | F0 중앙 Hz | 범위 반음 | 끝 반음 | 안 쉼 | 물음 |",
+          "", "## 이음매", "",
+          f"- 이음매 {summ['join_n']} · 높이 뜀 (≥ {JOIN_JUMP_ST} 반음) {summ['join_jumps']} · 이웃 높이 차 최대 {summ['join_max_st']} · "
+          f"95 % {summ['join_p95_st']} 반음 · 표 = 뜀 또는 까닭이 있는 이음매 (높이 차 큰 순 · 40 개까지)", "",
+          "| 시각 (앞 문장 끝) | 앞 → 뒤 | 높이 차 반음 | 까닭 |", "|---|---|---|---|"]
+    for j in sorted([j for j in js if j["jump"] or j["why"]], key=lambda j: -abs(j["d_st"] or 0))[:40]:
+        tt = j["t"]
+        md.append(f"| {int(tt // 60)}:{tt % 60:04.1f} | {j['a']} → {j['b']} | {j['d_st']} | {' · '.join(j['why']) or '—'} |"
+                  if tt is not None else f"| — | {j['a']} → {j['b']} | {j['d_st']} | {' · '.join(j['why']) or '—'} |")
+    md += ["", "## 문장별", "", "| 문장 | 음절 | 길이 s | 음절/s | 뒤 쉼 s | F0 중앙 Hz | 범위 반음 | 끝 반음 | 안 쉼 | 물음 |",
           "|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         md.append(f"| {r['id']} | {r['syl']} | {r['dur']} | {r['rate']} | {r['pause_after']} | {r['f0_med']} | "
@@ -444,7 +527,7 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
     with open(rep_md, "w", encoding="utf-8") as f:
         f.write("\n".join(md) + "\n")
     with open(rep_md[:-3] + ".json", "w", encoding="utf-8") as f:
-        json.dump(dict(summary=summ, rows=rows), f, ensure_ascii=False, indent=1)
+        json.dump(dict(summary=summ, rows=rows, joins=js), f, ensure_ascii=False, indent=1)
     return rep_md
 
 
@@ -526,6 +609,49 @@ def selftest(work):
     checks = [("alignment ≤ 0.06 s", max(errs) <= 0.06), ("pause re-time ≤ 0.03 s", perr <= 0.03),
               ("loudness −14 ± 0.5", abs(L + 14) <= 0.5), ("true peak ≤ −1.0 dBTP", tp <= -1.0),
               ("qc report written", os.path.exists(rep))]
+    # one file per sentence (TTS API output): random lead / tail silence, boundaries must come out exact
+    w2 = os.path.join(work, "per_line")
+    in2 = os.path.join(w2, "audio_in")
+    if os.path.isdir(w2):
+        shutil.rmtree(w2)
+    os.makedirs(in2)
+    sp_truth = {}
+    for sc in ep["scenes"]:
+        for k, ln in enumerate(sc["lines"]):
+            y = synth_line(ln["say"], rate=7.0, question=ln["say"].endswith("?"), seed=k + 21)
+            lead_s, tail_s = 0.15 + 0.2 * rng.random(), 0.2 + 0.3 * rng.random()
+            sig = np.concatenate([rng.normal(0, 0.0003, int(lead_s * SR)), y, rng.normal(0, 0.0003, int(tail_s * SR))])
+            sp_truth[ln["id"]] = (lead_s, lead_s + len(y) / SR)
+            write_wav(os.path.join(in2, f"ep99_{ln['id']}.wav"), sig, stereo=False)
+    res2 = prep(ep, w2, in_dir=in2)
+    tj2 = json.load(open(res2["timing"], encoding="utf-8"))
+    err2 = max(max(abs(d["src_t0"] - sp_truth[d["id"]][0]), abs(d["src_t1"] - sp_truth[d["id"]][1])) for d in tj2["lines"])
+    pz2 = [tj2["lines"][i + 1]["t0"] - tj2["lines"][i]["t1"] for i in range(len(tj2["lines"]) - 1)]
+    perr2 = max(abs(p - t_) for p, t_ in zip(pz2, tgt))
+    checks += [("per-sentence files: boundaries ≤ 0.06 s", err2 <= 0.06), ("per-sentence files: pause re-time ≤ 0.03 s", perr2 <= 0.03)]
+    ok.update(per_line_boundary_max_err_s=round(err2, 3), per_line_pause_max_err_s=round(perr2, 3))
+    # 이음매 점검 (1저자 11-24 밤 "14–17 초처럼 ai틱 · 전체적으로 확인 · avi 스킬에 넣어줭")
+    try:
+        rows_j = [dict(id="a", f0_med=200.0, pause_after=0.45), dict(id="b", f0_med=206.0, pause_after=0.35),
+                  dict(id="c", f0_med=290.0, pause_after=0.5), dict(id="d", f0_med=None, pause_after=0.4)]
+        lid_j = {"a": dict(say="첫 문장입니다."), "b": dict(say="같은 비율로 섞어도요."), "c": dict(say="결과가 달라집니다."),
+                 "d": dict(say="끝.")}
+        led_j = {"a": dict(preset="normal", tempo=1.0, mode="preset"), "b": dict(preset="toneup", tempo=1.08, mode="preset"),
+                 "c": dict(preset="normal", tempo=1.0, mode="preset"), "d": dict(preset=None, tempo=1.0, mode="smart")}
+        js = joins(rows_j, lid_j, led_j, {"a": 1.0, "b": 2.0, "c": 3.0, "d": 4.0})
+        by = {(j["a"], j["b"]): j for j in js}
+        checks += [("★ 이음매: 이웃 높이 차 ≥ 2.5 반음만 '뜀' (+0.5 반음은 아님 · +5.9 반음은 뜀)",
+                    not by[("a", "b")]["jump"] and by[("b", "c")]["jump"] and abs(by[("b", "c")]["d_st"] - 5.89) < 0.05),
+                   ("★ 이음매: F0 없는 문장 = 판정 안 함 (None · 뜀 아님)", by[("c", "d")]["d_st"] is None and not by[("c", "d")]["jump"]),
+                   ("★ 이음매: 톤 · 빠르기 · 방식 바뀜을 원장에서 적는다",
+                    any("톤 normal→toneup" in w for w in by[("a", "b")]["why"]) and any("빠르기" in w for w in by[("a", "b")]["why"])
+                    and any("방식" in w for w in by[("c", "d")]["why"])),
+                   ("★ 이음매: '~도요.' 다음 짧은 쉼 = 이어지는 말 끊김", any("이어지는 말" in w for w in by[("b", "c")]["why"]))]
+        rep_j = json.load(open(rep[:-3] + ".json", encoding="utf-8"))
+        checks.append(("★ 이음매: qc 보고 (json · md) 에 이음매 절", "joins" in rep_j and "join_jumps" in rep_j["summary"]
+                       and "## 이음매" in open(rep, encoding="utf-8").read()))
+    except Exception as ex:                                   # noqa: BLE001 — a crash is a FAIL
+        checks.append((f"★ 이음매 점검 [{type(ex).__name__}: {ex}]", False))
     for name, good in checks:
         print(("PASS " if good else "FAIL ") + name)
     print(json.dumps(ok, ensure_ascii=False))

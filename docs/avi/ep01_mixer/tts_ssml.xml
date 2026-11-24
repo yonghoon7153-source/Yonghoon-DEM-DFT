@@ -82,7 +82,7 @@
     <s><prosody rate="105%">이제 배터리로 돌아와 볼게요.</prosody></s><break time="350ms"/>
     <s><prosody rate="97%">큰 알갱이 표면을, <emphasis level="moderate">미리</emphasis> 고체전해질로 <emphasis level="moderate">얇게</emphasis> 덮어 두면 어떨까요?</prosody></s><break time="850ms"/>
     <s><prosody rate="100%">작은 알갱이 입장에서는, 큰 알갱이가 자기와 같은 물질로 보이게 됩니다.</prosody></s><break time="400ms"/>
-    <s><prosody rate="100%">표면 끈적함의 차이가 <emphasis level="moderate">사라지는</emphasis> 거죠.</prosody></s><break time="450ms"/>
+    <s><prosody rate="100%">표면 끈적함의 차이가 <emphasis level="moderate">사라지는</emphasis> 셈입니다.</prosody></s><break time="450ms"/>
     <s><prosody rate="102%">그러면 크기에서 오는 이점만 남게 되고요.</prosody></s><break time="350ms"/>
     <s><prosody rate="100%">작은 알갱이가 큰 알갱이 쪽에 붙기 쉬워질 거라고 <emphasis level="moderate">기대할</emphasis> 수 있습니다.</prosody></s><break time="650ms"/>
     <s><prosody rate="100%">다만, 표면을 바꾼다고 <emphasis level="moderate">늘</emphasis> 좋아지는 건 아닙니다.</prosody></s><break time="450ms"/>
@@ -98,7 +98,7 @@
     <s><prosody rate="102%">같은 가루로, 활물질에 건식 코팅도 해 봤어요.</prosody></s><break time="350ms"/>
     <s><prosody rate="100%">그러자 접착일을 포함한 기계적 성질이, 붙지 않고 남은 고체전해질 비율과 <emphasis level="moderate">함께 변했습니다</emphasis>.</prosody></s><break time="400ms"/>
     <s><prosody rate="100%">저자들은, 부착이 중요한 역할을 한다고 <emphasis level="moderate">제안</emphasis>했고요.</prosody></s><break time="600ms"/>
-    <s><prosody rate="100%">다만 이건 실리콘 탐침과 재료 사이의 힘이에요.</prosody></s><break time="450ms"/>
+    <s><prosody rate="100%">다만 이건 실리콘 탐침과 재료 사이의 힘입니다.</prosody></s><break time="450ms"/>
     <s><prosody rate="100%">고체전해질끼리, 그리고 고체전해질과 활물질 사이의 힘을 같은 탐침으로 견준 자료는요.</prosody></s><break time="300ms"/>
     <s><prosody rate="100%">저희가 살펴본 문헌 안에서는, <emphasis level="moderate">아직</emphasis> 보지 못했습니다.</prosody></s><break time="1450ms"/>
   </p>
@@ -117,7 +117,7 @@
   </p>
   <!-- S09 · 눌린 뒤의 이온 길 — 아직 열린 질문 -->
   <p>
-    <s><prosody rate="100%">이제 가장 궁금한 질문이 남았습니다.</prosody></s><break time="400ms"/>
+    <s><prosody rate="100%">이제 남은 질문이 하나 있습니다.</prosody></s><break time="400ms"/>
     <s><prosody rate="96%">잘 섞인 가루는, 꾹 <emphasis level="moderate">눌러</emphasis> 전극이 된 뒤에도, 더 좋은 <emphasis level="moderate">이온 길</emphasis>을 만들까요?</prosody></s><break time="900ms"/>
     <s><prosody rate="100%">독일의 다른 연구진은, 같은 조성의 전극을 두 가지 공정으로 만들었어요.</prosody></s><break time="400ms"/>
     <s><prosody rate="100%">한쪽에서는, 고체전해질이 활물질 표면을 납작하게 덮었는데요.</prosody></s><break time="350ms"/>
@@ -130,7 +130,7 @@
   <p>
     <s><prosody rate="100%">저희 연구실은 이 사슬의 앞쪽, 섞는 동안 <emphasis level="moderate">누가 누구와</emphasis> 붙는지부터 따져 보고 있어요.</prosody></s><break time="450ms"/>
     <s><prosody rate="102%">입자 시뮬레이션으로, 돌아가는 원통 안에서 섞는 계산을 둘씩 짝지어 견주는데요.</prosody></s><break time="350ms"/>
-    <s><prosody rate="100%">짝마다 출발 배치는 똑같고, 활물질 표면의 <emphasis level="moderate">끈적함만</emphasis> 다르죠.</prosody></s><break time="450ms"/>
+    <s><prosody rate="100%">짝마다 출발 배치는 똑같고, 활물질 표면의 <emphasis level="moderate">끈적함만</emphasis> 다릅니다.</prosody></s><break time="450ms"/>
     <s><prosody rate="100%">그래야 출발 배치의 차이로 결과가 갈리는 일을 막을 수 있거든요.</prosody></s><break time="550ms"/>
     <s><prosody rate="100%">그리고 고체전해질끼리 뭉친 알갱이와, 활물질에 닿은 알갱이를 <emphasis level="moderate">따로</emphasis> 셉니다.</prosody></s><break time="450ms"/>
     <s><prosody rate="98%">칸마다 고르게 섞였는지만 보면, 붙어서 고른 건지, 뭉친 채 고른 건지 <emphasis level="moderate">가리기 어렵거든요</emphasis>.</prosody></s><break time="600ms"/>

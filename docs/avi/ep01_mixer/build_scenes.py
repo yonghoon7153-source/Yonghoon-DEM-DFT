@@ -10,6 +10,8 @@ v2 (2026-11-24 · 1저자 "믹서 avi에 지금 내용도 추가해봐"): new S1
 (same start · only the active-material surface stickiness differs · two counts · why) — no result, number,
 direction or simulation picture; old S10 -> S11; source-line word '판독값' -> '그림에서 읽은 값' (lint).
 v1 is kept in ./v1/.
+v2.1 (2026-11-24 night · 1저자 Q5 "권고대로"): S07 l07 ending, two captions over 22 chars, captions without a final
+period, S11 header at line start, S09 opener without the superlative.  Text only (render after the real voice).
 """
 import json
 import math
@@ -222,7 +224,7 @@ a1 = L("전고체 배터리의 양극은, 두 가지 가루를 섞어서 만듭�
 a2 = L("리튬을 담아 두는 큰 알갱이와, 이온이 지나가는 길이 되는 작은 알갱이죠.",
        caps=["리튬을 담아 두는 큰 알갱이와", "이온이 지나가는 길이 되는", "작은 알갱이죠"], pause=0.7, speed=1.03,
        emph=["큰 알갱이", "작은 알갱이"])
-a3 = L("그런데 같은 재료를, 같은 비율로 섞어도요.", caps=["그런데 같은 재료를, 같은 비율로 섞어도요"],
+a3 = L("그런데 같은 재료를, 같은 비율로 섞어도요.", caps=["그런데 같은 재료를", "같은 비율로 섞어도요"],
        pause=0.35, speed=1.05, emo="가벼움", emph=["같은"], memo="'섞어도요' 끝을 살짝 올려 다음 문장으로 잇기")
 a4 = L("섞는 방법만 바꾸면, 결과가 달라집니다.", caps=["섞는 방법만 바꾸면, 결과가 달라집니다"], pause=0.6,
        emph=["방법"])
@@ -316,7 +318,7 @@ SHOT("s02a", b1, [
     text("t_b_se2", 1230, 731, "리튬 이온이 지나는 길", b4 + "~고체전해질", size=24, color="grey", weight="semibold"),
     number("n_am", 760, 255, 4.3, b5 + "~사", unit="µm", decimals=1, size=70, color="ink"),
     number("n_se", 1230, 395, 0.7, b5 + "~영", unit="µm", decimals=1, size=70, color="indigo"),
-    chip("c_ratio", 995, 575, "지름 약 6 배", b5 + "@0.95", size=26),
+    chip("c_ratio", 995, 575, "지름 약 6 배", b5 + "~영+0.9", size=26),        # 11-25: was "@0.95" (0.77 s on screen)
     src("src_hay_size", "Hayakawa 외, Adv. Powder Technol. 33, 103705 (2022) · 개수 기준 중앙 지름 · 6 배 = 4.3 ÷ 0.7 (산술)", b5),
 ], pre=0.4)
 liq_c = [(530, 400), (700, 360), (640, 560), (450, 590)]
@@ -517,7 +519,8 @@ SHOT("s04d", d10, [
 # S05  약 만드는 분야는 알고 있었다
 # ============================================================================
 scene("s05", "약을 만드는 분야가 먼저 판 문제 — 정렬 혼합과 힘의 비율")
-e1 = L("사실 이 문제를 오래 파 온 분야가 있어요.", pause=0.35, speed=1.03, emo="가벼움")
+e1 = L("사실 이 문제를 오래 파 온 분야가 있어요.", caps=["사실 이 문제를", "오래 파 온 분야가 있어요"], pause=0.35, speed=1.03,
+       emo="가벼움")
 e2 = L("바로 약을 만드는 쪽입니다.", pause=0.45, emph=["약"])
 e3 = L("들이마시는 흡입약은 흔히, 아주 고운 약 가루를 훨씬 큰 유당 가루에 붙여서 만들거든요.",
        caps=["들이마시는 흡입약은 흔히", "아주 고운 약 가루를", "훨씬 큰 유당 가루에 붙여서 만들거든요"], pause=0.5)
@@ -527,7 +530,7 @@ e4 = L("작은 가루가 큰 가루 표면에 붙으면서 섞이는 이 방식�
 e5 = L("나중에는, 상호작용 혼합이라는 이름이 제안됐고요.", caps=["나중에는", "상호작용 혼합이라는 이름이 제안됐고요"],
        pause=0.45, speed=1.02, emph=["상호작용 혼합"])
 e6 = L("두 크기가 열 배에서 백 배쯤 차이 날 때, 작은 가루가 큰 가루에 잘 붙는다고 알려져 있죠.",
-       caps=["두 크기가 10배에서 100배쯤 차이 날 때", "작은 가루가 큰 가루에", "잘 붙는다고 알려져 있죠"], pause=0.45,
+       caps=["두 크기가 10배에서", "100배쯤 차이 날 때", "작은 가루가 큰 가루에", "잘 붙는다고 알려져 있죠"], pause=0.45,
        speed=0.97)
 e7 = L("앞서 본 전고체 양극 가루에서는, 그 차이가 여섯 배 정도였어요.",
        caps=["앞서 본 전고체 양극 가루에서는", "그 차이가 6배 정도였어요"], pause=0.75, speed=0.95, emo="강조",
@@ -580,6 +583,11 @@ def lx(v):
 
 
 SHOT("s05b", e4, [
+    # 11-25 final render: the first new element came at "~정렬" (4.1 s into the line = empty picture) -> the s05a picture of
+    # fine drug on a lactose carrier (what the sentence describes) slides to the middle, stays under the 1975 · 1983 names and
+    # leaves before the size axis.  Same picture, no new number.
+    keep("lac", x=960, y=540, scale=0.62, out=e6 + "~두-0.35"),
+    keep("drug", x=960, y=540, scale=0.62, out=e6 + "~두-0.35"),
     line("tl", [(560, 290), (1400, 290)], e4 + "~정렬", sw=2.5, dur=0.6),
     circle("tl75", 680, 290, 9, e4 + "~정렬", fill="indigo"),
     text("tl75t", 680, 250, "1975", e4 + "~정렬", size=30),
@@ -688,7 +696,7 @@ f2 = L("큰 알갱이 표면을, 미리 고체전해질로 얇게 덮어 두면 
        emph=["미리", "얇게"])
 f3 = L("작은 알갱이 입장에서는, 큰 알갱이가 자기와 같은 물질로 보이게 됩니다.",
        caps=["작은 알갱이 입장에서는", "큰 알갱이가 자기와 같은 물질로", "보이게 됩니다"], pause=0.4)
-f4 = L("표면 끈적함의 차이가 사라지는 거죠.", pause=0.45, emph=["사라지는"])
+f4 = L("표면 끈적함의 차이가 사라지는 셈입니다.", pause=0.45, emph=["사라지는"])   # 11-25 1저자 권고대로: "거죠" = 세 판 모두 이웃보다 +5–7 반음
 f5 = L("그러면 크기에서 오는 이점만 남게 되고요.", pause=0.35, speed=1.02)
 f6 = L("작은 알갱이가 큰 알갱이 쪽에 붙기 쉬워질 거라고 기대할 수 있습니다.",
        caps=["작은 알갱이가 큰 알갱이 쪽에", "붙기 쉬워질 거라고 기대할 수 있습니다"], pause=0.65, emph=["기대할"],
@@ -759,7 +767,7 @@ g5 = L("그러자 접착일을 포함한 기계적 성질이, 붙지 않고 남�
        emph=["함께 변했습니다"])
 g6 = L("저자들은, 부착이 중요한 역할을 한다고 제안했고요.", caps=["저자들은", "부착이 중요한 역할을 한다고 제안했고요"],
        pause=0.6, emph=["제안"])
-g7 = L("다만 이건 실리콘 탐침과 재료 사이의 힘이에요.", caps=["다만 이건", "실리콘 탐침과 재료 사이의 힘이에요"],
+g7 = L("다만 이건 실리콘 탐침과 재료 사이의 힘입니다.", caps=["다만 이건", "실리콘 탐침과 재료 사이의 힘입니다"],
        pause=0.45, emo="진지")
 g8 = L("고체전해질끼리, 그리고 고체전해질과 활물질 사이의 힘을 같은 탐침으로 견준 자료는요.",
        caps=["고체전해질끼리, 그리고", "고체전해질과 활물질 사이의 힘을", "같은 탐침으로 견준 자료는요"], pause=0.3)
@@ -792,7 +800,7 @@ SH["elements"] += [
 att2 = shell(16, 840, 480, 140, 13, a0=0, a1=360, gap=1.0)
 loose = scatter(7, (1040, 360, 1230, 640), 13, seed=44)
 SHOT("s07b", g4, [
-    circle("g_ncm", 840, 480, 140, g4 + "~활물질에", label="활물질", ls=30),
+    circle("g_ncm", 840, 480, 140, g4 + "+0.3", label="활물질", ls=30),          # 11-25: was "~활물질에" (1.2 s empty start)
     dots("g_att", att2, g4 + "~코팅도", stagger=0.02),
     dots("g_loose", loose, g5 + "~남은", fill="lav", stagger=0.04),
     text("t_loose", 1135, 680, "붙지 않고 남은 고체전해질", g5 + "~남은", size=26, color="grey"),
@@ -909,7 +917,8 @@ SHOT("s08c", h7, [
 # S09  눌린 뒤에도 — 열린 질문
 # ============================================================================
 scene("s09", "눌린 뒤의 이온 길 — 아직 열린 질문")
-i1 = L("이제 가장 궁금한 질문이 남았습니다.", pause=0.4, speed=1.0, emo="진지")
+i1 = L("이제 남은 질문이 하나 있습니다.", pause=0.4, speed=1.0, emo="진지",
+       memo="v2.1: '가장 궁금한' (최상급) 을 뺌")
 i2 = L("잘 섞인 가루는, 꾹 눌러 전극이 된 뒤에도, 더 좋은 이온 길을 만들까요?",
        caps=["잘 섞인 가루는", "꾹 눌러 전극이 된 뒤에도", "더 좋은 이온 길을 만들까요?"], pause=0.9, speed=0.96, emo="궁금",
        emph=["눌러", "이온 길"])
@@ -1002,8 +1011,8 @@ k1 = L("저희 연구실은 이 사슬의 앞쪽, 섞는 동안 누가 누구와
        emph=["누가 누구와"], memo="우리 연구실 이야기 시작 · 담백하게 · 홍보 말투 아님")
 k2 = L("입자 시뮬레이션으로, 돌아가는 원통 안에서 섞는 계산을 둘씩 짝지어 견주는데요.",
        caps=["입자 시뮬레이션으로", "돌아가는 원통 안에서 섞는 계산을", "둘씩 짝지어 견주는데요"], pause=0.35, speed=1.02)
-k3 = L("짝마다 출발 배치는 똑같고, 활물질 표면의 끈적함만 다르죠.",
-       caps=["짝마다 출발 배치는 똑같고", "활물질 표면의 끈적함만 다르죠"], pause=0.45, emph=["끈적함만"],
+k3 = L("짝마다 출발 배치는 똑같고, 활물질 표면의 끈적함만 다릅니다.",   # 11-25 1저자 권고대로: "다르죠" = 세 판 모두 높음
+       caps=["짝마다 출발 배치는 똑같고", "활물질 표면의 끈적함만 다릅니다"], pause=0.45, emph=["끈적함만"],
        memo="끝 꼴: 앞 두 문장이 ~요 → ~죠")
 k4 = L("그래야 출발 배치의 차이로 결과가 갈리는 일을 막을 수 있거든요.",
        caps=["그래야 출발 배치의 차이로", "결과가 갈리는 일을 막을 수 있거든요"], pause=0.55,
@@ -1099,8 +1108,8 @@ SHOT("s10c", k5, [
     dots("cn_clu", cnt_clu, k5 + "~고체전해질끼리", stagger=0.03),
     circle("cn_clu_ring", 1180, 365, 78, k5 + "~뭉친", fill=None, stroke="indigo", sw=2.5, dash=[9, 7], anim="fade"),
     text("t_cn1", 1180, 255, "① 고체전해질끼리 뭉친 알갱이", k5 + "~뭉친", size=28, color="indigo"),
-    dots("cn_loose", cnt_loose, k5 + "~따로", fill="lav", stagger=0.05),
-    text("t_cn0", 1180, 750, "두 가지를 따로 센다 (정의 · 개념도)", k5 + "~셉니다", size=24, color="grey", weight="semibold"),
+    dots("cn_loose", cnt_loose, k5 + "~닿은", fill="lav", stagger=0.05),          # 11-25: was "~따로" (0.9 s on screen)
+    text("t_cn0", 1180, 750, "두 가지를 따로 센다 (정의 · 개념도)", k5 + "+0.5", size=24, color="grey", weight="semibold"),  # 11-25: was "~셉니다" (0.5 s flash) — the panel note with the panel
 ], pre=0.4)
 # why two counts: one cell with the same composition, two different insides
 cellL, cellR = (720, 470), (1200, 470)
@@ -1168,7 +1177,7 @@ END_CARD = [
     dict(id="end_obj", type="image", path=OBJ, x=1340, y=500, at=j6 + "$+1.1", anim="fade", dur=0.5),
 ]
 SHOT("s11a", j1, [
-    text("sum0", 960, 190, "오늘의 정리", j1 + "~정리", size=34, color="grey"),
+    text("sum0", 960, 190, "오늘의 정리", j1 + "+0.1", size=34, color="grey"),   # v2.1: at line start (was ~정리 -> 0.9 s caption-only)
     chip("sum1", 960, 300, "고운 가루 : 끈적함이 무게를 이긴다", j2 + "~고운", size=32, color="ink"),
     chip("sum2", 960, 420, "누구와 붙나 : 힘의 비율 + 끈적함의 크기 + 알갱이 크기 + 섞는 방식", j3 + "~누구와", size=30,
          color="indigo", stroke="indigo"),
@@ -1193,6 +1202,18 @@ sh = EP["scenes"][-1]["shots"][-1]
 for e in sh["elements"]:
     if e["id"] in ("nx_lbl", "nx_a", "nx_b", "nx_c", "nx_t"):
         e["out"] = j6 + "$+0.6"
+
+# ------------------------------------------------------------------ captions: no sentence-final period
+# v2.1: lines written without explicit caps fell back to the text WITH its final '.', unlike every other caption.
+for sc in EP["scenes"]:
+    for ln in sc["lines"]:
+        if not ln.get("captions"):
+            t = ln["text"].rstrip()
+            if t.endswith("."):
+                t = t[:-1]
+            if len(t) > EP["caption_max_chars"]:
+                raise SystemExit(f"{ln['id']}: caption over {EP['caption_max_chars']} chars without explicit caps: {t}")
+            ln["captions"] = [t]
 
 # ------------------------------------------------------------------ checks + write
 problems = []

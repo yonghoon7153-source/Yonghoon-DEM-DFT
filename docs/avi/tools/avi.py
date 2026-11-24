@@ -8,6 +8,11 @@
   python3 -I avi.py audio-prep EP_DIR [--in EP_DIR/audio_in] [--bgm music.wav]
   python3 -I avi.py audio-qc   EP_DIR
   python3 -I avi.py thumb   EP_DIR
+  python3 -I avi.py typecast EP_DIR [--run --lines s01_l01,… | --run --all] [--tempo 1.0] [--mode smart|preset] [--force]
+                              (Typecast 문정 · one wav per sentence into EP_DIR/audio_in · default = dry run)
+  python3 -I avi.py voice-auto EP_DIR [--run] [--rounds 2 --takes 2 --budget-x 3] [--bgm music.wav]
+                              (voice stage on its own: typecast smart 1.0 for out-of-date lines -> audio-prep -> audio-qc ->
+                               retake jumps up to --rounds -> EP_DIR/audio/voice_auto_report.md · default = preview, 0 calls)
   python3 -I avi.py selftest
 EP_DIR must contain scenes.json.  Run with `python3 -I` from anywhere.
 """
@@ -130,9 +135,30 @@ def cmd_thumb(a):
         print(avi_thumb.object_png(obj))
 
 
+def cmd_typecast(a):
+    import avi_typecast
+    argv = [a.ep] + (["--run"] if a.run else []) + (["--lines", a.lines] if a.lines else []) + \
+        (["--all"] if a.all else []) + (["--force"] if a.force else []) + ["--tempo", str(a.tempo), "--mode", a.mode] + \
+        (["--retake", a.retake] if a.retake else []) + (["--retake-jumps"] if a.retake_jumps else []) + ["--takes", str(a.takes)]
+    avi_typecast.main(argv)
+
+
+def cmd_voice_auto(a):
+    import avi_voice_auto
+    argv = [a.ep] + (["--run"] if a.run else []) + ["--rounds", str(a.rounds), "--takes", str(a.takes),
+                                                     "--budget-x", str(a.budget_x)] + \
+        (["--bgm", a.bgm, "--bgm-lufs", str(a.bgm_lufs)] if a.bgm else [])
+    sys.exit(avi_voice_auto.main(argv))
+
+
 def cmd_selftest(a):
     import avi_audio
-    avi_audio.selftest(os.path.join(os.path.dirname(HERE), "selftest"))
+    import avi_typecast
+    import avi_voice_auto
+    ok1 = avi_audio.selftest(os.path.join(os.path.dirname(HERE), "selftest"))
+    ok2 = avi_typecast.selftest()
+    ok3 = avi_voice_auto.selftest()
+    sys.exit(0 if (ok1 and ok2 and ok3) else 1)
 
 
 def main():
@@ -153,6 +179,15 @@ def main():
     p.add_argument("--text", help="one sentence per line (default for audition_*.wav: voice_audition.txt)")
     p.set_defaults(f=cmd_audio_qc)
     p = sub.add_parser("thumb"); p.add_argument("ep"); p.add_argument("--out", default="thumbnail.png"); p.add_argument("--obj", action="store_true", help="also re-render assets/powder_obj.png (end card)"); p.set_defaults(f=cmd_thumb)
+    p = sub.add_parser("typecast"); p.add_argument("ep"); p.add_argument("--run", action="store_true")
+    p.add_argument("--lines"); p.add_argument("--all", action="store_true"); p.add_argument("--force", action="store_true")
+    p.add_argument("--tempo", type=float, default=1.0); p.add_argument("--mode", choices=("smart", "preset"), default="smart")
+    p.add_argument("--retake"); p.add_argument("--retake-jumps", action="store_true"); p.add_argument("--takes", type=int, default=2)
+    p.set_defaults(f=cmd_typecast)
+    p = sub.add_parser("voice-auto", help="voice stage on its own (default = preview · 0 calls)"); p.add_argument("ep")
+    p.add_argument("--run", action="store_true"); p.add_argument("--rounds", type=int, default=2)
+    p.add_argument("--takes", type=int, default=2); p.add_argument("--budget-x", type=float, default=3.0)
+    p.add_argument("--bgm"); p.add_argument("--bgm-lufs", type=float, default=-28.0); p.set_defaults(f=cmd_voice_auto)
     p = sub.add_parser("selftest"); p.set_defaults(f=cmd_selftest)
     a = ap.parse_args()
     a.f(a)
