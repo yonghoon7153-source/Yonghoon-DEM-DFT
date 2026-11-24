@@ -3968,4 +3968,13 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](수집 지침 Q3 · Q4 · Q5 · Q8 · '옮길 때의 표기 규칙' 32 행 · 채움표 주석 · 반 칸 판정 · 새 제약 꼬리 · Status Log) · [[assb-synthetic-truth-contact-loss-requirements]](설계 선택지 기록 · R8 메모 · (혀) · 쓰는 법) · [[assb-apparent-capacity-decomposition]](θ 판정의 시간 궤적 조건 정식 목록) · [[assb-stack-pressure-operating-window]](압력 값 표기 칸 ①–⑥ · 계보 표 닫음) · [[assb-pressure-reapplication-separation-test]](D1 · D4 보강 · D6) · [[assb-operando-pressure-signal-attribution]](층위 결정) · [[drt-peak-count-nonidentifiability]](C6–C8) · [[assb-sensitivity-sweep-vs-identifiability]](처방 22–35 정식 · 36 신설 · 25↔26 정렬) · [[assb-lampe-contact-product-degeneracy]](첫 충전 상한 정식 · j₀(x) 기준선 정식 · 메모 꼬리) · [[nmc-lattice-li-content-calibration]]((르)(므)(으)) · [[reference-electrode-halfcell-dma]](LLI 규약) · [[assb-li-in-reference-potential-window]]((보)(소)(오)(초) · 108호 Q5) · [[assb-interphase-vs-contact-loss-attribution]](110호 여섯째).
 - 하지 않은 것: 실행 0(B 는 승인 대기) · 새 페이지 0 · raw 변경 0 · Status Log · 이 log 의 옛 항목 변경 0 · §3-b 행 없는 후보 줄(처방 표 30 · 31 · 46 · 84 · 85 · 86 · 90호 후보 · DRT 7번째 경보 칸 · Li-In 97호 압력 기준 칸)은 그대로.
 - 사용자가 정할 것: B 실행 · (메) 소급 검사(쓸 때만) · (새) 25호 원문 · 합성 truth R8 '두 형태' · 5호 개념 분할 제안 · ASSB 다음 방향(§6-3-k 결정 3).
-- `python3 wiki/tools/lint.py` → (통합 2단계가 편집 뒤 직접 실행해 결과를 적는다)
+- `python3 wiki/tools/lint.py` → **0 errors** (통합 2단계 적용 뒤 호출자 실행 · 커밋 `4420568`).
+
+## [2026-11-24] update | ASSB 다음 방향 — 사용자 결정: 문헌 쪽을 접고 합성 truth 로 (권고대로)
+- 사용자 원문 "권고대로 진행하고 백그라운드 에이전트로 진행" — `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §6-3-k 결정 3 의 권고 그대로.
+- 근거 (2026-11-17 기록): 105–117호 13 편 `θ(N)` 0 · 새 칸 0/13 · 접촉 손실 모형 넷이 모두 곱 `A·j₀` 또는 면적형 LAM_PE 꼴로만 출력 —
+  [[assb-contact-loss-vs-lampe]] 117호 누적 줄 · [[assb-lampe-contact-product-degeneracy]].
+- 다음: 합성 truth 설계서 (문서만 — [[assb-synthetic-truth-contact-loss-requirements]] R1–R8 · '설계 선택지 기록') →
+  첫 실행 후보 원장 §3-b (차)(처) (면적 노브 ↔ `j₀` 노브 분리 forward · 바인더 짝) · R8 = 계단 · 점진 두 형태.
+- 실행 경계: (차)(처) 는 RUN_SCOPE 밖 버리는 사본 (P3 선례 — 사전 등록 규칙 뒤) · `degradation-degeneracy` 코드로 옮기는 단계만 게이트 루프.
+- 하지 않은 것: 문헌 흡수 (멈춤) · 실행 0 (설계서 전).
