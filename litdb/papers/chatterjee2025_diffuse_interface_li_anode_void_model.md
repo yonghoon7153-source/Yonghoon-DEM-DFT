@@ -481,7 +481,7 @@ Eq. 1 (Ω_ed):
 | 기계 (탄성 · 크리프 · 적층압) | **없음** | DFT 탄성 E_VRH · B₀ (`our_dft_baseline.md`) · DEM/MPM 압밀 | 이 모델엔 넣을 자리가 없다 (역학을 안 푼다) |
 | 전자구조 · 산화안정 | n/a | gap · ESW (기준선) | 해당 없음 |
 | 무질서 처리 | n/a (연속체) | SQS 미적용 · 단일 배열 (기준선 주의) | 해당 없음 |
-| 확산 계수 입력 | Na 자기확산 D* = 6.33×10⁻¹³ m² s⁻¹ (Mundy 1971 · 3 항 Arrhenius) | 우리 Li 금속 확산 계산 **없음** (UMA 는 Li₃N 금지 · Li 금속 MD 기록 없음 — 확인 범위: `our_dft_baseline.md`) | Li 로 옮기려면 Li D* · c_v^eq · γ_Li 를 새로 넣어야 한다 |
+| 확산 계수 입력 | Na 자기확산 D* = 6.33×10⁻¹³ m² s⁻¹ (Mundy 1971 · 3 항 Arrhenius) | 우리 Li 금속 자기확산 · 공공 계산 **없음** (확인 범위: `our_dft_baseline.md` 만 봤다) | Li 로 옮기려면 Li D* · c_v^eq · γ_Li 를 새로 넣어야 한다 |
 | 계산 틀 | MOOSE FE (2D · 0.5 M 자유도 · LU) | QE DFT · UMA MD · LIGGGHTS DEM · MPM | 겹치는 방법 없음 |
 
 **판정**: 실제 차이 (real difference) 를 말할 수 있는 항목이 **없다** — 같은 계 · 같은 양이 없다. 이 논문이 우리에게 주는 것은 **값이 아니라 틀** (공극 모델이 계면 에너지를 받는 자리 · 받지 않는 자리 · 결과의 민감도 구조) 이다. 그래서 `comparison_vs_ours_DEM.md` 에는 물성 행이 아니라 **🔧 방법 원전** 줄로 넣는다.
