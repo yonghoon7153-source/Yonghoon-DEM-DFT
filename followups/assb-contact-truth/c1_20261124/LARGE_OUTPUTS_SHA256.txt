@@ -1,0 +1,11 @@
+# 대형 산출 — 저장소 밖 (스크래치패드 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1) · sha256 만
+# 격자 0 (§5-8-1 중단) — truth 파형 · z 지도 · MC 결과는 만들지 않았다. 스파이크는 요약만 저장했다 (사본: c1_20261124/spikes/).
+ec7f4fbad71f069efebc9d67a1a88dbcd688ba7a5a2dba6cdd024b4d696b084b  out/spikes/s1.json (491 B)
+367892b6e716251579e16752a5dcea9406581f0b35d492ba2d5762e16f91cd56  out/spikes/s2.json (669 B)
+6ea2290567251064325c3480f8267a0bfa8de7d216fcd9cd1ef150247b1e59de  out/spikes/s3.json (11271 B)
+dfb99ee80f9b3caee4fee02051e0a63da721954d84af449a09ef1de649f4ef9f  out/spikes/s4.json (984 B)
+e830703bcf0911f73d47330171f38e35b7f608bc457f4e541ab77d51c1aba700  out/spikes/s5.json (563 B)
+84f65c7f16687e7f9846b2d28739038dfb9226918290675152f6f52dae4197a7  out/spikes/s6_registered.json (3093 B)
+7029935c3d6e323b56a9ea4603a077e7418725b54b934852167187dc1e6633df  out/spikes/spike_status.json (82 B)
+2c88936a7ac494d60f8a3abc758f9db448814d5da60e308d0996299796e21a68  run/pip_freeze.txt (545 B)
+# 사본 base bf61565ba79f3aa66b16fd097da3105752c3248f · 사본 크기 536039199 B · venv 728426680 B

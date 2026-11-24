@@ -1,0 +1,5 @@
+T0 2026-11-24T05:17:32Z
+disk_free_T0 27775377408
+repo_head_T0 e9b1d299ee7f210891a2821721d11d8f46ae8021 dirty 0
+copy_base bf61565ba79f3aa66b16fd097da3105752c3248f (git archive HEAD degradation-degeneracy · git init · patch 0)
+scratch /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1

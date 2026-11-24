@@ -1,0 +1,19 @@
+S6 x_top=0.261417 x_low=0.999795 x_mid=0.625854 x_end=0.990291 SOC x=[0.407192, 0.625854, 0.844516] Q1C=6.4478Ah tau_ct0=19.069ms geo_ok=True mono=True
+S6 PASS
+S1 term=event: Minimum voltage [V] t_end=35537s Q=6.3648Ah tau_Li=2.569e-08s (≤1e-06) ce_dev=1.231e-03
+S1 PASS
+S2 faradaic_suppressed_k0x1e-4: C_eff=0.296824F hand=0.296732F rel=+0.0309%
+S2 as_is_t0plus: C_eff=0.262970F hand=0.296732F rel=-11.3779%
+S2 PASS
+S3 G05|Wa10.0: build 0.13s bundle(12 pulses) 2.24s
+S3 G2|Wa0.1: build 0.12s bundle(12 pulses) 2.39s
+S3 projection core ≤ 6.4 min (upper) · all_final_time=True
+S3 PASS
+S4 ce max rel dev: S1(C/10) 1.231e-03 · S3 bundles 1.386e-03 (spatial 1.760e-03) · limit 1e-9
+S4 diag c_dl_x1: {'ce_max_rel_dev': 0.00018359297562264842, 'ce_pos_mean_rel_end': -3.71521433928379e-06, 'pred_pos_rel_end_est': 1.8066768285588808e-06}
+S4 diag c_dl_x0.001: {'ce_max_rel_dev': 0.00010657736764452252, 'ce_pos_mean_rel_end': -5.18265697724285e-06, 'pred_pos_rel_end_est': 1.806298691353062e-09}
+S4 diag decoupling max|ΔV|: {'D_e_x10': 4.458518843009074e-08, 'ce0_x2': 4.641115669556939e-08}
+S4 FAIL
+S5 j0(x_mid) {'G05': 0.1347310189958485, 'G2': 0.13473286188722491} target 1.347316e-01 rel 9.12e-06 · Li rel (dl 포함) max 5.80e-11 · 문자 그대로 (dl 없음) 3.60e-05
+S5 FAIL
+SPIKES FAIL: s4,s5

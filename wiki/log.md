@@ -3992,3 +3992,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 하지 않은 것: 코드 0 · 설치 0 · 실행 0 · RUN_SCOPE 변경 0 · 새 위키 페이지 0 · raw 변경 0 · 우리 연구 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
 - 사용자가 정할 것: 설계서 §7-3 D1–D8 (C1 승인 · 예산 4 시간 · 환경 · AD 대리 팔 · EIS 새 의존성 · 판정 문턱 · C1b 표적 · C3 판 · 승인 문서 형식).
 - `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).
+
+## [2026-11-24] update | ASSB 합성 truth C1 실행 — 구현 스파이크 S4 · S5 실패로 §5-8 규칙 1 중단 (격자 0)
+- 무엇: `followups/assb-contact-truth/c1_20261124/` (README · 시험 T1–T6 · forward · 관측 연산자 · 스파이크 스크립트 · 단계 기록 `run/` · 스파이크 요약 `spikes/` ·
+  `LARGE_OUTPUTS_SHA256.txt`) · `followups/assb-contact-truth/DESIGN_v1.md` §8 덧붙임 (8-1 승인 · 시계 · 사본 · 환경 · 규칙 고정 · 8-2 S6 등록 수 · 8-3 스파이크 결과 ·
+  중단 · 사후 발견) · `followups/assb-contact-truth/STATUS.md` (C1 행 · 사용자가 정할 것).
+- 승인: 사용자 원문 "권고대로 진행하고 백그라운드 에이전트로 진행" (2026-11-24) — 설계서 §7-3 D1–D8 은 '권고' 칸 그대로 (호출자 결정). 저장소 밖 버리는 사본 · venv (프로필 C 핵심 셋).
+- 결과 (수치는 옮기지 않는다 — 진단 전용 · 인용 금지 · 정본 아님): 시험 RED → GREEN 뒤 스파이크에서 S4 (단일 이온 t₊ = 1 의 c_e 균일) · S5 (j₀ 모양 g 의 x_mid 동치) 가
+  통과 조건을 못 넘어 격자 전에 멈췄다. 원인 (원천 코드 읽기): [[pybamm]] 26.8 의 전해질 식에 남는 이중층 충전 항 · j₀ 함수의 정규화 후처리 — 설계서 §8-3.
+  C1a 검출 지도 · C1b 재현 판정은 없다. 사후 발견 다섯은 설계서 §8-3 · [[assb-synthetic-truth-contact-loss-requirements]] 다음 설계의 입력.
+- 하지 않은 것: RUN_SCOPE 변경 0 · 격자 0 · 위키 페이지 수정 0 · 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
+- 사용자가 정할 것: (가) 결과를 본 뒤의 규칙 변경으로 격자 · (나) truth 수정 → 새 스파이크 · (다) C1 닫기 — `followups/assb-contact-truth/STATUS.md`.
+- `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).

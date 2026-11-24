@@ -1,0 +1,341 @@
+"""C1 구현 스파이크 S1–S6 (설계서 §3-2) — 통과 조건은 설계서 표 그대로. 진단 전용 · 인용 금지.
+
+사용: python -I c1_spikes.py <s1|s2|s3|s4|s5|s6|all> --out <dir>
+환경변수 C1_COPY (사본 — c1_observe 의 add_noise 재사용 경로).
+S7 (pybamm-eis) 은 D4 보류 — 실행하지 않는다.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(Path(os.environ["C1_COPY"]).resolve()))
+sys.path.insert(0, str(HERE))
+
+import c1_truth as tr  # noqa: E402
+
+R_LIN, R_TAF = 0.2, 5.0          # r_kin (§5-2)
+SOCS = (0.8, 0.5, 0.2)
+F_K = 0.25                        # τ_max 어림의 K 팔 손실 (§5-2 창 규칙)
+
+
+def jdump(obj, path):
+    def conv(o):
+        if isinstance(o, (np.floating, np.integer)):
+            return o.item()
+        if isinstance(o, np.ndarray):
+            return o.tolist()
+        return str(o)
+    Path(path).write_text(json.dumps(obj, indent=1, ensure_ascii=False, default=conv))
+
+
+def x_window():
+    x_top = tr.x_of_ocp(tr.V_HIGH)
+    x_low = tr.x_of_ocp(tr.V_LOW)
+    return x_top, x_low
+
+
+def c10_end(model, solver, sim, b, x_top, I10):
+    r = tr.run_cc(model, solver, sim, b, x_start=x_top, I_A=I10, t_max=12.5 * 3600, dt_out=10.0,
+                  V_lo=tr.V_LOW, V_hi=10.0, keep=("Voltage [V]", "Electrolyte concentration [mol.m-3]"))
+    t_end = float(r["t"][-1])
+    q = I10 * t_end
+    return x_top + q / tr.q_per_x(), r
+
+
+# ------------------------------------------------------------------ S6 (등록 수) — 다른 스파이크가 x_mid 를 쓴다
+def s6(out: Path) -> dict:
+    t0 = time.time()
+    xs = np.linspace(1e-6, 1 - 1e-6, 200001)
+    U = np.array([tr.ocp(x) for x in xs[::100]])
+    mono = bool(np.all(np.diff(U) < 0))
+    x_top, x_low = x_window()
+    q1c = tr.q_1c_ah()
+    I1C = q1c                                     # A (1 h)
+    I10 = 0.1 * I1C
+    model, solver, sim = tr.build_model("G05")
+    x_mid = 0.5 * (x_top + x_low)
+    hist = []
+    for it in range(12):
+        b = tr.base_inputs(shape="G05", Wa=10.0, x_mid=x_mid)
+        x_end, r = c10_end(model, solver, sim, b, x_top, I10)
+        x_new = 0.5 * (x_top + x_end)
+        hist.append({"it": it, "x_mid_in": x_mid, "x_end": x_end, "x_mid_out": x_new, "term": str(r["termination"])})
+        if abs(x_new - x_mid) < 1e-7:
+            x_mid = x_new
+            break
+        x_mid = x_new
+    b = tr.base_inputs(shape="G05", Wa=10.0, x_mid=x_mid)
+    x_end, r = c10_end(model, solver, sim, b, x_top, I10)
+    soc_x = {s: x_top + (1 - s) * (x_end - x_top) for s in SOCS}
+    j0t = tr.j0_target()
+    I_lin = R_LIN * tr.A_SURF0 * j0t * tr.L_PE * tr.AREA
+    I_taf = R_TAF * tr.A_SURF0 * j0t * tr.L_PE * tr.AREA
+    cap5 = 5.0 * I1C
+    pulses = {"lin+": I_lin, "lin-": -I_lin, "taf+": min(I_taf, cap5), "taf-": -min(I_taf, cap5)}
+    tau_ct0 = tr.VT * tr.C_DL0 / j0t
+    tau_max, w_fit = {}, {}
+    for shape in tr.SHAPES:
+        bb = tr.base_inputs(shape=shape, Wa=10.0, x_mid=x_mid)
+        for s, x in soc_x.items():
+            tau = tr.VT * tr.C_DL0 / (F_K * bb["k0"] * float(tr.g_shape(shape, x)))
+            key = f"{shape}|SOC{s}"
+            tau_max[key] = tau
+            w_fit[key] = min(max(0.5, 10 * tau), 10.0)
+    kap = {}
+    for Wa in (10.0, 0.1):
+        bb = tr.base_inputs(shape="G05", Wa=Wa, x_mid=x_mid)
+        k_eff = bb["kappa"] * tr.EPS_SE ** tr.BRUGG_E
+        R_ion = tr.L_PE / k_eff
+        R_el = tr.L_PE / tr.SIGMA_S0
+        kap[str(Wa)] = {"kappa_eff_S_m": k_eff, "kappa_bulk_S_m": bb["kappa"], "kappa_eff_mS_cm": k_eff * 10,
+                        "R_ion_geo_ohm_m2": R_ion, "R_el_geo_ohm_m2": R_el,
+                        "Wa_incl_electronic": tr.RCT_GEO0 / (R_ion + R_el),
+                        "R_sep_ohm_m2": float(tr._P["Separator thickness [m]"]) / (bb["kappa"] * float(tr._P["Separator porosity"]) ** 1.5)}
+    # 사본 configs/base.yaml 과 대조 (§1-4 — 양극 기하 그대로)
+    import yaml
+    cfg = yaml.safe_load(Path(os.environ["C1_COPY"], "configs", "base.yaml").read_text())
+    geo_ok = (cfg["parameter_set"] == tr.PV_NAME and cfg["baseline"]["pe_vf"] == tr.EPS_CAM0
+              and cfg["baseline"]["pe_porosity"] == tr.EPS_SE and cfg["baseline"]["pe_max_conc"] == tr.C_MAX)
+    res = {
+        "spike": "S6", "ocp_monotone_decreasing": mono, "U_x_top": tr.ocp(x_top), "U_x_low": tr.ocp(x_low),
+        "cutoffs_V": [tr.V_LOW, tr.V_HIGH], "cutoff_rule_triggered": False,
+        "cutoff_rule_note": "OCP 함수 (Chen2020_composite) 의 정규화 항 1e-4·(1/x+1/(x−1)) 때문에 (0,1) 의 상이 [3.0, 4.3] V 를 덮는다 → 대체 규칙 미발동",
+        "x_top": x_top, "x_low_ocv": x_low, "x0_assembled": x_low,
+        "x0_note": "조립 상태 '완전 리튬화' = OCV 창의 리튬화 끝 U⁻¹(3.0 V) (x = 1 은 U · j₀ 특이)",
+        "Q_1C_Ah": q1c, "I_1C_A": I1C, "I_C10_A": I10,
+        "x_mid_fixed_point": hist, "x_mid": x_mid, "x_end_C10": x_end, "C10_termination": str(r["termination"]),
+        "soc_x": {str(k): v for k, v in soc_x.items()},
+        "j0_target_A_m2": j0t, "k0": {sh: tr.base_inputs(shape=sh, Wa=10.0, x_mid=x_mid)["k0"] for sh in tr.SHAPES},
+        "pulse_I_A": pulses, "pulse_C_rate": {k: v / I1C for k, v in pulses.items()},
+        "pulse_cap_5C_hit": I_taf > cap5, "r_kin": {"lin": R_LIN, "taf": R_TAF},
+        "tau_ct0_s": tau_ct0, "tau_max_s": tau_max, "W_fit_s": w_fit, "Wa": kap,
+        "A_surf_m-1": tr.A_SURF0, "aL": tr.A_SURF0 * tr.L_PE, "C_geo_F_m2": tr.A_SURF0 * tr.L_PE * tr.C_DL0,
+        "tau_Li_s": tr.VT / tr.J0_LI * tr.CDL_LI, "D_e": tr.D_E, "geometry_matches_copy_base_yaml": geo_ok,
+        "elapsed_s": time.time() - t0,
+    }
+    jdump(res, out / "s6_registered.json")
+    print(f"S6 x_top={x_top:.6f} x_low={x_low:.6f} x_mid={x_mid:.6f} x_end={x_end:.6f} "
+          f"SOC x={[round(v, 6) for v in soc_x.values()]} Q1C={q1c:.4f}Ah tau_ct0={tau_ct0*1e3:.3f}ms "
+          f"geo_ok={geo_ok} mono={mono}")
+    print("S6 PASS" if (mono and geo_ok and "Minimum voltage" in str(r["termination"])) else "S6 FAIL")
+    return res
+
+
+def reg(out: Path) -> dict:
+    return json.loads((out / "s6_registered.json").read_text())
+
+
+# ------------------------------------------------------------------ S1
+def s1(out: Path) -> dict:
+    t0 = time.time()
+    R = reg(out)
+    model, solver, sim = tr.build_model("G05")
+    b = tr.base_inputs(shape="G05", Wa=10.0, x_mid=R["x_mid"])
+    r = tr.run_cc(model, solver, sim, b, x_start=R["x_top"], I_A=R["I_C10_A"], t_max=12.5 * 3600, dt_out=10.0,
+                  V_lo=tr.V_LOW, V_hi=10.0, keep=("Voltage [V]", "Electrolyte concentration [mol.m-3]"))
+    ce = r["Electrolyte concentration [mol.m-3]"]
+    tau_li = tr.VT / tr.J0_LI * tr.CDL_LI
+    limit = 1e-4 / 100.0                     # 관측 창의 가장 짧은 축 = truth 간격 0.1 ms 의 1/100
+    conv = "Minimum voltage" in str(r["termination"])
+    res = {"spike": "S1", "termination": str(r["termination"]), "t_end_s": float(r["t"][-1]),
+           "Q_dis_Ah": R["I_C10_A"] * float(r["t"][-1]) / 3600, "V_first": float(r["Voltage [V]"][0]),
+           "V_last": float(r["Voltage [V]"][-1]), "ce_max_rel_dev": float(np.max(np.abs(ce / tr.CE0 - 1))),
+           "tau_Li_s": tau_li, "tau_Li_limit_s": limit,
+           "counter_dl_note": "LithiumMetalSurfaceForm: C_dl,Li·dΔφ/dt = i_cc − j_pl (평면 이중층 · 'Negative electrode double-layer capacity')",
+           "pass": bool(conv and tau_li <= limit), "elapsed_s": time.time() - t0}
+    jdump(res, out / "s1.json")
+    print(f"S1 term={res['termination']} t_end={res['t_end_s']:.0f}s Q={res['Q_dis_Ah']:.4f}Ah tau_Li={tau_li:.3e}s "
+          f"(≤{limit:.0e}) ce_dev={res['ce_max_rel_dev']:.3e}")
+    print("S1 PASS" if res["pass"] else "S1 FAIL")
+    return res
+
+
+# ------------------------------------------------------------------ S2
+def s2(out: Path) -> dict:
+    t0 = time.time()
+    R = reg(out)
+    model, solver, sim = tr.build_model("G05")
+    b = tr.base_inputs(shape="G05", Wa=10.0, x_mid=R["x_mid"])
+    I = 0.1 * R["pulse_I_A"]["lin+"]
+    C_hand = tr.A_SURF0 * tr.C_DL0 * tr.L_PE * tr.AREA
+    out_rows = {}
+    for label, kmul, win in (("faradaic_suppressed_k0x1e-4", 1e-4, (0.010, 0.100)),
+                             ("as_is_t0plus", 1.0, (1e-4, 5e-4))):
+        bb = dict(b)
+        bb["k0"] = b["k0"] * kmul
+        res = tr.run_pulse(model, solver, sim, bb, x_start=R["x_mid"], I_A=I, t_on=1.0, t_off=1.0,
+                           keep=("Voltage [V]",))
+        t = res["t"][: res["n_pulse"]]
+        v = res["Voltage [V]"][: res["n_pulse"]]
+        m = (t >= win[0] - 1e-12) & (t <= win[1] + 1e-12)
+        slope = np.polyfit(t[m], v[m], 1)[0]
+        C_eff = -I / slope
+        out_rows[label] = {"window_s": win, "slope_V_s": slope, "C_eff_F": C_eff, "C_hand_F": C_hand,
+                           "rel": C_eff / C_hand - 1.0}
+    rel = out_rows["faradaic_suppressed_k0x1e-4"]["rel"]
+    resd = {"spike": "S2", "I_A": I, "rows": out_rows, "pass": bool(abs(rel) <= 0.05),
+            "param_name": "Positive electrode double-layer capacity [F.m-2] (실제 접촉 면적당 — 모형식 a·C_dl·dΔφ/dt)",
+            "elapsed_s": time.time() - t0}
+    jdump(resd, out / "s2.json")
+    for k, v in out_rows.items():
+        print(f"S2 {k}: C_eff={v['C_eff_F']:.6f}F hand={C_hand:.6f}F rel={v['rel']:+.4%}")
+    print("S2 PASS" if resd["pass"] else "S2 FAIL")
+    return resd
+
+
+# ------------------------------------------------------------------ S3 (+ S4 · S5c 재료)
+def bundle(model, solver, sim, d, R):
+    rows = []
+    for s in SOCS:
+        x = R["soc_x"][str(s)]
+        for amp in ("lin", "taf"):
+            for sgn in ("+", "-"):
+                I = R["pulse_I_A"][amp + sgn]
+                t0 = time.time()
+                res = tr.run_pulse(model, solver, sim, d, x_start=x, I_A=I)
+                el = time.time() - t0
+                ce = res["Electrolyte concentration [mol.m-3]"]
+                lb = tr.li_balance(res, d, I, 10.0)
+                v = res["Voltage [V]"]
+                rows.append({"soc": s, "amp": amp, "sgn": sgn, "I_A": I, "elapsed_s": el, "n_t": int(res["t"].size),
+                             "ce_max_rel_dev": float(np.max(np.abs(ce / tr.CE0 - 1))),
+                             "ce_spatial_rel": float(np.max((ce.max(axis=0) - ce.min(axis=0)) / tr.CE0)),
+                             "li_rel_with_dl": lb["rel_with_dl"], "li_rel_no_dl": lb["rel_no_dl"],
+                             "V_min": float(v.min()), "V_max": float(v.max()), "term": [str(x_) for x_ in res["termination"]]})
+    return rows
+
+
+def s3(out: Path) -> dict:
+    t0 = time.time()
+    R = reg(out)
+    rows_all = {}
+    timing = {}
+    for shape, Wa in (("G05", 10.0), ("G2", 0.1)):
+        tb = time.time()
+        model, solver, sim = tr.build_model(shape)
+        t_build = time.time() - tb
+        d = tr.base_inputs(shape=shape, Wa=Wa, x_mid=R["x_mid"])
+        ts = time.time()
+        rows = bundle(model, solver, sim, d, R)
+        timing[f"{shape}|Wa{Wa}"] = {"build_s": t_build, "bundle_s": time.time() - ts}
+        rows_all[f"{shape}|Wa{Wa}"] = rows
+    per_run = max(v["bundle_s"] for v in timing.values())
+    n_core = 68 + 10 + 3 + 80            # 격자 수렴 3 · C1a 68 해 · DC 10 · C1b 80 (C1b · DC 는 펄스 묶음보다 가벼움 — 상한 어림)
+    proj = {"per_bundle_s_max": per_run, "core_runs": n_core, "projected_core_s_upper": per_run * n_core}
+    ok = all(all(str(t).startswith("final time") or "final time" in str(t) for t in r["term"])
+             for rows in rows_all.values() for r in rows)
+    res = {"spike": "S3", "timing": timing, "projection": proj, "rows": rows_all, "all_final_time": ok,
+           "pass": bool(ok), "elapsed_s": time.time() - t0}
+    jdump(res, out / "s3.json")
+    for k, v in timing.items():
+        print(f"S3 {k}: build {v['build_s']:.2f}s bundle(12 pulses) {v['bundle_s']:.2f}s")
+    print(f"S3 projection core ≤ {proj['projected_core_s_upper']/60:.1f} min (upper) · all_final_time={ok}")
+    print("S3 PASS" if res["pass"] else "S3 FAIL")
+    return res
+
+
+# ------------------------------------------------------------------ S4
+def s4(out: Path) -> dict:
+    t0 = time.time()
+    R = reg(out)
+    S1 = json.loads((out / "s1.json").read_text())
+    S3 = json.loads((out / "s3.json").read_text())
+    dev_s3 = max(r["ce_max_rel_dev"] for rows in S3["rows"].values() for r in rows)
+    sp_s3 = max(r["ce_spatial_rel"] for rows in S3["rows"].values() for r in rows)
+    dev = max(S1["ce_max_rel_dev"], dev_s3)
+    # 진단 (판정 아님): 기작 — 이중층 항 −a·C_dl·dΔφ/dt / F 를 줄이면 편차가 비례해 주는가 · 예측값
+    model, solver, sim = tr.build_model("G05")
+    d = tr.base_inputs(shape="G05", Wa=10.0, x_mid=R["x_mid"])
+    I = R["pulse_I_A"]["taf+"]
+    x = R["x_mid"]
+    diag = {}
+    for mul in (1.0, 1e-3):
+        dd = dict(d)
+        dd["c_dl"] = d["c_dl"] * mul
+        res = tr.run_pulse(model, solver, sim, dd, x_start=x, I_A=I)
+        ce = res["Electrolyte concentration [mol.m-3]"]
+        dphi = res["Positive electrode surface potential difference [V]"]
+        n_x = dphi.shape[0]
+        a = 3 * dd["eps_am"] / tr.R_P
+        # 예측: Δ(∫ε c_e dx) = −∫ a C_dl ΔΔφ dx / F → 셀 평균 편차 (양극 부분만 · 분리막 확산 무시 어림)
+        pred = -(a * dd["c_dl"] * (dphi[:, -1] - dphi[:, 0])).mean() / tr.F / tr.EPS_SE / tr.CE0
+        nce = ce.shape[0]
+        ce_pos_mean_end = ce[nce - n_x:, -1].mean()
+        diag[f"c_dl_x{mul:g}"] = {"ce_max_rel_dev": float(np.max(np.abs(ce / tr.CE0 - 1))),
+                                  "ce_pos_mean_rel_end": float(ce_pos_mean_end / tr.CE0 - 1), "pred_pos_rel_end_est": float(pred)}
+    # 진단: c_e 결합 여부 — D_e × 10 · c_e0 × 2 에서 V(t) 차
+    v_ref = tr.run_pulse(model, solver, sim, d, x_start=x, I_A=I, keep=("Voltage [V]",))["Voltage [V]"]
+    dec = {}
+    for lab, kw in (("D_e_x10", {"D_e": tr.D_E * 10}), ("ce0_x2", {"ce0": tr.CE0 * 2})):
+        m2, s2_, sim2 = tr.build_model("G05", **kw)
+        v2 = tr.run_pulse(m2, s2_, sim2, d, x_start=x, I_A=I, keep=("Voltage [V]",))["Voltage [V]"]
+        dec[lab] = float(np.max(np.abs(v2 - v_ref)))
+    res = {"spike": "S4", "ce_max_rel_dev_S1_C10": S1["ce_max_rel_dev"], "ce_max_rel_dev_S3_bundles": dev_s3,
+           "ce_spatial_rel_S3": sp_s3, "ce_max_rel_dev": dev, "limit": 1e-9, "pass": bool(dev <= 1e-9),
+           "diag_mechanism": diag, "diag_decoupling_max_abs_dV_V": dec,
+           "mechanism_note": "PyBaMM 26.8 full_diffusion: ∂(εc)/∂t = −∇·(−D∇c + t₊ i_e/F) + Σa j_F/F · FullDifferential: a C_dl ∂Δφ/∂t = ∇·i_e − Σa j_F → t₊=1 이면 ∂(εc)/∂t = ∇·D∇c − a C_dl ∂Δφ/∂t / F",
+           "elapsed_s": time.time() - t0}
+    jdump(res, out / "s4.json")
+    print(f"S4 ce max rel dev: S1(C/10) {S1['ce_max_rel_dev']:.3e} · S3 bundles {dev_s3:.3e} (spatial {sp_s3:.3e}) · limit 1e-9")
+    for k, v in diag.items():
+        print(f"S4 diag {k}: {v}")
+    print(f"S4 diag decoupling max|ΔV|: {dec}")
+    print("S4 PASS" if res["pass"] else "S4 FAIL")
+    return res
+
+
+# ------------------------------------------------------------------ S5
+def s5(out: Path) -> dict:
+    t0 = time.time()
+    R = reg(out)
+    S3 = json.loads((out / "s3.json").read_text())
+    j0s = {}
+    for shape in tr.SHAPES:
+        model, solver, sim = tr.build_model(shape)
+        d = tr.base_inputs(shape=shape, Wa=10.0, x_mid=R["x_mid"])
+        res = tr.run_pulse(model, solver, sim, d, x_start=R["x_mid"], I_A=0.0, t_on=1.0, t_off=1.0,
+                           keep=("Positive electrode exchange current density [A.m-2]",))
+        j0s[shape] = float(np.asarray(res["Positive electrode exchange current density [A.m-2]"])[:, 0].mean())
+    j0t = tr.j0_target()
+    rel_g = max(abs(v / j0t - 1) for v in j0s.values())
+    li_with = max(r["li_rel_with_dl"] for rows in S3["rows"].values() for r in rows)
+    li_without = max(r["li_rel_no_dl"] for rows in S3["rows"].values() for r in rows)
+    res = {"spike": "S5", "j0_at_x_mid": j0s, "j0_target": j0t, "g_norm_rel": rel_g,
+           "physical_area_impl": "없음 (26.8 · spherical: a = 3ε/R 고정 · 'no particles' 는 입자 확산이 없어 DFN 의 면적 노브가 아님) → 미확인 · 대수로만 (조건부 8 실행 안 함)",
+           "li_rel_with_dl_max": li_with, "li_rel_literal_no_dl_max": li_without,
+           "pass_g": bool(rel_g <= 1e-12), "pass_li": bool(li_with <= 1e-6),
+           "pass": bool(rel_g <= 1e-12 and li_with <= 1e-6), "elapsed_s": time.time() - t0}
+    jdump(res, out / "s5.json")
+    print(f"S5 j0(x_mid) {j0s} target {j0t:.6e} rel {rel_g:.2e} · Li rel (dl 포함) max {li_with:.2e} · 문자 그대로 (dl 없음) {li_without:.2e}")
+    print("S5 PASS" if res["pass"] else "S5 FAIL")
+    return res
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("which", choices=["s1", "s2", "s3", "s4", "s5", "s6", "all"])
+    ap.add_argument("--out", required=True)
+    a = ap.parse_args(argv)
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    order = ["s6", "s1", "s2", "s3", "s4", "s5"] if a.which == "all" else [a.which]
+    status = {}
+    for w in order:
+        r = globals()[w](out)
+        status[w] = r.get("pass", True) if w != "s6" else None
+    jdump(status, out / "spike_status.json")
+    fails = [k for k, v in status.items() if v is False]
+    print("SPIKES FAIL: " + ",".join(fails) if fails else "SPIKES ALL PASS")
+    return 3 if fails else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

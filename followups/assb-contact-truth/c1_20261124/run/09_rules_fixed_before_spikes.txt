@@ -1,0 +1,8 @@
+2026-11-24T05:40:26Z
+cc6b0b043150b78db26b1a63afe16540a63df54bab74d2e4991d831933892d24  HEAD:followups/assb-contact-truth/DESIGN_v1.md (§0–§7 = 판정 규칙 · git blob 17c7f75427c26bc6dee53dc7250edcf97edc9b0e)
+ed11cb8fd65772b61635da79a29a6a45b1ed47f4ac1f11b2e92ff90f6973a968  followups/assb-contact-truth/c1_20261124/test_c1.py
+683b98891296324dceaabb7cb1b30e2efd73fde6847000d3831690285170eb6a  followups/assb-contact-truth/c1_20261124/c1_truth.py
+91762c467ee07f2e7caaa8c0c33e1eda0567cf3025b698fca91bb361338bc410  followups/assb-contact-truth/c1_20261124/c1_observe.py
+88b499f28711e61a2ff75c27a28b848af163adb1a3fb769667d673abf7594139  followups/assb-contact-truth/c1_20261124/c1_spikes.py
+2b61ca24027f3d3761bff90ab682419e014bb3856192365b3915eb0b7c524777  followups/assb-contact-truth/c1_20261124/run_step.sh
+2c88936a7ac494d60f8a3abc758f9db448814d5da60e308d0996299796e21a68  pip_freeze.txt (스크래치패드 venv)

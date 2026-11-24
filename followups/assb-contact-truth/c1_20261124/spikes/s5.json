@@ -1,0 +1,16 @@
+{
+ "spike": "S5",
+ "j0_at_x_mid": {
+  "G05": 0.1347310189958485,
+  "G2": 0.13473286188722491
+ },
+ "j0_target": 0.13473163329017315,
+ "g_norm_rel": 9.11884627052828e-06,
+ "physical_area_impl": "없음 (26.8 · spherical: a = 3ε/R 고정 · 'no particles' 는 입자 확산이 없어 DFN 의 면적 노브가 아님) → 미확인 · 대수로만 (조건부 8 실행 안 함)",
+ "li_rel_with_dl_max": 5.8036958174902806e-11,
+ "li_rel_literal_no_dl_max": 3.596175557293024e-05,
+ "pass_g": false,
+ "pass_li": true,
+ "pass": false,
+ "elapsed_s": 0.48370790481567383
+}

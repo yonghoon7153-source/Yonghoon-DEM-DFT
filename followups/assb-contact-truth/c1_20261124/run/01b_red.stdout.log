@@ -1,0 +1,308 @@
+EEEEEEEEEFFFFFFFFFFFFFFF                                                 [100%]
+==================================== ERRORS ====================================
+__________ ERROR at setup of test_t1_area_arm_scales_k0_and_cdl_only ___________
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+_______________ ERROR at setup of test_t1_j0_arm_scales_k0_only ________________
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+_____ ERROR at setup of test_t1_ad_proxy_scales_k0_cdl_and_D_by_f_squared ______
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+____________ ERROR at setup of test_t1_negative_control_A0_equals_K ____________
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+________ ERROR at setup of test_t1_dc_product_identical_between_A_and_K ________
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+_ ERROR at setup of test_t1_theta_reduces_connected_volume_and_keeps_se_fraction _
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+_________________ ERROR at setup of test_t1_lam_pe_with_d_lam __________________
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+________ ERROR at setup of test_t1_se_fraction_invariant_for_every_knob ________
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+________________ ERROR at setup of test_t1_unknown_arm_rejected ________________
+
+    @pytest.fixture(scope="module")
+    def base():
+>       return tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.6)
+               ^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:32: AttributeError
+=================================== FAILURES ===================================
+_____________________ test_t1_j0_shape_normalised_at_x_mid _____________________
+
+    def test_t1_j0_shape_normalised_at_x_mid():
+        """두 g 가 x_mid 에서 같은 j₀ → 같은 신품 R_ct,기하 = 66 Ω cm² (§1-4 · §2-6)."""
+        for x_mid in (0.45, 0.6, 0.7):
+            j = []
+            for shape in ("G05", "G2"):
+>               b = tr.base_inputs(shape=shape, Wa=10.0, x_mid=x_mid)
+                    ^^^^^^^^^^^^^^
+E               AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:119: AttributeError
+____________________ test_t1_wa_definition_inverts_to_kappa ____________________
+
+    def test_t1_wa_definition_inverts_to_kappa():
+        for Wa in (10.0, 0.1):
+>           b = tr.base_inputs(shape="G05", Wa=Wa, x_mid=0.6)
+                ^^^^^^^^^^^^^^
+E           AttributeError: module 'c1_truth' has no attribute 'base_inputs'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:131: AttributeError
+__________________ test_t2_f1_noise_free_recovers_parameters ___________________
+
+    def test_t2_f1_noise_free_recovers_parameters():
+        rng = np.random.default_rng(7)
+        for _ in range(6):
+            R0, Rp, tau, k = rng.uniform(0.01, 0.1), rng.uniform(0.02, 0.2), rng.uniform(0.005, 0.3), rng.uniform(0.002, 0.05)
+            I = rng.choice([-1.0, 1.0]) * rng.uniform(0.05, 2.0)
+            dt = 1e-4
+            W = min(max(0.5, 10 * tau), 10.0)
+            t = np.arange(1, int(round(W / dt)) + 1) * dt
+            V0 = 3.8
+            v = _f1_wave(t, I, V0, R0, Rp, tau, k)
+>           r = ob.fit_f1(t, v, I=I, V0=V0, dt=dt)
+                ^^^^^^^^^
+E           AttributeError: module 'c1_observe' has no attribute 'fit_f1'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:154: AttributeError
+_______________________ test_t2_f1_unresolved_tau_is_nan _______________________
+
+    def test_t2_f1_unresolved_tau_is_nan():
+        """τ̂ < 2Δt → τ 미해상 (NaN) — 표본이 RC 를 못 본다."""
+        dt = 0.1
+        t = np.arange(1, 21) * dt
+        v = _f1_wave(t, 1.0, 3.8, 0.05, 0.05, 0.01, 0.01)   # τ = 10 ms ≪ 2Δt
+>       r = ob.fit_f1(t, v, I=1.0, V0=3.8, dt=dt)
+            ^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'fit_f1'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:166: AttributeError
+______________________ test_t2_f1_too_few_samples_is_nan _______________________
+
+    def test_t2_f1_too_few_samples_is_nan():
+        t = np.array([1.0, 2.0, 3.0])
+        v = _f1_wave(t, 1.0, 3.8, 0.05, 0.05, 0.5, 0.01)
+>       r = ob.fit_f1(t, v, I=1.0, V0=3.8, dt=1.0)
+            ^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'fit_f1'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:173: AttributeError
+______________________ test_t2_f1_noise_95ci_covers_truth ______________________
+
+    def test_t2_f1_noise_95ci_covers_truth():
+        """잡음 σ → 95 % 구간의 경험 포함률이 [0.88, 0.99] (M = 200)."""
+        R0, Rp, tau, k, I, V0 = 0.03, 0.06, 0.05, 0.01, 1.0, 3.8
+        dt = 1e-3
+        t = np.arange(1, 501) * dt
+        v = _f1_wave(t, I, V0, R0, Rp, tau, k)
+        sig = 2e-4
+        cover = {"tau": 0, "Rp": 0}
+        M = 200
+        for m in range(M):
+            vn = v + np.random.default_rng(1000 + m).normal(0, sig, size=v.shape)
+>           r = ob.fit_f1(t, vn, I=I, V0=V0, dt=dt)
+                ^^^^^^^^^
+E           AttributeError: module 'c1_observe' has no attribute 'fit_f1'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:188: AttributeError
+_____________________ test_t3_two_rc_waveforms_closed_form _____________________
+
+    def test_t3_two_rc_waveforms_closed_form():
+        """프로파일 없음 (후보 하나) · ΔR0 없음: z = I·R·√S/σ, S = Σ (q_A^n − q_K^n)² (기하급수 닫힌 꼴)."""
+        I, R, tA, tK, dt, N, sig = 1.5, 0.04, 0.02, 0.05, 1e-3, 3000, 1e-3
+        n = np.arange(1, N + 1)
+        t = n * dt
+        vA = -I * R * (1 - np.exp(-t / tA))
+        vK = -I * R * (1 - np.exp(-t / tK))
+        qA, qK = np.exp(-dt / tA), np.exp(-dt / tK)
+    
+        def geo(q):
+            return q * (1 - q ** N) / (1 - q)
+    
+        S = geo(qA * qA) - 2 * geo(qA * qK) + geo(qK * qK)
+        z_closed = I * R * np.sqrt(S) / sig
+>       z = ob.z_profile(vA, np.array([vK]), np.array([0.0]), i_t=np.full(N, I), sigma=sig, dR0="none")
+            ^^^^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'z_profile'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:213: AttributeError
+________________ test_t3_profile_over_log_f_quadratic_is_exact _________________
+
+    def test_t3_profile_over_log_f_quadratic_is_exact():
+        """가족 V(s) = s²·w (s = log f) — 세 점 이차 보간이 정확 · 최소 잔차 = ‖u‖ (u ⟂ w, u ⟂ I)."""
+        N = 400
+        t = np.arange(1, N + 1) * 1e-2
+        w = np.sin(2 * np.pi * t / t[-1])
+        i_t = np.where(t <= 1.0, 1.0, 0.0)
+        w = w - i_t * (w @ i_t) / (i_t @ i_t)
+        u = np.cos(6 * np.pi * t / t[-1])
+        for b in (w, i_t):
+            u = u - b * (u @ b) / (b @ b)
+        logf = np.log(np.array(F_GRID))
+        fam = np.array([s * s * w for s in logf])
+        c = (0.5 * (logf[3] + logf[4])) ** 2             # 격자 사이의 참값 → 보간이 필요
+        r0 = 0.37
+        target = c * w + u + i_t * r0
+        sig = 1e-3
+>       z_free = ob.z_profile(target, fam, logf, i_t=i_t, sigma=sig, dR0="free")
+                 ^^^^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'z_profile'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:233: AttributeError
+_____________________ test_t3_symmetric_takes_the_smaller ______________________
+
+    def test_t3_symmetric_takes_the_smaller():
+        N = 200
+        t = np.arange(1, N + 1) * 1e-2
+        logf = np.log(np.array(F_GRID))
+        famA = np.array([np.exp(s) * np.exp(-t) for s in logf])
+        famK = np.array([np.exp(s) * np.exp(-t / 2) for s in logf])
+        i_t = np.ones(N)
+>       zs = ob.z_cell(famA, famK, logf, idx=4, i_t=i_t, sigma=1e-3, dR0="none")
+             ^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'z_cell'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:246: AttributeError
+___________________ test_t4_gitt_ratio_on_analytic_sqrt_wave ___________________
+
+    def test_t4_gitt_ratio_on_analytic_sqrt_wave():
+        E0, IR0, b, tp, delta, tau_r = 3.75, 0.004, 3e-4, 600.0, 0.012, 120.0
+        tp_s = np.arange(0, int(tp) + 1, 1.0)                  # 펄스 0..600 s (1 s)
+        v_p = E0 - IR0 - b * np.sqrt(tp_s)
+        v_p[0] = E0 - IR0
+        tr_s = np.arange(1, 3601, 1.0)                         # 휴지 1 h
+        E1 = E0 - delta
+        v_end = v_p[-1]
+        v_r = E1 + (v_end + IR0 - E1) * np.exp(-tr_s / tau_r)
+>       r = ob.gitt_ratio(t_pulse=tp_s, v_pulse=v_p, t_rest=tr_s, v_rest=v_r, v_pre=E0)
+            ^^^^^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'gitt_ratio'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:264: AttributeError
+___________ test_t5_first_charge_bound_matches_65_digest_arithmetic ____________
+
+    def test_t5_first_charge_bound_matches_65_digest_arithmetic():
+        Qch_ref, Qdis_ref = 100.0, 80.0
+        Qch_var, Qdis_var = Qch_ref * (1 - 0.042), Qdis_ref * (1 - 0.197)
+>       ub = ob.first_charge_bound(Qch_ref=Qch_ref, Qch_var=Qch_var, Qdis_ref=Qdis_ref, Qdis_var=Qdis_var)
+             ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'first_charge_bound'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:282: AttributeError
+___________________________ test_t5_true_theta_share ___________________________
+
+    def test_t5_true_theta_share():
+        Qdis_ref, Qdis_p_th1, Qdis_p_th096 = 80.0, 70.0, 67.0
+>       s = ob.true_theta_share(Qdis_theta1=Qdis_p_th1, Qdis_theta=Qdis_p_th096, Qdis_ref=Qdis_ref)
+            ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'true_theta_share'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:288: AttributeError
+______________________ test_t5_c1b_observables_and_bands _______________________
+
+    def test_t5_c1b_observables_and_bands():
+        ref = dict(Rp=0.010, gitt_ratio=0.5, Qdis=80.0, Qch=100.0)
+        var = dict(Rp=0.0426, gitt_ratio=0.5 * 0.909, Qdis=80.0 * (1 - 0.197), Qch=100.0 * (1 - 0.042))
+>       o = ob.c1b_observables(ref, var)
+            ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_observe' has no attribute 'c1b_observables'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:295: AttributeError
+____________________ test_t6_ledger_conserves_total_lithium ____________________
+
+    def test_t6_ledger_conserves_total_lithium():
+>       A, L, cmax = tr.AREA, tr.L_PE, tr.C_MAX
+                     ^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'AREA'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:309: AttributeError
+__________________ test_t6_model_lithium_balance_short_pulse ___________________
+
+    def test_t6_model_lithium_balance_short_pulse():
+        """모형 안 Li 보존 (§3-2 S5): F·ΔN_Li,입자 + ΔQ_dl = ∫ I dt — 상대 ≤ 1e-6."""
+>       rel = tr.li_balance_check(shape="G05", Wa=10.0, x_mid=0.6, x0=0.6, I_A=0.5, t_pulse=10.0, t_rest=20.0)
+              ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'li_balance_check'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:322: AttributeError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_j0_shape_normalised_at_x_mid
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_wa_definition_inverts_to_kappa
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t2_f1_noise_free_recovers_parameters
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t2_f1_unresolved_tau_is_nan
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t2_f1_too_few_samples_is_nan
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t2_f1_noise_95ci_covers_truth
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t3_two_rc_waveforms_closed_form
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t3_profile_over_log_f_quadratic_is_exact
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t3_symmetric_takes_the_smaller
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t4_gitt_ratio_on_analytic_sqrt_wave
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t5_first_charge_bound_matches_65_digest_arithmetic
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t5_true_theta_share
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t5_c1b_observables_and_bands
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t6_ledger_conserves_total_lithium
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t6_model_lithium_balance_short_pulse
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_area_arm_scales_k0_and_cdl_only
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_j0_arm_scales_k0_only
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_ad_proxy_scales_k0_cdl_and_D_by_f_squared
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_negative_control_A0_equals_K
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_dc_product_identical_between_A_and_K
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_theta_reduces_connected_volume_and_keeps_se_fraction
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_lam_pe_with_d_lam
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_se_fraction_invariant_for_every_knob
+ERROR ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_t1_unknown_arm_rejected
+15 failed, 9 errors in 0.27s
