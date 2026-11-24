@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# One read of the existing 7:3 controller. Usage: bash THIS.txt [fixed_original.txt]
+set -euo pipefail
+if (( $# > 1 )); then echo "Usage: bash THIS.txt [fixed_original.txt]" >&2; exit 2; fi
+here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+fixed=${1:-"$here/../ps73_unloading_20261121/PASTE_PS73_UNLOADING_2f4c42a3b205.txt"}
+if [[ ! -f "$fixed" || -L "$fixed" ]]; then echo "Supply the original 2f4c42a3b205 TXT as the argument." >&2; exit 2; fi
+printf '%s  %s\n' 'e0d546d995bb5850a79eb9256de5cee5fb73ec4ced0e6e7033b1418b96c8048c' "$fixed" | sha256sum --check --status -
+echo 'READ_ONLY_STATUS; existing UB job 368469; full-sequence driver may progress independently.'
+exec bash "$fixed" STATUS
