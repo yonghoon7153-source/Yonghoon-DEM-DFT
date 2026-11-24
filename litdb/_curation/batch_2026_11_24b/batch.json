@@ -67,7 +67,40 @@
    "videos": {
     "where": "사용자 PC C:\\Users\\Administrator\\Downloads\\영상들\\d6ee03852b{2..13}_suppl.mp4 (12 개 · 아직 안 올림)",
     "map_assumed": "b1 = SI PDF 로 보고 bN = Video S(N−1) — 영상을 받으면 첫 장면으로 확인",
-    "content_from_SI": "S1–S3 Cu · Au · Ag 0.1 mA cm⁻² 도금 · S4–S6 0.5 · S7–S9 1 mA cm⁻² · S10–S12 박리 (SI p.44 · p.46 · 본문 p.7–8)"
+    "content_from_SI": "S1–S3 Cu · Au · Ag 0.1 mA cm⁻² 도금 · S4–S6 0.5 · S7–S9 1 mA cm⁻² · S10–S12 박리 (SI p.44 · p.46 · 본문 p.7–8)",
+    "received_2026_11_24": [
+     {
+      "inbox": "litdb/inbox/chu2026_solubility_interlayer_video_b7.mp4",
+      "sha256": "c7061feda3a89bd8fbd4f79beee2cd358a931840094231dced7615f2d73af9d1",
+      "bytes": 22376266,
+      "uploaded_as": "d6ee03852b7_suppl.mp4"
+     },
+     {
+      "inbox": "litdb/inbox/chu2026_solubility_interlayer_video_b10.mp4",
+      "sha256": "1dea086620fa584561b88f4a81941386302c797310fedc68aa061194720ca449",
+      "bytes": 20322095,
+      "uploaded_as": "d6ee03852b10_suppl.mp4"
+     },
+     {
+      "inbox": "litdb/inbox/chu2026_solubility_interlayer_video_b11.mp4",
+      "sha256": "b91b0eb7ee9de2b1400adb74b0cb3b7d8ac8a69133b154711def3353dc9b6796",
+      "bytes": 21116612,
+      "uploaded_as": "d6ee03852b11_suppl.mp4"
+     },
+     {
+      "inbox": "litdb/inbox/chu2026_solubility_interlayer_video_b12.mp4",
+      "sha256": "98ff0c1b6209aef6ca5c3cee225a7761f5394c76e56c3d119b7679722fcdb14d",
+      "bytes": 21995873,
+      "uploaded_as": "d6ee03852b12_suppl.mp4"
+     },
+     {
+      "inbox": "litdb/inbox/chu2026_solubility_interlayer_video_b13.mp4",
+      "sha256": "e2875bde17a21b5cf8f9a84c6480e35d58fa9245f7a59639f118b46c02721831",
+      "bytes": 20850830,
+      "uploaded_as": "d6ee03852b13_suppl.mp4"
+     }
+    ],
+    "not_received": "b4 (= S3 · Ag 0.1 mA cm⁻²) — 사용자가 크기 때문에 조각으로 올릴 수도 있음 · Cu · Au 도금 6 개는 안 받음 (그림에 장면 있음)"
    }
   }
  ]
