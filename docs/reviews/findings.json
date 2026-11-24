@@ -18307,6 +18307,20 @@
    "evidence_tests": [
     "docs/reviews/lhs_wsl30_source_freeze_20261124/README.md 15 줄 = '도구는 30/30 에서 두 로그 모두 정수로 시작하는 줄의 첫 정수가 하베스트 step 과 일치함을 확인 · 이를 thermo 행으로 본 것은 Claude 의 해석' (반입 ㉟ 5849cb331)"
    ]
+  },
+  {
+   "id": "SELF-197",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "게이트 J21 3조각 (11-24 밤 · 199 단계 fast 자기검사 전수)",
+   "opened_in": "docs/reviews/lhs_network_batch_registration_20261007_g2.md",
+   "title": "봉인 32 파일인 webapp/app.py 를 /mixer/story 로 바꾸면서 (J21 · J22) 194 · 보충 20 등록의 발사 뒤 대기 지문 선언 (§9-14 · §9-9) 을 빠뜨렸다 — 11-06 · 11-23 웹앱 변경 때는 같은 선언을 했었다 · J21 게이트 3조각이 supp20_input_receipt --selftest 112/123 (S0 상태 undeclared) 로 멈춰 push 못 함",
+   "note": "고침 = J22 끝 체크아웃 지문 9c157512… 선언 (11-23 값 = 역사) · J21 은 따로 push 하지 않고 J22 에 담아 한 번에 게이트 · 교훈 = app.py 를 바꾼 묶음은 게이트 전 빠른 점검에 scripts/supp20_input_receipt.py --selftest 를 더한다 (끝맺음 스크립트 사전 점검)",
+   "claimed_fixed_sha": "783f8db18",
+   "evidence_tests": [
+    "scripts/supp20_input_receipt.py --selftest — J21 끝 (b34cb4c0a · 지문 a82b3167…) 112/123 → 선언 뒤 J22 끝 123/123"
+   ]
   }
  ]
 }
