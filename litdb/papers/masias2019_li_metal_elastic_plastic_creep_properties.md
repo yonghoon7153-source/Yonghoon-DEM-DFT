@@ -356,7 +356,7 @@ E · G · ν = 7.82 · 2.83 GPa · 0.381 · 항복 0.73–0.81 MPa · 인장 = �
 1. **"점착이 Li 를 붙잡아 둔다" 의 역학 쪽 근거는 개념뿐이다** — `Fig. 10d,e` · p.2598: 점착/마찰이 정수압 영역을 만들어 Li 압출 · 단락을 막는다.  정량 0.  그리고 그 '점착' 은 **계면 전단 저항 (마찰)** 뜻으로 쓰였다 (*"if lithium adheres ... frictional forces"*) — W (법선 분리 에너지) 를 이 그림의 근거로 쓰려면 W → 계면 전단 강도 연결이 따로 필요하다.
 2. **공극 모델의 Li 쪽 입력은 이 논문이 원전**이다 — E · ν (탄성) + n 6.56 · A′ (크리프 유동) (7b 표).  공극을 메우는 Li 흐름 = 크리프이고, 실온 Li 의 유동 응력은 0.2–0.8 MPa 대 (속도 10⁻⁷ – 10⁻³ s⁻¹) 다.
 3. **Young–Dupré 에 필요한 γ_Li (Li 표면 에너지) 는 이 논문에 없다** (n/a) — W_ad 보고서 §7 이 적은 대로 같은 방법 · 같은 Li 면으로 계산해야 한다.
-4. **점착 실측의 원전 후보**: 이 논문 p.2589 가 인용한 [10] Wang & Sakamoto 2018 (*J. Power Sources* 377:7 — Li 금속–고체전해질 계면 저항 ↔ 표면 점착) · [23] Sharafi 외 2017 (*Chem. Mater.* 29:7961 — LLZO 표면 화학과 초저 계면 저항) — §14.
+4. **점착 실측의 원전 후보**: 이 논문 p.2589 가 인용한 [10] Wang & Sakamoto 2018 (*J. Power Sources* 377:7 — Li 금속–고체전해질 계면 저항 ↔ 표면 점착 · litdb 미보유) · [23] Sharafi 외 2017 (*Chem. Mater.* 29:7961 — LLZO 표면 화학과 초저 계면 저항 · 같은 날 묶음 카드 `sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance`) — §14.
 5. **AR · 마찰이 압축 응답을 바꾼다** (`Fig. 4` · `Fig. 10` · 결론) — 얇은 Li 층 (AR ~10⁻⁴) 에서 계면 경계조건 (미끄럼 / 붙음) 이 결과를 정한다는 정성 근거.  *우리 산수*: 인장 법칙상 **1 MPa 에서 자유 Li 는 7.7 × 10⁻³ s⁻¹ 로 흐른다** — 전지 Li 가 그렇게 안 흐르는 것은 구속 (AR · 마찰) 때문이라는 논문 논리와 차수가 맞는다.
 
 ---
@@ -470,7 +470,7 @@ E · G · ν = 7.82 · 2.83 GPa · 0.381 · 항복 0.73–0.81 MPa · 인장 = �
 | [4] | Monroe C, Newman J (2005) The impact of elastic deformation on deposition kinetics at lithium/polymer interfaces. J Electrochem Soc 152:A396–A404 | G_SE ≥ ~2 G_Li 기준의 원전 |
 | [5] | Ferrese A, Newman J (2014) Mechanical deformation of a lithium-metal anode due to a very stiff separator. J Electrochem Soc 161:A1350–A1359 | Li 음극 변형 연속체 모델 |
 | [10] | Wang M, Sakamoto J (2018) Correlating the interface resistance and surface adhesion of the Li metal-solid electrolyte interface. J Power Sources 377:7–11 | ★ **Li\|고체전해질 점착 실측** — W_ad 보고서 §7 의 실험 짝 후보 |
-| [23] | Sharafi A, Kazyak E, Davis AL, Yu S, Thompson T, Siegel DJ, Dasgupta NP, Sakamoto J (2017) Surface chemistry mechanism of ultra-low interfacial resistance in the solid-state electrolyte Li7La3Zr2O12. Chem Mater 29(18):7961–7968 | ★ Li\|LLZO 계면 점착 · 젖음 (이 논문이 [10] 과 함께 '높은 점착' 근거로 인용) |
+| [23] | Sharafi A, Kazyak E, Davis AL, Yu S, Thompson T, Siegel DJ, Dasgupta NP, Sakamoto J (2017) Surface chemistry mechanism of ultra-low interfacial resistance in the solid-state electrolyte Li7La3Zr2O12. Chem Mater 29(18):7961–7968 | ★ Li\|LLZO 계면 점착 · 젖음 (이 논문이 [10] 과 함께 '높은 점착' 근거로 인용) — 같은 날 묶음 카드 [`sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance`](sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance.md) |
 | [12] · [13] | Schultz R (2002) Lithium: measurement of young's modulus and yield strength. Fermilab Tech Memo 2191:1–6 · Tariq S, Ammigan K, Hurh P, Schultz R (2003) Li material testing-fermilab antiproton source lithium collection lens. In: Proceedings of the 2003 particle accelerator conference, pp 1452–1454 | Li 하중틀 시험 (신율계 유무 대조) |
 | [26] | Robertson WM, Montgomery DJ (1960) Elastic modulus of isotopically-concentrated lithium. Phys Rev 117(2):440–442 | 초음파 E 8.0 GPa 원전 |
 | [28] | Cook M, Larke EC (1945) Resistance of copper and copper alloys to homogeneous deformation in compression. J Inst Met 71(12):371–390 | barreling · 마찰 · AR 의 원전 (`Fig. 4`) |
@@ -512,6 +512,7 @@ E · G · ν = 7.82 · 2.83 GPa · 0.381 · 항복 0.73–0.81 MPa · 인장 = �
 - [`deysher2022_transport_mechanical_aspects_assb_review`](deysher2022_transport_mechanical_aspects_assb_review.md) · [`banerjee2020_interfaces_interphases_assb_review`](banerjee2020_interfaces_interphases_assb_review.md) — 이 논문을 인용한 총설
 - [`swinkels1983_hip_densification_plastic_yield_creep_mechanisms`](swinkels1983_hip_densification_plastic_yield_creep_mechanisms.md) — 금속 분말 HIP 의 소성 항복 → 멱법칙 크리프 (지수 6.5) — 같은 꼴의 식을 분말 압밀에 쓴 선례
 - [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) · [`liao2025_interfacial_adhesion_li_plating_carbon_interlayer`](liao2025_interfacial_adhesion_li_plating_carbon_interlayer.md) — 점착 · 인터레이어 트랙 (`comparison_vs_ours_DEM.md` §I)
+- 같은 날 (2026-11-24) 같은 묶음 카드 — 서로 내용 대조는 아직 안 했다 (링크만): [`sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance`](sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance.md) (= 이 논문의 ref [23]) · [`seymour2021_void_suppression_interfacial_adhesion_vacancy_transport`](seymour2021_void_suppression_interfacial_adhesion_vacancy_transport.md) (점착 ↔ 공극 억제) · [`yang2021_flat_li_stripping_lithiophilic_interface_design`](yang2021_flat_li_stripping_lithiophilic_interface_design.md) · [`lee2022_thin_insitu_li_void_rewetting_llzo`](lee2022_thin_insitu_li_void_rewetting_llzo.md) (얇은 Li 공극 · 재젖음)
 
 ## 🗨️ Q&A 로그
 
