@@ -89,5 +89,12 @@
   "블록": "B=claude/friendly-meitner-lldvar; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python\n( echo \"== ②′ 고른 12 개 확인 (ob_selected · manifest · 어닐 출력 폴더 없음)\" && [ \"$(ls $R/ob_picked/ob_selected/*_OB.xyz 2>/dev/null | wc -l)\" = 12 ] \\\n && [ \"$($PY -c \"import json;print(len(json.load(open('$R/ob_picked/manifest.json'))['files']))\")\" = 12 ] && [ ! -e $R/uma_ob_anneal ] \\\n && echo \"== GPU (참고 · 남과 나눠 씀 · 실행기가 여유 ≥ 4000 MiB 를 다시 본다)\" && nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader \\\n && echo \"== ③ 어닐 12 발사 (10월과 같은 500 K × 20 ps · SEED 20261014 · 이완 fmax 0.05 · tmux bsite_ob1)\" \\\n && { R=$R SRC=$W PY=$PY CAND=$R/ob_picked N_EXPECT=12 SESSION=bsite_ob1 OUTNAME=uma_ob_anneal TIME_PS=20 TEMP=500 SEED=20261014 RELAX_FMAX=0.05 bash $W/db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh > $R/launch_ob1.log 2>&1; rc=$?; tail -8 $R/launch_ob1.log; [ $rc = 0 ]; } \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
   "감시": "watch -n 30 'bash $HOME/w_bsite_ob1.sh' (실행기가 ~/w_<SESSION>.sh 를 쓴다)",
   "by": "claude (본 세션) · 2026-11-24"
+ },
+ "어닐_발사_2026_11_24": {
+  "근거": "사용자가 붙인 감시 화면 (kgy 2026-11-24 13:34:36 · watch bash ~/w_bsite_ob1.sh)",
+  "상태": "tmux bsite_ob1 살아 있음 · 2026-11-24 13:33:21 시작 (입력 · 소스 해시 재대조 통과) · 끝난 구조 0 / 12 · 진행 BMLi_00_OB MD 0.0 ps (20 ps 까지 · 순간 T 436.6 K — 시작 직후) · GPU 9676 / 24576 MiB · 99 % (남의 잡과 나눠 씀)",
+  "어림": "첫 구조가 끝나면 구조당 시간으로 잰다 (나눠 쓰는 속도라 바뀔 수 있다)",
+  "다음": "12 개 끝 → 자리 × O 꼴 UMA 최저 셋 → DFT 메모리 프로브 (GPU 가 빈 뒤) → 단일점 12 + 기준상 넷 vc-relax (카드 · 복귀 카드 ■6)",
+  "by": "claude (본 세션) · 2026-11-24"
  }
 }
