@@ -2120,6 +2120,14 @@
    "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf"
   ]
  },
+ "kotakadi2025_metallic_interlayers_li_li6ps5cl_operando_sem": {
+  "figures": 29,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "kotakadi2025_metallic_interlayers_main.pdf",
+   "kotakadi2025_metallic_interlayers_SI.pdf"
+  ]
+ },
  "kraft2017_lattice_polarizability_argyrodite_Li6PS5X": {
   "figures": 24,
   "generated": "2026-08-05",
@@ -3299,6 +3307,14 @@
    "54daa555-6._Sup_Chemo-mechanical_behavior_and_stability_of_high-loading_cathodes_in_solid-state_batteries.pdf"
   ]
  },
+ "park2025_li_kinetics_agc_porous_interlayer_reservoir_free": {
+  "figures": 32,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "park2025_agc_porous_interlayer_main.pdf",
+   "park2025_agc_porous_interlayer_SI.pdf"
+  ]
+ },
  "park2026_llzo_li13si4_dopant_interface_thermal_battery": {
   "figures": 33,
   "generated": "2026-10-27",
@@ -3528,6 +3544,14 @@
   "generated": "2026-11-16",
   "pdfs": [
    "12b131e6-79._Electrode_morphology_in_all-solid-state_lithium_secondary_batteries_consisting_of_LiNi13Co13Mn13O2_and_Li2S-P2S5_solid_electrolytes.pdf"
+  ]
+ },
+ "sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free": {
+  "figures": 16,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "sandoval2023_alloy_interlayers_main.pdf",
+   "sandoval2023_alloy_interlayers_SI.pdf"
   ]
  },
  "sandoval2025_electro_chemo_mechanics_anode_free_ssb": {
