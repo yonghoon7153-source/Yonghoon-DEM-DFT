@@ -350,6 +350,7 @@
 {# ── 산출물 원장 ────────────────────────────────────────────────────────── #}
 <div class="card">
   <h2>📦 산출물 원장 <span class="sub">({{ artifacts|length }}건 · 위험한 것부터)</span></h2>
+  <div class="tbl-scroll">  {# 폰 폭 (390) 에서 표가 쪽 전체를 옆으로 밀었다 (2026-11-24 실측) — 표만 제 안에서 스크롤 #}
   <table class="tbl">
     <thead><tr><th>ID</th><th>상태</th><th>사본</th><th>소재</th><th>검증</th><th>무엇</th></tr></thead>
     <tbody>
@@ -386,6 +387,7 @@
     {% endfor %}
     </tbody>
   </table>
+  </div>
 </div>
 
 {# ── 평가 ───────────────────────────────────────────────────────────────── #}
@@ -398,6 +400,7 @@
      대상만 있고 게이트·판정·사유가 전부 '–'. 정작 그 레코드가 든 것은
      what_was_wrong · second/third_error_corrected · scope · evidence 4건이고,
      원장 자신의 _rules 가 "★ 정정도 산출물이다" 라고 못 박는다. 분기를 만든다. #}
+  <div class="tbl-scroll">  {# 폰 폭 (390) 에서 표가 쪽 전체를 옆으로 밀었다 (2026-11-24 실측) — 표만 제 안에서 스크롤 #}
   <table class="tbl">
     <thead><tr><th>대상 · 레코드</th><th>게이트</th><th>판정</th><th>사유</th></tr></thead>
     <tbody>
@@ -441,5 +444,6 @@
     {% endfor %}
     </tbody>
   </table>
+  </div>
 </div>
 {% endblock %}

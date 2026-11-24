@@ -363,6 +363,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
   .doc,.sem-doc{overflow-wrap:break-word}   /* 본문 글: 줄을 넘칠 때만 끊는다 — 표 칸의 최소폭은 안 줄인다 (표는 제 안에서 스크롤) */
   .doc :not(pre)>code,.sem-doc :not(pre)>code,.doc a,.sem-doc a{overflow-wrap:anywhere}
   .doc blockquote,.sem-doc blockquote{margin-left:12px;margin-right:0}   /* 브라우저 기본 좌우 40px 이 폰 폭의 1/4 을 먹었다 */
+  .v3-chip{max-width:100%;overflow-wrap:anywhere;text-align:left}   /* /literature 새 논문 칩의 긴 slug (실측 scrollWidth 576) */
 }
 
 /* ============================================================

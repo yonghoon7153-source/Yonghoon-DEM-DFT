@@ -108,6 +108,7 @@
   {% if intake is none %}
   <p><span class="badge b-todo">값 대기</span> <span class="sub">원장에 이 절이 아직 없다.</span></p>
   {% else %}
+  <div class="tbl-scroll">  {# 폰 폭 (390) 에서 표가 쪽 전체를 옆으로 밀었다 (2026-11-24 실측) — 표만 제 안에서 스크롤 #}
   <table class="tbl"><tbody>
     {% for it in intake %}
     <tr><td style="white-space:nowrap"><b>{{ it.k }}</b></td>
@@ -116,6 +117,7 @@
             {% else %}<div class="tq-md">{{ it.html|safe }}</div>{% endif %}</td></tr>
     {% endfor %}
   </tbody></table>
+  </div>
   {% endif %}
 </div>
 
@@ -168,6 +170,7 @@
   <p class="sub">오늘 이 절은 0건이다 (절은 있는데 비어 있다).</p>
   {% else %}
   {% set has_a = sec.rows|selectattr("a_html")|list %}
+  <div class="tbl-scroll">  {# 폰 폭 (390) 에서 표가 쪽 전체를 옆으로 밀었다 (2026-11-24 실측) — 표만 제 안에서 스크롤 #}
   <table class="tbl">
     <thead><tr><th>Q</th><th>문서</th><th>질문</th>{% if has_a %}<th>오늘 어디까지 왔나</th>{% endif %}</tr></thead>
     <tbody>
@@ -185,6 +188,7 @@
     {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 </div>
 {% endfor %}
