@@ -1,0 +1,6 @@
+member pip/_vendor/certifi/cacert.pem (지금 ensurepip pip wheel 안)
+  size 273525 · sha256 12d0b33d5d4719c486eb98cae36b8224eef33a18e34cea3fabcbdc0ba43c06d9 · RECORD 칸 sha256=EtCzPV1HGcSG65jK42uCJO7zOhjjTOo_q8vcC6Q8Btk
+  10월 설치 RECORD 원문의 같은 행: sha256=eU0Dn_3yd8BH4m8sfVj4Glhl2KDrcCSg-sEWT-pNJ88,281617
+  인증서 블록 136 · 시스템 묶음 (/etc/ssl/certs/ca-certificates.crt) 122 · 겹침 98 · 이 묶음에만 38 · 시스템에만 24
+  첫 줄 [b'', b'# Issuer: CN=GlobalSign Root CA O=GlobalSign nv-sa OU=Root CA']
+  판단: certifi 형식의 다른 묶음으로 보인다 · 판 · 바꾼 주체는 확인하지 못했다 (deb 설치 뒤 바뀜 — 02_dpkg.txt 의 dpkg -V)

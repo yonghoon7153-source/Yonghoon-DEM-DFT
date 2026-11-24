@@ -1,0 +1,106 @@
+{
+  "kind": "REIL_C4_ENV_PREREVIEW_OUTSIDE_RAW_DELIVERY_RECORDS",
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_reseal_prereview_20261124\\REIL_C4_ENV_RESEAL_PREREVIEW_20261124.zip",
+    "bytes": 1941163,
+    "sha256": "ead9e3a4cd057002f81765420faac1247a4520b93534ca8f4f02fc0a300db3b6"
+  },
+  "record_count": 3,
+  "records": [
+    {
+      "name": "DELIVERY_RECEIPT.json",
+      "bytes": 1687,
+      "sha256": "c8aa028dfabe37f1bc3e3ae8ae0251273ae6c76bab47ffa6a8e5cb6db645120a",
+      "raw_base64": "ewogICJraW5kIjogIlJFSUxfQzRfRU5WX1JFU0VBTF9QUkVSRVZJRVdfREVMSVZFUllfUkVDRUlQVCIsCiAgInJlY2lwaWVudCI6IG51bGwsCiAgImFyY2hpdmUiOiB7CiAgICAicGF0aCI6ICJDOlxcVXNlcnNcXEFkbWluaXN0cmF0b3JcXERvY3VtZW50c1xcQ29kZXhcXDIwMjYtMDgtMjRcXGNsYXVkZS0xNC1nYXRlLWNvZGUtcmV2aWV3LTlxa3gwNS0yXFxvdXRwdXRzXFxyZWlsX2M0X2Vudl9yZXNlYWxfcHJlcmV2aWV3XzIwMjYxMTI0XFxSRUlMX0M0X0VOVl9SRVNFQUxfUFJFUkVWSUVXXzIwMjYxMTI0LnppcCIsCiAgICAiYnl0ZXMiOiAxOTQxMTYzLAogICAgInNoYTI1NiI6ICJlYWQ5ZTNhNGNkMDU3MDAyZjgxNzY1NDIwZmFhYzEyNDdhNDUyMGI5MzUzNGNhOGY0ZjAyZmMwYTMwMGRiM2I2IgogIH0sCiAgIm1hbmlmZXN0IjogewogICAgInBhdGgiOiAiQzpcXFVzZXJzXFxBZG1pbmlzdHJhdG9yXFxEb2N1bWVudHNcXENvZGV4XFwyMDI2LTA4LTI0XFxjbGF1ZGUtMTQtZ2F0ZS1jb2RlLXJldmlldy05cWt4MDUtMlxcb3V0cHV0c1xccmVpbF9jNF9lbnZfcmVzZWFsX3ByZXJldmlld18yMDI2MTEyNFxcUEFDS0FHRV9NQU5JRkVTVC5qc29uIiwKICAgICJieXRlcyI6IDIyOTA2LAogICAgInNoYTI1NiI6ICJhZDkyNjljNGNhY2RlNjhmZDk4Y2EwZjhlOWFlMDQyNGUxZTE1OWIzYzcwYzkwNDZlZmY5ZTJmMjk4ODgwOTM2IgogIH0sCiAgInBheWxvYWRfY291bnQiOiAxMTYsCiAgImVudHJpZXMiOiAxMTcsCiAgInZlcmlmaWNhdGlvbiI6ICJFeGFjdCBtZW1iZXIgc2V0LCBzYWZlIGNhc2UtdW5pcXVlIHBhdGhzLCBkZWNvbXByZXNzZWQgYnl0ZXMvc2l6ZS9TSEEyNTYsIG5vbi1saW5rIG1ldGFkYXRhIGFuZCBpbmRlcGVuZGVudGx5IHJlY29tcHV0ZWQgQ1JDMzIgbWF0Y2hlZC4iLAogICJzb3VyY2VfZmlsZXNfYXRfZml4ZWRfcmVmIjogNzUsCiAgInNlbGVjdGVkX2xvY2FsX29yaWdpbmFsc19wcmVzZXJ2ZWQiOiA0LAogICJkZWNpc2lvbiI6ICJSRVZJU0lPTl9SRVFVSVJFRF9CRUZPUkVfUkVTRUFMX0VYRUNVVElPTl9BUFBST1ZBTCIsCiAgInJlcXVpcmVkX2RvY3VtZW50X2NvcnJlY3Rpb25zIjogWwogICAgIkVOVjE4LU4xIiwKICAgICJFTlYxOC1OMiIKICBdLAogICJleGVjdXRpb25fcHJlcmVxdWlzaXRlIjogIkZyZWV6ZSBhbmQgc3RhdGljYWxseSByZXZpZXcgcnVubmVyIGFuZCBvdXRlciBoYXJuZXNzIGJlZm9yZSBleGVjdXRpb24gYXBwcm92YWwiLAogICJzdXBwbGllZF9wcm9ncmFtX2V4ZWN1dGlvbiI6IDAsCiAgInRlc3RzIjogMCwKICAiaW5zdGFsbGF0aW9ucyI6IDAsCiAgInZlbnZfY3JlYXRpb24iOiAwLAogICJwaXAiOiAwLAogICJlbWl0X2NoZWNrIjogMCwKICAiQ09NU09MIjogMCwKICAicmVzZWFsX2V4ZWN1dGlvbl9hdXRob3JpemVkX2J5X3JldmlldyI6IGZhbHNlLAogICJudW1lcmljX3Jldmlld19idWRnZXRfc2Vjb25kcyI6IG51bGwsCiAgIndob2xlX3Jldmlld19lbGFwc2VkX2NsYWltIjogbnVsbCwKICAiYm91bmRhcnkiOiAiQWZ0ZXIgbmV3IHJldmlldyBaSVAgcmVhZGJhY2sgYW5kIHNlbGVjdGVkIG9yaWdpbmFsIHJlaGFzaDsgYmVmb3JlIHRoaXMgcmVjZWlwdCB3cml0ZS9yZWFkYmFjayBhbmQgYWN0dWFsIHRvb2wgcmV0dXJuLiBTb3VyY2Ugc3VibWlzc2lvbiB3YXMgbm90IHJlcGFja2FnZWQgb3IgbW9kaWZpZWQuIgp9Cg==",
+      "parsed_view": {
+        "kind": "REIL_C4_ENV_RESEAL_PREREVIEW_DELIVERY_RECEIPT",
+        "recipient": null,
+        "archive": {
+          "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_reseal_prereview_20261124\\REIL_C4_ENV_RESEAL_PREREVIEW_20261124.zip",
+          "bytes": 1941163,
+          "sha256": "ead9e3a4cd057002f81765420faac1247a4520b93534ca8f4f02fc0a300db3b6"
+        },
+        "manifest": {
+          "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_reseal_prereview_20261124\\PACKAGE_MANIFEST.json",
+          "bytes": 22906,
+          "sha256": "ad9269c4cacde68fd98ca0f8e9ae0424e1e159b3c70c9046eff9e2f298880936"
+        },
+        "payload_count": 116,
+        "entries": 117,
+        "verification": "Exact member set, safe case-unique paths, decompressed bytes/size/SHA256, non-link metadata and independently recomputed CRC32 matched.",
+        "source_files_at_fixed_ref": 75,
+        "selected_local_originals_preserved": 4,
+        "decision": "REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL",
+        "required_document_corrections": [
+          "ENV18-N1",
+          "ENV18-N2"
+        ],
+        "execution_prerequisite": "Freeze and statically review runner and outer harness before execution approval",
+        "supplied_program_execution": 0,
+        "tests": 0,
+        "installations": 0,
+        "venv_creation": 0,
+        "pip": 0,
+        "emit_check": 0,
+        "COMSOL": 0,
+        "reseal_execution_authorized_by_review": false,
+        "numeric_review_budget_seconds": null,
+        "whole_review_elapsed_claim": null,
+        "boundary": "After new review ZIP readback and selected original rehash; before this receipt write/readback and actual tool return. Source submission was not repackaged or modified."
+      }
+    },
+    {
+      "name": "SELECTED_LOCAL_SOURCES_POST_PACKAGE.json",
+      "bytes": 1433,
+      "sha256": "a36caa1edae94dbfe900696df4eb76a7013dd120d15babf022b8567b614c97f3",
+      "raw_base64": "ewogICJraW5kIjogIlJFVklFV19QT1NUX1BBQ0tBR0VfU0VMRUNURURfU09VUkNFX0lERU5USVRJRVMiLAogICJmaWxlcyI6IFsKICAgIHsKICAgICAgInBhdGgiOiAiQzpcXFVzZXJzXFxBZG1pbmlzdHJhdG9yXFxEb2N1bWVudHNcXENvZGV4XFwyMDI2LTA4LTI0XFxjbGF1ZGUtMTQtZ2F0ZS1jb2RlLXJldmlldy05cWt4MDUtMlxcb3V0cHV0c1xccmVpbF9jNF9lbnZfcmV2aWV3XzIwMjYxMDEzXFxSRVZJRVdfS08ubWQiLAogICAgICAiYnl0ZXMiOiAxNDcyOCwKICAgICAgInNoYTI1NiI6ICJjNWFjZTgwNDNkYTk1ODE2ZjU0MzA1MzZkYzI4MDA4NTY3OThiZGUwN2M3MzBjOTU0Yjc5MTU0MDMzOTc0OTg5IgogICAgfSwKICAgIHsKICAgICAgInBhdGgiOiAiQzpcXFVzZXJzXFxBZG1pbmlzdHJhdG9yXFxEb2N1bWVudHNcXENvZGV4XFwyMDI2LTA4LTI0XFxjbGF1ZGUtMTQtZ2F0ZS1jb2RlLXJldmlldy05cWt4MDUtMlxcb3V0cHV0c1xccmVpbF9jNF9lbnZfcmV2aWV3XzIwMjYxMDEzXFxERUNJU0lPTi5qc29uIiwKICAgICAgImJ5dGVzIjogNjQyOSwKICAgICAgInNoYTI1NiI6ICJiMzk1ODZlMDA3MmM5MDU3MTg0NzczN2NiMWQ3ZWJjNmIwYzhlZDY2ZTA1ZDkzZmJlMDI4ZmExYTEyNzFjYWVkIgogICAgfSwKICAgIHsKICAgICAgInBhdGgiOiAiQzpcXFVzZXJzXFxBZG1pbmlzdHJhdG9yXFxEb2N1bWVudHNcXENvZGV4XFwyMDI2LTA4LTI0XFxjbGF1ZGUtMTQtZ2F0ZS1jb2RlLXJldmlldy05cWt4MDUtMlxcb3V0cHV0c1xccmVpbF9jNGFfdjRfcmV2aWV3XzIwMjYxMTI0XFxSRVZJRVdfREVDSVNJT04uanNvbiIsCiAgICAgICJieXRlcyI6IDMyNzQsCiAgICAgICJzaGEyNTYiOiAiNzYwNzU2OWM0MDAyZGJmZTY3MjhmZjQzMjM2ZjhkMzY5ZThhMDZjMzEyNTdlODA2OTU3OWVhNzFkNmZkOTk2ZSIKICAgIH0sCiAgICB7CiAgICAgICJwYXRoIjogIkM6XFxVc2Vyc1xcQWRtaW5pc3RyYXRvclxcRG9jdW1lbnRzXFxDb2RleFxcMjAyNi0wOC0yNFxcY2xhdWRlLTE0LWdhdGUtY29kZS1yZXZpZXctOXFreDA1LTJcXG91dHB1dHNcXHJlaWxfYzRhX3Y0X3Jldmlld18yMDI2MTEyNFxcaW5wdXRcXFJFSUxfQzRBX0lNUExfUkVRVUVTVF92NF8yMDI2MTEyNC5tZCIsCiAgICAgICJieXRlcyI6IDEwNTc4NCwKICAgICAgInNoYTI1NiI6ICI4NWUxNDhiNDE4NDBhMGQzZDk4ZWIwOGVjMGFkYWU3ZThiMzlmNjRiYzVkM2M0NGQyMTY1NzIzYjlkYTc0ZGIyIgogICAgfQogIF0sCiAgIm1hdGNoZXNfYmVmb3JlX3BhY2thZ2UiOiB0cnVlLAogICJzY29wZSI6ICJGb3VyIHNlbGVjdGVkIGxvY2FsIHByaW9yLXJldmlldyBzb3VyY2UgZmlsZXMgb25seTsgdGhlIGJlZm9yZSByZWNvcmQgd2FzIG1hZGUgYWZ0ZXIgcmV2aWV3IHJlYWRzLCBub3QgYXQgdHVybiBzdGFydC4gTm8gcmVtb3RlIGFsbC1maWxlc3lzdGVtIGF1ZGl0LiIKfQo=",
+      "parsed_view": {
+        "kind": "REVIEW_POST_PACKAGE_SELECTED_SOURCE_IDENTITIES",
+        "files": [
+          {
+            "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_review_20261013\\REVIEW_KO.md",
+            "bytes": 14728,
+            "sha256": "c5ace8043da95816f5430536dc2800856798bde07c730c954b79154033974989"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_review_20261013\\DECISION.json",
+            "bytes": 6429,
+            "sha256": "b39586e0072c90571847737cb1d7ebc6b0c8ed66e05d93fbe028fa1a1271caed"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_v4_review_20261124\\REVIEW_DECISION.json",
+            "bytes": 3274,
+            "sha256": "7607569c4002dbfe6728ff43236f8d369e8a06c31257e8069579ea71d6fd996e"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_v4_review_20261124\\input\\REIL_C4A_IMPL_REQUEST_v4_20261124.md",
+            "bytes": 105784,
+            "sha256": "85e148b41840a0d3d98eb08ec0adae7e8b39f64bc5d3c44d2165723b9da74db2"
+          }
+        ],
+        "matches_before_package": true,
+        "scope": "Four selected local prior-review source files only; the before record was made after review reads, not at turn start. No remote all-filesystem audit."
+      }
+    },
+    {
+      "name": "PACKAGE_TOOL_RETURN.json",
+      "bytes": 2313,
+      "sha256": "22020c7db6c7a071b8cd23346359aff63b0cf8edb4f9a8013a0e72a02ac5167f",
+      "raw_base64": "ewogICJraW5kIjogIkFDVFVBTF9SRUlMX0M0X0VOVl9QUkVSRVZJRVdfUEFDS0FHRV9UT09MX1JFVFVSTiIsCiAgInByb3ZlbmFuY2UiOiAiRXhhY3QgZXhlY19jb21tYW5kIHJlc3VsdCByZWNlaXZlZCBkdXJpbmcgdGhpcyByZXZpZXcsIHNlcmlhbGl6ZWQgYWZ0ZXJ3YXJkIG91dHNpZGUgdGhlIGNvbXBsZXRlZCByZXZpZXcgWklQLiBOb3QgaXRzIG93biBmdXR1cmUgd3JpdGUgcmV0dXJuIG9yIGEgd2hvbGUtcmV2aWV3IGVsYXBzZWQtdGltZSBtZWFzdXJlbWVudC4iLAogICJ0b29sX3Jlc3VsdCI6IHsKICAgICJjaHVua19pZCI6ICJmNmQ1MGQiLAogICAgIndhbGxfdGltZV9zZWNvbmRzIjogMC44MDY0ODEyLAogICAgImV4aXRfY29kZSI6IDAsCiAgICAib3JpZ2luYWxfdG9rZW5fY291bnQiOiA0MjEsCiAgICAib3V0cHV0IjogIntcclxuICBcImtpbmRcIjogXCJSRUlMX0M0X0VOVl9SRVNFQUxfUFJFUkVWSUVXX1BBQ0tBR0VfUkVUVVJOXCIsXHJcbiAgXCJhcmNoaXZlXCI6IHtcclxuICAgIFwicGF0aFwiOiBcIkM6XFxcXFVzZXJzXFxcXEFkbWluaXN0cmF0b3JcXFxcRG9jdW1lbnRzXFxcXENvZGV4XFxcXDIwMjYtMDgtMjRcXFxcY2xhdWRlLTE0LWdhdGUtY29kZS1yZXZpZXctOXFreDA1LTJcXFxcb3V0cHV0c1xcXFxyZWlsX2M0X2Vudl9yZXNlYWxfcHJlcmV2aWV3XzIwMjYxMTI0XFxcXFJFSUxfQzRfRU5WX1JFU0VBTF9QUkVSRVZJRVdfMjAyNjExMjQuemlwXCIsXHJcbiAgICBcImJ5dGVzXCI6IDE5NDExNjMsXHJcbiAgICBcInNoYTI1NlwiOiBcImVhZDllM2E0Y2QwNTcwMDJmODE3NjU0MjBmYWFjMTI0N2E0NTIwYjkzNTM0Y2E4ZjRmMDJmYzBhMzAwZGIzYjZcIlxyXG4gIH0sXHJcbiAgXCJtYW5pZmVzdFwiOiB7XHJcbiAgICBcInBhdGhcIjogXCJDOlxcXFxVc2Vyc1xcXFxBZG1pbmlzdHJhdG9yXFxcXERvY3VtZW50c1xcXFxDb2RleFxcXFwyMDI2LTA4LTI0XFxcXGNsYXVkZS0xNC1nYXRlLWNvZGUtcmV2aWV3LTlxa3gwNS0yXFxcXG91dHB1dHNcXFxccmVpbF9jNF9lbnZfcmVzZWFsX3ByZXJldmlld18yMDI2MTEyNFxcXFxQQUNLQUdFX01BTklGRVNULmpzb25cIixcclxuICAgIFwiYnl0ZXNcIjogMjI5MDYsXHJcbiAgICBcInNoYTI1NlwiOiBcImFkOTI2OWM0Y2FjZGU2OGZkOThjYTBmOGU5YWUwNDI0ZTFlMTU5YjNjNzBjOTA0NmVmZjllMmYyOTg4ODA5MzZcIlxyXG4gIH0sXHJcbiAgXCJyZWNlaXB0XCI6IHtcclxuICAgIFwicGF0aFwiOiBcIkM6XFxcXFVzZXJzXFxcXEFkbWluaXN0cmF0b3JcXFxcRG9jdW1lbnRzXFxcXENvZGV4XFxcXDIwMjYtMDgtMjRcXFxcY2xhdWRlLTE0LWdhdGUtY29kZS1yZXZpZXctOXFreDA1LTJcXFxcb3V0cHV0c1xcXFxyZWlsX2M0X2Vudl9yZXNlYWxfcHJlcmV2aWV3XzIwMjYxMTI0XFxcXERFTElWRVJZX1JFQ0VJUFQuanNvblwiLFxyXG4gICAgXCJieXRlc1wiOiAxNjg3LFxyXG4gICAgXCJzaGEyNTZcIjogXCJjOGFhMDI4ZGZhYmUzN2YxYmMzZTNhZThhZTAyNTEyNzNhZTZjNzZiYWI0N2ZmYTZhOGU1Y2I2ZGI2NDUxMjBhXCJcclxuICB9LFxyXG4gIFwicG9zdF9wYWNrYWdlXCI6IHtcclxuICAgIFwicGF0aFwiOiBcIkM6XFxcXFVzZXJzXFxcXEFkbWluaXN0cmF0b3JcXFxcRG9jdW1lbnRzXFxcXENvZGV4XFxcXDIwMjYtMDgtMjRcXFxcY2xhdWRlLTE0LWdhdGUtY29kZS1yZXZpZXctOXFreDA1LTJcXFxcb3V0cHV0c1xcXFxyZWlsX2M0X2Vudl9yZXNlYWxfcHJlcmV2aWV3XzIwMjYxMTI0XFxcXFNFTEVDVEVEX0xPQ0FMX1NPVVJDRVNfUE9TVF9QQUNLQUdFLmpzb25cIixcclxuICAgIFwiYnl0ZXNcIjogMTQzMyxcclxuICAgIFwic2hhMjU2XCI6IFwiYTM2Y2FhMWVkYWU5NGRiZmU5MDA2OTZkZjRlYjc2YTcwMTNkZDEyMGQxNWJhYmYwMjJiODU2N2I2MTRjOTdmM1wiXHJcbiAgfSxcclxuICBcInBheWxvYWRfY291bnRcIjogMTE2LFxyXG4gIFwiZW50cmllc1wiOiAxMTcsXHJcbiAgXCJkZWNpc2lvblwiOiBcIlJFVklTSU9OX1JFUVVJUkVEX0JFRk9SRV9SRVNFQUxfRVhFQ1VUSU9OX0FQUFJPVkFMXCIsXHJcbiAgXCJzdXBwbGllZF9wcm9ncmFtX2V4ZWN1dGlvblwiOiAwLFxyXG4gIFwidGVzdHNcIjogMCxcclxuICBcIkNPTVNPTFwiOiAwLFxyXG4gIFwid2hvbGVfcmV2aWV3X2VsYXBzZWRfY2xhaW1cIjogbnVsbCxcclxuICBcImJvdW5kYXJ5XCI6IFwiQWZ0ZXIgcmV2aWV3IGFyY2hpdmUgYW5kIHJlY2VpcHQgd3JpdGUvcmVhZGJhY2s7IGJlZm9yZSBhY3R1YWwgdG9vbCByZXR1cm4gYW5kIHN1YnNlcXVlbnQgc2VyaWFsaXphdGlvbiBvZiB0aGF0IHJlc3VsdC5cIlxyXG59XHJcbiIKICB9Cn0K",
+      "parsed_view": {
+        "kind": "ACTUAL_REIL_C4_ENV_PREREVIEW_PACKAGE_TOOL_RETURN",
+        "provenance": "Exact exec_command result received during this review, serialized afterward outside the completed review ZIP. Not its own future write return or a whole-review elapsed-time measurement.",
+        "tool_result": {
+          "chunk_id": "f6d50d",
+          "wall_time_seconds": 0.8064812,
+          "exit_code": 0,
+          "original_token_count": 421,
+          "output": "{\r\n  \"kind\": \"REIL_C4_ENV_RESEAL_PREREVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\REIL_C4_ENV_RESEAL_PREREVIEW_20261124.zip\",\r\n    \"bytes\": 1941163,\r\n    \"sha256\": \"ead9e3a4cd057002f81765420faac1247a4520b93534ca8f4f02fc0a300db3b6\"\r\n  },\r\n  \"manifest\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\PACKAGE_MANIFEST.json\",\r\n    \"bytes\": 22906,\r\n    \"sha256\": \"ad9269c4cacde68fd98ca0f8e9ae0424e1e159b3c70c9046eff9e2f298880936\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1687,\r\n    \"sha256\": \"c8aa028dfabe37f1bc3e3ae8ae0251273ae6c76bab47ffa6a8e5cb6db645120a\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 1433,\r\n    \"sha256\": \"a36caa1edae94dbfe900696df4eb76a7013dd120d15babf022b8567b614c97f3\"\r\n  },\r\n  \"payload_count\": 116,\r\n  \"entries\": 117,\r\n  \"decision\": \"REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL\",\r\n  \"supplied_program_execution\": 0,\r\n  \"tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"whole_review_elapsed_claim\": null,\r\n  \"boundary\": \"After review archive and receipt write/readback; before actual tool return and subsequent serialization of that result.\"\r\n}\r\n"
+        }
+      }
+    }
+  ],
+  "provenance": "Exact existing outside-record bytes. parsed_view is auxiliary. The last transport-return transcript is a separate later file.",
+  "supplied_program_execution": 0,
+  "whole_review_elapsed_claim": null
+}

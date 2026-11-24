@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_C4_ENV_PREREVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact exec_command result received during this review, serialized afterward outside the completed review ZIP. Not its own future write return or a whole-review elapsed-time measurement.",
+  "tool_result": {
+    "chunk_id": "f6d50d",
+    "wall_time_seconds": 0.8064812,
+    "exit_code": 0,
+    "original_token_count": 421,
+    "output": "{\r\n  \"kind\": \"REIL_C4_ENV_RESEAL_PREREVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\REIL_C4_ENV_RESEAL_PREREVIEW_20261124.zip\",\r\n    \"bytes\": 1941163,\r\n    \"sha256\": \"ead9e3a4cd057002f81765420faac1247a4520b93534ca8f4f02fc0a300db3b6\"\r\n  },\r\n  \"manifest\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\PACKAGE_MANIFEST.json\",\r\n    \"bytes\": 22906,\r\n    \"sha256\": \"ad9269c4cacde68fd98ca0f8e9ae0424e1e159b3c70c9046eff9e2f298880936\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1687,\r\n    \"sha256\": \"c8aa028dfabe37f1bc3e3ae8ae0251273ae6c76bab47ffa6a8e5cb6db645120a\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 1433,\r\n    \"sha256\": \"a36caa1edae94dbfe900696df4eb76a7013dd120d15babf022b8567b614c97f3\"\r\n  },\r\n  \"payload_count\": 116,\r\n  \"entries\": 117,\r\n  \"decision\": \"REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL\",\r\n  \"supplied_program_execution\": 0,\r\n  \"tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"whole_review_elapsed_claim\": null,\r\n  \"boundary\": \"After review archive and receipt write/readback; before actual tool return and subsequent serialization of that result.\"\r\n}\r\n"
+  }
+}

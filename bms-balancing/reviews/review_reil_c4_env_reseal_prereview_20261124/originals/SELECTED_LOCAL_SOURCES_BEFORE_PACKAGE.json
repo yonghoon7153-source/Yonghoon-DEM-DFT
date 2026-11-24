@@ -1,0 +1,25 @@
+{
+  "boundary": "After review reads, before review packaging; not start-of-turn or remote audit",
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_review_20261013\\REVIEW_KO.md",
+      "bytes": 14728,
+      "sha256": "c5ace8043da95816f5430536dc2800856798bde07c730c954b79154033974989"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_review_20261013\\DECISION.json",
+      "bytes": 6429,
+      "sha256": "b39586e0072c90571847737cb1d7ebc6b0c8ed66e05d93fbe028fa1a1271caed"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_v4_review_20261124\\REVIEW_DECISION.json",
+      "bytes": 3274,
+      "sha256": "7607569c4002dbfe6728ff43236f8d369e8a06c31257e8069579ea71d6fd996e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_v4_review_20261124\\input\\REIL_C4A_IMPL_REQUEST_v4_20261124.md",
+      "bytes": 105784,
+      "sha256": "85e148b41840a0d3d98eb08ec0adae7e8b39f64bc5d3c44d2165723b9da74db2"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "kind": "REIL_C4_ENV_NEW_GENERATION_STATIC_PREREVIEW",
+  "review_date_kst": "2026-11-24",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "commit": "781f357200259f24ac04a95da8aa13dfd2761524",
+  "decision": "REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL",
+  "request_sha256": "ae25f895051ec28f06aebf0bf43f07a9e58b77cb24e3a7abb6448572ed0e0791",
+  "checker_sha256": "8cf10f3c910a46d4ffcf9eb933760178c439fcbec8636189776cb2bea2dbedb0",
+  "old_accepted_manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+  "required_document_corrections": [
+    {
+      "id": "ENV18-N1",
+      "priority": "P2",
+      "title": "Effective pip CA selection is not bound by PIP_CERT alone",
+      "request_lines": [38, 39, 116, 124],
+      "basis": "Submitted environment-name observation contains REQUESTS_CA_BUNDLE and CURL_CA_BUNDLE; pip 24.0 vendored requests can prefer nonempty values over session.verify set from PIP_CERT. Their values and actual selected file were not observed by the reviewer.",
+      "required_change": "Explicitly remove competing CA environment names or define and bind the effective precedence and allowed CA file identity; retain TLS verification, value confidentiality and unknown-origin residual risk.",
+      "status": "OPEN"
+    },
+    {
+      "id": "ENV18-N2",
+      "priority": "P2",
+      "title": "Pre-commit end record cannot contain the final S10 commit outcome",
+      "request_lines": [194, 209, 256, 334],
+      "basis": "S10 writes 10_end.json before staging and commit, but the response table promises the S10 result in that file.",
+      "required_change": "Keep 10_end.json as PRE_COMMIT with S10 pending; place obtained commit rc, timeout, identity and S10/budget outcome in later external evidence and keep outer return separately. Preserve nulls and first failure when results are unavailable.",
+      "status": "OPEN"
+    }
+  ],
+  "execution_prerequisite": "Freeze runner and outer harness copies, diff, SHA256, argv and cwd for static review before reseal execution approval. This review does not authorize writing or running them.",
+  "nonblocking_notes": [
+    {"id": "ENV18-C1", "topic": "pip24 Downloading format identifies the supplied Link host, not the redirect destination or independently observed endpoint"},
+    {"id": "ENV18-C2", "topic": "records mode uses a dict that can collapse duplicate distribution Name+Version identities; the fixed full pipeline also has env_profile shadowed detection and exact lock comparison, so no whole-procedure false PASS is claimed"}
+  ],
+  "answers": {
+    "Q1": "New-generation separation and mapping of six restoration rules are acceptable as a proposal, not identity restoration or execution approval.",
+    "Q2": "A is conditionally acceptable after N1 and explicit residual-risk choice. B is not mandatory and needs its own fixed bootstrap procedure if selected.",
+    "Q3": "The four original ENV-P2-02 weaknesses are addressed within static code and submitted evidence scope. Generation-specific wording is appropriate; no universal or installed-runtime correctness claim.",
+    "Q4": "Runner and outer harness must be frozen and statically reviewed before execution approval; one precheck may remain in the later authorized procedure.",
+    "Q5": "Two-line v4 binding addendum is acceptable when bound to the exact v4 and later accepted environment artifacts. C4-E does not automatically carry over. Unrecorded files remain a limited observation scope, with execution-relevant unknowns requiring disposition before adoption."
+  },
+  "prior_findings": {
+    "ENV-P2-01": "OPEN_PENDING_N2_AND_FROZEN_RUNNER_REVIEW",
+    "ENV-P2-02": "ORIGINAL_FOUR_GAPS_ADDRESSED_STATIC_SUBMITTED_EVIDENCE_ONLY",
+    "ENV-P2-03": "PROPOSED_BINDINGS_PRESENT_NOT_YET_EXECUTED_OR_ACCEPTED",
+    "ENV-P2-04": "IMPROVED_PROPOSAL_N1_REQUIRED_NO_INDEPENDENT_NETWORK_AUDIT"
+  },
+  "submitted_results": {
+    "selftest": {"passed": 52, "total": 52},
+    "mutation_proof": {"matched": 13, "total": 13, "mutants": 12, "control": 1},
+    "run1_mutation_proof": {"matched": 11, "total": 12, "original_failure_preserved": true},
+    "interpretation": "Historical submitted logs statically linked to preserved source hashes; no independent observation or rerun of those executions."
+  },
+  "review_activity": {
+    "supplied_program_execution": 0,
+    "supplied_program_import": 0,
+    "tests": 0,
+    "installation": 0,
+    "venv_creation": 0,
+    "pip": 0,
+    "emit_check": 0,
+    "C4A_implementation": 0,
+    "real_data_execution": 0,
+    "COMSOL": 0,
+    "allowed_work_performed": "Static source/document/log review, own metadata/CSV/JSON/AST/hash processing, official documentation/source reads and review artifact packaging."
+  },
+  "authority": {
+    "new_environment_adopted": false,
+    "reseal_execution_authorized_by_review": false,
+    "C4A_implementation_authorized_by_review": false,
+    "real_data_execution_authorized_by_review": false,
+    "U2_U4_U5_adopted": false,
+    "COMSOL": "PAUSED_UNTIL_USER_AVAILABILITY_AND_RESUMPTION_DIRECTION",
+    "previous_user_approval_history": "Preserved as evidence; this review neither revokes it nor transfers environment-specific authority automatically."
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null
+}

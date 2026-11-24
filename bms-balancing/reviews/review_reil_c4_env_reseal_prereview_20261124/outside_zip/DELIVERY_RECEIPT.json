@@ -1,0 +1,36 @@
+{
+  "kind": "REIL_C4_ENV_RESEAL_PREREVIEW_DELIVERY_RECEIPT",
+  "recipient": null,
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_reseal_prereview_20261124\\REIL_C4_ENV_RESEAL_PREREVIEW_20261124.zip",
+    "bytes": 1941163,
+    "sha256": "ead9e3a4cd057002f81765420faac1247a4520b93534ca8f4f02fc0a300db3b6"
+  },
+  "manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4_env_reseal_prereview_20261124\\PACKAGE_MANIFEST.json",
+    "bytes": 22906,
+    "sha256": "ad9269c4cacde68fd98ca0f8e9ae0424e1e159b3c70c9046eff9e2f298880936"
+  },
+  "payload_count": 116,
+  "entries": 117,
+  "verification": "Exact member set, safe case-unique paths, decompressed bytes/size/SHA256, non-link metadata and independently recomputed CRC32 matched.",
+  "source_files_at_fixed_ref": 75,
+  "selected_local_originals_preserved": 4,
+  "decision": "REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL",
+  "required_document_corrections": [
+    "ENV18-N1",
+    "ENV18-N2"
+  ],
+  "execution_prerequisite": "Freeze and statically review runner and outer harness before execution approval",
+  "supplied_program_execution": 0,
+  "tests": 0,
+  "installations": 0,
+  "venv_creation": 0,
+  "pip": 0,
+  "emit_check": 0,
+  "COMSOL": 0,
+  "reseal_execution_authorized_by_review": false,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "boundary": "After new review ZIP readback and selected original rehash; before this receipt write/readback and actual tool return. Source submission was not repackaged or modified."
+}

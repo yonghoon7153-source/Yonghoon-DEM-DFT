@@ -1,0 +1,38 @@
+{
+  "kind": "OFFICIAL_SOURCE_REFERENCES_FOR_STATIC_REVIEW",
+  "scope": "Read-only official documentation and pip 24.0 source; not a measurement of the remote installation",
+  "items": [
+    {
+      "url": "https://github.com/pypa/pip/blob/24.0/src/pip/_internal/cli/req_command.py",
+      "capture": "official/pip24_0.capture.txt",
+      "supports": "options.cert is assigned to session.verify"
+    },
+    {
+      "url": "https://github.com/pypa/pip/blob/24.0/src/pip/_internal/network/session.py",
+      "capture": "official/pip24_1.capture.txt",
+      "supports": "PipSession.request defaults timeout and proxies but does not supply a per-request verify override"
+    },
+    {
+      "url": "https://github.com/pypa/pip/blob/24.0/src/pip/_vendor/requests/sessions.py",
+      "capture": "official/pip24_2.capture.txt",
+      "supports": "REQUESTS_CA_BUNDLE/CURL_CA_BUNDLE merge precedence"
+    },
+    {
+      "url": "https://github.com/pypa/pip/blob/24.0/src/pip/_internal/network/download.py",
+      "capture": "official/pip24_3.capture.txt",
+      "supports": "Downloading formatting uses link.netloc, not the final response host"
+    },
+    {
+      "url": "https://pip.pypa.io/en/stable/topics/https-certificates/",
+      "supports": "CA configuration options; version-specific reasoning uses the 24.0 sources above"
+    },
+    {
+      "url": "https://pip.pypa.io/en/stable/topics/configuration/",
+      "supports": "PIP_CONFIG_FILE=os.devnull disables configuration files"
+    },
+    {
+      "url": "https://docs.python.org/3.11/library/site.html",
+      "supports": "Executable lines in .pth and sitecustomize may affect startup"
+    }
+  ]
+}

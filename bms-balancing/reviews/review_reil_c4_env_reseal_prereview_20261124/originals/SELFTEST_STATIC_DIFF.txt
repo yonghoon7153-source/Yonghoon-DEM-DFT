@@ -1,0 +1,21 @@
+--- run1_selftest.py
++++ selftest.py
+@@ -241,7 +241,17 @@
+ 
+     def tbody(c):
+         c.setdefault("after", []).append(lambda cc: (cc["target"] / "bin" / "tool").write_bytes(f"#!{NB}/python\n".encode() + BODY + b"#x\n"))
+-    case("R14 pytest_t 쪽 wrapper 본문 변조 (../../bin → target/bin)", has(run_records(m(tbody)), "test_tools/tool-1.0.dist-info.RECORD"))
++    case("R14 pytest_t 쪽 wrapper 파일 변조 (RECORD 그대로 — ../../bin → target/bin 으로 찾아 RECORD↔바이트 검사가 잡음)",
++         has(run_records(m(tbody)), "test_tools/tool-1.0.dist-info.RECORD"))
++
++    def tbody2(c):   # 변이 증명 1 차 (run1) 에서 찾은 빈틈: pytest_t 쪽 본문 결속만 잡을 수 있는 사례가 없었다
++        nb = f"#!{NB}/python\n".encode() + BODY.replace(b"main", b"evil")
++        c["new_files"]["tool-1.0.dist-info.RECORD"][3]["../../bin/tool"] = nb
++        r = c["new_rows"]["tool-1.0.dist-info.RECORD"]
++        i = [x[0] for x in r].index("../../bin/tool")
++        r[i] = (r[i][0], C.record_hash(nb), str(len(nb)))
++        c["new_raw"]["tool-1.0.dist-info.RECORD"] = rec_bytes(r)
++    case("R14b pytest_t 쪽 wrapper 본문 변경 (RECORD 도 맞춰 줌 — 본문 결속만 잡을 수 있음)", has(run_records(m(tbody2)), "본문이 다르다"))
+ 
+     def extra(c):
+         def add(cc):

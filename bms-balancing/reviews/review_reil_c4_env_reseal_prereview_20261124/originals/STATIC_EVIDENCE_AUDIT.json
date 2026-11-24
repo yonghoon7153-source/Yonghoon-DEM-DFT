@@ -1,0 +1,152 @@
+{
+  "old_seal": {
+    "manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+    "exact_files": 11,
+    "all_payload_hashes_match": true
+  },
+  "old_records": {
+    "09_records": {
+      "count": 30,
+      "rows": 12489,
+      "hashed": 7188,
+      "unhashed": 5301,
+      "all_crlf_final_crlf": true,
+      "duplicate_rows": 0
+    },
+    "10_test_tool_records": {
+      "count": 4,
+      "rows": 909,
+      "hashed": 469,
+      "unhashed": 440,
+      "all_crlf_final_crlf": true,
+      "duplicate_rows": 0
+    }
+  },
+  "wrappers": [
+    {
+      "record": "cffi-2.1.1.RECORD",
+      "path": "../../../bin/cffi-gen-src",
+      "hash": "sha256=trYQ5_yokWuNaZsR0_oiSXBon4myQCrkVQxotR3W8n4",
+      "size": "315"
+    },
+    {
+      "record": "fonttools-4.66.1.RECORD",
+      "path": "../../../bin/fonttools",
+      "hash": "sha256=TQizhb1xn-b8wgB00c9l7fqj-GNqSp8rGnmDPpqJy3s",
+      "size": "317"
+    },
+    {
+      "record": "fonttools-4.66.1.RECORD",
+      "path": "../../../bin/pyftmerge",
+      "hash": "sha256=l7SQQFzOb5EP9-v093xqNLKXyYB_OaZFZHRdcamNgmM",
+      "size": "314"
+    },
+    {
+      "record": "fonttools-4.66.1.RECORD",
+      "path": "../../../bin/pyftsubset",
+      "hash": "sha256=JM06AJDTGugCO1tg9-c6AsoGk7-d8q-RzRUeX8ih8wk",
+      "size": "315"
+    },
+    {
+      "record": "fonttools-4.66.1.RECORD",
+      "path": "../../../bin/ttx",
+      "hash": "sha256=OILn-4ITtnAiv98ZurYHGtGvTdvNaedWJdTje0r0j6o",
+      "size": "312"
+    },
+    {
+      "record": "numpy-2.4.6.RECORD",
+      "path": "../../../bin/f2py",
+      "hash": "sha256=w4tvDjaz3IHpF6mvJnqQ2j178dXoqNVvVIceAkvY5fs",
+      "size": "316"
+    },
+    {
+      "record": "numpy-2.4.6.RECORD",
+      "path": "../../../bin/numpy-config",
+      "hash": "sha256=3TGhmOnaf0jUnWwDEPTm7yI7yMAjAqu8uKQuMuYBDZs",
+      "size": "316"
+    },
+    {
+      "record": "pip-24.0.RECORD",
+      "path": "../../../bin/pip",
+      "hash": "sha256=dZGUaPcSiolN2ty4W3ir0zb4RU2xZOAiqlCV1FZhWUU",
+      "size": "325"
+    },
+    {
+      "record": "pip-24.0.RECORD",
+      "path": "../../../bin/pip3",
+      "hash": "sha256=dZGUaPcSiolN2ty4W3ir0zb4RU2xZOAiqlCV1FZhWUU",
+      "size": "325"
+    },
+    {
+      "record": "pip-24.0.RECORD",
+      "path": "../../../bin/pip3.11",
+      "hash": "sha256=dZGUaPcSiolN2ty4W3ir0zb4RU2xZOAiqlCV1FZhWUU",
+      "size": "325"
+    },
+    {
+      "record": "pygments-2.21.0.dist-info.RECORD",
+      "path": "../../bin/pygmentize",
+      "hash": "sha256=_RrArI06osazgbQYYRuAtfDBrTeZc_3xToixz0fuYP8",
+      "size": "315"
+    },
+    {
+      "record": "pytest-9.1.1.dist-info.RECORD",
+      "path": "../../bin/py.test",
+      "hash": "sha256=CqH3ZhQT8hFuHHfMSUh3rMyh9xYzZwrQEWEOVhgFbDo",
+      "size": "331"
+    },
+    {
+      "record": "pytest-9.1.1.dist-info.RECORD",
+      "path": "../../bin/pytest",
+      "hash": "sha256=CqH3ZhQT8hFuHHfMSUh3rMyh9xYzZwrQEWEOVhgFbDo",
+      "size": "331"
+    }
+  ],
+  "old_lock_record_links": 30,
+  "reil_c4_env_reseal_pre_20261124": {
+    "git_tree_recomputed": "1e759c6a5d0e38fb7c84f20fe7233f8b15276cc7",
+    "files": 8
+  },
+  "reil_c4_env_reseal_selftest_20261124": {
+    "git_tree_recomputed": "6cedd7828d7a0949e70836efacb4b60f1aca3998",
+    "files": 13
+  },
+  "metadata_source_hash_links": "ALL_MATCHED",
+  "selftest_submitted_results": {
+    "pass_lines": 52,
+    "fail_lines": [],
+    "last": "52 / 52 PASS",
+    "stderr_bytes": 0
+  },
+  "mutation_proof_submitted_results": {
+    "pass_lines": 13,
+    "fail_lines": [],
+    "last": "변이 증명: 13 / 13 기대대로",
+    "stderr_bytes": 0
+  },
+  "run1_mutation_proof_submitted_results": {
+    "pass_lines": 11,
+    "fail_lines": [
+      "FAIL M3 wrapper 본문 결속 끔 (첫 줄만 봄) — selftest rc 1 · 50 / 51 PASS · FAIL 사례 ['R5'] · 기대 ['R5', 'R14']"
+    ],
+    "last": "변이 증명: 11 / 12 기대대로",
+    "stderr_bytes": 0
+  },
+  "mutation_source_static": {
+    "mutants": 12,
+    "control_runs": 1,
+    "replacement_targets_each_once": true,
+    "execution_by_reviewer": 0
+  },
+  "scope": {
+    "supplied_program_imports": 0,
+    "supplied_program_executions": 0,
+    "tests": 0,
+    "installs": 0,
+    "venv_creation": 0,
+    "pip": 0,
+    "emit_check": 0,
+    "COMSOL": 0,
+    "review_only": "Own metadata/hash/CSV/JSON/AST processing. Submitted result logs are historical evidence, not independently observed executions."
+  }
+}

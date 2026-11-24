@@ -1,0 +1,33 @@
+{
+ "allowed_only": true,
+ "mode": "bundled",
+ "problems": [],
+ "tool_sha256": "8cf10f3c910a46d4ffcf9eb933760178c439fcbec8636189776cb2bea2dbedb0",
+ "wheels": {
+  "pip-24.0-py3-none-any.whl": {
+   "equals_october_sha256": false,
+   "members_differing_from_october_install": [
+    {
+     "declared": true,
+     "new": [
+      "sha256=EtCzPV1HGcSG65jK42uCJO7zOhjjTOo_q8vcC6Q8Btk",
+      "273525"
+     ],
+     "old": [
+      "sha256=eU0Dn_3yd8BH4m8sfVj4Glhl2KDrcCSg-sEWT-pNJ88",
+      "281617"
+     ],
+     "path": "pip/_vendor/certifi/cacert.pem"
+    }
+   ],
+   "sha256": "9c51d6ade96c424e64356a9337fe15be2cce412b3ddb962f3efb61f63001d118",
+   "size": 2106360
+  },
+  "setuptools-79.0.1-py3-none-any.whl": {
+   "equals_october_sha256": true,
+   "members_differing_from_october_install": [],
+   "sha256": "e147c0549f27767ba362f9da434eab9c5dc0045d5304feb602a0af001089fc51",
+   "size": 1256281
+  }
+ }
+}

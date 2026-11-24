@@ -1,0 +1,140 @@
+[
+  {
+    "path": "bms-balancing/docs/REIL_C4_ENV_RESEAL_REQUEST_SEND_20261124.md",
+    "bytes": 6906,
+    "sha256": "302ef7236297b50b41bd86b75ecdc275b9fe3a75ca6c3601a25461c8aec89ac3",
+    "git_blob": "4866ac94f99a03e48508ba41463d48112f3d4ea3"
+  },
+  {
+    "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+    "bytes": 523222,
+    "sha256": "43523278df1ae81345fccd24a32f1766dd128b301ebf63750a01af9a94df5c3b",
+    "git_blob": "ecb71f7ab87ea318c612554062cfe55ce70be3d3"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_pre_20261124/00_meta.txt",
+    "bytes": 316,
+    "sha256": "979ad8f82348979706dac7335a6b218fbe3491d7c32fcc8bf186287fc80cfae6",
+    "git_blob": "51eab82f24512f70e54ffb31b166edc5d4f0701b"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_pre_20261124/01_interpreter.txt",
+    "bytes": 1093,
+    "sha256": "12c7a8786f5a40ae7ecb2242d73cda053c60ced5fdbbb23c3bd4390b1cdb0182",
+    "git_blob": "f4583e624e251a5af0b18cef3dce7d008daa2548"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_pre_20261124/02_dpkg.txt",
+    "bytes": 1897,
+    "sha256": "638c11cc2271e3abfd4b7d1312144d5fe2e759caaad397ab9f403653213439b9",
+    "git_blob": "7b8dc6785d921ebc435e3a01f7a365e1a726d99d"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_pre_20261124/03_bundled_check.json",
+    "bytes": 894,
+    "sha256": "04d95f9aa7152d18608932c4c2a1d8e7c57551d2beef35b66d49116ca0f5eccb",
+    "git_blob": "60d7490f606e2c165e96f2ff491a32e097b1dbe5"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_pre_20261124/03_bundled_check.stdout.log",
+    "bytes": 34,
+    "sha256": "aa5819c57083025d1752ffb49d6a709cc0c21c73f51f0784f291b3dec081d2b7",
+    "git_blob": "8b07d5c5def8522aadb85b67a4effeed1c516f8f"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_pre_20261124/04_cacert_member.txt",
+    "bytes": 711,
+    "sha256": "dd89cf968fabfdbedbff5e318fb437352cc3124352e489aecb7509bf4fcd704e",
+    "git_blob": "7214c5b0063d36ca6e8448771520b54756935681"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_pre_20261124/05_env_names.txt",
+    "bytes": 372,
+    "sha256": "511ccfef2312efeac25b4da1f0df9fbd95badced95a484bd762af841831af9d0",
+    "git_blob": "7f305846758c2b9e6a59d527ff4fef4aed7f47b5"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_pre_20261124/06_paths_disk.txt",
+    "bytes": 583,
+    "sha256": "1a6b332c20b6bc41b28cf717b39386c7229245360e4a82f4ae4e63432ad9d21b",
+    "git_blob": "a9df96e4b2c28e120bbcb9879bbe93e23bef04b9"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/mutation_proof.meta.txt",
+    "bytes": 570,
+    "sha256": "e7fee9eec02eb3a8314b846bfb6f571087a51a1e14204bb7e6352d0c38dc44c5",
+    "git_blob": "71080374c557a2e7ebbbd2738ba74fe85b3d238a"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/mutation_proof.py",
+    "bytes": 5245,
+    "sha256": "8a1200f42c9484f903d73455eae1dc3f969de36b7d3a8b913cd7c8d3f590acc2",
+    "git_blob": "3f80b05245207e4936c7b5de44fbba3de36da183"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/mutation_proof.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/mutation_proof.stdout.log",
+    "bytes": 1597,
+    "sha256": "2d274de76fa52a994e54917ffc160a3a06a0c0b9030b6cddfdac6e43daaa2565",
+    "git_blob": "f1bba6c7e533b1820d56432e621efdf05746cdf9"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/run1_mutation_proof.meta.txt",
+    "bytes": 459,
+    "sha256": "65155ea6a91f3a3ceb3ea43cb7b2a47a85edf906d91f2beaa488b68f70365d3a",
+    "git_blob": "e46e1ebef7affee5fecb8e7ec5252007b8e6471c"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/run1_mutation_proof.py",
+    "bytes": 4825,
+    "sha256": "701655b0963f6af6964affd0f7ff7e4ca6adc2b1d262ea6b1f466a5bef2f3f2d",
+    "git_blob": "5417afaf9f02dfdf44ec85d9751ea467b01f63d2"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/run1_mutation_proof.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/run1_mutation_proof.stdout.log",
+    "bytes": 1442,
+    "sha256": "aea7638c2ba0a6c0d0ae91763a7027fe59c9ae49fefd8f040b07f97f84ce13ae",
+    "git_blob": "29e712d4f7e9132e7a2a2bc7a18427065797988f"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/run1_selftest.py",
+    "bytes": 30145,
+    "sha256": "b740df666980aabc77c1b32c67df871b0551b43bfdef046ac0e7c53ca0c76881",
+    "git_blob": "8b3f851c73d82ca28cad2da091c80bcda85d184f"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/selftest.meta.txt",
+    "bytes": 564,
+    "sha256": "0f8ae4c2bc480319af8760a6bb862e10bdbf0ec8a557d59a31304f51a3e4c98d",
+    "git_blob": "7ae0f98c93c318bfd7175415d2e1faeec1827dc1"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/selftest.py",
+    "bytes": 30917,
+    "sha256": "dc1d4eb9141606f7a495dbbf13e676e0aa98ee914f517aedefed7e7642e4875d",
+    "git_blob": "d7aa624462352c0c2dde70ff07976b0f2937f783"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/selftest.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+  },
+  {
+    "path": "bms-balancing/evidence/reil_c4_env_reseal_selftest_20261124/selftest.stdout.log",
+    "bytes": 3396,
+    "sha256": "7fa83d7fc749f4d01fbce90b12837959283f8febcd3915afde68c91a1dc3a2a7",
+    "git_blob": "a4c1bbd2079ea0f95500f40c84e917d59280c6a6"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_C4_ENV_PREREVIEW_DELIVERY_TRANSPORT_TOOL_RETURN",
+  "provenance": "Exact exec_command return received for DELIVERY_RECORDS creation/readback, saved afterward outside the ZIP and transport. It does not certify its own later file write or a whole-review elapsed time.",
+  "tool_result": {
+    "chunk_id": "ffbb8b",
+    "wall_time_seconds": 0.4284576,
+    "exit_code": 0,
+    "original_token_count": 253,
+    "output": "{\r\n  \"kind\": \"REIL_C4_ENV_PREREVIEW_DELIVERY_TRANSPORT_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\REIL_C4_ENV_RESEAL_PREREVIEW_20261124.zip\",\r\n    \"bytes\": 1941163,\r\n    \"sha256\": \"ead9e3a4cd057002f81765420faac1247a4520b93534ca8f4f02fc0a300db3b6\"\r\n  },\r\n  \"transport\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4_env_reseal_prereview_20261124\\\\DELIVERY_RECORDS.json\",\r\n    \"bytes\": 14381,\r\n    \"sha256\": \"06818aef19ef847fdb1ff0fe883f28acd01cc1699926d895556dae8b1ed5a0d2\"\r\n  },\r\n  \"raw_records\": 3,\r\n  \"raw_bytes_and_parsed_views_match\": true,\r\n  \"supplied_program_execution\": 0,\r\n  \"tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"whole_review_elapsed_claim\": null,\r\n  \"boundary\": \"After raw transport write/readback/hash and unchanged ZIP check; before actual tool return and its subsequent transcript.\"\r\n}\r\n"
+  }
+}

@@ -1,0 +1,563 @@
+# REIL C4-A 구현 요청서 v4 — H Phase A 실자료 실행기 · 상한 있는 경고 기록 · runner 어댑터 · 비용 / unit 규칙 · 소스 / 승인 결속 · 행 무결성 · 회귀 허용표 · 호출 계수기 (문서만 · 실행 0) · 2026-11-24 KST
+
+> **v4 (2026-11-24 KST) — 상태: 문서만 · 실행 0 · 구현 / 시험 / 실행 승인 아님 · U2 미선택 · U4 · U5 미채택.** 이 문서를 쓰는 동안 구현 · 시험 ·
+> pytest (수집 포함) · 대상 모듈 import · 실행 · 자료 개봉 0 회.
+> **보존 (그대로 둔다):** v1 (`86f2d631…` · 15,873 B) · v2 (`d85e9a64…` · 34,092 B) · v3 `docs/REIL_C4A_IMPL_REQUEST_v3_20261124.md` (96,546 B · sha256
+> `2156f12d35c05c3a41307c4c254ce0bf836f9bdcbc33485c1eba2bb995d71c5b`). 이 문서 (새 파일) 가 v3 를 대체한다.
+> **기준:** v3 재검토 (2026-11-24 · 판정 `REVISION_REQUIRED_BOOTSTRAP_ALLOWLIST_CYCLE` · 원장 §132 · `reviews/review_reil_c4a_impl_v3_prereview_20261124/`) —
+> 제출 커밋 `c7062ced9c48a97bf47d042882fd79451332adf9`. v2 재검토의 세부 12 중 11 + C2 는 종결됐고, **남은 하나는 C4A-IMPL-V3-N1 (N1 `bootstrap` 의 허용표 순환)** 이다.
+> §0-v4 의 행 번호는 v3 의 행이다.
+> **v4 가 v3 와 다른 곳 (표시 "(v4 정정 — V3-N1)"):** 이 머리 · §0-v4 (새 대응표) · §3 I7 의 "켜기" · §6-1 T16j · §6-2 의 계수기 인자 문장 (v3 433) ·
+> §7 의 b0 · b1 · b2 · c · d 줄과 "세 실행의 기록" 문단. 그 밖의 글은 v3 그대로다 (아래 v3 머리 · §0 대응표는 v2 → v3 이력으로 남는다).
+>
+> ---- 아래 머리 (열두 줄) 는 v3 의 것 그대로 ----
+> **상태: 문서만 · 실행 0 · 구현 / 시험 / 실행 승인 아님 · U2 미선택.** 이 문서를 쓰는 동안 구현 · 시험 · pytest (수집 포함) · 대상 모듈 import · 실행 · 자료 개봉 0 회.
+> **보존 (그대로 둔다):** v1 `docs/REIL_C4A_IMPL_REQUEST_20261106.md` (15,873 B · sha256 `86f2d63134cbf186c9838a2f4124f97e98ce6cfb543557b9c04147d315b917c2`) ·
+> v2 `docs/REIL_C4A_IMPL_REQUEST_v2_20261106.md` (34,092 B · sha256 `d85e9a64ed3bbbbfa1fe49360d5a9c5f2132f61d73e22f51ed386071f300732d`). 이 문서 (새 파일) 가 v2 를 대체한다.
+> **기준 pin:** `fa502acb68f6d103a880d9431bb2e3f1c4013588` — v2 재검토 (2026-11-08 · 판정 REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL · 원장 §130 ·
+> `reviews/review_reil_c4a_impl_v2_prereview_20261108/`) 의 고정 기준이다. 인용한 `scripts/` · `tests/` 의 행 번호는 이 pin 의 바이트다 (작성 때 pin ↔ HEAD · 작업 트리의
+> `bms-balancing/scripts` · `bms-balancing/tests` 차이 0 을 `git diff --name-only` 로 확인 · v2 가 쓴 `86cab053` 과도 scripts · tests 가 같다 — 재검토 회신 7 절). 원격 HEAD 라는
+> 주장이 아니며, v3 파일 자체는 pin 뒤에 새로 쓴 것이다.
+> **기준 문서:** 범위안 v2 (`docs/REIL_C4A_SCOPE_v2_20261106.md` · `605520b8…` · 수용 §125) · 채택된 C4 요청 v2 (`docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md` · `22dcc8e5…`) ·
+> 사용자 선택 §126 (U1 분리 · U3 고정 자료 재사용 · U2 미선택) · §129 (C4A-IMPL-N1 의 회귀 범위 = **(가) 전체 회귀 + 합성 실제 호출 허용표**).
+> 검토자의 `request_lines` 는 v2 의 행이다 (§0 의 "v2 행"). v3 가 바꾼 내용은 본문에 **(v3 정정 — 지적 · 키)** 또는 **(v3)** 로 표시했다. 표시 없는 문단과 v2 의 차이는
+> 교차 참조 · 단계 이름 (v2 의 b → v3 의 b0 등) · 새 절을 가리키는 연결 문구뿐이다.
+> 승인되면 §7 의 절차로 **구현과 무자료 시험만** 한다. 자료 개봉 · 맞춤 · 실제 C4-A 단계 실행은 별도의 실행 요청이다.
+
+## 0-v4. v3 → v4 정정 대응표 (v3 재검토 · 원장 §132)
+
+| 지적 (v3 행) | 검토자 요구 (요지) | v4 변경 위치 | 해결 방식 | 유지 제한 (v4 가 주장하지 않는 것) |
+|---|---|---|---|---|
+| C4A-IMPL-V3-N1 (P2 · ← N1 `bootstrap` · 198–199 · 433 · 453–455 · 459–460) | 계수기는 수집 **전에** `ALLOW_A.json` 과 해시를 요구하는데, §7 은 그 파일을 같은 b1 수집의 **산출물**로 정의한다 — 첫 b1 의 입력이 없다 (순환). 누락 허용 · 옛 표 재사용 · 계수기 끄기는 fail-closed 수집 계약과 어긋난다. b0 에서 수집 전용 허용 입력과 SHA 를 봉인하고, b1 이 그것을 소비해 nodeid 별 실행용 `ALLOW_A.json` 과 SHA 를 산출하며, b2 / c 는 그 고정 해시를 소비 · 단계별 인자 / 모드와 혼용 거부를 명확히 · "세 실행의 인자가 같다" 정정 · T16 에 잘못된 모드 · 해시 · 표 바꿔치기 · 수집 / 실행 표 혼용의 거부 | §3 I7 "켜기" · §6-1 T16j · §6-2 (v3 433 의 문장) · §7 b0 ⑦ · b1 · b2 · c · d · "세 실행의 기록" | 계수기에 **모드 둘** (`--c4a-mode collect` / `run` · 기본 모드 없음) · 표마다 `kind` (`C4A_ALLOW_TABLE` 함수표 · `C4A_ALLOW_COLLECT` 수집 전용 · `C4A_ALLOW_RUN` 실행용). b0 가 수집 전용 표 `ALLOW_COLLECT_A.json` (collect · session 버킷의 K1–K7 = 0 · nodeid 행 없음) 을 쓰고 함수표 `ALLOW_A_TABLE.json` 과 **따로** sha 를 `BOOTSTRAP_A.json` 에 봉인 → b1 은 수집 모드로 두 표 (수집 전용 표 = 수집 중 계수 상한 · 함수표 = 수집 끝 매핑에만 · `--c4a-table`) 를 봉인 sha 와 대조한 뒤 수집 1 회 → 계수기가 수집 끝에 `NODEIDS_A.txt` · 실행용 `ALLOW_A.json` (표 안에 `source_table_sha256` · `nodeids` 순서 목록 · `nodeids_sha256`) · `B1_RECORD_A.json` (입력 두 표 sha · 수집 nodeid 집합 sha · 결과 표 sha) 을 쓴다 → b2 · c 는 실행 모드로 **같은** 실행용 표 · 같은 sha (`B1_RECORD_A` 의 결과 값) 를 소비 (실행 모드에 `--c4a-table` · 수집 전용 표 = 거부 · 수집된 nodeid 가 표와 다르면 첫 시험 전 중단) → d 의 끝 기록이 sha 사슬 (b0 → b1 → b2 · c) 을 대조. 검토자의 대안 (봉인된 패턴 표를 수집 모드가 직접 소비) 은 쓰지 않았다 — 수집 중 상한을 정하는 표와 매핑에 쓰는 표를 나눠 두는 쪽이 혼용 거부를 검사하기 쉽다 | 새 pytest 세션 · 새 시간 상한 · 새 숫자 0 (수집 · RED · GREEN 의 세 실행과 120 / 600 / 1,800 s 는 v3 그대로 · 제안). 사슬 대조는 파일 바이트 · sha 의 일치만 본다 — 표를 쓴 사람의 인증과 함수표 수치 자체의 옳음은 주장하지 않는다 (§132: 미완 수치표를 미리 검증한 것은 아님) |
+| 그 밖 — v2 재검토 세부 11 + C2 · N2 · N5 · N7 · C1 | — | — | **v3 그대로 · 종결 (§132)** — N1 `coverage` 는 좁힌 주장으로 종결 | 유지되는 한계 (§132): 분리 해석기 (-I) 안 호출 · 손주 미계수 · 경고 기록기 총 메모리 상한 · stderr 실제 쓰기 상한 없음 · 시간 값은 제안 (검증된 실제 반환 상한 아님) |
+
+## 0. v2 → v3 정정 대응표
+
+v2 재검토 (§130) 의 남은 네 묶음 N1 · N3 · N4 · N6 의 subissue 열둘 + 비차단 C2 + 문서 범위 종결 넷. 행마다 검토자 원문 (`REVIEW_KO.txt` · `REVIEW_DECISION.json`) 을 다시 읽고 썼다.
+
+| 지적 · 키 (v2 행) | 검토자 요구 (요지) | v3 변경 위치 | 해결 방식 | 유지 제한 (v3 가 주장하지 않는 것) |
+|---|---|---|---|---|
+| C4A-IMPL-N1 `allowlist` (P1 · 207–210) | 0b1* / 0b2* 의 실제 supervise fork 는 K5 · 0a / c4e 의 중단 시험은 살아 있는 작업자 terminate / kill 로 K4 · K6 ⊂ K3 · 같은 상한 안인지 · nodeid 별 K1–K7 종류 · 상한 · 환경을 소스와 대조해 RED 전 고정 · 초과를 본 뒤 올리지 않음 | §6-2 (규칙 R1–R7 · 시험 함수별 표 · 환경) · §7 b0 · b1 | 파일 단위 표 (v2) 를 버리고 **시험 함수 단위** (매개변수 nodeid 는 함수 행을 물려받음) 로 고친다. 종류마다 정적 상한 규칙과 소스 행: R1 K1 = 실제 minimize 로 가는 `run_local` 진입 수 · R3 K5 = 실제 supervise 호출의 n_workers · R4 K4 = supervise 마다 2 × n_workers + 실제 killpg 로 가는 launch 마다 3 + 본문 kill · R5 K3 / K6 = 호출 자리 셈 (K6 ⊂ K3 · git 하나가 둘을 함께 예약). 예: 0b2 `test_c_8` = K5 ≤ 2 (wave 1 + ρ wave × 작업자 1 · 774–776). 표에 없는 nodeid = 모든 K 0. 표 → nodeid 펼침은 b1 의 수집 1 회 뒤 한 번 · 그 뒤 값 변경 0 | launcher 회귀 (`test_reil_c4e1_launch.py`) 의 함수별 K3 / K6 / K4 **수치는 v3 에 없다** — 규칙 R4 · R5 와 helper 별 상한만 고정하고, 수치는 b0 에서 같은 규칙의 정적 읽기 (AST · import 없음) 로 구해 수집 전에 봉인한다. 상한은 경로 중 최대인 정적 상한이지 기대 횟수가 아니다 |
+| N1 `coverage` (P1 · 116–119) | 부모 `-p` 래퍼만으로 이미 묶인 기본인자 / 별칭 · fork 메모리 · 분리된 Python 자식 · 손주의 호출을 셀 수 없다 · 수집 전 설치 · 수집 / setup / call / teardown 귀속 · context 별 Process.start · fork 공유 / 회수 · 자식 · 손주 기록의 nodeid 결속 · 누락 = 실패 · T16 의 가짜 함수 계수만으로 주장 안 함 | §3 I7 (설치 · 귀속 · 경로별 표) · §6-1 T16a–j · §9 | 설치 = 플러그인 import 시점 (`-p` 사전 적재 — 최초 conftest · 수집 전) · 그때 대상 모듈이 이미 적재돼 있으면 중단 · 수집 뒤 · 첫 시험 전 **별칭 감사** (대상 모듈의 전역 · `__defaults__` · `__kwdefaults__` 가 원본 객체면 실패 — launcher 718 · 731 · 777 · 818–819 · c4e `fetch` 676) · 단계 귀속 (collect / setup / call / teardown / session — collect · session 상한 0) · fork 자식 = 감싸기 · nodeid · 원장 상속 + 자식 시작 / 끝 기록 (끝 없음은 신호 종료 exitcode 일 때만 허용) · spawn / forkserver 차단 · 분리 해석기 자식 = 생성 (argv · 프로그램 sha) · 종료 · 프로세스 그룹 빔 확인 · 자체 검증은 실제 감싼 지점마다 무해한 실제 호출로 (T16a–j) | **분리된 해석기 자식 (`-I` — launcher 348 · FAKE_RUN 93) 안의 호출과 손주는 세지 않는다** — 봉인 venv 를 바꾸지 않고는 계수기를 넣을 수 없다. 그 경로의 주장은 "생성 · 프로그램 신원 · 종료 · 그룹 빔" 까지다. K1–K7 밖의 프로세스 생성 경로 (os.fork 직접 등) 도 세지 않는다 (정적 대조 0 을 기록) |
+| N1 `before_call` (P1 · 118–119) | 원 함수 전에 권한 · 잔여 상한 검사 + 원자적 예약 · 위반이면 실제 호출 차단 · 원인 · 시도 / 차단 / 실행 수 보존 · 중단 · 사후 집계는 보조 확인 | §3 I7 (호출 전 순서) · §6-1 T16f · T16g · T16i | 감싸기 안: 분류 → 잠금 (프로세스 안 잠금 + nodeid 원장의 `flock`) → 허용 종류 · 단계 · 문맥 · 프로그램 · 남은 상한 (git 은 K3 · K6 둘 다) 확인 → `reserve` 기록 → 풀기 → 원 함수 → `end` 기록 / 위반이면 `block` 기록 (원인 · 수) → `CallBlocked` (BaseException 하위) · **원 함수 미실행** · 그 nodeid 실패 + `session.shouldstop`. 대상 코드가 삼켜도 원장이 실패를 정한다. 세션 끝 대조 (시도 = 예약 + 차단 · 예약 = 반환 + 예외 + 미종료) 는 보조 | 차단은 그 호출만 막는다 — 이미 시작된 다른 프로세스를 되돌리지 않고, 차단 예외를 삼킨 대상 코드의 뒤 동작 (예: 구조 오류로 기록) 은 막지 않는다. 보장은 "원 함수 미실행 · 그 nodeid 실패 · 세션 멈춤" 이다 |
+| N1 `bootstrap` (P1 · 202 · 234–236) | 수집 가능한 시험 · 골격과 동작하는 계수기 준비 / 봉인 → 수집 1 회 · NODEIDS / ALLOW 고정 → RED → 구현 → GREEN · 계수기 자체 검증 ↔ 대상 골격의 기대 RED 실패 분리 · 수집 / RED / GREEN 의 기록 · 허용 범위 고정 · 이 절차를 쓰는 것 ≠ 실행 | §7 (a · b0 · b1 · b2 · c · d) · §6-1 머리 | b0 = 준비 · 봉인 (대상 시험 T01–T15 · T17 · T18 원문 · 골격 · **완성된** 계수기와 자체 검증 T16a–j · §6-3 정정 · 허용표 원문 · 기대표) — 실행 0 → b1 = 수집 1 회 (계수기 켬) → `NODEIDS_A` · `ALLOW_A` 고정 → b2 = RED 1 회 (자체 검증 nodeid 먼저 · 하나라도 실패면 대상 전에 세션을 멈춤 · 판정을 따로: 자체 검증 = 통과 · 대상 = 기대표의 골격 `NotImplementedError`) → c = 구현 → GREEN | 이 문서를 쓰는 것은 그 절차의 실행이 아니다 (수집 · RED · GREEN 0). 대상의 기대 RED 원인을 골격의 `NotImplementedError` 하나로 좁힌다 (v2 의 "없는 이름" 은 쓰지 않는다) |
+| C4A-IMPL-N3 `distinct` (P1 · 77–81 · 191) | 앞 240 B 가 같은 서로 다른 경고가 한 키로 합쳐지는데 overflow 0 이면 exact = true — 원문 고유 수라면 잘림도 정확성 상실 (하한 = len(keys) + int(overflow>0)) 또는 "잘린 키 고유 수" 로 명시 · T11 에 접두사 충돌 | §3 I3 (행 필드 · 집계) · §6-1 T11 | `warnings_distinct_exact = (n_overflow == 0 and n_truncated == 0)` · `warnings_n_distinct = len(keys) + int(n_overflow > 0)` — exact 가 false 면 원문 고유 수의 **하한** (상한은 n_total). 다섯 키의 이름 · §6-3 의 세 기대 dict 값은 그대로 (그 행들은 잘림 0 · overflow 0). run 집계는 "잘린 키 기준 고유 수" 로 이름 붙인다. T11: 앞 240 B 같고 뒤만 다른 둘 → 키 1 · 잘림 2 · overflow 0 · distinct 1 · exact false | 잘림이 실제 합침을 일으켰는지는 판정하지 않는다 — 잘림이 한 번만 있어도 exact false (보수적) |
+| N3 `retained_bytes` (P1 · 75 · 77–78) | 무제한 정확 정수 · 키별 계수로는 "20 × 240 B + 정수 다섯" 고정 총량이 성립하지 않음 · 키 payload 4,800 B · 객체 / 계수 개수 제한 ↔ 총 메모리 바이트 한도 구분 · 고정 총량을 원하면 유한 계수 표현 · 초과 처리 | §3 I3 (보관량) · §6-1 T11 · §11 U4 | 주장을 둘로 좁힌다: (가) 키 payload ≤ 20 × 240 = 4,800 B (UTF-8) (나) 보관 객체 개수 ≤ 키 20 · 키별 계수 20 · 스칼라 계수 셋 (`n_total` · `n_overflow` · `n_truncated`) · 표지 하나 (`unknown_option`). 총 메모리 바이트 상한은 주장하지 않는다 (Python 정수의 크기는 값에 따라 자란다). 고정 총량은 U4 (미채택 · 사용자 몫) | 기록기 전체의 메모리 바이트 상한 · 정수 표현 크기의 상한 |
+| N3 `stderr` (P1 · 84–85) | 1 GiB 는 현 감시의 표본 중지 임계값 (기본 5 s 디스크 표본 · 마지막 종료 뒤 재측정 없이 반환 가능) — 쓰기 상한 아님 · 새 adapter / launcher 의 마지막 용량 확인 · 초과 시 유효성 / 인계 거부 · 후속 wave 차단 · 감시가 끝난 뒤 기록 구간의 책임자 · 실제 쓰기 상한은 쓰기 단계 제한으로 따로 | §3 I3 (확인 사슬 ①–⑤) · I1 (P6) · I5 · §5-1 · §8 | 1 GiB 의 뜻을 "감시 표본의 중지 임계값" 으로 한정 (monitor 237–238 · 319–329 · 336–342 · 357–367). 확인 사슬과 책임자: ① 감시 표본 (wave 안) ② runner_a 의 supervise 반환 뒤 재측정 (HB 반환 전 · 초과 → 지속 전역 중지) ③ run-a 의 `mon.final_record` (마지막 쓰기 뒤 같은 루트 재측정 · 375–410) ④ launcher_a 의 자식 종료 뒤 재측정 (stdout / stderr 포함) ⑤ 외곽 / 판정기의 launcher 반환 뒤 최종 측정. 어디서든 초과 → 실행 유효성 false · C4-B 인계 0 · (마지막 wave 전이면) 후속 wave 0 | **쓰기 상한 아님** — 측정 사이의 증가와 쓰기 자체는 막지 못한다. 실제 쓰기 상한은 U5 (미채택 · 사용자 몫) |
+| C4A-IMPL-N4 `late_completion` (P1 · 100–101 · 250) | 모두 끝나면 닫는 규칙은 899.8 s 관측 뒤 900.5 s 에 끝난 마지막 task 를 놓친다 · rule_snapshot 에 완료 시각 없음 · 닫기 전 완료 시각 근거 · 기존 행의 t_end 와 시작 근거 결속 · 미가용이면 정상 추정 금지 · 관측 사이 늦은 완료를 가짜 시계 사례로 | §3 I4 (unit 닫힘 규칙) · I1 (P5) · §6-1 T12 · T17 | 루프 안 (StopRule_A): unit 은 **마지막 완료가 처음 관측된 tick 의 now_rel ≤ 첫 시작 + 900** 일 때만 닫힌다 (완료 ≤ 부모 수신 ≤ now_rel ≤ 900 의 증명). 닫히지 않았고 now_rel − 첫 시작 > 900 이면 사유 — 진행 중 · 완료 하한 초과 (start 사건 + wall — 감시 173 의 start 가 H 814 의 t0 보다 먼저라 하한) · 미확인 (모두 완료 · 하한 ≤ 900) 셋 다 전역 중지. 루프 뒤 (runner_a P5): 행의 `t_end` (h.py 876–877) − wave t0 와 `t_start_rel` (start 사건) 로 unit 마다 WITHIN_900 / EXCEEDED_900 / UNDETERMINED (근거 없음 · 불일치) / INCOMPLETE. EXCEEDED → 지속 전역 중지 · 인계 제외 · UNDETERMINED → 그 위에 유효성 false | 부모 · fork 자식의 시각이 같은 시계 (time.monotonic) 라는 전제를 둔다 — rule_snapshot 218 이 이미 기대는 전제다. 관측 지연 때문에 실제로 900 s 안에 끝난 unit 에서 멈출 수 있다 (보수적 · 중지 사유와 t_end 판정을 따로 남긴다) |
+| N4 `late_row_validation` (P1 · 93–99 · 158) | stop_rule 은 루프 안 (315–316) 뿐 · 기한 (290–292) / 앞선 오류로 빠진 뒤 최종 drain (360) 의 done 행은 비용 형식 검사 없이 COMPLETED (200–201) · 최종 무결성 (v2 158) 이 n_eval 0 을 허용하고 wall 을 요구하지 않음 · runner_a 가 최종 states 전체를 사유와 무관하게 재검증 · solver_error 구분 · 최초 사유 유지 · 추가 오류 보존 · 다음 wave / Parent / C4-B 소비 전 배제 (N5 의 최종 drain 적용) | §3 I1 (P4) · I4 (판정 함수 하나) · §5-1 · §6-1 T17 | runner_a 가 supervise 반환 뒤 **모든 COMPLETED 상태** 를 받은 때 (루프 안 · 296 · 337 · 360 의 drain) 와 중지 사유에 무관하게 재검증 (P4 — StopRule_A 와 **같은** N5 판정 함수): converged / budget = bool 아닌 양의 정수 n_eval · 유한 비음수 wall · solver_error = bool 아닌 정수 n_eval ≥ 0 (0 평가 허용 · 표본 제외) · 모두 t_start · t_end 유한 · wall = t_end − t_start · termination ∈ 셋. 실패 → 최초 사유 (supervise 의 것이 있으면 그것) 유지 · 추가 오류는 `post_checks` 에 · HB 반환 전 지속 전역 중지 · 그 unit 인계 제외 · 유효성 false. ROW_INTEGRITY_A 의 필수 필드도 같은 정의로 고친다 | 감시 루프 안의 판정 순서와 감시 코드는 바꾸지 않는다 (§10) — 루프 밖 행은 runner_a 가 본다 |
+| N4 `cleanup_gate` (P1 · 162–163 · 194) | owned_alive_after > 0 / drain_ok false 를 최종 유효성 false 로만 적으면 HB 는 global_stop None 을 보고 다음 ρ 를 시작 (HB 1109 · 1120 · 1168) · HB 반환 전 지속 전역 중지 · global_stop None + alive 1 · drain false 의 후속 runner 호출 0 명세 | §3 I1 (P1 · P2 · P3 · 지속 중지) · §5-1 · §6-1 T10 | runner_a 의 사후 검사 P1 (정리: alive 0 · drain true) · P2 · P3 (필수 증거) 실패 → HB 에 돌려주는 `global_stop` 을 문자열로 (HB 1109 · 1168 은 그것만 보고 후속 ρ 를 정한다 · 1143 의 stopped 분류) + runner_a 안에 걸어 둠 (뒤 호출은 supervise 를 부르지 않고 모두 NOT_STARTED) · 실행 유효성 false. T10: 가짜 supervise 가 global_stop None + owned_alive_after 1 (또는 drain_ok false) → 뒤 supervise 호출 0 | runner_a 는 남은 작업자를 PID 로 죽이지 않는다 (손잡이 없음 · PID 재사용 위험) — 그 정리는 launcher_a 의 그룹 정리 (launcher 731–774) 몫이다 |
+| N4 `time_boundaries` (P1 · 245–257) | 40 s 는 중지 경로 (344–356) 의 명목 join 배분 합 · 정상 경로 (357–359) 는 작업자마다 grace 20 s (4 → 80 s) 뒤 drain (360) 따로 · 40 s 를 무조건 wall 상한으로 쓰지 않음 · 기록 원점 D_meas / stop 이 정리와 겹침 · 기록 900 s 의 정리 포함 여부 · 단계 절대 마감 적용 | §8 (표 · 산술) · §3 I1 · §6-1 T18 | 정리 경로를 둘로: 중지 (명목 join ≤ 20 + 5 × 4 = 40 s) · 정상 (명목 join ≤ 20 × 4 = 80 s) · 둘 다 그 뒤 drain (감시가 묶지 않음). 40 · 80 은 join 대기 배분이지 wall 상한이 아니다. 절대 시각 사슬: D_prep · D_meas · D_clean = D_meas + 600 · D_rec = D_clean + 900. **기록 창 = t_rec0 (마지막 wave 의 정리 · drain · 사후 검사 · HB 반환 뒤) → D_rec** — 정리를 포함하지 않는다. 단계 절대 마감 = 외곽 감시 기한 D_stage. 막힌 동기 호출의 상한은 launcher_a 의 자식 기한과 외곽 감시 기한뿐 | v2 §8 의 합 (28,800 · 36,000) 은 바뀌지 않는다 — v2 표에 없던 "여유 300 s" 의 자리 (S0 → t_a0) 만 적는다. 자식 기한 28,500 s 는 산술 (미채택 · U2 와 함께). 감시 안의 join · drain 을 끊는 장치는 만들지 않는다 |
+| C4A-IMPL-N6 `approval_binding` (P2 · 127–141 · 194) | 요청서 / 목록 SHA 대조와 승인 절의 존재만으로는 그 절이 그 요청의 긍정적 C4-A 실행 승인인지 모름 · 종류 · 범위 · 긍정 결정 · 승인된 execution_request SHA 확인 · 그 요청서가 결속한 두 목록 · 입력 · 시간 / 자원 설정 ↔ 실제 소비 인자 · T14 에서 무관 · 거절 · 구현 전용 · 요청서 + 인자 동시 교체 거부 · 승인 요청서 SHA 를 통한 전이 결속이면 충분 | §4-2 · §5-2 · §6-1 T14 · T15 | 승인 § 안의 기계 판독 기록 하나 (`c4a-approval` 블록: `kind` = `C4A_EXECUTION` · `decision` = `APPROVED` · `scope` · 승인한 execution_request 의 경로 · sha256) 를 요구하고 대조한다 · 실행 요청서 안의 `c4a-binding` 블록 (두 목록 · 입력 · LIMITS_A · 시간 몫 · n_workers · 폴더) 을 실제 소비값과 하나씩 대조 · 다르면 시작 전 거부 · 원장 파일 sha · §N 원문 sha 를 시작 기록에 · 판정기가 끝에 §N 불변을 확인 | 원장에 그 블록을 쓴 사람이 사용자인지는 코드가 인증하지 못한다 (원장은 사용자 원문을 인용해 덧붙이는 기록 · 재검토가 근거). 승인 블록에 결속 값을 다시 적지 않는다 (전이 결속) |
+| C4A-IMPL-V2-C2 (비차단 · 155–159) | 미완 행의 unit 은 계획 task_id → unit 에서 유도 · 원행에 unit 이 있으면 먼저 불일치 판정 · 계획값으로 덮어써 숨기지 않음 (monitor 203–211 · HB 1048–1053) | §5-1 (unit 줄) · §6-1 T07 | ROW_INTEGRITY_A 가 행마다 계획 unit 을 쓰되, 원행에 `unit` 이 있으면 **먼저** 비교해 다르면 구조적 행 오류로 적는다 · 원행은 고치지 않는다 (STORE_A 는 원문) | — |
+| C4A-IMPL-N2 (P2) | — | §3 I3 · §6-3 | **v2 그대로 · 종결 (§130)** — 세 기대 dict 에 다섯 키만 더함 · 기존 단언 보존 · RED 전 봉인. v3 의 `distinct` 정정은 그 값을 바꾸지 않는다 | — |
+| C4A-IMPL-N5 (P2) | — | §3 I4 | **v2 그대로 · 종결 (§130 · 문서 정의)** — 표본 정의역 · 0 평가 solver_error 제외 · 통계 · 문자열 사유. 최종 drain 행까지의 적용은 N4 `late_row_validation` (P4) 에서 한다 | — |
+| C4A-IMPL-N7 (P2) | — | §5-1 | **v2 그대로 · 종결 (§130)** — 계획 task 기준 무결성 · 집계와 별도 · 정당한 미완 구분 · 인계 조건. C2 와 N4 의 필수 필드 정정만 더한다 | — |
+| C4A-IMPL-C1 (문구) | — | §3 I2 | **v2 그대로 · 종결 (§130)** — finally 한 번 게시 · 실패 시 덮어쓰기 / 재시도 없음 · END_RECORD 결속 | — |
+
+- U2 (전체 10 h 배분) 는 여전히 미선택 제안이다. 재검토는 단계 28,800 s 합 · 전체 36,000 s 합의 **산술만** 맞다고 했다 — 수치 채택이 아니다. v3 가 새로 내놓는 선택지 U4 · U5 도 미채택이다 (§11).
+
+## 1. 요약 (v3 반영 — 사후 검사 · 시험 ID · 인계 조건)
+
+- **만들 것 일곱 (§3):** I1 진입점 `scripts/reil_c4a_run.py` (runner 어댑터 · 사후 검사 P1–P6 · 지속 전역 중지 · 행 무결성 포함) · I2 STORE_A 한 번 게시 · I3 상한 있는 경고 기록
+  (`reil_c4_h.py` 변경) · I4 `StopRule_A` · I5 실행 틀 (launcher_a · 외곽 · 판정기 · 끝 기록 작성기 v3) · I6 무자료 시험 (대상 C4A-T01–T15 · T17 · T18 / 계수기 자체 검증
+  T16a–j) · I7 호출 계수기 플러그인 (b0 에서 완성).
+- **계약 (§4 · §5):** 신뢰 입력 · 소스 목록 둘의 외부 sha 결속 · 실행 승인 기록의 종류 / 결정 / 승인 sha + 요청서 결속 블록 · 수의 판정 · 행 무결성 · 실행 유효성과 실험 결과의 분리 ·
+  인계 조건 (유효성 true 일 때만).
+- **시험 (§6 · §7):** 준비 · 봉인 → 수집 1 회 → RED (자체 검증 먼저 · 대상은 골격 실패) → 구현 → GREEN (고정 nodeid 전체 · 함수별 허용표 안의 합성 실제 호출만).
+- **바꾸지 않는 것:** E 계열 바이트 · util · C6 봉인 · 배열 · 기존 증거 · `reil_c4_hb.py` · `reil_c4_monitor.py` (과학적 실행 순서와 감시 동작을 그대로 쓴다).
+
+## 2. 연결부와 빈 곳 (읽기만)
+
+| 연결부 | 위치 (고정 소스) |
+|---|---|
+| Phase A 순서 · 미실행 · 완료 대조 · ρ · 집계 | `reil_c4_hb.py` `_not_run_a` 1010 · `phase_a_complete` 1020–1045 · `stage_a` 1082–1126 · `rho_wave` 1129–1175 · `plan_counts` 1353–1388 |
+| runner | `direct_runner` 1056 · `supervise_runner` 1074–1079 (wave 마다 `t0 = time.monotonic()` · 고정 limits) |
+| HB 의 후속 결정 (v3) | wave 1 의 `global_stop` 1109 → ρ 마다 `stopped` 1120 → 실행 없이 분류 1143 · ρ wave 의 `global_stop` 1168 → `WaveStop` 1173–1174 · `_group` 1048–1053 (계획 매핑으로 분류 · 행 보강 없음) |
+| 감시 | `reil_c4_monitor.py` `apply_rule` 224–234 · `supervise` 237–367 (`stop_rule` 기본 None · `out_roots` 기본 () · **(v3)** `disk_every` 기본 5 s · 정리 344–359 · 반환 363–367) |
+| 감시 — 루프 밖에서 받는 행 (v3) | `drain` 264–271 · 끝 메시지 없는 작업자 확인 296 · 모두 끝 337 · 마지막 360 — 이때 받은 done 은 `stop_rule` (315–316) 을 거치지 않을 수 있다 (337 · 360 은 항상 — 그 뒤 루프가 끝난다 · 296 은 그 뒤 중지 사유 · 구조 오류가 생기면) · `_states` 200–201 은 받은 done 을 모두 COMPLETED 로 |
+| 감시 — 규칙 입력 (v3) | `rule_snapshot` 215–221 — start 사건 (`started` · 173 의 t − t0) · 완료 행의 wall / n_eval / termination 만 (완료 시각 없음) |
+| 단일 실행 | `reil_c4_h.py` `_partial` 737–748 · `_assess` 773–804 · `_run_local` 807–878 (t0 814 · 행의 `t_start` 817 · n_eval 0 시작 822 · 경고 포착 836–848 · 모르는 옵션 856–859 · solver_error 860–865 · `t_end` · `wall` 876–877) |
+| 소스 목록 | `reil_c4e_run.py` `load_sources` 504–532 (목록 바이트 sha 를 먼저 511–513) |
+| launcher 의 승인 문자열 | `reil_c4e1_launch.py` 385 (`--approval … {REQUEST}`) · 831 (meta `request`) |
+| launcher 의 기본인자 결속 (v3) | `kill_group` 718 · `cleanup_group` 731 · `run_child` 777 · `launch` 818–819 (`popen=subprocess.Popen` · `killpg=os.killpg` — import 때 묶인다) · c4e `fetch` 676 (`run=subprocess.run`) |
+| 분리 해석기 (v3) | launcher `interp` 346–348 (`-I -B`) · `probe` 357–361 · 회귀의 FAKE_RUN (`test_reil_c4e1_launch.py` 60–110 — 안의 git 75–81 · 손주 93 `-I`) |
+
+- v1 의 G1–G7 · v2 의 G8–G11 은 그대로이고 넷을 더한다 **(v3 정정)** — **G12** 계수 범위 (별칭 · fork · 분리 해석기) 와 호출 전 차단이 없다 · **G13** 루프 밖에서 받은 행의 검증과
+  완료 시각에 기댄 unit 판정이 없다 · **G14** 정리 / 필수 증거 실패가 다음 wave 를 막지 않는다 · **G15** 승인 절의 뜻 (종류 · 결정 · 승인 sha) 과 요청서 결속 값을 보지 않는다.
+
+## 3. 만들 것
+
+### I1. 진입점 `scripts/reil_c4a_run.py` (새 파일)
+
+- **명령:** `plan-a` (자료 없이 수 · 계획만) · `seal-sources-a` (구현 끝에 SOURCES_A · SOURCES_A_FRAME 을 봉인 — §4) · `run-a` (실자료 — 실행 요청 승인에서만).
+- **`run-a` 준비:** 실행 승인 결속 (§4-2 — 승인 기록 · 결속 블록 · **(v3 정정 — N6)**) · 소스 목록 대조 (§4-1) · 환경 identity · 입력 결속 (§4-3) · util 적재 · 행별 Model · halfcell ·
+  옵션 (C6 `COBYQA_OPTIONS.json` 바이트) · 게이트 (int 키) · 배열 (고정 MANIFEST). 준비가 D_prep (§8) 를 넘으면 wave 를 하나도 시작하지 않고 기록만 한다 **(v3 정정 — N4 time_boundaries)**.
+- **runner 어댑터 `runner_a` (N4):** `stage_a` 가 부르는 runner 계약 (`runner(tasks, ctx, task_fn) → {states, global_stop}`) 을 지키면서 —
+  - run-a 원점에서 **불변 절대 측정 마감** `D_meas = t_run0 + MEASURE_A` 를 한 번 정한다 (**(v3)** 같은 때 `D_clean` · `D_rec` 도 — §8). wave 를 부를 때마다 `remaining = D_meas − now` ·
+    `limits = LIMITS_A ⊕ {measure: remaining}` · `t0 = now` 로 `mon.supervise` 를 부른다 → 모든 wave 의 `t0 + measure = D_meas` (같은 절대 마감 · 새 예산이 생기지 않는다).
+    `remaining ≤ 60 s` 면 시작하지 않고 모든 task 를 `NOT_STARTED` · 사유 "단계 경계 — 남은 측정 시간" 으로 돌린다.
+  - `stop_rule = StopRule_A(wave_id, task_unit, maxfev, n_workers=4, unit_limit_s=900, deadline_rel=remaining)` (I4) · `out_roots = (run-a 출력 폴더, 증거 폴더)` · `free_path = 출력 폴더`.
+  - wave 신원: 순번 · 첫 unit · task_id 범위 · task→unit · task→(run_id, x0) · 작업자 배정 · 원점 (monotonic · UTC) · remaining.
+  - supervisor 반환 **전부** (`samples` · `structural` · `owned_alive_after` · `drain_ok` · `exitcodes` · `workers` · `worker_end` · `worker_deadline` · `t_stop` · `deadline_rel` ·
+    `global_stop`) 를 `SUPERVISOR_A.jsonl` 에 한 줄로 붙인다 (states 는 STORE_A 에). **(v3 정정 — N4 cleanup_gate)** 줄은 runner_a 호출마다 하나다 — supervise 를 부르지 않은 호출
+    (잔여 ≤ 60 s · 지속 중지) 도 `supervise_called: false` 와 이유로 한 줄 (유효성의 "줄 수" 는 runner_a 호출 수와 대조). HB 의 과학적 실행 순서 (wave 1 → ρ) 는 바꾸지 않는다.
+  - **사후 검사 (v3 정정 — N4 late_row_validation · late_completion · cleanup_gate · N3 stderr):** supervise 가 돌아오면 HB 에 돌려주기 **전에** 아래 순서로 모두 한다 (앞이 실패해도
+    뒤를 건너뛰지 않는다 — 추가 오류를 남기려고).
+
+| # | 검사 | 실패의 범주 |
+|---|---|---|
+| P1 정리 | `owned_alive_after` 가 bool 아닌 정수 0 · `drain_ok is True` (monitor 357–367 은 정상 종료 join 뒤에도 `global_stop` None 과 alive > 0 을 함께 돌려줄 수 있다) | 정리 실패 → 유효성 false |
+| P2 필수 증거 | 반환 키 전부 (위 열한 키 + `states`) · 그 wave 의 SUPERVISOR_A 한 줄 (P1–P6 의 판정을 다 담아 마지막에) 쓰기 → 다시 읽어 바이트 같음 — 그 쓰기의 실패는 END_RECORD 에 | 필수 증거 실패 → 유효성 false |
+| P3 반환 행 신원 | 계획 task 마다 정확히 한 상태 (감시 `_states` 193–212 의 구성상 성립 — 가짜 · 교체 supervise 를 막는 검사) | 필수 증거 실패 → 유효성 false |
+| P4 최종 반환 재검증 | **모든 COMPLETED** (받은 때와 무관 — 루프 안 · 296 · 337 · 360 의 drain): termination ∈ {converged, budget, solver_error} · converged / budget 는 N5 적격 형식 (I4 의 판정 함수 — StopRule_A 와 같은 것) · solver_error 는 bool 아닌 정수 n_eval ≥ 0 · 모두 `t_start` · `t_end` 유한 · `t_start ≤ t_end` · `wall = t_end − t_start` (h.py 877 이 같은 두 값을 뺀다) · `t_start_rel ≤ t_start − t0` (start 사건이 H 의 t0 보다 먼저 — 173 · 814) | 행 형식 오류 → 유효성 false · 그 unit 인계 제외 |
+| P5 unit 900 s | §3 I4 의 판정을 행의 `t_end` 로 — unit 마다 WITHIN_900 / EXCEEDED_900 / UNDETERMINED / INCOMPLETE | EXCEEDED = 실험상 중지 (유효성 그대로 · 인계 제외) · UNDETERMINED = 필수 증거 실패 → 유효성 false |
+| P6 용량 | `mon.disk_sample(out_roots, free_path)` (monitor 129–130) 재측정 — 새 산출 > `disk_new` 또는 여유 < `disk_free` | 용량 초과 → 유효성 false · 인계 0 |
+
+  - **최초 사유 · 추가 오류:** supervise 의 `global_stop` 이 있으면 그것이 최초 사유다 (문자열 그대로). 없고 P1–P6 중 실패가 있으면 순서상 첫 실패가 최초 사유다 ("runner_a 사후 검사 — …" ·
+    400 자). 모든 실패는 그 wave 의 SUPERVISOR_A 줄 `post_checks` 에 (검사 · task · 값) 그대로 남긴다 — 지우거나 합치지 않는다.
+  - **지속 전역 중지:** 최초 사유가 생기면 runner_a 가 그것을 걸어 두고 HB 에 그 문자열을 `global_stop` 으로 돌려준다 (HB 1109 · 1168 은 그것만 보고 후속 ρ 를 막는다 — 1120 · 1143).
+    걸린 뒤의 runner_a 호출은 supervise 를 부르지 않고 모든 task 를 `NOT_STARTED` · interrupt_reason "지속 전역 중지 — …" 로 돌린다. supervise 가 예외로 끝나면 그 원문을 적고 걸어 둔 뒤
+    예외를 그대로 올린다 (HB 는 잡지 않는다 → run-a 의 `finally`).
+  - **행은 고치지 않는다:** 원 상태를 그대로 HB 에 돌려주고 (STORE_A 는 원문) 판정은 따로 남긴다. 남은 작업자를 PID 로 죽이지 않는다 (손잡이 없음 · PID 재사용 위험 — launcher_a 의 그룹 정리 몫).
+- **행 무결성 (N7):** 각 run unit 에 대해 `ROW_INTEGRITY_A.json` (§5-1).
+- **기록 (`<out>/`):** `HEADER` · `IDENTITY` · `ROWS_A` · `STORE_A` (I2) · `COUNTS` · `ROW_INTEGRITY_A` · `WARNINGS` · `RULE_A` · `SUPERVISOR_A.jsonl` · `RESOURCES` ·
+  `OPERATION` · `END_RECORD`. 정확한 이름 집합은 c 에서 고정한다. `HStop` 은 기록하고 끝낸다 — 재시도 0. **(v3)** 기록 단계의 기한은 §8 (t_rec0 → D_rec).
+
+### I2. STORE_A — 한 번의 공통 최종 게시 (C1 · v2 그대로 · 종결 §130)
+
+- `STORE_A.json` = store 의 JSON 사본 (`planned_units` · `phase_a` · `not_run` · `summaries` · `rho_denominators` · `events` · `next_task_id` · `seq` · 행 무결성 결과).
+- **게시는 run-a 의 `finally` 에서 한 번** (정상 끝 · 전역 중지 · 예외 모두 같은 경로) — 임시 파일에 쓰고 sha 를 잰 뒤 배타 이름 바꾸기 (대상이 있으면 실패). 실패하면 덮어쓰기 ·
+  재시도 없이 `END_RECORD.store_publish` 에 오류를 적고 실행 유효성 false. 성공하면 게시한 바이트의 sha 를 END_RECORD 에 넣는다. 읽기 함수 `load_store_a` 는 sha 를 받아 대조한다.
+
+### I3. 상한 있는 경고 기록 (N3 · N2 · `reil_c4_h.py` 변경)
+
+- **기록기 `_WarnBox`:** `_run_local` 의 `warnings.catch_warnings(record=True)` (836) 를 `warnings.catch_warnings()` + `simplefilter("always")` + `warnings.showwarning = box.show` 로
+  바꾼다 (블록을 나가면 원래 갈고리로 돌아간다). `show` 는 경고 하나마다:
+  - `n_total += 1` (정확한 정수 · 상한 없음).
+  - 원문 `text = f"{category.__name__}: {message}"` 에 `"Unknown solver options"` 가 있으면 `unknown_option = True` — **키 저장 여부와 무관한 별도 표지**.
+  - 키 = `text` 를 UTF-8 **240 바이트**로 자른 것 (잘리면 `n_truncated += 1`). 이미 있는 키면 그 수 + 1 · 없고 저장 키가 **20 개 미만**이면 새 키 · 아니면 `n_overflow += 1`.
+- **보관량 (v3 정정 — N3 retained_bytes):** v2 의 "키 20 × 240 B + 정수 다섯" 은 키별 계수 20 개를 빠뜨렸고 정수 크기를 고정으로 셌다. v3 가 주장하는 것은 둘뿐이다 —
+  (가) 키 payload ≤ 20 × 240 = 4,800 B (UTF-8 바이트) (나) 보관 객체의 개수 ≤ 키 20 · 키별 계수 20 · 스칼라 계수 셋 (`n_total` · `n_overflow` · `n_truncated`) · 표지 하나
+  (`unknown_option`). 정수 값에는 상한이 없고 Python 정수의 바이트 크기는 값에 따라 자라므로 **기록기 전체의 메모리 바이트 상한은 주장하지 않는다.** 고정 총량이 필요하면 유한 계수
+  표현과 포화 처리가 필요하다 — §11 U4 (미채택).
+- **행 필드 (정상 · solver_error · partial 공통 — 이름 · 개수는 v2 그대로):** `warnings` = 저장 키 정렬 (≤ 20 · 기존 필드와 같은 이름 · 같은 형식) · `warnings_n_total` ·
+  `warnings_n_distinct` · `warnings_distinct_exact` · `warnings_n_overflow` · `warnings_n_truncated`.
+  - **(v3 정정 — N3 distinct)** `warnings_distinct_exact = (n_overflow == 0 and n_truncated == 0)` — 잘림이 한 번이라도 있으면 앞 240 B 가 같은 서로 다른 원문이 한 키로
+    합쳐졌을 수 있으므로 정확성을 잃는다 (v2 의 `= n_overflow == 0` 은 접두사 충돌을 exact 로 셌다). `warnings_n_distinct = len(keys) + int(n_overflow > 0)` — exact 가 true 면
+    원문 고유 수와 같고, false 면 원문 고유 수의 **하한**이다 (상한은 `warnings_n_total`).
+  - 이 정의로 §6-3 의 세 기대 dict 값은 바뀌지 않는다 — 그 행들은 잘림 0 · overflow 0 이다 (정상 · solver_error = 0 · 0 · true · 0 · 0 / 모르는 옵션 partial = 1 · 1 · true · 0 · 0).
+- **구조 중지 (v2 그대로):** 모르는 옵션 판정은 `box.unknown_option` 으로 한다 (856–859 의 문구 대조 대신) — 키 상한 뒤에 와도 구조 중지는 그대로다. 조기 구조 오류 (842–845) 와 모든
+  `_partial` 은 `acc["wbox"]` 에서 같은 여섯 필드를 그 시점 값으로 남긴다 (0 으로 채우지 않음 — 기록기가 아직 없으면 필드를 넣지 않는다).
+- **`_assess` 재평가 경고 (v3 정정 — N3 stderr):** 행 포착 밖이다 (재평가는 포착 블록 뒤 — 875). 프로세스 stderr 로 가며, launcher_a 가 자식 stderr 를 증거 폴더의 파일로 받는다
+  (E1 launcher 875–877 과 같은 연결 — 파일 연결은 쓰기 상한이 아니다). 그 파일은 `out_roots` 안이다. **감시의 새 산출 1 GiB (`disk_new`) 는 표본 중지 임계값이다** — 디스크 표본은
+  `disk_every` (기본 5 s · 237–238) 간격이고 (319–329), 모든 작업자가 끝나면 마지막 재측정 없이 돌아갈 수 있다 (336–342 · 357–367). 마지막 표본 뒤의 증가는 그 wave 안에서 잡히지
+  않을 수 있으므로 v2 의 "감시 상한이 저장 한도 · 넘으면 그 wave 가 전역 중지" 는 성립하지 않는다. 대신 확인 사슬과 책임자를 고정한다:
+
+| # | 언제 | 책임 | 초과면 |
+|---|---|---|---|
+| ① | wave 안 표본 | 감시 (기존 · 바꾸지 않음) | 그 wave 전역 중지 (기존 사유) — ② 에서 다시 잰다 |
+| ② | supervise 반환 뒤 · HB 반환 전 | runner_a P6 (I1) | 지속 전역 중지 (후속 wave 0) · 유효성 false |
+| ③ | run-a 의 마지막 쓰기 뒤 | run-a — `mon.final_record` (375–410 · 마지막 쓰기 · 재읽기 · 해시 뒤 같은 루트 재측정) | `OUTPUT_LIMIT_EXCEEDED` · 유효성 false |
+| ④ | 자식 (run-a) 종료 뒤 | launcher_a — 같은 루트 (stdout / stderr 파일 포함) 재측정 | 단계 판정 false · 인계 거부 |
+| ⑤ | launcher_a 반환 뒤 (meta 포함) | 외곽 · 판정기 — 증거 · 출력 폴더 최종 측정 | 판정 false · 인계 거부 |
+
+  어느 단계의 초과든 C4-B 인계 0 (§5-1). 채택된 C4 요청 v2 의 "새 산출 ≤ 1 GiB = 본체 · 래퍼 · 임시 / 최종 기록 합산 · 최종 기록을 쓴 뒤 다시 잰다" (C4 v2 118) 를 ③–⑤ 가 맡는다.
+  **실제 쓰기 상한은 주장하지 않는다** — 쓰기 자체를 막는 장치는 §11 U5 (미채택). run-a 의 END_RECORD 에는 ③ 시점의 stderr 바이트를 "run-a 끝 기록 시점 (최종 아님)" 으로 적고,
+  최종 크기는 ④ 의 launcher meta 에 있다. `WARNINGS.json` 과 판정기는 재평가 경고를 **"미집계 (stderr)"** 로 적고, 무경고로 세지 않는다.
+- **run-a 의 집계 `WARNINGS.json`:** 범위를 **"행마다 저장된 키 (≤ 20) 에서 관측한 키"** 로 한정한다. (키별 그 키가 나온 실행 수 · 전체 고유 키 ≤ 50 · 넘으면 overflow 수) ·
+  `warnings_distinct_exact` false 인 행 수 · `n_truncated` 합 · `n_total` 합 · "재평가 경고 미집계" 문구를 함께 적는다. **(v3 정정 — N3 distinct)** 집계의 고유 수는
+  **"잘린 키 (≤ 240 B) 기준 고유 수"** 로 이름 붙인다 — 원문 고유 수가 아니다. 이 집계를 전체 경고의 유형 · 문구별 실행 수로 쓰지 않는다.
+- **이 변경은 C4-0b1 / 0b2 에서 수용된 `reil_c4_h.py` 의 바이트를 바꾼다** — 새 식별값은 구현 결과 봉인 (§4-1) 에 들어가고 실행 요청에서 묶는다.
+
+### I4. 비용 · unit 규칙 `StopRule_A` (N5 · N4 · C4 v2 131 행의 네 요소)
+
+- **적격 표본 (N5 · v2 그대로 · 종결 §130):** 그 wave 의 완료 행 가운데 H termination ∈ {`converged`, `budget`} · `wall` 이 유한한 비음수 · `n_eval` 이 bool 이 아닌 양의 정수인 것.
+  c = wall / n_eval. `solver_error` 행 (목적함수 첫 호출 전 지역 오류의 0 평가 포함) 은 원기록 그대로 두고 표본에서 뺀다 (`excluded: solver_error`). E 의 `returned` 열거는 쓰지 않는다.
+- **정상 반환인데 형식이 틀린 행 (v2 그대로):** (termination 은 converged / budget 인데 wall 이 비유한 · 음수거나 n_eval 이 0 · 음수 · bool · 비정수): 규칙이 **문자열 사유**
+  ("비용 표본 형식 오류 — task …") 를 돌려 전역 중지한다 — 예외를 던지지 않으므로 `apply_rule` 의 구조 오류 분류 (224–234) 와 섞이지 않는다.
+- **판정 함수 하나 (v3 정정 — N4 late_row_validation):** 적격 · 형식 오류 · solver_error 제외의 판정은 함수 하나로 두고 StopRule_A (루프 안) 와 runner_a 의 P4 (루프 뒤 · 최종 drain
+  행 포함) 가 같은 함수를 부른다 — 같은 규칙을 두 벌 두지 않는다.
+- **최소 표본 · 통계 · 중지 경계 (v2 그대로):** 적격 8 (wave 안 누적 · tick 마다 다시) · 적격 c 의 위쪽 중앙 (0-기반 index ⌊n/2⌋) ·
+  `now_rel + (n_remaining × maxfev × c) / n_workers > deadline_rel` (엄격한 >) 이면 사유. `n_remaining` = 그 wave 계획 task − 완료 (착수 뒤 미완은 남은 것으로 센다) ·
+  `deadline_rel` = runner_a 가 준 잔여 (= 공통 절대 마감까지).
+- **unit 900 s (v3 정정 — N4 late_completion):** 원점 = unit 의 첫 task 시작 (snapshot `started` = 감시 173 의 start 사건 − t0). snapshot 에는 완료 시각이 없으므로 (215–221) v2 의
+  "마지막 task 가 끝나면 닫고 더 보지 않는다" 를 버린다:
+  - unit 은 **그 unit 의 마지막 완료가 처음 관측된 tick 의 `now_rel` 이 첫 시작 + 900 이하일 때만** 닫힌다 (관측 증명: 완료 ≤ 부모 수신 ≤ now_rel ≤ 첫 시작 + 900). 닫힌 unit 은 다시
+    보지 않는다.
+  - 닫히지 않았고 `now_rel − 첫 시작 > 900` 이면 사유 (전역 중지) — 셋으로 적는다: "unit … 900 s 초과 (진행 중)" (끝나지 않은 task 가 있음) · "unit … 900 s 초과 (완료 하한)" (모두
+    완료 · `max(started + wall) − 첫 시작 > 900` — start 사건 173 이 H 의 t0 814 보다 먼저이므로 `started + wall` 은 완료 시각의 하한) · "unit … 900 s 미확인 (완료 관측 지연)" (모두 완료 ·
+    하한 ≤ 900 < now_rel − 첫 시작 · 형식이 틀린 wall 은 하한에서 빼고 이쪽으로 센다). **미확인도 정상 완료로 추정하지 않는다 — 멈춘다.**
+  - 최종 판정은 runner_a 의 P5 가 행의 `t_end` 로 한다 — 첫 시작 = 그 unit 의 `t_start_rel` 최소 · 마지막 완료 = COMPLETED 의 `t_end − t0` 최대 · 차 > 900 → EXCEEDED_900 · ≤ 900 →
+    WITHIN_900 · 모든 task 가 COMPLETED 가 아니면 INCOMPLETE · COMPLETED 중 하나라도 시각 근거 (P4 의 t_start · t_end · wall 일치) 가 없거나 루프 안의 닫힘과 t_end 판정이 어긋나면
+    UNDETERMINED. 루프 밖 drain (296 · 337 · 360) 으로 온 완료도 여기서 본다.
+  - 시각의 전제: 부모의 t0 · now 와 fork 자식의 start 사건 · `t_start` · `t_end` 는 같은 시계 (`time.monotonic`) 다 — 감시의 rule_snapshot (218) 이 이미 이 전제로 start 사건 − t0 를 잰다.
+  - 책임자 = `StopRule_A` (관측 · 닫힘 · 중지 사유) + runner_a (t_end 판정).
+- **자원 (v2 그대로 · 1 GiB 의 뜻만 v3 정정 — N3 stderr):** 표본 RSS 합 ≤ 4 GiB · 새 산출 ≤ 1 GiB (표본 중지 임계값 — I3 의 확인 사슬) · 디스크 여유 ≥ 5 GiB (LIMITS_A · 감시의
+  기존 판정). v1 의 "중앙 3 배" 예시는 채택하지 않는다.
+- 규칙의 모든 판정 입력 · 사유는 `RULE_A.json` 에 남긴다 (**(v3)** P4 · P5 의 판정도 wave 별로 함께).
+
+### I5. C4-A 실행 틀 (새 파일 · E 계열 바이트는 그대로)
+
+- **launcher `scripts/reil_c4a_launch.py`** — v6 의 형식을 따른다 · 단계 하나 `phase_a` · 고정 argv · 작업 폴더 `SP/c4a` · 자료 `SP/c4e1/data` 읽기만 (U3) · 새 pycache 폴더 ·
+  사전 / 사후 검사. **승인 문자열과 메타의 `request` 는 `execution_request` (§4-2) 다 — 이 구현 요청서가 아니다.** 실행 승인 결속 (승인 기록 · 결속 블록 — **(v3 정정 — N6)**) ·
+  `SOURCES_A_FRAME` 대조가 없으면 자식을 띄우지 않는다. 자식 stderr 는 증거 폴더 파일로 (I3).
+  - **(v3 정정 — N4 time_boundaries)** 자식 대기 기한 = launcher_a 시작 + 28,500 s (산술: 단계 28,800 − 사후 300 · 미채택 — §8). 넘으면 기존 정리 정책 (그룹 SIGKILL · launcher
+    731–774) · 유효성 false.
+  - **(v3 정정 — N3 stderr)** 자식 종료 뒤 확인 ④: 같은 루트 (stdout / stderr 파일 포함) 를 다시 재서 새 산출 > `disk_new` 면 단계 판정 false · 인계 거부 (E1 launcher 는 892–897 에서
+    증거 바이트를 재기만 하고 판정하지 않았다).
+- **외곽 · 판정기 · 끝 기록 작성기 v3 초안** (`docs/*_v3_*.py.txt`) — 단계 `phase_a` 를 더한다 (감시 여유 · 조각은 §8 의 표) · phase_a 판정 항목 (§5-2) · E 단계 동작 불변.
+  **(v3 정정)** 판정기 = 확인 ⑤ (launcher 반환 뒤 최종 측정) · 인계 목록은 실행 유효성 true 일 때만 · 승인 §N 원문 불변 확인 (§4-2).
+
+### I6. 무자료 시험 — §6-1 (대상 C4A-T01–T15 · T17 · T18 · 계수기 자체 검증 T16a–j).
+
+### I7. 호출 계수기 플러그인 `tests/c4a_callcount.py` (N1 · 새 파일 · **b0 에서 완성 — 골격 아님**)
+
+- **켜기 (v4 정정 — V3-N1):** pytest `-p` 로만 켠다 (기존 conftest · 시험 파일은 건드리지 않음). 옵션 체계는 하나이고 **모드가 둘**이다 — 모드마다 소비하는 표가 다르다.
+  - 수집 모드 (b1 만): `pytest --collect-only -q -p tests.c4a_callcount --c4a-mode collect --c4a-allow <ALLOW_COLLECT_A.json> --c4a-allow-sha256 <hex>
+    --c4a-table <ALLOW_A_TABLE.json> --c4a-table-sha256 <hex> --c4a-calls <폴더>` — 수집 중 계수 상한은 수집 전용 표 (모든 K 0) 가 정하고, 함수표는 수집 끝의 nodeid 매핑에만
+    쓴다 (호출 허용에 쓰지 않는다). 수집 끝 (`pytest_collection_finish`) 에 `NODEIDS_A.txt` (수집 순서) · 실행용 `ALLOW_A.json` · `B1_RECORD_A.json` 을 쓴다 (§7 b1).
+    `--collect-only` 가 아니면 중단.
+  - 실행 모드 (b2 · c): `pytest -p tests.c4a_callcount --c4a-mode run --c4a-allow <ALLOW_A.json> --c4a-allow-sha256 <hex> --c4a-calls <폴더> <nodeid …>` — 계수 상한은 실행용 표가
+    정한다.
+  - 수집 전 확인 (`pytest_configure` · 하나라도 다르면 **수집 전 중단** — fail-closed): ① 표 바이트 sha ↔ 인자 (수집 모드는 함수표도) ② 표의 `kind` ↔ 모드 (`C4A_ALLOW_COLLECT` ↔
+    collect · `C4A_ALLOW_RUN` ↔ run · `--c4a-table` 자리는 `C4A_ALLOW_TABLE`) ③ 수집 모드: 수집 전용 표의 모든 버킷 K1–K7 = 0 · nodeid 행 0 ④ 실행 모드: `--c4a-table` 이 주어지면
+    거부 · 표 안에 `source_table_sha256` · `nodeids` · `nodeids_sha256` 가 있어야 한다 ⑤ 모드 인자가 없으면 중단 (기본 모드 없음).
+  - 실행 모드의 수집 뒤 · 첫 시험 전 확인: 실행용 표는 `NODEIDS_A.txt` 의 순서 목록을 그대로 담는다 (`nodeids` · 그 파일 바이트의 sha = `nodeids_sha256` — 계수기가 목록에서
+    다시 계산해 대조). 수집된 nodeid 집합 · 순서를 그 목록과 대조한다 (c = 전체가 같음 · b2 = 그 부분집합이고 같은 상대 순서) — 아니면 첫 시험 전 중단.
+- **세는 것 (v2 정의 + v3 정정):** **K1** `scipy.optimize.minimize` (COBYQA 포함) · **K2** `pymoo.optimize.minimize` (util NSGA2) · **K3** `subprocess.Popen` 생성 (`subprocess.run` ·
+  `git_run` 도 Popen 을 지난다) · **K4** `os.kill` · `os.killpg` (감시의 terminate / kill 도 multiprocessing 이 `os.kill` 로 보낸다) · **K5** `multiprocessing` `Process.start` —
+  **fork 문맥만** (spawn / forkserver 는 자식에 계수기가 없으므로 허용표와 무관하게 차단) · **K6** argv[0] 의 이름 (basename) 이 `git` 인 K3 — **K6 ⊂ K3**: git Popen 하나가 K3 · K6 를
+  함께 쓴다 (상한(K6) ≤ 상한(K3)) · **K7** xlsx 해석 (`openpyxl.load_workbook` · `pandas.read_excel`) — 모든 곳 0 (바이트 읽기 · sha 계산은 K7 이 아니다). 감싸기는 분류 · 예약 · 기록만
+  하고 허용된 호출의 인자 · 반환 · 예외는 바꾸지 않는다 (Popen 은 하위 클래스로 감싸 isinstance 를 보존).
+- **설치와 귀속 (v3 정정 — N1 coverage):**
+  - 설치 = 플러그인 모듈의 import 시점 (`-p` 의 사전 적재 — 최초 conftest · 수집 전). 모듈 속성 (`scipy.optimize.minimize` · `pymoo.optimize.minimize` · `subprocess.Popen` · `os.kill` ·
+    `os.killpg` · `multiprocessing.process.BaseProcess.start` · `openpyxl.load_workbook` · `pandas.read_excel`) 을 바꾸고 원본 객체를 보관한다. 그때 대상 모듈 (`scripts.*` ·
+    `tests.test_reil_c4*` · `tests.test_c4a*`) 이 이미 `sys.modules` 에 있으면 중단한다.
+  - 설치가 대상 import 보다 먼저이므로 import 때 묶이는 기본인자 · from-import 도 감싼 것을 가리킨다 — 회귀의 실제 자리: launcher `kill_group` 718 · `cleanup_group` 731 ·
+    `run_child` 777 · `launch` 818–819 · `test_reil_c4e1_launch.py` 41 (수집 때 import) · c4e `fetch` 676 · util 사본 16 (`from pymoo.optimize import minimize` — 시험 중 적재).
+  - **별칭 감사:** 수집이 끝난 뒤 · 첫 시험 전에, 적재된 대상 모듈의 모듈 전역 · 함수의 `__defaults__` · `__kwdefaults__` · 클래스 속성이 보관한 원본 객체를 가리키면 세션을
+    실패로 끝낸다 (미계측 별칭).
+  - **단계 귀속:** 호출마다 (nodeid · 단계 ∈ {collect, setup, call, teardown, session} · pid · ppid). 수집 중 = `collect:<파일>` · 어느 시험에도 속하지 않음 = `session` — 둘 다 모든 K
+    상한 0. 모듈 / 세션 범위 fixture 는 그것을 처음 세운 nodeid 의 setup 으로 센다.
+- **호출 전 순서 (v3 정정 — N1 before_call):** 감싼 함수 안에서 원 함수 **전에**:
+  1. 분류 — 종류 (git 이면 K3 + K6) · K3 이면 argv 분류 (git · 봉인 venv python 의 `-c` 코드 sha · python 스크립트 경로와 그때 바이트 sha · 그 밖) · K5 면 문맥.
+  2. 잠금 — 프로세스 안 잠금 + 그 nodeid 원장 파일의 `fcntl.flock`. fork 뒤 자식은 `os.register_at_fork` 로 두 잠금을 새로 만들고 원장을 새로 연다 (부모와 잠금 · 파일 설명을 나누지 않는다).
+  3. 확인 — 그 nodeid · 단계에 허용된 종류인가 · K3 의 프로그램이 그 nodeid 의 허용 집합에 있는가 · K5 가 fork 인가 · 남은 상한 (K3 · K6 는 둘 다) 이 있는가.
+  4. 통과면 예약 (원장에 `reserve` 한 줄 · 한 번의 `write`) → 풀기 → 원 함수 → `end` (`returned` · `raised`) 한 줄. 원 함수의 예외는 그대로 올린다.
+  5. 위반이면 `block` 한 줄 (원인: 종류 · nodeid · 단계 · pid · argv / 함수 요약 · 그때의 시도 / 예약 / 차단 수) 과 세션 중단 표지 → 풀기 → `CallBlocked` (BaseException 하위 —
+     `except Exception` 에 잡히지 않는다). **원 함수는 실행되지 않는다.** 원장 쓰기가 실패해도 차단한다.
+  - 부모는 단계 보고마다 그 nodeid 원장을 읽어 `block` 이 있으면 그 시험을 실패로 바꾸고 `session.shouldstop` 을 건다 — 대상 코드가 `except BaseException` 으로 차단을 삼켜도
+    (예: 감시 작업자 188 · H 782 · 842) 실패는 원장이 정한다.
+  - 세션 끝 대조 (보조): nodeid · 종류마다 시도 = 예약 + 차단 · 예약 = 반환 + 예외 + 미종료 · 예약 ≤ 상한 · 미종료는 신호로 끝난 fork 자식의 것만 — 어긋나면 세션 실패. 대조는 차단을
+    대신하지 않는다.
+- **경로별 계수 범위 (v3 정정 — N1 coverage):**
+
+| 경로 | 세는 방법 | 결속 · 누락 처리 |
+|---|---|---|
+| pytest 부모 (수집 · setup · call · teardown) | 모듈 속성 교체 (수집 전 설치) | nodeid + 단계 · collect / session 버킷 상한 0 |
+| 이미 묶인 별칭 (기본인자 · from-import · 모듈 전역) | 설치가 import 보다 먼저 → 감싼 것을 묶는다 | 별칭 감사 (수집 뒤 · 시험 전 — 원본을 가리키면 세션 실패) · 설치 때 대상 모듈이 이미 있으면 중단 |
+| fork 자식 (감시 242 의 fork 문맥 — 작업자 안의 K1 등) | 자식이 감싸기 · 현재 nodeid · 원장 경로를 물려받고 같은 원장에 쓴다 · `BaseProcess._bootstrap` 감싸기로 자식 시작 / 끝 기록 | 부모의 K5 기록 (자식 pid · 문맥) ↔ 자식 시작 기록 — 없으면 실패 · 끝 기록이 없으면 그 자식 exitcode 가 음수 (신호 종료) 일 때만 허용하고 끝 없는 예약은 실행으로 센다 · 그 nodeid 의 teardown 에 살아 있으면 실패 |
+| spawn / forkserver 문맥 | 자식에 계수기 없음 | 차단 |
+| 분리된 해석기 자식 (Popen 의 python · git) | 생성만 (K3 · K6) — argv 분류 · 프로그램 sha · pid · 세션 그룹 (`start_new_session` 이면 pgid) | 허용 프로그램 밖이면 차단 · teardown 과 세션 끝에 그 자식이 끝나 있어야 하고, `start_new_session` 으로 띄운 자식 (launcher 786) 이면 그 프로세스 그룹에 살아 있는 구성원이 없어야 한다 (좀비는 끝난 것 — launcher 시험 415–419 와 같은 기준) — 아니면 그 nodeid 실패 |
+| 분리 자식 안의 호출 · 손주 (FAKE_RUN 75–81 의 git · 93 의 손주 · git 의 내부 프로세스) | **세지 않는다** — `-I` 해석기 (launcher 348 · FAKE_RUN 93) 에는 봉인 venv 를 바꾸지 않고 계수기를 넣을 수 없다 | nodeid 별 "계수 범위 밖" 목록 (`CALLS_A` 에) · 손주의 끝은 위의 그룹 확인으로만 |
+
+- **K1–K7 밖의 프로세스 생성 경로** (os.fork 직접 · os.system · os.popen · os.spawn* · os.posix_spawn* · os.exec* · pty.spawn · asyncio 하위 프로세스 · multiprocessing Pool / Manager /
+  resource_tracker) 는 세지 않는다. 이 문서를 쓰며 대상 범위 (`scripts/reil_c4*.py` · `reil_c5_pilot.py` · `reil_p0.py` · `tests/test_reil_c4*.py` · `tests/conftest.py`) 를 이름으로 찾은
+  결과 그런 호출은 0 이고 multiprocessing 문맥은 `get_context("fork")` 둘 (monitor 242 · c5_pilot 422) 뿐이었다 · 보존 util 사본에도 multiprocessing · subprocess · Pool 이름 0.
+  b0 에서 같은 정적 대조를 봉인 기록에 다시 남기고 0 이 아니면 멈춘다.
+- **원장 · 출력:** nodeid 마다 원장 (`--c4a-calls` 폴더) · 실행마다 `CALLS_<단계>_A.json` (nodeid · 종류별 시도 / 예약 / 차단 / 반환 / 예외 / 미종료 · 차단 원인 · 계수 범위 밖 목록 ·
+  별칭 감사 · 대조 결과).
+
+## 4. 입력 · 소스 · 승인 계약 (N6)
+
+### 4-1. 소스 목록 둘 — 목록 자체의 sha 를 먼저 (v2 그대로 · 실행 요청서의 결속 블록으로 잇는 문구만 v3)
+
+| 목록 | 정확한 경로 집합 | 결속 |
+|---|---|---|
+| `SOURCES_A.json` | run-a 가 import 하는 것: `reil_c4a_run.py` · `reil_c4_h.py` · `reil_c4_hb.py` · `reil_c4_monitor.py` · `reil_c5_pilot.py` · `reil_p0.py` · `reil_c4_e3a.py` (+ import 하면 `reil_c4e_run.py`) — 구현 c 에서 import 그래프로 확정 | run-a `--sources … --sources-sha256 <hex>` — 목록 바이트 sha = 인자 (E `load_sources` 504–532 와 같은 순서) → 경로 집합 정확 → 항목별 sha · bytes |
+| `SOURCES_A_FRAME.json` | `reil_c4a_launch.py` · 외곽 · 판정기 · 끝 기록 작성기 v3 · wrapper | launcher_a `--frame-sources … --frame-sources-sha256 <hex>` — 같은 순서로 대조 · 외곽은 launcher 를 띄우기 전에 같은 대조 |
+
+- 소스와 목록을 **함께** 바꾸면 내부 상호 대조는 통과하지만 목록 sha 가 인자와 달라 거부된다 (T05).
+- 두 목록은 구현 단계 d 에서 `seal-sources-a` 로 만든다 (= **구현 결과 봉인**). 그 sha 는 결과 검토를 거쳐 실행 요청서의 결속 블록에 적힌다 — 이 요청서는 아직 없는 구현의 sha 를
+  요구하지 않는다.
+
+### 4-2. 구현 기준 ↔ 실행 승인 분리 (v3 정정 — N6 approval_binding)
+
+| 이름 | 무엇 | 어디에 쓰나 |
+|---|---|---|
+| `implementation_basis` | 이 구현 요청서 v3 (경로 · sha) + 구현 결과 봉인 (SOURCES_A · FRAME 의 sha) + 구현 승인 § | 구현 단계의 기록 · 결과 검토 |
+| `execution_request` | 이후의 별도 실행 요청서 (경로 · sha) — 안에 결속 블록 `c4a-binding` 하나 · 그 요청서를 승인한 원장 § 와 그 안의 승인 블록 `c4a-approval` 하나 | run-a · launcher_a 의 인자와 메타 · `--approval` 문자열 |
+
+- run-a · launcher_a 는 `--execution-request <path> --execution-request-sha256 <hex> --approval-section §N` 을 받는다 (v2 그대로). 시작 전에 아래를 **모두** 확인하고 하나라도 없거나
+  다르면 **시작 전 거부** (fail-closed · T14). `implementation_basis` 를 실행 승인으로 받지 않는다.
+  1. 요청서 바이트 sha = 인자.
+  2. **승인 기록:** 원장 (`docs/REIL_PREREQUISITES_STATUS_20261004.md`) 에서 §N 의 원문 (제목 줄 `## §N ` 부터 다음 `## §` 전까지) 을 잘라, 그 안의 `c4a-approval` 블록이 **정확히 하나**
+     이고 JSON 키 집합이 정확하며 `kind` = `C4A_EXECUTION` · `decision` = `APPROVED` · `scope` = 결속 블록의 `approval_scope` = run-a 의 고정 문자열 · `execution_request.path` = 인자 경로 ·
+     `execution_request.sha256` = 인자 sha 인지 본다. 블록의 `user_text` (사용자 원문 인용) 는 사람의 감사용이다 — 있음만 본다.
+  3. **전이 결속:** 요청서 바이트 안의 `c4a-binding` 블록이 정확히 하나 · 키 집합 정확 · 값마다 실제 소비값과 같다 — `sources_a` · `sources_a_frame` (경로 · sha = 받은 목록 인자 ·
+     §4-1 의 대조 결과) · `inputs` (§4-3 의 sha · bytes = 시작 때 잰 값) · `limits_a` (= run-a 가 감시에 줄 LIMITS_A) · `times_s` (§8 의 몫 · unit 900 · 잔여 60 · 자식 기한 = 코드 상수와
+     실제 인자) · `n_workers` · `tick_s` · `disk_every_s` · `paths` (작업 · 자료 · 증거 폴더 = 실제 인자). 값은 실행 요청서가 정한다 — 이 문서는 키만 정한다.
+  4. 원장 파일 sha · §N 원문 sha · 요청서 sha 를 `HEADER` · `IDENTITY` 에 남기고, 판정기가 끝에 §N 원문을 같은 규칙으로 다시 잘라 같음을 확인한다 (원장은 덧붙임 — 앞 절은 고치지 않는다).
+- **거부 사례 (T14):** §N 이 있지만 승인 블록이 없음 (무관한 절) · 블록이 다른 요청서 (경로 또는 sha) 를 가리킴 · `decision` ≠ `APPROVED` (거절 · 보류) · `kind` = `C4A_IMPLEMENTATION`
+  (구현 전용 승인) · 블록이 둘 이상 · 요청서와 그 sha 인자를 **함께** 바꿈 (승인 블록의 sha 와 다르다) · 결속 블록의 값 하나가 소비값과 다름 (예: LIMITS_A 의 `disk_new` · 목록 sha ·
+  입력 sha · `times_s` 의 측정 몫).
+- 승인 블록에 결속 값을 다시 적지 않는다 — 승인된 요청서 sha 를 통한 전이 결속이다. 구현 승인 § 에 같은 꼴의 블록 (`kind` = `C4A_IMPLEMENTATION`) 을 둘 수 있으나 run-a 는 그 kind 를
+  실행 승인으로 받지 않는다.
+- 승인 블록의 꼴 (예시 — 값은 자리표시 · 실제 블록은 사용자의 실행 승인 원문을 기록하는 § 에 쓴다):
+
+```c4a-approval
+{"kind": "C4A_EXECUTION", "decision": "APPROVED", "scope": "C4-A phase_a 실자료 실행 1 회",
+ "execution_request": {"path": "docs/<실행 요청서>.md", "sha256": "<64 hex>"}, "user_text": "<사용자 원문>"}
+```
+
+- 이 대조는 원장에 블록을 쓴 사람이 사용자인지 인증하지 못한다 — 원장은 사용자 원문을 인용해 덧붙이는 기록이고, 그 관행과 재검토가 근거다 (§9).
+
+### 4-3. 입력 (v1 §3 그대로)
+
+`LFP_Data.xlsx` (10,841,377 B · `fd50e095…`) · `util_LFP.py` (33,754 B · `3c19e45e…`) · `P0_RESULT.json` (`reil_c4e_run.py` 63–64 의 고정 sha) · C6 봉인 (`4f120948…`) ·
+Phase A 배열 MANIFEST (`861c33ac…` · 정확한 파일 집합) · E3a 완료 근거 (`evidence/reil_c4e1_20261106/run/` · §122 의 수용 범위) · 시작 · 끝의 실제 소비 바이트 · 행마다 `options_received`.
+H 배열 (`d122117f…`) 은 C4-A 가 읽지 않는다 ("소비 안 함" 으로 기록 · C4-B 입력).
+
+## 5. 판정 계약
+
+### 5-1. run-a 의 판정 — 수 · 행 무결성 · 유효성 · 인계
+
+- **수 (범위안 v2 §3-2 · `plan_counts` · v2 그대로):** 등록 9,856 · 조건 제외 (ENDPOINT_GATE · JD_EMPTY_MASK · RHO_PRECONDITION — unit 수와 실행 수 · 이유) · 상태별 행 ·
+  `unaccounted_units` · `unaccounted_runs` · `row_count_mismatch`. 9,856 · 7,040 을 "반환해야 정상" 으로 쓰지 않는다.
+- **행 무결성 `ROW_INTEGRITY_A` (N7 · 세 집계 수와 따로):** run unit 마다 계획 task 집합 (task_id → run_id · unit · x0 · 작업자) 을 기준으로
+  - 행의 task_id 집합 = 계획 집합 · 각각 정확히 한 번 (누락 · 중복 · 계획 밖 task 를 따로 적는다) · 행 수 128.
+  - **unit (v3 정정 — C2):** 행마다 그 행의 unit 은 계획 task_id → unit 에서 유도한다. 원행에 `unit` 이 있으면 (COMPLETED 는 H 의 행 키 — h.py 751 · 815) **먼저** 계획 unit 과 비교해
+    다르면 구조적 행 오류로 적는다 — 계획값으로 덮어써 숨기지 않는다. 미완 원행 (감시 203–211 의 STARTED_INTERRUPTED · NOT_STARTED) 에는 unit 이 없으므로 계획값으로 분류만 한다
+    (HB `_group` 1048–1053 과 같은 매핑 · 행은 고치지 않는다 · STORE_A 는 원문).
+  - COMPLETED 행의 run_id · x0 = 계획 task 의 값 (x0 는 봉인 배열과 같은 값 — `phase_a_complete` 와 같은 비교).
+  - **상태별 필수 필드 (v3 정정 — N4 late_row_validation · v2 158 의 "n_eval ≥ 0 · wall 없음" 정정):** COMPLETED: run_id · unit · x0 · termination ∈ {converged, budget, solver_error} ·
+    n_eval (converged / budget = bool 아닌 양의 정수 · solver_error = bool 아닌 정수 ≥ 0) · wall (유한 비음수) · t_start · t_end (유한 · t_start ≤ t_end · wall = t_end − t_start) · witness ·
+    경고 여섯 필드. STARTED_INTERRUPTED: task_id · interrupt_reason (+ 있으면 structural_partial). NOT_STARTED: task_id · interrupt_reason.
+  - 결과: unit 별 `integrity_ok` 와 오류 목록. **구조적 행 오류** (누락 · 중복 · 계획 밖 · unit / run_id / x0 불일치 · 필수 필드 오류) 는 정당한 미완 (필드가 바른 NOT_STARTED ·
+    STARTED_INTERRUPTED) 과 다른 범주로 적는다. `phase_a_complete` 의 false 나 그 사유 문자열 (예: 정상 중단의 "run 번호 누락") 만으로 구조 오류를 판정하지 않는다.
+- **실행 유효성:** 사전 대조 모두 통과 (**(v3)** §4 — 승인 기록 · 결속 블록 포함) · 모든 run unit 의 `integrity_ok` · `unaccounted_*` 0 · `row_count_mismatch` 0 · STORE_A 게시 성공 ·
+  기록 집합 정확 · 모든 wave 의 `owned_alive_after` 0 · `drain_ok` true · supervisor 원근거 저장 (**(v3)** runner_a 호출 수 = SUPERVISOR_A 줄 수 — v2 는 "wave 수") · **(v3 정정)** runner_a
+  사후 검사의 P1 · P2 · P3 · P4 · P6 실패 0 · P5 UNDETERMINED 0 · 용량 확인 ①–⑤ 초과 0 · 마지막 wave 의 반환 (t_rec0) ≤ D_clean · 기록이 D_rec 안 (`RECORD_INCOMPLETE` 아님) · 자식 기한
+  도달 없음. 하나라도 아니면 false 와 이유.
+- **실험 결과 (유효성과 따로):** 범주별 수 · unit 별 완료 / 미완 · 전역 중지 이유 (**(v3)** 최초 사유 + `post_checks`) · **(v3)** unit 시간 판정 (WITHIN_900 / EXCEEDED_900 / INCOMPLETE —
+  루프 안의 "미확인" 중지와 t_end 판정을 함께) · UNFIT 은 완료 unit 에만 (원장 1406–1414).
+- **Parent 소비 · C4-B 인계 (v3 정정 — N4 · N3):**
+  - Parent 소비 (v2 의 용어 — 같은 실행 안에서 다음 wave 가 앞 wave 결과를 쓰는 것: `rho_wave` 1144–1161 의 완료 대조 · 요약 · 분모) 전의 배제 = runner_a 의 사후 검사가 HB 반환 전에
+    지속 전역 중지를 걸어 다음 ρ 가 `stopped` 로 실행 없이 분류되게 한다 (1120 · 1143). HB 가 남기는 `phase_a_complete` 사건 (1112–1114 · 1171–1172) 은 HB 의 기록 그대로 두며 인계
+    판정이 아니다.
+  - C4-B 인계 = **실행 유효성 true 일 때만** · 그 안에서 unit 마다 `integrity_ok` · `phase_a_complete` true · P4 통과 · P5 WITHIN_900. 유효성 false 면 인계 목록 0 (이유를 적는다).
+    인계에서 빠진 unit 은 이유가 남는다. 모든 unit 의 완료나 9,856 회 반환을 요구하지 않는다.
+
+### 5-2. 판정기의 `phase_a` 항목 (E 단계 공통 항목 + 아래)
+
+`run/` 파일 집합 정확 · COUNTS 정합 (두 항등식) · ROW_INTEGRITY_A 의 오류 0 (아니면 유효성 false) · STORE_A sha 가 END_RECORD 에 있고 게시 성공 · WARNINGS 의 상한 준수와
+"재평가 경고 미집계" 문구 · SUPERVISOR_A 줄 수 = runner_a 호출 수 (**(v3)** v2 는 wave 수) · 정리 증거 · 실행 승인 결속 (§4-2) · 유효성과 실험 결과를 따로 적음. **(v3 정정)** · 사후 검사 P1–P6 기록 ·
+확인 ④ (launcher meta) · ⑤ (판정기 자신의 최종 측정) · 승인 §N 원문 불변 · 인계 목록 = 유효성 true 일 때만.
+
+## 6. 시험
+
+### 6-1. 새 시험 (전부 가짜 · 실제 호출 0 — 자체 검증 T16a–j 만 무해한 실제 호출)
+
+가짜 util · 가짜 minimize · 가짜 시계 · **(v3)** 가짜 supervise · 합성 입력 · 봉인 배열 (읽기만).
+**RED 의 기대 (v3 정정 — N1 bootstrap):** 대상 시험 (`tests/test_reil_c4a.py` 의 T01–T15 · T17 · T18) = 기대표 `EXPECT_A.json` 이 nodeid 마다 정한 **골격 함수의 `NotImplementedError` 하나**
+(다른 예외 · 예상 밖 통과 = 멈춤) · 계수기 자체 검증 (`tests/test_c4a_callcount.py` 의 T16a–j) = **통과** (계수기는 b0 에서 완성 · RED 에서 대상보다 먼저). 둘의 판정을 따로 적는다.
+
+| ID | 대조 |
+|---|---|
+| T01 | `plan-a` — 등록 9,856 · 끝점 게이트 22 unit · 계획 7,040 (실제 P0 · 봉인 배열 · util import 없음) |
+| T02 | 게이트 키 int · `stage_a` 와 맞음 (str 키 거부) |
+| T03 | 입력 sha 불일치 (xlsx · util · P0 · C6 · 배열 MANIFEST · E3a 근거) → 시작 전 거부 |
+| T04 | 배열 npy 와 로컬 MANIFEST 를 함께 바꿔도 잡힌다 |
+| T05 | SOURCES_A · FRAME — 항목 추가 · 누락 · 변경 → 거부 · **소스와 목록을 함께 바꾸면 목록 sha 인자로 거부** (N6) |
+| T06 | 행 무결성 — 128 행 중 하나를 다른 run_id 의 중복으로 대체: `plan_counts` 세 수는 0 / 빈 목록인데 `ROW_INTEGRITY_A` 는 구조 오류 · 유효성 false (N7) |
+| T07 | 한 unit 127 행 · 다른 unit 129 행 (합계 상쇄) → 두 unit 모두 무결성 오류 · x0 / run_id 불일치 → 오류 · 정당한 NOT_STARTED / STARTED_INTERRUPTED 는 오류 아님 (N7) · **(v3 — C2)** 미완 행에 계획과 다른 `unit` 이 있으면 구조적 행 오류 · 원행은 그대로 · `unit` 이 없는 미완 행은 계획 unit 으로 분류 |
+| T08 | 정당한 미실행 (ENDPOINT_GATE · JD_EMPTY_MASK · RHO_PRECONDITION) 은 이유와 함께 세고 오류가 아니다 |
+| T09 | wave 1 전역 중지 → STORE_A 가 `finally` 에서 **한 번** 게시 · ρ 진입 없음 · SUPERVISOR_A 1 줄 (**(v3)** runner_a 호출 1) · 수 정합 (C1 · N4) |
+| T10 | ρ wave 안 중지 → 뒤 ρ 는 NOT_RUN:RHO_PRECONDITION · **둘째 wave 의 measure = 같은 절대 마감까지의 잔여** (새 예산 아님) · 잔여 ≤ 60 s 면 시작 안 함 (N4) · **(v3 — N4 cleanup_gate)** 가짜 supervise 가 `global_stop` None + `owned_alive_after` 1 → runner_a 가 문자열 중지를 돌려준다 · 뒤 ρ 는 실행 없이 분류 · supervise 호출 수 1 (뒤 호출 0) · `drain_ok` false 도 같다 · 걸린 runner_a 를 직접 다시 불러도 supervise 0 · 모두 NOT_STARTED · 유효성 false |
+| T11 | 경고 기록기 — 키 20 상한 · overflow 수 · `distinct_exact` false 와 하한 · 240 B 잘림 수 · **키 상한 뒤의 늦은 Unknown solver options → 구조 중지** · 조기 구조 오류 partial 에 그 시점 계수 · 집계 50 상한 · "재평가 경고 미집계" (N3) · **(v3 — N3 distinct · retained_bytes)** 접두사 충돌 (앞 240 B 같고 뒤만 다른 둘) → 키 1 · 잘림 2 · overflow 0 · distinct 1 · exact false · 잘림 없는 키 20 + 새 키 하나 더 → overflow 1 · distinct 21 (하한) · exact false · 보관 객체 개수 (키 ≤ 20 · 각 키 ≤ 240 B · 키별 계수 ≤ 20 · 스칼라 셋) — 바이트 총량은 단언하지 않는다 · 집계의 "잘린 키 기준" 표지 |
+| T12 | `StopRule_A` — 0 평가 solver_error 는 표본 제외 · 비유한 / 음수 wall · bool n_eval · 적격 7 / 8 경계 · 위쪽 중앙 · 엄격한 > · 형식 틀린 정상 행 → 문자열 사유 (구조 오류 아님) · unit 900 s 초과 → 사유 · 닫힌 unit 은 다시 보지 않음 (N5 · N4) · **(v3 — N4 late_completion)** 닫힘 = 마지막 완료가 첫 시작 + 900 안에 관측될 때만 · 가짜 시계 snapshot: (a) 899.8 진행 중 → 사유 없음 · 다음 tick 900.8 에 마지막 완료 (started + wall = 900.5) → "900 s 초과 (완료 하한)" (b) started + wall = 899.9 인데 처음 관측이 900.3 → "900 s 미확인" (c) 899.95 에 마지막 완료 관측 → 닫힘 · 뒤 tick 에서 다시 보지 않음 (d) 첫 시작은 snapshot `started` |
+| T13 | STORE_A — 왕복 일치 · 배타 게시 · 쓰기 실패 → 덮어쓰기 · 재시도 없음 · 유효성 false · END_RECORD 의 sha (C1) |
+| T14 | launcher_a — argv 고정 · 자료 sha 사전 검사 · 새 pycache · **실행 승인 없음 · 요청서 sha 불일치 · 본문 sha 불일치 → 자식 안 띄움** · FRAME 대조 · 정리 미완 (`owned_alive_after` > 0) · supervisor 원근거 누락 → 유효성 false (N6 · N4) · **(v3 — N6 approval_binding)** 원장 fixture: 무관한 § · 거절 · 구현 전용 (`C4A_IMPLEMENTATION`) · 블록 둘 · 요청서와 sha 인자 동시 교체 · 결속 블록 값 (LIMITS_A · 목록 sha · 입력 sha · 시간 몫) 하나가 소비값과 다름 → 모두 자식 안 띄움 (주입한 가짜 popen 호출 0) · 양성 대조 (바른 기록) → 가짜 popen 1 · **(v3 — N3 stderr)** 가짜 자식이 끝난 뒤 stderr 파일이 상한을 넘김 → 확인 ④ → 단계 판정 false · 인계 거부 |
+| T15 | 외곽 / 판정기 / 끝 기록 작성기 v3 — §8 의 감시 여유 · 조각 · phase_a 항목 (fixture) · E 단계 동작 불변 · **(v3)** 판정기: 유효성 false → 인계 목록 0 · launcher 반환 뒤 최종 측정 (⑤) 초과 → false · 승인 §N 원문이 바뀜 → false |
+| T16a–j | **계수기 자체 검증 (v3 정정 — N1 coverage · before_call · bootstrap)** — 대상 시험이 아니다 (별도 파일 · RED 에서도 통과가 기대). 아래 표 |
+| T17 | **(v3 새 — N4 late_row_validation · late_completion · N3 stderr)** runner_a 사후 검사: 가짜 supervise 가 기한 중지 + 마지막 drain 의 행 (converged 인데 n_eval 0 / wall NaN / t_end 없음 / wall ≠ t_end − t_start) → 최초 사유 (기한) 유지 · 각 오류가 `post_checks` 에 · 지속 중지 · 그 unit 인계 제외 · 유효성 false · solver_error 의 n_eval 0 은 오류 아님 · t_end 로 unit 900 판정 (마지막 완료 900.5 → EXCEEDED_900 · 지속 중지 · 유효성 그대로 · 인계 제외 / t_end 없음 → UNDETERMINED · 유효성 false) · 반환 뒤 용량 재측정 초과 (가짜 `disk_sample`) → 중지 · 유효성 false · `global_stop` None 일 때 첫 실패 (P1–P6 순서) 가 사유 |
+| T18 | **(v3 새 — N4 time_boundaries)** 가짜 시계: 준비가 D_prep 를 넘으면 wave 0 · 기록만 · 마지막 wave 의 반환이 D_clean 뒤 → 유효성 false · 기록 창 = t_rec0 → D_rec (정리를 포함하지 않음 · t_rec0 < D_clean 이면 900 s 보다 길다) · 쓰기 전 D_rec 확인 → 넘으면 이후 파일 0 · `RECORD_INCOMPLETE` · 이미 쓴 파일 · sha 보존 |
+
+계수기 자체 검증 (`tests/test_c4a_callcount.py` · 각 경로에 무해한 실제 호출을 일부러 낸다 · 기대 계수는 기대표에 정확히). 양성 경로 (세어짐) 는 바깥 세션에서 직접 낸다.
+부정 경로 (차단 · 실패 · 세션 멈춤) 는 계수기를 켠 **하위 pytest** (자체 허용표 · 자체 원장 · 바깥에서는 분리 해석기 K3 한 번) 안에서 일으키고, 바깥 시험은 그 하위 실행의 기록 (원장 ·
+종료 코드 · nodeid 결과) 을 대조해 통과한다 — 바깥 세션에서는 차단이 일어나지 않는다.
+
+| ID | 대조 |
+|---|---|
+| T16a | 부모 경로 — 감싼 지점마다 실제 호출 1 회 (합성 이차식의 COBYQA · 작은 합성 pymoo 문제 · `python -I -c pass` · `git --version` · 자기 fork 자식에 `os.kill(pid, 0)` · 빈 target 의 fork `Process.start`) → 계수 정확 · `pandas.read_excel` · `openpyxl.load_workbook` (없는 경로) 은 차단 (원 함수가 돌았다면 나올 FileNotFoundError 가 아니라 차단) |
+| T16b | 별칭 — 설치 뒤 적재한 시험용 모듈의 기본인자 · from-import 는 감싼 것을 가리키고 세어진다 · 보관된 원본 객체를 직접 묶은 별칭은 별칭 감사가 잡아 세션 실패 |
+| T16c | fork — 자식 안의 K1 · K3 가 부모 원장에 같은 nodeid · 단계로 · 자식 시작 / 끝 기록 · SIGKILL 된 자식의 끝 없는 예약은 실행으로 · 시작 기록이 없는 자식 → 실패 · teardown 에 살아 있는 자식 → 실패 |
+| T16d | 분리 해석기 — `python -I` 자식의 생성 · 프로그램 sha · 종료 · 그룹 빔 · 허용 밖 프로그램 → 차단 · 자식 안의 호출은 "계수 범위 밖" 표시 (세지 않음) · 구성원이 남은 그룹 → 실패 |
+| T16e | 단계 귀속 — setup fixture · 본문 · teardown fixture · 수집 중 (상한 0 → 차단 · 세션 실패) · nodeid 밖 (session). 수집 · 세션 단계 동작은 계수기를 켠 하위 pytest (그 자체가 K3 한 번 · 자체 원장) 로 본다 |
+| T16f | 사전 차단 — 허용 밖 종류 → 원 함수의 부수효과 표지 없음 · 시도 1 · 차단 1 · 실행 0 · 원인 보존 · 그 nodeid 실패 · 세션 멈춤 |
+| T16g | 상한 — 상한 1 에서 둘째 호출 차단 · git 하나가 K3 · K6 를 함께 쓴다 · K6 가 남았어도 K3 가 없으면 차단 (반대도) |
+| T16h | spawn / forkserver 의 `Process.start` → 차단 |
+| T16i | 삼킴 — 차단 예외를 `except BaseException` 으로 삼키는 코드 안에서도 그 nodeid 는 실패 · 세션 멈춤 |
+| T16j | 원장 · 허용표 — 손상된 줄 · 예약-끝 불일치 · 세션 끝 대조 불일치 · 허용표 sha 불일치 → 실패 · **(v4 정정 — V3-N1)** 모드 · 표 결속: 모드 인자 없음 · 수집 모드에 실행용 표 · 실행 모드에 수집 전용 표 (`kind` 불일치) · 실행 모드에 `--c4a-table` · 함수표 자리에 다른 `kind` · 수집 전용 표에 0 이 아닌 K 나 nodeid 행 · 함수표 sha 불일치 · 실행용 표의 `nodeids_sha256` 와 수집된 nodeid 집합 · 순서의 불일치 (같은 수의 nodeid 바꿔치기 포함) → 수집 전 / 첫 시험 전 중단 (하위 pytest 안에서 · 실제 호출 0) |
+
+### 6-2. 회귀와 합성 실제 호출 허용표 (N1 · 사용자 선택 가 · v3 정정 — N1 allowlist)
+
+- **회귀 파일 (v2 의 목록 그대로):** `tests/test_reil_c4_0a.py` · `_0a_fix` · `_0b1` · `_0b1_fix` · `_0b1_fix2` · `_0b2` · `_0b2_fix` · `test_reil_c4e.py` · `test_reil_c4e_fix.py` ·
+  `test_reil_c4e1_launch.py` · `test_reil_c4e1_runner.py` (환경 변수가 없으면 수집에서 모듈 단위로 건너뜀 — 36–38 · 허용된 건너뜀은 이것뿐).
+- **nodeid 고정:** §7 의 b1 (수집 1 회 · 준비 · 봉인 뒤) — v2 의 b0 (새 시험을 쓰기 전 수집) 은 버린다.
+- **정적 상한 규칙 (시험 경로 중 최대 · 기대 횟수가 아니다):**
+  - **R1 K1** ≤ 시험 경로의 `run_local` → `_run_local` (h.py 881 · 807) 진입 수 — minimize 를 가짜로 바꾼 진입은 빼고, minimize 전에 멈출 수 있는 진입 (예: 812 의 `_check_task`) 은 셈에
+    넣는다. 진입마다 840 의 호출 1 회 · fork 자식 안이면 자식에서 센다.
+  - **R2 K2** ≤ util `run_optimization` (util 사본 682–697) 진입 수 × 그 분기의 minimize 수 (NSGA2 · NSGA3 = 1).
+  - **R3 K5** ≤ Σ 실제 `mon.supervise` 호출의 n_workers (monitor 273–279 — 마감 전이면 작업자 전부 시작 · 지나면 0) · fork 문맥만.
+  - **R4 K4** ≤ Σ 실제 supervise 호출의 2 × n_workers (중지 경로 344–356 — 작업자마다 terminate 1 · kill 1 · 정상 경로 357–359 는 0 이지만 상한은 경로 중 최대) + Σ 실제 killpg 로 가는
+    `launch` 마다 3 (`cleanup_group` 746 · 758 · 767) + 시험 본문의 `os.kill` / `os.killpg` 호출 수.
+  - **R5 K3 · K6** = 시험 경로의 Popen 생성 자리 셈 (반복문은 반복 수를 곱한다): 본문의 `subprocess.run` / `Popen` · `_git` 1 (git) · launch 시험의 `_tree(git=True)` 2 (git 2 — 158–188 의
+    185–186) · launcher `probe` 1 (python `-c` — 556 · 361) · `git_run` / `git_out` 1 (git) · `run_child` 1 (python — 786) · `_launch` 한 번 = run / identity 단계 6 (git 4) · fetch 단계 11
+    (git 9) (probe 1 + 사전 fetch 2 (568 · 466–467) + 시작 기록 2 (867–868) + 자식 1 + 끝 기록 2 (882 · 884) + 사후 fetch 3 (616 · 483–485)) · `_pre` 한 번 = run / identity 1 · fetch 3
+    (git 2) · c4e `fetch` 한 번 = 3 + 받은 파일 수 (668–669 · 705–710 · git 전 거부는 0 — 680–687). K6 ⊂ K3 — git 하나가 둘 다 쓴다.
+  - **R6 K7** = 모든 nodeid · 모든 단계 0 (차단).
+  - **R7** 수집 단계 · 세션 단계 (어느 nodeid 에도 속하지 않는 호출) = 모든 K 0.
+- **시험 함수별 표 (매개변수 nodeid 는 함수 행을 물려받는다 · 표에 없는 함수 = 모든 K 0):**
+
+| 파일 :: 시험 함수 | K1 | K2 | K3 / K6 | K4 | K5 | 근거 (행 · 규칙) |
+|---|---|---|---|---|---|---|
+| `test_reil_c4_0a.py` :: `test_02_a_slow_sample_past_the_deadline_stops_before_new_tasks_start` | 0 | 0 | 0 | ≤ 4 | ≤ 2 | 78 (작업자 2 · 마감 중지) · R3 · R4 |
+| `test_reil_c4_0a.py` :: `test_02_a_late_rss_sample_inside_supervise_is_a_global_stop` | 0 | 0 | 0 | ≤ 4 | ≤ 2 | 119 (늦은 표본 중지) · R3 · R4 |
+| `test_reil_c4_0a.py` :: `test_02_all_tasks_complete_without_a_stop` | 0 | 0 | 0 | ≤ 4 | ≤ 2 | 126 (정상 경로 — kill 0 이 기대 · 상한은 R4) |
+| `test_reil_c4_0a.py` :: `test_07_the_preserved_util_copy_runs_one_nsga2_case_on_synthetic_curves` | 0 | 1 | 0 | 0 | 0 | 351–354 · util 691 (NSGA2 1) · R2 |
+| `test_reil_c4_0a_fix.py` :: `test_n4_b_the_partial_crosses_the_worker_boundary_and_the_task_stays_interrupted` | 0 | 0 | 0 | ≤ 2 | ≤ 1 | 364 (작업자 1 · 구조 중지 · 가짜 util 324 — pymoo 없음) |
+| `test_reil_c4_0a_fix.py` :: `test_out_the_synthetic_nsga2_outcome_is_kept_as_evidence` | 0 | 1 | 0 | 0 | 0 | 393–396 · 환경 390–391 (아래) · R2 |
+| `test_reil_c4_0b1.py` :: `test_08_a_run_records_reeval_residuals_class_termination_and_constraints` | ≤ 2 | 0 | 0 | 0 | 0 | 407 · 414 (spy 399–404 가 실제를 부른다) · R1 |
+| `test_reil_c4_0b1.py` :: `test_08_a_util_error_is_solver_error_and_our_error_is_structural` | ≤ 2 | 0 | 0 | 0 | 0 | 422 · 428 · R1 |
+| `test_reil_c4_0b1.py` :: `test_08_rho_runs_use_the_phase_a_denominators_and_record_both_components` | ≤ 2 | 0 | 0 | 0 | 0 | 434 · 438 (438 은 `_check_task` 730 에서 먼저 멈출 수 있다 — 상한은 진입 수) · R1 |
+| `test_reil_c4_0b1_fix.py` :: `test_n1_a_counts_and_the_stop_error_cross_the_worker_boundary` | ≤ 1 (fork 자식) | 0 | 0 | ≤ 2 | ≤ 1 | 80–83 · 103 (실제 COBYQA 1 · 구조 중지) · R1 · R3 · R4 |
+| `test_reil_c4_0b1_fix.py` :: `test_n1_b_an_unknown_option_stop_keeps_counts_and_warnings` | ≤ 1 | 0 | 0 | 0 | 0 | 116–118 · R1 |
+| `test_reil_c4_0b1_fix.py` :: `test_n1_d_the_same_path_without_an_error_completes` | ≤ 1 (fork 자식) | 0 | 0 | ≤ 2 | ≤ 1 | 144 (정상 경로 — kill 0 이 기대) · R1 · R3 · R4 |
+| `test_reil_c4_0b1_fix.py` :: `test_n2_d_an_unclassified_return_is_a_global_stop_across_the_worker_boundary` | 0 (가짜 186 — fork 전) | 0 | 0 | ≤ 2 | ≤ 1 | 187 · R3 · R4 |
+| `test_reil_c4_0b1_fix2.py` :: `test_r1_b_the_return_fields_cross_the_worker_boundary` | 0 (가짜 100) | 0 | 0 | ≤ 2 | ≤ 1 | 101–102 (구조 중지) · R3 · R4 |
+| `test_reil_c4_0b1_fix2.py` :: `test_r1_e_the_real_scipy_warning_path_keeps_the_returned_point` | ≤ 1 | 0 | 0 | 0 | 0 | 136–138 · R1 |
+| `test_reil_c4_0b2.py` :: `test_p_2_elimination_rebuilds_the_full_point_and_moves_g_and_the_d_n_box` (매개 3 — nodeid 마다) | ≤ 1 | 0 | 0 | 0 | 0 | 307 · 320 · R1 |
+| `test_reil_c4_0b2.py` :: `test_s_3_the_simultaneous_problem_has_the_box_g_and_both_lii_faces` | ≤ 1 | 0 | 0 | 0 | 0 | 455 · R1 |
+| `test_reil_c4_0b2.py` :: `test_n_2_the_lowest_grid_point_is_refined_once_and_the_smaller_valid_value_wins` | ≤ 1 | 0 | 0 | 0 | 0 | 497 (refine 1 — 490) · R1 |
+| `test_reil_c4_0b2.py` :: `test_c_8_end_to_end_one_cell_a0_through_supervise_and_phase_b` | 0 (가짜 772) | 0 | 0 | ≤ 4 | ≤ 2 | 774–776 (wave 1 + ρ wave · 작업자 1 · 정상 경로 — kill 0 이 기대) · R3 · R4 |
+| `test_reil_c4e.py` :: `test_m_1_a_rule_reason_is_a_global_stop_with_three_states` | 0 | 0 | 0 | ≤ 4 | ≤ 2 | 334–335 (작업자 2 · 규칙 중지) · R3 · R4 |
+| `test_reil_c4e.py` :: `test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain` | 0 | 0 | 0 | ≤ 4 | ≤ 2 | 519 · 531 (두 호출 × 작업자 1 · 둘 다 중지) · R3 · R4 |
+| `test_reil_c4e.py` :: `test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete` | 0 | 0 | 0 | ≤ 16 | ≤ 8 | 960–969 (run 두 번 × `N_WORKERS` 4 — c4e_run 73 · 641 · 가짜 util 269) · R3 · R4 |
+| `test_reil_c4e.py` :: `test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo` | 0 | 0 | ≤ 16 / ≤ 16 | 0 | 0 | `_git` 762 · 768–772 (6) + `fetch` 776 (3 + 2) + 787 (0 — 680–682) + 792 (≤ 3 + 2) · R5 |
+| `test_reil_c4e1_launch.py` (함수마다) | 0 | 0 | b0 에서 R5 | b0 에서 R4 | 0 | 수치는 v3 에 없다 — 아래 |
+| `test_reil_c4a.py` (새 대상) · `test_reil_c4_0b2_fix.py` · `test_reil_c4e_fix.py` · 위에 없는 모든 함수 | 0 | 0 | 0 | 0 | 0 | 가짜 · 만든 행 · 대본 문맥 (예: 0a_fix 223–224 · c4e 351 이 `get_context` 를 바꾼다) |
+| `test_c4a_callcount.py` (새 · 자체 검증) | 기대표 | 기대표 | 기대표 | 기대표 | 기대표 | 시험마다 그 시험이 일부러 내는 호출 수 그대로 (b0) |
+
+- **launcher 회귀 (`test_reil_c4e1_launch.py`) 의 수치:** 이 파일은 optimizer · 네트워크 · 실행 모듈을 쓰지 않는다 (docstring 17) — K1 · K2 · K5 · K7 = 0. K3 · K6 은 R5 의 helper 상한으로,
+  K4 는 R4 로 (실제 killpg 로 가는 `_launch` 마다 ≤ 3 · `killpg` 를 주입한 l19 는 launcher 0 + 본문 622 의 1) 함수마다 구한다. 수치는 b0 에서 정적 읽기 (AST · import 없음) 로 구해
+  호출 자리 목록과 함께 `ALLOW_A_TABLE.json` 에 봉인하고, 결과 검토 대상으로 남긴다. **v3 는 이 파일의 함수별 수치를 적지 않았다** (§9).
+- **K3 의 허용 프로그램 (nodeid 마다):** git · 봉인 venv python 의 `-c` 탐침 (launcher `probe` 357–361 의 코드 sha) · tmp 트리의 가짜 run (FAKE_RUN 60–110 의 바이트 sha — 시험 파일의 AST
+  상수에서 b0 에 계산) · 자체 검증의 `python -I -c pass` · 하위 pytest — 그 밖 = 차단.
+- **환경 (v2 그대로 + nodeid 표시):** 봉인된 venv (C4-ENV identity) · cwd `bms-balancing` · `tmp_path` · 네트워크 불요 (Git 은 로컬만) · 실자료 경로 없음.
+  `test_reil_c4_0a_fix.py::test_out_the_synthetic_nsga2_outcome_is_kept_as_evidence` 는 기록 위치를 요구한다 (390–391) — GREEN 에서 `REIL_C4_FIX_EVIDENCE` =
+  `evidence/reil_c4a_impl_<D>/fix_outcome/` · `REIL_C4_FIX_STEP` = `c4a_green` 을 준다 (그 밖의 nodeid 는 이 두 변수를 읽지 않는다). `test_reil_c4e1_runner.py` 는
+  `REIL_C4E1_RUNNER_UNDER_TEST` 를 주지 않아 모듈 단위로 건너뛴다 (36–38). **(v4 정정 — V3-N1)** 계수기의 옵션 체계 (`--c4a-mode` · `--c4a-allow` · `--c4a-allow-sha256` · `--c4a-calls`) 는 세 실행에 공통이지만 **소비하는 표 · sha 는 단계마다
+  다르다** — b1 = 수집 모드 · 수집 전용 표 `ALLOW_COLLECT_A.json` + 함수표 `ALLOW_A_TABLE.json` (`--c4a-table` · 매핑에만 · 둘 다 b0 봉인 sha) / b2 · c = 실행 모드 · 실행용 표
+  `ALLOW_A.json` (b1 산출 · `B1_RECORD_A` 의 결과 sha · b2 와 c 는 같은 파일 · 같은 sha).
+- **주장의 범위 (v3 정정 — N1 coverage):** "실자료 개봉 · 생산 단계 (launcher_a 의 실제 phase_a) 실행 0 · 합성 실제 호출은 위 허용표 안에서만 · 계수는 `CALLS_*_A.json` · 계수 범위 =
+  pytest 프로세스와 그 fork 자식 · 분리 해석기 자식은 생성 · 프로그램 · 종료 · 그룹 빔까지". 시간 상한만으로 실제 호출 0 을 주장하지 않는다. 상한을 사후에 올리지 않는다.
+
+### 6-3. 기존 시험의 제한적 정정 (N2 — 허용 파일 하나 · v2 그대로 · 종결 §130 · 단계 이름만 b → b0)
+
+- `tests/test_reil_c4_0b2.py` 의 세 기대 dict 에 **새 경고 다섯 키만 더한다** (기존 키 · 단언 삭제 · 부분 비교로 완화 없음):
+  - 205–208 행 `want` (정상): `warnings_n_total` 0 · `warnings_n_distinct` 0 · `warnings_distinct_exact` true · `warnings_n_overflow` 0 · `warnings_n_truncated` 0.
+  - 217–219 행 (util 오류 · solver_error): 위와 같은 값.
+  - 228 행 `part` (모르는 옵션 구조 중지 partial): `warnings_n_total` 1 · `warnings_n_distinct` 1 · `warnings_distinct_exact` true · `warnings_n_overflow` 0 · `warnings_n_truncated` 0.
+- 다른 회귀 파일은 행 전체 비교가 없다 (키별 단언만 — 0b1_fix 122 · 0b1_fix2 92 · 0b2 242). 이 정정은 b0 에서 새 시험과 함께 커밋 · sha 를 봉인한다 (RED 전).
+- v3 의 `distinct` 정정 (§3 I3) 은 위 값을 바꾸지 않는다 — 세 행 모두 잘림 0 · overflow 0.
+
+## 7. 구현 절차 (승인 뒤 · 단계마다 첫 예상 밖 결과에서 멈춤 · 재시도 0 · v3 정정 — N1 bootstrap)
+
+이 표는 구현 승인 뒤의 절차다. **이 문서를 쓰는 것은 그 실행이 아니다** — 지금까지 수집 · RED · GREEN · 대상 import 는 0 회다.
+
+| 단계 | 내용 | 호출 · 상한 | 멈춤 |
+|---|---|---|---|
+| a | 구현 승인 기록 § · 보존 규칙 (`evidence/reil_c4a_impl_<D>/**`) | 문서 · Git | — |
+| b0 | **준비 · 봉인 (실행 0):** ① 대상 시험 `tests/test_reil_c4a.py` (T01–T15 · T17 · T18 원문 — 수집 가능) ② 골격 — I1 · I2 · I4 · I5 의 새 파일과 `reil_c4_h.py` 의 `_WarnBox` · 판정 함수의 이름 · 서명 (몸통 `NotImplementedError` · 기존 동작 불변) ③ 계수기 `tests/c4a_callcount.py` **완성본** + 자체 검증 `tests/test_c4a_callcount.py` (T16a–j) ④ §6-3 의 0b2 정정 ⑤ 허용표 원문 `ALLOW_A_TABLE.json` (§6-2 의 행 · 규칙 R1–R7 · launcher 파일의 함수별 수치와 호출 자리 목록 · 정적 대조 0 기록) ⑥ 기대표 `EXPECT_A.json` (자체 검증 nodeid 패턴 → 통과 · 기대 계수 / 대상 nodeid 패턴 → 골격 함수 이름의 `NotImplementedError`) ⑦ **(v4 정정 — V3-N1)** 수집 전용 표 `ALLOW_COLLECT_A.json` (`kind` = `C4A_ALLOW_COLLECT` · collect · session 버킷의 K1–K7 = 0 · nodeid 행 없음 · ⑤ 함수표의 `kind` = `C4A_ALLOW_TABLE`) → 커밋 · 파일별 sha 를 `BOOTSTRAP_A.json` 에 (⑤ 함수표 · ⑦ 수집 전용 표의 sha 는 이름을 붙여 따로 — b1 의 인자가 된다) | pytest · import · 실행 0 (AST 읽기만) | — |
+| b1 | **수집 1 회 (계수기 켬 · 수집 모드 — v4 정정 — V3-N1):** `pytest --collect-only -q -p tests.c4a_callcount --c4a-mode collect --c4a-allow ALLOW_COLLECT_A.json --c4a-allow-sha256 <BOOTSTRAP_A 의 ⑦ 값> --c4a-table ALLOW_A_TABLE.json --c4a-table-sha256 <BOOTSTRAP_A 의 ⑤ 값> --c4a-calls …` (회귀 11 파일 + 새 2 파일) → 계수기가 수집 끝에 `NODEIDS_A.txt` (수집 순서) · 실행용 `ALLOW_A.json` (`kind` = `C4A_ALLOW_RUN` · 함수표 행 ↔ nodeid · 대응 없는 nodeid = 모든 K 0 · 대응 없는 표 행 = 멈춤 · 표 안에 `source_table_sha256` (= ⑤) · `nodeids` (`NODEIDS_A.txt` 의 순서 목록) · `nodeids_sha256` (= `NODEIDS_A.txt`)) · `B1_RECORD_A.json` (입력 두 표의 sha · 수집 nodeid 집합의 sha · 결과 표의 sha · 매핑 불일치 0 · 건너뜀 = runner 모듈만) 을 쓴다 · `CALLS_COLLECT_A.json` · 별칭 감사 결과 · 커밋 | pytest 수집 1 회 · ≤ 120 s | 수집 전 확인 실패 (모드 · sha · `kind` · 0 아닌 K) · 수집 오류 · 수집 단계 호출 > 0 · 별칭 감사 실패 · 표-수집 불일치 · 허용 밖 모듈 건너뜀 |
+| b2 | **RED 1 회 (계수기 켬 · 실행 모드 · 실행용 표 `ALLOW_A.json` + `B1_RECORD_A` 의 결과 sha — v4 정정 — V3-N1 · `NODEIDS_A` 중 자체 검증 + 대상만):** 자체 검증 nodeid 를 먼저 돌린다 (인자 순서 · 계수기가 순서를 확인) — 하나라도 실패하면 계수기가 대상 nodeid 전에 세션을 멈춘다. 판정을 따로: 자체 검증 = 전부 통과 · 기대 계수와 같음 / 대상 = 각 nodeid 가 기대표의 골격 `NotImplementedError` 로 실패 · 실제 호출 0 | pytest 1 회 · ≤ 600 s | 수집 전 / 첫 시험 전 확인 실패 (모드 · sha · `kind` · nodeid 집합 — v4) · 자체 검증 실패 → 대상 RED 없이 멈춤 · 대상의 예상 밖 통과 · 다른 예외 → 멈춤 (fixture 가 진실을 가린다) |
+| c | I1–I5 구현 → 정적 자체 검토 → **GREEN 1 회 (`NODEIDS_A` 전체 · 같은 순서 · 계수기 켬 · 실행 모드 · b2 와 같은 실행용 표 · 같은 sha — v4 정정 — V3-N1)** — 실패 0 · 건너뜀은 runner 모듈만 · 모든 nodeid 의 계수 ≤ `ALLOW_A` · 차단 0 · 세션 끝 대조 일치 | pytest 1 회 · ≤ 1,800 s | 수집 전 / 첫 시험 전 확인 실패 (v4) · 첫 예상 밖 결과 · 상한 초과 (상한을 올리지 않는다) |
+| d | `seal-sources-a` (구현 결과 봉인 — SOURCES_A · FRAME) · 끝 기록 (`CALLS_*_A.json` · 세 실행의 기록 포함 · **(v4 정정 — V3-N1)** sha 사슬 대조: `BOOTSTRAP_A` 의 ⑤ · ⑦ = `B1_RECORD_A` 의 입력 sha · `B1_RECORD_A` 의 결과 sha = b2 · c 의 인자 sha = `CALLS_RED_A` · `CALLS_GREEN_A` 머리의 값 — 어긋나면 결과 § 에 실행 유효성 false) · 비밀 검사 · 커밋 · push · 결과 § · 결과 검토 발송문 → 멈춤 | 문서 · Git | — |
+
+- **세 실행의 기록 · 허용 범위 (고정 · v4 정정 — V3-N1):** 실행마다 명령 · env 이름 · cwd · 종료 코드 · stdout / stderr · nodeid 별 결과 (통과 / 실패 · 예외 형 · 발생 함수) ·
+  `CALLS_<단계>_A.json` 과 **모드 · 소비한 표 파일 · 표 sha** (b1 = collect · `ALLOW_COLLECT_A.json` + `ALLOW_A_TABLE.json` / b2 · c = run · `ALLOW_A.json`) 를
+  `evidence/reil_c4a_impl_<D>/` 에 남긴다. 허용 범위 — b1: 수집 전용 표 (모든 K 0) · b2: 실행용 표 `ALLOW_A` 중 자체 검증 nodeid 의 기대 계수 · 대상 nodeid 모든 K 0 ·
+  c: 실행용 표 `ALLOW_A` 전체.
+- 계수기 (③) 는 b0 에서 완성되고 b2 의 자체 검증을 통과한 뒤에만 RED 의 "실제 호출 0" 근거가 된다. b2 에서 대상 시험의 실패를 계수기 자신의 실패와 섞어 세지 않는다.
+- 실패하면 그 자리의 기록을 커밋하고 결과 §에 적고 멈춘다. 자료 개봉 · 생산 단계 실행은 0 이다. 수집 · RED · GREEN 의 시간 상한 (120 · 600 · 1,800 s) 은 v2 의 제안 그대로다.
+
+## 8. 실행 단계의 마감 연결표 (v3 정정 — N4 time_boundaries · U2 의 입력 · 숫자는 실행 요청에서 확정)
+
+원점 기호: T_a = 착수 (a0) · S0 = 단계 시작 기록 · t_L0 = launcher_a 시작 · t_a0 = run-a 의 첫 시각 · t_run0 = run-a 준비 끝 · t_rec0 = 마지막 runner_a 호출 뒤 HB 가 run-a 로 돌아온 시각 (반환 또는 HStop · wave 가 0 이면 그 결정 시각).
+안쪽 기한은 모두 자기 원점에서 **한 번** 만든 절대 시각이다 (E1 의 선례: c4e_run 637–647 · 654 — 모든 기한을 run 원점에서).
+
+| 구간 | 값 (제안 · U2 미선택) | 원점 → 닫힘 | 강제 · 책임 |
+|---|---|---|---|
+| 전체 | ≤ 36,000 s (10 h) | T_a → g3 의 push 반환 | wrapper |
+| 착수 창 | ≤ 5,400 s | T_a → S0 (wrapper 는 `S0 + 28,800 ≤ T_end − R` 일 때만 launcher 를 띄운다) | wrapper |
+| 단계 (외곽 감시 기한) | 28,800 s | S0 → **D_stage = S0 + 28,800 — 단계의 절대 마감** · 아래가 모두 이 안 | 외곽 (유일한 바깥 강제 — 감시 기한에 멈춤) |
+| ├ 여유 (v3 명시 — launcher_a 사전 검사 · 자식 시작 · 인터프리터 시작) | 300 s | S0 → t_a0 (v2 표에 이 구간의 줄이 없었다 · v2 의 "여유 300 s" 를 여기에 둔다) | launcher_a — 조건 `t_a0 − S0 ≤ 300` (아래 산술) |
+| ├ run-a 준비 | ≤ 900 s | t_a0 → t_run0 ≤ **D_prep = t_a0 + 900** (넘으면 wave 0 · 기록만) | run-a |
+| ├ 측정 (모든 wave 공통 절대 마감) | `MEASURE_A` = 25,800 s | t_run0 → **D_meas = t_run0 + 25,800** · wave 마다 measure = `D_meas − now` · 잔여 ≤ 60 s 면 시작 안 함 · D_meas 전에 끝난 wave 의 정리 · drain · 사후 검사는 이 안에서 쓴다 | runner_a + 감시 (245 · 290–292 · 작업자 169) |
+| ├ unit | 900 s | unit 의 첫 시작 (start 사건) → 마지막 완료 (행의 `t_end`) · 측정 안 | `StopRule_A` (관측 · 닫힘) + runner_a P5 (t_end 판정) |
+| ├ 마지막 wave 의 끝 처리 (정리 여유) | 600 s | D_meas → **D_clean = D_meas + 600** · 그 안에 끝날 것: 그 wave 의 정리 + drain + runner_a 사후 검사 + HB 의 남은 분류 → t_rec0 | 감시 (join 배분만 — 아래) · run-a (t_rec0 > D_clean 이면 기록 · 유효성 false) |
+| ├ run-a 기록 · STORE_A 게시 · run-a 의 END_RECORD | 900 s | **t_rec0 → D_rec = D_clean + 900** (절대) — **정리를 포함하지 않는다** · t_rec0 < D_clean 이면 900 s 보다 길다 · 쓰기마다 시작 전에 D_rec 확인 (넘으면 이후 파일을 쓰지 않고 `RECORD_INCOMPLETE` · 이미 쓴 파일 · sha 보존 — monitor 375–395 의 규칙) | run-a |
+| ├ 자식 대기 기한 | 산술 28,500 s (미채택 · U2 와 함께) | t_L0 → t_L0 + 28,500 (= 28,800 − 사후 300) · 넘으면 그룹 SIGKILL (launcher 정리 정책 731–774) · 유효성 false | launcher_a |
+| └ launcher_a 사후 검사 · 확인 ④ · 반환 | ≤ 300 s | 자식 반환 → launcher 반환 | launcher_a · 외곽 |
+| 종결 reserve R | 1,800 s | D_stage → T_end: 판정기 · 확인 ⑤ · **전체 끝 기록** (단계 안 END_RECORD 와 다른 파일) · 커밋 · push 반환 | wrapper / g |
+
+- **정리 경로 둘 (감시 코드 그대로 · 몫은 join 대기 배분이지 wall 상한이 아니다):**
+  - 중지 경로 (사유 있음 · 344–356): `stop.set()` → 살아 있는 작업자 terminate → **공통 join 마감** `time.monotonic() + limits.grace` (349 · grace = 20 s 제안) 까지 join → 그래도 살아
+    있는 작업자마다 kill + `join(5)` (353–356) → 명목 배분 ≤ 20 + 5 × 4 = 40 s / wave (작업자 4).
+  - 정상 경로 (사유 없음 · 357–359): terminate 없이 작업자마다 `join(limits.grace)` 를 차례로 → 명목 배분 ≤ 20 × 4 = 80 s / wave. join 뒤에도 살아 있는 작업자는 그대로 남고 alive > 0 ·
+    `global_stop` None 이 함께 돌아올 수 있다 (362–367) → runner_a P1 이 지속 중지로 바꾼다 (§3 I1).
+  - 두 경로 모두 그 뒤 `drain(0.1)` (360) — 빈 큐에서 한 번 기다림은 ≤ 0.1 s 이지만 메시지 수와 한 메시지의 읽기는 감시가 묶지 않는다 (264–271). 그래서 40 s · 80 s 를 정리의 wall
+    상한으로 쓰지 않는다.
+- **막힌 동기 호출의 상한:** run-a 는 감시의 join · drain 이 막히면 그 안에서 끊지 못한다 (같은 스레드 · 감시 코드 변경 0). 그때의 상한은 launcher_a 의 자식 대기 기한과 외곽 감시
+  기한 D_stage 뿐이고, 둘 중 하나에 닿으면 유효성 false 다.
+- **기록 창이 정리와 겹치지 않는다:** v2 의 원점 "`D_meas` (또는 중지)" 를 버린다 — 정리는 D_meas 이전 (측정 안) 또는 [D_meas, D_clean] (정리 여유) 에, 기록은 t_rec0 뒤에만 쓴다.
+- **산술 (v2 의 합은 바뀌지 않는다):**
+  - 300 + 900 + 25,800 + 600 + 900 + 300 = 28,800 (여유 300 의 자리만 S0 → t_a0 로 명시).
+  - t_run0 ≤ t_a0 + 900 이므로 D_rec − t_a0 ≤ 900 + 25,800 + 600 + 900 = 28,200.
+  - 조건 t_a0 − S0 ≤ 300 이면 D_rec ≤ S0 + 300 + 28,200 = S0 + 28,500 = D_stage − 300 — launcher 사후 300 s 가 단계 안에 든다.
+  - 자식 대기 기한 (산술 · 미채택): 28,800 − 300 = 28,500 (t_L0 기준). t_L0 ≥ S0 이므로 같은 조건에서 D_rec ≤ S0 + 28,500 ≤ t_L0 + 28,500 (자식 기한이 run-a 의 몫을 자르지 않는다).
+    조건이 깨지면 자식 기한 또는 외곽 감시 기한이 먼저 끊고 유효성 false 다. launcher 쪽 기한은 t_L0 기준이라 S0 기준보다 (t_L0 − S0) 만큼 늦을 수 있다 — 그 차이는 외곽 감시 기한이 끊는다.
+  - 5,400 + 28,800 + 1,800 = 36,000 (v2 그대로 · U2 미선택). 이 합들은 각 동기 호출의 실제 반환 상한을 증명하지 않으며 U2 선택을 대신하지 않는다.
+- 감시 조각 · 호출 수 (E1 의 6,600 s · ≤ 5) 는 외곽 v3 에서 28,800 s 에 맞춰 정하고 T15 로 대조한다.
+
+## 9. 밝힐 것
+
+1. I3 은 수용된 `reil_c4_h.py` 바이트를 바꾼다 (기록기 · 필드 다섯 · 모르는 옵션 표지 · **(v3)** 판정 함수 골격). `reil_c4_hb.py` · `reil_c4_monitor.py` 는 바꾸지 않는다 — 어댑터 ·
+   규칙 · **(v3)** 사후 검사는 새 파일에 둔다.
+2. `_assess` 재평가 경고는 행 포착 밖이다 (stderr · 미집계 표시). **(v3)** 감시의 1 GiB 는 표본 중지 임계값이며 쓰기 상한이 아니다 — 초과 판정은 확인 사슬 ①–⑤ 가 맡고 쓰기 자체는
+   막지 않는다 (U5).
+3. 허용표의 상한은 정적 읽기로 정한 경로 중 최대 값이다 (기대 횟수가 아니다). GREEN 에서 넘으면 실패로 멈추고 결과 §에 적는다 (상한을 사후에 올리지 않는다). **(v3)** launcher 회귀
+   파일의 함수별 K3 / K6 / K4 수치는 v3 에 없고 b0 에서 규칙 R4 · R5 로 정한다.
+4. 9,856 · 7,040 은 기대 반환 수가 아니다. `MEASURE_A` 등 §8 의 숫자 (**(v3)** 자식 기한 산술 28,500 s 포함) 는 제안이다.
+5. 줄 번호는 **(v3)** 고정 pin `fa502acb` 의 소스다 (v2 의 `86cab053` 과 scripts · tests 바이트가 같다). 시험 함수 · 기록 파일의 정확한 이름은 b0 · c 에서 고정해 결과 §에 적는다.
+6. **(v3 — N1 coverage)** 계수 범위 = pytest 프로세스와 그 fork 자식. 분리된 해석기 자식 (`-I`) 안의 호출과 손주 · git 내부 프로세스는 세지 않는다 (봉인 venv 를 바꾸지 않으면 넣을
+   수 없다) — 생성 · 프로그램 신원 · 종료 · 그룹 빔만 결속한다. K1–K7 밖의 프로세스 생성 경로도 세지 않는다 (정적 대조 0).
+7. **(v3 — N4)** unit 시각 판정은 부모 · fork 자식이 같은 시계 (`time.monotonic`) 라는 전제에 기댄다. 루프 안의 "미확인" 중지는 관측 지연 때문에 실제로 900 s 안에 끝난 unit 에서도 멈출
+   수 있다 (보수적 · 기록에 구분).
+8. **(v3 — N6)** 승인 블록을 원장에 쓴 사람이 사용자인지는 코드가 인증하지 못한다. 원장은 사용자 원문을 인용해 덧붙이는 기록이고, 그 관행과 재검토가 근거다.
+
+## 10. 하지 않는 것
+
+자료 개봉 · 맞춤 · 실제 C4-A 단계 실행 (별도 실행 요청) · C4-B · COMSOL · util · C6 봉인 · 배열 · 기존 증거 · E 계열 · `reil_c4_hb.py` · `reil_c4_monitor.py` 의 변경 · 재봉인 ·
+설치 · 환경 재구축 · 기존 시험의 단언 삭제나 완화. **(v3)** 감시의 판정 순서 · join · drain 을 고치거나 끊는 장치 · 계수용으로 봉인 venv · 기존 conftest · 기존 시험 파일을 바꾸는 것 ·
+남은 작업자를 PID 로 죽이는 것 · 새 수치나 실행 권한의 채택.
+
+## 11. 사용자가 정할 것 (모두 미선택 · 이 문서는 고르지 않는다)
+
+| ID | 무엇 | 선택지 · 대가 | 상태 |
+|---|---|---|---|
+| U2 | 전체 10 h 배분 (§8) | v2 그대로 — 단계 28,800 s · 전체 36,000 s 의 산술 수용은 채택이 아니다. 자식 대기 기한 산술 28,500 s 도 이 선택에 딸린다 | 미선택 |
+| U4 (새 · N3 retained_bytes) | 경고 기록기의 전체 고정 바이트 상한 | (가) v3 본문: 키 payload 4,800 B · 보관 객체 개수만 주장 · 계수는 정확 (무제한 정수) · 총 메모리 바이트 주장 없음. (나) 고정 크기 표현: 키 버퍼 20 × 240 B + int64 계수 23 개 (키별 20 · 스칼라 3) 를 0 … 2^63 − 1 에서 포화 · 표지 하나 → payload 상한 4,800 + 23 × 8 = 4,984 B 를 식으로 주장할 수 있다 (Python 객체 머리 · 인터프리터 메모리는 여전히 밖). 대가: 구현 복잡 · 포화 뒤 총수는 하한 (exact false) · 포화 표시를 새 행 필드로 두면 §6-3 의 기대 dict 정정이 다시 필요하다 (값 2^63 − 1 로만 표시하면 필드는 그대로) | 미채택 |
+| U5 (새 · N3 stderr) | stderr 의 실제 쓰기 상한 | (가) v3 본문: 쓰기 상한 없음 · 확인 사슬 ①–⑤ 로 초과를 판정만. (나) 자식 stderr 를 파일 대신 파이프로 받아 launcher_a 가 상한 바이트까지만 쓰고 나머지는 바이트 수만 센다 → 그 파일의 실제 쓰기 상한. 대가: launcher 읽기 스레드 · 넘친 원문 손실 · 상한 값은 새 숫자 · 다른 산출 (STORE_A 등) 은 여전히 측정만. (다) 자식에 `RLIMIT_FSIZE` → 파일마다 크기 상한 (합계 아님) · 넘으면 SIGXFSZ 로 자식이 끝나 기록이 미완 | 미채택 |

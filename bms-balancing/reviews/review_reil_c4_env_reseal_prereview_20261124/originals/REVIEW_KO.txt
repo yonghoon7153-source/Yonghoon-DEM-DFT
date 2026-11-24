@@ -1,0 +1,87 @@
+REIL C4-ENV 새 환경 세대 재봉인 요청 사전 검토
+2026-11-24 KST · 고정 커밋 781f357200259f24ac04a95da8aa13dfd2761524
+
+판정: REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL
+새 세대로 분리한 방향과 복원 규칙 6항을 검사 계약으로 옮긴 구성은 수용한다. 다만 ENV18-N1·N2 문서 정정과 실행기 사전 고정·정적 검토가 필요하다. 이 회신은 설치·재봉인·C4-A 구현/시험·실자료 실행 승인이 아니다. 10월 한정 수용을 취소하거나 과거 기록을 수정하지 않는다.
+
+1. 다섯 질문에 대한 답
+
+Q1 — 새 세대 구분 및 §8-3
+맞다. interpreter 판·빌드·파일 해시, venv 경로, ensurepip pip wheel이 달라졌으므로 같은 복원으로 취급할 수 없다. 10월 회신 §5는 자동 복원 권한이 아니라 별도 승인에 필요한 계약 요소였다. 이번 §8-3은 32+2 wheel, RECORD 30+4, 설치 바이트, 별도 pytest_t, 새 출력 경로, emit/check 수, 보존·중지·승인 경계를 적절히 연결한다. 그러나 “그대로 채웠다”는 말은 구성 대응을 뜻하며, 기존 동일성 조건을 충족했다는 뜻은 아니다. 새 차이와 남은 한계를 명시해 승인받아야 한다.
+
+Q2 — 변경된 ensurepip wheel을 쓰는 A안
+A안을 조건부 설계 방향으로 수용할 수 있다. B안으로 무조건 바꿀 필요는 없다. 단, 아래 N1을 정정한 뒤 실제 사용할 CA의 선택 규칙과 바이트 식별을 고정하고, 변경 주체·원래 배포 출처를 확인하지 못했다는 잔여 불확실성을 사용자 선택에 남겨야 한다.
+wheel 자체 SHA와 구성원·RECORD 대조는 “지정한 바이트인가”를 제한한다. 변경 주체의 정당성이나 CA 신뢰성을 인증하지 않는다. “과학 코드가 pip을 import하지 않는다”만으로 준비 단계의 TLS 선택을 생략할 수 없다.
+“선언 1행”은 cacert payload의 허용 차이 1행을 뜻한다. wheel 자신의 RECORD도 바뀌므로 ZIP 구성원 전체에서 문자 그대로 파일 하나만 달랐다고 확대하지 않는다. 이 리뷰는 원격 시스템의 실제 wheel 원바이트를 다시 받은 것이 아니라, 고정 대조기·기록·옛 RECORD의 연결을 검토했다.
+B를 택한다면 --without-pip 이후의 bootstrap 명령, pip/setuptools 공급·해시, wrapper 집합, 설치 순서와 예산을 별도 개정안에 고정해야 한다. 이번 A안 승인문을 B안 실행 허가로 읽지 않는다.
+
+Q3 — ENV-P2-02 네 약점 및 자체 시험
+원래 네 약점은 이 세대의 코드·제출 증거 범위에서 보완됐다고 판단한다.
+- parse_record는 줄 끝 목록·마지막 줄바꿈, CSV 재구성, 중복 경로를 확인한다.
+- compare_record는 경로 순서와 자기 dist-info 경계를 검사한다.
+- wrapper_check는 첫 줄만 옛 경로로 되돌린 바이트를 옛 RECORD 해시·크기에 결속하며, 새 RECORD↔새 파일도 대조한다.
+- 설치 파일의 해시 있는 행과 pytest_t를 별도로 대조한다.
+- seal은 옛 봉인에서 정해진 값만 바꾼 기대 바이트와 새 11파일을 비교한다.
+“이 세대 전용·범용 자동 복원 검사기 아님” 표시는 적절하다. 다만 고정 CLI의 모든 경로와 새 실제 설치 환경까지 검증 완료한 것은 아니다. seal 모드는 S9a 성공과 보존 RECORD의 불변을 전제로 이어져야 한다. seal 단독 통과를 RECORD 수용으로 사용하지 않는다.
+52/52는 제출 로그의 결과다. 13/13은 변이 12개와 무변이 대조군 1개다. run1의 11/12 및 M3에서 R14가 실패하지 않았던 원문, R14b 추가와 M12 추가는 연결된다. 두 실행의 meta가 같은 checker SHA를 가리키며, 시험·변이 소스 SHA는 보존 사본과 일치한다. 리뷰어가 재시험하거나 과거 실행을 독립 관측한 것은 아니다.
+추가 비차단 지적 C2는 아래와 같다. 원래 네 약점의 보완을 모든 입력에 대한 완전성 증명으로 확대하지 않는다.
+
+Q4 — 실행기를 승인 뒤에 작성할지
+이번에는 실행 전에 실행기와 바깥 호출 하네스를 고정해 정적 검토받는 것이 필요하다. 10월의 경로 치환만 하는 변경이 아니다. 자식 env, CA 선택, S0 bundled, S4/S9 새 연결, S10 남은 예산과 종료 기록이 실제 승인 조건을 집행한다.
+작성 승인을 별도로 받아 실행기 사본·10월 대비 diff·SHA와 정확한 argv/cwd를 준비할 수 있으나, 그것을 설치/재봉인 실행 승인으로 합치지 않는다. 읽기 전용 정적 검토에는 precheck 실행도 필요하지 않다. 승인 뒤 precheck 1회라는 설계는 유지할 수 있다.
+실행기 검토 때에는 단계 원점과 남은 시간 전달, 순수 Python 작업의 초과 탐지, 실패 뒤 첫 원인 보존, S10 및 바깥 반환, 출력·경로 부재 확인을 확인한다. subprocess timeout과 전체 작업의 절대 반환 보장은 구분해야 한다. precheck 시간 한도·실행기 폴더/출력의 디스크 집계 포함 여부도 명시한다. 현재 §1-9의 du 합은 R·N·E만이고 별도 c4env18_runner 폴더는 포함하지 않는다.
+
+Q5 — C4-A 연결과 RECORD 밖 파일
+Q1의 “v4 결속 정정 2줄” 방식은 가능하다. v4 원문 SHA를 식별하고 정확한 기존 좌표, old→new 값, 새 MANIFEST/lock/PROFILE 및 venv/pytest_t와 interpreter 식별, 효력 발생 조건을 담은 별도 정정 기록을 붙이면 v5 전체를 다시 쓸 필요는 없다. 새 결과 수용 전에는 값을 미리 채택하지 않는다. 실제 v4 좌표는 §4-3의 C6 봉인(318행), §6-2의 환경(458행)이다. 현재 요청 §6의 괄호는 두 자리를 모두 §4-3으로 보이게 하므로 좌표를 명확히 쓰면 된다.
+Q2의 C4-E 결과 미이월은 맞다. E3a COMPLETE/c4a_gate의 과거 증거는 3.11.17 세대의 이력이다. 새 emit/check 일치만으로 새 세대의 E3a나 실자료 gate를 닫을 수 없다. C4-A 실자료 요청 전에 그 적합성·필요 재확인·사용자 결정을 따로 정한다. 이 리뷰는 재실행을 지시하지 않는다.
+Q4의 RECORD 밖 파일을 자동 실패로 삼지 않는 한정 범위는 가능하다. 다만 “옛 관측이 없으니 무조건 무해하다”는 결론은 불가하다. 현재 코드의 첫 50개는 미기록 파일의 전체 결속이 아니다. 가능하면 전체 목록·크기·해시를 별도 관측 자료로 남기고 결과 검토에서 다룬다. 알려지지 않은 .pth·sitecustomize.py·로드될 모듈/확장 등 실행 경로에 영향을 주는 항목이 발견되면 일반 잉여 파일로 묵인하지 말고 새 환경 채택을 보류해 판단한다. Python의 .pth 실행 줄은 시작 시 실행될 수 있다. 현재 “전체 환경 모든 바이트 동일 아님” 한계는 유지한다. [Python 3.11 site 문서](https://docs.python.org/3.11/library/site.html)
+
+2. 실행 승인 전에 정정할 사항
+
+ENV18-N1 [P2] — PIP_CERT만으로 유효 CA가 고정되지 않는다
+좌표: 요청서 38–39, 116–124행; pre/05_env_names.txt; pip24 공식 소스.
+제출 목록에 REQUESTS_CA_BUNDLE과 CURL_CA_BUNDLE이 실제 존재한다. §1-5의 비밀 이름 필터와 PIP_* 필터는 이 두 이름을 지우지 않는다. pip24는 options.cert를 session.verify에 넣지만, vendored requests는 기본 요청에서 REQUESTS_CA_BUNDLE, 다음 CURL_CA_BUNDLE을 읽은 뒤 session.verify와 병합한다. 따라서 값이 비어 있지 않다면 이들이 PIP_CERT보다 우선할 수 있다. 값 자체는 수신되지 않아 현재 셋이 같은 파일인지, 비어 있는지, 실제 무엇을 쓸지 확인할 수 없다.
+최소 정정: pip 자식에서 REQUESTS_CA_BUNDLE/CURL_CA_BUNDLE을 명시적으로 제거해 PIP_CERT 하나로 고정하거나, 유효 우선순위와 허용 파일을 명시적으로 고정한다. 실제 선택한 CA 파일의 크기·SHA를 값 비공개로 기록하고, 해당 변수 이름의 제거/설정 여부를 기록한다. 값 없는 이름 목록만으로 CA 동일성을 주장하지 않는다. SSL_CERT_FILE·프록시 관련 값은 남겨두는 범위와 관측 한계를 적는다. TLS 검증을 끄는 해결은 허용하지 않는다.
+고정된 wheel 바이트 대조는 이 설정 결속의 대체물이 아니다. 이 정정 후에도 변경된 wheel의 출처 미확인은 남는다.
+공식 근거:
+- [pip24 session 구성](https://github.com/pypa/pip/blob/24.0/src/pip/_internal/cli/req_command.py) — _build_session 참조.
+- [pip24 requests의 환경 병합](https://github.com/pypa/pip/blob/24.0/src/pip/_vendor/requests/sessions.py) — merge_environment_settings 참조.
+- [pip CA 문서](https://pip.pypa.io/en/stable/topics/https-certificates/)
+PIP_CONFIG_FILE=/dev/null은 설정 파일 차단에는 맞지만 위 비-PIP 환경변수를 제거하지 않는다. [pip 설정 문서](https://pip.pypa.io/en/stable/topics/configuration/)
+
+ENV18-N2 [P2] — 커밋 전 10_end.json에 S10 최종 결과를 기록할 수 없다
+좌표: 요청서 194–209, 256, 333–335행.
+S10은 끝 기록→검사→staging→commit→커밋 밖 관측 순서다. 그런데 §8-1은 S10 결과를 10_end.json의 steps에 넣겠다고 한다. 이미 커밋하기 전에 쓴 파일은 그 후 commit의 rc/timeout이나 S10 최종 성공을 관측할 수 없다.
+최소 정정: 10_end.json은 PRE_COMMIT snapshot과 S10 PENDING/미완 상태만 담는다. 외부 11_after_commit.json에 commit 시도/원 rc·timeout·확보한 SHA·S10 시작/끝·한도 판정과 파일 식별을 기록하고, 바깥 실행기 반환은 다시 별도 기록으로 연결한다. commit 실패·timeout·후속 기록 쓰기 실패 시 확보하지 못한 값은 null/미확인으로 유지한다. 실패 뒤 정상 완료를 다시 선언하지 않는다. 사후 문서 커밋은 이전 원문을 덮지 않는 후속 증거다.
+각 파일은 자신의 미래 쓰기/반환을 증명하지 않는다. 마지막 기록 이후 경계와 1,800초에 포함/제외되는 범위를 일관되게 쓴다. 현재 설계 문장만으로 ENV-P2-01의 실제 강제·종료 관측이 종결됐다고 판정하지 않는다.
+
+3. 추가 비차단 지적과 유지할 한계
+
+C1 — Downloading 줄은 최종 네트워크 endpoint를 증명하지 않는다.
+pip24의 _prepare_download는 응답 resp.url이 아니라 전달받은 Link의 netloc로 이름 꼴을 정한다. 따라서 그 관측은 “pip이 처리한 다운로드 링크의 호스트”다. HTTP redirect 뒤 최종 응답 호스트와 프록시 실제 접속은 별도다. 요청서가 독립 네트워크 감사가 아니라고 밝힌 방향은 맞다. 125–129행을 이 의미로 좁히면 된다. [pip24 download 소스](https://github.com/pypa/pip/blob/24.0/src/pip/_internal/network/download.py)
+
+C2 — RECORD 행의 중복은 거부하지만 배포판 식별 중복은 별개다.
+checker 265행 new_sci는 METADATA의 정규화 Name+Version을 dict key로 만든다. 서로 다른 dist-info 디렉터리가 같은 key를 내면 하나가 덮일 수 있다. R15는 다른 이름 zzz를 추가하는 사례라 이 경로를 확인하지 않는다. 예를 들어 앞서 정렬되는 다른 디렉터리에 기존 Name/Version을 가진 METADATA를 넣으면, 뒤의 정상 디렉터리가 같은 key를 덮고 추가 파일은 관측에만 남을 수 있다. 이는 소스의 정적 경로 분석이며 실행 재현은 하지 않았다.
+다만 고정된 전체 S7/S8/S9 흐름에서는 env_profile.measure의 shadowed 기록과 옛 lock 정확 대조가 추가 방어이므로, 이 한 점을 곧바로 “전체 절차가 잘못된 환경을 통과시킨다”로 확대하지 않는다. 새 checker의 독립 방어력을 보강하려면 dict 생성 전에 key→디렉터리 중복을 거부하고, 별도 범위에서 그 사례를 추가하면 된다. 원래 ENV-P2-02의 RECORD 행 중복과 구분한다.
+
+해시 없는 RECORD 행 5,741개, RECORD 밖 파일, interpreter 링크/로드된 모든 모듈의 출처를 검증 완료로 바꾸지 않는다. lexical 경로 검사가 모든 심볼릭 링크의 실제 대상 격리를 증명하는 것도 아니다. 현재 명시한 한정 파일 바이트 검사의 범위를 유지한다.
+
+4. 근거 및 검토 범위
+
+요청서 47,551 B / SHA256 ae25f895051ec28f06aebf0bf43f07a9e58b77cb24e3a7abb6448572ed0e0791
+대조기 32,342 B / SHA256 8cf10f3c910a46d4ffcf9eb933760178c439fcbec8636189776cb2bea2dbedb0
+두 식별과 수신 원문이 일치한다. 현재 커밋의 디렉터리 식별에서 옛 evidence tree df74b0e3… 및 옛 seal tree f4384bb2…를 확인했다. 새 pre 8파일과 selftest 13파일은 받은 바이트로 Git tree를 재계산해 제시한 두 tree와 일치했다.
+옛 봉인 11파일의 정확 집합과 MANIFEST SHA, 내부 10파일 해시를 재대조했다. RECORD 30+4는 총 13,398행(해시 있음 7,657 / 없음 5,741), wrapper 13행이며 원문 CRLF·마지막 CRLF·중복 경로 없음과 lock의 30개 text SHA 연결을 확인했다. 배열 파일은 해시만 읽었고 수치 로딩/계산은 없었다.
+새 프로그램·자체 시험 소스·원문 로그의 정적 연결을 확인했다. 52/52·13/13은 제출자 기록을 정적으로 수용한 범위이며 새 실행 결과가 아니다. 현재 원격 interpreter·dpkg·CA 파일·설치 파일을 독립 재관측하지 않았다.
+
+검토자는 공급 코드 import/실행, 자체 시험 재실행, venv 생성, 설치, pip, emit/check, 최적화/Sobol 계산, C4-A 구현·자료 개봉·COMSOL을 하지 않았다. 검토용 텍스트·CSV·JSON·AST·Git 객체/해시 처리와 공식 문서/소스 읽기, 회신 파일/ZIP 작성만 했다. 여기서 사용한 리뷰어 메타데이터 스크립트는 제출된 프로그램의 실행이 아니다.
+
+§135에 기록된 C4-A 사용자 승인 이력은 증거로 보존한다. 이번 검토는 그 이력을 취소하지도, 환경 결속 조건을 면제하거나 새 환경에 자동 적용하지도 않는다. U2·U4·U5는 미채택이고 실자료 실행 승인은 없다. COMSOL은 사용자가 사용 가능하다고 알릴 때까지 보류한다.
+
+다음 제출은 N1·N2 정정 요청문과 실행기/바깥 하네스의 고정 사본·diff·SHA를 포함한 정적 검토 묶음이다. 이번 회신으로 그 코드 작성·시험·설치 실행을 시작하도록 지시하지 않는다. 원본·run1 실패·10월 수용 기록은 보존한다.
+
+고정 원문:
+요청서 https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/781f357200259f24ac04a95da8aa13dfd2761524/bms-balancing/docs/REIL_C4_ENV_RESEAL_REQUEST_20261124.md
+대조기 https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/781f357200259f24ac04a95da8aa13dfd2761524/bms-balancing/scripts/reil_c4_env_reseal_check.py
+원장 https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/781f357200259f24ac04a95da8aa13dfd2761524/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md
+

@@ -1,0 +1,15 @@
+$ ls -la /usr/bin/python3.11 ; stat -c "%s %F" ; sha256sum ; file -b
+-rwxr-xr-x 1 root root 6644312 Oct 26 15:28 /usr/bin/python3.11
+6644312 regular file
+ca969be9adfbddc0a593745da84da0348a4c2baf849daae18806a344708934c4  /usr/bin/python3.11
+ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a735fc4e7009a969b2ba3ecf29ce36891b66ab10, for GNU/Linux 3.2.0, stripped
+$ /usr/bin/python3.11 -I -c (sys.version · platform.python_build · python_compiler · implementation · system · machine · libc_ver)
+3.11.18 (main, Oct 26 2026, 15:28:55) [GCC 13.3.0]
+('main', 'Oct 26 2026 15:28:55')
+GCC 13.3.0
+CPython Linux x86_64 ('glibc', '2.39')
+$ /usr/bin/python3.11 -I -c "import ensurepip; print(ensurepip.version())"
+24.0
+$ sha256sum /usr/lib/python3.11/ensurepip/__init__.py /usr/lib/python3.11/venv/__init__.py
+0f4e3b95882c914577a9045e27ac88f78d9a0a931a409d3d0287df1cd49e945a  /usr/lib/python3.11/ensurepip/__init__.py
+8671bc5810ee3e52a5ae7aa3b625764688cf12513b2f8e1b0b82aaec93f118a6  /usr/lib/python3.11/venv/__init__.py

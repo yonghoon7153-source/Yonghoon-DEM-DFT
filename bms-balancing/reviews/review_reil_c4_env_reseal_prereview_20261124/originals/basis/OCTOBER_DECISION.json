@@ -1,0 +1,161 @@
+{
+  "kind": "INDEPENDENT_STATIC_REVIEW_DECISION",
+  "review_date": "2026-10-13",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "review_ref": "c2ab1e0cbdc8fc2da2321bd18a064381c6513919",
+  "execution_evidence_commit": "1135624c435b161f0928c2663f77700392606d85",
+  "verdict": "C4_ENV_ACCEPTED_WITH_DOCUMENTED_SCOPE",
+  "current_seal_accepted": true,
+  "current_seal_blocking_findings": [],
+  "findings": [
+    {
+      "id": "ENV-P2-01",
+      "priority": "P2",
+      "current_seal_blocking": false,
+      "topic": "Pre-final-write/commit snapshots and future S10 deadline enforcement",
+      "action": "Correct description without rerun; harden only before future enforcing-runner reuse."
+    },
+    {
+      "id": "ENV-P2-02",
+      "priority": "P2",
+      "current_seal_blocking": false,
+      "topic": "Comparator generality exceeds its current test coverage",
+      "action": "Retain fixed-submission acceptance; narrow byte/path/row exceptions before generic automatic reuse."
+    },
+    {
+      "id": "ENV-P2-03",
+      "priority": "P2",
+      "current_seal_blocking": false,
+      "topic": "Future exact-artifact restoration closure",
+      "action": "Include two ensurepip artifacts and actual external test-tool payload checks, explicit tool/environment/count identities before separate approval."
+    },
+    {
+      "id": "ENV-P2-04",
+      "priority": "P2",
+      "current_seal_blocking": false,
+      "topic": "Effective download endpoints not independently observed",
+      "action": "Keep provenance qualified; explicitly bind source configuration before future source-restricted restore."
+    }
+  ],
+  "accepted_seal": {
+    "path": "bms-balancing/reil_c6_rebuild_20261013/",
+    "manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+    "lock_sha256": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+    "profile_sha256": "50f2c7fb176910da2df252cfd7f17a8f05a56b8696e1be3040d6ff5cf034a641",
+    "interpretation": "New accepted environment generation, not proof of all prior installed bytes being reproduced."
+  },
+  "check_credit": {
+    "accepted": true,
+    "credited_full_c6_check": 1,
+    "recorded_emit_calls": 1,
+    "recorded_check_calls": 1,
+    "recorded_synthetic_cobyqa_calls": 2,
+    "recorded_full_sobol_generation_paths": 2,
+    "condition": "Same code/environment/seal identity remains valid; no repeat full check in C4-0."
+  },
+  "verification": {
+    "unchanged_scientific_member_git_blobs": 8,
+    "lock_changed_lines": [
+      4,
+      16,
+      22,
+      27,
+      32
+    ],
+    "profile_changed_fields": [
+      "python.version",
+      "python.build"
+    ],
+    "manifest_changed_members": [
+      "REIL_C6.lock.txt",
+      "PROFILE.json"
+    ],
+    "scientific_record_hashes_matched": 30,
+    "test_record_hashes_matched": 4,
+    "protected_trees_identical_across_start_execution_review": 7,
+    "recorded_child_calls": 10,
+    "recorded_child_rc_all_zero": true,
+    "wheel_to_installed_record_basis": "Submitted execution evidence, not reviewer direct wheel/installed-runtime observation.",
+    "scientific_installed_payload_basis": "Submitted emit/check source path and execution records; not fresh reviewer OS measurement."
+  },
+  "deviations": {
+    "secret_like_env_removal": {
+      "accepted_for_this_submission": true,
+      "reported_names_removed": 15,
+      "scope": "Limited child-process hygiene, not complete environment isolation."
+    },
+    "extra_pre_origin_precheck": {
+      "accepted_as_documented_exception": true,
+      "original_invocation_output_verified": false,
+      "scope": "Read-only source verified; occurrence/count/problem0 are submitter report, outside timed S0/overall snapshot."
+    }
+  },
+  "timing": {
+    "snapshot_seconds": 36.446,
+    "snapshot_boundary": "Before 10_end.json write, secret scan, stage and commit",
+    "reported_post_commit_seconds": 36.6,
+    "reported_post_commit_raw_return_verified": false,
+    "sampled_disk_max_bytes": 556020307,
+    "disk_limit_bytes": 2000000000,
+    "sampled_disk_within_limit": true,
+    "continuous_peak_verified": false,
+    "complete_post_return_elapsed_verified": false,
+    "s10_individual_rc_observed": false,
+    "historical_budget_overrun_observed": false,
+    "scope": "Do not add call wall times or infer exact final elapsed from Git timestamps."
+  },
+  "next_step": {
+    "name": "C4-0 under existing user approval only",
+    "existing_user_approval_reference": "REIL_PREREQUISITES_STATUS_20261004.md section 36 / REIL_C4_APPROVAL_REQUEST_v2_20261013.md section 8",
+    "environment_acceptance_precondition_satisfied": true,
+    "identity_check_before_start_required": true,
+    "explicit_seal_path_and_manifest_required": true,
+    "scope": "Implementation, approved synthetic RED/GREEN, remaining fixed-array seal, no-data dry run, then stop and report",
+    "total_work_limit_seconds": 14400,
+    "phase_allocation_seconds": {
+      "identity": 60,
+      "red": 600,
+      "green": 600,
+      "fixed_array_seal": 240,
+      "dry_run": 300
+    },
+    "automatic_retest": false,
+    "reviewer_started_implementation": false
+  },
+  "new_authorization_granted": {
+    "environment_install_or_restore": false,
+    "c4_e": false,
+    "c4_a": false,
+    "c4_b": false,
+    "reil_data_opening": false,
+    "research_fit": false,
+    "comsol": false
+  },
+  "future_restore_rule": {
+    "status": "REQUIRES_CLARIFICATION_AND_SEPARATE_USER_APPROVAL",
+    "approved": false,
+    "review_opinion": "Direction acceptable; see REVIEW_KO.md section 5. Do not restore merely because this seal was accepted."
+  },
+  "reviewer_actions": {
+    "supplied_code_imports": 0,
+    "supplied_code_runs": 0,
+    "tests": 0,
+    "installs": 0,
+    "environment_rebuilds": 0,
+    "sobol_regenerations": 0,
+    "scientific_fits": 0,
+    "comsol_calls": 0,
+    "reil_xlsx_pickle_notebook_openings": 0,
+    "external_messages_sent": 0,
+    "tools_used": "Read-only connector GETs; reviewer-owned text/hash/JSON arithmetic; review artifact creation/packaging."
+  },
+  "uncertainties": [
+    "No direct current remote OS/runtime inspection",
+    "No historical wheel SHA equivalence proof",
+    "Unhashed installed-file categories remain outside full byte identity",
+    "Original outer runner return and extra precheck raw output not in submitted evidence"
+  ],
+  "source_index": "SOURCE_INDEX.json",
+  "report": "REVIEW_KO.md",
+  "reply": "CLAUDE_REPLY_KO.md"
+}
