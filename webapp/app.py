@@ -1550,9 +1550,7 @@ def interface_thermo_report():
 def _collab_info(r: dict) -> dict:
     import hashlib as _h
     p = D.ROOT / r["rel"]
-    # via = 'api_file' — 원문을 종전의 /api/file 경로로 띄운다 (결속 검사 밖 · via_why 에 이유 · data.COLLAB_REPORTS 의 CEI 줄 참고)
-    raw = f"/api/file/{r['rel']}" if r.get("via") == "api_file" else f"/reports/{r['slug']}/raw"
-    info = {**r, "ok": p.is_file(), "raw": raw,
+    info = {**r, "ok": p.is_file(), "raw": f"/reports/{r['slug']}/raw",
             "earlier": [{**e, "ok": (D.ROOT / e["rel"]).is_file()} for e in r.get("earlier", ())]}
     if info["ok"]:
         b = p.read_bytes()
@@ -1591,11 +1589,21 @@ def _collab_raw(slug: str):
     return raw
 
 
+@app.route("/reports/<slug>/<path:name>")
+def collab_report_asset(slug, name):
+    """보고서 폴더의 그림 · 표 데이터 · 스타일 — 보기 화면 iframe 이 상대 경로로 받는다 (CEI index.html 의 PNG 9 장 · 2026-11-24).
+    ⛔ HTML 은 내지 않는다 (404) — HTML 은 표에 올려 인자 없는 원문 경로로만 낸다 (결속 음성시험이 그 경로를 훑는다) ·
+    표에 없는 슬러그 · 허용 밖 확장자 · 폴더 밖으로 나가는 경로도 404 (send_from_directory 가 막는다)."""
+    r = D.COLLAB_BY_SLUG.get(slug)
+    if not r or not name.lower().endswith(D.COLLAB_ASSET_EXT):
+        abort(404)
+    return send_from_directory((D.ROOT / r["rel"]).parent, name)
+
+
 for _r in D.COLLAB_REPORTS:
     _ep = _r["slug"].replace("-", "_")
     app.add_url_rule(f"/reports/{_r['slug']}", endpoint=f"collab_report_{_ep}", view_func=_collab_view(_r["slug"]))
-    if _r.get("via") != "api_file":          # via api_file 이면 원문 경로를 안 단다 (종전 /api/file 로만 — 이유는 via_why)
-        app.add_url_rule(f"/reports/{_r['slug']}/raw", endpoint=f"collab_report_raw_{_ep}", view_func=_collab_raw(_r["slug"]))
+    app.add_url_rule(f"/reports/{_r['slug']}/raw", endpoint=f"collab_report_raw_{_ep}", view_func=_collab_raw(_r["slug"]))
 del _r, _ep
 
 

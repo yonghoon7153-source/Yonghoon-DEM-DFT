@@ -34,8 +34,8 @@ def _text(html):
 
 
 def _raw_url(r):
-    """표 한 줄의 원문 경로 — 기본은 인자 없는 /reports/<slug>/raw · via 'api_file' 이면 종전 /api/file 경로 (이유는 via_why)."""
-    return f"/api/file/{r['rel']}" if r.get("via") == "api_file" else f"/reports/{r['slug']}/raw"
+    """표 한 줄의 원문 경로 — 인자 없는 /reports/<slug>/raw (결속 검사의 자동 열거가 훑는 길)."""
+    return f"/reports/{r['slug']}/raw"
 
 
 def _company_hits(t):
@@ -150,14 +150,9 @@ def test_routes_are_in_the_surface_scan():
     assert "/reports" in dom
     rules = {str(rule) for rule in A.app.url_map.iter_rules()}
     for r in D.COLLAB_REPORTS:
-        assert f"/reports/{r['slug']}" in dom, r["slug"]
-        if r.get("via") == "api_file":
-            # 예외 — 원문은 종전 /api/file 경로 (결속 검사 밖) · 이유가 표에 적혀 있어야 한다 · 원문 경로를 따로 달지 않는다
-            assert r.get("via_why"), f"{r['slug']}: 검사 밖으로 띄우는 이유 (via_why) 가 없다"
-            assert f"/reports/{r['slug']}/raw" not in rules, r["slug"]
-        else:
-            assert f"/reports/{r['slug']}/raw" in dom, r["slug"]
-    assert not any("<" in u for u in rules if u.startswith("/reports")), "인자 있는 /reports 경로가 생겼다 (자동 열거 밖)"
+        assert f"/reports/{r['slug']}" in dom and f"/reports/{r['slug']}/raw" in dom, r["slug"]
+    # 인자 있는 /reports 경로는 그림 · 데이터 경로 하나뿐이다 — 그 경로는 HTML 을 내지 않는다 (test_report_assets_*)
+    assert sorted(u for u in rules if u.startswith("/reports") and "<" in u) == ["/reports/<slug>/<path:name>"]
 
 
 def test_report_memos_lead_back_to_each_view(tmp_path, monkeypatch):
@@ -275,32 +270,37 @@ def test_registry_check_is_not_blind(tmp_path):
     assert D.collab_registration("docs/collab/lzo_coated_nca_lpscl_progress_2026_11_17.html")["kind"] == "earlier"
 
 
-def test_cei_exemption_is_honest_and_self_expiring():
-    """CEI index.html 은 유령 결속 4 건 때문에 결속 검사 밖 (/api/file) 으로 띄운다 — 그 예외를 지킨다.
-    양성: 보기 화면이 이유 (via_why) 를 보여 준다 · 상대 경로 그림 9 장이 /api/file 로 열린다.
-    ⛔음성 (스스로 끝나는 예외): 결속 검사기로 원문을 직접 훑어 유령 id 가 **정확히 그 넷** 인지 본다 —
-      원장에 등록돼 0 이 되면 '예외를 지우고 원문 경로로 옮겨라', 새 유령이 생기면 그것도 빨간불."""
-    import canonical as C
-    r = D.COLLAB_BY_SLUG["cei"]
-    assert r.get("via") == "api_file"
+def test_report_assets_serve_pictures_but_never_html():
+    """양성+⛔음성: CEI 페이지가 상대 경로로 부르는 그림 9 장이 보기 화면 iframe 에서 열린다 (/reports/cei/<그림>) ·
+    HTML · 허용 밖 확장자 · 폴더 밖 경로 · 표에 없는 슬러그 · 없는 파일은 404 — HTML 은 표의 원문 경로로만 낸다 (결속 음성시험이 훑는 길)."""
     c = _client()
-    h = c.get("/reports/cei").get_data(as_text=True)
-    assert r["via_why"] in h and "cal-warn" in h, "보기 화면에 검사 밖 이유가 안 보인다"
-    raw = c.get(_raw_url(r)).get_data(as_text=True)
+    raw = c.get("/reports/cei/raw").get_data(as_text=True)
     pics = re.findall(r'src="([^"#:]+\.png)"', raw)
     assert len(pics) == 9, pics
     for name in pics:
-        g = c.get(f"/api/file/db/properties/cei_figs/{name}")
+        g = c.get(f"/reports/cei/{name}")
         assert g.status_code == 200 and g.mimetype == "image/png", (name, g.status_code, g.mimetype)
+    assert c.get("/reports/cei/cei_nd_electronegativity.html").status_code == 404, "HTML 을 그림 경로로 내면 결속 검사를 피해 간다"
+    assert c.get("/reports/cei/index.html").status_code == 404
+    assert c.get("/reports/cei/../../../webapp/app.py").status_code == 404
+    assert c.get("/reports/cei/%2e%2e/%2e%2e/citation_hazards.json").status_code == 404
+    assert c.get("/reports/no-such-slug/cei_dual_compat.png").status_code == 404
+    assert c.get("/reports/cei/no_such_picture.png").status_code == 404
+
+
+def test_cei_box_claims_are_registered_no_ghost_binding():
+    """⛔음성 (2026-11-24): CEI index.html 의 경고 상자 넷이 단 claim id 가 원장 (인용위험 원장) 에 있다 — 결속 검사기로
+    원문을 직접 훑어 유령 결속 0 · 그 넷이 선언된 결속으로 잡힌다. 원장에서 하나라도 빠지면 여기서 빨간불 (화면이 거짓 결속을 단다)."""
+    import canonical as C
+    raw = _client().get("/reports/cei/raw").get_data(as_text=True)
     reg = C.registry()
     sc = C.scan_claim_bindings(raw, claims=C.all_claims(reg=reg), reg=reg, origin="internal")
-    ghost = sorted(sc["dangling"])
-    want = ["cei.esw.nd_narrows_window", "cei.esw.not_cv", "dualcompat.doping.defensive", "dualcompat.sulfate.risk"]
-    assert ghost, ("유령 결속이 정리됐다 — data.COLLAB_REPORTS 의 cei 줄에서 via · via_why 를 지우고 "
-                   "인자 없는 원문 경로 (/reports/cei/raw) 로 옮겨라 (그래야 결속 검사가 훑는다)")
-    assert ghost == want, f"유령 결속이 바뀌었다: {ghost}"
-    # 다른 보고서는 전부 검사 경로다 — 예외는 이 하나뿐
-    assert [x["slug"] for x in D.COLLAB_REPORTS if x.get("via")] == ["cei"]
+    assert sc["dangling"] == [], f"유령 결속: {sc['dangling']}"
+    four = {"cei.esw.nd_narrows_window", "cei.esw.not_cv", "dualcompat.doping.defensive", "dualcompat.sulfate.risk"}
+    hz = {h["id"]: h for h in json.loads((D.ROOT / "db/properties/citation_hazards.json").read_text(encoding="utf-8"))["hazards"]}
+    for cid in four:
+        assert f'data-claim="{cid}"' in raw, cid
+        assert hz.get(cid, {}).get("level") == "CONDITIONAL", f"{cid}: 원장에 CONDITIONAL 로 없다"
 
 
 def test_cei_view_mounts_memos_without_a_main_element():

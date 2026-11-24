@@ -24,7 +24,6 @@
 <div class="callout cal-danger"><b>⛔ 보고서 파일을 못 읽었다</b> — <span class="mono">{{ it.rel }}</span> 이 없다.
   빈 화면이 아니라 파일이 없는 것이다.</div>
 {% else %}
-{% if it.via_why %}<div class="callout cal-warn" style="margin:0 0 10px">⚠ {{ it.via_why }}</div>{% endif %}
 <p class="sub" style="margin:0 0 10px">원본 <span class="mono">{{ it.rel }}</span> · {{ it.kb }} KB · sha256 <span class="mono">{{ it.sha16 }}</span> ·
   값의 근거는 각 카드와 <a href="/governance">판정 원장</a>이다.</p>
 <div class="dn-host" id="creport-host">

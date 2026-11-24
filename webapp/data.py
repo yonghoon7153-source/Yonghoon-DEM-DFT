@@ -7505,15 +7505,12 @@ COLLAB_REPORTS = (
      "title": "Ag–C 층 계면 점착 에너지 (DEM 입력) — DFT 쪽 진행 보고", "date": "2026-11-24",
      "track": "W_ad (DEM-DFT)", "note": "", "earlier": ()},
     # 2026-11-24 (사용자 '권고대로') — CEI 페이지 둘. 실험 쪽 1저자에게 보낸 설명 페이지다 (docs/collab 밖 · db/properties/cei_figs/).
-    #   ⚠ index.html 은 결속 검사 (test_v3_surfaces) 에서 **유령 결속 4 건** 이 나왔다 — 경고 상자 넷의 data-claim id
-    #     (cei.esw.nd_narrows_window · cei.esw.not_cv · dualcompat.doping.defensive · dualcompat.sulfate.risk) 가 claim 원장에 없다.
-    #     원장 등록 (인용위험 원장 · 사람이 정한다) 전까지는 종전과 같은 /api/file 경로로 띄운다 (via · via_why) — 그 경로는 같은 폴더의
-    #     PNG 9 장도 상대 경로로 그대로 푼다. 유령 결속이 정리되면 test_collab_reports 가 빨간불로 '원문 경로로 옮겨라' 를 알린다.
+    #   index.html 은 같은 폴더의 PNG 9 장을 상대 경로로 부른다 → 보기 화면 iframe 은 /reports/cei/<그림> (app.collab_report_asset) 로 받는다.
+    #   ⚠ 처음 결속 검사에 들어갔을 때 경고 상자 넷이 유령 결속 (원장에 없는 claim id) 으로 잡혔다 → 같은 날 인용위험 원장에 CONDITIONAL 로
+    #     등록했다 (사용자 '권고대로' · 초안 확인 '이대로 등록' · citation_hazards.json _history 2026-11-24).
     {"slug": "cei", "nav_parent": "/composition/modelc_nd_doped", "rel": "db/properties/cei_figs/index.html",
      "title": "Nd 는 P 의 행선지를 바꾼다", "date": "2026-10-20",
-     "track": "CEI · Nd 계면", "note": "실험 쪽 1저자에게 보낸 CEI 설명 페이지 — 그림은 같은 폴더의 PNG", "earlier": (),
-     "via": "api_file",
-     "via_why": "결속 검사 밖 (종전과 같은 /api/file 경로) — 경고 상자 넷의 claim id 가 원장에 없다 (유령 결속 4 건 · 원장 등록 전)"},
+     "track": "CEI · Nd 계면", "note": "실험 쪽 1저자에게 보낸 CEI 설명 페이지 — 그림은 같은 폴더의 PNG", "earlier": ()},
     {"slug": "cei-nd", "nav_parent": "/composition/modelc_nd_doped", "rel": "db/properties/cei_figs/cei_nd_electronegativity.html",
      "title": "Nd 를 넣으면 무엇이 달라지나", "date": "2026-10-26",
      "track": "CEI · Nd 계면", "note": "Nd 를 넣었을 때 달라지는 것 — 실험 쪽 1저자용 설명 페이지", "earlier": ()},
@@ -7541,6 +7538,9 @@ def collab_registration(rel: str) -> dict:
 #: 공유 HTML 이 사는 폴더 — 기본은 docs/collab · 표에 든 보고서의 폴더도 자동으로 든다 (예: CEI db/properties/cei_figs).
 #:   이 폴더들의 *.html 은 전부 표에 있어야 한다 (훅 · 시험이 이 목록을 본다).
 COLLAB_DIRS = ("docs/collab",)
+#: 보고서 폴더에서 보기 화면 iframe 이 상대 경로로 받아 갈 수 있는 것 (그림 · 표 데이터 · 스타일). ⛔ HTML 은 안 된다 —
+#:   HTML 은 표에 올려 인자 없는 원문 경로로만 낸다 (그래야 결속 음성시험의 자동 열거가 훑는다).
+COLLAB_ASSET_EXT = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".css", ".csv")
 
 
 def collab_dirs() -> list:
