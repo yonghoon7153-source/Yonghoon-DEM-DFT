@@ -318,15 +318,16 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
-    232.6,
+    260.3,
     548.9,
     509.9
    ],
-   "w": 2012,
-   "h": 1156,
+   "w": 2013,
+   "h": 1041,
    "dpi": 300,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.664
+   "blank": 0.664,
+   "recrop": "tool crop [66.0, 232.6, 548.9, 509.9] included the last body-text line above the figure (SI p.23, line y 238.1–251.4); top moved to y=260.3 (= raster top 266.3 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS8",
@@ -338,15 +339,16 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
-    356.8,
+    384.5,
     548.9,
     575.7
    ],
-   "w": 2012,
-   "h": 913,
+   "w": 2013,
+   "h": 797,
    "dpi": 300,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.777
+   "blank": 0.777,
+   "recrop": "tool crop [66.0, 356.8, 548.9, 575.7] included the last body-text line above the figure (SI p.24, line y 362.3–375.6); top moved to y=384.5 (= raster top 390.5 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS9",
@@ -358,15 +360,16 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
-    238.6,
+    270.4,
     548.7,
     595.7
    ],
    "w": 2012,
-   "h": 1489,
+   "h": 1357,
    "dpi": 300,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.953
+   "blank": 0.953,
+   "recrop": "tool crop [66.0, 238.6, 548.7, 595.7] included the last body-text line above the figure (SI p.25, line y 244.1–257.4); top moved to y=270.4 (= raster top 276.4 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS10",
@@ -538,15 +541,16 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
-    87.8,
+    112.4,
     548.9,
     513.2
    ],
-   "w": 2012,
-   "h": 1774,
+   "w": 2013,
+   "h": 1671,
    "dpi": 300,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.632
+   "blank": 0.632,
+   "recrop": "tool crop [66.0, 87.8, 548.9, 513.2] included the last body-text line above the figure (SI p.47, line y 93.1–106.4); top moved to y=112.4 (= raster top 118.4 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS19",
@@ -578,15 +582,16 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
-    377.6,
+    405.2,
     548.8,
     611.4
    ],
    "w": 2012,
-   "h": 975,
+   "h": 860,
    "dpi": 300,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.43
+   "blank": 0.43,
+   "recrop": "tool crop [66.0, 377.6, 548.8, 611.4] included the last body-text line above the figure (SI p.49, line y 382.9–396.2); top moved to y=405.2 (= raster top 411.2 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS21",
@@ -679,15 +684,16 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
-    191.2,
+    222.6,
     548.9,
     373.8
    ],
-   "w": 2012,
-   "h": 762,
+   "w": 2013,
+   "h": 631,
    "dpi": 300,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.921
+   "blank": 0.921,
+   "recrop": "tool crop [66.0, 191.2, 548.9, 373.8] included the last body-text line above the figure (SI p.59, line y 196.7–210.0); top moved to y=222.6 (= raster top 228.6 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS25",
