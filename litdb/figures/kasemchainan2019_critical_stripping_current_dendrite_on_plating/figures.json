@@ -223,8 +223,8 @@
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
    "blank": 0.942,
-   "viewed": false,
-   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)"
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - Nyquist -1 C with circuit a, R_SEI+CT vs time b)"
   },
   {
    "key": "fS3",
@@ -274,8 +274,8 @@
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
    "blank": 0.926,
-   "viewed": false,
-   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)"
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - WE/CE voltage vs time; note 0 mV rest segments between half cycles)"
   },
   {
    "key": "fS5",
@@ -340,8 +340,8 @@
    "dpi": 300,
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
    "blank": 0.925,
-   "viewed": false,
-   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)"
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - Na cells a-c)"
   }
  ],
  "missing_labels": [
