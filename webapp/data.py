@@ -7488,19 +7488,20 @@ INTERFACE_THERMO_REL = "docs/collab/sulfide_se_interface_thermo_2026_11_17.html"
 #:   docs/collab 의 완결 HTML 을 /interface-thermo 와 같은 꼴 (iframe · 원문 경로 · 여백 메모 · 형광펜) 로 띄운다.
 #:   여기가 집이다 — app 의 라우트 (/reports · /reports/<slug> · /reports/<slug>/raw) · 아래 _NOTE_PAGES · 시험이 이 표 하나를 본다.
 #:   ⛔ 회의록 바탕 외부 과제 문서는 화면에서도 **기업 이름 없이** 그 문서의 제목만 쓴다 (CLAUDE.md · 시험이 본다).
+#:   nav_parent = 사이드바에서 이 보고서를 하위 항목으로 거는 캠페인 url (nav.py 가 그 밑에 둔다 · 시험이 맞는지 본다).
 #:   earlier = 같은 트랙의 앞 판 — 보기 화면 없이 원본 링크만 준다 (메모 딥링크 표에 안 넣는다 · 그 메모는 '파일' 로 남는다).
 #:   ⛔ 이 표가 못 하는 것: 보고서 내용 · 값을 판정하지 않는다 (근거는 각 카드 · 판정 원장) · 새 판이 나오면 사람이 rel 을 바꾼다
 #:     (옛 판에 단 메모는 옛 파일 이름에 남는다 — /interface-thermo 와 같은 규칙).
 COLLAB_REPORTS = (
-    {"slug": "agc-crack", "rel": "docs/collab/agc_interlayer_crack_calc_2026_11_16.html",
+    {"slug": "agc-crack", "nav_parent": "/interface-thermo", "rel": "docs/collab/agc_interlayer_crack_calc_2026_11_16.html",
      "title": "Ag–C 인터레이어 crack 에서의 부반응 — 열역학 계산 보고", "date": "2026-11-16",
      "track": "사례 A · Ag–C 인터레이어 crack",
      "note": "11-16 에 보낸 판 — 통합 보고 (계면 부반응 · 열역학) 의 사례 A 와 같은 문장 · 그림", "earlier": ()},
-    {"slug": "lzo", "rel": "docs/collab/lzo_coated_nca_lpscl_report_2026_11_23.html",
+    {"slug": "lzo", "nav_parent": "/interface-thermo", "rel": "docs/collab/lzo_coated_nca_lpscl_report_2026_11_23.html",
      "title": "LZO 코팅 NCA 양극 | Li₆PS₅Cl 계면 — 계산 보고", "date": "2026-11-23",
      "track": "[혁주] LZO 코팅 NCA", "note": "",
      "earlier": ({"rel": "docs/collab/lzo_coated_nca_lpscl_progress_2026_11_17.html", "label": "계산 진행 보고 (11-17)"},)},
-    {"slug": "wad-dem", "rel": "docs/collab/wad_dem_interface_adhesion_report_2026_11_24.html",
+    {"slug": "wad-dem", "nav_parent": "/adhesion", "rel": "docs/collab/wad_dem_interface_adhesion_report_2026_11_24.html",
      "title": "Ag–C 층 계면 점착 에너지 (DEM 입력) — DFT 쪽 진행 보고", "date": "2026-11-24",
      "track": "W_ad (DEM-DFT)", "note": "", "earlier": ()},
 )

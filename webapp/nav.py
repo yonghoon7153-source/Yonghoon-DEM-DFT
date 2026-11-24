@@ -103,7 +103,17 @@ SECTIONS: list[dict] = [
          "sub": "조성×계산 → QE/UMA 입력 스캐폴드", "kw": "compute 계산 입력 qe"},
     ]},
     # ── 캠페인 (지위 배지는 db 에서) ──────────────────────────────────────
-    {"id": "nav-camp", "label": "캠페인", "items": [
+    # 2026-11-24 — 사이드바가 길어서 (사용자 '옆 index 부분이 너무 길어져서 … 공유보고서만 index 에 넣고 · 아님 토글로 피거나 접거나')
+    #   첫 줄 (공유 보고서) 만 늘 보이고 나머지 캠페인 페이지는 그 밑 접힘 토글 안에 둔다 (fold_after = 늘 보이는 줄 수).
+    #   ⚠ 항목은 SECTIONS 에 그대로 있다 — ⌘K 검색 · 짝 검사 · 배지는 접힘과 무관하게 전부 본다. /reports 화면이 같은 목록을 배지와 같이 싣는다.
+    {"id": "nav-camp", "label": "캠페인", "fold_after": 1, "fold_label": "캠페인 페이지", "items": [
+        # 같이 보는 HTML 보고서 + 캠페인 페이지 목록 (표 = data.COLLAB_REPORTS + 통합 보고). 회의록 바탕 문서는 기업 이름 없이 (시험이 본다).
+        #   also = 보고서 보기 화면 (/reports/<slug>) 에 있을 때 이 줄이 켜진다 — 그 화면들은 사이드바 줄이 따로 없다.
+        {"url": "/reports", "label": "공유 보고서", "icon": "📑", "active": "reports",
+         "also": ["report-agc-crack", "report-lzo", "report-wad-dem"],
+         "sub": "캠페인 페이지와 같이 보는 HTML 보고서를 한 화면에 — 통합 보고 · 사례 A · LZO 코팅 NCA · 점착 W (DEM)",
+         "kw": "reports report 공유 보고서 html collab 캠페인 campaign 사례 a ag-c agc crack 인터레이어 lzo 혁주 hyeokju nca 코팅 "
+               "wad w_ad 점착 dem dem-dft 박리"},
         {"url": "/composition/lpsocl", "label": "LPSOCl 3×3×1", "icon": "🧪",
          "sub": "O-doped LPSCl · 마감 조건 비준 캠페인",
          "camp": "lpsocl", "kw": "lpsocl 마감 closure box331"},
@@ -131,11 +141,6 @@ SECTIONS: list[dict] = [
          "camp": ["ag2s", "hyeokju"],
          "kw": "interface thermo 계면 부반응 열역학 mp materials project grand potential 혼합 반응에너지 ag-c agc 인터레이어 crack ag2s 은 "
                "lzo li2zro3 nca 코팅 양극 혁주 hyeokju 0 v 띠틈"},
-        # 2026-11-24 — 같이 보는 HTML 보고서 목록 (표 = data.COLLAB_REPORTS). 회의록 바탕 문서는 기업 이름 없이 (시험이 본다).
-        {"url": "/reports", "label": "공유 보고서", "icon": "📑", "active": "reports",
-         "sub": "Ag–C crack · LZO 코팅 NCA · 점착 W (DEM) — 같이 보는 HTML 보고서 (메모 · 형광펜)",
-         "kw": "reports report 공유 보고서 html collab 사례 a ag-c agc crack 인터레이어 lzo 혁주 hyeokju nca 코팅 "
-               "wad w_ad 점착 dem dem-dft 박리"},
         {"url": "/composition/modelc_nd_doped", "label": "Nd/O 공치환", "icon": "🧬",
          "sub": "Nd₂O₃-LPSCl · DFT 재채점 중",
          "camp": "nd", "kw": "nd ndo 공치환 neodymium"},
@@ -347,6 +352,7 @@ def sidebar(D=None, root=None) -> list:
         #   먼저 잡혀 `'builtin_function_or_method' object is not iterable` 로 죽는다.
         out.append({"id": sec["id"], "label": sec.get("label"),
                     "fold": bool(sec.get("fold")), "comps": bool(sec.get("comps")),
+                    "fold_after": int(sec.get("fold_after") or 0), "fold_label": sec.get("fold_label") or "",
                     "links": items})
     return out
 

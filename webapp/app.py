@@ -1562,14 +1562,19 @@ def _collab_info(r: dict) -> dict:
 @app.route("/reports")
 def collab_reports_page():
     """공유 보고서 목록 — 통합 보고 (/interface-thermo) 와 COLLAB_REPORTS. 파일이 없으면 그 줄에 '파일 없음' 을 적는다 (빼지 않는다)."""
+    import nav as NAV
     rows = [_collab_info(D.COLLAB_BY_SLUG[r["slug"]]) for r in D.COLLAB_REPORTS]
     ith = {"ok": (D.ROOT / INTERFACE_THERMO_REL).is_file(), "rel": INTERFACE_THERMO_REL}
-    return render_template("collab_reports.html", active="reports", rows=rows, ith=ith)
+    # 캠페인 페이지 목록 — 사이드바 캠페인 묶음의 접힘 쪽 줄 그대로 (배지 포함 · 사본을 안 만든다) + 그 캠페인에 딸린 공유 보고서.
+    camp = next(sec for sec in NAV.sidebar() if sec["id"] == "nav-camp")
+    camps = [{**it, "reports": [r for r in rows if r.get("nav_parent") == it["url"]]}
+             for it in camp["links"][camp["fold_after"]:]]
+    return render_template("collab_reports.html", active="reports", rows=rows, ith=ith, camps=camps)
 
 
 def _collab_view(slug: str):
     def view():
-        return render_template("collab_report.html", active="reports", it=_collab_info(D.COLLAB_BY_SLUG[slug]))
+        return render_template("collab_report.html", active=f"report-{slug}", it=_collab_info(D.COLLAB_BY_SLUG[slug]))
     view.__doc__ = f"공유 보고서 보기 — {slug} (iframe · 여백 메모 · 형광펜)."
     return view
 

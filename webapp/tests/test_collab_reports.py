@@ -103,8 +103,9 @@ def test_no_company_name_anywhere():
         pages[f"원문 {r['slug']}"] = _text(c.get(f"/reports/{r['slug']}/raw").get_data(as_text=True))
         for e in r.get("earlier", ()):
             pages[f"앞 판 {e['rel']}"] = _text((D.ROOT / e["rel"]).read_text(encoding="utf-8"))
-    item = next(it for sec in N.SECTIONS for it in sec["items"] if it["url"] == "/reports")
-    pages["사이드바"] = " ".join(str(item.get(k, "")) for k in ("label", "sub", "kw"))
+    for it in (it for sec in N.SECTIONS for it in sec["items"] if it["url"].startswith("/reports")):
+        pages[f"사이드바 {it['url']}"] = " ".join(str(it.get(k, "")) for k in ("label", "sub", "kw"))
+    assert sum(k.startswith("사이드바") for k in pages) == 1, "전제: 사이드바의 보고서 줄은 공유 보고서 하나뿐이다"
     for name, t in pages.items():
         assert not _company_hits(t), f"기업 이름이 들어갔다 ({name}): {_company_hits(t)}"
 
@@ -168,9 +169,70 @@ def test_report_memos_lead_back_to_each_view(tmp_path, monkeypatch):
             assert o["kind"] == "파일" and o["url"].startswith("/files?q="), (e["rel"], o)
 
 
+def _camp():
+    return next(sec for sec in N.SECTIONS if sec["id"] == "nav-camp")
+
+
+def _sidebar_html(h):
+    return h[h.index('<nav'):h.index('</nav>')] if '<nav' in h else h
+
+
 def test_nav_has_the_reports_item():
-    """양성: 사이드바에 공유 보고서 항목이 있고 목록 화면이 active 로 그 항목을 켠다."""
-    item = next(it for sec in N.SECTIONS for it in sec["items"] if it["url"] == "/reports")
-    assert item["active"] == "reports" and item["label"] == "공유 보고서"
+    """양성: 사이드바 캠페인 묶음의 **첫 줄 (늘 보이는 줄)** 이 공유 보고서이고, 목록 화면이 active 로 그 줄을 켠다.
+    보기 화면 (/reports/<slug>) 에서도 같은 줄이 켜진다 (also) — 그 화면들은 사이드바 줄이 따로 없다."""
+    camp = _camp()
+    assert camp["fold_after"] == 1 and camp["fold_label"] == "캠페인 페이지", camp.get("fold_after")
+    hub = camp["items"][0]
+    assert (hub["url"], hub["active"], hub["label"]) == ("/reports", "reports", "공유 보고서"), hub
+    c = _client()
+    assert re.search(r'href="/reports" aria-current="page"', c.get("/reports").get_data(as_text=True))
+    for r in D.COLLAB_REPORTS:
+        assert f"report-{r['slug']}" in hub["also"], r["slug"]
+        h = c.get(f"/reports/{r['slug']}").get_data(as_text=True)
+        assert re.search(r'href="/reports" aria-current="page"', h), f"{r['slug']}: 보기 화면에서 공유 보고서 줄이 안 켜진다"
+
+
+def test_sidebar_shows_only_the_hub_and_folds_the_campaigns():
+    """양성+⛔음성 (사용자 2026-11-24 '공유보고서만 index 에 넣고 · 아님 토글로 피거나 접거나'):
+    캠페인 페이지는 토글 (details) 안에만 있다 · 늘 보이는 줄은 공유 보고서 하나 · 보고서 보기 화면 줄은 사이드바에 없다 ·
+    토글은 기본으로 닫혀 있고, 지금 페이지가 그 안에 있으면 (예: /sdcp) 서버가 펴서 보낸다."""
+    camp = _camp()
+    rest = camp["items"][camp["fold_after"]:]
+    assert rest and all(not it["url"].startswith("/reports") for it in rest)
+    assert not any(it["url"].startswith("/reports/") for sec in N.SECTIONS for it in sec["items"]), "보고서 줄이 사이드바에 남았다"
+    c = _client()
+    h = _sidebar_html(c.get("/reports").get_data(as_text=True))
+    m = re.search(r'<details class="v3-fold nav-fold nav-subfold" data-fold="nav-camp-more"( open)?>(.*?)</details>', h, re.S)
+    assert m, "캠페인 접힘 토글이 없다"
+    assert not m.group(1), "공유 보고서 화면에서 토글이 펴져 있다 (기본은 접힘)"
+    inside = m.group(2)
+    assert f"캠페인 페이지 {sum(1 for it in rest if not it.get('nsub'))}" in inside
+    for it in rest:
+        assert f'href="{it["url"]}"' in inside, f"{it['url']} 이 토글 안에 없다"
+    head = h[h.index('id="nav-camp"'):m.start()]
+    assert head.count("<li") == 1 and 'href="/reports"' in head, "늘 보이는 줄이 공유 보고서 하나가 아니다"
+    hs = _sidebar_html(c.get("/sdcp").get_data(as_text=True))
+    assert re.search(r'data-fold="nav-camp-more" open>', hs), "캠페인 페이지에 있을 때 토글이 안 펴진다"
+
+
+def test_reports_page_lists_every_campaign_with_its_reports():
+    """양성+⛔음성: 공유 보고서 화면의 캠페인 표가 사이드바 토글 안의 캠페인을 **전부** (배지와 함께) 싣고,
+    공유 보고서마다 그 캠페인 (nav_parent) 줄에 링크가 달린다. 캠페인을 빼먹거나 다른 줄에 달면 여기서 빨간불."""
+    camp = _camp()
+    rest = camp["items"][camp["fold_after"]:]
     h = _client().get("/reports").get_data(as_text=True)
-    assert 'href="/reports"' in h
+    tbl = re.search(r'<table class="tbl" id="camp-list">.*?<tbody>(.*?)</tbody>', h, re.S).group(1)
+    rows = re.findall(r"<tr>(.*?)</tr>", tbl, re.S)
+    assert len(rows) == len(rest), (len(rows), len(rest))
+    by_url = {}
+    for it, row in zip(rest, rows):
+        assert f'href="{it["url"]}"' in row, f"{it['url']}: 표 순서 · 줄이 사이드바와 다르다"
+        by_url[it["url"]] = row
+    side = {it["url"]: it for sec in N.sidebar() for it in sec["links"]}
+    for u, row in by_url.items():
+        if side[u].get("badge"):
+            assert side[u]["badge"] in row, f"{u}: 배지 (원장에서 센 수) 가 표에 없다"
+    for r in D.COLLAB_REPORTS:
+        assert f'href="/reports/{r["slug"]}"' in by_url[r["nav_parent"]], f"{r['slug']}: {r['nav_parent']} 줄에 없다"
+        others = [u for u in by_url if u != r["nav_parent"]]
+        assert not any(f'href="/reports/{r["slug"]}"' in by_url[u] for u in others), f"{r['slug']}: 다른 캠페인 줄에도 달렸다"

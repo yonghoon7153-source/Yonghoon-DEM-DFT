@@ -72,6 +72,16 @@ function plotlyBG(){return {paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0
     <summary class="nav-section" id="{{ sec.id }}">{{ sec.label }}</summary>
     <ul class="nav-links" aria-labelledby="{{ sec.id }}">{{ navlinks(sec.links) }}</ul>
   </details>
+    {%- elif sec.fold_after %}
+  {# 머리 몇 줄만 늘 보이고 나머지는 접힘 토글 안 (2026-11-24 · 캠페인 묶음 — 사이드바가 길어서).
+     접힘 기억은 위 fold 묶음과 같은 data-fold 장치 (브라우저에만) · 지금 페이지가 토글 안에 있으면 서버가 펴서 보낸다. #}
+    {%- set _head = sec.links[:sec.fold_after] %}{%- set _rest = sec.links[sec.fold_after:] %}
+  <div class="nav-section" id="{{ sec.id }}">{{ sec.label }}</div>
+  <ul class="nav-links" aria-labelledby="{{ sec.id }}">{{ navlinks(_head) }}</ul>
+  <details class="v3-fold nav-fold nav-subfold" data-fold="{{ sec.id }}-more"{% if _rest|selectattr('active')|selectattr('active','equalto',active)|list %} open{% endif %}>
+    <summary class="nav-subsum">{{ sec.fold_label }} {{ _rest|rejectattr('nsub')|list|length }}</summary>
+    <ul class="nav-links" aria-label="{{ sec.fold_label }}">{{ navlinks(_rest) }}</ul>
+  </details>
     {%- else %}
   <div class="nav-section" id="{{ sec.id }}">{{ sec.label }}</div>
   <ul class="nav-links" aria-labelledby="{{ sec.id }}">{{ navlinks(sec.links) }}</ul>
