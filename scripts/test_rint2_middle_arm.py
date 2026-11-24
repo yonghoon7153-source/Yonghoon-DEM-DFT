@@ -5,7 +5,7 @@
   unshare -pf --mount-proc --kill-child python3 -I -X utf8 -B scripts/test_rint2_middle_arm.py
 
   T1  봉인 사슬 sha256 앞 16 자리 그대로 · 바뀐 사본은 거부 · 시험 뒤에도 바이트 그대로
-  T2  env 차이 = arm 1 {SIGMA_SDCP_OVERRIDE: '0'} · arm 2 {KITS} 정확히 (봉인 R 단위 env = 사슬 runner_env_delta 를 따로 불러 대조 · 합성 계획 · 사다리)
+  T2  env 차이 = arm 1 {SIGMA_SDCP_OVERRIDE: '0'} · arm 2 {KITS} (+ SV 반사실 켠 봉인 런 = CJUNC_SV_CF 1 → 없음 · arm 2 SV 반사실 끔 = 1저자 11-24) 정확히 (봉인 R 단위 env = 사슬 runner_env_delta 를 따로 불러 대조 · 합성 계획 · 사다리)
   T3  등록 밖 override · 칸 거부 (등록 표 변이 · 사슬 env 변이 · 금지 env · 킷 이름 · 부모 셸 칸 지움)
   T4  없는 · 꼴 틀린 사다리 거부 (요약 읽기 · 사슬 load_ladders 읽기 · run 은 --out 을 만들지 않는다)
   T5  σ_SDCP 0 = SDCP 셀을 빈칸 (pore) 으로 둔 것과 같은 σ_e — step3_sigma.solve_sigma_z (작은 합성 격자 · 비트 같음 · σ_SDCP > 0 이면 달라짐)
@@ -320,6 +320,7 @@ def t2a():
         order = _unit_order(law, lads)
         assert [(c['kit'], c['role'], c['law'], c['c'], c['rj'], c['arms'], c['sv_cf']) for c in (r['call'] for r in cell['runs'])] == order
         assert [r['name'] for r in cell['runs']] == ['U01_corner', 'U02_origin'], [r['name'] for r in cell['runs']]
+        assert all(r['sv_cf'] == bool(r['call']['sv_cf']) for r in cell['runs'])          # arm 1 = 봉인 R 단위 SV 요청 그대로
         assert cell['kit'] == CH.DBE_KIT and cell['rj'] == RJ[law] and cell['unit'] == f'{law}_c0_R_j0'
         for n, r in enumerate(cell['runs'], 1):
             assert r['env_diff'] == {'SIGMA_SDCP_OVERRIDE': {'r_unit': '256.6', 'arm': '0'}}, r['env_diff']
@@ -337,20 +338,29 @@ def t2a():
         assert [r['outdir'].name for r in cell['runs']] == ['U01_corner_arm1', 'U02_origin_arm2_arml1-2']
 
 
-@check('T2b', 'arm 2 — 런마다 env 차이 = {KITS: DBE 킷 → 새 킷} 정확히 · 요청 차이 = kit 하나 · σ_SDCP 칸 = 봉인 값 그대로')
+@check('T2b', 'arm 2 — 런마다 env 차이 = {KITS: DBE 킷 → 새 킷} (+ SV 반사실 켠 봉인 런 = CJUNC_SV_CF 1 → 없음) 정확히 · 요청 차이 = kit (+ sv_cf) · σ_SDCP 칸 = 봉인 값 그대로 · SV 반사실 늘 끔')
 def t2b():
     lads = MA.ladders_summary(CH, FX['lads'])['lads']
+    n_drop = 0
     for law in CH.LAWS:
         cell = MA.build_cell(CH, 2, law, KIT2, FX['plan'], lads, FX['runner'], FX['root'], FX['out'])
         assert cell['kit'] == KIT2
         for n, r in enumerate(cell['runs'], 1):
-            assert r['env_diff'] == {'KITS': {'r_unit': CH.DBE_KIT, 'arm': KIT2}}, r['env_diff']
+            ref_sv = bool(r['call']['sv_cf'])
+            assert r['sv_cf'] is False and 'CJUNC_SV_CF' not in r['env'], r['env'].get('CJUNC_SV_CF')
+            want_diff = {'KITS': {'r_unit': CH.DBE_KIT, 'arm': KIT2}}
+            if ref_sv:
+                want_diff['CJUNC_SV_CF'] = {'r_unit': '1', 'arm': None}
+                n_drop += 1
+            assert r['env_diff'] == want_diff, r['env_diff']
             req, ref = _ref_env(r['call'], n, law, r['outdir'])
             want = dict(ref)
             want['KITS'] = KIT2
+            want.pop('CJUNC_SV_CF', None)
             assert r['env'] == want
             assert r['env']['SIGMA_SDCP_OVERRIDE'] == CH.ENV_FIXED['SIGMA_SDCP_OVERRIDE'] == '256.6'
-            assert {k for k in req if req[k] != r['req'][k]} == {'kit'}
+            assert {k for k in req if req[k] != r['req'][k]} == ({'kit', 'sv_cf'} if ref_sv else {'kit'})
+    assert n_drop == len(CH.LAWS), n_drop          # 봉인 단위마다 모서리 런 하나가 SV 반사실을 켠다 (합성 계획)
 
 
 @check('T2c', 'plan CLI (새 프로세스 · --ladder-check summary) — 4 칸 · 차이 줄 = 등록 칸뿐 · rc 0')
@@ -359,7 +369,9 @@ def t2c():
                        '--root', FX['root'], '--runner', FX['runner']])
     assert rc == 0, out
     assert out.count('다른 칸: SIGMA_SDCP_OVERRIDE 256.6 → 0') == 4, out
-    assert out.count(f'다른 칸: KITS {CH.DBE_KIT} → {KIT2}') == 4, out
+    assert out.count(f'KITS {CH.DBE_KIT} → {KIT2}') == 4, out
+    assert out.count(f'다른 칸: CJUNC_SV_CF 1 → None · KITS {CH.DBE_KIT} → {KIT2}') == 2, out    # arm 2 모서리 런 = SV 반사실 끔
+    assert out.count('SV 반사실 켬') == 2 and 'SV 반사실 끔 = arm [2]' in out, out
     assert 'plan = 4 칸' in out and out.count('[칸] arm') == 4
     assert all(f'CJUNC_RJ={RJ[law]}' in out for law in CH.LAWS)
 
@@ -374,9 +386,30 @@ def t2d():
     for arm, kit in ((1, None), (2, KIT2)):
         cell = MA.build_cell(CH, arm, 'P1', kit, FX['plan'], lads, FX['runner'], FX['root'], FX['out'], cjunc_store=str(st))
         for r in cell['runs']:
-            assert r['env']['CJUNC_STORE'] == str(st) and set(r['env_diff']) == set(MA.ARM_DIFF_KEYS[arm])
+            dropped = r['sv_cf'] != bool(r['call']['sv_cf'])
+            assert r['env']['CJUNC_STORE'] == str(st) and set(r['env_diff']) == set(MA.ARM_DIFF_KEYS[arm]) | ({'CJUNC_SV_CF'} if dropped else set())
     rc, out = run_main(['plan', '--ladder-check', 'summary', '--ladders', *FX['lads'], '--plan', FX['plan_file'], '--cjunc-store', 'rel/dir'])
     assert rc == 3 and 'NOT_REGISTERED' in out, out
+
+
+@check('T2e', 'SV 반사실 끄는 팔 (1저자 11-24) — ARM_SV_CF_OFF 를 비우면 arm 2 모서리 런이 CJUNC_SV_CF 1 을 받는다 (옛 꼴) · 끈 런의 차이 칸 위조 · 빠짐 · 등록 밖 = 거부')
+def t2e():
+    lads = MA.ladders_summary(CH, FX['lads'])['lads']
+    old = MA.ARM_SV_CF_OFF
+    try:
+        MA.ARM_SV_CF_OFF = ()
+        cell = MA.build_cell(CH, 2, 'P0', KIT2, FX['plan'], lads, FX['runner'], FX['root'], FX['out'])
+        assert [r['env'].get('CJUNC_SV_CF') for r in cell['runs']] == ['1', None]
+    finally:
+        MA.ARM_SV_CF_OFF = old
+    cell = MA.build_cell(CH, 2, 'P0', KIT2, FX['plan'], lads, FX['runner'], FX['root'], FX['out'])
+    assert [r['env'].get('CJUNC_SV_CF') for r in cell['runs']] == [None, None]
+    ok_diff = {'KITS': {'r_unit': CH.DBE_KIT, 'arm': KIT2}, 'CJUNC_SV_CF': {'r_unit': '1', 'arm': None}}
+    assert MA.diff_problem(CH, ok_diff, 2, KIT2, sv_dropped=True) is None
+    assert MA.diff_problem(CH, dict(ok_diff, CJUNC_SV_CF={'r_unit': '1', 'arm': '1'}), 2, KIT2, sv_dropped=True)
+    assert MA.diff_problem(CH, {'KITS': ok_diff['KITS']}, 2, KIT2, sv_dropped=True)           # 빠진 칸
+    assert MA.diff_problem(CH, ok_diff, 2, KIT2, sv_dropped=False)                           # 등록 밖 칸
+    assert MA.arm_sv_cf(1, True) is True and MA.arm_sv_cf(1, False) is False and MA.arm_sv_cf(2, True) is False
 
 
 # ═════════════════════════ T3 ═════════════════════════
@@ -994,11 +1027,15 @@ def r3():
     m = json.loads((out / MA.MANIFEST).read_text(encoding='utf-8'))
     assert m['kit'] == KIT2 and m['override'] == {} and m['rj'] == RJ['P1'] and m['bed_diff_vs_dbe'] == ['역할 scaffold']
     for r in m['runs']:
-        assert r['env_diff'] == {'KITS': {'r_unit': CH.DBE_KIT, 'arm': KIT2}} and r['kit'] == KIT2
+        d = dict(r['env_diff'])
+        sv = d.pop('CJUNC_SV_CF', None)
+        assert d == {'KITS': {'r_unit': CH.DBE_KIT, 'arm': KIT2}} and r['kit'] == KIT2 and sv in (None, {'r_unit': '1', 'arm': None}), r['env_diff']
         env = _env_dump(out / r['outdir'] / 'runner_env.txt')
+        assert 'CJUNC_SV_CF' not in env                                                  # arm 2 = SV 반사실 끔 (1저자 11-24)
         assert env['KITS'] == KIT2 and env['SIGMA_SDCP_OVERRIDE'] == '256.6' and env['CJUNC_RJ'] == RJ['P1'] and env['CJUNC_PTFE_JLAW'] == 'P1'
         assert all(a['file'].startswith('p2_DBE_ptfe05_sdcp0_vgcf100_') for a in r['arm_files'])
     assert [x['man_sdcp'] for x in FX['run_reads']] == [256.6, 256.6] and all(x['s0_grid'] is None for x in FX['run_reads'])
+    assert sum(1 for r in m['runs'] if 'CJUNC_SV_CF' in r['env_diff']) == 1, [r['env_diff'] for r in m['runs']]
     # 기계 · 시간 관문
     with patched(CH, 'load_ladders', fake_load_ladders):
         rc, txt = run_main(['run', '--arm', '1', '--law', 'P0', '--ladders', *FX['lads'], '--plan', FX['plan_file'], '--registration', FX['reg'],

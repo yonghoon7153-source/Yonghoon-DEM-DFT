@@ -62,6 +62,14 @@ ARM_CHOICES = (1, 2)
 ARM_OVERRIDE = {1: {'SIGMA_SDCP_OVERRIDE': '0'}, 2: {}}
 #: 등록 §2 — 봉인 R 단위 env 와 달라도 되는 칸 (① = σ_SDCP · ② = 킷 이름) · 그 밖 칸이 다르면 거부
 ARM_DIFF_KEYS = {1: ('SIGMA_SDCP_OVERRIDE',), 2: ('KITS',)}
+#: SV 반사실 (CJUNC_SV_CF) 을 끄는 팔 — 1저자 11-24 *"권고대로"* (등록 개정 1 §8): ② 는 SDCP 가 없어 끊을 다리가 0 개 (반사실 = 주 그래프 ·
+#:   같은 풀이 한 번 더 · R 은 SDCP 없는 침대에서 돌린 적 없음) · 주 σ 무관 · ① 은 봉인 R 단위 요청 그대로.
+ARM_SV_CF_OFF = (2,)
+
+
+def arm_sv_cf(arm, ref_sv):
+    """이 팔 런의 SV 반사실 요청 — `ARM_SV_CF_OFF` 팔 = 늘 끔 · 그 밖 = 봉인 R 단위 요청 그대로."""
+    return False if arm in ARM_SV_CF_OFF else bool(ref_sv)
 #: 등록 §2 — 봉인 R 단위 요청과 달라도 되는 요청 칸 (② = 킷)
 ARM_REQ_DIFF = {1: (), 2: ('kit',)}
 ARM1_SIGMA_SDCP = 0.0                           # arm 1 매니페스트 기대값 (env '0' 의 수)
@@ -269,9 +277,10 @@ def env_diff(ref, mid):
     return {k: {'r_unit': ref.get(k), 'arm': mid.get(k)} for k in sorted(set(ref) | set(mid)) if ref.get(k) != mid.get(k)}
 
 
-def diff_problem(CH, diff, arm, kit):
-    """env 차이 → 사유 | None — 칸 집합 = `ARM_DIFF_KEYS[arm]` 정확히 · ① 값 = 등록 override · ② = DBE 킷 → 새 킷."""
-    want = set(ARM_DIFF_KEYS[arm])
+def diff_problem(CH, diff, arm, kit, sv_dropped=False):
+    """env 차이 → 사유 | None — 칸 집합 = `ARM_DIFF_KEYS[arm]` (+ SV 반사실을 끈 런이면 `CJUNC_SV_CF` 1 → 없음) 정확히 ·
+    ① 값 = 등록 override · ② = DBE 킷 → 새 킷."""
+    want = set(ARM_DIFF_KEYS[arm]) | ({'CJUNC_SV_CF'} if sv_dropped else set())
     if set(diff) != want:
         return (f'봉인 R 단위 env 와 다른 칸 {sorted(diff)} ≠ 등록 {sorted(want)} — 등록 밖 칸 '
                 f'{sorted(set(diff) - want)} · 빠진 칸 {sorted(want - set(diff))}')
@@ -281,6 +290,8 @@ def diff_problem(CH, diff, arm, kit):
             return f'SIGMA_SDCP_OVERRIDE {d} ≠ 봉인 {CH.ENV_FIXED["SIGMA_SDCP_OVERRIDE"]!r} → 등록 {ARM_OVERRIDE[1]["SIGMA_SDCP_OVERRIDE"]!r}'
     if arm == 2 and diff['KITS'] != {'r_unit': CH.DBE_KIT, 'arm': kit}:
         return f'KITS {diff["KITS"]} ≠ {CH.DBE_KIT} → {kit}'
+    if sv_dropped and diff['CJUNC_SV_CF'] != {'r_unit': '1', 'arm': None}:
+        return f'CJUNC_SV_CF {diff["CJUNC_SV_CF"]} ≠ 봉인 단위 1 → 없음 (SV 반사실 끈 런)'
     return None
 
 
@@ -340,17 +351,20 @@ def build_cell(CH, arm, law, kit2, plan, lads, runner, root, out, machine=None, 
     runs = []
     for cl in calls:
         rname, rreq, rout, renv = _call(CH, '봉인 R 단위 요청', ref._prepare, cl['kit'], cl['role'], cl['law'], cl['c'], cl['rj'], cl['arms'], cl['sv_cf'])
-        mname, mreq, mout, menv = _call(CH, f'arm {arm} 요청', mid._prepare, kit, cl['role'], cl['law'], cl['c'], cl['rj'], cl['arms'], cl['sv_cf'])
+        sv = arm_sv_cf(arm, cl['sv_cf'])
+        dropped = sv != bool(cl['sv_cf'])
+        mname, mreq, mout, menv = _call(CH, f'arm {arm} 요청', mid._prepare, kit, cl['role'], cl['law'], cl['c'], cl['rj'], cl['arms'], sv)
         if (rname, rout) != (mname, mout):
             raise Refuse('ENV_DIFF', f'런 이름 · 폴더 {mname} · {mout} ≠ 봉인 단위 {rname} · {rout}')
         dreq = sorted(k for k in set(rreq) | set(mreq) if rreq.get(k) != mreq.get(k))
-        if dreq != sorted(ARM_REQ_DIFF[arm]):
-            raise Refuse('ENV_DIFF', f'{mname}: 요청 칸 차이 {dreq} ≠ 등록 {sorted(ARM_REQ_DIFF[arm])}')
+        want_req = sorted(set(ARM_REQ_DIFF[arm]) | ({'sv_cf'} if dropped else set()))
+        if dreq != want_req:
+            raise Refuse('ENV_DIFF', f'{mname}: 요청 칸 차이 {dreq} ≠ 등록 {want_req}')
         diff = env_diff(renv, menv)
-        why = diff_problem(CH, diff, arm, kit)
+        why = diff_problem(CH, diff, arm, kit, sv_dropped=dropped)
         if why:
             raise Refuse('ENV_DIFF', f'{mname}: {why}')
-        runs.append({'name': mname, 'req': mreq, 'outdir': mout, 'env': menv, 'env_diff': diff, 'call': cl})
+        runs.append({'name': mname, 'req': mreq, 'outdir': mout, 'env': menv, 'env_diff': diff, 'call': cl, 'sv_cf': sv})
     return {'arm': arm, 'law': law, 'kit': kit, 'rj': lads[law][CELL_ROLE], 'unit': uname, 'runs': runs, 'scrubbed': list(mid.scrubbed)}
 
 
@@ -426,7 +440,8 @@ def cmd_plan(a):
                 say('    ' + cmd_line(CH, root, runner, r['env']))
             if cell['scrubbed']:
                 say(f'  부모 셸에서 지울 env (사슬 Runner 규칙): {cell["scrubbed"]}')
-    say(f'plan = {n} 칸 · env 차이 = 등록 칸뿐 (arm 1 {list(ARM_DIFF_KEYS[1])} · arm 2 {list(ARM_DIFF_KEYS[2])}) · OUTDIR = run 의 --out 아래 같은 이름')
+    say(f'plan = {n} 칸 · env 차이 = 등록 칸뿐 (arm 1 {list(ARM_DIFF_KEYS[1])} · arm 2 {list(ARM_DIFF_KEYS[2])} + SV 반사실 끈 런의 CJUNC_SV_CF) · '
+        f'SV 반사실 끔 = arm {list(ARM_SV_CF_OFF)} · OUTDIR = run 의 --out 아래 같은 이름')
     return 0
 
 
@@ -545,7 +560,7 @@ def cmd_run(a):
                 cl = pr['call']
                 read = {'status': 'stopped', 'stop': None}
                 try:
-                    rn.run(cell['kit'], cl['role'], cl['law'], cl['c'], cl['rj'], cl['arms'], cl['sv_cf'])
+                    rn.run(cell['kit'], cl['role'], cl['law'], cl['c'], cl['rj'], cl['arms'], pr['sv_cf'])
                     read = {'status': 'ok'}
                 except CH.Stop as e:
                     last = rn.records[-1] if rn.records else {}
