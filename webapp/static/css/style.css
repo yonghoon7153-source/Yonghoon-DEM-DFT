@@ -1063,25 +1063,43 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; padding: .05
 }
 
 /* ══ 인쇄 ═══════════════════════════════════════════════════════════════ */
-/* 화면 위의 "PDF 로 저장" — 인쇄에서는 사라진다 (아래 print 블록) */
+/* 화면 위의 "PDF 로 저장" — 인쇄에서는 사라진다 (아래 print 블록)
+   2026-11-24: 오른쪽 아래에 떠 있던 단추가 스크롤할 때 표 · 본문 글자를 가렸다 (렌더 확인으로 발견 · 사용자 "권고대로").
+   → 데스크톱: 떠 있지 않게 본문 맨 위 오른쪽에 둔다 (흐름 안 · 스크롤하면 같이 올라간다 · Ctrl-P 는 어디서나 된다).
+   → 폰 (≤ 860px): 아래 블록의 위 막대 안 오른쪽에 둔다. */
 .pdfbtn {
-  position: fixed; right: 18px; bottom: 18px; z-index: 40;
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 9px 14px; border-radius: 999px; cursor: pointer;
+  position: static; display: flex; width: max-content; margin: -14px 0 12px auto;
+  align-items: center; gap: 7px;
+  padding: 7px 13px; border-radius: 999px; cursor: pointer;
   font: inherit; font-size: var(--fs-sm); font-weight: 600;
   color: var(--ink-1); background: var(--surface-1);
-  border: 1px solid var(--line); box-shadow: 0 2px 10px rgb(0 0 0 / 12%);
+  border: 1px solid var(--line);
 }
 .pdfbtn:hover { background: var(--surface-2); border-color: var(--k); color: var(--k); }
 .pdfbtn:focus-visible { outline: 2px solid var(--k); outline-offset: 2px; }
-@media (max-width: 720px) { .pdfbtn { right: 12px; bottom: 12px; padding: 8px 12px; } }
+
+/* 폰 폭의 위 막대 (base.html `.topbar`) — 메뉴 단추 (z 50) · PDF 단추를 그 안에 둔다. 막대는 사이드바 (z 40) · 어둠막 (z 35)
+   아래 (z 34) 라 메뉴를 열면 함께 덮인다. 그 층의 색 띠 (`.content::before` — 폰에서 left 가 사이드바 폭만큼 밀려 있었다)
+   대신 막대 윗줄을 그 색으로 칠한다. 앵커로 뛰면 제목이 막대 밑에 숨지 않게 scroll-padding 을 막대 높이만큼 준다. */
+.topbar { display: none; }
+@media (max-width: 860px) {
+  .topbar {
+    display: block; position: fixed; top: 0; left: 0; right: 0; height: 62px; z-index: 34;
+    background: var(--bg); border-top: 3px solid var(--k); border-bottom: 1px solid var(--line);
+  }
+  .content::before { display: none; }
+  .pdfbtn { position: fixed; top: 12px; right: 12px; z-index: 36; margin: 0; padding: 8px 12px; }
+  html { scroll-padding-top: 74px; }
+  .panel:target, .prose :is(h2, h3):target { scroll-margin-top: 74px; }
+}
+body.rd-on .topbar { display: none !important; }
 
 @media print {
   /* ⚠ 인쇄본은 **화면의 사본**이다. 여기서 내용을 빼거나 요약하지 않는다 —
      빠진 줄이 있으면 인쇄본을 읽는 사람이 그것을 모른다. 없애는 것은 탐색
      장치(사이드바·팔레트·버튼)뿐이다. */
   .sidebar, .menu-toggle, .cmdk, .skip-link, .toc, .jump, .seg,
-  .nav-veil, .pdfbtn, .theme-toggle { display: none !important; }
+  .nav-veil, .pdfbtn, .theme-toggle, .topbar { display: none !important; }
   .content { margin: 0; padding: 0; max-width: 100%; }
   .content::before { display: none; }
   .panel, .card { box-shadow: none; break-inside: avoid; }

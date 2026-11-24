@@ -43,6 +43,9 @@
 <button class="menu-toggle" id="menubtn" aria-label="메뉴 열기/닫기" aria-expanded="false" aria-controls="sidebar">
   <svg class="ic" aria-hidden="true"><use href="#i-menu"></use></svg>
 </button>
+{# 폰 폭 (≤ 860px) 의 위 막대 — 메뉴 · PDF 단추를 이 막대 안에 두고, 본문 글자는 막대 밑으로 지나가게 한다
+   (떠 있는 단추가 글자를 가리던 것 · 2026-11-24 렌더 확인). 장식뿐이라 읽기 도구에서 숨긴다. #}
+<div class="topbar" aria-hidden="true"></div>
 <div class="nav-veil" id="navveil" hidden></div>
 
 <nav class="sidebar" id="sidebar" aria-label="주 메뉴">
