@@ -62,22 +62,22 @@
               기계 정본화 — 09-29 판 그대로</td></tr>
         <tr><td><b>③ 정량화</b></td>
             <td>09-29 판 그대로 — 폭 측정 원장 · FINDINGS · 새 모델 설계 요구서에 그 뒤 날짜가 붙은 기록이 없다</td>
-            <td><code class="mono">reviews/BML_R1_RESPONSE.md</code> · <code class="mono">docs/NEW_MODEL_REQUIREMENTS.md</code></td>
+            <td><code class="mono">reviews/<wbr>BML_<wbr>R1_<wbr>RESPONSE.md</code> · <code class="mono">docs/<wbr>NEW_<wbr>MODEL_<wbr>REQUIREMENTS.md</code></td>
             <td>§4·5 의 "남은 일" 표</td></tr>
         <tr><td><b>REIL 외부 검증</b></td>
-            <td>C4-A 구현 요청서 v2 재검토 = <code class="mono">REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL</code> —
+            <td>C4-A 구현 요청서 v2 재검토 = <code class="mono">REVISION_<wbr>REQUIRED_<wbr>BEFORE_<wbr>IMPLEMENTATION_<wbr>AND_<wbr>TEST_<wbr>APPROVAL</code> —
               N2 · N5 · N7 · C1 문서 범위 종결 · <b>N1 · N3 · N4 · N6 남음</b> · 비차단 C2 (검토 2026-11-08 · 2026-11-24 반입)</td>
-            <td><code class="mono">REIL_PREREQUISITES_STATUS_20261004.md</code> §130 · <a href="#reil">§4·8</a></td>
-            <td>구현 요청서 v3 (원장 §131 · 커밋 c7062ce) → 같은 날 재검토 회신 (원장 §132) = <code class="mono">REVISION_REQUIRED_BOOTSTRAP_ALLOWLIST_CYCLE</code> —
+            <td><code class="mono">REIL_<wbr>PREREQUISITES_<wbr>STATUS_<wbr>20261004.md</code> §130 · <a href="#reil">§4·8</a></td>
+            <td>구현 요청서 v3 (원장 §131 · 커밋 c7062ce) → 같은 날 재검토 회신 (원장 §132) = <code class="mono">REVISION_<wbr>REQUIRED_<wbr>BOOTSTRAP_<wbr>ALLOWLIST_<wbr>CYCLE</code> —
               세부 12 중 11 + C2 문서 범위 종결 · N1 bootstrap 하나 OPEN → 요청서 v4 (원장 §133 · 그 하나만 정정) → 재검토 회신 (원장 §134) =
-              <code class="mono">DOCUMENT_REVISION_ACCEPTED_V3_N1_CLOSED_NOT_IMPLEMENTATION_AUTHORIZED</code> — <b>v4 수용 · 새 차단 0</b>.
+              <code class="mono">DOCUMENT_<wbr>REVISION_<wbr>ACCEPTED_<wbr>V3_<wbr>N1_<wbr>CLOSED_<wbr>NOT_<wbr>IMPLEMENTATION_<wbr>AUTHORIZED</code> — <b>v4 수용 · 새 차단 0</b>.
               다음 = <b>구현 · 무자료 시험 승인은 사용자 결정 (대기)</b>. U2 미선택 · U4 · U5 미채택 · 수용은 구현 · 시험 · 실행 승인이 아니다</td></tr>
         <tr><td><b>ASSB</b></td>
             <td>문헌 흡수 <b>117호에서 멈춤</b> → 합성 truth (2026-11-24 사용자 결정). C1 1 차: 스파이크 S4 · S5 실패로 격자 전 중단
               (격자 0 / 165). C1 2 차 (⚠ 결과를 본 뒤의 규칙 변경 S4′ · S5′ — 사용자 승인 (가)): 스파이크 전부 통과 ·
               <b>격자 수렴 (설계서 §5-8 규칙 5) 에서 중단</b> — 격자 3 / 165 · 검출 지도 (C1a) · 바인더 판정 (C1b) 없음.
               진단 전용 · 인용 금지 · 정본 아님</td>
-            <td><code class="mono">ASSB_TRANSFER_NOTE.md</code> §6-3-k 결정 3 · <code class="mono">followups/assb-contact-truth/STATUS.md</code> · 원장 §4 2026-11-24 줄 · <a href="#assb">§4·7</a></td>
+            <td><code class="mono">ASSB_TRANSFER_NOTE.md</code> §6-3-k 결정 3 · <code class="mono">followups/<wbr>assb-contact-truth/<wbr>STATUS.md</code> · 원장 §4 2026-11-24 줄 · <a href="#assb">§4·7</a></td>
             <td>2 차 뒤 사용자 "다 권고대로 해" (2026-11-24) → C1 3 차 (표준 해상도 40 · 1e-9 + DC 영 채널 판정을 DC 결과 전에 사전 등록 · 설계서 §8-7) →
               <b>격자 수렴 (규칙 5) 에서 다시 중단</b> — τ̂ 최대 변화 1.148 % &gt; 1 % (원인 = 격자 · 2 차 2.95 %) · 격자 3 / 165 · DC 판정 실행 0 (커밋 d1d19c4).
               → 사용자 "권고대로해" → C1 4 차 (표준 80 · 판정 쌍 160 · 설계서 §8-9) → <b>정밀판 160 계산이 메모리 부족으로 죽어 규칙 5 판정 없음</b>
@@ -621,14 +621,14 @@
     <p><b>(2026-11-24 갱신) 지금 이 갈래는 사용자 보류다 — 재개 일정 없음 · 자동 재개 없음.</b>
       사용자 원문 (원장 §100): "현재 제가 COMSOL을 사용할 수 없어 당분간 COMSOL 관련 후속 작업은 보류해 주세요. …
       지금 추가 구현·시험·OS/Job·COMSOL 실행이나 자동 재개는 하지 않습니다." 재개 조건은 사용자가 COMSOL 을 다시 쓸 수 있다고
-      알릴 때이고 (<code class="mono">automatic_resume=false</code> · <code class="mono">new_execution_authorization=false</code>),
+      알릴 때이고 (<code class="mono">automatic_resume=false</code> · <code class="mono">new_<wbr>execution_<wbr>authorization=false</code>),
       보류는 이전 검증 결과의 취소가 아니다. 재개해도 단계마다 별도 승인이다.</p>
     <p><b>보류 직전의 판정</b> (§100 · 송신 측 검토 2026-11-09 · 2026-11-24 인계 반입 · 이 저장소 실행 0): S1 receiver-bound ACK
       통합 R3 — 12 시나리오 (오프라인 10 + 실제 연결 2) 의 <b>한정 기능 결과 수용</b>
-      (<code class="mono">LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED</code>). 한정 기능 결과 수용은
+      (<code class="mono">LIMITED_<wbr>FUNCTIONAL_<wbr>RESULT_<wbr>ACCEPTED_<wbr>WITH_<wbr>DELIVERY_<wbr>STOP_<wbr>PRESERVED</code>). 한정 기능 결과 수용은
       <b>전체 절차 PASS 가 아니다</b> — 전체 절차 PASS 는 인정되지 않았다. 문서 보충은 수용 · 종결
-      (<code class="mono">DOCUMENT_SUPPLEMENT_ACCEPTED_RBI_R1_READY_01_CLOSED</code>). 유지:
-      <code class="mono">contract_adopted / native_ready / approved / usable = false</code> · 전체 · 정상 gate INCOMPLETE.
+      (<code class="mono">DOCUMENT_<wbr>SUPPLEMENT_<wbr>ACCEPTED_<wbr>RBI_<wbr>R1_<wbr>READY_<wbr>01_<wbr>CLOSED</code>). 유지:
+      <code class="mono">contract_<wbr>adopted /<wbr> native_<wbr>ready /<wbr> approved /<wbr> usable = false</code> · 전체 · 정상 gate INCOMPLETE.
       ⚠ §99 (2026-10-30) 와 §100 사이의 경과는 원장에 기록이 없다 — §100 의 근거는 인계 묶음 안의 두 검토 회신뿐이다.</p>
     <p>그 사이의 §31–§99 (정상 fresh native 한정 진단 · B-min · 미세단락 물리 탐구 S0 · S1 계열 — 원장 절 제목) 와 쉬운 말 풀이는
       <a href="/microshort">마이크로 쇼츠 인계 화면</a>에 있다. <b>이 절의 아래는 2026-09-29 판 (§30 까지) 그대로</b>이고,
@@ -722,7 +722,7 @@
     57 개 결과와 수신 독립 33 건은 <b>별개 범위</b>이고, 현지 224 개 보존 기록의 168 개 대조는
     <b>원격 현재 파일의 직접 검증이 아니다</b>. <b>C2 는 미완</b>이다 — 기존 launcher 가 Desktop
     apply <b>뒤에</b> isatty 를 보므로 "TTY 가 없으면 Desktop 전에 막는다" 고 말할 수 없다.
-    <code class="mono">approved=false · B_path_ready=true · usable=false</code> —
+    <code class="mono">approved=false · B_<wbr>path_<wbr>ready=true · usable=false</code> —
     <b>B_path_ready 는 승인이 아니다.</b> 세 겹 ZIP 과 검토 정본 6 개를 bytes 그대로 보존했고
     (세 겹 명세 6/400/7 전수 일치, 커밋 뒤 재대조 일치) 그것은 바이트 대조이지 코드·수치 검증이 아니다.
     §24 의 R1·R2·R3 가 어디서 닫혔는지는 수신 문서 어디에도 없어 <b>⚠ 로 남겼다.</b></p>
@@ -800,7 +800,7 @@
     왔다(§4). 아래 둘은 그 전(2026-09-16 · 09-22)에 닫은 것이고 여전히 참이다.</p>
 
   <p class="pipe-p"><b>새 모델 설계 요구서를 썼다</b>
-    (<code class="mono">docs/NEW_MODEL_REQUIREMENTS.md</code>). 저장소의 최종 순서가
+    (<code class="mono">docs/<wbr>NEW_<wbr>MODEL_<wbr>REQUIREMENTS.md</code>). 저장소의 최종 순서가
     <span class="mono">R2 원장 닫기 → R3 리뷰 → <b>새 모델 설계 요구서</b></span> 였고
     그 마지막 항목이다. <b>코드가 아니라 설계서</b>이고, 형식은
     <b>관측 → 후보 원인 → 구분 시험 → 채택 기준 → 남는 한계</b>.</p>
@@ -838,7 +838,7 @@
       <b>편향</b>이다 — 폭은 답이 얼마나 흔들리는가고, 편향은 답이 <b>어디로 틀리는가</b>다.
       둘은 다른 축이라 미분을 고쳐도 폭이 좁아진다는 보장은 없다 (그건 아직 안 잰 것).</p>
     <p>그래서 <b>고치되 지우지 않았다.</b> 적합을 돌리는 쪽이 <b>어느 미분을 쓰는지 반드시
-      적어야</b> 한다 — <code class="mono">--objective-version legacy_matlab</code>(원본 재현용)
+      적어야</b> 한다 — <code class="mono">--objective-version legacy_<wbr>matlab</code>(원본 재현용)
       또는 <code class="mono">chain_rule_v2</code>. <b>기본값은 없다.</b> 알려진 잘못된
       미분을 "기본" 으로 두면 아무도 모르게 계속 쓰이고, 조용히 바꾸면 옛 산출과 새 산출이
       섞인다. 그 선택은 행·sidecar·비교기에 같이 실려서 <b>두 판을 한 판인 것처럼 견주면
@@ -967,7 +967,7 @@
     <code class="mono">w_dqdv 0</code> 이 <b>옳다</b>는 근거(지금은 "켜면 나빠진다"만
     보였다) · held-out 예측 등. <b>held-out 은 자료가 없어 지금은 불가</b>다 —
     다른 셀의 <b>독립</b> 반쪽전지가 있어야 한다. 정본은
-    <code class="mono">docs/NEW_MODEL_REQUIREMENTS.md</code> §9.</p>
+    <code class="mono">docs/<wbr>NEW_<wbr>MODEL_<wbr>REQUIREMENTS.md</code> §9.</p>
 </section>
 
 <!-- ══ 4.6 ═══════════════════════════════════════════════════════════ -->
@@ -979,7 +979,7 @@
     실험은 <b>원인을 켜고 끌 수 있는 DOE</b> 로. 우리 본진의 명제와 모양이 같아서, 구분 원리
     P1~P12 를 적고 그중 모델로 볼 수 있는 것을 <b>공개 파라미터 합성 셀</b>(PyBaMM SPMe ·
     Chen2020, 외부 병렬 누설 100 Ω)로 먼저 돌렸다. 정본은
-    <code class="mono">bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md</code> §4-1~§4-4.
+    <code class="mono">bms-balancing/<wbr>docs/<wbr>MSC_<wbr>SEMINAR_<wbr>2026-09-23_<wbr>APPLICATION.md</code> §4-1~§4-4.
     규진팀 원자료는 쓰지 않았다.</p>
 
   <div class="pg-tablewrap">
@@ -1016,8 +1016,8 @@
   <h3 class="tw-h3">2026-09-28 갱신 — 다시 맞춰 봤고, 요구서 한 문장을 고쳤다</h3>
 
   <p class="pipe-p">문서 §7 이 09-23 판(§0–§6)을 손대지 않고 덧붙인 것이다. 요지만 옮긴다 — 정본은
-    <code class="mono">MSC_SEMINAR_2026-09-23_APPLICATION.md</code> §7 과
-    <code class="mono">NEW_MODEL_REQUIREMENTS.md</code> §4-3 끝의 "2026-09-28 정정" 문단이다.</p>
+    <code class="mono">MSC_<wbr>SEMINAR_<wbr>2026-09-23_<wbr>APPLICATION.md</code> §7 과
+    <code class="mono">NEW_<wbr>MODEL_<wbr>REQUIREMENTS.md</code> §4-3 끝의 "2026-09-28 정정" 문단이다.</p>
 
   <ul class="pg-list">
     <li><b>재검증 (7-1).</b> 회귀 시험 <code class="mono">4 passed in 6.86s</code>(rc 0, PyBaMM
@@ -1067,9 +1067,9 @@
      (커밋 17b7e56) · 원장 §3-b (아)(자)(고) 꼬리 · §4 2026-11-24 줄 (커밋 0f0522b — C1 3 차 승인) · DESIGN_v1.md §8-7 · §8-8 (커밋 d1d19c4 — 3 차 결과) · §8-9 · §8-10 (커밋 6e2668d — 4 차 결과) · §8-11 · §8-12 (커밋 287d310 — 5 차 결과).
      합성 truth 수치는 중단 판정에 쓰인 값만 옮긴다. 3 차 (설계서 §8-7 · run3/) 는 작성 · 실행 중일 수 있어 읽지 않았다. #}
   <div class="pipe-cite">
-    <b>이 절의 수와 판정은 사본이다.</b> 원장은 <code class="mono">bms-balancing/docs/ASSB_WANTED_PAPERS.md</code>
-    (머리 "갱신:" 줄 · §3-b · §4), 큐와 결정은 <code class="mono">bms-balancing/docs/ASSB_TRANSFER_NOTE.md</code> §6-3-j · §6-3-k,
-    합성 truth 는 상태판 <code class="mono">followups/assb-contact-truth/STATUS.md</code> · 설계서 <code class="mono">DESIGN_v1.md</code> 다.
+    <b>이 절의 수와 판정은 사본이다.</b> 원장은 <code class="mono">bms-balancing/<wbr>docs/<wbr>ASSB_<wbr>WANTED_<wbr>PAPERS.md</code>
+    (머리 "갱신:" 줄 · §3-b · §4), 큐와 결정은 <code class="mono">bms-balancing/<wbr>docs/<wbr>ASSB_<wbr>TRANSFER_<wbr>NOTE.md</code> §6-3-j · §6-3-k,
+    합성 truth 는 상태판 <code class="mono">followups/<wbr>assb-contact-truth/<wbr>STATUS.md</code> · 설계서 <code class="mono">DESIGN_v1.md</code> 다.
     합성 truth 의 결과 수치는 <b>진단 전용 · 인용 금지 · 정본 아님</b>이고 본 연구 수치와 섞지 않는다 (code · env identity 가 다르다) —
     이 절은 중단 판정에 쓰인 값만 옮긴다.
   </div>
@@ -1144,7 +1144,7 @@
           <td>설계서 §8-4 · §8-5 · §8-6 · 커밋 <code class="mono">17b7e56</code></td><td>—</td></tr>
         <tr><td>C1 격자 수렴 (§5-8 규칙 5)</td><td><b>중단</b> (06:22:17Z) — τ̂ 최대 변화 2.95 % &gt; 1 % (Tafel 진폭 펄스 18 개 전부) · z 0.50 % ≤ 5 % ·
           격자 3 / 165. 정밀판이 격자와 허용오차를 함께 바꿨으므로 어느 쪽 몫인지는 미확인 (규칙대로 가르지 않았다)</td>
-          <td>설계서 §8-6 · <code class="mono">c1_20261124/run2_tables/conv.json</code></td><td>선택지 (가)(나)(다) → 사용자는 (가) 를 골랐다 (다음 줄)</td></tr>
+          <td>설계서 §8-6 · <code class="mono">c1_<wbr>20261124/<wbr>run2_<wbr>tables/<wbr>conv.json</code></td><td>선택지 (가)(나)(다) → 사용자는 (가) 를 골랐다 (다음 줄)</td></tr>
         <tr><td>C1 3 차 — 승인 · 사전 등록</td><td>2026-11-24 사용자 "다 권고대로 해" (원장 §4 2026-11-24 줄) → 설계서 §8-7 (계산 전 06:41:44Z 고정 · T0₃):
           표준 해상도 40 · 1e-9 · 규칙 5 판정 쌍 = 표준 ↔ 80 · 1e-10 (원인 가르기 진단 둘은 판정에 쓰지 않음) · DC 영 채널 (규칙 3(a)) 을 패러데이 전하 축
           (Q_F = I·t − Q_dl · 각 팔 자기 상태의 이중층 전하 · 맞춤 없음) 으로 비교 — DC 자료가 하나도 없을 때 등록 · 문턱 그대로 · k₀ 의 g_reg 재정규화 확인 ·
@@ -1154,7 +1154,7 @@
         <tr><td>C1 3 차 격자 수렴 (§5-8 규칙 5)</td><td><b>다시 중단</b> (06:55:20Z) — τ̂ 최대 변화 1.148 % &gt; 1 % (Tafel 진폭 5 / 36 · 선형 진폭 0.06–0.29 %) ·
           z 0.25 % ≤ 5 % · 격자 3 / 165. 원인 진단: 격자 (80 · 1e-9 가 같은 값을 재현 · 40 · 1e-10 은 거의 그대로) — 반경 ↔ 두께 축은 가르지 않았다.
           2 차 2.95 % → 3 차 1.148 %. DC 영 채널 · C1a · C1b 실행 0</td>
-          <td>설계서 §8-8 · <code class="mono">c1_20261124/run3_tables/conv.json</code></td><td>선택지 (가)(나)(다) → 사용자는 (가) 표준 80 · 판정 쌍 160 을 골랐다 ("권고대로해" · 다음 줄)</td></tr>
+          <td>설계서 §8-8 · <code class="mono">c1_<wbr>20261124/<wbr>run3_<wbr>tables/<wbr>conv.json</code></td><td>선택지 (가)(나)(다) → 사용자는 (가) 표준 80 · 판정 쌍 160 을 골랐다 ("권고대로해" · 다음 줄)</td></tr>
         <tr><td>C1 4 차 — 승인 · 사전 등록</td><td>2026-11-24 사용자 "권고대로해" → 설계서 §8-9 (계산 전 07:06:51Z 고정 · T0₄): 표준 80 · 1e-9 · 규칙 5 판정 쌍 =
           표준 ↔ 160 · 1e-10 (규칙 그대로) · 축 가르기 진단 둘 (반경만 160 · 두께만 160 — 판정에 쓰지 않음) · §8-7 의 DC 보정 · k₀ 확인 · '정칙화 영향'
           조건 · DC 검출기 한계 그대로. 해상도 상수만 바뀌어 새 RED 없음 · GREEN 32 통과 · 새 표준에서 스파이크 · 배관 통과</td>
@@ -1162,7 +1162,7 @@
         <tr><td>C1 4 차 격자 수렴 — <b>메모리 부족</b></td><td>정밀판 160 · 1e-10 계산 중 커널이 프로세스를 죽였다 (rc 137 · 07:24:31Z) — <b>규칙이 아니라 자원 한계</b>라
           규칙 5 판정 자체가 없다. 결과 파일은 단계 끝에만 쓰여 표준판 셋의 결과도 남지 않았다 (격자 0 / 165 기록 · 재실행 0). 원인 추정 (산술 · 측정 아님):
           출력 시각마다 전체 상태 저장 · 160 에서 펄스당 수 GB · 기계 16 GB. 배관 점검의 축소 묶음이 가장 무거운 경우보다 가벼웠다 (추정)</td>
-          <td>설계서 §8-10 · <code class="mono">c1_20261124/run4/20_conv.meta.txt</code></td><td>선택지 (가)(나)(다) → 사용자는 (가) 메모리 줄이는 변경 뒤 같은 쌍을 골랐다 ("권고대로해용" · 다음 줄)</td></tr>
+          <td>설계서 §8-10 · <code class="mono">c1_<wbr>20261124/<wbr>run4/<wbr>20_<wbr>conv.meta.txt</code></td><td>선택지 (가)(나)(다) → 사용자는 (가) 메모리 줄이는 변경 뒤 같은 쌍을 골랐다 ("권고대로해용" · 다음 줄)</td></tr>
         <tr><td>C1 5 차 — 승인 · 사전 등록</td><td>2026-11-24 사용자 "권고대로해용" → 설계서 §8-11 (계산 전 고정 · T0₅ 07:35:02Z): 8-9 설정 그대로 + 계산 수를 바꾸지 않는
           메모리 수정 셋 (펄스마다 필요한 값만 · 실행마다 바로 기록 · DC 만 필요 변수 출력 — 동치 스파이크 S8 로 확인) · 메모리 경비 (프로세스 트리 12×10⁹ B) · 배관에
           가장 무거운 160 Tafel 펄스. 시험 RED → GREEN 37 통과 · 스파이크 · 배관 통과 (무거운 160 경우 최대 3.96×10⁹ B)</td>
@@ -1171,7 +1171,7 @@
           변화 2.228 % &gt; 1 % (16 / 36 · 전부 Tafel 진폭 · 선형 ≤ 0.34 % · 36 행 모두 정밀판 τ̂ 가 큼) · z 0.219 % ≤ 5 %. 축 진단 (판정에 쓰지 않음): 반경만 160 1.728 % ·
           두께만 160 0.508 % — 반경 격자가 약 3/4. <b>균일 격자를 두 배로 해도 줄지 않는다</b> (2.95 → 1.148 → 2.228 %) — 3 차의 "160 이면 0.45 % 근처" 외삽은 틀렸다.
           [해석 · 미검증] 입자 표면 확산 길이 ≈ 균일 반경 격자 간격</td>
-          <td>설계서 §8-12 · <code class="mono">c1_20261124/run5_tables/conv.json</code></td><td>사용자 결정 — (가) 표면 쪽으로 조인 비균일 반경 격자 · (나) 규칙 5 변경 (사후) · (다) C1 닫기 · 그 뒤 (아)(자) 판단</td></tr>
+          <td>설계서 §8-12 · <code class="mono">c1_<wbr>20261124/<wbr>run5_<wbr>tables/<wbr>conv.json</code></td><td>사용자 결정 — (가) 표면 쪽으로 조인 비균일 반경 격자 · (나) 규칙 5 변경 (사후) · (다) C1 닫기 · 그 뒤 (아)(자) 판단</td></tr>
         <tr><td>C1a (차) 검출 지도 · C1b (처) 바인더 판정</td><td>없음 — 격자 0 (C1a 0 / 72 · C1b 0 / 80) · 판정 표 · '가른다' 문장 없음</td><td>상태판 진행표</td><td>새 승인 · 새 시계 원점</td></tr>
         <tr><td>C2 역문제 · 식별성 · C3 동역학 truth</td><td>미착수</td><td>설계서 §6</td><td>—</td></tr>
         <tr><td>게이트 (본 연구 코드로 이식)</td><td>대기 — 리뷰어 사용 불가</td><td>설계서 §6-5</td><td>—</td></tr>
@@ -1194,8 +1194,8 @@
 
   <p class="pipe-note"><b>2026-09-29 기준 · 80호까지 — 이후는 원장이 정본이다.</b> 흡수가 지금도
     이어지고 있어 아래 수는 곧 낡는다. 원장은
-    <code class="mono">bms-balancing/docs/ASSB_WANTED_PAPERS.md</code>, 큐는
-    <code class="mono">bms-balancing/docs/ASSB_TRANSFER_NOTE.md</code> §6-3-h · §6-3-i, 채움표는
+    <code class="mono">bms-balancing/<wbr>docs/<wbr>ASSB_<wbr>WANTED_<wbr>PAPERS.md</code>, 큐는
+    <code class="mono">bms-balancing/<wbr>docs/<wbr>ASSB_<wbr>TRANSFER_<wbr>NOTE.md</code> §6-3-h · §6-3-i, 채움표는
     <a href="/question/assb-contact-loss-vs-lampe">위키 카드</a>다.</p>
 
   <p class="pipe-p">전고체(ASSB) 열화 정량 개발은 2026-09-16 결정으로 <b>보류</b>(지금 프로젝트가 끝난
@@ -1438,7 +1438,7 @@
     <summary>지난 상태 — 2026-09-23 판의 이 절 첫 문단 (58호까지, 그대로) · 정정 둘</summary>
     <p class="pipe-p">전고체(ASSB) 열화 정량 개발은 2026-09-16 결정으로 <b>보류</b>이고, 지금 하는 것은
       그 앞의 문헌 기반이다. 논문을 큐 번호로 받아(1 차 27~37 호, 2 차 40~59 호) 한 편씩 wiki 에
-      digest 하고, 원장 <code class="mono">bms-balancing/docs/ASSB_WANTED_PAPERS.md</code> 에
+      digest 하고, 원장 <code class="mono">bms-balancing/<wbr>docs/<wbr>ASSB_<wbr>WANTED_<wbr>PAPERS.md</code> 에
       <b>다음에 읽어야 할 논문</b>과 <b>미결 결정</b>을 누적한다. 2 차 묶음까지 흡수했고, 원장 §1 은
       큐 밖 후보 173 행(★★★★ 7 · ★★★ 47 · ★★ 62 · ★ 57, ✅ 흡수 20) — 이 수는 원장 머리의 사본이다.</p>
     <p class="pipe-note"><b>⚠ 2026-09-29 정정 둘.</b> ① "2 차 40~59 호" 의 40~59 는 <b>큐 번호</b>다 —
@@ -1459,8 +1459,8 @@
 
   <div class="pipe-cite">
     <b>이 절의 판정 · 수는 전부 원장의 사본이다.</b> 정본은
-    <code class="mono">bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md</code> (§ 번호를 붙였다) 와 그 절들이 가리키는 회신 보존
-    (<code class="mono">bms-balancing/reviews/prereview_reil_*</code> · <code class="mono">review_reil_*</code>) · 증거 폴더다.
+    <code class="mono">bms-balancing/<wbr>docs/<wbr>REIL_<wbr>PREREQUISITES_<wbr>STATUS_<wbr>20261004.md</code> (§ 번호를 붙였다) 와 그 절들이 가리키는 회신 보존
+    (<code class="mono">bms-balancing/<wbr>reviews/<wbr>prereview_<wbr>reil_<wbr>*</code> · <code class="mono">review_reil_*</code>) · 증거 폴더다.
     <b>"수용" 은 검토자 (Codex) 의 판정이고 실행 승인이 아니다</b> — 원장의 절 대부분이 "이 기록은 어느 단계의 승인도 아니다" 로 끝난다.
     REIL 쪽 맞춤 결과 (J 값 · 증인 순위 등) 는 원장이 요약하지 않으므로 (§31) 이 화면도 옮기지 않는다.
   </div>
@@ -1478,49 +1478,49 @@
       <thead><tr><th>칸</th><th>무엇</th><th>검토자 판정 — 글자 그대로</th><th>범위 · 한계 (원장)</th><th>원장</th></tr></thead>
       <tbody>
         <tr><td>C1-core · 부속 C</td><td>논문 본문 · 보충 자료 (사용자가 올림) 에서 핵심 실험 정의 셋을 기록</td>
-            <td><code class="mono">ANNEX_C_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_DOCUMENT_CORRECTIONS</code> — C1-core 논문 쪽 수용 (<code class="mono">PAPER_SIDE_ACCEPTED</code>)</td>
+            <td><code class="mono">ANNEX_<wbr>C_<wbr>CONDITIONALLY_<wbr>ACCEPTABLE_<wbr>THREE_<wbr>LOCAL_<wbr>DOCUMENT_<wbr>CORRECTIONS</code> — C1-core 논문 쪽 수용 (<code class="mono">PAPER_SIDE_ACCEPTED</code>)</td>
             <td>실물 시트 · 셀 열 · step 대응은 P0 로 넘김 · 실행 · P0 · C6 · 비용 측정 · 구현 · 맞춤 승인 아님</td><td>§7 · §9</td></tr>
         <tr><td>C6</td><td>판 · 환경 고정 (이 컨테이너)</td>
-            <td><code class="mono">C6_PREREQUISITE_REVIEW_ACCEPTED_N1_N2_CLOSED_WITH_EVIDENCE_LIMITS</code></td>
+            <td><code class="mono">C6_<wbr>PREREQUISITE_<wbr>REVIEW_<wbr>ACCEPTED_<wbr>N1_<wbr>N2_<wbr>CLOSED_<wbr>WITH_<wbr>EVIDENCE_<wbr>LIMITS</code></td>
             <td>옵션은 정적 구조까지만 수용 · "전체 549 개 clean 재실행 통과" 는 확인된 사실이 아니다</td><td>§15</td></tr>
         <tr><td>C3 = P0</td><td>자료를 처음 여는 단계 — 1 회 · rc 0 · 중단 조건 0</td>
-            <td><code class="mono">C3_OUTPUTS_ACCEPTED_WITH_EXECUTION_RECORD_GAPS</code> · 실행 준수 = <code class="mono">INCOMPLETE_UNVERIFIED_NOT_A_NUMERICAL_FAILURE</code></td>
+            <td><code class="mono">C3_<wbr>OUTPUTS_<wbr>ACCEPTED_<wbr>WITH_<wbr>EXECUTION_<wbr>RECORD_<wbr>GAPS</code> · 실행 준수 = <code class="mono">INCOMPLETE_<wbr>UNVERIFIED_<wbr>NOT_<wbr>A_<wbr>NUMERICAL_<wbr>FAILURE</code></td>
             <td>고정 제출에 한정 수용 · 자원 상한 준수 UNVERIFIED (§22 정정) · 실행 기록 누락 신고 (P0-N1) · 13 입력의 cycle · 방향은 자료 메타데이터로 확인 불가</td><td>§20 · §22</td></tr>
         <tr><td>C5</td><td>비용 파일럿 — 1 회 · 비용용 (판정 아님)</td>
-            <td>C5 비용 근거 <code class="mono">ACCEPTED_WITH_DOCUMENTED_LIMITS</code> · C5 재실행 불필요</td>
+            <td>C5 비용 근거 <code class="mono">ACCEPTED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>LIMITS</code> · C5 재실행 불필요</td>
             <td>한 셀 · A0 · J_V · Phase A 만 쟀다 · 결과는 요약하지 않고 확인적 분석에 쓰지 않는다</td><td>§31 · §35</td></tr>
         <tr><td>C4 요청 · C4-ENV</td><td>C4 단계 구조 사전 검토 · 새 환경 세대 준비 (C5 의 실행 환경이 컨테이너 교체로 사라져서)</td>
-            <td><code class="mono">MODIFICATION_CONDITIONAL_SUITABILITY_NO_EXECUTION_GO</code> · <code class="mono">C4_ENV_ACCEPTED_WITH_DOCUMENTED_SCOPE</code></td>
+            <td><code class="mono">MODIFICATION_<wbr>CONDITIONAL_<wbr>SUITABILITY_<wbr>NO_<wbr>EXECUTION_<wbr>GO</code> · <code class="mono">C4_<wbr>ENV_<wbr>ACCEPTED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code></td>
             <td>새 환경 세대로 수용한 것이고 옛 설치물 전체 바이트가 재현됐다는 증명은 아니다</td><td>§34 · §35 · §38</td></tr>
         <tr><td>C4-0a</td><td>감시 보완 · 고정 배열 봉인 · E3a 실행기 · 무자료 건조</td>
-            <td><code class="mono">EVIDENCE_ACCEPTED_WITH_SCOPE_IMPLEMENTATION_CLOSURE_HELD</code> → 한정 보완 → <code class="mono">C4_0A_LIMITED_IMPLEMENTATION_CLOSED_WITH_DOCUMENTED_SCOPE</code></td>
+            <td><code class="mono">EVIDENCE_<wbr>ACCEPTED_<wbr>WITH_<wbr>SCOPE_<wbr>IMPLEMENTATION_<wbr>CLOSURE_<wbr>HELD</code> → 한정 보완 → <code class="mono">C4_<wbr>0A_<wbr>LIMITED_<wbr>IMPLEMENTATION_<wbr>CLOSED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code></td>
             <td>실행 HEAD 가 같다는 것을 clean tree 라 부르지 않는다 · N3 은 세 위치 각각의 독립 동적 증거나 OS hard limit 까지 검증한 것이 아니다</td><td>§42 · §45</td></tr>
         <tr><td>C4-0b1</td><td>배열 · 규칙 봉인 + H 핵심</td>
-            <td><code class="mono">C4_0B1_IMPLEMENTATION_CLOSURE_HELD</code> → <code class="mono">C4_0B1_IMPLEMENTATION_CLOSURE_HELD_N1_REMAINDER</code> → <code class="mono">C4_0B1_LIMITED_IMPLEMENTATION_CLOSED</code></td>
-            <td>과거 이탈은 <code class="mono">PRESERVED_NOT_RETROACTIVELY_AUTHORIZED</code> · 새 승인 없음 (0b2 구현 · C4-E / A / B · 자료 개봉 · 맞춤 · 배열 재봉인 · 설치 / 환경 재구축 · COMSOL 모두 false)</td><td>§48 · §51 · §54</td></tr>
+            <td><code class="mono">C4_<wbr>0B1_<wbr>IMPLEMENTATION_<wbr>CLOSURE_<wbr>HELD</code> → <code class="mono">C4_<wbr>0B1_<wbr>IMPLEMENTATION_<wbr>CLOSURE_<wbr>HELD_<wbr>N1_<wbr>REMAINDER</code> → <code class="mono">C4_<wbr>0B1_<wbr>LIMITED_<wbr>IMPLEMENTATION_<wbr>CLOSED</code></td>
+            <td>과거 이탈은 <code class="mono">PRESERVED_<wbr>NOT_<wbr>RETROACTIVELY_<wbr>AUTHORIZED</code> · 새 승인 없음 (0b2 구현 · C4-E / A / B · 자료 개봉 · 맞춤 · 배열 재봉인 · 설치 / 환경 재구축 · COMSOL 모두 false)</td><td>§48 · §51 · §54</td></tr>
         <tr><td>C4-0b2</td><td>Phase B · H4 대조 · 표지 (ray 는 유보 — 완료로 세지 않음)</td>
-            <td><code class="mono">C4_0B2_REVIEWED_CHANGES_REQUIRED</code> → <code class="mono">C4_0B2_CLOSED_WITH_RECORDED_SCOPE_AND_LIMITATIONS</code></td>
+            <td><code class="mono">C4_<wbr>0B2_<wbr>REVIEWED_<wbr>CHANGES_<wbr>REQUIRED</code> → <code class="mono">C4_<wbr>0B2_<wbr>CLOSED_<wbr>WITH_<wbr>RECORDED_<wbr>SCOPE_<wbr>AND_<wbr>LIMITATIONS</code></td>
             <td>종결 범위 = 제한 오프라인 구현과 제출된 합성 검증 기록 (실자료 실행 준비 · 연구 결과 수용 아님)</td><td>§55 · §57 · §60</td></tr>
         <tr><td>C4-E · E0</td><td>E3a 실행기의 무자료 시험 · 건조 (plan-e 1 회)</td>
-            <td>사전 검토 <code class="mono">REQUEST_REVISION_BEFORE_E0_APPROVAL</code> 두 번 → <code class="mono">PREREVIEW_ACCEPTED_READY_FOR_EXPLICIT_E0_APPROVAL</code> →
-              결과 <code class="mono">E0_EVIDENCE_LIMITED_ACCEPTANCE_E1_BLOCKED_SOURCE_IDENTITY</code> → 정정 뒤 <code class="mono">E0_N1_SCOPED_CLOSED_E1_APPROVAL_REQUEST_ALLOWED_NOT_EXECUTION</code></td>
+            <td>사전 검토 <code class="mono">REQUEST_<wbr>REVISION_<wbr>BEFORE_<wbr>E0_<wbr>APPROVAL</code> 두 번 → <code class="mono">PREREVIEW_<wbr>ACCEPTED_<wbr>READY_<wbr>FOR_<wbr>EXPLICIT_<wbr>E0_<wbr>APPROVAL</code> →
+              결과 <code class="mono">E0_<wbr>EVIDENCE_<wbr>LIMITED_<wbr>ACCEPTANCE_<wbr>E1_<wbr>BLOCKED_<wbr>SOURCE_<wbr>IDENTITY</code> → 정정 뒤 <code class="mono">E0_<wbr>N1_<wbr>SCOPED_<wbr>CLOSED_<wbr>E1_<wbr>APPROVAL_<wbr>REQUEST_<wbr>ALLOWED_<wbr>NOT_<wbr>EXECUTION</code></td>
             <td>E1 승인 요청서 작성 허용 — E1 실행 승인이 아니다</td><td>§62–§72</td></tr>
         <tr><td>C4-E · E1-0</td><td>launcher · 외곽 실행기 고정본의 시험 (RED-L · RED-R · GREEN)</td>
-            <td>사전 검토 <code class="mono">CHANGES_REQUIRED_NO_EXECUTION</code> 네 번 → <code class="mono">STATIC_ACCEPTED_E1_0_USER_APPROVAL_RECOMMENDED_NO_EXECUTION</code> →
-              결과 <code class="mono">E1_0_RESULTS_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION</code></td>
+            <td>사전 검토 <code class="mono">CHANGES_<wbr>REQUIRED_<wbr>NO_<wbr>EXECUTION</code> 네 번 → <code class="mono">STATIC_<wbr>ACCEPTED_<wbr>E1_<wbr>0_<wbr>USER_<wbr>APPROVAL_<wbr>RECOMMENDED_<wbr>NO_<wbr>EXECUTION</code> →
+              결과 <code class="mono">E1_<wbr>0_<wbr>RESULTS_<wbr>ACCEPTED_<wbr>WITH_<wbr>RECORDED_<wbr>PROCEDURAL_<wbr>DEVIATION</code></td>
             <td>승인 절차의 완전 준수 false · 당시 계속 진행의 소급 승인도 false (지적 E1_0_N1) · 범위는 이 바이트 · 이 환경의 기록 결과</td><td>§74–§86</td></tr>
         <tr><td>C4-E · E1-0b</td><td>그다음 시험 단계 — 1 차는 RED 에서 멈춤 (원인이 표와 다름), 정정판 a2 로 다시</td>
-            <td><code class="mono">STOP_HANDLING_ACCEPTED_E1_0B_INCOMPLETE_TEST_CORRECTION_REQUIRED</code> → a2 결과 <code class="mono">E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION</code></td>
+            <td><code class="mono">STOP_<wbr>HANDLING_<wbr>ACCEPTED_<wbr>E1_<wbr>0B_<wbr>INCOMPLETE_<wbr>TEST_<wbr>CORRECTION_<wbr>REQUIRED</code> → a2 결과 <code class="mono">E1_<wbr>0B_<wbr>A2_<wbr>LIMITED_<wbr>FUNCTIONAL_<wbr>RESULT_<wbr>ACCEPTED_<wbr>WITH_<wbr>RECORDED_<wbr>PROCEDURAL_<wbr>DEVIATION</code></td>
             <td>차단 지적 0 · 비차단 절차 이탈 A2_PROC_01 (기록 유지 · 재시험 없음) · 한정 기능 결과</td><td>§87–§101</td></tr>
         <tr><td>C4-E · E1-1–3</td><td>E1-1 identity · E1-2 fetch (자료 두 파일) · E1-3 run (E3a 66 호출) — 첫 실행은 E1-1 뒤 멈췄고 (원인 = d1 <code class="mono">add_repo</code> 의 승인 대기, §117 정정) 재개로 끝냈다</td>
-            <td>요청서 v3 <code class="mono">APPROVAL_REQUEST_V3_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED</code> → 재개 요청 v2
-              <code class="mono">RESUME_REQUEST_V2_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED</code> → 결과 <code class="mono">E1_2_E1_3_RESULTS_ACCEPTED_C4A_GATE_CONDITIONS_MET_NO_EXECUTION_APPROVAL</code></td>
+            <td>요청서 v3 <code class="mono">APPROVAL_<wbr>REQUEST_<wbr>V3_<wbr>DOCUMENT_<wbr>REVIEW_<wbr>ACCEPTED_<wbr>NOT_<wbr>EXECUTION_<wbr>AUTHORIZED</code> → 재개 요청 v2
+              <code class="mono">RESUME_<wbr>REQUEST_<wbr>V2_<wbr>DOCUMENT_<wbr>REVIEW_<wbr>ACCEPTED_<wbr>NOT_<wbr>EXECUTION_<wbr>AUTHORIZED</code> → 결과 <code class="mono">E1_<wbr>2_<wbr>E1_<wbr>3_<wbr>RESULTS_<wbr>ACCEPTED_<wbr>C4A_<wbr>GATE_<wbr>CONDITIONS_<wbr>MET_<wbr>NO_<wbr>EXECUTION_<wbr>APPROVAL</code></td>
             <td>새 지적 0 · <b>수치 경고 유지</b> — 아래 상자 · 실제 실행일 2026-11-05 UTC (폴더 이름 <code class="mono">reil_c4e1_20261106</code> 은 증거 이름표)</td><td>§102–§122</td></tr>
         <tr><td>C4-A 범위안</td><td>사용자 "권고대로" 로 C4-A 문 개방 (§123 — 실행 승인 아님) → 범위안 v1 · v2 (문서만)</td>
-            <td><code class="mono">DIRECTION_ACCEPTABLE_SCOPE_REVISION_REQUIRED_BEFORE_IMPLEMENTATION_REQUEST</code> → v2 <code class="mono">SCOPE_V2_ACCEPTED_N1_N4_CLOSED_FOR_IMPLEMENTATION_REQUEST_BASELINE</code></td>
+            <td><code class="mono">DIRECTION_<wbr>ACCEPTABLE_<wbr>SCOPE_<wbr>REVISION_<wbr>REQUIRED_<wbr>BEFORE_<wbr>IMPLEMENTATION_<wbr>REQUEST</code> → v2 <code class="mono">SCOPE_<wbr>V2_<wbr>ACCEPTED_<wbr>N1_<wbr>N4_<wbr>CLOSED_<wbr>FOR_<wbr>IMPLEMENTATION_<wbr>REQUEST_<wbr>BASELINE</code></td>
             <td>후속 구현 요청서의 기준으로 쓸 수 있다 · 구현 · 시험 · 설치 · 자료 개봉 · 맞춤 · C4-A / B 실행 승인 아님 · 사용자 선택 U1 · U3 는 권고대로, U2 는 미선택 (§126)</td><td>§123–§126</td></tr>
         <tr><td>C4-A 구현 요청서</td><td>v1 → v2 (문서만 · 실행 0)</td>
-            <td>v1 <code class="mono">REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL</code> (C4A-IMPL-N1–N7 · 문구 C1) → v2 같은 판정 — 아래</td>
+            <td>v1 <code class="mono">REVISION_<wbr>REQUIRED_<wbr>BEFORE_<wbr>IMPLEMENTATION_<wbr>AND_<wbr>TEST_<wbr>APPROVAL</code> (C4A-IMPL-N1–N7 · 문구 C1) → v2 같은 판정 — 아래</td>
             <td>구현 · 시험 · 실행 승인 아님</td><td>§127–§130</td></tr>
       </tbody>
     </table>
@@ -1537,11 +1537,11 @@
   <h3 class="tw-h3">지금 — C4-A 구현 요청서 v2 재검토 (원장 §130)</h3>
 
   <p class="pipe-p"><b>경로.</b> 검토는 2026-11-08 (송신 측 Codex · 고정 HEAD <code class="mono">fa502acb</code> = §129 의 커밋) 이고, 회신은
-    2026-11-24 사용자가 올린 인계 묶음 안에 왔다 (반입 기록 <code class="mono">reviews/handoff_reil_comsol_20261124/INTAKE_BY_THIS_REPO_20261124.json</code>).
+    2026-11-24 사용자가 올린 인계 묶음 안에 왔다 (반입 기록 <code class="mono">reviews/<wbr>handoff_<wbr>reil_<wbr>comsol_<wbr>20261124/<wbr>INTAKE_<wbr>BY_<wbr>THIS_<wbr>REPO_<wbr>20261124.json</code>).
     ⚠ <b>11-08 과 11-24 사이의 기록은 이 원장에 없다.</b> 이 저장소는 안전 풀기 · 대조 · 비밀 검사 · 커밋만 했고 묶음의 코드는 실행 ·
     import · 수집하지 않았다.</p>
 
-  <p class="pipe-p"><b>판정 (검토자):</b> <code class="mono">REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL</code> — 구현 · 시험 승인 전
+  <p class="pipe-p"><b>판정 (검토자):</b> <code class="mono">REVISION_<wbr>REQUIRED_<wbr>BEFORE_<wbr>IMPLEMENTATION_<wbr>AND_<wbr>TEST_<wbr>APPROVAL</code> — 구현 · 시험 승인 전
     정정 필요 · 남은 지적 4 묶음 (P1 3 · P2 1) + 비차단 문구 C2. 범위안 v2 수용 · C4A-SCOPE-N1–N4 종결 유지. 종결된 것: N2 · C1 = 문서 범위 ·
     N5 = 문서 정의 (최종 drain 행에 적용하는 연결은 N4 에 남김) · N7 = 문서 범위 (미완 행의 계획 unit 유도는 C2 로 명확화).
     <b>종결은 구현 · 기능 시험 · 예산 채택 · 실행 승인이 아니다.</b></p>
@@ -1585,11 +1585,11 @@
     남은 subissue 열둘 + C2 를 키마다 답하고, 문서 범위 종결 넷 (N2 · N5 · N7 · C1) 은 v2 그대로다. 주장을 좁힌 곳이 둘 있다 — 분리 해석기 (-I) 자식 안의
     호출 · 손주는 세지 않는다 (생성 · 프로그램 신원 · 종료 · 그룹 빔까지) · launcher 회귀의 함수별 상한 수치는 b0 에서 같은 규칙으로 봉인한다. 새 미채택
     선택지 U4 (경고 기록기 전체 고정 바이트 상한) · U5 (stderr 실제 쓰기 상한) 는 사용자 몫이고, U2 는 그대로 미선택이다.
-    <b>(같은 날 재검토 회신 — 원장 §132)</b> <code class="mono">REVISION_REQUIRED_BOOTSTRAP_ALLOWLIST_CYCLE</code>: 세부 12 중 11 + C2 를 문서 범위에서 종결했다
+    <b>(같은 날 재검토 회신 — 원장 §132)</b> <code class="mono">REVISION_<wbr>REQUIRED_<wbr>BOOTSTRAP_<wbr>ALLOWLIST_<wbr>CYCLE</code>: 세부 12 중 11 + C2 를 문서 범위에서 종결했다
     (coverage 는 좁힌 주장으로 종결). 남은 하나는 N1 bootstrap — 계수기가 수집 <b>전에</b> 요구하는 허용표를 문서가 같은 수집의 <b>산출물</b>로 정의한 순환이다.
     고치는 길은 검토자가 적었다 (b0 에서 수집 전용 허용표 · 해시 봉인 → b1 이 실행용 허용표 산출 → b2 / c 고정 소비 · 문장 하나 정정).
     <b>(원장 §133)</b> 요청서 v4 를 그대로 썼다 — v3 에 정확한 바꿔치기만 했고 (v3 쪽에서 바뀐 행 13), 계수기에 수집 / 실행 모드 둘 · 표마다 종류 표지 · sha 사슬 대조를 넣었다.
-    <b>(원장 §134)</b> 같은 날 재검토 회신 <code class="mono">DOCUMENT_REVISION_ACCEPTED_V3_N1_CLOSED_NOT_IMPLEMENTATION_AUTHORIZED</code> — V3-N1 종결 · 새 차단 0 ·
+    <b>(원장 §134)</b> 같은 날 재검토 회신 <code class="mono">DOCUMENT_<wbr>REVISION_<wbr>ACCEPTED_<wbr>V3_<wbr>N1_<wbr>CLOSED_<wbr>NOT_<wbr>IMPLEMENTATION_<wbr>AUTHORIZED</code> — V3-N1 종결 · 새 차단 0 ·
     v2 재검토 세부 12 전부 문서 범위 종결. 구현 때 지킬 점 둘 (RED 선택 = 자체 검증 + 대상 전부의 고정 목록 · `NODEIDS_A.txt` 의 정확한 바이트 해시) 은 문서 개정 요구가 아니다.
     다음은 <b>구현 · 무자료 시험의 사용자 승인</b>이다 — 수용은 그 승인이 아니다.</p>
 
@@ -1624,7 +1624,7 @@
         미승인·미실행</b>이다.</p>
       <p><b>(2026-11-24 갱신)</b> 바로 위 문장은 2026-09-29 상태다 — 그 뒤 경과는 <a href="/microshort">마이크로 쇼츠</a>.
         지금은 <b>사용자 보류</b>이고, §100 의 유지 목록 그대로다 — 전체 절차 PASS 불인정 ·
-        <code class="mono">contract_adopted / native_ready / approved / usable = false</code> · 전체 · 정상 gate INCOMPLETE.</p>
+        <code class="mono">contract_<wbr>adopted /<wbr> native_<wbr>ready /<wbr> approved /<wbr> usable = false</code> · 전체 · 정상 gate INCOMPLETE.</p>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">② 하네스</span>
@@ -1684,30 +1684,30 @@
     <table class="pg-table is-prose">
       <thead><tr><th>무엇</th><th>어디</th></tr></thead>
       <tbody>
-        <tr><td>세 갈래 현재 상태 · 재개 runbook</td><td><code class="mono">bms-balancing/WORKING_STATE.md</code></td></tr>
-        <tr><td>③ 정량화 — 전 라운드 원장 (판정 §11 · pyDMA §12 · <b>실데이터 폭 §14</b> · <b>열린 둘 §15</b>)</td><td><code class="mono">bms-balancing/reviews/BML_R1_RESPONSE.md</code></td></tr>
-        <tr><td>③ <b>새 모델 설계 요구서</b> (§4·5 의 정본 — 관측·칸·구분 시험·채택 기준·한계·미실행 일곱)</td><td><code class="mono">bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md</code></td></tr>
-        <tr><td>③ 요구서의 문헌 입력 (논문 19·20)</td><td><code class="mono">bms-balancing/docs/LIT_19_20_FOR_NEW_MODEL.md</code></td></tr>
-        <tr><td>③ 폭 측정 runbook (두 번 돌리는 절차와 <b>쓰면 안 되는 도구</b>)</td><td><code class="mono">bms-balancing/docs/WIDTH_RUN.md</code></td></tr>
-        <tr><td>① COMSOL 재구축 명세 · 진단 §8~§30 (<b>§24 = A 준비본 검토 · B NO-GO</b> · §25 = B_A8R1 제한 배치 · <b>§26~§30 = 짧은 시간 진단 수신 검토</b> — 2026-09-29 갱신)</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
-        <tr><td>① 건너온 묶음 원문 (bytes 보존 + 대조 기록)</td><td><code class="mono">bms-balancing/reviews/r14_repros/codex63/</code></td></tr>
+        <tr><td>세 갈래 현재 상태 · 재개 runbook</td><td><code class="mono">bms-balancing/<wbr>WORKING_<wbr>STATE.md</code></td></tr>
+        <tr><td>③ 정량화 — 전 라운드 원장 (판정 §11 · pyDMA §12 · <b>실데이터 폭 §14</b> · <b>열린 둘 §15</b>)</td><td><code class="mono">bms-balancing/<wbr>reviews/<wbr>BML_<wbr>R1_<wbr>RESPONSE.md</code></td></tr>
+        <tr><td>③ <b>새 모델 설계 요구서</b> (§4·5 의 정본 — 관측·칸·구분 시험·채택 기준·한계·미실행 일곱)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>NEW_<wbr>MODEL_<wbr>REQUIREMENTS.md</code></td></tr>
+        <tr><td>③ 요구서의 문헌 입력 (논문 19·20)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>LIT_<wbr>19_<wbr>20_<wbr>FOR_<wbr>NEW_<wbr>MODEL.md</code></td></tr>
+        <tr><td>③ 폭 측정 runbook (두 번 돌리는 절차와 <b>쓰면 안 되는 도구</b>)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>WIDTH_<wbr>RUN.md</code></td></tr>
+        <tr><td>① COMSOL 재구축 명세 · 진단 §8~§30 (<b>§24 = A 준비본 검토 · B NO-GO</b> · §25 = B_A8R1 제한 배치 · <b>§26~§30 = 짧은 시간 진단 수신 검토</b> — 2026-09-29 갱신)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>COMSOL_<wbr>REBUILD_<wbr>SPEC.md</code></td></tr>
+        <tr><td>① 건너온 묶음 원문 (bytes 보존 + 대조 기록)</td><td><code class="mono">bms-balancing/<wbr>reviews/<wbr>r14_<wbr>repros/<wbr>codex63/</code></td></tr>
         <tr><td>② 게이트 리뷰 R13 · R14 요청·회신 원문 (R15 는 R14 회신 §8)</td><td><code class="mono">bms-balancing/reviews/</code></td></tr>
-        <tr><td>② R17 · 후속 1~3 차 회신과 수신 재검토 종결 (§8) — 2026-09-29 갱신</td><td><code class="mono">bms-balancing/reviews/R17_*.md</code> · <code class="mono">r17_*/</code></td></tr>
-        <tr><td>MSC 세미나 적용 · 2026-09-28 재검증 (§4·6 — 문서 §7)</td><td><code class="mono">bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md</code></td></tr>
-        <tr><td>ASSB 문헌 원장 — §1 후보 · §3-b 보류 판단 거리 · §4 갱신 기록 (§4·7)</td><td><code class="mono">bms-balancing/docs/ASSB_WANTED_PAPERS.md</code></td></tr>
-        <tr><td>ASSB 큐 — 3차 묶음 흡수 §6-3-h · 도착 기록 §6-3-i (§4·7)</td><td><code class="mono">bms-balancing/docs/ASSB_TRANSFER_NOTE.md</code></td></tr>
-        <tr><td>ASSB 카드 채움표 (§4·7)</td><td><code class="mono">wiki/questions/assb-contact-loss-vs-lampe.md</code></td></tr>
-        <tr><td>ASSB 큐 — 4차 묶음 도착 §6-3-j · 5차 묶음 · 결정 1–4 §6-3-k (§4·7 — 2026-11-24 갱신)</td><td><code class="mono">bms-balancing/docs/ASSB_TRANSFER_NOTE.md</code></td></tr>
-        <tr><td>ASSB 합성 truth — 상태판 · 설계서 v1 (§8 = 실행 전 고정값 · 1 차 · 2 차 기록) (§4·7 — 2026-11-24 갱신)</td><td><code class="mono">followups/assb-contact-truth/STATUS.md</code> · <code class="mono">followups/assb-contact-truth/DESIGN_v1.md</code></td></tr>
-        <tr><td>ASSB 합성 truth C1 실행 기록 (진단 전용 · 인용 금지 · 정본 아님)</td><td><code class="mono">followups/assb-contact-truth/c1_20261124/README.md</code></td></tr>
-        <tr><td>REIL 외부 검증 원장 §0–§130 (§4·8 — 2026-11-24 신설)</td><td><code class="mono">bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md</code></td></tr>
-        <tr><td>REIL 프로토콜 v2 + 부속 A–D · C4 요청 v2 (단계 정의)</td><td><code class="mono">bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md</code> · <code class="mono">…_v2_ANNEX_A.md</code> ~ <code class="mono">…_v2_ANNEX_D.md</code> · <code class="mono">REIL_C4_APPROVAL_REQUEST_v2_20261013.md</code></td></tr>
-        <tr><td>REIL C4-A 범위안 v2 · 구현 요청서 v2</td><td><code class="mono">bms-balancing/docs/REIL_C4A_SCOPE_v2_20261106.md</code> · <code class="mono">REIL_C4A_IMPL_REQUEST_v2_20261106.md</code></td></tr>
-        <tr><td>REIL 검토 회신 보존 · 2026-11-24 인계 반입 기록</td><td><code class="mono">bms-balancing/reviews/prereview_reil_*/</code> · <code class="mono">review_reil_*/</code> · <code class="mono">handoff_reil_comsol_20261124/</code></td></tr>
-        <tr><td>① COMSOL — §31–§100 (2026-11-24 갱신: §100 = R3 한정 기능 결과 · 문서 보충 수용 · 사용자 보류 — 세부 화면은 <a href="/microshort">마이크로 쇼츠</a>)</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
-        <tr><td>degradation-degeneracy 게이트 원장 (§3·5 · §4·5 의 82 차 — §115 · 2026-11-24 갱신: 마지막 회신 94 차 — §151)</td><td><code class="mono">degradation-degeneracy/docs/08_REVIEW_RESPONSE.md</code></td></tr>
-        <tr><td>② 승격 예외·legacy 이관의 <b>기록된 결정</b></td><td><code class="mono">bms-balancing/reviews/PROMOTION_DECISIONS.json</code></td></tr>
-        <tr><td>① 우리 재계산 산출 (§18·§19·§20)</td><td><code class="mono">…/codex63/*/RECHECK_*.json</code></td></tr>
+        <tr><td>② R17 · 후속 1~3 차 회신과 수신 재검토 종결 (§8) — 2026-09-29 갱신</td><td><code class="mono">bms-balancing/<wbr>reviews/<wbr>R17_<wbr>*.md</code> · <code class="mono">r17_*/</code></td></tr>
+        <tr><td>MSC 세미나 적용 · 2026-09-28 재검증 (§4·6 — 문서 §7)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>MSC_<wbr>SEMINAR_<wbr>2026-09-23_<wbr>APPLICATION.md</code></td></tr>
+        <tr><td>ASSB 문헌 원장 — §1 후보 · §3-b 보류 판단 거리 · §4 갱신 기록 (§4·7)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>ASSB_<wbr>WANTED_<wbr>PAPERS.md</code></td></tr>
+        <tr><td>ASSB 큐 — 3차 묶음 흡수 §6-3-h · 도착 기록 §6-3-i (§4·7)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>ASSB_<wbr>TRANSFER_<wbr>NOTE.md</code></td></tr>
+        <tr><td>ASSB 카드 채움표 (§4·7)</td><td><code class="mono">wiki/<wbr>questions/<wbr>assb-contact-loss-vs-lampe.md</code></td></tr>
+        <tr><td>ASSB 큐 — 4차 묶음 도착 §6-3-j · 5차 묶음 · 결정 1–4 §6-3-k (§4·7 — 2026-11-24 갱신)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>ASSB_<wbr>TRANSFER_<wbr>NOTE.md</code></td></tr>
+        <tr><td>ASSB 합성 truth — 상태판 · 설계서 v1 (§8 = 실행 전 고정값 · 1 차 · 2 차 기록) (§4·7 — 2026-11-24 갱신)</td><td><code class="mono">followups/<wbr>assb-contact-truth/<wbr>STATUS.md</code> · <code class="mono">followups/<wbr>assb-contact-truth/<wbr>DESIGN_<wbr>v1.md</code></td></tr>
+        <tr><td>ASSB 합성 truth C1 실행 기록 (진단 전용 · 인용 금지 · 정본 아님)</td><td><code class="mono">followups/<wbr>assb-contact-truth/<wbr>c1_<wbr>20261124/<wbr>README.md</code></td></tr>
+        <tr><td>REIL 외부 검증 원장 §0–§130 (§4·8 — 2026-11-24 신설)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>REIL_<wbr>PREREQUISITES_<wbr>STATUS_<wbr>20261004.md</code></td></tr>
+        <tr><td>REIL 프로토콜 v2 + 부속 A–D · C4 요청 v2 (단계 정의)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>REIL_<wbr>EXTERNAL_<wbr>VALIDATION_<wbr>PROTOCOL_<wbr>v2.md</code> · <code class="mono">…_v2_ANNEX_A.md</code> ~ <code class="mono">…_v2_ANNEX_D.md</code> · <code class="mono">REIL_<wbr>C4_<wbr>APPROVAL_<wbr>REQUEST_<wbr>v2_<wbr>20261013.md</code></td></tr>
+        <tr><td>REIL C4-A 범위안 v2 · 구현 요청서 v2</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>REIL_<wbr>C4A_<wbr>SCOPE_<wbr>v2_<wbr>20261106.md</code> · <code class="mono">REIL_<wbr>C4A_<wbr>IMPL_<wbr>REQUEST_<wbr>v2_<wbr>20261106.md</code></td></tr>
+        <tr><td>REIL 검토 회신 보존 · 2026-11-24 인계 반입 기록</td><td><code class="mono">bms-balancing/<wbr>reviews/<wbr>prereview_<wbr>reil_<wbr>*/</code> · <code class="mono">review_reil_*/</code> · <code class="mono">handoff_<wbr>reil_<wbr>comsol_<wbr>20261124/</code></td></tr>
+        <tr><td>① COMSOL — §31–§100 (2026-11-24 갱신: §100 = R3 한정 기능 결과 · 문서 보충 수용 · 사용자 보류 — 세부 화면은 <a href="/microshort">마이크로 쇼츠</a>)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>COMSOL_<wbr>REBUILD_<wbr>SPEC.md</code></td></tr>
+        <tr><td>degradation-degeneracy 게이트 원장 (§3·5 · §4·5 의 82 차 — §115 · 2026-11-24 갱신: 마지막 회신 94 차 — §151)</td><td><code class="mono">degradation-degeneracy/<wbr>docs/<wbr>08_<wbr>REVIEW_<wbr>RESPONSE.md</code></td></tr>
+        <tr><td>② 승격 예외·legacy 이관의 <b>기록된 결정</b></td><td><code class="mono">bms-balancing/<wbr>reviews/<wbr>PROMOTION_<wbr>DECISIONS.json</code></td></tr>
+        <tr><td>① 우리 재계산 산출 (§18·§19·§20)</td><td><code class="mono">…/<wbr>codex63/<wbr>*/<wbr>RECHECK_<wbr>*.json</code></td></tr>
         <tr><td>산출 자체 (정본 수치)</td><td>산출 <code class="mono">.csv</code> + 나란한 <code class="mono">.meta.json</code></td></tr>
       </tbody>
     </table>

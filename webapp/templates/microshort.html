@@ -56,7 +56,7 @@
     자동 재개는 하지 않습니다.”</p>
   <p><b>재개 조건</b>은 사용자가 COMSOL 을 다시 쓸 수 있다고 알릴 때다. <b>재개 일정은 없다. 자동 재개도 없다</b> —
     인계 묶음의 <code class="mono">CURRENT_DIRECTION.json</code> 이 <code class="mono">automatic_resume=false</code> ·
-    <code class="mono">new_execution_authorization=false</code> 로 적는다 (그 파일은 스스로를 대화 요약이라고 적는다 —
+    <code class="mono">new_<wbr>execution_<wbr>authorization=false</code> 로 적는다 (그 파일은 스스로를 대화 요약이라고 적는다 —
     플랫폼 원본 내보내기가 아니다). 재개하면 §100 의 상태와 미검증 범위를 기준으로 다음 작업을 구체화하고,
     그때도 각 단계는 별도 승인이다 (§100).</p>
   <p><b>보류는 이전 검증 결과의 취소가 아니다</b> (인계문 · §100). 그리고 이 화면이 적는 “수용”은 어느 것도 실행 승인이
@@ -174,7 +174,7 @@
 
     <dt>INCOMPLETE · UNVERIFIED · 실효 정책</dt>
     <dd><b>INCOMPLETE</b> 는 판정이 끝나지 않았다는 값이다. 정상 전체 gate 가 이 값이다
-      (§21-1 의 <code class="mono">INCOMPLETE_POSTPROCESSING_UNDEFINED_COORDINATE</code>). 뒤의 한정
+      (§21-1 의 <code class="mono">INCOMPLETE_<wbr>POSTPROCESSING_<wbr>UNDEFINED_<wbr>COORDINATE</code>). 뒤의 한정
       수용들은 이것을 <b>소급해 바꾸지 않는다</b> (§26-1). <b>UNVERIFIED</b> 는 확인되지 않았다는 값이다.
       <b>실효 정책</b>은 COMSOL 이 실행 중에 실제로 적용하는 보안 설정(파일 접근 범위 등)이다. OS 접근 · prefs 값 ·
       실효 정책 · 실제 호출 성공은 <b>서로 다른 증거</b>다 (§28-3). 실효 정책은 지금 UNVERIFIED 다
@@ -288,8 +288,8 @@
 
   <p class="pipe-p">우리가 여기서 하려는 것은 <b>그 모델을 COMSOL 6.3 에서 다시 짓고,
     믿을 수 있는 상태로 만든 다음</b> 진단을 돌리는 것이다. 명세는
-    <code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code> 이고,
-    원본 모델에 대한 검토는 <code class="mono">docs/MICROSHORT_MPH_REVIEW.md</code> 다.</p>
+    <code class="mono">bms-balancing/<wbr>docs/<wbr>COMSOL_<wbr>REBUILD_<wbr>SPEC.md</code> 이고,
+    원본 모델에 대한 검토는 <code class="mono">docs/<wbr>MICROSHORT_<wbr>MPH_<wbr>REVIEW.md</code> 다.</p>
 
   <div class="plain">
     <p class="plain-t">쉬운 말로</p>
@@ -305,7 +305,7 @@
 
   <p class="pipe-note"><b>관련 · 다른 층 (2026-09-29 추가).</b> 마이크로 쇼츠를 <b>검출</b>하는 쪽에는
     실셀 알려진-라벨 자료 후보가 하나 있다 — 팩 레벨 공개 데이터셋이고, 균등화가 관측 위에 겹친다
-    (<code class="mono">bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md</code> §7-2). 그 문서는
+    (<code class="mono">bms-balancing/<wbr>docs/<wbr>MSC_<wbr>SEMINAR_<wbr>2026-09-23_<wbr>APPLICATION.md</code> §7-2). 그 문서는
     그것을 <b>“후보이지 검증이 아니다”</b>라고 적는다 (§7-6). 이 화면의 COMSOL 재구축과는
     <b>다른 층</b>이고, 판정을 서로 빌려 오지 않는다. 같은 문서 §7-4 는 재구축 §25–§30 을
     “전부 짧은 시간 진단”이라 요약하고, 그 문서가 쓰는 시간 단위(휴지 1 h · 고리 3 h · 보관 5 h)를
@@ -344,7 +344,7 @@
       <tbody>
         <tr><td>§32-5 · §33-4 → <b>§34</b></td><td>30 s · 60 s 결과를 읽을 판단 재료로 쓴 의견문 v2. 실수 네 종류 — 서로 다른 좌표를 한 비교에 섞었다 (R1) · 균일 평형 산술에서 유한 전류 경로의 결론으로 건너뛰었다 (R2) · 재현성 선례를 보장처럼 썼다 (R3) · 모델 조건을 “무관”으로 지웠다 (R4). R5 – R7 은 국소 · 시나리오 · 범위 한정을 떼고 옮긴 것이다 (§34-4)</td><td>검토자 정정 일곱 (R1 – R7) 을 모두 수용 · 반론 없음 · §34-2 가 원문 문장을 대체</td></tr>
         <tr><td><b>§35-2</b></td><td>보충 S1: 표의 J 가 몰 플럭스가 아니라 c<sub>s,max</sub> 로 정규화한 플럭스라는 단위 표시를 빠뜨렸다. 보충 S2: “실험과의 절대 전압 비교는 OCP 교체 뒤” 는 너무 넓었다 — “현재 모델도 실험과 대조해 불일치를 확인할 수 있다. 정량 예측의 수용은 OCP · 초기 상태 · 프로토콜의 실험 대응을 확인한 뒤” 로 좁혔다</td><td>검토자 보충 둘 · v4 는 내지 않고 §35 로 닫음</td></tr>
-        <tr><td>§70 → <b>§72</b></td><td>미세단락 S0 요청서의 오류 넷 — 분리막 epss 를 옛 설계 값 1 로 인용 (실제 NORMAL480 소스는 <code class="mono">epss_short = 1 − epsl_sep</code> = 0.55) · 누설비를 10 배 틀림 (0.001C = 정규화 용량 0.1 %/h 인데 “0.01C · 1 %/h”) · 유한 σ 의 “균일 평형 시작” 은 엄밀한 평형이 아님 · 정상(σ 1e−20)은 near-zero 누설 기준이지 무열화가 아님</td><td>S0 회신이 짚고 이 저장소에서 받은 소스로 확인 · 요청서 원문은 그대로 두고 §72 가 정정</td></tr>
+        <tr><td>§70 → <b>§72</b></td><td>미세단락 S0 요청서의 오류 넷 — 분리막 epss 를 옛 설계 값 1 로 인용 (실제 NORMAL480 소스는 <code class="mono">epss_<wbr>short = 1 − epsl_<wbr>sep</code> = 0.55) · 누설비를 10 배 틀림 (0.001C = 정규화 용량 0.1 %/h 인데 “0.01C · 1 %/h”) · 유한 σ 의 “균일 평형 시작” 은 엄밀한 평형이 아님 · 정상(σ 1e−20)은 near-zero 누설 기준이지 무열화가 아님</td><td>S0 회신이 짚고 이 저장소에서 받은 소스로 확인 · 요청서 원문은 그대로 두고 §72 가 정정</td></tr>
         <tr><td>§82 → <b>§83</b></td><td>사용자의 “보냈어” 를 R1_004 발송문 발송으로 적었다. 시점상 그 메시지는 R1_004 실행 · 결과 전달 <b>뒤</b>였다 — 근거 없는 해석이었다</td><td>이 저장소가 결과 묶음의 시각과 대조해 정정</td></tr>
         <tr><td>§83 → <b>§84</b></td><td>“(= 원파일과 같은 바이트)” 라고 적었다. 맞는 말은 “실행 측이 보고한 크기 · SHA 와 같은 바이트” 다 — 보고값이 원파일 값이라는 것은 제출자 기록이다</td><td>검토자 경미 C2 · 이 저장소가 표현 정정 (재실행 0)</td></tr>
         <tr><td>§91 → <b>§92</b></td><td>다음 OPEN 범위 제안문에 “B + E 면 COMSOL 없이 ④ 전체 종결” 이라고 적었다. B / E 는 OS 하위 범위만 검증한다 — COMSOL 협조적 중지의 지원 · 통합, 또는 따로 승인 · 검증한 force-only 경로와의 실제 연결이 남는다</td><td>검토자 정정 N1 (P2) · 원문은 그대로, 고쳐 읽는다</td></tr>
@@ -681,7 +681,7 @@
   </div>
 
   <div class="pipe-quote pipe-quote-bad">
-    <p><b><code class="mono">approved=false · B_path_ready=true · usable=false</code>.</b>
+    <p><b><code class="mono">approved=false · B_<wbr>path_<wbr>ready=true · usable=false</code>.</b>
       B_path_ready 는 "경로가 준비됐다" 이지 승인이 아니다. §24 의 R1·R2·R3 가 어디서 닫혔는지는
       수신 문서 여섯 개 어디에도 없어 <b>⚠ 로 남겼다</b> — 추측으로 메우지 않는다.</p>
   </div>
@@ -736,7 +736,7 @@
       시간 변화는 다른 것이다. phiL 의 N/P 개별 기여(−120.596 / +121.370 mV)는 상쇄되어 순 +0.773851 mV 이므로
       <b>한쪽 전위 이동을 독립 원인으로 세지 않는다.</b> Eeq 의 +101.644 % 는 부호 있는 산술 비율이지 에너지 ·
       원인 비중이 <b>아니다.</b> 대수적 기여는 반응 · 확산 · 저항의 <b>인과 지배성이나 실험 타당성의 증명이
-      아니다.</b> <code class="mono">Eeq = direct_Eeq_surface_V</code> 는 저장값 항등이지 OCP 물리 검증이 아니다.</p>
+      아니다.</b> <code class="mono">Eeq = direct_<wbr>Eeq_<wbr>surface_<wbr>V</code> 는 저장값 항등이지 OCP 물리 검증이 아니다.</p>
   </div>
 
   <p class="pipe-note"><b>§26 이 닫지 않은 것 (§26-2).</b> 실제 코어 수 / COMSOL 내부 실효 정책 UNVERIFIED ·
@@ -792,26 +792,26 @@
 
   <dl class="gloss">
     <dt>준비본 독립 검토 (§27) — 수신 검토자의 판정 (사본 — 우리 검증 아님)</dt>
-    <dd><code class="mono">DIRECTION_ACCEPTED_TWO_P2_CORRECTIONS_BEFORE_LIMITED_VALIDATION_ACCEPTANCE</code> — 방향 수용 ·
+    <dd><code class="mono">DIRECTION_<wbr>ACCEPTED_<wbr>TWO_<wbr>P2_<wbr>CORRECTIONS_<wbr>BEFORE_<wbr>LIMITED_<wbr>VALIDATION_<wbr>ACCEPTANCE</code> — 방향 수용 ·
       P2 2 건 (G1198-N1 · N2). 범위 한정: 정적 존재/식별 검사는 기능 시험이 아니다 ·
-      <code class="mono">validation_approved_by_this_review false</code> · <code class="mono">native_1198_approved false</code> ·
+      <code class="mono">validation_<wbr>approved_<wbr>by_<wbr>this_<wbr>review false</code> · <code class="mono">native_<wbr>1198_<wbr>approved false</code> ·
       <code class="mono">run_30s_approved false</code>.</dd>
 
     <dt>변경부 한정 검증 (§28) — 수신 검토자의 판정 (사본)</dt>
-    <dd><code class="mono">LIMITED_OFFLINE_VALIDATION_ACCEPTED</code> — G1198-N1 · N2 종결 · 새 P1/P2 0 · 26 논리군 /
+    <dd><code class="mono">LIMITED_<wbr>OFFLINE_<wbr>VALIDATION_<wbr>ACCEPTED</code> — G1198-N1 · N2 종결 · 새 P1/P2 0 · 26 논리군 /
       78 하위 사례 = Python 14/30 · Java helper 6/13 · PowerShell 5.1 6/35 · FAIL/NOT_RUN 0. 범위 한정:
-      <b>오프라인 검증 수용이며 COMSOL 실행 승인이 아니다</b> · <code class="mono">native_policy_route_ready false</code> ·
-      <code class="mono">native_1198_approved false</code> · <code class="mono">long_run_approved false</code>.</dd>
+      <b>오프라인 검증 수용이며 COMSOL 실행 승인이 아니다</b> · <code class="mono">native_<wbr>policy_<wbr>route_<wbr>ready false</code> ·
+      <code class="mono">native_<wbr>1198_<wbr>approved false</code> · <code class="mono">long_run_approved false</code>.</dd>
 
     <dt>G1198-N1 (P2) — 무엇이 비어 있었나 (검토자 서술 · 사본)</dt>
     <dd>초기 실패 반환에 <code class="mono">limited_result</code> 가 없다. 호출부는 그것을 정상 반환으로 받아 저장한 뒤
       그 키를 필수로 읽으므로 추가 <code class="mono">KeyError</code> 가 난다. <b>우리가 한 것 (읽기만 · 실행 0)</b>:
       동봉 사본의 호출 경로가 서술과 일치함을 파일:줄로 확인했다 (§27-2). 정정 뒤 사본에서 두 파일의 기본 결과가
-      처음부터 <code class="mono">limited_result:'INCOMPLETE'</code> 를 담는 것을 확인했다 (§28-2).</dd>
+      처음부터 <code class="mono">limited_<wbr>result:'INCOMPLETE'</code> 를 담는 것을 확인했다 (§28-2).</dd>
 
     <dt>G1198-N2 (P2) — 무엇이 비어 있었나 (검토자 서술 · 사본)</dt>
     <dd>부모가 요약 문자열만으로 수용 대기 상태로 넘긴다 — 다섯 필드만 있는 객체도
-      <code class="mono">AWAITING_LIMITED_EXTERNAL_ACCEPTANCE</code> 로 간다. 축 다섯과 pair · native_stop · numeric ·
+      <code class="mono">AWAITING_<wbr>LIMITED_<wbr>EXTERNAL_<wbr>ACCEPTANCE</code> 로 간다. 축 다섯과 pair · native_stop · numeric ·
       tables_manifest 는 읽지 않는다. <b>우리가 한 것 (읽기만 · 실행 0)</b>: 같은 방식으로 일치를 확인했다 (§27-2).
       정정 뒤 부모가 네 축 PASS · trigger <code class="mono">TEST_TRIGGER_DETECTED</code> · normal_gate INCOMPLETE ·
       effective_policy UNVERIFIED · 네 증거 구조가 비어 있지 않음을 읽고, 하나라도 어긋나면 INCOMPLETE 로 두는 것을
@@ -859,9 +859,9 @@
 
   <dl class="gloss">
     <dt>판정 (사본 — 우리 검증 아님)</dt>
-    <dd><code class="mono">ACCEPT_LIMITED_TRIGGER_AND_PRETRIGGER_SAMPLED_COMPARISON</code> · 검토 범위 차단 발견 0 ·
-      trigger <code class="mono">ACCEPTED_TEST_TRIGGER_DETECTED</code> · sampled_comparison
-      <code class="mono">PASS_INDEPENDENT_RAW_CSV_RECALCULATION</code> · 보존/소유 정리/정책 보존 = <b>동봉 기록
+    <dd><code class="mono">ACCEPT_<wbr>LIMITED_<wbr>TRIGGER_<wbr>AND_<wbr>PRETRIGGER_<wbr>SAMPLED_<wbr>COMPARISON</code> · 검토 범위 차단 발견 0 ·
+      trigger <code class="mono">ACCEPTED_<wbr>TEST_<wbr>TRIGGER_<wbr>DETECTED</code> · sampled_comparison
+      <code class="mono">PASS_<wbr>INDEPENDENT_<wbr>RAW_<wbr>CSV_<wbr>RECALCULATION</code> · 보존/소유 정리/정책 보존 = <b>동봉 기록
       범위에서</b> 수용.</dd>
 
     <dt>발동</dt>
@@ -874,8 +874,8 @@
       6.19e-16 V (1e-8) — <b>0–5 s 전체 비교를 했다는 뜻이 아님</b>.</dd>
 
     <dt>그대로인 것</dt>
-    <dd><code class="mono">native_30s_approved false</code> · <code class="mono">long_run_approved false</code> ·
-      <code class="mono">candidate_C_approved false</code> · overall/normal gate <b>INCOMPLETE 보존</b> · 전체 수렴
+    <dd><code class="mono">native_<wbr>30s_<wbr>approved false</code> · <code class="mono">long_run_approved false</code> ·
+      <code class="mono">candidate_<wbr>C_<wbr>approved false</code> · overall/normal gate <b>INCOMPLETE 보존</b> · 전체 수렴
       INCOMPLETE · 연속 시공간 양수성 NOT_ESTABLISHED.</dd>
 
     <dt>유지되는 미확인</dt>
@@ -925,7 +925,7 @@
 
   <dl class="gloss">
     <dt>판정 (사본 — 우리 검증 아님)</dt>
-    <dd><code class="mono">REVISE_TWO_ITEMS_THEN_LIMITED_VALIDATION</code> · 준비 방향 수용 · <b>후보 기능 검증 완료
+    <dd><code class="mono">REVISE_<wbr>TWO_<wbr>ITEMS_<wbr>THEN_<wbr>LIMITED_<wbr>VALIDATION</code> · 준비 방향 수용 · <b>후보 기능 검증 완료
       아님 · native 실행 GO 아님</b> · <code class="mono">native30_approved false</code> ·
       <code class="mono">long_run_approved false</code> · normal gate / 전체 수렴 INCOMPLETE · 실효 정책 UNVERIFIED ·
       B020 · 1198 수용 유지.</dd>
@@ -945,7 +945,7 @@
       <code class="mono">1e-6</code> 으로 대체했다. 산술 반례: 기준 N/P 각 1 mol/m², 현재 1.0000005 / 0.9999995 →
       합 동일 · 각 상대차 5e-7 은 통과 · 각 절대차 5e-7 mol/m² 는 1e-9 초과. <b>두 기준은 동등하지 않다</b>
       (기준량에 따라 상대가 더 엄격할 수도 있어 일률적 “완화”는 아님). <b>요구</b>:
-      <code class="mono">initial_Li_component_abs_mol_m2 = 1e-9</code> 명시 · 총량 drift 상대 1e-6 은 별도 유지 ·
+      <code class="mono">initial_<wbr>Li_<wbr>component_<wbr>abs_<wbr>mol_<wbr>m2 = 1e-9</code> 명시 · 총량 drift 상대 1e-6 은 별도 유지 ·
       Python 결과에 current/baseline/absolute_delta/적용 한도를 두고 부모가 그 필드를 소비 (상대차는 참고값만).</dd>
 
     <dt>N30-N2 · P2 — 쓰기 전에 잰 예산 판정을 마지막 반환에서 재사용한다</dt>
@@ -1132,8 +1132,8 @@
         <tr><td><b>A 보완</b> (A5→A8 오프라인) · <b>B_A8R1 제한 배치</b></td><td><b>수신 수용</b> (C1·C3 닫힘, 2026-09-24)</td><td>같음</td></tr>
         <tr><td>API 수치 회수 (241 좌표 표면 · Li 수지 · 정상 전체 판정)</td><td>수신 보고에 따르면 <b>241 좌표 · 프로파일 · Li 분율의 회수와 표본 비교가 수용</b>됐다 · 정상 전체 판정(INCOMPLETE)은 그대로 (§26-2)</td><td>전극별 241 좌표 공간 비교 <b>미완</b> · Li 수지 · 나머지 필수 출력 <b>미완</b></td></tr>
         <tr><td>B020 0–5 초 시각화 · 전압 분해</td><td>수용 · 차단 지적 없음 (P1 0 / P2 0) (§26-1)</td><td>—</td></tr>
-        <tr><td>1198 준비본의 변경부 한정 검증 (26 논리군 / 78 하위 사례)</td><td><code class="mono">LIMITED_OFFLINE_VALIDATION_ACCEPTED</code> — 오프라인 검증 수용이며 COMSOL 실행 승인이 아니다 (§28-1)</td><td>—</td></tr>
-        <tr><td>보호식 <b>발동</b> 시험 (임계값 1198)</td><td>native 1 회 · <code class="mono">ACCEPTED_TEST_TRIGGER_DETECTED</code> · 발동 전 표본 비교 PASS — <b>한정 수용</b> (§29-1)</td><td><b>미실행·미승인</b></td></tr>
+        <tr><td>1198 준비본의 변경부 한정 검증 (26 논리군 / 78 하위 사례)</td><td><code class="mono">LIMITED_<wbr>OFFLINE_<wbr>VALIDATION_<wbr>ACCEPTED</code> — 오프라인 검증 수용이며 COMSOL 실행 승인이 아니다 (§28-1)</td><td>—</td></tr>
+        <tr><td>보호식 <b>발동</b> 시험 (임계값 1198)</td><td>native 1 회 · <code class="mono">ACCEPTED_<wbr>TEST_<wbr>TRIGGER_<wbr>DETECTED</code> · 발동 전 표본 비교 PASS — <b>한정 수용</b> (§29-1)</td><td><b>미실행·미승인</b></td></tr>
         <tr><td>실제 API 호환성 · 정책 전파 · 프로세스 격리</td><td>1198 native 1 회: compile 1 · batch 1 (rc 0 각) · 정리/정책 보존은 <b>동봉 기록 범위에서</b> 수용 · 실효 정책은 UNVERIFIED — 아래 주</td><td><b>실물 미시험</b></td></tr>
       </tbody>
     </table>
@@ -1197,7 +1197,7 @@
       먼저 읽기 전용으로 검토하고, 사용자가 A 후속 작업을 승인하면 경로·환경·출력 계약을
       맞춘 뒤 <b>새 지문과 시험 결과를 다시 제출</b>해야 한다.</p>
     <p><b>(2026-09-29 갱신) 그리고 지금 규칙 하나.</b> COMSOL · JVM · Java 실행과 기존 launcher 실행은
-      <b>사용자 명시 승인 전 금지</b>다 (<code class="mono">MSC_SEMINAR_2026-09-23_APPLICATION.md</code> §7-4).
+      <b>사용자 명시 승인 전 금지</b>다 (<code class="mono">MSC_<wbr>SEMINAR_<wbr>2026-09-23_<wbr>APPLICATION.md</code> §7-4).
       이 화면이 적는 “수용”은 어느 것도 그 승인이 아니다.</p>
     <p><b>(2026-11-24 갱신) 그리고 지금은 보류다.</b> 사용자 원문 “지금 추가 구현·시험·OS/Job·COMSOL 실행이나 자동 재개는 하지
       않습니다” (§100). 재개는 사용자가 COMSOL 을 다시 쓸 수 있다고 알릴 때이고, 재개 일정도 자동 재개도 없다.</p>
@@ -1234,7 +1234,7 @@
       <h3>지금 상태를 읽는 순서 (2026-09-29)</h3>
       <p>① 원문 <b>§30-6</b> (이 절이 바꾸지 않는 것) — 지금 무엇이 승인되지 않았는지가 한 문단에 있다.
         ② §30-1 ~ §30-4 — 판정 · 보완 둘 · 지시서 사본 · 우리 의견. ③ 보존 묶음
-        <code class="mono">normal30_offline_review_20260928/</code> 의 <code class="mono">REVIEW_KO.md</code> ·
+        <code class="mono">normal30_<wbr>offline_<wbr>review_<wbr>20260928/</code> 의 <code class="mono">REVIEW_KO.md</code> ·
         <code class="mono">DECISION.json</code> — 판정 정본. ④ 같은 묶음의 다음 작업지시서 —
         <b>사용자 채택 대기 초안이고 실행 지시가 아니다.</b> ⑤ 거슬러 §29-7 · §28-6 · §27-6 · §26-8 · §25-6
         — 각 절의 “바꾸지 않는 것”은 전부 그대로 이어진다.</p>
@@ -1259,10 +1259,10 @@
       <h3>지금 상태를 읽는 순서 (2026-11-24)</h3>
       <p>① 원문 <b>§100</b> — 보류 원문 · R3 판정 · 유지 · 미검증 범위가 한 절에 있다. ② §98 · §99 — Job commit event 설계 검토와,
         그 앞에서 이 원장이 받지 못한 단계 목록. ③ §84 · §89 — S1-O 한정 기능 검증 종결 · 93 사례 수용 · OPEN 4 의 이름.
-        ④ 보존 묶음 <code class="mono">comsol_s1_event_receiver_bound_integration_r3_review_20261109/</code> ·
-        <code class="mono">…_r3_document_supplement_review_20261109/</code> 의 <code class="mono">originals/</code>
+        ④ 보존 묶음 <code class="mono">comsol_<wbr>s1_<wbr>event_<wbr>receiver_<wbr>bound_<wbr>integration_<wbr>r3_<wbr>review_<wbr>20261109/</code> ·
+        <code class="mono">…_<wbr>r3_<wbr>document_<wbr>supplement_<wbr>review_<wbr>20261109/</code> 의 <code class="mono">originals/</code>
         (<code class="mono">REVIEW_KO.txt</code> · <code class="mono">REVIEW_DECISION.json</code>) — 판정 정본.
-        ⑤ 인계 최상위 <code class="mono">bms-balancing/reviews/handoff_reil_comsol_20261124/</code> 의
+        ⑤ 인계 최상위 <code class="mono">bms-balancing/<wbr>reviews/<wbr>handoff_<wbr>reil_<wbr>comsol_<wbr>20261124/</code> 의
         <code class="mono">CLAUDE_HANDOFF_KO.txt</code> · <code class="mono">CURRENT_DIRECTION.json</code>.
         ⑥ 거슬러 §69 (B-min 종결 · 단계 전환) · §39-2 (960 s 없음).</p>
     </div>
@@ -1297,8 +1297,8 @@
     <table class="pg-table is-prose">
       <thead><tr><th>무엇</th><th>어디</th></tr></thead>
       <tbody>
-        <tr><td>인계 문서 셋 + 묶음 지문</td><td><code class="mono">…/codex63/takeover_20260915/</code></td></tr>
-        <tr><td>재구축 명세 · 진단 §8~§30</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
+        <tr><td>인계 문서 셋 + 묶음 지문</td><td><code class="mono">…/<wbr>codex63/<wbr>takeover_<wbr>20260915/</code></td></tr>
+        <tr><td>재구축 명세 · 진단 §8~§30</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>COMSOL_<wbr>REBUILD_<wbr>SPEC.md</code></td></tr>
         <tr><td>A 준비본 수신 검토 (R1·R2·R3)</td><td>같은 파일 <b>§24</b></td></tr>
         <tr><td>A5→A8 · B_A8R1 제한 배치 수신 검토 (C1/C3 닫힘 · C2(TTY) 미완)</td><td>같은 파일 <b>§25</b></td></tr>
         <tr><td>B020 이해 완료 · 제한 장시간 진단 계획에 대한 우리 의견</td><td>같은 파일 <b>§26</b></td></tr>
@@ -1306,25 +1306,25 @@
         <tr><td>1198 변경부 한정 검증 수용</td><td>같은 파일 <b>§28</b></td></tr>
         <tr><td>1198 native 발동 한정 수용 · R-O1 정정문</td><td>같은 파일 <b>§29</b></td></tr>
         <tr><td>정상 0→30 s 준비본 검토 (N30-N1 · N30-N2) · 지금 기준</td><td>같은 파일 <b>§30</b> (특히 §30-6)</td></tr>
-        <tr><td>원본 모델 검토 (v3)</td><td><code class="mono">bms-balancing/docs/MICROSHORT_MPH_REVIEW.md</code></td></tr>
-        <tr><td>건너온 묶음 원문 (bytes 보존)</td><td><code class="mono">bms-balancing/reviews/r14_repros/codex63/</code></td></tr>
-        <tr><td>그 아래 §26 · §27 검토 묶음</td><td><code class="mono">b020_voltage_review_20260928/</code> · <code class="mono">guard1198_independent_review_20260928/</code></td></tr>
-        <tr><td>그 아래 §28 · §29 검토 묶음</td><td><code class="mono">guard1198_validation_acceptance_20260928/</code> · <code class="mono">guard1198_native_acceptance_20260928/</code></td></tr>
-        <tr><td>그 아래 §30 검토 묶음</td><td><code class="mono">normal30_offline_review_20260928/</code></td></tr>
+        <tr><td>원본 모델 검토 (v3)</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>MICROSHORT_<wbr>MPH_<wbr>REVIEW.md</code></td></tr>
+        <tr><td>건너온 묶음 원문 (bytes 보존)</td><td><code class="mono">bms-balancing/<wbr>reviews/<wbr>r14_<wbr>repros/<wbr>codex63/</code></td></tr>
+        <tr><td>그 아래 §26 · §27 검토 묶음</td><td><code class="mono">b020_<wbr>voltage_<wbr>review_<wbr>20260928/</code> · <code class="mono">guard1198_<wbr>independent_<wbr>review_<wbr>20260928/</code></td></tr>
+        <tr><td>그 아래 §28 · §29 검토 묶음</td><td><code class="mono">guard1198_<wbr>validation_<wbr>acceptance_<wbr>20260928/</code> · <code class="mono">guard1198_<wbr>native_<wbr>acceptance_<wbr>20260928/</code></td></tr>
+        <tr><td>그 아래 §30 검토 묶음</td><td><code class="mono">normal30_<wbr>offline_<wbr>review_<wbr>20260928/</code></td></tr>
         <tr><td>우리 재계산 산출 · 코드</td><td><code class="mono">…/RECHECK_*.json</code> · <code class="mono">scripts/recheck_*.py</code></td></tr>
-        <tr><td>세 갈래 현재 상태</td><td><code class="mono">bms-balancing/WORKING_STATE.md</code></td></tr>
-        <tr><td>관련 · 다른 층 — 검출 쪽 실셀 라벨 자료 후보</td><td><code class="mono">bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md</code> §7-2 · §7-4</td></tr>
+        <tr><td>세 갈래 현재 상태</td><td><code class="mono">bms-balancing/<wbr>WORKING_<wbr>STATE.md</code></td></tr>
+        <tr><td>관련 · 다른 층 — 검출 쪽 실셀 라벨 자료 후보</td><td><code class="mono">bms-balancing/<wbr>docs/<wbr>MSC_<wbr>SEMINAR_<wbr>2026-09-23_<wbr>APPLICATION.md</code> §7-2 · §7-4</td></tr>
         <tr><td>(2026-11-24) 정상 30 → 480 s · 우리 의견문 정정 R1 – R7 · 보충 S1 / S2</td><td>재구축 명세 <b>§31 – §39</b></td></tr>
         <tr><td>(2026-11-24) 저장 0–480 s 분석 · rtol 30 s</td><td>같은 파일 <b>§40 · §41</b></td></tr>
-        <tr><td>(2026-11-24) 실험 대응 계획 · A0 자료 요청 · B-min 150 s · 단계 전환</td><td>같은 파일 <b>§42 – §69</b> · <code class="mono">bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md</code> · <code class="mono">COMSOL_BMIN_SCOPE_v2_20261004.md</code></td></tr>
-        <tr><td>(2026-11-24) 미세단락 S0 · S1-O · S1O-R1 · R1_003 / R1_004</td><td>같은 파일 <b>§70 – §84</b> · 요청서 <code class="mono">bms-balancing/docs/COMSOL_MICROSHORT_PHYSICS_REQUEST_DRAFT_20261007.md</code></td></tr>
+        <tr><td>(2026-11-24) 실험 대응 계획 · A0 자료 요청 · B-min 150 s · 단계 전환</td><td>같은 파일 <b>§42 – §69</b> · <code class="mono">bms-balancing/<wbr>docs/<wbr>COMSOL_<wbr>EXPERIMENT_<wbr>CORRESPONDENCE_<wbr>v2_<wbr>20261004.md</code> · <code class="mono">COMSOL_<wbr>BMIN_<wbr>SCOPE_<wbr>v2_<wbr>20261004.md</code></td></tr>
+        <tr><td>(2026-11-24) 미세단락 S0 · S1-O · S1O-R1 · R1_003 / R1_004</td><td>같은 파일 <b>§70 – §84</b> · 요청서 <code class="mono">bms-balancing/<wbr>docs/<wbr>COMSOL_<wbr>MICROSHORT_<wbr>PHYSICS_<wbr>REQUEST_<wbr>DRAFT_<wbr>20261007.md</code></td></tr>
         <tr><td>(2026-11-24) S1 OPEN 연결부 · 93 사례 · OS B</td><td>같은 파일 <b>§85 – §97</b></td></tr>
-        <tr><td>(2026-11-24) Job commit event 설계 검토 · R3 · <b>보류</b></td><td>같은 파일 <b>§98 – §100</b> · 우리 문서 검토 <code class="mono">bms-balancing/docs/COMSOL_S1_JOB_COMMIT_EVENT_DESIGN_REVIEW_20261027.md</code></td></tr>
-        <tr><td>(2026-11-24) 그 아래 §31 – §41 검토 묶음</td><td><code class="mono">normal30_validation_recipient_review_20260930/</code> · <code class="mono">normal30_native_…</code> · <code class="mono">normal60_…</code> · <code class="mono">normal120_native_…</code> · <code class="mono">normal240_native_…</code> · <code class="mono">normal480_native_recipient_review_20261001/</code> · <code class="mono">normal480_saved_analysis_recipient_review_20261003/</code> · <code class="mono">rtol30_native_recipient_review_20261004/</code> · <code class="mono">claude_normal30_long_horizon_review_20260930/</code></td></tr>
-        <tr><td>(2026-11-24) 그 아래 §42 – §69 묶음</td><td><code class="mono">comsol_a0_bmin_documents_20261004/</code> · <code class="mono">comsol_bmin_*_2026100[5-7]/</code> · <code class="mono">comsol_bmin150_*_2026100[6-7]/</code></td></tr>
-        <tr><td>(2026-11-24) 그 아래 §72 – §97 묶음</td><td><code class="mono">comsol_microshort_s0_deep_20261007/</code> · <code class="mono">comsol_microshort_s1o_*/</code> · <code class="mono">comsol_microshort_s1_open_*/</code> · <code class="mono">comsol_microshort_s1_os_b_scope_review_20261013/</code></td></tr>
-        <tr><td>(2026-11-24) 그 아래 §98 · §100 묶음</td><td><code class="mono">comsol_s1_job_commit_event_detailed_design_20261016/</code> · <code class="mono">comsol_s1_event_receiver_bound_integration_r3_review_20261109/</code> · <code class="mono">comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/</code></td></tr>
-        <tr><td>(2026-11-24) 인계 최상위 · 이 저장소의 반입 기록</td><td><code class="mono">bms-balancing/reviews/handoff_reil_comsol_20261124/</code> (<code class="mono">INTAKE_BY_THIS_REPO_20261124.json</code>)</td></tr>
+        <tr><td>(2026-11-24) Job commit event 설계 검토 · R3 · <b>보류</b></td><td>같은 파일 <b>§98 – §100</b> · 우리 문서 검토 <code class="mono">bms-balancing/<wbr>docs/<wbr>COMSOL_<wbr>S1_<wbr>JOB_<wbr>COMMIT_<wbr>EVENT_<wbr>DESIGN_<wbr>REVIEW_<wbr>20261027.md</code></td></tr>
+        <tr><td>(2026-11-24) 그 아래 §31 – §41 검토 묶음</td><td><code class="mono">normal30_<wbr>validation_<wbr>recipient_<wbr>review_<wbr>20260930/</code> · <code class="mono">normal30_native_…</code> · <code class="mono">normal60_…</code> · <code class="mono">normal120_native_…</code> · <code class="mono">normal240_native_…</code> · <code class="mono">normal480_<wbr>native_<wbr>recipient_<wbr>review_<wbr>20261001/</code> · <code class="mono">normal480_<wbr>saved_<wbr>analysis_<wbr>recipient_<wbr>review_<wbr>20261003/</code> · <code class="mono">rtol30_<wbr>native_<wbr>recipient_<wbr>review_<wbr>20261004/</code> · <code class="mono">claude_<wbr>normal30_<wbr>long_<wbr>horizon_<wbr>review_<wbr>20260930/</code></td></tr>
+        <tr><td>(2026-11-24) 그 아래 §42 – §69 묶음</td><td><code class="mono">comsol_<wbr>a0_<wbr>bmin_<wbr>documents_<wbr>20261004/</code> · <code class="mono">comsol_<wbr>bmin_<wbr>*_<wbr>2026100[5-7]/</code> · <code class="mono">comsol_<wbr>bmin150_<wbr>*_<wbr>2026100[6-7]/</code></td></tr>
+        <tr><td>(2026-11-24) 그 아래 §72 – §97 묶음</td><td><code class="mono">comsol_<wbr>microshort_<wbr>s0_<wbr>deep_<wbr>20261007/</code> · <code class="mono">comsol_<wbr>microshort_<wbr>s1o_<wbr>*/</code> · <code class="mono">comsol_<wbr>microshort_<wbr>s1_<wbr>open_<wbr>*/</code> · <code class="mono">comsol_<wbr>microshort_<wbr>s1_<wbr>os_<wbr>b_<wbr>scope_<wbr>review_<wbr>20261013/</code></td></tr>
+        <tr><td>(2026-11-24) 그 아래 §98 · §100 묶음</td><td><code class="mono">comsol_<wbr>s1_<wbr>job_<wbr>commit_<wbr>event_<wbr>detailed_<wbr>design_<wbr>20261016/</code> · <code class="mono">comsol_<wbr>s1_<wbr>event_<wbr>receiver_<wbr>bound_<wbr>integration_<wbr>r3_<wbr>review_<wbr>20261109/</code> · <code class="mono">comsol_<wbr>s1_<wbr>event_<wbr>receiver_<wbr>bound_<wbr>integration_<wbr>r3_<wbr>document_<wbr>supplement_<wbr>review_<wbr>20261109/</code></td></tr>
+        <tr><td>(2026-11-24) 인계 최상위 · 이 저장소의 반입 기록</td><td><code class="mono">bms-balancing/<wbr>reviews/<wbr>handoff_<wbr>reil_<wbr>comsol_<wbr>20261124/</code> (<code class="mono">INTAKE_<wbr>BY_<wbr>THIS_<wbr>REPO_<wbr>20261124.json</code>)</td></tr>
         <tr><td>(2026-11-24) 한 페이지 요약</td><td><a href="/microshort/summary"><code class="mono">/microshort/summary</code></a> (+ PDF)</td></tr>
       </tbody>
     </table>
@@ -1362,9 +1362,9 @@
     <table class="pg-table is-prose">
       <thead><tr><th>원문</th><th>무엇</th><th>판정 (사본 — 우리 검증 아님)</th><th>범위 · 남긴 것</th></tr></thead>
       <tbody>
-        <tr><td>§31</td><td>30 s 준비본 보완 (N30-N1 · N30-N2) 의 변경부 한정 검증</td><td><code class="mono">ACCEPT_LIMITED_VALIDATION_NATIVE30_PENDING_SEPARATE_USER_APPROVAL</code> · N30-N1 · N30-N2 <code class="mono">CLOSED_WITHIN_DECLARED_SCOPE</code></td><td>기능 사례 111 + 정적 대조 2 · 논리군 17 — “113 회 실행” 으로 부르지 않는다. 시험 fixture 는 모듈을 명시적으로 import 했다 → <b>fixture 성공 ≠ 생산 부모 startup 성공</b> (§31-3)</td></tr>
-        <tr><td>§33</td><td>60 s 오프라인 준비본</td><td><code class="mono">offline_preparation ACCEPTED</code> · 차단 0 · <code class="mono">functional_validation NOT_RUN</code></td><td>요청 시각 737 = 기존 437 + 30.1–60 s 0.1 s 간격 300 · Java 변경은 목적 · 시간 상한 · 요청 목록뿐 (§33-1)</td></tr>
-        <tr><td>§35</td><td>60 s 변경부 12 군 46 사례</td><td><code class="mono">LIMITED_VALIDATION_ACCEPTED_NATIVE60_REQUIRES_SEPARATE_USER_APPROVAL</code> · 차단 0</td><td>Python 27 · Java helper 4 · PowerShell 5.1 15 · 첫 Python 120 s timeout 은 미완으로 보존 — 46 PASS 로 덮지 않는다 (§35-1)</td></tr>
+        <tr><td>§31</td><td>30 s 준비본 보완 (N30-N1 · N30-N2) 의 변경부 한정 검증</td><td><code class="mono">ACCEPT_<wbr>LIMITED_<wbr>VALIDATION_<wbr>NATIVE30_<wbr>PENDING_<wbr>SEPARATE_<wbr>USER_<wbr>APPROVAL</code> · N30-N1 · N30-N2 <code class="mono">CLOSED_<wbr>WITHIN_<wbr>DECLARED_<wbr>SCOPE</code></td><td>기능 사례 111 + 정적 대조 2 · 논리군 17 — “113 회 실행” 으로 부르지 않는다. 시험 fixture 는 모듈을 명시적으로 import 했다 → <b>fixture 성공 ≠ 생산 부모 startup 성공</b> (§31-3)</td></tr>
+        <tr><td>§33</td><td>60 s 오프라인 준비본</td><td><code class="mono">offline_<wbr>preparation ACCEPTED</code> · 차단 0 · <code class="mono">functional_<wbr>validation NOT_<wbr>RUN</code></td><td>요청 시각 737 = 기존 437 + 30.1–60 s 0.1 s 간격 300 · Java 변경은 목적 · 시간 상한 · 요청 목록뿐 (§33-1)</td></tr>
+        <tr><td>§35</td><td>60 s 변경부 12 군 46 사례</td><td><code class="mono">LIMITED_<wbr>VALIDATION_<wbr>ACCEPTED_<wbr>NATIVE60_<wbr>REQUIRES_<wbr>SEPARATE_<wbr>USER_<wbr>APPROVAL</code> · 차단 0</td><td>Python 27 · Java helper 4 · PowerShell 5.1 15 · 첫 Python 120 s timeout 은 미완으로 보존 — 46 PASS 로 덮지 않는다 (§35-1)</td></tr>
         <tr><td>§37 · §38-8 · §39</td><td>120 s · 480 s 의 준비 · 변경부 검증 · 실행 승인</td><td>—</td><td>⚠ <b>이 저장소에 오지 않았다</b> (§37 머리 · §38-8 · §39 머리) — 결과만 받았다</td></tr>
       </tbody>
     </table>
@@ -1376,11 +1376,11 @@
     <table class="pg-table">
       <thead><tr><th>실행 (원문)</th><th>판정 (사본)</th><th>요청 / 저장 시각</th><th>직전 수용 실행과의 비교 — 정확 공통 시각 · 최대 전압 차</th><th>끝 시각 전압</th><th>compile + batch · 전체 (상한) s</th></tr></thead>
       <tbody>
-        <tr><td>NORMAL30 (§32)</td><td><code class="mono">NORMAL_30S_DIAGNOSTIC_ACCEPTED</code></td><td>437 / 1,237</td><td>B020 0–5 s · 987 · 5.4e-15 V</td><td>2.5409764300 V</td><td>1,570.079 (3,600) · 1,653.199 (5,100)</td></tr>
-        <tr><td>NORMAL60 (§36)</td><td><code class="mono">ACCEPT_NORMAL60_LIMITED_NATIVE_DIAGNOSTIC</code></td><td>737 / 1,537</td><td>NORMAL30 0–30 s · 1,237 · 0 V</td><td>2.68144272 V</td><td>1,881.438 (3,600) · 1,996.478 (5,100)</td></tr>
-        <tr><td>NORMAL120 (§37)</td><td><code class="mono">ACCEPTED_NORMAL120_LIMITED_DIAGNOSTIC</code></td><td>1,337 / 2,140</td><td>NORMAL60 0–60 s · 1,537 · 5.0e-15 V</td><td>2.8192929281 V</td><td>2,650.203 (3,600) · 2,794.536 (5,100)</td></tr>
-        <tr><td>NORMAL240 (§38)</td><td><code class="mono">ACCEPTED_NORMAL240_LIMITED_DIAGNOSTIC</code></td><td>2,537 / 3,340</td><td>NORMAL120 0–120 s · 2,140 · 5.4e-15 V</td><td>2.9793204952 V</td><td>4,059.516 (5,400) · 4,269.865 (7,200)</td></tr>
-        <tr><td>NORMAL480 (§39)</td><td><code class="mono">ACCEPTED_NORMAL480_LIMITED_DIAGNOSTIC</code></td><td>4,937 / 5,740</td><td>NORMAL240 0–240 s · 3,340 · 6e-15 V</td><td>3.1461077189 V</td><td>6,500.453 (9,000) · 6,829.015 (11,400)</td></tr>
+        <tr><td>NORMAL30 (§32)</td><td><code class="mono">NORMAL_<wbr>30S_<wbr>DIAGNOSTIC_<wbr>ACCEPTED</code></td><td>437 / 1,237</td><td>B020 0–5 s · 987 · 5.4e-15 V</td><td>2.5409764300 V</td><td>1,570.079 (3,600) · 1,653.199 (5,100)</td></tr>
+        <tr><td>NORMAL60 (§36)</td><td><code class="mono">ACCEPT_<wbr>NORMAL60_<wbr>LIMITED_<wbr>NATIVE_<wbr>DIAGNOSTIC</code></td><td>737 / 1,537</td><td>NORMAL30 0–30 s · 1,237 · 0 V</td><td>2.68144272 V</td><td>1,881.438 (3,600) · 1,996.478 (5,100)</td></tr>
+        <tr><td>NORMAL120 (§37)</td><td><code class="mono">ACCEPTED_<wbr>NORMAL120_<wbr>LIMITED_<wbr>DIAGNOSTIC</code></td><td>1,337 / 2,140</td><td>NORMAL60 0–60 s · 1,537 · 5.0e-15 V</td><td>2.8192929281 V</td><td>2,650.203 (3,600) · 2,794.536 (5,100)</td></tr>
+        <tr><td>NORMAL240 (§38)</td><td><code class="mono">ACCEPTED_<wbr>NORMAL240_<wbr>LIMITED_<wbr>DIAGNOSTIC</code></td><td>2,537 / 3,340</td><td>NORMAL120 0–120 s · 2,140 · 5.4e-15 V</td><td>2.9793204952 V</td><td>4,059.516 (5,400) · 4,269.865 (7,200)</td></tr>
+        <tr><td>NORMAL480 (§39)</td><td><code class="mono">ACCEPTED_<wbr>NORMAL480_<wbr>LIMITED_<wbr>DIAGNOSTIC</code></td><td>4,937 / 5,740</td><td>NORMAL240 0–240 s · 3,340 · 6e-15 V</td><td>3.1461077189 V</td><td>6,500.453 (9,000) · 6,829.015 (11,400)</td></tr>
       </tbody>
     </table>
   </div>
@@ -1407,9 +1407,9 @@
   <h3 class="pipe-sub">10-4 우리 의견문이 정정됐다 (§34 · §35)</h3>
 
   <p class="pipe-p">30 s · 60 s 결과를 읽을 판단 재료로 우리가 쓴 의견문 (§32-5 · §33-4) 을 검토자가 독립으로 검토했다 — 판정
-    <code class="mono">DIRECTION_AND_CORE_ARITHMETIC_SUPPORTED_WITH_INTERPRETATION_CORRECTIONS</code> (§34-1). 정정 일곱 (R1 – R7) 을 모두
+    <code class="mono">DIRECTION_<wbr>AND_<wbr>CORE_<wbr>ARITHMETIC_<wbr>SUPPORTED_<wbr>WITH_<wbr>INTERPRETATION_<wbr>CORRECTIONS</code> (§34-1). 정정 일곱 (R1 – R7) 을 모두
     수용했고, 원문은 고치지 않고 §34-2 가 해당 문장을 대체한다. 보충 둘 (§35-2 의 S1 · S2) 도 수용했고, 검토자는 회신 v3 을
-    <code class="mono">ACCEPTED_WITHIN_INTERPRETATION_SCOPE</code> 로 받았다 (§35-1). 실수의 종류는 §2 에 옮겼다.</p>
+    <code class="mono">ACCEPTED_<wbr>WITHIN_<wbr>INTERPRETATION_<wbr>SCOPE</code> 로 받았다 (§35-1). 실수의 종류는 §2 에 옮겼다.</p>
 
   <p class="pipe-note"><b>그 의견문의 숫자는 판단 재료이지 합격선이 아니다</b> (§32-7 · §33-6 · §35-1). 그리고 정정 뒤에도 남는 판단 하나 —
     <b>4.25 V CV → 0.01C 종료 → 휴지 프로토콜을 OCP 표 안에서 끝낼 수 있는지는 미입증이고, 그 구간의 장기 예측 주장을 보류한다</b>
@@ -1435,7 +1435,7 @@
     시간 적분 허용오차 한 축만 바꾼 30 s 시험이 한 번 돌았다 (§41). 판정은 수신 검토자의 것이다.</p>
 
   <dl class="gloss">
-    <dt>저장 0–480 s 분석 — <code class="mono">ACCEPTED_SAVED_ANALYSIS_0_480</code> (§40-1 · 사본)</dt>
+    <dt>저장 0–480 s 분석 — <code class="mono">ACCEPTED_<wbr>SAVED_<wbr>ANALYSIS_<wbr>0_<wbr>480</code> (§40-1 · 사본)</dt>
     <dd>단자 전압 2.2306115890 → 3.1461077189 V · 전체 상승 <b>+915.4961 mV</b> = Eeq +922.2674 · etaMid −19.7011 · phiL +12.9298 mV
       (Eeq 중 N +916.3904 / P +5.8770 mV) · 360–480 s 상승 +60.3979 mV · 평균 변화율 +0.5033 mV/s · 수준 / 변화 항등식 최대 잔차
       6.545e−16 / 7.495e−16 V.</dd>
@@ -1444,7 +1444,7 @@
     <dd>“N 경계 Eeq 하락이 가장 큰 양의 기여” 는 부호를 포함한 대수 분해로 맞다 — <b>독립 물리 원인 · 인과 비중 · 반응 / 확산 지배의
       증명이 아니다.</b> 최근 120 s 에 변화가 남아 있어 정상상태 도달 · 향후 평탄화를 판정하지 않는다.</dd>
 
-    <dt>rtol 1e-6 → 1e-7 · fresh 0→30 s — <code class="mono">ACCEPTED_LIMITED_RTOL30_SENSITIVITY</code> (§41-1 · 사본)</dt>
+    <dt>rtol 1e-6 → 1e-7 · fresh 0→30 s — <code class="mono">ACCEPTED_<wbr>LIMITED_<wbr>RTOL30_<wbr>SENSITIVITY</code> (§41-1 · 사본)</dt>
     <dd>NORMAL30 대비 정확 공통 1,196 시각 · 최대 |ΔV| <b>2.3812821772 µV</b> · 최대 |Δx_surf| 3.9797189265e−8 (둘 다 0.2 s) — 한도
       (1 mV · 1e−4) 대비 0.2381 % · 0.0398 %. 5 &lt; t ≤ 30 s 구간은 250 시각 · 0.4281635275 µV.</dd>
 
@@ -1484,10 +1484,10 @@
       <tbody>
         <tr><td>§42 – §44</td><td>대응표 · 자료 요청문 · B-min 범위 v1 → v2 · “오차 바닥” → “해당 설정 간 관측 차이”</td><td>v2 세 문서 후속 검토 수용 · R1 – R6 종결 · 새 차단 0 · 새 계산 0</td></tr>
         <tr><td>§49 – §51 · §58</td><td>A0 자료 요청 발송 (사용자 알림 “보냈엉”) → 사용자가 닫음 (“요청은 못해 이건 닫고”)</td><td>A0 닫힘 — 실험 자료와의 비교 · 대응 주장은 하지 않는다 · COMSOL 결과는 모델 안의 관측으로만 읽는다 (§58)</td></tr>
-        <tr><td>§45 – §57</td><td>B-min 오프라인 후보 v1 → r1 → r2 (정적 대조 81/81 → 42/42 → 38/38) · 변경부 한정 검증 승인 (9 군 · 고유 ID 62 · 입력 77)</td><td>r2 <code class="mono">PREPARATION_ACCEPTED_NOT_VALIDATED</code> → 검증 1 건 승인 (§56 · §57)</td></tr>
-        <tr><td>§59 – §62</td><td>한정 검증 retry3 · 집계 정정 (BMIN-R3-C1) · PS01-16 범위 사용자 결정 (가)</td><td><code class="mono">LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE</code> · PS01-16 외부 fail-closed 수용 · 내부 분기 UNOBSERVED</td></tr>
-        <tr><td>§63 – §67</td><td>native 150 s 두 단계 승인 — 1 단계 (배치 · 읽기 전용 사전 관측) · 2 단계 (사용자 최종 승인)</td><td>1 단계 <code class="mono">DEPLOYMENT_AND_PREFLIGHT_ACCEPTED_WITH_STATED_EVIDENCE_LIMITS</code> → 2 단계 승인</td></tr>
-        <tr><td>§68 · §69</td><td>B-min native 150 s 결과 · 전달 보존 종결</td><td><code class="mono">LIMITED_NATIVE150_REVIEW_CLOSED_WITH_DOCUMENTED_SCOPE</code></td></tr>
+        <tr><td>§45 – §57</td><td>B-min 오프라인 후보 v1 → r1 → r2 (정적 대조 81/81 → 42/42 → 38/38) · 변경부 한정 검증 승인 (9 군 · 고유 ID 62 · 입력 77)</td><td>r2 <code class="mono">PREPARATION_<wbr>ACCEPTED_<wbr>NOT_<wbr>VALIDATED</code> → 검증 1 건 승인 (§56 · §57)</td></tr>
+        <tr><td>§59 – §62</td><td>한정 검증 retry3 · 집계 정정 (BMIN-R3-C1) · PS01-16 범위 사용자 결정 (가)</td><td><code class="mono">LIMITED_<wbr>VALIDATION_<wbr>CLOSED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code> · PS01-16 외부 fail-closed 수용 · 내부 분기 UNOBSERVED</td></tr>
+        <tr><td>§63 – §67</td><td>native 150 s 두 단계 승인 — 1 단계 (배치 · 읽기 전용 사전 관측) · 2 단계 (사용자 최종 승인)</td><td>1 단계 <code class="mono">DEPLOYMENT_<wbr>AND_<wbr>PREFLIGHT_<wbr>ACCEPTED_<wbr>WITH_<wbr>STATED_<wbr>EVIDENCE_<wbr>LIMITS</code> → 2 단계 승인</td></tr>
+        <tr><td>§68 · §69</td><td>B-min native 150 s 결과 · 전달 보존 종결</td><td><code class="mono">LIMITED_<wbr>NATIVE150_<wbr>REVIEW_<wbr>CLOSED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code></td></tr>
       </tbody>
     </table>
   </div>
@@ -1497,7 +1497,7 @@
     <dd>저장 2,447 시각 · 마지막 150 s · 보호식 미발동 · compile / batch 각 1 회 rc 0 · 부모 최종 snapshot 4,471.8936425 / 10,500 s
       (POST_WRITE · 사용자 콘솔 전사 · 독립 OS 관측 아님) · 외부 NoExit rc null.</dd>
 
-    <dt>mesh_comparison = <code class="mono">WITHIN_LIMITS_THIS_WINDOW</code> (§68 · 사본)</dt>
+    <dt>mesh_comparison = <code class="mono">WITHIN_<wbr>LIMITS_<wbr>THIS_<wbr>WINDOW</code> (§68 · 사본)</dt>
     <dd>고정 입력 · 입자 반경 격자 320/320 ↔ 640/640 · <b>120–150 s · 요청 301 시각 · 전극별 241 좌표</b> · 최대 전압 차
       3.449917063×10⁻⁷ V (= 0.0003449917063 mV · 한도 0.001 V) · N / P 표면 조성 최대 차 1.1309035403×10⁻⁸ / 3.3226834×10⁻⁹
       (한도 1×10⁻⁴).</dd>
@@ -1507,7 +1507,7 @@
       “0–150 s 최대 0.000345 mV” 라고 쓰지 않는다.</dd>
 
     <dt>종결 (§69 · 사본)</dt>
-    <dd>BEFORE / AFTER 8,674 선택 원본 경로 · 크기 · SHA 일치 → <code class="mono">delivery_closeout = CLOSED</code> · 남은 항목 0.
+    <dd>BEFORE / AFTER 8,674 선택 원본 경로 · 크기 · SHA 일치 → <code class="mono">delivery_<wbr>closeout = CLOSED</code> · 남은 항목 0.
       승인 아님: 새 실행 · MPH 삭제 · 과거 기록 수정 · 재시험.</dd>
   </dl>
 
@@ -1547,8 +1547,8 @@
 
   <dl class="gloss">
     <dt>회신의 상태 (§72 · 회신 <code class="mono">DECISION.json</code> 사본)</dt>
-    <dd><code class="mono">COMPLETE_WITH_EXPLICIT_S1_OPEN_CONDITIONS</code> · <code class="mono">s1_recommended: true</code>
-      (<code class="mono">CONDITIONAL_WITHIN_MODEL_RESEARCH_ONLY</code>) · approved / usable_for_native / native_approved: false ·
+    <dd><code class="mono">COMPLETE_<wbr>WITH_<wbr>EXPLICIT_<wbr>S1_<wbr>OPEN_<wbr>CONDITIONS</code> · <code class="mono">s1_recommended: true</code>
+      (<code class="mono">CONDITIONAL_<wbr>WITHIN_<wbr>MODEL_<wbr>RESEARCH_<wbr>ONLY</code>) · approved / usable_for_native / native_approved: false ·
       비활성 후보 (실행본 아님). 회신은 우리 요청서의 오류 넷을 짚었다 — §2 에 옮겼다.</dd>
 
     <dt>사전 예측 — <b>COMSOL 결과가 아니다</b> (§72 · 회신의 축약 OCV 산술)</dt>
@@ -1571,18 +1571,18 @@
       <thead><tr><th>원문</th><th>무슨 일</th><th>판정 · 상태 (사본)</th></tr></thead>
       <tbody>
         <tr><td>§73</td><td>사용자 승인 — S1 의 오프라인 실행 연결 · consumer · 기록 / 자원 계약 · 변경부 한정 검증안 준비 “범위만”</td><td>실제 COMSOL / JVM / 컴파일 / solve / 입력 gate / 정책 변경 / 승인 활성화 미포함</td></tr>
-        <tr><td>§74 · §75</td><td>발송문 사전 검토 → v2</td><td><code class="mono">ACCEPTED_FOR_EXISTING_SCOPED_OFFLINE_PREPARATION</code> · S1O-C1 – C4 <code class="mono">CLOSED_DOCUMENT_ONLY</code></td></tr>
-        <tr><td>§76</td><td>준비본 정적 검토 — 준비본 상태 <code class="mono">PREPARED_WITH_EXPLICIT_OPEN_NATIVE_BLOCKERS</code> (8 항목 done 4 / partial 4)</td><td><code class="mono">PARTIAL_OFFLINE_PREPARATION_ACCEPTED_SOURCE_CORRECTIONS_REQUIRED</code> · N1 (P1) · N2 · N3 (P2) · N4 (경미) — 이 저장소에서도 받은 코드 텍스트로 넷 다 정적 확인 (실행 0)</td></tr>
-        <tr><td>§77 – §80</td><td>좁은 정정 S1O-R1 (N1 – N4) → 정정본 (검증안 8 군 130 ID) → 소스 검토</td><td>N1 – N4 정적 수용 · 검증안 정정 R1-V1 – V3 필요 (<code class="mono">SOURCE_CORRECTIONS_STATICALLY_ACCEPTED_VALIDATION_PLAN_CORRECTIONS_REQUIRED</code>)</td></tr>
-        <tr><td>§81</td><td>기능 검증 R1_003 — 후보 Python / PowerShell 함수를 합성 fixture 로 실제로 부른 첫 단계 (COMSOL 아님 · §80)</td><td>Python 99/99 PASS · PowerShell 28 PASS 뒤 PARENT_R113 하네스 전제에서 중지 · 2 미실행 → 127 PASS · INCOMPLETE · <code class="mono">STOP_RESULT_ACCEPTED_LIMITED_VALIDATION_INCOMPLETE</code> (생산 코드 결함 확인 아님 — 목표 함수 미도달)</td></tr>
-        <tr><td>§82 – §84</td><td>한정 보완 R1_004 (Python 보조 양성 4 + PowerShell 미완 3)</td><td>새 7 PASS · <code class="mono">LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE</code> — 원 127 재사용 + 원 미완 3 충족 · 보조 4 별도 · <b>S1-O 한정 기능 검증 종결</b></td></tr>
+        <tr><td>§74 · §75</td><td>발송문 사전 검토 → v2</td><td><code class="mono">ACCEPTED_<wbr>FOR_<wbr>EXISTING_<wbr>SCOPED_<wbr>OFFLINE_<wbr>PREPARATION</code> · S1O-C1 – C4 <code class="mono">CLOSED_DOCUMENT_ONLY</code></td></tr>
+        <tr><td>§76</td><td>준비본 정적 검토 — 준비본 상태 <code class="mono">PREPARED_<wbr>WITH_<wbr>EXPLICIT_<wbr>OPEN_<wbr>NATIVE_<wbr>BLOCKERS</code> (8 항목 done 4 / partial 4)</td><td><code class="mono">PARTIAL_<wbr>OFFLINE_<wbr>PREPARATION_<wbr>ACCEPTED_<wbr>SOURCE_<wbr>CORRECTIONS_<wbr>REQUIRED</code> · N1 (P1) · N2 · N3 (P2) · N4 (경미) — 이 저장소에서도 받은 코드 텍스트로 넷 다 정적 확인 (실행 0)</td></tr>
+        <tr><td>§77 – §80</td><td>좁은 정정 S1O-R1 (N1 – N4) → 정정본 (검증안 8 군 130 ID) → 소스 검토</td><td>N1 – N4 정적 수용 · 검증안 정정 R1-V1 – V3 필요 (<code class="mono">SOURCE_<wbr>CORRECTIONS_<wbr>STATICALLY_<wbr>ACCEPTED_<wbr>VALIDATION_<wbr>PLAN_<wbr>CORRECTIONS_<wbr>REQUIRED</code>)</td></tr>
+        <tr><td>§81</td><td>기능 검증 R1_003 — 후보 Python / PowerShell 함수를 합성 fixture 로 실제로 부른 첫 단계 (COMSOL 아님 · §80)</td><td>Python 99/99 PASS · PowerShell 28 PASS 뒤 PARENT_R113 하네스 전제에서 중지 · 2 미실행 → 127 PASS · INCOMPLETE · <code class="mono">STOP_<wbr>RESULT_<wbr>ACCEPTED_<wbr>LIMITED_<wbr>VALIDATION_<wbr>INCOMPLETE</code> (생산 코드 결함 확인 아님 — 목표 함수 미도달)</td></tr>
+        <tr><td>§82 – §84</td><td>한정 보완 R1_004 (Python 보조 양성 4 + PowerShell 미완 3)</td><td>새 7 PASS · <code class="mono">LIMITED_<wbr>VALIDATION_<wbr>CLOSED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code> — 원 127 재사용 + 원 미완 3 충족 · 보조 4 별도 · <b>S1-O 한정 기능 검증 종결</b></td></tr>
       </tbody>
     </table>
   </div>
 
   <p class="pipe-note"><b>R113 에서 실제로 본 것 (§83 · 제출자 관측).</b> parse 직후 실제 타입이 System.Decimal 이었다 (값 0.001) — §81 에서
     “알려진 동작 (관측 아님)” 으로 적은 것이 이 실행 기록에서 관측됐다. 검토자는 그 동적 증거를 “명시 Double 입력을 실제 S1Decision →
-    S1Fields → S1ComparisonNumerics 가 <code class="mono">DECIMAL_TRANSPORT_PRECISION</code> 으로 거부” 에 한정했다 (§84).</p>
+    S1Fields → S1ComparisonNumerics 가 <code class="mono">DECIMAL_<wbr>TRANSPORT_<wbr>PRECISION</code> 으로 거부” 에 한정했다 (§84).</p>
 
   <div class="pipe-quote pipe-quote-bad">
     <p><b>종결의 범위 (§84).</b> S1-O 한정 기능 검증이 닫혔어도 <code class="mono">native_ready=false</code> · 전체 / 정상 gate INCOMPLETE ·
@@ -1615,10 +1615,10 @@
     <table class="pg-table is-prose">
       <thead><tr><th>원문</th><th>무슨 일</th><th>판정 · 상태 (사본)</th></tr></thead>
       <tbody>
-        <tr><td>§85</td><td>S1 OPEN 연결부 오프라인 준비본 — 정적 검토</td><td><code class="mono">OFFLINE_PREPARATION_REVIEWED_REVISIONS_REQUIRED_BEFORE_LIMITED_VALIDATION</code> · OPEN-R1-N1 (P1: 전체 / native 원점을 raw 샘플이 스스로 주장 — 원점을 앞으로 옮겨 경과를 줄일 수 있다) · N2 (P2: 항목 타입 검사 전 <code class="mono">.get</code>) · N3 (P2: 검증안의 도달 · 양성 대조) · OPEN 4 닫힘 0</td></tr>
-        <tr><td>§86 · §87</td><td>좁은 정정 OPEN-R1 (첨부 정정 한 번) → 정적 재검토</td><td><code class="mono">STATIC_CORRECTIONS_ACCEPTED_WITH_PLAN_METADATA_CONDITIONS</code> — 검증안 메타데이터 조건 둘 (순서 규칙 · 양성 대조)</td></tr>
-        <tr><td>§88 · §89</td><td>9 군 93 사례 변경부 한정 검증 (사용자 “권고대로”) → 결과 <code class="mono">_003</code></td><td><code class="mono">LIMITED_VALIDATION_ACCEPTED_WITH_DOCUMENTED_SCOPE</code> · PASS 93 · FAIL 0 · 최종 NOT_RUN 0 · 차단 0</td></tr>
-        <tr><td>§90 – §92</td><td>다음 OPEN 해소 범위 제안 — ④ OS 자원 · 소유 · 중지를 B 단계부터</td><td><code class="mono">SCOPE_ACCEPTABLE_WITH_DOCUMENT_CORRECTIONS</code> · 정정 N1 – N3 (P2) · 근거 경로 (b) 사본 묶음 권고</td></tr>
+        <tr><td>§85</td><td>S1 OPEN 연결부 오프라인 준비본 — 정적 검토</td><td><code class="mono">OFFLINE_<wbr>PREPARATION_<wbr>REVIEWED_<wbr>REVISIONS_<wbr>REQUIRED_<wbr>BEFORE_<wbr>LIMITED_<wbr>VALIDATION</code> · OPEN-R1-N1 (P1: 전체 / native 원점을 raw 샘플이 스스로 주장 — 원점을 앞으로 옮겨 경과를 줄일 수 있다) · N2 (P2: 항목 타입 검사 전 <code class="mono">.get</code>) · N3 (P2: 검증안의 도달 · 양성 대조) · OPEN 4 닫힘 0</td></tr>
+        <tr><td>§86 · §87</td><td>좁은 정정 OPEN-R1 (첨부 정정 한 번) → 정적 재검토</td><td><code class="mono">STATIC_<wbr>CORRECTIONS_<wbr>ACCEPTED_<wbr>WITH_<wbr>PLAN_<wbr>METADATA_<wbr>CONDITIONS</code> — 검증안 메타데이터 조건 둘 (순서 규칙 · 양성 대조)</td></tr>
+        <tr><td>§88 · §89</td><td>9 군 93 사례 변경부 한정 검증 (사용자 “권고대로”) → 결과 <code class="mono">_003</code></td><td><code class="mono">LIMITED_<wbr>VALIDATION_<wbr>ACCEPTED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code> · PASS 93 · FAIL 0 · 최종 NOT_RUN 0 · 차단 0</td></tr>
+        <tr><td>§90 – §92</td><td>다음 OPEN 해소 범위 제안 — ④ OS 자원 · 소유 · 중지를 B 단계부터</td><td><code class="mono">SCOPE_<wbr>ACCEPTABLE_<wbr>WITH_<wbr>DOCUMENT_<wbr>CORRECTIONS</code> · 정정 N1 – N3 (P2) · 근거 경로 (b) 사본 묶음 권고</td></tr>
         <tr><td>§93 · §94</td><td>공식 문서 묶음 — 첫 세션은 네트워크 정책에 막힘 → 새 세션에서 생성</td><td>36 / 36 HTTP 200 · 525,600 B · 최종 v2 에 식별 기입 (§0 11 – 14 행만)</td></tr>
         <tr><td>§95</td><td>S1 OS B 오프라인 준비 — 사용자 승인 (“승인이야”)</td><td>공식 근거 대응 · 비활성 provider 후보 · 변경부 검증안 작성 · 정적 봉인 뒤 멈춤 — 실행 PC 관측 · OS 시험 · COMSOL / native 승인 아님</td></tr>
         <tr><td>§96 · §97</td><td>실행 측이 두 번 착수 전에 멈춤 — 필수 기준 ZIP 미첨부 (이 저장소 쪽 누락) · 공식 문서 ZIP 지정 위치 부재</td><td>첫 오류 중지 규칙대로 · 대체 사본 · 재시도 0 · 원본 그대로 재전달 (재생성 아님)</td></tr>
@@ -1655,7 +1655,7 @@
   <div class="pipe-quote pipe-quote-bad">
     <p><b>⚠ 이 원장이 받지 못한 단계가 둘 있다 — 이 화면은 그 자리를 추측으로 메우지 않는다.</b></p>
     <p>① §97 (2026-10-14) 뒤 송신 측에서 진행된 것 — OS B 준비 결과 · R8 후보 · DOC_R1 (N1 – N3 종결) · 106 사례 · 16 주제 · 결정 제안
-      Q1 – Q4 · 결정 검토 (<code class="mono">DOCUMENT_PROPOSAL_ACCEPTED_FOR_USER_CHOICE_NOT_ADOPTED</code>) · 사용자 선택 “1번가자”
+      Q1 – Q4 · 결정 검토 (<code class="mono">DOCUMENT_<wbr>PROPOSAL_<wbr>ACCEPTED_<wbr>FOR_<wbr>USER_<wbr>CHOICE_<wbr>NOT_<wbr>ADOPTED</code>) · 사용자 선택 “1번가자”
       (2026-10-16). 이 저장소는 원본을 받지 않았고, 묶음의 basis 사본과 인용으로만 안다 (§98).</p>
     <p>② §99 (2026-10-30) 뒤의 문서 정정 · receiver-bound ACK 통합 R1 · R2 · R3 의 준비와 실행 — 원장에 기록이 없다. R3 의 근거는
       2026-11-24 인계 묶음 안의 두 검토 회신 (둘 다 2026-11-09) 뿐이고, 그 사이의 실행 · 결정을 이 원장이 독립 확인한 것이 아니다.
@@ -1671,7 +1671,7 @@
       계약 · 구현 · 시험 · OS 관측 · COMSOL 승인이 아니다 (기록 원문).</dd>
 
     <dt>이 저장소의 문서 검토 (§98 — 우리 판정이다)</dt>
-    <dd><code class="mono">DESIGN_DIRECTION_ACCEPTABLE_DOCUMENT_CORRECTIONS_BEFORE_D1_D5</code> · P1 0 · P2 5 (JC-01 감시자 자신의 정체 · JC-02
+    <dd><code class="mono">DESIGN_<wbr>DIRECTION_<wbr>ACCEPTABLE_<wbr>DOCUMENT_<wbr>CORRECTIONS_<wbr>BEFORE_<wbr>D1_<wbr>D5</code> · P1 0 · P2 5 (JC-01 감시자 자신의 정체 · JC-02
       reader 기한 · JC-03 handle 사용권 장부 · JC-04 실패 경로의 증거 객체 · JC-05 Parent 필드) · P3 5 (JC-06 – 10) · 미구현을 완료로 주장하는
       위치 0. API 의미에 기댄 두 지적은 공식 문서의 일반 의미를 쓴 것이고, 이번에 원문을 다시 열지 않았다 (네트워크 0).</dd>
 
@@ -1684,7 +1684,7 @@
 
   <dl class="gloss">
     <dt>판정</dt>
-    <dd><code class="mono">LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED</code> · 한정 결과 수용을 막는 지적 0.</dd>
+    <dd><code class="mono">LIMITED_<wbr>FUNCTIONAL_<wbr>RESULT_<wbr>ACCEPTED_<wbr>WITH_<wbr>DELIVERY_<wbr>STOP_<wbr>PRESERVED</code> · 한정 결과 수용을 막는 지적 0.</dd>
 
     <dt>범위</dt>
     <dd>오프라인 파일 / 생명주기 시나리오 10 (F01 – F10) + 직접 소유한 수신자 하나를 공유하는 순차 실제 연결 시나리오 2 (L01 – L02) =
@@ -1707,14 +1707,14 @@
 
   <h3 class="pipe-sub">15-3 R3 문서 보충 — 검토자 판정 (§100 · 2026-11-09 · 사본)</h3>
 
-  <p class="pipe-p"><code class="mono">DOCUMENT_SUPPLEMENT_ACCEPTED_RBI_R1_READY_01_CLOSED</code> · 차단 0 · 새 정정 요구 0. 문서 지적 둘이 문서
+  <p class="pipe-p"><code class="mono">DOCUMENT_<wbr>SUPPLEMENT_<wbr>ACCEPTED_<wbr>RBI_<wbr>R1_<wbr>READY_<wbr>01_<wbr>CLOSED</code> · 차단 0 · 새 정정 요구 0. 문서 지적 둘이 문서
     범위에서 종결됐다 — <code class="mono">RBI_R3_C1_COUNT_WORDING</code> (전달문 첫 줄 “2 시나리오” → “총 12 시나리오 · 실제 연결 2 · 정상
     실제 전달 완료 1 회”) · <code class="mono">RBI_R1_READY_01</code> (봉인 63 행의 양쪽 bootstrap 해시 읽기 ↔ 부모 13 · 자식 7 load_target
     모듈 구분). 과거 문서는 고치지 않고, <code class="mono">RBI_R1_READY_01</code> 을 다시 OPEN 으로 취급하지 않는다 (인계문). 기존 ZIP ·
     봉인 · 소스 · 결과의 수정이나 재시험은 필요 없다.</p>
 
   <div class="pipe-quote pipe-quote-bad">
-    <p><b>그대로인 것 (§100 · 유지).</b> 전체 절차 PASS 불인정 · <code class="mono">contract_adopted / native_ready / approved / usable = false</code> ·
+    <p><b>그대로인 것 (§100 · 유지).</b> 전체 절차 PASS 불인정 · <code class="mono">contract_<wbr>adopted /<wbr> native_<wbr>ready /<wbr> approved /<wbr> usable = false</code> ·
       전체 · 정상 gate <b>INCOMPLETE</b> · 네 운영 기한 / reserve = null (검토자 표기 — §98 – §99 의 “세 기한” 과 세는 방식이 다르고, 이 원장은
       그 차이를 판정하지 않았다) · <code class="mono">JOB_CURRENT_COMMIT=OPEN</code> · 기존 OPEN · 앞 중지 기록 (재분류하지 않음).</p>
     <p><b>미검증 (별개).</b> 운영 clock / boot / domain / role / freshness 결속 · 동시 파일 교체와 프로세스 동시성 · 재시작 복구와 내구성 ·
@@ -1757,7 +1757,7 @@
       <thead><tr><th>항목</th><th>지금 (2026-11-24)</th></tr></thead>
       <tbody>
         <tr><td>COMSOL 후속 작업</td><td><b>보류</b> — 사용자 원문은 화면 맨 위 상자 · 추가 구현 · 시험 · OS / Job · COMSOL 실행 · 자동 재개 없음 (§100)</td></tr>
-        <tr><td>재개 조건 · 일정</td><td>사용자가 COMSOL 을 다시 쓸 수 있다고 알릴 때 · <b>재개 일정 없음</b> · <code class="mono">automatic_resume=false</code> · <code class="mono">new_execution_authorization=false</code> (<code class="mono">CURRENT_DIRECTION.json</code> — 대화 요약 파일)</td></tr>
+        <tr><td>재개 조건 · 일정</td><td>사용자가 COMSOL 을 다시 쓸 수 있다고 알릴 때 · <b>재개 일정 없음</b> · <code class="mono">automatic_resume=false</code> · <code class="mono">new_<wbr>execution_<wbr>authorization=false</code> (<code class="mono">CURRENT_DIRECTION.json</code> — 대화 요약 파일)</td></tr>
         <tr><td>보류와 이전 결과</td><td>보류는 이전 검증 결과의 취소가 아니다 (인계문 · §100)</td></tr>
         <tr><td>재개하면</td><td>§100 의 상태와 미검증 범위를 기준으로 다음 작업을 구체화한다 · 그때도 각 단계는 별도 승인이다 (§100)</td></tr>
       </tbody>
@@ -1795,14 +1795,14 @@
       <tbody>
         <tr><td>30 s 보완 검증 · 60 s 준비 · 46 사례 (§31 · §33 · §35)</td><td>각각 한정 수용</td><td>오프라인 검증 — COMSOL 실행 승인 아님</td></tr>
         <tr><td>정상 fresh 0→30 · 60 · 120 · 240 · 480 s (§32 · §36 – §39)</td><td>각각 한정 진단 수용</td><td>앞 구간 재현성 — 수렴 · 실험 정확도 아님</td></tr>
-        <tr><td>우리 회신 v3 (§35)</td><td><code class="mono">ACCEPTED_WITHIN_INTERPRETATION_SCOPE</code></td><td>해석 범위 — 기대값은 결과 해석의 참고이고 계약 한도를 대체하지 않는다</td></tr>
-        <tr><td>저장 0–480 s 분석 (§40)</td><td><code class="mono">ACCEPTED_SAVED_ANALYSIS_0_480</code></td><td>부호 포함 대수 분해 — 인과 증명 아님</td></tr>
-        <tr><td>rtol 30 s (§41)</td><td><code class="mono">ACCEPTED_LIMITED_RTOL30_SENSITIVITY</code></td><td>30 s 창 · rtol 한 축</td></tr>
+        <tr><td>우리 회신 v3 (§35)</td><td><code class="mono">ACCEPTED_<wbr>WITHIN_<wbr>INTERPRETATION_<wbr>SCOPE</code></td><td>해석 범위 — 기대값은 결과 해석의 참고이고 계약 한도를 대체하지 않는다</td></tr>
+        <tr><td>저장 0–480 s 분석 (§40)</td><td><code class="mono">ACCEPTED_<wbr>SAVED_<wbr>ANALYSIS_<wbr>0_<wbr>480</code></td><td>부호 포함 대수 분해 — 인과 증명 아님</td></tr>
+        <tr><td>rtol 30 s (§41)</td><td><code class="mono">ACCEPTED_<wbr>LIMITED_<wbr>RTOL30_<wbr>SENSITIVITY</code></td><td>30 s 창 · rtol 한 축</td></tr>
         <tr><td>A0 · B-min v2 문서 (§44)</td><td>v2 세 문서 수용 · R1 – R6 종결</td><td>문서 · 새 계산 0</td></tr>
-        <tr><td>B-min r2 한정 검증 · native 150 s (§62 · §68 · §69)</td><td><code class="mono">LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE</code> · <code class="mono">LIMITED_NATIVE150_REVIEW_CLOSED_WITH_DOCUMENTED_SCOPE</code></td><td>120–150 s 창 · 입자 반경 320 ↔ 640 — 창 밖은 관측 전용</td></tr>
-        <tr><td>S1-O 한정 기능 검증 (§84)</td><td><code class="mono">LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE</code></td><td>합성 fixture 의 함수 호출 — COMSOL 아님 · native_ready false</td></tr>
-        <tr><td>S1 OPEN 변경부 93 사례 (§89)</td><td><code class="mono">LIMITED_VALIDATION_ACCEPTED_WITH_DOCUMENTED_SCOPE</code></td><td>Java 는 stub — OS · 설치본 · 물리 효과로 확대하지 않는다</td></tr>
-        <tr><td>receiver-bound ACK 통합 R3 (§100)</td><td><code class="mono">LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED</code> · 문서 보충 <code class="mono">DOCUMENT_SUPPLEMENT_ACCEPTED_RBI_R1_READY_01_CLOSED</code></td><td>12 시나리오 · fixture clock / binding — 전체 절차 PASS 아님</td></tr>
+        <tr><td>B-min r2 한정 검증 · native 150 s (§62 · §68 · §69)</td><td><code class="mono">LIMITED_<wbr>VALIDATION_<wbr>CLOSED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code> · <code class="mono">LIMITED_<wbr>NATIVE150_<wbr>REVIEW_<wbr>CLOSED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code></td><td>120–150 s 창 · 입자 반경 320 ↔ 640 — 창 밖은 관측 전용</td></tr>
+        <tr><td>S1-O 한정 기능 검증 (§84)</td><td><code class="mono">LIMITED_<wbr>VALIDATION_<wbr>CLOSED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code></td><td>합성 fixture 의 함수 호출 — COMSOL 아님 · native_ready false</td></tr>
+        <tr><td>S1 OPEN 변경부 93 사례 (§89)</td><td><code class="mono">LIMITED_<wbr>VALIDATION_<wbr>ACCEPTED_<wbr>WITH_<wbr>DOCUMENTED_<wbr>SCOPE</code></td><td>Java 는 stub — OS · 설치본 · 물리 효과로 확대하지 않는다</td></tr>
+        <tr><td>receiver-bound ACK 통합 R3 (§100)</td><td><code class="mono">LIMITED_<wbr>FUNCTIONAL_<wbr>RESULT_<wbr>ACCEPTED_<wbr>WITH_<wbr>DELIVERY_<wbr>STOP_<wbr>PRESERVED</code> · 문서 보충 <code class="mono">DOCUMENT_<wbr>SUPPLEMENT_<wbr>ACCEPTED_<wbr>RBI_<wbr>R1_<wbr>READY_<wbr>01_<wbr>CLOSED</code></td><td>12 시나리오 · fixture clock / binding — 전체 절차 PASS 아님</td></tr>
       </tbody>
     </table>
   </div>
