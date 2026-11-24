@@ -305,3 +305,5 @@ evidence/reil_c4_env_20261124/** -text
 evidence/reil_c4_env_20261124_after/** -text
 # 2026-11-24 반입: REIL C4-ENV 새 세대 (3.11.18) 재봉인 요청 사전 검토 회신 (REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL · ENV18-N1 CA 선택 · N2 S10 종료 기록 · 실행기 · 바깥 하네스 사전 고정 필요 · 비차단 C1 · C2 · 제출 커밋 781f357 · 실행 승인 아님 · review_tools/*.py = 실행하지 않음 · outside_zip/ = 사용자가 준 CODEX_REPLY_KO.txt · DELIVERY_RECORDS.json · DELIVERY_TRANSPORT_TOOL_RETURN.json 원본 + DELIVERY_RECORDS 안 raw_base64 셋을 푼 파일) — bytes 그대로
 reviews/review_reil_c4_env_reseal_prereview_20261124/** -text
+# 2026-11-24: REIL C4-ENV 재봉인 요청 v2 의 근거 — 대조기 v2 · 실행기 · 바깥 하네스의 합성 자체 시험 · 변이 증명 기록 (RED 실행 · 1 차 개발 실행 보존 포함) · 10월 실행기 대비 diff (임시 git 저장소 · 가짜 명령만 · 설치 · 내려받기 0) — bytes 그대로
+evidence/reil_c4_env_reseal_v2_selftest_20261124/** -text
