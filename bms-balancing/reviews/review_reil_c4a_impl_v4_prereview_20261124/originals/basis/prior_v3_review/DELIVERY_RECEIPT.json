@@ -1,0 +1,34 @@
+{
+  "kind": "REIL_C4A_V3_REVIEW_DELIVERY_RECEIPT",
+  "recipient": null,
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_v3_review_20261124\\REIL_C4A_IMPL_V3_PREREVIEW_20261124.zip",
+    "bytes": 1467669,
+    "sha256": "a1202b694048e31a6c21956b825c40a9c534dfd382c1c56a2823edfcc8b53a7a"
+  },
+  "manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_v3_review_20261124\\PACKAGE_MANIFEST.json",
+    "bytes": 9018,
+    "sha256": "d48dc50bb81b5d67574783a5e037ee66c7a1c66b62ab263a688cfdebe3517bdc"
+  },
+  "payload_count": 49,
+  "entries": 50,
+  "verification": "Exact member set, safe case-unique relative paths, non-link metadata, decompressed size/SHA256 and independently recomputed CRC32 matched.",
+  "selected_local_inputs_preserved": 6,
+  "fixed_reference_files": 27,
+  "prior_reference_files_exact_match": 23,
+  "prior_ledger_is_exact_prefix": true,
+  "decision": "REVISION_REQUIRED_BOOTSTRAP_ALLOWLIST_CYCLE",
+  "closed_subissues": 11,
+  "open_subissues": 1,
+  "C2": "CLOSED_DOCUMENT_SCOPE",
+  "target_import_or_execution": 0,
+  "pytest_collection": 0,
+  "functional_tests": 0,
+  "COMSOL": 0,
+  "COMSOL_policy": "PAUSED_BY_USER",
+  "implementation_or_execution_approved": false,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "boundary": "After review ZIP readback and six selected local input rehashes; before receipt write/readback and actual tool return."
+}

@@ -1,0 +1,45 @@
+{
+  "kind": "V4_STATIC_INTAKE",
+  "files": [
+    {
+      "repository_path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v4_20261124.md",
+      "local_path": "input/REIL_C4A_IMPL_REQUEST_v4_20261124.md",
+      "bytes": 105784,
+      "sha256": "85e148b41840a0d3d98eb08ec0adae7e8b39f64bc5d3c44d2165723b9da74db2",
+      "git_blob_sha": "eb3fd36814f69f6adf261ed7483740d67e762eab"
+    },
+    {
+      "repository_path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_v4_20261124.md",
+      "local_path": "input/REIL_C4A_IMPL_REQUEST_SEND_v4_20261124.md",
+      "bytes": 5573,
+      "sha256": "dc9f083765df1332c4fa9c707d37389d1996d569eb779244c51c52cf0b7c29e7",
+      "git_blob_sha": "afdc57ee26c16be92cf3ab89462b68641c34d655"
+    },
+    {
+      "repository_path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v3_20261124.md",
+      "local_path": "input/REIL_C4A_IMPL_REQUEST_v3_20261124.md",
+      "bytes": 96546,
+      "sha256": "2156f12d35c05c3a41307c4c254ce0bf836f9bdcbc33485c1eba2bb995d71c5b",
+      "git_blob_sha": "78cb55dd0a744bd97be72faff46374bdce5f2da7"
+    },
+    {
+      "repository_path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "local_path": "input/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 512469,
+      "sha256": "f1a2e96a20d3d8dddc70b98a6dfbcfaa2671503e33f6d4466ccf6ae4b147bca3",
+      "git_blob_sha": "910389a07926d1d7b17c1f680f186ce8c64f258c"
+    },
+    {
+      "local_original_path": "C:\\Users\\Administrator\\Downloads\\REIL_C4A_v4_SEND_READY.txt",
+      "local_path": "input/REIL_C4A_v4_SEND_READY.txt",
+      "bytes": 5101,
+      "sha256": "fff955e62964884fe657c8e01f989ee69166413d0fa9fb59de235b89a7ef36e3"
+    }
+  ],
+  "v3_preserved": true,
+  "ledger_prior_exact_prefix": true,
+  "changed_hunks": 8,
+  "line_ending_normalization": false,
+  "target_execution": 0,
+  "pytest_collection": 0
+}

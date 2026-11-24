@@ -1,0 +1,90 @@
+{
+  "kind": "REIL_C4A_V4_DOCUMENT_REVIEW_DECISION",
+  "date": "2026-11-24",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "submission_commit": "c2703f1fe339815ceec4f656bf87123b624aa387",
+  "prior_submission_commit": "c7062ced9c48a97bf47d042882fd79451332adf9",
+  "request": {
+    "path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v4_20261124.md",
+    "bytes": 105784,
+    "sha256": "85e148b41840a0d3d98eb08ec0adae7e8b39f64bc5d3c44d2165723b9da74db2"
+  },
+  "decision": "DOCUMENT_REVISION_ACCEPTED_V3_N1_CLOSED_NOT_IMPLEMENTATION_AUTHORIZED",
+  "finding_closure": {
+    "id": "C4A-IMPL-V3-N1",
+    "parent": "C4A-IMPL-N1/bootstrap",
+    "status": "CLOSED_DOCUMENT_SCOPE",
+    "evidence_lines": "216–227,402,461–463,483–492"
+  },
+  "new_blocking_findings": [],
+  "prior_12_subissues_closed_document_scope": 12,
+  "C2": "CLOSED_DOCUMENT_SCOPE_RETAINED",
+  "retained_closed": [
+    "C4A-IMPL-N2",
+    "C4A-IMPL-N5",
+    "C4A-IMPL-N7",
+    "C4A-IMPL-C1"
+  ],
+  "questions": {
+    "Q1": "Closed. Collection inputs precede b1; b1 output used only by b2/c. No new document dependency cycle found.",
+    "Q2": "Accepted. Mapping table is not call permission; plugin may produce run table after collection with fail-closed b1 gates.",
+    "Q3": "Adequate for the original finding. Pre-collection/pre-test checks remain primary; d SHA comparison is additional verification."
+  },
+  "implementation_checkpoints": [
+    {
+      "key": "fixed_red_selection",
+      "blocking_document_revision": false,
+      "note": "RED means all specified self-tests and target cases, not an arbitrary subset. GREEN matches the full list. Fix compatible collection/selection ordering and enforce existing completeness requirements."
+    },
+    {
+      "key": "nodeid_serialization",
+      "blocking_document_revision": false,
+      "note": "Freeze encoding/newline/trailing newline and duplicate handling; distinguish exact NODEIDS file hash and ordered-list identity from a set hash."
+    }
+  ],
+  "source_scope": {
+    "fixed_commit_documents_fetched": 6,
+    "v1_v2_v3_preserved": true,
+    "ledger_previous_exact_prefix": true,
+    "diff_hunks": 8,
+    "whole_source_tree_reaudit": false,
+    "unreviewed_commit_paths": [
+      "webapp/templates/bms.html",
+      "webapp/templates/index.html"
+    ]
+  },
+  "authorizations": {
+    "implementation": false,
+    "pytest_collection": false,
+    "tests": false,
+    "actual_C4A_execution": false,
+    "COMSOL": false,
+    "external_send": false
+  },
+  "user_choices": {
+    "U2": "UNSELECTED",
+    "U4": "UNADOPTED",
+    "U5": "UNADOPTED"
+  },
+  "COMSOL": {
+    "state": "PAUSED_BY_USER",
+    "resume_condition": "User reports availability and directs resumption",
+    "native_ready": false,
+    "gate": "INCOMPLETE"
+  },
+  "performed": {
+    "static_document_review": true,
+    "target_import_or_execution": 0,
+    "pytest_collection": 0,
+    "functional_tests": 0,
+    "data_interpretation": 0,
+    "optimization": 0,
+    "OS_probe": 0,
+    "COMSOL": 0,
+    "target_repository_mutation": 0,
+    "external_send": 0
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "next_step": "User decision on v4 REIL implementation and synthetic/data-free testing scope; no execution authorized by this review."
+}

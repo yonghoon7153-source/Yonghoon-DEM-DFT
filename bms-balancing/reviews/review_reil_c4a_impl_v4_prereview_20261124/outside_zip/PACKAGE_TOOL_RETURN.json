@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_C4A_V4_REVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact exec_command result received in this review and serialized afterward outside the completed archive. No certification of this file's future write return, remote historical runtime, or whole-review elapsed time.",
+  "tool_result": {
+    "chunk_id": "8ef348",
+    "wall_time_seconds": 0.5660046,
+    "exit_code": 0,
+    "original_token_count": 365,
+    "output": "{\r\n  \"kind\": \"REIL_C4A_V4_REVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_v4_review_20261124\\\\REIL_C4A_IMPL_V4_PREREVIEW_20261124.zip\",\r\n    \"bytes\": 738727,\r\n    \"sha256\": \"d597a4f2d5869a9a3ee1b4011b04ba3fc5611c93e526c82437f6432a9ce5c37c\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_v4_review_20261124\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1478,\r\n    \"sha256\": \"f3bc6a3057577aa9a77464dc27825bb4bacf9db6f9e027216e42c556604ce578\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_v4_review_20261124\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 1876,\r\n    \"sha256\": \"33c85b7ed17c98fff6fb8381a876f31e3a205a72adb189dd9ef03aea8567a59a\"\r\n  },\r\n  \"payload_count\": 25,\r\n  \"entries\": 26,\r\n  \"decision\": \"DOCUMENT_REVISION_ACCEPTED_V3_N1_CLOSED_NOT_IMPLEMENTATION_AUTHORIZED\",\r\n  \"V3_N1\": \"CLOSED_DOCUMENT_SCOPE\",\r\n  \"new_blocking_findings\": 0,\r\n  \"target_execution\": 0,\r\n  \"pytest_collection\": 0,\r\n  \"functional_tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"COMSOL_policy\": \"PAUSED_BY_USER\",\r\n  \"boundary\": \"After review ZIP/receipt readback and local original preservation checks; before this actual return and its subsequent transcription.\"\r\n}\r\n"
+  }
+}

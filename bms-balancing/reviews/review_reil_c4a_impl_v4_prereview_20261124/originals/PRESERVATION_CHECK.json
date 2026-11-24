@@ -1,0 +1,55 @@
+{
+  "kind": "V4_PRESERVATION_CHECK",
+  "preserved_requests": [
+    {
+      "repository_path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_20261106.md",
+      "local_path": "input/REIL_C4A_IMPL_REQUEST_20261106.md",
+      "bytes": 15873,
+      "sha256": "86f2d63134cbf186c9838a2f4124f97e98ce6cfb543557b9c04147d315b917c2",
+      "git_blob_sha": "c8554964943e03909b64318cd9caf961ad4f7c2e",
+      "matches_prior": true
+    },
+    {
+      "repository_path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+      "local_path": "input/REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+      "bytes": 34092,
+      "sha256": "d85e9a64ed3bbbbfa1fe49360d5a9c5f2132f61d73e22f51ed386071f300732d",
+      "git_blob_sha": "1b3a642370dcefdfa1aad63738b24562f210b866",
+      "matches_prior": true
+    }
+  ],
+  "submission_commit": "c2703f1fe339815ceec4f656bf87123b624aa387",
+  "submission_changed_files": [
+    {
+      "filename": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_v4_20261124.md",
+      "status": null,
+      "additions": null,
+      "deletions": null
+    },
+    {
+      "filename": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v4_20261124.md",
+      "status": null,
+      "additions": null,
+      "deletions": null
+    },
+    {
+      "filename": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "status": null,
+      "additions": null,
+      "deletions": null
+    },
+    {
+      "filename": "webapp/templates/bms.html",
+      "status": null,
+      "additions": null,
+      "deletions": null
+    },
+    {
+      "filename": "webapp/templates/index.html",
+      "status": null,
+      "additions": null,
+      "deletions": null
+    }
+  ],
+  "scope": "Fixed request and ledger byte checks; no new whole-source-tree audit or runtime execution."
+}

@@ -1,0 +1,101 @@
+--- v3
++++ v4
+@@ -1,5 +1,16 @@
+-# REIL C4-A 구현 요청서 v3 — H Phase A 실자료 실행기 · 상한 있는 경고 기록 · runner 어댑터 · 비용 / unit 규칙 · 소스 / 승인 결속 · 행 무결성 · 회귀 허용표 · 호출 계수기 (문서만 · 실행 0) · 2026-11-24 KST
+-
++# REIL C4-A 구현 요청서 v4 — H Phase A 실자료 실행기 · 상한 있는 경고 기록 · runner 어댑터 · 비용 / unit 규칙 · 소스 / 승인 결속 · 행 무결성 · 회귀 허용표 · 호출 계수기 (문서만 · 실행 0) · 2026-11-24 KST
++
++> **v4 (2026-11-24 KST) — 상태: 문서만 · 실행 0 · 구현 / 시험 / 실행 승인 아님 · U2 미선택 · U4 · U5 미채택.** 이 문서를 쓰는 동안 구현 · 시험 ·
++> pytest (수집 포함) · 대상 모듈 import · 실행 · 자료 개봉 0 회.
++> **보존 (그대로 둔다):** v1 (`86f2d631…` · 15,873 B) · v2 (`d85e9a64…` · 34,092 B) · v3 `docs/REIL_C4A_IMPL_REQUEST_v3_20261124.md` (96,546 B · sha256
++> `2156f12d35c05c3a41307c4c254ce0bf836f9bdcbc33485c1eba2bb995d71c5b`). 이 문서 (새 파일) 가 v3 를 대체한다.
++> **기준:** v3 재검토 (2026-11-24 · 판정 `REVISION_REQUIRED_BOOTSTRAP_ALLOWLIST_CYCLE` · 원장 §132 · `reviews/review_reil_c4a_impl_v3_prereview_20261124/`) —
++> 제출 커밋 `c7062ced9c48a97bf47d042882fd79451332adf9`. v2 재검토의 세부 12 중 11 + C2 는 종결됐고, **남은 하나는 C4A-IMPL-V3-N1 (N1 `bootstrap` 의 허용표 순환)** 이다.
++> §0-v4 의 행 번호는 v3 의 행이다.
++> **v4 가 v3 와 다른 곳 (표시 "(v4 정정 — V3-N1)"):** 이 머리 · §0-v4 (새 대응표) · §3 I7 의 "켜기" · §6-1 T16j · §6-2 의 계수기 인자 문장 (v3 433) ·
++> §7 의 b0 · b1 · b2 · c · d 줄과 "세 실행의 기록" 문단. 그 밖의 글은 v3 그대로다 (아래 v3 머리 · §0 대응표는 v2 → v3 이력으로 남는다).
++>
++> ---- 아래 머리 (열두 줄) 는 v3 의 것 그대로 ----
+ > **상태: 문서만 · 실행 0 · 구현 / 시험 / 실행 승인 아님 · U2 미선택.** 이 문서를 쓰는 동안 구현 · 시험 · pytest (수집 포함) · 대상 모듈 import · 실행 · 자료 개봉 0 회.
+ > **보존 (그대로 둔다):** v1 `docs/REIL_C4A_IMPL_REQUEST_20261106.md` (15,873 B · sha256 `86f2d63134cbf186c9838a2f4124f97e98ce6cfb543557b9c04147d315b917c2`) ·
+ > v2 `docs/REIL_C4A_IMPL_REQUEST_v2_20261106.md` (34,092 B · sha256 `d85e9a64ed3bbbbfa1fe49360d5a9c5f2132f61d73e22f51ed386071f300732d`). 이 문서 (새 파일) 가 v2 를 대체한다.
+@@ -12,6 +23,13 @@
+ > 검토자의 `request_lines` 는 v2 의 행이다 (§0 의 "v2 행"). v3 가 바꾼 내용은 본문에 **(v3 정정 — 지적 · 키)** 또는 **(v3)** 로 표시했다. 표시 없는 문단과 v2 의 차이는
+ > 교차 참조 · 단계 이름 (v2 의 b → v3 의 b0 등) · 새 절을 가리키는 연결 문구뿐이다.
+ > 승인되면 §7 의 절차로 **구현과 무자료 시험만** 한다. 자료 개봉 · 맞춤 · 실제 C4-A 단계 실행은 별도의 실행 요청이다.
++
++## 0-v4. v3 → v4 정정 대응표 (v3 재검토 · 원장 §132)
++
++| 지적 (v3 행) | 검토자 요구 (요지) | v4 변경 위치 | 해결 방식 | 유지 제한 (v4 가 주장하지 않는 것) |
++|---|---|---|---|---|
++| C4A-IMPL-V3-N1 (P2 · ← N1 `bootstrap` · 198–199 · 433 · 453–455 · 459–460) | 계수기는 수집 **전에** `ALLOW_A.json` 과 해시를 요구하는데, §7 은 그 파일을 같은 b1 수집의 **산출물**로 정의한다 — 첫 b1 의 입력이 없다 (순환). 누락 허용 · 옛 표 재사용 · 계수기 끄기는 fail-closed 수집 계약과 어긋난다. b0 에서 수집 전용 허용 입력과 SHA 를 봉인하고, b1 이 그것을 소비해 nodeid 별 실행용 `ALLOW_A.json` 과 SHA 를 산출하며, b2 / c 는 그 고정 해시를 소비 · 단계별 인자 / 모드와 혼용 거부를 명확히 · "세 실행의 인자가 같다" 정정 · T16 에 잘못된 모드 · 해시 · 표 바꿔치기 · 수집 / 실행 표 혼용의 거부 | §3 I7 "켜기" · §6-1 T16j · §6-2 (v3 433 의 문장) · §7 b0 ⑦ · b1 · b2 · c · d · "세 실행의 기록" | 계수기에 **모드 둘** (`--c4a-mode collect` / `run` · 기본 모드 없음) · 표마다 `kind` (`C4A_ALLOW_TABLE` 함수표 · `C4A_ALLOW_COLLECT` 수집 전용 · `C4A_ALLOW_RUN` 실행용). b0 가 수집 전용 표 `ALLOW_COLLECT_A.json` (collect · session 버킷의 K1–K7 = 0 · nodeid 행 없음) 을 쓰고 함수표 `ALLOW_A_TABLE.json` 과 **따로** sha 를 `BOOTSTRAP_A.json` 에 봉인 → b1 은 수집 모드로 두 표 (수집 전용 표 = 수집 중 계수 상한 · 함수표 = 수집 끝 매핑에만 · `--c4a-table`) 를 봉인 sha 와 대조한 뒤 수집 1 회 → 계수기가 수집 끝에 `NODEIDS_A.txt` · 실행용 `ALLOW_A.json` (표 안에 `source_table_sha256` · `nodeids` 순서 목록 · `nodeids_sha256`) · `B1_RECORD_A.json` (입력 두 표 sha · 수집 nodeid 집합 sha · 결과 표 sha) 을 쓴다 → b2 · c 는 실행 모드로 **같은** 실행용 표 · 같은 sha (`B1_RECORD_A` 의 결과 값) 를 소비 (실행 모드에 `--c4a-table` · 수집 전용 표 = 거부 · 수집된 nodeid 가 표와 다르면 첫 시험 전 중단) → d 의 끝 기록이 sha 사슬 (b0 → b1 → b2 · c) 을 대조. 검토자의 대안 (봉인된 패턴 표를 수집 모드가 직접 소비) 은 쓰지 않았다 — 수집 중 상한을 정하는 표와 매핑에 쓰는 표를 나눠 두는 쪽이 혼용 거부를 검사하기 쉽다 | 새 pytest 세션 · 새 시간 상한 · 새 숫자 0 (수집 · RED · GREEN 의 세 실행과 120 / 600 / 1,800 s 는 v3 그대로 · 제안). 사슬 대조는 파일 바이트 · sha 의 일치만 본다 — 표를 쓴 사람의 인증과 함수표 수치 자체의 옳음은 주장하지 않는다 (§132: 미완 수치표를 미리 검증한 것은 아님) |
++| 그 밖 — v2 재검토 세부 11 + C2 · N2 · N5 · N7 · C1 | — | — | **v3 그대로 · 종결 (§132)** — N1 `coverage` 는 좁힌 주장으로 종결 | 유지되는 한계 (§132): 분리 해석기 (-I) 안 호출 · 손주 미계수 · 경고 기록기 총 메모리 상한 · stderr 실제 쓰기 상한 없음 · 시간 값은 제안 (검증된 실제 반환 상한 아님) |
+ 
+ ## 0. v2 → v3 정정 대응표
+ 
+@@ -195,8 +213,18 @@
+ 
+ ### I7. 호출 계수기 플러그인 `tests/c4a_callcount.py` (N1 · 새 파일 · **b0 에서 완성 — 골격 아님**)
+ 
+-- **켜기:** pytest `-p` 로만 켠다 (기존 conftest · 시험 파일은 건드리지 않음). **(v3)** `pytest -p tests.c4a_callcount --c4a-allow <ALLOW_A.json> --c4a-allow-sha256 <hex> --c4a-calls <폴더>`
+-  — 허용표 바이트의 sha 를 인자와 대조한다 (다르면 수집 전 중단).
++- **켜기 (v4 정정 — V3-N1):** pytest `-p` 로만 켠다 (기존 conftest · 시험 파일은 건드리지 않음). 옵션 체계는 하나이고 **모드가 둘**이다 — 모드마다 소비하는 표가 다르다.
++  - 수집 모드 (b1 만): `pytest --collect-only -q -p tests.c4a_callcount --c4a-mode collect --c4a-allow <ALLOW_COLLECT_A.json> --c4a-allow-sha256 <hex>
++    --c4a-table <ALLOW_A_TABLE.json> --c4a-table-sha256 <hex> --c4a-calls <폴더>` — 수집 중 계수 상한은 수집 전용 표 (모든 K 0) 가 정하고, 함수표는 수집 끝의 nodeid 매핑에만
++    쓴다 (호출 허용에 쓰지 않는다). 수집 끝 (`pytest_collection_finish`) 에 `NODEIDS_A.txt` (수집 순서) · 실행용 `ALLOW_A.json` · `B1_RECORD_A.json` 을 쓴다 (§7 b1).
++    `--collect-only` 가 아니면 중단.
++  - 실행 모드 (b2 · c): `pytest -p tests.c4a_callcount --c4a-mode run --c4a-allow <ALLOW_A.json> --c4a-allow-sha256 <hex> --c4a-calls <폴더> <nodeid …>` — 계수 상한은 실행용 표가
++    정한다.
++  - 수집 전 확인 (`pytest_configure` · 하나라도 다르면 **수집 전 중단** — fail-closed): ① 표 바이트 sha ↔ 인자 (수집 모드는 함수표도) ② 표의 `kind` ↔ 모드 (`C4A_ALLOW_COLLECT` ↔
++    collect · `C4A_ALLOW_RUN` ↔ run · `--c4a-table` 자리는 `C4A_ALLOW_TABLE`) ③ 수집 모드: 수집 전용 표의 모든 버킷 K1–K7 = 0 · nodeid 행 0 ④ 실행 모드: `--c4a-table` 이 주어지면
++    거부 · 표 안에 `source_table_sha256` · `nodeids` · `nodeids_sha256` 가 있어야 한다 ⑤ 모드 인자가 없으면 중단 (기본 모드 없음).
++  - 실행 모드의 수집 뒤 · 첫 시험 전 확인: 실행용 표는 `NODEIDS_A.txt` 의 순서 목록을 그대로 담는다 (`nodeids` · 그 파일 바이트의 sha = `nodeids_sha256` — 계수기가 목록에서
++    다시 계산해 대조). 수집된 nodeid 집합 · 순서를 그 목록과 대조한다 (c = 전체가 같음 · b2 = 그 부분집합이고 같은 상대 순서) — 아니면 첫 시험 전 중단.
+ - **세는 것 (v2 정의 + v3 정정):** **K1** `scipy.optimize.minimize` (COBYQA 포함) · **K2** `pymoo.optimize.minimize` (util NSGA2) · **K3** `subprocess.Popen` 생성 (`subprocess.run` ·
+   `git_run` 도 Popen 을 지난다) · **K4** `os.kill` · `os.killpg` (감시의 terminate / kill 도 multiprocessing 이 `os.kill` 로 보낸다) · **K5** `multiprocessing` `Process.start` —
+   **fork 문맥만** (spawn / forkserver 는 자식에 계수기가 없으므로 허용표와 무관하게 차단) · **K6** argv[0] 의 이름 (basename) 이 `git` 인 K3 — **K6 ⊂ K3**: git Popen 하나가 K3 · K6 를
+@@ -371,7 +399,7 @@
+ | T16g | 상한 — 상한 1 에서 둘째 호출 차단 · git 하나가 K3 · K6 를 함께 쓴다 · K6 가 남았어도 K3 가 없으면 차단 (반대도) |
+ | T16h | spawn / forkserver 의 `Process.start` → 차단 |
+ | T16i | 삼킴 — 차단 예외를 `except BaseException` 으로 삼키는 코드 안에서도 그 nodeid 는 실패 · 세션 멈춤 |
+-| T16j | 원장 — 손상된 줄 · 예약-끝 불일치 · 세션 끝 대조 불일치 · 허용표 sha 불일치 → 실패 |
++| T16j | 원장 · 허용표 — 손상된 줄 · 예약-끝 불일치 · 세션 끝 대조 불일치 · 허용표 sha 불일치 → 실패 · **(v4 정정 — V3-N1)** 모드 · 표 결속: 모드 인자 없음 · 수집 모드에 실행용 표 · 실행 모드에 수집 전용 표 (`kind` 불일치) · 실행 모드에 `--c4a-table` · 함수표 자리에 다른 `kind` · 수집 전용 표에 0 이 아닌 K 나 nodeid 행 · 함수표 sha 불일치 · 실행용 표의 `nodeids_sha256` 와 수집된 nodeid 집합 · 순서의 불일치 (같은 수의 nodeid 바꿔치기 포함) → 수집 전 / 첫 시험 전 중단 (하위 pytest 안에서 · 실제 호출 0) |
+ 
+ ### 6-2. 회귀와 합성 실제 호출 허용표 (N1 · 사용자 선택 가 · v3 정정 — N1 allowlist)
+ 
+@@ -430,7 +458,9 @@
+ - **환경 (v2 그대로 + nodeid 표시):** 봉인된 venv (C4-ENV identity) · cwd `bms-balancing` · `tmp_path` · 네트워크 불요 (Git 은 로컬만) · 실자료 경로 없음.
+   `test_reil_c4_0a_fix.py::test_out_the_synthetic_nsga2_outcome_is_kept_as_evidence` 는 기록 위치를 요구한다 (390–391) — GREEN 에서 `REIL_C4_FIX_EVIDENCE` =
+   `evidence/reil_c4a_impl_<D>/fix_outcome/` · `REIL_C4_FIX_STEP` = `c4a_green` 을 준다 (그 밖의 nodeid 는 이 두 변수를 읽지 않는다). `test_reil_c4e1_runner.py` 는
+-  `REIL_C4E1_RUNNER_UNDER_TEST` 를 주지 않아 모듈 단위로 건너뛴다 (36–38). 계수기 인자 (`--c4a-allow` · `--c4a-allow-sha256` · `--c4a-calls`) 는 세 실행 모두 같다.
++  `REIL_C4E1_RUNNER_UNDER_TEST` 를 주지 않아 모듈 단위로 건너뛴다 (36–38). **(v4 정정 — V3-N1)** 계수기의 옵션 체계 (`--c4a-mode` · `--c4a-allow` · `--c4a-allow-sha256` · `--c4a-calls`) 는 세 실행에 공통이지만 **소비하는 표 · sha 는 단계마다
++  다르다** — b1 = 수집 모드 · 수집 전용 표 `ALLOW_COLLECT_A.json` + 함수표 `ALLOW_A_TABLE.json` (`--c4a-table` · 매핑에만 · 둘 다 b0 봉인 sha) / b2 · c = 실행 모드 · 실행용 표
++  `ALLOW_A.json` (b1 산출 · `B1_RECORD_A` 의 결과 sha · b2 와 c 는 같은 파일 · 같은 sha).
+ - **주장의 범위 (v3 정정 — N1 coverage):** "실자료 개봉 · 생산 단계 (launcher_a 의 실제 phase_a) 실행 0 · 합성 실제 호출은 위 허용표 안에서만 · 계수는 `CALLS_*_A.json` · 계수 범위 =
+   pytest 프로세스와 그 fork 자식 · 분리 해석기 자식은 생성 · 프로그램 · 종료 · 그룹 빔까지". 시간 상한만으로 실제 호출 0 을 주장하지 않는다. 상한을 사후에 올리지 않는다.
+ 
+@@ -450,14 +480,16 @@
+ | 단계 | 내용 | 호출 · 상한 | 멈춤 |
+ |---|---|---|---|
+ | a | 구현 승인 기록 § · 보존 규칙 (`evidence/reil_c4a_impl_<D>/**`) | 문서 · Git | — |
+-| b0 | **준비 · 봉인 (실행 0):** ① 대상 시험 `tests/test_reil_c4a.py` (T01–T15 · T17 · T18 원문 — 수집 가능) ② 골격 — I1 · I2 · I4 · I5 의 새 파일과 `reil_c4_h.py` 의 `_WarnBox` · 판정 함수의 이름 · 서명 (몸통 `NotImplementedError` · 기존 동작 불변) ③ 계수기 `tests/c4a_callcount.py` **완성본** + 자체 검증 `tests/test_c4a_callcount.py` (T16a–j) ④ §6-3 의 0b2 정정 ⑤ 허용표 원문 `ALLOW_A_TABLE.json` (§6-2 의 행 · 규칙 R1–R7 · launcher 파일의 함수별 수치와 호출 자리 목록 · 정적 대조 0 기록) ⑥ 기대표 `EXPECT_A.json` (자체 검증 nodeid 패턴 → 통과 · 기대 계수 / 대상 nodeid 패턴 → 골격 함수 이름의 `NotImplementedError`) → 커밋 · 파일별 sha 를 `BOOTSTRAP_A.json` 에 | pytest · import · 실행 0 (AST 읽기만) | — |
+-| b1 | **수집 1 회 (계수기 켬):** `pytest --collect-only -q -p tests.c4a_callcount …` (회귀 11 파일 + 새 2 파일) → `NODEIDS_A.txt` · `ALLOW_A.json` (표의 함수 행 ↔ nodeid · 대응 없는 nodeid = 모든 K 0 · 대응 없는 표 행 = 멈춤) · `CALLS_COLLECT_A.json` · 별칭 감사 결과 · 커밋 | pytest 수집 1 회 · ≤ 120 s | 수집 오류 · 수집 단계 호출 > 0 · 별칭 감사 실패 · 표-수집 불일치 |
+-| b2 | **RED 1 회 (계수기 켬 · `NODEIDS_A` 중 자체 검증 + 대상만):** 자체 검증 nodeid 를 먼저 돌린다 (인자 순서 · 계수기가 순서를 확인) — 하나라도 실패하면 계수기가 대상 nodeid 전에 세션을 멈춘다. 판정을 따로: 자체 검증 = 전부 통과 · 기대 계수와 같음 / 대상 = 각 nodeid 가 기대표의 골격 `NotImplementedError` 로 실패 · 실제 호출 0 | pytest 1 회 · ≤ 600 s | 자체 검증 실패 → 대상 RED 없이 멈춤 · 대상의 예상 밖 통과 · 다른 예외 → 멈춤 (fixture 가 진실을 가린다) |
+-| c | I1–I5 구현 → 정적 자체 검토 → **GREEN 1 회 (`NODEIDS_A` 전체 · 같은 순서 · 계수기 켬)** — 실패 0 · 건너뜀은 runner 모듈만 · 모든 nodeid 의 계수 ≤ `ALLOW_A` · 차단 0 · 세션 끝 대조 일치 | pytest 1 회 · ≤ 1,800 s | 첫 예상 밖 결과 · 상한 초과 (상한을 올리지 않는다) |
+-| d | `seal-sources-a` (구현 결과 봉인 — SOURCES_A · FRAME) · 끝 기록 (`CALLS_*_A.json` · 세 실행의 기록 포함) · 비밀 검사 · 커밋 · push · 결과 § · 결과 검토 발송문 → 멈춤 | 문서 · Git | — |
+-
+-- **세 실행의 기록 · 허용 범위 (고정):** 실행마다 명령 · env 이름 · cwd · 종료 코드 · stdout / stderr · nodeid 별 결과 (통과 / 실패 · 예외 형 · 발생 함수) · `CALLS_<단계>_A.json` 을
+-  `evidence/reil_c4a_impl_<D>/` 에 남긴다. 허용 범위 — b1: 수집 단계 모든 K 0 · b2: `ALLOW_A` 중 자체 검증 nodeid 의 기대 계수 · 대상 nodeid 모든 K 0 · c: `ALLOW_A` 전체.
++| b0 | **준비 · 봉인 (실행 0):** ① 대상 시험 `tests/test_reil_c4a.py` (T01–T15 · T17 · T18 원문 — 수집 가능) ② 골격 — I1 · I2 · I4 · I5 의 새 파일과 `reil_c4_h.py` 의 `_WarnBox` · 판정 함수의 이름 · 서명 (몸통 `NotImplementedError` · 기존 동작 불변) ③ 계수기 `tests/c4a_callcount.py` **완성본** + 자체 검증 `tests/test_c4a_callcount.py` (T16a–j) ④ §6-3 의 0b2 정정 ⑤ 허용표 원문 `ALLOW_A_TABLE.json` (§6-2 의 행 · 규칙 R1–R7 · launcher 파일의 함수별 수치와 호출 자리 목록 · 정적 대조 0 기록) ⑥ 기대표 `EXPECT_A.json` (자체 검증 nodeid 패턴 → 통과 · 기대 계수 / 대상 nodeid 패턴 → 골격 함수 이름의 `NotImplementedError`) ⑦ **(v4 정정 — V3-N1)** 수집 전용 표 `ALLOW_COLLECT_A.json` (`kind` = `C4A_ALLOW_COLLECT` · collect · session 버킷의 K1–K7 = 0 · nodeid 행 없음 · ⑤ 함수표의 `kind` = `C4A_ALLOW_TABLE`) → 커밋 · 파일별 sha 를 `BOOTSTRAP_A.json` 에 (⑤ 함수표 · ⑦ 수집 전용 표의 sha 는 이름을 붙여 따로 — b1 의 인자가 된다) | pytest · import · 실행 0 (AST 읽기만) | — |
++| b1 | **수집 1 회 (계수기 켬 · 수집 모드 — v4 정정 — V3-N1):** `pytest --collect-only -q -p tests.c4a_callcount --c4a-mode collect --c4a-allow ALLOW_COLLECT_A.json --c4a-allow-sha256 <BOOTSTRAP_A 의 ⑦ 값> --c4a-table ALLOW_A_TABLE.json --c4a-table-sha256 <BOOTSTRAP_A 의 ⑤ 값> --c4a-calls …` (회귀 11 파일 + 새 2 파일) → 계수기가 수집 끝에 `NODEIDS_A.txt` (수집 순서) · 실행용 `ALLOW_A.json` (`kind` = `C4A_ALLOW_RUN` · 함수표 행 ↔ nodeid · 대응 없는 nodeid = 모든 K 0 · 대응 없는 표 행 = 멈춤 · 표 안에 `source_table_sha256` (= ⑤) · `nodeids` (`NODEIDS_A.txt` 의 순서 목록) · `nodeids_sha256` (= `NODEIDS_A.txt`)) · `B1_RECORD_A.json` (입력 두 표의 sha · 수집 nodeid 집합의 sha · 결과 표의 sha · 매핑 불일치 0 · 건너뜀 = runner 모듈만) 을 쓴다 · `CALLS_COLLECT_A.json` · 별칭 감사 결과 · 커밋 | pytest 수집 1 회 · ≤ 120 s | 수집 전 확인 실패 (모드 · sha · `kind` · 0 아닌 K) · 수집 오류 · 수집 단계 호출 > 0 · 별칭 감사 실패 · 표-수집 불일치 · 허용 밖 모듈 건너뜀 |
++| b2 | **RED 1 회 (계수기 켬 · 실행 모드 · 실행용 표 `ALLOW_A.json` + `B1_RECORD_A` 의 결과 sha — v4 정정 — V3-N1 · `NODEIDS_A` 중 자체 검증 + 대상만):** 자체 검증 nodeid 를 먼저 돌린다 (인자 순서 · 계수기가 순서를 확인) — 하나라도 실패하면 계수기가 대상 nodeid 전에 세션을 멈춘다. 판정을 따로: 자체 검증 = 전부 통과 · 기대 계수와 같음 / 대상 = 각 nodeid 가 기대표의 골격 `NotImplementedError` 로 실패 · 실제 호출 0 | pytest 1 회 · ≤ 600 s | 수집 전 / 첫 시험 전 확인 실패 (모드 · sha · `kind` · nodeid 집합 — v4) · 자체 검증 실패 → 대상 RED 없이 멈춤 · 대상의 예상 밖 통과 · 다른 예외 → 멈춤 (fixture 가 진실을 가린다) |
++| c | I1–I5 구현 → 정적 자체 검토 → **GREEN 1 회 (`NODEIDS_A` 전체 · 같은 순서 · 계수기 켬 · 실행 모드 · b2 와 같은 실행용 표 · 같은 sha — v4 정정 — V3-N1)** — 실패 0 · 건너뜀은 runner 모듈만 · 모든 nodeid 의 계수 ≤ `ALLOW_A` · 차단 0 · 세션 끝 대조 일치 | pytest 1 회 · ≤ 1,800 s | 수집 전 / 첫 시험 전 확인 실패 (v4) · 첫 예상 밖 결과 · 상한 초과 (상한을 올리지 않는다) |
++| d | `seal-sources-a` (구현 결과 봉인 — SOURCES_A · FRAME) · 끝 기록 (`CALLS_*_A.json` · 세 실행의 기록 포함 · **(v4 정정 — V3-N1)** sha 사슬 대조: `BOOTSTRAP_A` 의 ⑤ · ⑦ = `B1_RECORD_A` 의 입력 sha · `B1_RECORD_A` 의 결과 sha = b2 · c 의 인자 sha = `CALLS_RED_A` · `CALLS_GREEN_A` 머리의 값 — 어긋나면 결과 § 에 실행 유효성 false) · 비밀 검사 · 커밋 · push · 결과 § · 결과 검토 발송문 → 멈춤 | 문서 · Git | — |
++
++- **세 실행의 기록 · 허용 범위 (고정 · v4 정정 — V3-N1):** 실행마다 명령 · env 이름 · cwd · 종료 코드 · stdout / stderr · nodeid 별 결과 (통과 / 실패 · 예외 형 · 발생 함수) ·
++  `CALLS_<단계>_A.json` 과 **모드 · 소비한 표 파일 · 표 sha** (b1 = collect · `ALLOW_COLLECT_A.json` + `ALLOW_A_TABLE.json` / b2 · c = run · `ALLOW_A.json`) 를
++  `evidence/reil_c4a_impl_<D>/` 에 남긴다. 허용 범위 — b1: 수집 전용 표 (모든 K 0) · b2: 실행용 표 `ALLOW_A` 중 자체 검증 nodeid 의 기대 계수 · 대상 nodeid 모든 K 0 ·
++  c: 실행용 표 `ALLOW_A` 전체.
+ - 계수기 (③) 는 b0 에서 완성되고 b2 의 자체 검증을 통과한 뒤에만 RED 의 "실제 호출 0" 근거가 된다. b2 에서 대상 시험의 실패를 계수기 자신의 실패와 섞어 세지 않는다.
+ - 실패하면 그 자리의 기록을 커밋하고 결과 §에 적고 멈춘다. 자료 개봉 · 생산 단계 실행은 0 이다. 수집 · RED · GREEN 의 시간 상한 (120 · 600 · 1,800 s) 은 v2 의 제안 그대로다.
+ 

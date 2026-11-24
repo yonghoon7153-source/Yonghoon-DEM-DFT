@@ -1,0 +1,132 @@
+{
+  "kind": "REIL_C4A_V4_REVIEW_MANIFEST",
+  "files": [
+    {
+      "path": "CHANGE_MAP.json",
+      "bytes": 18408,
+      "sha256": "a06f602fd497fd98c3fed7507e4ccbc15e8ddc8109a19330314d26ca30b4e208"
+    },
+    {
+      "path": "CODEX_REPLY_KO.txt",
+      "bytes": 1549,
+      "sha256": "975d4c2d5c72d238301b5cbb39d94d39be78b784fd7cbd47ffe64034fc1f4267"
+    },
+    {
+      "path": "INTAKE.json",
+      "bytes": 1885,
+      "sha256": "3533d4c3f5b0b3605fc9a0d8f5c6cd86f215a4acb76420235563c6a2691fde01"
+    },
+    {
+      "path": "PRESERVATION_CHECK.json",
+      "bytes": 1804,
+      "sha256": "9939be31adcc8c7a1aaa26ebf035fc82be2e6c67235ac9808f5fd678ec577bbe"
+    },
+    {
+      "path": "REVIEW_DECISION.json",
+      "bytes": 3274,
+      "sha256": "7607569c4002dbfe6728ff43236f8d369e8a06c31257e8069579ea71d6fd996e"
+    },
+    {
+      "path": "REVIEW_KO.txt",
+      "bytes": 7952,
+      "sha256": "b805c2c0ebfe95fb15c5ff1f5d3f1652f2f0356dee4804d9656e5f933a5d4ff5"
+    },
+    {
+      "path": "SELECTED_LOCAL_INPUTS.json",
+      "bytes": 1858,
+      "sha256": "b5539da3ee96bee3651ef91f185b852d439e925f2b4113441fc849fbd36e8c63"
+    },
+    {
+      "path": "V3_V4_DIFF.txt",
+      "bytes": 21274,
+      "sha256": "dd1f440bdbfa974ac82cab8a3644d75044ea3b4ca1b7cd055bb60a53057796e6"
+    },
+    {
+      "path": "basis/prior_v3_review/CODEX_REPLY_KO.txt",
+      "bytes": 1620,
+      "sha256": "85cb66cc6a223e28efc50bcad40397eb2b1a3a51bdbcf6129c4bc48836636a1d"
+    },
+    {
+      "path": "basis/prior_v3_review/DELIVERY_RECEIPT.json",
+      "bytes": 1604,
+      "sha256": "8771396b6fc1d8cb13881fa9b292bf084fa922dd12ba35acce561614357f2b8e"
+    },
+    {
+      "path": "basis/prior_v3_review/REVIEW_DECISION.json",
+      "bytes": 4912,
+      "sha256": "0bd662d7bb1512a941cb9ca2186a4875a926824125a143b1518c90e80fc25955"
+    },
+    {
+      "path": "basis/prior_v3_review/REVIEW_KO.txt",
+      "bytes": 13875,
+      "sha256": "436f454b3c6ab13d6a57ac92d4608fa4d12f8cfcc99f077f8a674dd6cf3b27e7"
+    },
+    {
+      "path": "capture/FETCHED_BASE64.json",
+      "bytes": 994592,
+      "sha256": "4c85261398e774f82d5340e586e1e0a5a363b010c453bf5adfd9a4622aaa6a0c"
+    },
+    {
+      "path": "capture/PRESERVED_REQUESTS_BASE64.json",
+      "bytes": 69861,
+      "sha256": "030b7e84d44d502316b1bd8b30224e5f4c497aa665cf05ca142e1a5e3c09e12e"
+    },
+    {
+      "path": "capture/SUBMISSION_COMMIT.json",
+      "bytes": 54306,
+      "sha256": "58adf8b811c2bf926d86fbffbb05e60ab5241976e72e7c880cb89bea9d51e06b"
+    },
+    {
+      "path": "check_preservation.py",
+      "bytes": 1353,
+      "sha256": "bd31dc683acb5d4c8610acbc1120a5c4b2855d325df73f1a45b5e56b230b415b"
+    },
+    {
+      "path": "input/REIL_C4A_IMPL_REQUEST_20261106.md",
+      "bytes": 15873,
+      "sha256": "86f2d63134cbf186c9838a2f4124f97e98ce6cfb543557b9c04147d315b917c2"
+    },
+    {
+      "path": "input/REIL_C4A_IMPL_REQUEST_SEND_v4_20261124.md",
+      "bytes": 5573,
+      "sha256": "dc9f083765df1332c4fa9c707d37389d1996d569eb779244c51c52cf0b7c29e7"
+    },
+    {
+      "path": "input/REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+      "bytes": 34092,
+      "sha256": "d85e9a64ed3bbbbfa1fe49360d5a9c5f2132f61d73e22f51ed386071f300732d"
+    },
+    {
+      "path": "input/REIL_C4A_IMPL_REQUEST_v3_20261124.md",
+      "bytes": 96546,
+      "sha256": "2156f12d35c05c3a41307c4c254ce0bf836f9bdcbc33485c1eba2bb995d71c5b"
+    },
+    {
+      "path": "input/REIL_C4A_IMPL_REQUEST_v4_20261124.md",
+      "bytes": 105784,
+      "sha256": "85e148b41840a0d3d98eb08ec0adae7e8b39f64bc5d3c44d2165723b9da74db2"
+    },
+    {
+      "path": "input/REIL_C4A_v4_SEND_READY.txt",
+      "bytes": 5101,
+      "sha256": "fff955e62964884fe657c8e01f989ee69166413d0fa9fb59de235b89a7ef36e3"
+    },
+    {
+      "path": "input/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 512469,
+      "sha256": "f1a2e96a20d3d8dddc70b98a6dfbcfaa2671503e33f6d4466ccf6ae4b147bca3"
+    },
+    {
+      "path": "intake_review.py",
+      "bytes": 2425,
+      "sha256": "b279440fea2dd66e23a6a029b9a72ddb9f2ad565713e6026173e59e16f9601bf"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 4802,
+      "sha256": "8d4f6f62f1b1156038708cacd55fda09707e75415e9b8112cd070313634e4dfd"
+    }
+  ],
+  "target_execution": 0,
+  "COMSOL_policy": "PAUSED_BY_USER"
+}
