@@ -1,0 +1,24 @@
+{
+  "step": 4418784,
+  "frame_index": 134,
+  "sha256": "a2af83dbdb941225fe39a902c7ae65b4fc72804ad73070f75511274ac76b75a9",
+  "N": 100000,
+  "mid_slab": 47194,
+  "turn": 1.0000071543038538,
+  "theta_degrees": 33.8102412351414,
+  "dense_edge_theta_degrees": 43.9053094081469,
+  "delta_over_R": 0.2772187827710824,
+  "qminusdense_median_R": 0.007700291598910461,
+  "qminusdense_absmax_R": 0.2626185278735524,
+  "quantile_angles": {
+    "0.985": 33.42156084438306,
+    "0.99": 33.8102412351414,
+    "0.995": 34.549347178252816
+  },
+  "dense_columns": 12,
+  "q99_columns": 13,
+  "native_threshold_bracket_R": [
+    0.27,
+    0.29
+  ]
+}

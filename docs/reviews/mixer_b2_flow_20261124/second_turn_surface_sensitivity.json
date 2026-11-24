@@ -1,0 +1,67 @@
+{
+  "independent_seeds": 1,
+  "frames": 100,
+  "valid": 100,
+  "primary_abs_all": {
+    "min": 31.347846639773895,
+    "q25": 34.33491323601717,
+    "median": 35.7970373035715,
+    "q75": 37.346934366416484,
+    "max": 39.437494742142015
+  },
+  "primary_abs_paired": {
+    "min": 31.347846639773895,
+    "q25": 34.33491323601717,
+    "median": 35.7970373035715,
+    "q75": 37.346934366416484,
+    "max": 39.437494742142015
+  },
+  "dense_abs_paired": {
+    "min": 33.27488798483487,
+    "q25": 38.67455237644932,
+    "median": 41.18592516570957,
+    "q75": 41.185925165709584,
+    "max": 47.24480701767712
+  },
+  "paired_abs_dense_minus_abs_primary": {
+    "min": -1.0956403041635738,
+    "q25": 2.7101559295091224,
+    "median": 4.229834900533238,
+    "q75": 6.0485348669659285,
+    "max": 12.026561612819982
+  },
+  "paired_signed_dense_minus_signed_primary": {
+    "min": -1.0956403041635738,
+    "q25": 2.7101559295091224,
+    "median": 4.229834900533238,
+    "q75": 6.0485348669659285,
+    "max": 12.026561612819982
+  },
+  "dense_steeper_count": 98,
+  "dense_with_primary_width": 90,
+  "dense_columns_across_frames": {
+    "min": 11.0,
+    "q25": 14.0,
+    "median": 14.0,
+    "q75": 15.0,
+    "max": 15.0
+  },
+  "signed_difference_over_5deg_descriptive_count": 38,
+  "quarter_valid_counts": [
+    25,
+    25,
+    25,
+    25
+  ],
+  "density_rule": {
+    "height_bin_R": 0.035,
+    "minimum_count": 3,
+    "minimum_consecutive_bins": 3,
+    "column_weight": "sum_r_squared",
+    "nonempty_reference_percentile": 90,
+    "threshold_fraction": 0.15,
+    "minimum_points_to_fit": 2,
+    "descriptive_width_check": "at least 10 columns spanning +/-0.35 R"
+  },
+  "method_status": "POST_HOC_SURFACE_DEFINITION_SENSITIVITY"
+}
