@@ -1,0 +1,300 @@
+{
+ "slug": "seymour2021_void_suppression_interfacial_adhesion_vacancy_transport",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "seymour2021_void_adhesion_main.pdf",
+  "seymour2021_void_adhesion_SI1.pdf",
+  "seymour2021_void_adhesion_SI2.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) BCC Li (100) slab structure containing 11 Li layers. (b) Vari- ation in Li-vacancy formation energy, EVm, in diﬀerent layers from the slab surface (layer 1) to the slab bulk (layer 6). Vacancy formation energies were calculated for Li slabs without relaxation (as-cleaved), with surface relaxation (relaxed surface) and with full relaxation of all atoms.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    252.8
+   ],
+   "w": 1090,
+   "h": 869,
+   "dpi": 300,
+   "src": "seymour2021_void_adhesion_main.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Nudged elastic band activation barriers for vacancy diﬀusion between the (100) surface (layer 1) and bulk (layer 6) of and 11 slab supercell of (a) BCC Li and (b) BCC Na. Labels above the local minima (blue squares) indicate the layer number in the supercell.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    200.5
+   ],
+   "w": 1090,
+   "h": 651,
+   "dpi": 300,
+   "src": "seymour2021_void_adhesion_main.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 DFT optimised structures (a) LiCl (100)/Li (100) and (b) LiMg (100)/Li (100) interfaces. Strains of \u00030.14 and +5.67%, respectively, were applied to the Li slab lattice parameters within the interfacial plane. Li atoms in the BCC slab and LiCl or LiMg substrates are col- oured green and blue, respectively, to distinguish them. (c) Compar- ison of Li vacancy formation energy, EVm, in BCC Li after vacancy relaxation in diﬀerent layers away from the Li surface (layer 1) of a LiMg (100)/Li (100) and LiCl (100)/Li (100) interface. The diﬀerence in vacancy formation energy DEBulk–Int",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    292.3,
+    558.8,
+    617.0
+   ],
+   "w": 1091,
+   "h": 1354,
+   "dpi": 300,
+   "src": "seymour2021_void_adhesion_main.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) DFT relaxed structure of BCC Li (100)/LiCl (100) interface for three diﬀerent translations of the Li slab relative to the surface sites of the LiCl substrate: Cl top, hollow and Li top. Li atoms in the Li metal slab (metal) and substrate (sub) are coloured green and blue, respec- tively. A strain of +5.67% was applied to the lattice parameters of the Li slab within the interfacial plane. (b) Plot of vacancy segregation energy (DEBulk–Int",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    345.9
+   ],
+   "w": 1090,
+   "h": 1257,
+   "dpi": 300,
+   "src": "seymour2021_void_adhesion_main.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 (a) Incoherent Li (100)/LiCl (100) interface. The three symmetrically distinct Li sites at the interface (i), (ii) and (iii) are shown. The red box shows the repeating unit of the supercell. Li atoms in the Li metal slab (metal) and substrate (sub) are coloured green and blue, respectively. A strain of \u00030.05% was applied to the Li slab lattice parameters within the interfacial plane. The vacancy formation ener- gies in layers 1, 6 and 11 for each inequivalent site are shown with (b) no vacancy relaxation and (c) with vacancy relaxation.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.8,
+    250.1
+   ],
+   "w": 1091,
+   "h": 857,
+   "dpi": 300,
+   "src": "seymour2021_void_adhesion_main.pdf",
+   "blank": 0.904
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [
+    {
+     "page": 8,
+     "text": "Fig. 4 Plot of vacancy segregation energy (DEBulk–Int"
+    }
+   ],
+   "refs": [
+    "p8",
+    "p9"
+   ]
+  },
+  {
+   "key": "fS1",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p3"
+   ]
+  },
+  {
+   "key": "fS2",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p4",
+    "p8"
+   ]
+  },
+  {
+   "key": "fS3",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p5",
+    "p6"
+   ]
+  },
+  {
+   "key": "fS4",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS5",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p5",
+    "p6"
+   ]
+  },
+  {
+   "key": "fS6",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p6",
+    "p7"
+   ]
+  },
+  {
+   "key": "fS7",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p8"
+   ]
+  },
+  {
+   "key": "fS8",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p8"
+   ]
+  },
+  {
+   "key": "fS9",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS10",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Fig. S10 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p10"
+   ]
+  },
+  {
+   "key": "tS1",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S7 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p3"
+   ]
+  },
+  {
+   "key": "tS2",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S7 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p4"
+   ]
+  },
+  {
+   "key": "tS3",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S7 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS4",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S7 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p4"
+   ]
+  },
+  {
+   "key": "tS5",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S7 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p5",
+    "p10"
+   ]
+  },
+  {
+   "key": "tS6",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S7 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p7",
+    "p8"
+   ]
+  },
+  {
+   "key": "tS7",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S7 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p10"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "seymour2021_void_adhesion_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "seymour2021_void_adhesion_SI1.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "seymour2021_void_adhesion_SI2.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

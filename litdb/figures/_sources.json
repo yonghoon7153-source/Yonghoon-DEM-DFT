@@ -482,7 +482,7 @@
  },
  "chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency": {
   "figures": 55,
-  "generated": "2026-11-24",
+  "generated": "2026-11-23",
   "pdfs": [
    "8f6e1608-Numerical_simulation_of_mechanofusion_system.pdf"
   ]
@@ -531,7 +531,7 @@
   ]
  },
  "choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition": {
-  "figures": 8,
+  "figures": 32,
   "generated": "2026-11-12",
   "pdfs": [
    "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf"
@@ -737,16 +737,16 @@
   "generated": "2026-11-12",
   "pdfs": [
    "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
-   "74921154-24._SupZ_09_11340_2018_451_MOESM1_ESM.docx (SI docx — Table S1; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_08_11340_2018_451_MOESM2_ESM.docx (SI docx — Table S2; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_07_11340_2018_451_MOESM3_ESM.docx (SI docx — Fig. S1; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_06_11340_2018_451_MOESM4_ESM.docx (SI docx — Fig. S2; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_05_11340_2018_451_MOESM5_ESM.docx (SI docx — Fig. S3; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_04_11340_2018_451_MOESM6_ESM.docx (SI docx — Fig. S4; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_03_11340_2018_451_MOESM7_ESM.docx (SI docx — Fig. S5; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_02_11340_2018_451_MOESM8_ESM.docx (SI docx — Fig. S6; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_01_11340_2018_451_MOESM9_ESM.docx (SI docx — Fig. S7; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
-   "74921154-24._SupZ_00_11340_2018_451_MOESM10_ESM.docx (SI docx — Fig. S8; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)"
+   "74921154-24._SupZ_07_11340_2018_451_MOESM3_ESM.docx",
+   "74921154-24._SupZ_06_11340_2018_451_MOESM4_ESM.docx",
+   "74921154-24._SupZ_05_11340_2018_451_MOESM5_ESM.docx",
+   "74921154-24._SupZ_04_11340_2018_451_MOESM6_ESM.docx",
+   "74921154-24._SupZ_03_11340_2018_451_MOESM7_ESM.docx",
+   "74921154-24._SupZ_02_11340_2018_451_MOESM8_ESM.docx",
+   "74921154-24._SupZ_01_11340_2018_451_MOESM9_ESM.docx",
+   "74921154-24._SupZ_00_11340_2018_451_MOESM10_ESM.docx",
+   "74921154-24._SupZ_09_11340_2018_451_MOESM1_ESM.docx",
+   "74921154-24._SupZ_08_11340_2018_451_MOESM2_ESM.docx"
   ]
  },
  "deysher2022_transport_mechanical_aspects_assb_review": {
@@ -1263,7 +1263,7 @@
   ]
  },
  "heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct": {
-  "figures": 16,
+  "figures": 39,
   "generated": "2026-11-12",
   "pdfs": [
    "bff6b9b1-20._Identifying_the_origins_of_microstructural_defects_such_as_cracking_within_Ni_rich_NMC811_cathode_particles_for_lithium_ion_batteries.pdf",
@@ -1665,7 +1665,7 @@
   ]
  },
  "kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode": {
-  "figures": 44,
+  "figures": 150,
   "generated": "2026-11-16",
   "pdfs": [
    "0a342b1c-Stress-Regulated_Li_Plating_in_Hybrid_Ag_CarbonCarbon_Nanofiber_Anodes_for_Durable_All-Solid-State_Batteries.pdf",
@@ -1740,6 +1740,14 @@
   "pdfs": [
    "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf",
    "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  ]
+ },
+ "kazyak2020_li_penetration_ceramic_se_operando_microscopy": {
+  "figures": 24,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "kazyak2020_li_penetration_main.pdf",
+   "kazyak2020_li_penetration_SI.pdf"
   ]
  },
  "ke2025_orbital_hybridization_mgclo": {
@@ -2091,6 +2099,14 @@
    "628309c4-nn7004427.pdf"
   ]
  },
+ "lee2022_thin_insitu_li_void_rewetting_llzo": {
+  "figures": 30,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "lee2022_thin_li_void_rewetting_main.pdf",
+   "lee2022_thin_li_void_rewetting_SI.pdf"
+  ]
+ },
  "lee2024_multicomponent_argyrodite_mixed_oxidation_mtp": {
   "figures": 19,
   "generated": "2026-08-05",
@@ -2323,6 +2339,13 @@
   "pdfs": [
    "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf",
    "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  ]
+ },
+ "lin2026_p_doped_compounds_li_s_review": {
+  "figures": 11,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "3e59ba8a-Research_on_the_preparation_and_application_of_multifunctional_P-doped_compounds_in_lithium_sulfur_batteries.pdf"
   ]
  },
  "lindblad2005_surface_area_weighted_local_configurations": {
@@ -2604,6 +2627,14 @@
   "pdfs": [
    "10. Ionic_correlations_failure_Nernst_Einstein_SSE_MAIN.pdf",
    "10. Sup) Ionic_correlations_failure_NE_SI.pdf"
+  ]
+ },
+ "masias2019_li_metal_elastic_plastic_creep_properties": {
+  "figures": 7,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "masias2019_li_creep_main.pdf",
+   "masias2019_li_creep_SI.pdf"
   ]
  },
  "matsusaka2010_triboelectric_charging_powders_review": {
@@ -2994,7 +3025,7 @@
   ]
  },
  "ohashi2020_stress_distribution_composite_electrode_sulfide_assb": {
-  "figures": 9,
+  "figures": 45,
   "generated": "2026-11-17",
   "pdfs": [
    "Stress_distribution_in_the_composite_electrodes_of_sulfide_all-solid-state_lithium-ion_batteries.pdf"
@@ -3463,11 +3494,28 @@
    "DFT 먹인 논문/40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf"
   ]
  },
+ "seymour2021_void_suppression_interfacial_adhesion_vacancy_transport": {
+  "figures": 5,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "seymour2021_void_adhesion_main.pdf",
+   "seymour2021_void_adhesion_SI1.pdf",
+   "seymour2021_void_adhesion_SI2.pdf"
+  ]
+ },
  "shapeev2016_moment_tensor_potentials": {
   "figures": 2,
   "generated": "2026-08-26",
   "pdfs": [
    "67. Shapeev2016_Moment_Tensor_Potentials.pdf"
+  ]
+ },
+ "sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance": {
+  "figures": 9,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "sharafi2017_llzo_wetting_main.pdf",
+   "sharafi2017_llzo_wetting_SI1.pdf"
   ]
  },
  "sharma2023_nmc_single_crystal_anisotropic_nanoindentation": {
@@ -3705,6 +3753,13 @@
    "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf"
   ]
  },
+ "sun2026_ssb_interface_electromechanical_gaps_account": {
+  "figures": 8,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf"
+  ]
+ },
  "sundar2025_oxide_coating_screening_lpscl": {
   "figures": 10,
   "generated": "2026-08-05",
@@ -3907,8 +3962,7 @@
   "generated": "2026-11-23",
   "pdfs": [
    "f9daec4d-Four-dimensional_X-ray_nano-holotomography_reveals_multiscale_chemomechanics_in_composite_graphite_silicon_battery_electrodes.pdf",
-   "4027f62e-Sup_Four-dimensional_X-ray_nano-holotomography_reveals_multiscale_chemomechanics_in_composite_graphite_silicon_battery_electrodes.pdf",
-   "b86b190c-Sup2_vanpeene2026/41565_2026_2327_MOESM3_ESM.avi … MOESM8_ESM.avi (Supplementary Videos 1–6 — 12 stills, kind movie_frame)"
+   "4027f62e-Sup_Four-dimensional_X-ray_nano-holotomography_reveals_multiscale_chemomechanics_in_composite_graphite_silicon_battery_electrodes.pdf"
   ]
  },
  "var2026_sulfide_se_mechanical_properties_local_indentation_pellet": {
@@ -3961,6 +4015,14 @@
   "pdfs": [
    "b515aea1-1-s2.0-S037877531830466X-main.pdf",
    "f0e95785-1-s2.0-S037877531830466X-mmc1.pdf"
+  ]
+ },
+ "wang2019_li_se_interface_dynamics_stack_pressure_current_density": {
+  "figures": 11,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "wang2019_li_se_stack_pressure_main.pdf",
+   "wang2019_li_se_stack_pressure_SI.pdf"
   ]
  },
  "wang2020_br_rich_argyrodite_fast_ion_conduction_origin": {
@@ -4086,7 +4148,7 @@
   ]
  },
  "warren2026_liquid_phase_thiophosphate_lpscl_synthesis": {
-  "figures": 34,
+  "figures": 35,
   "generated": "2026-11-16",
   "pdfs": [
    "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
@@ -4232,7 +4294,10 @@
   "generated": "2026-11-16",
   "pdfs": [
    "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
-   "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf"
+   "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "a9851e22-70._Sup2_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "2d36e924-70._Sup3_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "9307e61b-70._Sup4_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4"
   ]
  },
  "xu2023_realistic_am_shape_cgmd_calendering": {
@@ -4270,6 +4335,22 @@
   "generated": "2026-10-30",
   "pdfs": [
    "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+  ]
+ },
+ "yang2021_atomistic_li_stripping_plating_interface_md": {
+  "figures": 12,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "yang2021mo_li_strip_plate_md_main.pdf",
+   "yang2021mo_li_strip_plate_md_SI1.pdf"
+  ]
+ },
+ "yang2021_flat_li_stripping_lithiophilic_interface_design": {
+  "figures": 20,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "yang2021_flat_li_stripping_main.pdf",
+   "yang2021_flat_li_stripping_SI.pdf"
   ]
  },
  "yang2025_lao_dualdoping_argyrodite_lacl3": {
@@ -4384,6 +4465,13 @@
   "pdfs": [
    "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
    "43193ec8-1s2.0S2542435122005724mmc1.pdf"
+  ]
+ },
+ "zhang2026_ai_cross_scale_simulation_li_battery_review": {
+  "figures": 35,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf"
   ]
  },
  "zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector": {
@@ -4534,27 +4622,6 @@
   "pdfs": [
    "105. Impact_of_the_Chlorination_of_Lithium_Argyrodites_on_the_ElectrolyteCathode_Interface_in_SolidState_Batteries.pdf",
    "105. Sup) Impact_of_the_Chlorination_of_Lithium_Argyrodites_on_the_ElectrolyteCathode_Interface_in_SolidState_Batteries.pdf"
-  ]
- },
- "lin2026_p_doped_compounds_li_s_review": {
-  "figures": 11,
-  "generated": "2026-11-23",
-  "pdfs": [
-   "3e59ba8a-Research_on_the_preparation_and_application_of_multifunctional_P-doped_compounds_in_lithium_sulfur_batteries.pdf"
-  ]
- },
- "zhang2026_ai_cross_scale_simulation_li_battery_review": {
-  "figures": 35,
-  "generated": "2026-11-23",
-  "pdfs": [
-   "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf"
-  ]
- },
- "sun2026_ssb_interface_electromechanical_gaps_account": {
-  "figures": 8,
-  "generated": "2026-11-23",
-  "pdfs": [
-   "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf"
   ]
  }
 }

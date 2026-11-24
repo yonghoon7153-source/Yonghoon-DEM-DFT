@@ -1,0 +1,292 @@
+{
+ "slug": "yang2021_atomistic_li_stripping_plating_interface_md",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "yang2021mo_li_strip_plate_md_main.pdf",
+  "yang2021mo_li_strip_plate_md_SI1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Atomistic model and interfacial atomic structures of Li metal with solid electrolyte. a) A schematic of our model comprising the Li metal slab and its interface with the solid electrolyte and a rigid piston for applying pressure. b,c) Atomistic structures of the incoherent interface and coherent interfaces. d) The pair correlation function g(r) of Li atoms at the top layers within 10 Å of the interface core. e,f) Snapshots from MD simulation during the plating (e) and the stripping (f) process over time for the coherent interface (W = 0.77 J m−2) at P = 0 MPa under the nominal current density of 1.6 nA nm−2. Original Li atoms are blue and inserted Li atoms are cyan. g,h) The green and pink lines indicate ½ <111> and <100> dislocation loops, respectively, with the red arrow indicating the movement direction. diffusion is largely caused by the high formation energy of Li point de",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    555.3,
+    518.5
+   ],
+   "w": 2127,
+   "h": 1891,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_main.pdf",
+   "blank": 0.606
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Atomistic mechanisms of Li diffusion during stripping and plating. a,b) Vacancy configurations and migration pathways at the Li coherent interface (a) and inside the Li-metal bulk (b). c) The facilitated formation of vacancies at the coherent interface during Li stripping (W = 0.77 J m−2). d–f) Interstitial formation and migration during Li plating at the coherent interface (W = 0.77 J m−2). g) Diffusion of inserted Li atoms (cyan) accom- modated by the amorphous layers at the incoherent interface (W = 0.77 J m−2).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.3,
+    671.2
+   ],
+   "w": 2127,
+   "h": 2527,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_main.pdf",
+   "blank": 0.502
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Interface pore formation during stripping process. a–c) Li stripping process of: a) incoherent interface of W = 0.77 J m−2, at P = 0 MPa, b) incoherent interface of W = 0.77 J m−2, under P = 50 MPa, and c) coherent interface (W = 0.77 J m−2), P = 0 MPa, at a nominal current density of 0.2 nA nm−2 and a local current density of 6.4 nA nm−2 within the 20 nm-diameter regions of current constriction. The pore formation is visualized in the side view (upper) of 2 nm-thick cross section and the bottom view (lower) within 3 Å in contact with SE. d,e) Ratio of the contact area for the incoherent interface within the current constriction region during stripping (1.6 nA nm−2): d) under different external pressures for interface with W = 0.70 J m−2 and e) for the interfaces with different interfacial adhesion energies under 0 MPa. SEs.[21,25] For interfaces with stronger adhesion, a much ",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.4,
+    552.5,
+    590.2
+   ],
+   "w": 2128,
+   "h": 2191,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_main.pdf",
+   "blank": 0.686
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Interface separation process during Li plating with current constriction. a–d) Local plating process of: a) the incoherent adhesion of W = 0.10 J m−2, at P = 0 MPa, b) incoherent adhesion of W = 0.10 J m−2, under P = 450 MPa, c) incoherent adhesion of W = 0.77 J m−2, P = 0 MPa, and d) coherent adhesion (W = 0.77 J m−2), P = 0 MPa, at a nominal current density of 1.6 nA nm−2 and a local current density of 51.0 nA nm−2 within the 20 nm-diameter regions of current constriction. The local plating concentration can be visualized by the side view (upper) of 2 nm-thick cross section and the bottom view (lower) within 3 Å in contact with SE. e) Occluded pore formation shown by the plating process for incoherent interface (W = 0.77 J m−2) with pore formed from prior stripping at P = 0 MPa under plating current density of 2.5 nA nm−2. f,g) Ratio of the contact area for the incoherent int",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    555.1,
+    557.7
+   ],
+   "w": 2127,
+   "h": 2054,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_main.pdf",
+   "blank": 0.601
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Map of interface morphological stability. For incoherent Li–SE interfaces under lithium plating (a) and stripping (b), the conditions in external pressures P and interfacial adhesion energy W that prevent interface morphological instability (blue). The testing is performed at a nominal current density of 0.4 nA nm−2 and a local current density of 1.6 nA nm−2 within the 10 nm × 10 nm region of current constriction in the small-cell model. during the plating, Li atoms can only be deposited at the edge of pores (triple contact point) to have both Li and elec- tron transfer pathway. Our observation is consistent with the experiments by Kasemchainan et al.,[12] in which formed pores become occluded inside Li metal during subsequent plating. These occluded pores would reopen at interfaces during sub- sequent stripping, leading to current constriction and inter- face morphological ins",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.8,
+    552.3,
+    211.7
+   ],
+   "w": 2127,
+   "h": 613,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_main.pdf",
+   "blank": 0.506
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Arrhenius plots of self-diffusivity of vacancy DV (orange) and interstitial DI",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    434.7,
+    533.5,
+    627.7
+   ],
+   "w": 1954,
+   "h": 805,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Arrhenius plots of bulk lithium with different concentrations of point defects",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    532.9,
+    387.1
+   ],
+   "w": 1952,
+   "h": 1492,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. ½<111> dislocation loops climbing in Li metal. A high concentration of the",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.4,
+    231.2
+   ],
+   "w": 1954,
+   "h": 842,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.569
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Homogeneous plating process for the incoherent interface (W = 0.77 J/m2)",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    389.0
+   ],
+   "w": 1954,
+   "h": 1500,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.665
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Homogeneous stripping process for the incoherent interface (W = 0.77 J/m2)",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    341.2
+   ],
+   "w": 1954,
+   "h": 1300,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.559
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Deformation of lithium with interface pore under pressure. MD simulation of",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    258.0,
+    533.4,
+    529.5
+   ],
+   "w": 1954,
+   "h": 1132,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.657
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The interfacial adhesion energy between Li metal and different solid materials",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.3,
+    532.0,
+    322.2
+   ],
+   "w": 1943,
+   "h": 1067,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.929
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p10",
+    "p3"
+   ]
+  },
+  {
+   "key": "fS2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p5 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p2",
+    "p5"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "yang2021mo_li_strip_plate_md_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

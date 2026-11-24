@@ -1,0 +1,230 @@
+{
+ "slug": "sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "sharafi2017_llzo_wetting_main.pdf",
+  "sharafi2017_llzo_wetting_SI1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. XPS analysis of LLZO before and after heat treatment at 400 and 500 °C. (a) C:(La+Zr) atomic ratio as a function of heat treatment temperature; (b) O 1s and (c) C 1s core levels; (d) percentage of total composition of diﬀerent oxygen species on the LLZO surface as a function of heat treatment temperature after wet polishing (WP). an attempt to reduce the interfacial resistance, and their impact on LLZO surface chemistry was evaluated (details regarding the dry and wet polishing conditions are explained in the Experimental Section). Heat treatment between 200 and 500 °C in an inert atmosphere was conducted after dry and wet polishing. In this study, we provide a mechanistic understanding of the interplay between interfacial chemistry and electrochemical performance at solid−solid interfaces in SSBs. This under- standing provides design rules for engineering low-resistance interf",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    291.2
+   ],
+   "w": 2151,
+   "h": 951,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_main.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Contact angle measurements of molten metallic Li on (a) Li2CO3, (b) DP-LLZO, (c) WP-LLZO, (d) WP-LLZO after heat treatment at 500 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    508.9,
+    306.5,
+    723.2
+   ],
+   "w": 1050,
+   "h": 894,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_main.pdf",
+   "blank": 0.616
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Calculated work of adhesion (Wad), contact angle (θ), and atomic structure for the (a) Li−Li2CO3 and (b) Li−LLZO interfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    247.2
+   ],
+   "w": 1050,
+   "h": 768,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_main.pdf",
+   "blank": 0.485
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Schematic of the all solid-state Li−LLZO−Li cell, (b) equivalent circuit used for modeling the EIS data, (c) representative Nyquist plot of the Li−LLZO−Li cell (for LLZO heat-treated at 500 °C), as-assembled (○) and after preconditioning at 175 °C (●). Markers indicate experimental data and dotted lines represent from the equivalent circuit model simulation using the circuit shown in panel b, (d) the Li−LLZO interfacial resistance after preconditioning at 175 °C versus the heat-treatment temperature. N = 3 for each HT condition. Error bars represent standard deviations. Chem. Mater. 2017, 29, 7961−7968 7964 DOI: 10.1021/acs.chemmater.7b03002",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    450.2,
+    570.5,
+    703.2
+   ],
+   "w": 2151,
+   "h": 1055,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_main.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) DC cycling of Li−LLZO−Li cells (LLZO HT to 500 °C after WP) at room temperature, stepping the current density from 0.01 to 1 mA cm−2, (b) the critical current density versus Li−LLZO interfacial resistance comparing the results of this study with other studies available in the literature, (c) Nyquist plots of a Li−LLZO−Li cell after each 20 cycles for cell cycled 100 times, (d) galvanostatic cycling of Li−LLZO−Li at 0.2 mA cm−2 for 100 cycles at 0.4 mAh cm−2. The blue dotted line shows the times at which EIS was collected and is shown in panel c. characterization suggests WP+HT could enable the use of metallic Li anodes and LLZO in SSBs. ■CONCLUSIONS In closing, this study reveals the mechanism by which surface chemistry controls the resistance of the Li−LLZO interface. By exploiting this mechanism, very low interfacial resistances, 2 Ω cm−2, comparable to solid−liquid inter",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    317.8
+   ],
+   "w": 2151,
+   "h": 1061,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_main.pdf",
+   "blank": 0.767
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Optimization of the translation state within the interfacial plane and the interfacial distance for the Li-LLZO interface: a) contour plot of \u0002\u0003\u0004 as a function of translation state for the Li slab relative to the LLZO slab using a 5×5 grid with a constant interfacial distance of 2 Å. b) \u0002\u0003\u0004 as a function of interfacial distance between slabs fitted by the UBER for the five lowest \u0002\u0003\u0004 interfaces identified in the contour plot of panel (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    400.4,
+    548.6,
+    610.8
+   ],
+   "w": 2012,
+   "h": 877,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_SI1.pdf",
+   "blank": 0.716
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Optimization of the translation state within the interfacial plane and the interfacial distance for the Li-Li2CO3 interface. a) contour plot of the total energy as a function of translation state for the Li slab relative to Li2CO3 slab with a constant interfacial distance of 3 Å. Due to the symmetry of Li atoms in the Li slab, the translation state was restricted to the red box using a 4x4 grid. b) \u0002\u0003\u0004 as a function of interfacial distance fit to the UBER for the lowest total energy interface (translation Li slab to x=0 and y=0.25) identified in panel (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    65.9,
+    548.6,
+    367.0
+   ],
+   "w": 2013,
+   "h": 1255,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_SI1.pdf",
+   "blank": 0.827
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Calculated \u0002\u0003\u0004 as a function of interfacial distance for the Li-LiOH interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    461.7,
+    311.2
+   ],
+   "w": 1649,
+   "h": 1023,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_SI1.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Number of atoms in the supercell, lattice parameters in the interfacial plane, the in-plane strain of Li, the calculated \u0002\u0003\u0004, and the contact angle for the Li-LLZO, Li-Li2CO3, and Li-LiOH interfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.7,
+    244.9,
+    547.6,
+    390.3
+   ],
+   "w": 2009,
+   "h": 607,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_SI1.pdf",
+   "blank": 0.912
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p2 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p3",
+    "p2"
+   ]
+  },
+  {
+   "key": "tS1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p6",
+    "p2"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "sharafi2017_llzo_wetting_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "sharafi2017_llzo_wetting_SI1.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  }
+ ]
+}

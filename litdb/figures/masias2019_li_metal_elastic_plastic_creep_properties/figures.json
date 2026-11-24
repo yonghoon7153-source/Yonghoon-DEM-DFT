@@ -1,0 +1,442 @@
+{
+ "slug": "masias2019_li_metal_elastic_plastic_creep_properties",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "masias2019_li_creep_main.pdf",
+  "masias2019_li_creep_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1 Schematic of creep tension (left) and compression (right) test procedure.",
+   "rotated_deg": 0,
+   "bbox": [
+    174.7,
+    73.9,
+    548.5,
+    272.8
+   ],
+   "w": 1559,
+   "h": 829,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.869,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f1 as a number gap ('p5 그래픽 없음(img0/draw1)') - Springer side caption (caption block 110x33 pt at x51-161 y77-110; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im27 (1524x795 px) at (178.7,78.0)-(544.5,268.8) + 4 pt margin"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Figure 2 Room-temperature tensile stress–strain behavior of Li (15.5 mm height, 12.7 mm diameter). The inset shows the 0.2% yield strength using the elastic modulus from the stress–strain curve (SS Slope) and pulse-echo acoustic measurements (PE Slope).",
+   "rotated_deg": 0,
+   "bbox": [
+    200.1,
+    73.9,
+    548.5,
+    325.9
+   ],
+   "w": 1453,
+   "h": 1050,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.757,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f2 as a number gap ('p7 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x105 pt at x51-162 y77-182; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im28 (1418x1017 px) at (204.1,78.0)-(544.5,321.9) + 4 pt margin"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3 Room-temperature compressive stress–strain behavior of Li (12.3 mm height, 12.7 mm diameter).",
+   "rotated_deg": 0,
+   "bbox": [
+    200.1,
+    73.9,
+    548.5,
+    322.7
+   ],
+   "w": 1453,
+   "h": 1037,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.847,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f3 as a number gap ('p8 그래픽 없음(img0/draw1)') - Springer side caption (caption block 105x45 pt at x51-156 y77-122; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im29 (1418x1003 px) at (204.1,78.0)-(544.5,318.7) + 4 pt margin"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4 Schematic diagram depicting the evolution of a highly ductile sample geometry (barreling) during compression. The cross-hatched regions indicate where limited deformation occurs adjacent to the platens due to friction. a original sample geometry,",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    72.0,
+    550.3,
+    176.7
+   ],
+   "w": 2106,
+   "h": 438,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5 Room-temperature tensile strain and strain rate of Li versus time.",
+   "rotated_deg": 0,
+   "bbox": [
+    200.1,
+    76.8,
+    548.5,
+    329.1
+   ],
+   "w": 1453,
+   "h": 1052,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.789,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f5 as a number gap ('p10 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x33 pt at x51-162 y80-113; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im31 (1418x1018 px) at (204.1,80.8)-(544.5,325.1) + 4 pt margin"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6 Minimum tensile strain rate of Li versus stress at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    200.1,
+    342.7,
+    548.5,
+    597.9
+   ],
+   "w": 1453,
+   "h": 1065,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.809,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f6 as a number gap ('p10 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x33 pt at x51-162 y346-379; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im32 (1418x1030 px) at (204.1,346.7)-(544.5,593.9) + 4 pt margin"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 12,
+   "file": "fig_7.png",
+   "caption": "Figure 7 Room-temperature strain rate normalized by diffusivity versus stress normalized by shear modulus for various alkali metals [32] and Li from this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    200.1,
+    73.9,
+    548.5,
+    326.1
+   ],
+   "w": 1453,
+   "h": 1051,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.377,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f7 as a number gap ('p12 그래픽 없음(img0/draw1)') - Springer side caption (caption block 107x69 pt at x51-158 y77-146; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im33 (1418x1018 px) at (204.1,78.0)-(544.5,322.2) + 4 pt margin"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Figure 8 Room-temperature engineering strain and strain rate versus time and for Li under compression.",
+   "rotated_deg": 0,
+   "bbox": [
+    200.1,
+    344.0,
+    548.5,
+    594.5
+   ],
+   "w": 1453,
+   "h": 1044,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.832,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f8 as a number gap ('p12 그래픽 없음(img0/draw1)') - Springer side caption (caption block 105x45 pt at x51-156 y347-392; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im34 (1418x1011 px) at (204.1,348.0)-(544.5,590.5) + 4 pt margin"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9.png",
+   "caption": "Figure 9 Room-temperature strain rate versus stress as a function of time. The three time points were taken to represent a LMSSB charged or discharged in 12, 60, and 120 min.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    467.9,
+    550.5,
+    729.9
+   ],
+   "w": 2107,
+   "h": 1093,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 14,
+   "file": "fig_10.png",
+   "caption": "Figure 10 Under compression; two possible scenarios determined by the deformation behavior of lithium: a–c with no adhesion between components, lithium could deform to eventually short-circuit against the cathode; d, e if lithium adheres to the solid electrolyte and current collector, frictional forces.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    412.3,
+    550.5,
+    729.9
+   ],
+   "w": 2107,
+   "h": 1324,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Young’s modulus of Li from the literature and this study (room temperature) Microstructure E (GPa) Method Reference Polycrystalline 5.0 Wire bending [11] Polycrystalline 8.0 Acoustic [26] Polycrystalline 1.9 Compression [12] Polycrystalline 7.8 Tension [13] Polycrystalline 7.8 Acoustic This work Single crystal *21.2 \\111[ Acoustic [34] Single crystal *3.0 \\100[ Acoustic [34] *E values based on crystallographic orientation calculated from Ref. [34]",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    540.2,
+    292.7,
+    709.8
+   ],
+   "w": 1029,
+   "h": 708,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 Elastic properties of polycrystalline Li at room temperature Height (mm) Density q (g/cc) Wave speed (km/s) E (GPa) G (GPa) K (GPa) v Longitudinal, Vl Shear, Vs 12.35 0.53 5.27 ± 0.01 (N = 4) 2.29 ± 0.01 (N = 4) 7.80 2.82 11.18 0.38 8.83 0.54 5.48 ± 0.02 (N = 6) 2.30 ± 0.02 (N = 6) 7.79 2.80 12.12 0.39 0.75 0.53 5.08 ± 0.26 (N = 6) 2.32 ± 0.02 (N = 10) 7.88 2.88 9.92 0.37 Average 7.82 2.83 11.07 0.38",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    72.2,
+    549.2,
+    184.7
+   ],
+   "w": 2098,
+   "h": 470,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3 Yield strength (ry) of Li from literature and this study (room temperature)",
+   "rotated_deg": 0,
+   "bbox": [
+    174.6,
+    338.5,
+    548.3,
+    497.3
+   ],
+   "w": 1558,
+   "h": 663,
+   "dpi": 300,
+   "src": "masias2019_li_creep_main.pdf",
+   "blank": 0.916,
+   "manual_crop": "2026-11-24 litdb-curator: tool cropped the blank strip below the side caption ('p7 거의 백지(1.000)') - Springer side caption (caption block 111x33 pt at x51-162 y339-372); the table sits to the right of the caption; clip = text table: top rule y343.0, header 344-359, body 369-462, bottom rule y463, footnotes to y493.3, x 178.6-544.3 + 4 pt margin"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Tension Creep Minimum Secondary Creep Rate as a function of Pressure (room temperature) Pressure Minimum Secondary Creep Aspect Ratio (H/D) σ (MPa) σ/G Rate (sec-1) Strain (%)",
+   "rotated_deg": 0,
+   "bbox": [
+    90.1,
+    102.9,
+    524.3,
+    305.8
+   ],
+   "w": 1810,
+   "h": 847,
+   "dpi": 300,
+   "src": "masias2019_li_creep_SI.pdf",
+   "blank": 0.72
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Compression Creep Strain Rate as a function of Pressure and Time (room temperature)",
+   "rotated_deg": 0,
+   "bbox": [
+    71.6,
+    67.1,
+    542.8,
+    221.3
+   ],
+   "w": 1964,
+   "h": 644,
+   "dpi": 300,
+   "src": "masias2019_li_creep_SI.pdf",
+   "blank": 0.74
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p5 그래픽 없음(img0/draw1)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p4",
+    "p5"
+   ],
+   "resolved": "manual_crop fig_1.png (2026-11-24, litdb-curator) - see figures[f1].manual_crop"
+  },
+  {
+   "key": "f2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p7 그래픽 없음(img0/draw1)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p6",
+    "p7"
+   ],
+   "resolved": "manual_crop fig_2.png (2026-11-24, litdb-curator) - see figures[f2].manual_crop"
+  },
+  {
+   "key": "f3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p8 그래픽 없음(img0/draw1)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p6",
+    "p8"
+   ],
+   "resolved": "manual_crop fig_3.png (2026-11-24, litdb-curator) - see figures[f3].manual_crop"
+  },
+  {
+   "key": "f5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p10 그래픽 없음(img0/draw1)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p9",
+    "p10",
+    "p12",
+    "p13"
+   ],
+   "resolved": "manual_crop fig_5.png (2026-11-24, litdb-curator) - see figures[f5].manual_crop"
+  },
+  {
+   "key": "f6",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p10 그래픽 없음(img0/draw1)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p10",
+    "p11"
+   ],
+   "resolved": "manual_crop fig_6.png (2026-11-24, litdb-curator) - see figures[f6].manual_crop"
+  },
+  {
+   "key": "f7",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p12 그래픽 없음(img0/draw1)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p11",
+    "p12"
+   ],
+   "resolved": "manual_crop fig_7.png (2026-11-24, litdb-curator) - see figures[f7].manual_crop"
+  },
+  {
+   "key": "f8",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p12 그래픽 없음(img0/draw1)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p12"
+   ],
+   "resolved": "manual_crop fig_8.png (2026-11-24, litdb-curator) - see figures[f8].manual_crop"
+  },
+  {
+   "key": "t3",
+   "why": "끝 번호 — 본문이 Table 3 까지 가리키는데 추출 최대는 2 (남의 논문 그림 참조일 수도 있다 · 확인)",
+   "skipped": [
+    "p7 거의 백지(1.000)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p6",
+    "p7",
+    "p9"
+   ],
+   "resolved": "manual_crop tab_3.png (2026-11-24, litdb-curator) - see figures[t3].manual_crop"
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "masias2019_li_creep_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 2,
+   "caption_below": false
+  },
+  {
+   "src": "masias2019_li_creep_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

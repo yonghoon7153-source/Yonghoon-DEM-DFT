@@ -1,0 +1,641 @@
+{
+ "slug": "lee2022_thin_insitu_li_void_rewetting_llzo",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "lee2022_thin_li_void_rewetting_main.pdf",
+  "lee2022_thin_li_void_rewetting_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic of cell conﬁgurations and analysis of stripping in situ L (A and B) (A) A schematic illustration, and (B) voltage proﬁle of in situ plating of Li at 0.05 mA cm\u00032. (C) A schematic illustration of stripping in situ plated Li including a zoomed-in Li/LLZO interface. (D and E) (D) A stripping voltage proﬁle of 10-mm-thick Li at 0.4 mA cm\u00032, and (E) the corresponding second derivative of voltage versus capacity plots used to deﬁne the accessible capacity (QA). Horizontal blue dashed lines represent Gs (1.1 here), the standard deviation of the second derivatives at the early stage of stripping. Quasi-stable and unstable regimes are shaded as green and red, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    97.6,
+    382.5,
+    493.5
+   ],
+   "w": 1379,
+   "h": 1651,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_main.pdf",
+   "blank": 0.6
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Characterizing the stripping behavior of Li as a function of current density and thickness (A) Voltage proﬁles of 10-mm-thick in situ Li stripped at various current densities (0.05–0.6 mA cm\u00032). The calculated values of QA for each current density are represented as circles with corresponding colors. (B) Voltage proﬁles of 5-, 10-, and 20-mm-thick in situ Li and thick Li foil (0.75 mm) stripped at 0.4 mA cm\u00032. The plated capacities are illustrated as dashed lines with corresponding colors. (C) QA of 10-mm-thick Li at each current density represented in (A). (D) Ratio of QA to the maximum capacity (Qmax) of each thickness represented in (B).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    372.0
+   ],
+   "w": 1379,
+   "h": 1362,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_main.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Mechanisms behind abrupt increase in voltage as a function of current density Integrated EIS and SEM analysis of stripping phenomena at the Li/LLZO interface at (A–C) 0.1 mA cm\u00032 and (D–F) 0.4 mA cm\u00032. (A and D) Impedance spectra of the cell before in situ plating (black circles), before stripping (red squares), and after stripping (blue triangles). (B and E) Digital photographs of LLZO surface when Cu foil was peeled off after stripping. (C and F) Cross-sectional SEM image of the cell after stripping. the stripping behavior, thermally evaporated thin ﬁlms of Li were also tested (Fig- ure S8). While the general trends observed with the evaporated ﬁlms were consistent with those formed by in situ plating, the evaporated ﬁlms exhibited differences in accessible capacity compared with in situ formed thin Li, which can be attributed to differences in the Li-metal purity, interfacia",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    307.4
+   ],
+   "w": 1379,
+   "h": 1093,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_main.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Operando GEIS during galvanostatic stripping of 10-mm-thick Li at 0.4 mA cm\u00032 (A) Voltage proﬁles of stripping 10-mm-thick Li at 0.4 mA cm\u00032. Each symbol represents a GEIS measurement while applying 0.4 mA cm\u00032. Horizontal error bars indicate the capacity of Li stripped during operando GEIS measurements. (B) GEIS spectra at the points indicated by the symbols in (A) (see also Figure S9). (C) Corresponding schematic illustrations of the Li/LLZO interface during void formation.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    97.6,
+    382.5,
+    313.1
+   ],
+   "w": 1379,
+   "h": 899,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_main.pdf",
+   "blank": 0.757
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Finite element analysis of interfacial and bulk resistance during void formation (A) Current density distribution overlaid on electrode and electrolyte geometries used for each t/l ratio. The values in parentheses are the values of l (void spacing) for the t = 2,000 mm case that was used experimentally. (B) Bulk area-speciﬁc resistance (ASR) for each void spacing as a function of the void fraction. (C) Interface ASR for each void spacing as a function of the void fraction.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    408.0
+   ],
+   "w": 1379,
+   "h": 1512,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_main.pdf",
+   "blank": 0.77
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "Figure 6. DC measurements for the characterization of void recovery 10-mm-thick Li was initially stripped under a current density of 0.4 mA cm\u00032 (blue shaded region), and the stripping current density was switched to 0.01 mA cm\u00032 (yellow shaded region) when void formation started to accelerate to see the void recovery. Right panel of the ﬁgure is magniﬁcation of the 0.01 mA cm\u00032 region.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    249.4
+   ],
+   "w": 1379,
+   "h": 852,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_main.pdf",
+   "blank": 0.73
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 15,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Recovery of the damaged interface by stripping (A) EIS measurements after in situ plating (black circle), after stripping (red square), after replating (blue triangle), and after reconditioning (orange diamond). Inset represents the interfacial resistances at the low-frequency regime (see also Figure S15). (B) Plots of voltage and resistance of stripping at 0.4 mA cm\u00032 (black), replating at 0.1 mA cm\u00032 (blue, see also Figure S16), reconditioning (green), and second stripping at 0.4 mA cm\u00032 (red). The breaks for the second and the third panel are 10 and 3 h, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    97.6,
+    382.5,
+    464.7
+   ],
+   "w": 1379,
+   "h": 1531,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_main.pdf",
+   "blank": 0.602
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Voltage profiles of in situ plating of Li on Cu CC at 0.4 mA cm-2 for 2.0 mAh cm-2",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    101.5,
+    510.2,
+    330.6
+   ],
+   "w": 1851,
+   "h": 956,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Accessible capacities (QA) calculated from each criteria QA is determined as the capacity at which the value of 2nd derivative becomes larger than the criteria times the standard deviation of the stable initial regime. The calculated values of QA at current densities of (A) 0.1 mA cm-2 and (B) 0.4 mA cm-2 are plotted as a function of criteria. This result justifies that the criteria of 10 is used in this study such that the values of QA from this criteria approaches an asymptote and that the specific chosen value has little bearing on the results.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    265.3
+   ],
+   "w": 2012,
+   "h": 831,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. EIS spectra of a Thick Li/LLZO/Thick Li cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    348.1,
+    341.2
+   ],
+   "w": 1176,
+   "h": 1147,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Schematic illustration of the Li/LLZO interface after stripping. (A) Li depletion after stripping at low current densities. (< 0.1 mA cm-2) (B) Void formation after stripping at high current densities. (> 0.4 mA cm-2)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    516.5,
+    185.0
+   ],
+   "w": 1878,
+   "h": 496,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.763
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Impedance spectrum after a rest period under stack pressure. Impedance spectrum measured 5 minutes, 12 hours and 2 days after the end of stripping under the current density of (A) 0.1 mA cm-2 and (B) 0.4 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    296.5
+   ],
+   "w": 2000,
+   "h": 961,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Schematic illustration of void growth and Li depletion. (A) (Figure 2A) Voltage profiles of stripping 10 µm-thick Li at different current densities. (0.05-0.6 mA/cm2) (B, C) Schematic illustration of the void formation at the Li/LLZO interface when stripping at 0.4 mA/cm2. (D) Schematic illustration of the Li/LLZO interface when Li depletion occurs after stripping at 0.1 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    86.4,
+    548.2,
+    436.3
+   ],
+   "w": 2010,
+   "h": 1458,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Effect of stack pressure on stripping at 0.4 mA/cm2. (A) Voltage profiles of stripping 10 µm-thick Li at different stack pressures (0.56, 1.4 and 5.6 MPa). (B) EIS measured before and after stripping at 0.56 MPa and 0.4 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    310.5
+   ],
+   "w": 2000,
+   "h": 1019,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 15,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Figure 4B with labeling frequencies of (A) bulk resistances and (B) interfacial resistances.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    302.0
+   ],
+   "w": 2000,
+   "h": 984,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 16,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Slow increase in voltage of mode I (A) Stripping in situ plated Li at various current densities. (B) Stripping in situ plated Li and thick Li foil at 0.4 mA cm-2",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.7,
+    281.2
+   ],
+   "w": 2012,
+   "h": 897,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 19,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. COMSOL information. (A) Nyquist plots for 4 different void geometries with 2 mm thick electrolyte. (B) Plot of Bulk and Interface resistances for varying electrolyte thicknesses when no voids are present on the surface. (C-F) Current density distributions across the unit cell for the 4 void geometries shown in (A) at 0.1 Hz, each with a progressively larger void fraction. Void sizes are labelled in the top right corner of each panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    439.5
+   ],
+   "w": 2000,
+   "h": 1557,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 20,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Impact of spatially varying kinetics on interfacial resistance. (A) Interface ASR for different cases of spatially varying kinetics, each with a different ratio of the exchange current density in the middle vs. the outside of the simulation unit cell. (B) Current density distribution for the ~40% void fraction and 10x slower middle condition.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    89.5,
+    548.8,
+    302.5
+   ],
+   "w": 2012,
+   "h": 889,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.538
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 21,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. XPS spectrum after stripping at 0.1 and 0.4 mA cm-2. Area 2 after stripping at 0.4 mA/cm2 exhibits a smaller amount of La and Zr. This is due to the presence of a layer of Li metal remaining on the surface in this region. The surface passivation layer on the Li leads the surface chemistry to primarily consist of Li, C, and O, as shown above for that case.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    489.6
+   ],
+   "w": 2012,
+   "h": 1766,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 22,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Stripping Li after voids form and the interfaces are recovered only by the stack pressure. (A) Voltage profile of stripping 10µm thick Li at 0.4 mA cm-2 and (B) stripping residual Li at 0.4 mA cm-2 after a day of the rest period (right). (C) Impedance spectra after in situ plating (left), after 1st stripping (middle) and after 2nd stripping (right).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    551.6,
+    396.3
+   ],
+   "w": 2024,
+   "h": 1377,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.655
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 23,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Figure 7A with labeling frequencies of (A) bulk resistances and (B) interfacial resistances.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    503.1,
+    291.8
+   ],
+   "w": 1822,
+   "h": 941,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 25,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Voltage profiles of replating under the current density of 0.1 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    466.7,
+    354.5
+   ],
+   "w": 1670,
+   "h": 1203,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 26,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Interfacial resistances after reconditioning at different temperatures from 50 C to 170 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    542.9,
+    475.5
+   ],
+   "w": 1988,
+   "h": 1707,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.972
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 27,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. SEM image of LLZO pellet in a cross-section.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    470.2,
+    342.8
+   ],
+   "w": 1685,
+   "h": 1154,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.097
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 28,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. XRD spectra of Ta-doped LLZO powder and a pellet.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    449.9
+   ],
+   "w": 2000,
+   "h": 1600,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 29,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Lissajous plots during operando GEIS in the initial stripping regime for 10 µm-thick Li at 0.4 mA/cm2. The corresponding frequencies are (A) 1MHz, (B) 100 kHz, (C) 12.6 kHz, (D) 1 kHz, (E) 100 Hz, and (F) 10 Hz.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    378.8
+   ],
+   "w": 2000,
+   "h": 1304,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Capacities that stripped during quasi-stable regime and unstable regime.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    544.8,
+    704.8
+   ],
+   "w": 1992,
+   "h": 2657,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 14,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Bulk, interfacial and total resistances and corresponding capacitances at each stage of 0.4 mA cm-2 stripping in Figure 4.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    547.8,
+    385.3
+   ],
+   "w": 2004,
+   "h": 1326,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 17,
+   "file": "tab_S3.png",
+   "caption": "Table S3: COMSOL Model Parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    90.9,
+    295.0,
+    316.5
+   ],
+   "w": 951,
+   "h": 941,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 24,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Bulk, interfacial and total resistances and corresponding capacities at each stage in Figure 7.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    90.9,
+    537.3,
+    265.8
+   ],
+   "w": 1960,
+   "h": 730,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.939
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS8",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p13 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p8",
+    "p10",
+    "p13"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "lee2022_thin_li_void_rewetting_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 3,
+   "caption_below": false
+  }
+ ]
+}
