@@ -3655,6 +3655,7 @@ _NOT_AUTHOR_RE = re.compile(
     r"(?:공저자|공저|저자)(?:가|는)?\s?(?:아니|아님)"
     r"|not (?:an? )?(?:co-?)?author")
 _CLAUSE_SPLIT_RE = re.compile(r"(\s·\s|·|\s—\s|;|\||\(|\)|⛔|\.\s)")
+_EMPHASIS_RE = re.compile(r"[*_~]+")
 
 
 def _drop_not_author_clauses(ln: str) -> str:
@@ -3664,11 +3665,15 @@ def _drop_not_author_clauses(ln: str) -> str:
       · 마디 구분자(· — ; | 괄호 ⛔ '. ') 없이 진짜 저자와 부정문이 한 마디에 섞이면 그 마디를 통째로 버린다.
       · 역할 말 (교신 · 1 · 첫 · 끝 · 마지막) 밖의 수식어가 붙은 저자 부정 ('주 저자는 아니다' 처럼 저자인데 부정형) 은 부정으로 본다.
       · 한국어 · 영어 두 꼴만 안다.
+    마크다운 강조 기호 (`*` · `_` · `~`) 는 **판정할 때만** 지우고 본다 — 돌려주는 줄은 그대로다
+    (2026-11-24 chu2026 머리: `저자가 **아니다**` 의 `**` 가 '저자가' 와 '아니' 사이에 끼어 부정을 못 보고 배지가 붙었다).
     """
-    if not _NOT_AUTHOR_RE.search(ln):
+    def _neg(s: str):
+        return _NOT_AUTHOR_RE.search(_EMPHASIS_RE.sub("", s))
+    if not _neg(ln):
         return ln
     parts = _CLAUSE_SPLIT_RE.split(ln)
-    return "".join(p for p in parts if not _NOT_AUTHOR_RE.search(p))
+    return "".join(p for p in parts if not _neg(p))
 
 
 def _paper_pis(slug: str) -> list:

@@ -4301,6 +4301,8 @@ def test_not_author_sentence_does_not_tag_pi(tmp_path, monkeypatch):
     sakamoto 배지가 붙었다 — 이름이 부정어 **앞**이라 NEG(그 자리에서 자르기)로는 못 막는다.
     양성 대조: ① 같은 줄의 진짜 저자는 살아남는다 (마디만 버린다)
               ② '교신 저자는 아니다' (공저 · 교신 아님 — masias2019 · fuchs2023) 는 저자로 잡힌다.
+    셋째 실측 (11-24b chu2026 머리 15 줄): 부정어가 굵은 글씨 `저자가 **아니다**` 라 `**` 때문에 부정을 못 봤다
+      → neg_bold · neg_bold_en · neg_italic_us (강조 기호는 판정할 때만 지운다) · pos_bold_role (강조된 역할 말은 그대로 저자).
     ⛔ 이 시험이 못 하는 것: 한국어 · 영어 밖의 부정문, 마디 구분자 없이 한 마디에 섞인 저자 + 부정문.
     """
     for slug in ("metzler2025_ag_particle_distribution_carbon_interlayer_anode_free",
@@ -4324,6 +4326,11 @@ def test_not_author_sentence_does_not_tag_pi(tmp_path, monkeypatch):
         "pos_first_same_clause": ("> **저자**: X · Jeff Sakamoto 는 1저자는 아니다", {"sakamoto"}),
         "pos_same_line": ("> **저자**: Min-Gi Jeong · Jeff Sakamoto · Kelsey B. Hatzell · ⛔ Yoon Seok Jung 은 저자가 아니다",
                           {"sakamoto"}),
+        "neg_bold": ("> **저자**: **A** (1저자 · MIT) · **B\\*** (MIT · 교신 `b@x.de`). "
+                     "Jeff Sakamoto 는 저자가 **아니다** (참고문헌에만 · §2).", set()),
+        "neg_bold_en": ("> Authors: A, B. Jeff Sakamoto is **not** an author.", set()),
+        "neg_italic_us": ("> **저자**: A · B · Jeff Sakamoto 는 저자가 _아니다_", set()),
+        "pos_bold_role": ("> **저자**: X · Jeff Sakamoto 는 **교신** 저자가 **아니다**", {"sakamoto"}),
     }
     papers = tmp_path / "papers"
     papers.mkdir()
