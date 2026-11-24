@@ -32,6 +32,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: 한글 글꼴 (viz_mixer_bed selftest ②pre · CJK 글꼴이 없으면 한글이 □)
+        #  ★ 2026-11-25 (J23) — 게이트 기계의 matplotlib 가 고르는 글꼴 = WenQuanYi Zen Hei (fonts-wqy-zenhei) ·
+        #    11-20 부터 CI 빨간불의 하나 ('CJK 폰트가 없다').  matplotlib 글꼴 목록이 처음 import 때 만들어지므로 pip 앞에 둔다.
+        run: sudo apt-get update -q && sudo apt-get install -y -q fonts-wqy-zenhei
+
       - name: 의존성 (검사기가 실제로 쓰는 것만)
         #  ⚠ flask·requests 는 웹앱 테스트가 **import 단계에서** 쓴다
         #    (`app.py` → `storage_sync.py` → `requests`).  이 줄에 없으면 깨끗한
@@ -43,7 +48,10 @@ jobs:
         #    워크플로 본문에 **이름이 적힌** 43개만 봤고, 드라이버 한 줄이 펴서 돌리는 116개는
         #    밖이었다 = 규율 ⑤ 의 "후보를 고르는 코드가 곧 사각지대".  폐포를 고쳤고 그것이
         #    이 줄의 누락을 잡는다.
-        run: python -m pip install --quiet numpy scipy matplotlib flask requests networkx adjustText markdown pandas pillow
+        #  ★★ 2026-11-25 (J23) — pandas 고정 2.3.3 (= 게이트 기계).  pandas 3.x 면 coverage_physics_vs_hertzian selftest ① 의
+        #    summary 해시가 달라진다 (11-25 따로 만든 가상 환경 재현: 3.1.1 = rc 1 · 2.3.3 = PASS) — 11-20 부터 CI 빨간불의 하나.
+        #    ⚠ 따옴표 없이 쓴다 — check_selftest_inventory 의 설치 이름 파서가 토큰을 '==' 앞에서 자른다.
+        run: python -m pip install --quiet numpy scipy matplotlib flask requests networkx adjustText markdown pandas==2.3.3 pillow
 
       - name: 실행 계약 단일 출처 (selftest)
         run: python scripts/run_contract.py --selftest
