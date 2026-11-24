@@ -342,6 +342,6 @@
  "hand_notes": [
   "2026-11-24 litdb-curator: all 14 crops (main Fig. 1-6, SI Fig. S1-S8; no tables in this paper) came from one tool run (--slug ... --pdf main SI --clean); no manual crop, no recrop, missing_labels = []. Fig. S1 crop also contains the SI page heading 'SUPPLEMENTARY FIGURES' (cosmetic, left as is).",
   "2026-11-24 litdb-curator: caption clean-up = ligatures (fi/ff) and line-break hyphens only (treatments, collector, stripping, electrode, deposited, anode-free); original text kept in caption_raw.",
-  "2026-11-24 litdb-curator: video frames (video_frames/, 57 JPG from the five SI videos sup4-sup8 = Video S1-S5) are outside this manifest and are deleted by --clean; the ffmpeg commands and the sup-to-Video mapping are recorded in the digest (section 'Video set')."
+  "2026-11-24 litdb-curator: video frames (video_frames/, 58 JPG from the five SI videos sup4-sup8 = Video S1-S5) are outside this manifest and are deleted by --clean; the ffmpeg commands and the sup-to-Video mapping are recorded in the digest (section 'Video set')."
  ]
 }

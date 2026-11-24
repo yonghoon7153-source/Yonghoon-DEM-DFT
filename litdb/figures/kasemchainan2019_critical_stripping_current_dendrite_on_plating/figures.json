@@ -181,7 +181,7 @@
    "label": "S1",
    "page": 2,
    "file": "fig_S1.png",
-   "caption": "Figure S1 | Powder X-ray Diffraction (PXRD) of Li6PS5Cl: after sintering at 300 ˚C indicates Li6PS5Cl cubic phase.32",
+   "caption": "Figure S1 | Powder X-ray Diffraction (PXRD) of Li6PS5Cl: after sintering at 300 ˚C. ★ indicates Li6PS5Cl cubic phase.32",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -202,7 +202,9 @@
    ],
    "recrop": "2026-11-24 litdb-curator: auto crop (y 304.0-709.7) also took the e-mail line (y 310.0) and the 'Supplementary Information' heading (y 374.1) above the plot; clip = embedded raster (72.0,407.3,523.2,703.7) + 6 pt margin (geometric, the raster is the whole figure)",
    "viewed": false,
-   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)"
+   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)",
+   "caption_raw": "Figure S1 | Powder X-ray Diffraction (PXRD) of Li6PS5Cl: after sintering at 300 ˚C indicates Li6PS5Cl cubic phase.32",
+   "caption_fix": "2026-11-24 litdb-curator: restored a symbol lost in text extraction (S1 star marker / S7 beta) - wording otherwise verbatim; caption_raw keeps the extracted text"
   },
   {
    "key": "fS2",
@@ -327,7 +329,7 @@
    "label": "S7",
    "page": 8,
    "file": "fig_S7.png",
-   "caption": "Figure S7 | Voltage vs charge passed for Na / Na’’Alumina cells, (a) 3-electrode cell, stripping at current densities of 0.2, 0.5, 1.0 and 1.5 mA·cm-2 at 4 MPa pressure, (b) 2-electrode cell cycled at 0.1 mA·cm-2 and 4 MPa for 100 cycles (below critical current for stripping) and (c) 2-electrode cell cycled at 1.5 mA·cm-2 and 4 MPa for 20 cycles (above critical current for stripping) showing increasing polarisation and short-circuiting. Note that the polarisation was limited to 3 V.",
+   "caption": "Figure S7 | Voltage vs charge passed for Na / Na–β’’–Alumina cells, (a) 3-electrode cell, stripping at current densities of 0.2, 0.5, 1.0 and 1.5 mA·cm-2 at 4 MPa pressure, (b) 2-electrode cell cycled at 0.1 mA·cm-2 and 4 MPa for 100 cycles (below critical current for stripping) and (c) 2-electrode cell cycled at 1.5 mA·cm-2 and 4 MPa for 20 cycles (above critical current for stripping) showing increasing polarisation and short-circuiting. Note that the polarisation was limited to 3 V.",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -341,7 +343,9 @@
    "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
    "blank": 0.925,
    "viewed": true,
-   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - Na cells a-c)"
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - Na cells a-c)",
+   "caption_raw": "Figure S7 | Voltage vs charge passed for Na / Na’’Alumina cells, (a) 3-electrode cell, stripping at current densities of 0.2, 0.5, 1.0 and 1.5 mA·cm-2 at 4 MPa pressure, (b) 2-electrode cell cycled at 0.1 mA·cm-2 and 4 MPa for 100 cycles (below critical current for stripping) and (c) 2-electrode cell cycled at 1.5 mA·cm-2 and 4 MPa for 20 cycles (above critical current for stripping) showing increasing polarisation and short-circuiting. Note that the polarisation was limited to 3 V.",
+   "caption_fix": "2026-11-24 litdb-curator: restored Symbol-font private-use characters (U+F02D hyphen, U+F062 beta, U+F020 space) lost in text extraction - wording otherwise verbatim; caption_raw keeps the extracted text"
   }
  ],
  "missing_labels": [

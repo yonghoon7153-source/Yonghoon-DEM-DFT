@@ -15,7 +15,7 @@
 >
 > **서지**: 투고 2025-11-27 · 채택 2026-03-03 · 온라인 2026-03-16 · *Energy Environ. Sci.* 2026, 19, 2367–2383 · OA **CC BY 4.0** · 자금 Evonik Operations GmbH + BMBF DE-US **LiSI2** (03XP0509B) + **FestBatt** (03XP0428E) · 데이터 JLUPub `10.22029/jlupub-20276` (전기화학 · EBSD) · CRediT: S. K. = formal analysis · **software** · visualization (Potts 코드 담당으로 보인다 — 추정)
 >
-> **계보**: [Fuchs24EBSD] (*Nat. Mater.* 23, 1678 · ref 33 — 무음극 Li · Na 석출층의 첫 EBSD 영상) · [Becker25Steel] (*Adv. Energy Mater.* 15, 2404975 · ref 34 — steel\|Li₆PS₅Cl 위 석출 Li 는 기둥형이고 결정립 폭이 층 두께를 따라간다 = '두께 효과' · 2D Potts) · [Haslam25] (*ACS Energy Lett.* 10, 2285 · ref 31 — Cu\|LLZO 에 Au 층을 넣으면 결정립이 작아지고 기둥형이 깨진다 · 같은 묶음 4 번 `haslam2025_alloying_interlayers_li_morphology_microstructure_anode_free` 가 병렬로 작성 중) → **본 논문** (그 질문을 **LPSCl** 위에서 Au · Ag · Bi 세 층 + **박리 · 사이클 뒤** 미세구조 + **3D** Potts 로). 같은 그룹 앞 편 digest: `fuchs2023_cu_llzo_anode_free_li_growth_modes.md` (Cu\|LLZO operando SEM · 성장 모드)
+> **계보**: [Fuchs24EBSD] (*Nat. Mater.* 23, 1678 · ref 33 — 무음극 Li · Na 석출층의 첫 EBSD 영상) · [Becker25Steel] (*Adv. Energy Mater.* 15, 2404975 · ref 34 — steel\|Li₆PS₅Cl 위 석출 Li 는 기둥형이고 결정립 폭이 층 두께를 따라간다 = '두께 효과' · 2D Potts) · [Haslam25] (*ACS Energy Lett.* 10, 2285 · ref 31 — Cu\|LLZO 에 Au 층을 넣으면 결정립이 작아지고 기둥형이 깨진다 · Au 는 Li₁₅Au₄ 입자로 Cu\|Li 계면을 따라 · Ag 는 따로 된 상 없음 — 같은 묶음 4 번 digest `haslam2025_alloying_interlayers_li_morphology_microstructure_anode_free` · ⚠ LLZO 계) → **본 논문** (그 질문을 **LPSCl** 위에서 Au · Ag · Bi 세 층 + **박리 · 사이클 뒤** 미세구조 + **3D** Potts 로). 같은 그룹 앞 편 digest: `fuchs2023_cu_llzo_anode_free_li_growth_modes.md` (Cu\|LLZO operando SEM · 성장 모드)
 
 > **본 digest 에서 실제로 본 그림 (2026-11-24)**: 본문 6장 전부 + SI 23장 전부 = **크롭 29장 / 29장** (표는 없다). 원본 크기로 본 것 21장 (`Fig. 1`–`Fig. 6` · `Fig. S1`–`Fig. S6` · `Fig. S9` · `Fig. S12`–`Fig. S15` · `Fig. S17`–`Fig. S19` · `Fig. S22`) + 확대 렌더 3장 (`Fig. 1b` · `Fig. 2b` 위 SEM · `Fig. 4b`). 축소 접촉 시트로만 본 것 8장 — 전체 단면 `Fig. S7` · `Fig. S8` · `Fig. S10` · `Fig. S11` · `Fig. S16` · `Fig. S20` · `Fig. S21` · `Fig. S23` (결정립 색 · 대략의 길이만 읽었고 결정립 하나하나 · 작은 글씨는 못 읽었다).
 > 그림에서만 읽은 값은 **`figure-read ≈`**, 우리가 계산한 값은 **`우리 산수`** 로 표시했다. 본문 명시값은 표시 없이 쪽을 단다 (p.N = 저널 쪽 2367–2383 · SI p.N = SI PDF 쪽).
@@ -33,6 +33,7 @@
 | ③ **10 번 사이클** 뒤에는 | Ag 층 · 4.5 mAh cm⁻² × 10 | `Fig. 5` |
 
 메시지 셋:
+
 - **(1)** Au · Ag 는 결정립 평균 폭을 **136 µm (Ti) → 30 µm** 로 줄인다. Au 는 기둥형을 깨고, Ag 는 기둥을 가늘게 한다. Bi 는 오히려 **170 µm** 로 키운다 (⚠ 결정립 11 개 중 하나가 811 µm — §10-①).
 - **(2)** 기전은 상도 (phase diagram) 의 Li 쪽 끝에 따라 셋이다. **Au** = Li₁₅Au₄ 입자가 Li 층에 흩어져 입계를 붙잡는다 (Zener 류). **Ag** = Li 에 **다 녹는다** (상온 ≈1 at%) → 고용체 격자 변형. **Bi** = Li₃Bi 층이 LPSCl 쪽에 남고 **Li 는 Ti 쪽**에 쌓인다 (상분리 · Li 가 LPSCl 에 안 닿는다).
 - **(3)** 벗기면 **순수 Li** (Ti · Bi) 는 결정립이 다시 작아지고, Ti 위 Li 는 **거의 전부 <101> ∥ 법선** 으로 정렬한다. 합금이 섞인 Li (Au · Ag) 는 미세구조가 '얼어' 줄지 않는다.
@@ -54,11 +55,11 @@
 ## 2. 메타 / 동기 / 질문
 
 - **소속 판정**: [외부] (JLU Giessen Janek 그룹). 우리 그룹 아님. Jeff Sakamoto 는 이 논문 저자 목록에 없다 — 참고문헌 [8, 9, 11, 15, 18, 20, 31, 33] 의 공저자로만 나온다 (표기 'J. Sakamoto').
-- **동기 (p.2368)**: 무음극 (저자 용어 *reservoir-free cell, RFC*) 셀은 첫 충전 Li 형태가 고르지 않아 덴드라이트 · 낮은 CC 덮임 · 박리 공극으로 실패한다. 합금 층 (Au · Ag) 은 핵 밀도를 올려 고르게 한다는 보고가 많다 (LPSCl: refs 10, 20, 29). 그런데
-  - 입계 (GB) 는 빠른 확산 경로라 박리 공극을 막을 수 있다고 계산이 예측한다 (ref 35 · Yoon · Sulaimon · Siegel 2023).
-  - 실용 두께 **≈25 µm (≈5 mAh cm⁻²)** 의 석출 Li 는 결정립이 **≈100 µm** 인데 **≈1 µm** 가 바람직하다 (refs 33–35).
-  - 층이 Li 미세구조를 바꾼다는 관찰이 하나 있다 (ref 31 · Haslam 2025 · Cu\|LLZO + Au).
-  - 단결정 Li 로 방위가 전기화학 성질을 바꾼다는 보고가 있다 (ref 37 · Chen 2025 *Nat. Synth.*).
+- **동기 (p.2368)**: 무음극 (저자 용어 *reservoir-free concept, RFC* — *"often referred to in literature as 'anode-free'"*) 셀은 첫 충전 Li 형태가 고르지 않아 덴드라이트 · 낮은 CC 덮임 · 박리 공극으로 실패한다. 합금 층 (Au · Ag) 은 핵 밀도를 올려 고르게 한다는 보고가 많다 (LPSCl: refs 10, 20, 29). 그런데
+    - 입계 (GB) 는 빠른 확산 경로라 박리 공극을 막을 수 있다고 계산이 예측한다 (ref 35 · Yoon · Sulaimon · Siegel 2023).
+    - 실용 두께 **≈25 µm (≈5 mAh cm⁻²)** 의 석출 Li 는 결정립이 **≈100 µm** 인데 **≈1 µm** 가 바람직하다 (refs 33–35).
+    - 층이 Li 미세구조를 바꾼다는 관찰이 하나 있다 (ref 31 · Haslam 2025 · Cu\|LLZO + Au).
+    - 단결정 Li 로 방위가 전기화학 성질을 바꾼다는 보고가 있다 (ref 37 · Chen 2025 *Nat. Synth.*).
 - **질문**: (i) 층 재료가 결정립 크기 · 방위를 어떻게 바꾸나 (ii) 박리가 미세구조를 바꾸나 (iii) 사이클 이력의 효과. 저자는 이 현상을 *"electrometallurgy"* 라 부른다 (p.2368).
 - **비교군**: Ti 박 (무층 · 기준) · Au · Ag · Bi (각 160 nm · PVD). Ti 를 CC 로 쓴 이유: *"chemical stability against LPSCl and lithium"* (p.2368 · 근거 ref 38 = **미국 특허 출원** — §10-⑥).
 
@@ -88,7 +89,7 @@
 | **Au** | **260 · 120 mV** 평탄 (끝 figure-read ≈0.09 mAh cm⁻²) → 0 V 아래 작은 골 (≈ −7 mV) → ≈ −5 mV | ≈260 · ≈120 → 끝 ≈0.085 | ≈260 (x ≈5–70 mol%) · ≈120 (≈71–80) → ≈15–20 mV | ≈330 → 300 (x 25–68) · ≈135 (71–78) · **≈30 (79–81)** → 0 | 20 mV 평탄 = Li₃Au\|Li₁₅Au₄ 2상 영역 · 나머지 상은 속도로 가려짐 · 일부 Li–Au 상은 δ 까지 불안정 (refs 26, 55) |
 | **Ag** | **평탄 거의 없음** · 핵 과전압 없이 곧장 0 V 아래 (≈ −5 mV) | **봉우리 ≈68 · 어깨 ≈45 · ≈5 mV** → ≈ −7 mV | ≈130 → 100 · ≈50 · ≈10–15 → x ≈62 mol% 에서 ≈0 V | ≈250 → 207 (x 20–47) · ≈97 → 65 (49–55) · ≈32 → 17 (57–70) · ≈5 → 0 (≥ 72) | 속도 제한 — 낮은 전류 · 적정에서 평탄이 풀린다 |
 | **Bi** | **800 · 760 mV** 평탄 (끝 figure-read ≈0.047 mAh cm⁻²) → 작은 핵 골 (≈ −14 mV) → ≈ −6 mV | ≈810 · ≈770 → 끝 ≈0.035 | ≈820 · ≈770 → x ≈70 mol% 에서 0 V | ≈840 → 760 (x 20–63 · 계단 없이 내려감) → ≈0 (≥ 66–68) | Bi\|LiBi · LiBi\|Li₃Bi 2상 영역 (ref 56 상도) |
-| **Ti** (무층) | 첫 골 (핵) figure-read ≈ −28 mV → *"around −10 mV"* (IR · 본문) → 7.5 mAh cm⁻² 끝 ≈ −5 mV | 골 ≈ −25 → ≈ −7 mV · 박리 ≈ +5 → +6 mV | — | — | 핵생성 → 성장 |
+| **Ti** (무층) | 첫 골 (핵) figure-read ≈ −28 mV → 본문 *"stabilizes around 10 mV, agreeing with the IR drop"* (부호 없이 크기만 · 그림은 ≈ −13 → −8 mV) → 7.5 mAh cm⁻² 끝 ≈ −5 mV | 골 ≈ −25 → ≈ −7 mV · 박리 ≈ +5 → +6 mV | — | — | 핵생성 → 성장 |
 
 - **이론 리튬화 전하** (`우리 산수` · 160 nm · 교과서 밀도 Au 19.32 · Ag 10.49 · Bi 9.78 g cm⁻³): Bi → LiBi **0.020** · → Li₃Bi **0.060** mAh cm⁻² · Au → LiAu 0.042 · → Li₃Au **0.126** · → Li₁₅Au₄ **0.158** · Ag → LiAg 0.042 · Ag 전부를 ≈1 at% 로 Li 에 녹이는 Li 양 **4.13 mAh cm⁻²** (본문 *"approximately 4.2"* 와 맞다). `Fig. S3` 위 축 눈금 (Bi 0.02 · 0.06 · Au · Ag 0.04 · 0.13) 이 이 값과 같다 — 저자도 공칭 두께 · 덩어리 밀도로 환산했다.
 - **평탄 끝 전하 대 이론** (`우리 산수` · figure-read 끝값 ÷ 이론): Au 150 µA cm⁻² ≈0.09 / 0.158 ≈ **57 %** (Li₃Au 기준 ≈71 %) — 3 µA cm⁻² 에서는 Li₁₅Au₄ 조성 (≈80 mol%) 까지 가므로 *속도 제한* 해석과 맞다. **Bi 는 3 µA cm⁻² 에서도 x ≈70 mol% (Li ≈2.3 / Bi) 에서 끝난다** (적정 ≈66–68 %) → 150 · 100 µA cm⁻² 끝값 (≈0.047 · ≈0.035 = 이론의 ≈78 · ≈58 %) 과 함께 보면 **전류와 상관없이 공칭보다 적다** — 속도 탓이 아니라 실제 Bi 양 · 면적 기준 (층 8 mm vs WE 10 mm) · 셀 차이 쪽이다 (저자 논의 없음 · §10-③).
@@ -117,7 +118,7 @@
 
 | | 도금 7.5 mAh cm⁻² (`Fig. 1d` · `Fig. S6`) | 박리 (10 − 5) mAh cm⁻² (`Fig. 4d` · `Fig. S17`) | 계면과 나란한 Li 면 (우리 환산) |
 |---|---|---|---|
-| **Ti** | *"no pronounced preferential orientation"* · figure-read: 약한 점 둘 (001 근처 · 101–111 사이) | **거의 전부 <101> ∥ y** (`Fig. 4d` 최대가 101 꼭짓점 · `Fig. S16` 지도가 거의 다 녹색) · ∥ x 는 <111> 쪽에 몰림 (figure-read · 저자 언급 없음) | 도금: 없음 → 박리: **(110)** |
+| **Ti** | *"do not appear to exhibit a pronounced preferential orientation"* (p.2371) · figure-read: 약한 점 둘 (001 근처 · 101–111 사이) | **거의 전부 <101> ∥ y** (`Fig. 4d` 최대가 101 꼭짓점 · `Fig. S16` 지도가 거의 다 녹색) · ∥ x 는 <111> 쪽에 몰림 (figure-read · 저자 언급 없음) | 도금: 없음 → 박리: **(110)** |
 | **Au** | **<101> ∥ y** (최대 101 꼭짓점 · 노랑–주황) | <101> 근처 (최대가 101 에서 약간 안쪽 · figure-read) · ∥ x 도 <111> 쪽 | **(110)** → (110) 근처 |
 | **Ag** | **<111> ∥ y** (최대 111 꼭짓점 · 노랑) | **우선 방위 없음** (`Fig. S21` · 고르게 퍼짐) | **(111)** → 없음 |
 | **Bi** | *"<101> and <111>"* ∥ y · figure-read: 최대 (빨강) 가 101–111 가장자리 가운데 · ∥ x · ∥ z 도 한 점에 몰림 (`Fig. S6`) = **큰 결정립 몇 개의 방위** (저자도 p.2377 *"mainly due to very large individual grains"*) | 우선 방위 없음 (`Fig. S23`) | (110)–(111) 사이 (소수 결정립) → 없음 |
@@ -135,7 +136,7 @@
 | Au | 30 | ≈47 | **+57 %** | Li₁₅Au₄ 입자 고정 → 10 mAh cm⁻² 때 미세구조가 '얼었다' |
 | Ag | 30 | ≈59 | **+97 %** | Li(Ag) 격자 변형 → '얼었다' |
 
-- Ti 대조 (`Fig. S19` · figure-read): **5 mAh cm⁻² 만 도금** 두께 ≈50 µm · 폭 ≈72 µm / **10 만 도금** ≈88 · ≈175 / **(10 − 5)** ≈60 · ≈84 → *"both samples with an absolute areal charge of 5 mAh cm⁻² exhibit comparable average grain sizes, despite their different cycling history"* (SI p.11). 지도 색: 5 · 10 은 여러 색 · (10 − 5) 만 녹색 (101).
+- Ti 대조 (`Fig. S19` · figure-read): **5 mAh cm⁻² 만 도금** 두께 ≈50 µm · 폭 ≈72 µm / **10 만 도금** ≈88 · ≈175 / **(10 − 5)** ≈60 · ≈84 → *"both samples with an absolute areal charge of 5 mAh cm⁻² exhibit comparable average grain sizes, despite their different cycling histories"* (p.2376 · SI p.11 캡션도 같은 말). 지도 색: 5 · 10 은 여러 색 · (10 − 5) 만 녹색 (101).
 - Ag 둘째 대조 (`Fig. S22` · figure-read): 7.5 도금 두께 ≈44 · 폭 평균 ≈31 µm / 7.5 도금 + 3 박리 ≈26 · ≈36 µm → *"slightly higher"* (p.2377).
 - 박리 전위 (`Fig. 4b`): 넷 다 비슷 (≈ +3–6 mV) — 5 mAh cm⁻² 가 남고 탈합금이 없어서 (p.2376).
 
@@ -147,7 +148,7 @@
 | 무층 셀 | **단락** (데이터 미제시) | p.2377 |
 | 박리 가능량 | 도금량의 **90–95 %** · 사이클이 갈수록 준다 · figure-read 9 번째 박리는 ≈3.5 mAh cm⁻² 부터 분극 상승 → 컷오프 | p.2377 · `Fig. 5a` |
 | 핵 과전압 | 사이클마다 커진다 (figure-read 10 번째 첫 골 ≈ −27 mV) — 저자: Ag 분포가 고르지 않게 돼 **맨 Ti 위 핵생성** | p.2377 · `Fig. 5a` |
-| IR 증가 | figure-read 정상 도금 ≈ −7 (1st) → ≈ −12 mV 이상 (10th) — 저자: SEI 두께 증가 (refs 63, 64) + SEI · LPSCl 기계 손상 → 접촉 상실 · 수축 저항 (ref 65) | p.2377 |
+| IR 증가 | figure-read 정상 도금 ≈ −7 (1st) · ≈ −9 (3rd) · ≈ −10 (5th) → ≈ −17 → −11 mV (10th · 도금이 진행하며 줄어듦) — 저자: SEI 두께 증가 (refs 63, 64) + SEI · LPSCl 기계 손상 → 접촉 상실 · 수축 저항 (ref 65) | p.2377 |
 | 형태 | LPSCl 찌꺼기가 **Ti 위와 Li 층 안**에 (SEM) | `Fig. 5b` |
 | 결정립 | *"only three columnar grains remain, while numerous smaller grains emerge between them"* | p.2377 · `Fig. 5c` |
 
@@ -232,9 +233,9 @@
 ## 5. 결과 — 절별 상세 (그림 실독 포함)
 
 ### 5.1 모델 셀과 도금 전위 — `Fig. 1a,b` · `Fig. S2`–`Fig. S4` (p.2370–2371)
-- **Ti (무층)**: 전위가 먼저 골 (핵생성) 을 지난 뒤 IR 과 맞는 ≈ −10 mV 로 안정되고, 그 뒤 핵이 자라 결정립이 된다. CTTA 로 Ti 가 steel 보다 Li 를 더 잃지 않음을 보였다 (`Fig. S2`). Ti 는 steel 과 달리 *"chemically pure metal"* 이다.
+- **Ti (무층)**: 전위가 먼저 골 (핵생성) 을 지난 뒤 IR 과 맞는 크기 (본문 *"around 10 mV"* · 그림은 0 V 아래 ≈ −13 → −8 mV) 로 안정되고, 그 뒤 핵이 자라 결정립이 된다. CTTA 로 Ti 가 steel 보다 Li 를 더 잃지 않음을 보였다 (`Fig. S2`). Ti 는 steel 과 달리 *"chemically pure metal"* 이다.
 - **Au**: 150 µA cm⁻² 에서 평탄이 **260 · 120 mV 둘뿐**이다 (상도에는 더 많다). 저자: 전위가 가까운 상은 속도 · 과전압에 가려지고, 높은 전류가 일부 상을 막았을 수 있고, 일부 Li–Au 상은 δ 상까지 불안정하다 (refs 26, 55). 0 V 아래로 가면 작은 골을 지나 Li 가 핵생성한다. 3 µA cm⁻² · 적정에서 **20 mV 평탄이 하나 더** 나와 Li₃Au\|Li₁₅Au₄ 2상 영역으로 귀속 — figure-read 로 3 µA cm⁻² 는 ≈15–20 mV · 적정 OCV 는 ≈30 mV (x ≈79–81 mol%).
-  - 저자 단서 (p.2370): 이원 상도는 대개 녹인 시료로 정한 것이라 **상온 합금 생성의 신뢰도가 불확실**하다.
+    - 저자 단서 (p.2370): 이원 상도는 대개 녹인 시료로 정한 것이라 **상온 합금 생성의 신뢰도가 불확실**하다.
 - **Ag**: 150 µA cm⁻² 에서 평탄이 거의 없고 **핵 과전압 없이** 바로 0 V 아래로 간다 (p.2371). 3 µA cm⁻² · 적정에서는 평탄이 풀린다 (figure-read 적정 OCV ≈250 → 207 · ≈97 → 65 · ≈32 → 17 · ≈5 → 0 mV). 100 µA cm⁻² (`Fig. 4b`) 에서도 평탄이 보인다 (figure-read 봉우리 ≈68 · 어깨 ≈45 · ≈5 mV) — 저자: 전류가 낮아서 (p.2375).
 - **Bi**: **800 · 760 mV** 두 평탄 = Bi\|LiBi · LiBi\|Li₃Bi 2상 영역 (ref 56) · 0 V 아래에서 작은 핵 골. 적정 OCV 는 계단 없이 ≈840 → 760 mV 로 내려간다 (figure-read).
 - 적정 EIS (`Fig. S4` · Note S1): Bi 는 LiBi · Li₃Bi 가 생길 때 저주파 임피던스가 크게 오르고, Au 는 상마다 저주파 기울기가 천천히 바뀌며, Ag 는 Li 가 많은 쪽에서 스펙트럼이 거의 같다. **맞춤 · 수치 없음** — 정성 관찰뿐이다.
@@ -255,9 +256,9 @@
 
 ### 5.4 층이 어디로 갔나 — `Fig. 2b–d` · `Fig. S13` (p.2373–2374)
 - **Au** (`Fig. 2b`): 작은 덩어리가 *"predominantly near the Ti\|Li interface"* · EBSD Kikuchi 로 **Li₁₅Au₄** · 전위 곡선에는 안 보였지만 시간이 지나며 생긴 것 (속도 제한). 입계가 이 입자를 만나 끌림 (drag) 을 받아 조대화가 막힌다 = **Zener 고정과 비슷한 기전** (ref 61).
-  - figure-read: SEM 패널 (5 µm 막대) 의 'EBSD area' 상자는 Li\|LPSCl 경계에서 ≈6–14 µm 위 · Ti 는 화면 밖 · 상 지도 (1 µm 막대) 에 노란 Li₁₅Au₄ ≈1 µm 하나 + Li 입계 · 패널 위쪽 Li 에 작은 어두운 점이 많다 (정체 미확인).
+    - figure-read: SEM 패널 (5 µm 막대) 의 'EBSD area' 상자는 Li\|LPSCl 경계에서 ≈6–14 µm 위 · Ti 는 화면 밖 · 상 지도 (1 µm 막대) 에 노란 Li₁₅Au₄ ≈1 µm 하나 + Li 입계 · 패널 위쪽 Li 에 작은 어두운 점이 많다 (정체 미확인).
 - **Ag** (`Fig. 2c`): EDS 로 Ag 가 Li 층에 **고르게** · Ag–Li 상도상 상온 고용 ≈1 at% · 160 nm 가 다 녹으려면 ≈4.2 mAh cm⁻² 이상 → 7.5 mAh cm⁻² 면 고른 고용체가 예상된다. 녹아 있으니 Zener 고정보다 **역학 성질 변화**가 원인일 것 — 녹은 Ag 가 격자 변형을 주어 표면 에너지를 바꾸고 결정립 성장을 막는다 (Ti\|Li 계면에 Ag 가 쌓이지 않고도). 1 at% Ag 면 녹는점이 조금 낮아진다 (refs 31, 62). melt 로 만든 0.7 at% Ag 시료의 XRD 가 격자 상수 **−0.21 %** (`Fig. S13`) — 저자도 *"produced from melt and not by electrodeposition"* 를 단서로 단다.
-  - figure-read `Fig. S13`: 순수 Li 박은 (110) 이 가장 세고, Li–Ag 박은 (200) 이 거의 혼자 세다 (압착 조직 차이 · 저자 언급 없음) · 순수 Li 무늬 마지막 라벨 '(200)' (≈77°) 은 (220) 의 오기.
+    - figure-read `Fig. S13`: 순수 Li 박은 (110) 이 가장 세고, Li–Ag 박은 (200) 이 거의 혼자 세다 (압착 조직 차이 · 저자 언급 없음) · 순수 Li 무늬 마지막 라벨 '(200)' (≈77°) 은 (220) 의 오기.
 - **Bi** (`Fig. 2d`): Bi 층이 **LPSCl 계면**에 있다 → 합금이 끝난 뒤에야 Li 가 층 **뒤 (Ti 쪽)** 에 쌓인다 = Li 가 Li₃Bi 를 지나 Li₃Bi\|Ti 계면에 모인다 · Bi 는 Li 속 확산이 느리다 (추정). 낮은 덮임 (`Fig. 2a` · `Fig. S12`) 의 이유: Bi 가 있어도 Li 석출은 Ti 와 닿아서 일어난다. Bi 는 Li 에 안 녹으므로 Li 층은 순수하다. 맨 Ti 와 달리 Bi 층이 Li 와 LPSCl 의 접촉을 막아 미세구조에 영향 (ref 34) · SEI 형성에도 영향 (ref 56) (p.2374).
 
 ### 5.5 Potts 모델 — `Fig. 3` · `Fig. S1` · `Fig. S14` · `Fig. S15` (p.2374–2375)
@@ -354,6 +355,7 @@
 | **Li(100)** | 이 논문에서 우세하게 나온 적 없음 (Ti 도금 IPF 에 001 근처 약한 점뿐 · `Fig. 1d` figure-read) | seymour2021 (Li(100)) · yang2021 (Li(001)) · wang2022 (Li(100)‖Li₂S(111)) · Cheng 2017 (baer2026 계보) · lai2020 γ_Li(100) 0.47 J m⁻² | **문헌 대조용** — 같은 면끼리 비교하려면 필요 |
 
 **옮길 때의 단서 다섯** (보고서에 같이 싣는다):
+
 1. IPF 는 **층 전체 단면**의 방위 분포다 — 계면에 닿은 결정립만의 방위가 아니다. 기둥형 (Ti · Ag · Bi) 이면 한 결정립이 CC 와 SE 둘 다에 닿으니 거의 같지만, Au (쌓인 결정립 · Ti 쪽 작은 결정립) 와 Ti 의 SE 쪽 잘린 결정립은 다를 수 있다.
 2. 세기는 패널마다 정규화 · MUD 없음 · 결정립 11–70 개 → '우세' 가 얼마나 센지 · 시료 사이 순서는 말할 수 없다 (§10-①).
 3. 방위는 **결과**다 — 성장 속도 · 박리 선택 · 압력으로 정해졌을 수 있다. 실험 방위는 '어느 면을 계산할지' 의 근거이고 'W 가 어느 면에서 큰지' 의 근거가 아니다 (그건 계산이 답한다).
@@ -370,11 +372,13 @@
 | **Ti** (무층) | — | — | Ti\|LPSCl 사이 | Li\|Ti · Li\|LPSCl | p.2370 · p.2378 |
 
 **7 절 ③ 에 붙일 점**
+
 - **실측 합금 평탄 = 합금 구동력의 대조 표적.** Li 하나당 ΔG ≈ −F·E 라서 적정 OCV (`Fig. S4`) 의 첫 평탄 Bi ≈0.84 · Au ≈0.33 · Ag ≈0.25 eV/Li (figure-read) 가 DFT 볼록 껍질 (hull) 전압과 바로 맞댈 수 있는 숫자다. MP 엔트리로 Li–Au · Li–Ag · Li–Bi hull 전압을 내는 것은 우리 grand-potential 도구 (`get_element_profile` 계열) 로 몇 분짜리다 — 순서 (Bi ≫ Au > Ag) 가 맞는지 보는 **대조** 표적이지 맞추는 표적이 아니다 (상온 상 안정성 자체가 불확실하다는 저자 단서 · p.2370).
 - **구동력 순서 ≠ 결과 순서** (§7c-②) → 7 절 ③ 을 *"합금 · 리튬화가 생기는 에너지"* 하나로 끝내지 말고 **(a) Li 속 M 의 희석 용해 에너지** (Ag ≈1 at% 고용 · Au · Bi 는 거의 0) · **(b) Li 가 가장 많은 금속간 화합물의 Li 대비 안정성** (Li₁₅Au₄ · Li₃Bi) · **(c) 그 화합물\|Li 계면** 을 같이 본다.
 - 층 두께 · 공칭 전하 대조: Bi 리튬화가 전류와 무관하게 공칭의 ≈60–80 % 에서 끝난다 (§3b · `우리 산수`) — 실험 쪽 Bi 양 · 면적 기준이 불확실하다는 단서.
 
 **8-3 (Li 가 쌓이는 자리) 에 붙일 점**
+
 - 순수 Au · Ag 박막 (탄소 없음): Li 는 **SE 쪽**에 쌓인다 (Au · Ag 는 CC 쪽 또는 Li 속으로) — 8-3 의 'Li 가 집전체와 탄소층 사이' 와 반대다.
 - Bi 박막: Li 가 **CC 쪽** (Li₃Bi 를 지나서) — 8-3 의 Ag/C 관찰과 같은 쪽이다.
 - 같은 'Ag' 라도 **탄소 유무**가 Li 자리를 바꾼다 (이 논문 Ag 박막 = SE 쪽 · metzler2026 Ag 스퍼터 + C = Cu\|C 사이) — W 계면 후보 목록을 층 구조별로 따로 적어야 하는 이유.
@@ -383,6 +387,7 @@
 ### 7f. 박리 · 공극 · 접촉 (사용자 질문 3)
 
 이 논문은 공극을 **정량하지 않았다**. 결정립과 공극 · 접촉의 관계는 아래가 전부다.
+
 - **덮임**: Ti · Bi 는 맨 영역이 남고 Au · Ag 는 ≈100 % (`Fig. S12` 사진 · 정량 없음) · 같은 전하에서 덮임이 낮을수록 층이 두껍다 (`Fig. 2a`).
 - **박리 (절반)**: 넷 다 박리 전위가 비슷하고 (`Fig. 4b`) 축소본으로 본 박리 뒤 전체 단면 (`Fig. S16` · `Fig. S20` · `Fig. S21` · `Fig. S23`) 에 큰 공극은 안 보인다 (figure-read · 해상도 한계 · 15 MPa · 5 mAh cm⁻² 가 남는 조건이라 공극 문턱 밖일 수 있다).
 - **사이클 (Ag · 10 번)**: 박리 가능량 90–95 % → 감소 · 9 번째 박리는 ≈3.5 mAh cm⁻² 부터 분극 상승 (figure-read) · IR 증가를 저자는 SEI 성장 + 접촉 일부 상실 (수축 저항 · ref 65) 로 해석 · LPSCl 찌꺼기가 Ti 위 · Li 안 (`Fig. 5b`) = SE · SEI 의 기계 손상.
@@ -409,12 +414,14 @@
 
 **DFT · AIMD · MLIP · NEB 등 원자단위 계산은 없다** — code · functional · pseudo · k-point · supercell · DFT+U · 무질서 처리 전부 **n/a**.
 유일한 계산은 **3D Monte Carlo Potts 결정립 성장 모델** (§4g) 이다.
+
 - 격자 · 단위: 입방 격자 · MCU (임의 길이) · MCS (임의 시간) · 에너지 γ_gb = T_s (임의).
 - 크기: 30 × 250 × 250 MCU (≈2×10⁶ 자리) · 두께 10 · 20 · 30 · ≈10⁴ MCS.
 - 물리: 방위 무관 입계 에너지 · 곡률 구동 성장만 · **석출 속도 없음** (막을 한 번에 깔고 진화만) · 격자 고정 (lattice pinning) 인공물.
 - 구현: Python + PyTorch · GPU 8 부분격자 병렬 (Wright · Plimpton · Swiler 1997 방식).
 - 저자 스스로 **정성적 통찰** 이라고 못 박았다 (p.2370) — 결정립 크기 · 시간을 물리 단위로 옮기지 않는다.
 - 2D → 3D: 앞 논문 (ref 34) 은 2D 였고, 3D 에서는 고정이 없으면 결국 단결정이 된다 (p.2375) — 2D 결론 (결정립이 두께에 묶여 멈춘다) 이 3D 에서 그대로 서지 않는다는 것이 이 모사의 방법론 쪽 기여다.
+
 ⇒ 관계는 **우리 계산이 이 논문의 빈자리를 채우는 쪽**이다 — 예: Li–M hull 전압 (§7e) · Li 속 Ag 용해 에너지 · Li 면별 γ_Li · Li\|Li₃Bi · Li\|Li₁₅Au₄ 계면 W. 이 논문에서 가져올 계산 수치는 없다.
 
 ---
@@ -427,7 +434,7 @@
 | 2a–d | (a) 위: h_layer figure-read Ti ≈64 · Au ≈44 · Ag ≈44 · Bi ≈58 µm (점선 37.5) · 아래: w_grain 상자 (Ti 18 · Bi 11 · Au 64 · Ag 70 결정립) · 평균 (본문) 136 / 30 / 30 / 170 µm · 중앙 figure-read ≈88 / ≈24 / ≈27 / ≈79 · Bi 이상치 811 µm · (b) Au: SEM + EBSD 상 지도 — Li 속 노란 Li₁₅Au₄ ≈1 µm (LPSCl 계면에서 ≈10 µm 위 · figure-read) · (c) Ag: EDS Li Kα · Ag Lα 고르게 (신호 희박) · (d) Bi: Bi Mα 밝은 띠가 Li 층과 LPSCl 사이 | 결정립 크기 · 두께 (Li 층 입력 후보 · §11) · **층이 끝에 어디 있나** = W 계면 후보 (§7e) · ⚠ Bi '더 크다' 는 평균만 (중앙값은 Ti 와 비슷 · 811 µm 하나 빼면 ≈106 µm) |
 | 3a–c | 3D Potts (MCU · MCS · 임의 단위 · ≈10⁴ MCS): (a) 두께 10 · 20 · 30 — h 가 두께에 닿으면 w 증가가 꺾임 · 끝 w figure-read ≈32 / ≈33 / ≈40 · (b) 입자 0.02 · 0.04 · 0.08 — w ≈29 / ≈28 / ≈21 · 0.08 은 h ≈15 < 20 (쌓인 결정립) · (c) 기판 결정립 10 · 20 · 30 — w ≈17 / ≈24 / ≈33 (기판 크기를 따라감) · h ≈10–13 | '무엇이 Li 결정립을 정하나' 의 정성 체크리스트 (두께 · 입자 고정 · 기판 고정) — 수치 이식 불가 · 입자 분율에 붙은 단위 'MCU' 는 무차원이어야 한다 |
 | 4a–d | 10 mAh cm⁻² 도금 → 5 mAh cm⁻² 박리 (100 µA cm⁻²): (a) 도식 (Au 층 + Li₁₅Au₄ 입자 · 'Ag in Li' · Bi 층은 SE 쪽 · Li⁺ 아래로) · (b) 전위: Au 260 · 120 · Ag 봉우리 ≈68 · ≈45 · ≈5 mV · Bi ≈810 · ≈770 · 박리 ≈ +3–6 mV (figure-read) · (c) IPF ∥ y 지도 (40 µm 막대): Ti 거의 다 녹색 기둥 · Au 녹색 우세 · Ag 여러 색 · Bi 여러 색 + 작은 결정립 무리 · (d) IPF: Ti 최대 101 (가장 셈) · Au 101 근처 · Ag · Bi 뚜렷한 최대 없음 | ★ **박리가 Li 방위를 바꾼다** — 순수 Li 는 (110) ∥ 계면으로 정렬 (Ti) → '박리 뒤' 계면 모델의 Li 면 근거 · ⚠ 도금 전류 (100 대 150) · 도금량 (10 대 7.5) 이 같이 바뀐 비교 (§10-②) |
-| 5a–c | Ag 층 · 4.5 mAh cm⁻² × 10 (150 µA cm⁻²) · 끝 = 10 번째 도금: (a) 도금 정상 과전압 figure-read ≈ −7 (1st) → ≈ −12 mV 이상 (10th · 첫 골 ≈ −27) · 9 번째 박리는 ≈3.5 mAh cm⁻² 부터 상승 → 50 mV 컷오프 · (b) SEM (50 µm 막대): Li 층 ≈20–35 µm · 위 · 아래 LPSCl 찌꺼기 (확대 10 µm) · (c) IPF 겹침: 큰 기둥 몇 개 사이 작은 결정립 다수 (특히 계면 가까이) | 사이클 이력이 결정립을 잘게 만든다 · 박리 효율 90–95 % · 핵 과전압 증가 = Ag 고갈 → 맨 Ti 위 핵 (저자) — '사이클 뒤 Li 층은 첫 도금과 다른 재료' 의 근거 |
+| 5a–c | Ag 층 · 4.5 mAh cm⁻² × 10 (150 µA cm⁻²) · 끝 = 10 번째 도금: (a) 도금 정상 과전압 figure-read ≈ −7 (1st) → ≈ −17 → −11 mV (10th · 첫 골 ≈ −27) · 9 번째 박리는 ≈3.5 mAh cm⁻² 부터 상승 → 50 mV 컷오프 · (b) SEM (50 µm 막대): Li 층 ≈20–35 µm · 위 · 아래 LPSCl 찌꺼기 (확대 10 µm) · (c) IPF 겹침: 큰 기둥 몇 개 사이 작은 결정립 다수 (특히 계면 가까이) | 사이클 이력이 결정립을 잘게 만든다 · 박리 효율 90–95 % · 핵 과전압 증가 = Ag 고갈 → 맨 Ti 위 핵 (저자) — '사이클 뒤 Li 층은 첫 도금과 다른 재료' 의 근거 |
 | 6a–f | 종합 도식: 상도에 따라 (a) 2차 상 분산 (Au) · (b) 층 용해 (Ag · Li(M)) · (c) 상분리 (Bi · LiₓM_y 층이 SE 쪽) → (d) CC 덮임 ↑ · (e) 공극 억제 · (f) 미세구조 변경 | 7 절 ③ 을 '상도의 Li 쪽 끝' 으로 넓히는 틀 (§7e) · (d) · (e) 는 이 논문이 잰 것이 아니라 문헌 정리 |
 | S1 | Potts 2D 도식 — 방위 정수 · 고정 · 고유 250 = 입자 · 거친 경계 · 아래 = SE/CC 고정 경계 (방위 24 · 40 · 130 · 22 …) · 옆 = 주기 경계 | 기판 = 방위 고정층 · 같은 방위면 계면 에너지 0 = '방위 물려받기' 를 넣는 꼴 · ✂ 다시 자름 (SI 표지 글 제외) |
 | S2 | CTTA: q_Σ vs t^½ — steel · Ti 둘 다 직선 · 400 h 에 figure-read ≈0.036–0.037 mAh cm⁻² · 기울기 ≈1.8 µAh cm⁻² h^−½ (`우리 산수`) · 축 라벨 't^1/2 / h' 는 h^½ 의 오기 | Ti 가 Li 손실을 더하지 않는다 (저자) · LPSCl 위 SEI 성장 속도의 차수 (우리 grand-potential 의 속도 쪽 짝 · §7b) |
@@ -458,6 +465,7 @@
 ## 10. 비판 — 이 논문의 약한 곳 ★
 
 ① **조건당 셀 · 단면 하나이고 결정립 수가 적다 — 'Bi 가 결정립을 키운다' 는 결정립 하나에 기댄다.**
+
 - 결정립 수 Ti 18 · Bi 11 · Au 64 · Ag 70 (`Fig. 2` 캡션) · 반복 셀 · 오차막대 없음.
 - Bi 평균 170 µm 는 811 µm 결정립 하나를 넣은 값이다 — 빼면 **≈106 µm 로 Ti (136) 보다 작다** (`우리 산수`). 중앙값도 Bi ≈79 대 Ti ≈88 (figure-read) 로 비슷하다. ⇒ 단단한 것은 **Au · Ag ≪ Ti** (중앙값 · 사분위 · 폭 / 두께 어느 것으로도) 이고, **Bi > Ti 는 서지 않는다**.
 - IPF 세기는 패널마다 정규화 · MUD 없음 · 가중 방식 미기재 — '우세 방위' 의 세기를 시료 사이에 비교할 수 없다. Bi 의 '조직' 은 `Fig. S6` 에서 x · y · z 세 방향이 모두 한 점에 몰려 소수 결정립의 방위임이 보인다 (저자도 p.2377 에서 인정).
@@ -465,17 +473,20 @@
 ② **박리 비교는 세 가지를 같이 바꾼다.** (10 − 5) 시료는 100 µA cm⁻² · 10 mAh cm⁻² 도금 + 박리이고, 비교 대상 7.5 시료는 150 µA cm⁻² · 7.5 mAh cm⁻² 도금이다. Ti 에만 같은 전하 대조 (`Fig. S19` · 5 · 10 mAh cm⁻² 만 도금) 가 있고 그 도금 전류는 적혀 있지 않다. **Au · Ag 의 '10 mAh cm⁻² 상태로 얼었다' 가설에 필요한 10 mAh cm⁻² 도금만 한 Au · Ag 시료가 없다** — 가설이 직접 시험되지 않았다 (Ag 7.5 − 3 이 간접 근거 하나). Ti 의 <101> 정렬 기전 (박리 속도의 방위 의존 · 압력 재결정 등) 은 제시도 시험도 없다.
 
 ③ **면적 기준과 덮임이 정량되지 않았다.**
+
 - 층 지름 8 mm · WE · 펠렛 10 mm (`Fig. S12` 캡션). 전류 밀도를 어느 면적으로 나눴는지 없다. Li 가 층 위에만 쌓이면 기대 두께는 37.5 × (10/8)² = **58.6 µm** (`우리 산수`) 이고, 측정 Au · Ag ≈44 µm 는 37.5 와 58.6 사이다 → *"덮임 ≈100 % 라서 얇다"* 는 해석이 면적 기준에 묶여 있다.
 - 덮임 *"close to 100%"* 의 근거는 사진 (`Fig. S12`) 뿐이다.
 - Bi 리튬화가 3 µA cm⁻² 에서도 공칭 Li₃Bi 의 ≈70 % 조성 (x ≈70 mol%) 에서 끝나고 셀마다 끝 전하가 ≈0.035–0.047 mAh cm⁻² 로 다르다 (§3b · figure-read) — 실제 Bi 양 · 면적 기준 · 층 균일성 중 무언가가 공칭과 다르다 (논의 없음).
 
 ④ **기전 주장은 사후 단면에서 끝 상태로 거꾸로 추론한 것이다.**
+
 - 'Au · Ag 는 합금\|LPSCl 사이에서 핵생성' (p.2378) 은 핵생성 순간을 본 것이 아니다 (Ag 는 끝에 다 녹아 있어 처음 자리를 알 수 없다).
-- Au: *"small clusters were detected predominantly near the Ti\|Li interface in Fig. 2b"* 인데 `Fig. 2b` 의 SEM 은 Ti 계면을 보여 주지 않고, 분석한 입자는 **LPSCl 계면에서 ≈10 µm 위** 에 있다 (figure-read). 입자 수 · 크기 · 깊이 분포 통계가 없어 Zener 고정의 정량 (입자 분율 · 반지름 → Zener 한계 크기) 을 할 수 없다.
+- Au: *"small clusters were detected predominantly near the Ti\|Li interface in Fig. 2b"* 인데 `Fig. 2b` 의 SEM 은 Ti 계면을 보여 주지 않고, 분석한 입자는 **LPSCl 계면에서 ≈10 µm 위** 에 있다 (figure-read) — 같은 그룹의 LLZO 판 (haslam2025 digest) 은 Li₁₅Au₄ 가 Cu\|Li 계면을 따라 줄지어 있음을 보였으니 주장 자체는 그럴듯하지만, 이 논문 그림으로는 확인되지 않는다. 입자 수 · 크기 · 깊이 분포 통계가 없어 Zener 고정의 정량 (입자 분율 · 반지름 → Zener 한계 크기) 을 할 수 없다.
 - Ag 의 '격자 변형' 기전: 근거가 **melt 로 만든** 0.7 at% 시료의 −0.21 % 격자 수축 하나이고 오차막대 (≈ ±0.13 %) 와 같은 차수다 (figure-read · 각 n = 3). 0.2 % 변형이 결정립 성장을 막는 크기인지 · 용질 끌림 (solute drag) 과 어떻게 다른지 논의가 없다. Potts 모사에도 이 기전이 없다.
 - EDS (`Fig. 2c`) 의 '고른 Ag' 는 평균 ≈0.55 at% (`우리 산수`) 의 희박 신호라 국부 편석을 가를 감도가 있는지 보이지 않았다.
 
 ⑤ **본문 · 캡션과 그림이 어긋나는 곳.**
+
 - (a) `Fig. S15`: 평균 결정립 **높이가 거칠수록 높다** (figure-read ≈23 → ≈25 → ≈30 MCU) — Note S4 *"At a roughness of 3.7, the average grain height reaches a lower value than at 0.7"* 와 반대다 (색 · 범례는 폭 패널과 같다).
 - (b) p.2379 *"albeit with a significantly lower aspect ratio, i.e., there are more grains that are taller than they are wide"* — 이 논문의 종횡비 (높이 ÷ 폭 · `Fig. S9`) 로는 Ag 가 Ti 보다 **크다** (≈1.3 대 ≈0.5). 문장 안에서 정의가 뒤집혔다.
 - (c) `Fig. 2b` 입자 위치 (④).
@@ -542,7 +553,7 @@
 - "After partial stripping (10 mAh cm⁻² plated, 5 mAh cm⁻² stripped), nearly all Li grains on bare Ti were aligned with ⟨101⟩ parallel to the stripping direction, i.e., with Li(110) planes parallel to the current collector."
 - "Becker et al. attributed the interlayer effects to the Li-rich end of each binary phase diagram: dispersed Li₁₅Au₄ particles (Au), complete dissolution of Ag in Li (about 1 at% at room temperature), and a Li₃Bi layer that remained at the electrolyte side while Li accumulated on the Ti current collector (Bi)."
 - ⚠ (조건부) "The reported grain coarsening on Bi interlayers relies on the mean of eleven grains, one of which was 811 µm wide; excluding it, the mean width is about 106 µm, below that on bare Ti."
-- ⚠ (조건부 · 우리 판단) "Because the alloying plateaus of all three interlayers (≈0.03–0.84 V vs Li/Li⁺) lie below the calculated reduction edge of Li₆PS₅Cl (1.717 V), the interlayer|electrolyte contact is already within the thermodynamic reduction window while the interlayer is being lithiated."
+- ⚠ (조건부 · 우리 판단) "Because the alloying plateaus of all three interlayers (from a few millivolts up to ≈0.84 V vs Li/Li⁺) lie below the calculated reduction edge of Li₆PS₅Cl (1.717 V), the interlayer|electrolyte contact is already within the thermodynamic reduction window while the interlayer is being lithiated."
 
 ## 14. 주의 / 한계 (인용 규율)
 
@@ -561,7 +572,7 @@
 
 ## 15. 기법 용어 미니사전
 
-- **무음극 (anode-free) · RFC (reservoir-free cell)**: 조립할 때 음극 쪽에 Li 금속 없이 집전체 (여기서는 Ti) 만 둔다. 첫 충전에서 양극 (여기서는 Li CE) 의 Li 가 집전체와 SE 사이에 석출돼 음극이 그 자리에서 생긴다.
+- **무음극 (anode-free) · RFC (reservoir-free concept)**: 조립할 때 음극 쪽에 Li 금속 없이 집전체 (여기서는 Ti) 만 둔다. 첫 충전에서 양극 (여기서는 Li CE) 의 Li 가 집전체와 SE 사이에 석출돼 음극이 그 자리에서 생긴다.
 - **EBSD (electron backscatter diffraction)**: SEM 에서 70° 기운 시료에 전자를 쏘면 결정이 회절한 띠 무늬 (Kikuchi pattern) 가 검출기에 맺힌다. 점마다 그 무늬를 지표화해 그 점의 결정 방위를 얻고, 지도로 그리면 결정립 · 입계 · 방위가 한 번에 보인다. Li 처럼 무르고 반응성이 큰 금속은 극저온 이온빔으로 단면을 만들고 대기 차단 이송으로 옮겨야 무늬가 나온다.
 - **Hough 지표 · dynamical template matching**: Hough 는 무늬의 띠를 직선으로 찾아 방위를 푸는 고전 방법이고, template matching 은 동역학 회절 모사로 만든 기준 무늬와 측정 무늬를 통째로 견줘 더 정확히 맞춘다 (가짜 대칭으로 잘못 지표화한 점을 고친다).
 - **IPF 지도 · IPF (역극점도)**: '시료의 한 방향 (여기서는 y = 계면 법선) 이 결정의 어느 방향과 나란한가' 를 표준 삼각형 (001 · 101 · 111 꼭짓점) 위 색으로 나타낸다. 녹색 = <101> · 빨강 = <001> · 파랑 = <111>. 지도는 점마다 색 · IPF 는 모든 점의 분포 (밀도) 다. 이 논문의 IPF 세기는 패널마다 정규화돼 있다.

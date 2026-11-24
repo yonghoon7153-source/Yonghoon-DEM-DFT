@@ -9,12 +9,35 @@
  ],
  "figures": [
   {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Appearance of the AF-ASSB of a laminate-type cell (a) and microscopic image of its cross-section (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    401.0,
+    298.0,
+    729.5
+   ],
+   "w": 1088,
+   "h": 1370,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "blank": 0.397,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f1 as a number gap - the caption lines 'Fig. 1 Appearance ...' (p.4, y 709-727, left column) sit inside a two-column text block (43,657,553,729) together with body text, so no caption block was detected; clip = image XObject (50.9,406.6,283.8,700.7) + caption lines + margin = (37,401,298,729.5) at 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution (manual crop)"
+  },
+  {
    "key": "f2",
    "kind": "figure",
    "label": "2",
    "page": 5,
    "file": "fig_2.png",
-   "caption": "Fig. 2 Typical charge–discharge proﬁle (a) and cycle properties (b) of the AF-ASSB with the Ag/C layer and Raman spectra of the SE, CB and cross-sectional Ag/C layer in a pristine cell (c).",
+   "caption": "Fig. 2 Typical charge–discharge profile (a) and cycle properties (b) of the AF-ASSB with the Ag/C layer and Raman spectra of the SE, CB and cross-sectional Ag/C layer in a pristine cell (c).",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -26,7 +49,10 @@
    "h": 1895,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
-   "blank": 0.918
+   "blank": 0.918,
+   "caption_raw": "Fig. 2 Typical charge–discharge proﬁle (a) and cycle properties (b) of the AF-ASSB with the Ag/C layer and Raman spectra of the SE, CB and cross-sectional Ag/C layer in a pristine cell (c).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution + zooms of (a) first-charge start and (b) retention start/end (scratchpad); (a) first-charge curve digitized (pre-plateau ~1.2 mAh)"
   },
   {
    "key": "f3",
@@ -34,7 +60,7 @@
    "label": "3",
    "page": 5,
    "file": "fig_3.png",
-   "caption": "Fig. 3 Raman spectra acquired from point 1 in the cross-sectional AF- ASSB with the Ag/C layer at every 0.3 V interval during charge– discharge processes in the operando Raman spectroscopy at room temperature.",
+   "caption": "Fig. 3 Raman spectra acquired from point 1 in the cross-sectional AF-ASSB with the Ag/C layer at every 0.3 V interval during charge–discharge processes in the operando Raman spectroscopy at room temperature.",
    "rotated_deg": 0,
    "bbox": [
     297.3,
@@ -46,7 +72,10 @@
    "h": 715,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
-   "blank": 0.783
+   "blank": 0.783,
+   "caption_raw": "Fig. 3 Raman spectra acquired from point 1 in the cross-sectional AF- ASSB with the Ag/C layer at every 0.3 V interval during charge– discharge processes in the operando Raman spectroscopy at room temperature.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution + zooms of 1000-2000 cm-1 (1087/1854 bands) and 3500-3800 cm-1 (3648 band) (scratchpad)"
   },
   {
    "key": "f4",
@@ -54,7 +83,7 @@
    "label": "4",
    "page": 6,
    "file": "fig_4.png",
-   "caption": "Fig. 4 Relationships between the aspect ratios (a), R values (b), and positions (c and d) in the D- and G-bands on voltage calculated using the curve ﬁtting analysis.",
+   "caption": "Fig. 4 Relationships between the aspect ratios (a), R values (b), and positions (c and d) in the D- and G-bands on voltage calculated using the curve fitting analysis.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -66,7 +95,10 @@
    "h": 1339,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
-   "blank": 0.886
+   "blank": 0.886,
+   "caption_raw": "Fig. 4 Relationships between the aspect ratios (a), R values (b), and positions (c and d) in the D- and G-bands on voltage calculated using the curve ﬁtting analysis.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution + zooms of panels a, b, d; all panels digitized by marker colour with axes calibrated on point-1 charge values (rms 0.2-0.9 px) -> point-2 charge offset in a,b; discharge x-positions in b; point-2 discharge != Table S2 (digest §10-⑧)"
   },
   {
    "key": "f5",
@@ -86,7 +118,9 @@
    "h": 1345,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
-   "blank": 0.789
+   "blank": 0.789,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution"
   },
   {
    "key": "f6",
@@ -106,7 +140,9 @@
    "h": 705,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
-   "blank": 0.824
+   "blank": 0.824,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution"
   },
   {
    "key": "f7",
@@ -114,7 +150,7 @@
    "label": "7",
    "page": 9,
    "file": "fig_7.png",
-   "caption": "Fig. 7 Relationships between aspect ratios (a), R values (b), and positions (c) in the D- and G-bands calculated using the curve ﬁtting analysis. All data are described as average values of the 3 measurement points.",
+   "caption": "Fig. 7 Relationships between aspect ratios (a), R values (b), and positions (c) in the D- and G-bands calculated using the curve fitting analysis. All data are described as average values of the 3 measurement points.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -126,7 +162,10 @@
    "h": 2002,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
-   "blank": 0.958
+   "blank": 0.958,
+   "caption_raw": "Fig. 7 Relationships between aspect ratios (a), R values (b), and positions (c) in the D- and G-bands calculated using the curve ﬁtting analysis. All data are described as average values of the 3 measurement points.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution; markers digitized (frame-calibrated) and compared with Table S3 means (digest §10-⑧)"
   },
   {
    "key": "f8",
@@ -134,7 +173,7 @@
    "label": "8",
    "page": 9,
    "file": "fig_8.png",
-   "caption": "Fig. 8 Schematic of the reaction model in the cross-sectional AF- ASSB with an Ag/C layer during charging process.",
+   "caption": "Fig. 8 Schematic of the reaction model in the cross-sectional AF-ASSB with an Ag/C layer during charging process.",
    "rotated_deg": 0,
    "bbox": [
     297.3,
@@ -146,7 +185,10 @@
    "h": 669,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
-   "blank": 0.597
+   "blank": 0.597,
+   "caption_raw": "Fig. 8 Schematic of the reaction model in the cross-sectional AF- ASSB with an Ag/C layer during charging process.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution"
   },
   {
    "key": "fS1",
@@ -154,7 +196,7 @@
    "label": "S1",
    "page": 2,
    "file": "fig_S1.png",
-   "caption": "Fig. S1. The electrochemical profiles for CV measurement in the range of 0–4.5 V (a) and 0–2.0 V",
+   "caption": "Fig. S1. The electrochemical profiles for CV measurement in the range of 0–4.5 V (a) and 0–2.0 V during Operando Raman spectroscopy.",
    "rotated_deg": 0,
    "bbox": [
     48.7,
@@ -166,7 +208,10 @@
    "h": 2173,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.961
+   "blank": 0.961,
+   "caption_raw": "Fig. S1. The electrochemical profiles for CV measurement in the range of 0–4.5 V (a) and 0–2.0 V",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution; panel (a) charge branch digitized and integrated at 0.11 mV/s (digest §3-8 ⑦)"
   },
   {
    "key": "fS2",
@@ -174,7 +219,7 @@
    "label": "S2",
    "page": 3,
    "file": "fig_S2.png",
-   "caption": "Fig. S2 The Raman spectra acquired from point 2 in the cross-sectional AF-ASSB with the Ag/C layer",
+   "caption": "Fig. S2 The Raman spectra acquired from point 2 in the cross-sectional AF-ASSB with the Ag/C layer every 0.3 V during charge-discharge processes in the Operando Raman spectroscopy at room temperature.",
    "rotated_deg": 0,
    "bbox": [
     48.7,
@@ -186,7 +231,10 @@
    "h": 1190,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.748
+   "blank": 0.748,
+   "caption_raw": "Fig. S2 The Raman spectra acquired from point 2 in the cross-sectional AF-ASSB with the Ag/C layer",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution"
   },
   {
    "key": "fS3",
@@ -194,7 +242,7 @@
    "label": "S3",
    "page": 4,
    "file": "fig_S3.png",
-   "caption": "Fig. S3 The Raman spectra in the range of 200–1800 cm−1 at point 1 during the Operando Raman",
+   "caption": "Fig. S3 The Raman spectra in the range of 200–1800 cm−1 at point 1 during the Operando Raman spectroscopy. The fluorescence signal is indicated as orange region in the lower wavenumber.",
    "rotated_deg": 0,
    "bbox": [
     48.7,
@@ -206,7 +254,10 @@
    "h": 1676,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.782
+   "blank": 0.782,
+   "caption_raw": "Fig. S3 The Raman spectra in the range of 200–1800 cm−1 at point 1 during the Operando Raman",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution"
   },
   {
    "key": "fS4",
@@ -214,7 +265,7 @@
    "label": "S4",
    "page": 5,
    "file": "fig_S4.png",
-   "caption": "Fig. S4. The baseline corrected Raman spectra in the range of 600–2100 cm-1 acquired from point 1",
+   "caption": "Fig. S4. The baseline corrected Raman spectra in the range of 600–2100 cm-1 acquired from point 1 (a) and point 2 (b) in the Ag/C layer during Operando Raman spectroscopy.",
    "rotated_deg": 0,
    "bbox": [
     48.7,
@@ -226,7 +277,10 @@
    "h": 1594,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.828
+   "blank": 0.828,
+   "caption_raw": "Fig. S4. The baseline corrected Raman spectra in the range of 600–2100 cm-1 acquired from point 1",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution"
   },
   {
    "key": "fS5",
@@ -234,7 +288,7 @@
    "label": "S5",
    "page": 6,
    "file": "fig_S5.png",
-   "caption": "Fig. S5. The curve fitted Raman spectra in the range of 600–1950 cm-1 at a pristine, 3.9 (charge) and",
+   "caption": "Fig. S5. The curve fitted Raman spectra in the range of 600–1950 cm-1 at a pristine, 3.9 (charge) and 2.1 (discharge) V acquired from the Ag/C layer during Operando Raman spectroscopy in point 1.",
    "rotated_deg": 0,
    "bbox": [
     48.7,
@@ -246,7 +300,10 @@
    "h": 2128,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.931
+   "blank": 0.931,
+   "caption_raw": "Fig. S5. The curve fitted Raman spectra in the range of 600–1950 cm-1 at a pristine, 3.9 (charge) and",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution"
   },
   {
    "key": "fS6",
@@ -266,7 +323,9 @@
    "h": 825,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.926
+   "blank": 0.926,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution"
   },
   {
    "key": "fS7",
@@ -274,7 +333,7 @@
    "label": "S7",
    "page": 10,
    "file": "fig_S7.png",
-   "caption": "Fig. S7. The charge-discharge profile in the ex-situ Raman spectroscopy (percentages indicate SOCs).",
+   "caption": "Fig. S7. The charge-discharge profile in the ex-situ Raman spectroscopy (percentages indicate SOCs). The curve and flat regions in the voltage profiles are constant-current charge-discharge and open-circuit periods, respectively.",
    "rotated_deg": 0,
    "bbox": [
     48.7,
@@ -286,7 +345,10 @@
    "h": 1086,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.946
+   "blank": 0.946,
+   "caption_raw": "Fig. S7. The charge-discharge profile in the ex-situ Raman spectroscopy (percentages indicate SOCs).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution + 2 h grid overlay to read CC durations (scratchpad)"
   },
   {
    "key": "fS8",
@@ -294,7 +356,7 @@
    "label": "S8",
    "page": 11,
    "file": "fig_S8.png",
-   "caption": "Fig. S8. The microscopic images from the cross-sectional AF-ASSB with Ag/C layer in the ex-situ",
+   "caption": "Fig. S8. The microscopic images from the cross-sectional AF-ASSB with Ag/C layer in the ex-situ Raman spectroscopy, indicating clear deposited Li layer between Ag/C layer and SUS current collector.",
    "rotated_deg": 0,
    "bbox": [
     48.7,
@@ -306,7 +368,10 @@
    "h": 838,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.484
+   "blank": 0.484,
+   "caption_raw": "Fig. S8. The microscopic images from the cross-sectional AF-ASSB with Ag/C layer in the ex-situ",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator (batch 2026-11-24b #6): Read at full resolution + zooms of pristine and 100% panels (scratchpad)"
   },
   {
    "key": "tS1",
@@ -326,7 +391,9 @@
    "h": 2509,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.936
+   "blank": 0.936,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as image - transcribed from the SI PDF text layer (pdftotext -layout); all values used in digest §3-5"
   },
   {
    "key": "tS2",
@@ -346,7 +413,9 @@
    "h": 2509,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.938
+   "blank": 0.938,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as image - transcribed from the SI PDF text layer (pdftotext -layout)"
   },
   {
    "key": "tS3",
@@ -354,7 +423,7 @@
    "label": "S3",
    "page": 14,
    "file": "tab_S3.png",
-   "caption": "Table S3 Calculated parameters in curve fitting analysis based on pseudo-Voigt function, as",
+   "caption": "Table S3 Calculated parameters in curve fitting analysis based on pseudo-Voigt function, as representative 3 data used for curve fitting analysis",
    "rotated_deg": 0,
    "bbox": [
     49.7,
@@ -366,7 +435,10 @@
    "h": 1597,
    "dpi": 300,
    "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
-   "blank": 0.912
+   "blank": 0.912,
+   "caption_raw": "Table S3 Calculated parameters in curve fitting analysis based on pseudo-Voigt function, as",
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as image - transcribed from the SI PDF text layer (pdftotext -layout)"
   }
  ],
  "missing_labels": [
@@ -378,7 +450,8 @@
    "refs": [
     "p4",
     "p5"
-   ]
+   ],
+   "resolved": "manual_crop fig_1.png (2026-11-24, litdb-curator) - see figures[f1].manual_crop"
   },
   {
    "key": "tS4",
@@ -387,7 +460,8 @@
    "near_miss": [],
    "refs": [
     "p8"
-   ]
+   ],
+   "resolved": "not a figure - the main text (p.27966, PDF p.8) cites 'Tables S3 and S4' but the 14-page SI ends at Table S3 (S-14); Table S4 does not exist in the SI PDF (paper's own cross-reference error) - 2026-11-24 litdb-curator"
   }
  ],
  "table_caption_vote": [
