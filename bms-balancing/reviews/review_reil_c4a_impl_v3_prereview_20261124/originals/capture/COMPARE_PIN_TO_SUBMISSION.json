@@ -1,0 +1,2431 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Action completed."
+    }
+  ],
+  "structuredContent": {
+    "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "base": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+    "head": "c7062ced9c48a97bf47d042882fd79451332adf9",
+    "status": "ahead",
+    "ahead_by": 45,
+    "behind_by": 0,
+    "total_commits": 45,
+    "too_large": null,
+    "base_commit": {
+      "sha": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/fa502acb68f6d103a880d9431bb2e3f1c4013588",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/fa502acb68f6d103a880d9431bb2e3f1c4013588"
+    },
+    "merge_base_commit": {
+      "sha": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/fa502acb68f6d103a880d9431bb2e3f1c4013588",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/fa502acb68f6d103a880d9431bb2e3f1c4013588"
+    },
+    "files": [
+      {
+        "filename": ".claude/agents/paper-curator.md",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "CLAUDE.md",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/.gitattributes",
+        "status": "modified",
+        "additions": 8,
+        "deletions": 0,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/ASSB_TRANSFER_NOTE.md",
+        "status": "modified",
+        "additions": 63,
+        "deletions": 3,
+        "changes": 66,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/ASSB_WANTED_PAPERS.md",
+        "status": "modified",
+        "additions": 300,
+        "deletions": 227,
+        "changes": 527,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+        "status": "modified",
+        "additions": 51,
+        "deletions": 0,
+        "changes": 51,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_v3_20261124.md",
+        "status": "added",
+        "additions": 62,
+        "deletions": 0,
+        "changes": 62,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v3_20261124.md",
+        "status": "added",
+        "additions": 531,
+        "deletions": 0,
+        "changes": 531,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+        "status": "modified",
+        "additions": 57,
+        "deletions": 0,
+        "changes": 57,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/handoff_reil_comsol_20261124/CLAUDE_HANDOFF_KO.txt",
+        "status": "added",
+        "additions": 50,
+        "deletions": 0,
+        "changes": 50,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/handoff_reil_comsol_20261124/CLAUDE_MESSAGE_KO.txt",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/handoff_reil_comsol_20261124/CURRENT_DIRECTION.json",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/handoff_reil_comsol_20261124/HANDOFF_MANIFEST.json",
+        "status": "added",
+        "additions": 134,
+        "deletions": 0,
+        "changes": 134,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/handoff_reil_comsol_20261124/INTAKE_BY_THIS_REPO_20261124.json",
+        "status": "added",
+        "additions": 171,
+        "deletions": 0,
+        "changes": 171,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/handoff_reil_comsol_20261124/SOURCE_IDENTITIES.json",
+        "status": "added",
+        "additions": 175,
+        "deletions": 0,
+        "changes": 175,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_REVIEW_20261109.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/CHAT_REPORTED_PACKAGE_RETURN.json",
+        "status": "added",
+        "additions": 36,
+        "deletions": 0,
+        "changes": 36,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/CODEX_REPLY_KO.txt",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/FIRST_LOCAL_INPUT_SNAPSHOT.json",
+        "status": "added",
+        "additions": 16,
+        "deletions": 0,
+        "changes": 16,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/LOCAL_INPUTS_BEFORE.json",
+        "status": "added",
+        "additions": 16,
+        "deletions": 0,
+        "changes": 16,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 182,
+        "deletions": 0,
+        "changes": 182,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/REVIEWER_MAPPING_ERROR.json",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/REVIEWER_TOOL_ERROR.json",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/REVIEW_DECISION.json",
+        "status": "added",
+        "additions": 95,
+        "deletions": 0,
+        "changes": 95,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/REVIEW_KO.txt",
+        "status": "added",
+        "additions": 40,
+        "deletions": 0,
+        "changes": 40,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/STATIC_REVIEW_CHECK.json",
+        "status": "added",
+        "additions": 1527,
+        "deletions": 0,
+        "changes": 1527,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/STATIC_REVIEW_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/FIRST_ERROR.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/PRESEAL.json",
+        "status": "added",
+        "additions": 816,
+        "deletions": 0,
+        "changes": 816,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/PRIOR_CHAT_REPORTED_TRANSPORT_RETURN.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/PRIOR_CODEX_REPLY_KO.txt",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/PRIOR_REVIEW_DECISION.json",
+        "status": "added",
+        "additions": 149,
+        "deletions": 0,
+        "changes": 149,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/PYTHON_SESSION_RETURN.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/READY_INPUTS.json",
+        "status": "added",
+        "additions": 830,
+        "deletions": 0,
+        "changes": 830,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/READY_INPUTS_COMPLETION.json",
+        "status": "added",
+        "additions": 847,
+        "deletions": 0,
+        "changes": 847,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/delivery/DELIVERY_TRANSPORT_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/results/RESULTS.json",
+        "status": "added",
+        "additions": 78,
+        "deletions": 0,
+        "changes": 78,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/validation/receiver_entry.py",
+        "status": "added",
+        "additions": 30,
+        "deletions": 0,
+        "changes": 30,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/validation/run.py",
+        "status": "added",
+        "additions": 15,
+        "deletions": 0,
+        "changes": 15,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/basis/validation/runtime_support.py",
+        "status": "added",
+        "additions": 175,
+        "deletions": 0,
+        "changes": 175,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/input/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_20261109.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/input/DELIVERY_RECEIPT.original.json",
+        "status": "added",
+        "additions": 873,
+        "deletions": 0,
+        "changes": 873,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/CODEX_REPLY_KO.txt",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/DOCUMENT_MANIFEST.json",
+        "status": "added",
+        "additions": 55,
+        "deletions": 0,
+        "changes": 55,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/DOCUMENT_SUPPLEMENT_KO.txt",
+        "status": "added",
+        "additions": 55,
+        "deletions": 0,
+        "changes": 55,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/INPUT_READ_VS_LOAD_ROLES.json",
+        "status": "added",
+        "additions": 1103,
+        "deletions": 0,
+        "changes": 1103,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/INTAKE_AND_STATIC_CHECK.json",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0,
+        "changes": 22,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/SELECTED_INPUTS_AFTER.json",
+        "status": "added",
+        "additions": 838,
+        "deletions": 0,
+        "changes": 838,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/SELECTED_INPUTS_BEFORE.json",
+        "status": "added",
+        "additions": 837,
+        "deletions": 0,
+        "changes": 837,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/STATIC_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 10,
+        "deletions": 0,
+        "changes": 10,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/basis/R3_DELIVERY_TRANSPORT_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/originals/received/basis/RECEIVED_CODEX_REPLY_KO.txt",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/outside_zip/DELIVERY_RECEIPT.json",
+        "status": "added",
+        "additions": 45,
+        "deletions": 0,
+        "changes": 45,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/outside_zip/PACKAGE_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/outside_zip/SELECTED_LOCAL_INPUTS_POST_PACKAGE.json",
+        "status": "added",
+        "additions": 21,
+        "deletions": 0,
+        "changes": 21,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_REVIEW_20261109.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/CHAT_REPORTED_TRANSPORT_RETURN.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/CODEX_REPLY_KO.txt",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/INTAKE_CHECK.json",
+        "status": "added",
+        "additions": 19,
+        "deletions": 0,
+        "changes": 19,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/LOCAL_INPUTS_BEFORE.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 877,
+        "deletions": 0,
+        "changes": 877,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/REVIEWER_CHECKER_CORRECTION.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/REVIEWER_PACKAGE_CHECK_CORRECTION.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/REVIEWER_SPAN_CHECKER_CORRECTION.json",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/REVIEW_DECISION.json",
+        "status": "added",
+        "additions": 149,
+        "deletions": 0,
+        "changes": 149,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/REVIEW_KO.txt",
+        "status": "added",
+        "additions": 56,
+        "deletions": 0,
+        "changes": 56,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/STATIC_EVIDENCE_CHECK.json",
+        "status": "added",
+        "additions": 110,
+        "deletions": 0,
+        "changes": 110,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/input/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_RESULT_AND_DELIVERY_STOP_20261108.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/input/DELIVERY_RECORDS.original.json",
+        "status": "added",
+        "additions": 1107,
+        "deletions": 0,
+        "changes": 1107,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/outside_originals/DELIVERY_RECEIPT.json",
+        "status": "added",
+        "additions": 48,
+        "deletions": 0,
+        "changes": 48,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/outside_originals/FINAL_CHECK.json",
+        "status": "added",
+        "additions": 47,
+        "deletions": 0,
+        "changes": 47,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/outside_originals/FINAL_CHECK_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/outside_originals/PACKAGE_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/outside_originals/SELECTED_SOURCES_POST_PACKAGE.json",
+        "status": "added",
+        "additions": 933,
+        "deletions": 0,
+        "changes": 933,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/BOUNDARIES_KO.txt",
+        "status": "added",
+        "additions": 10,
+        "deletions": 0,
+        "changes": 10,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/CONFIG.json",
+        "status": "added",
+        "additions": 48,
+        "deletions": 0,
+        "changes": 48,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/COPY_PRESERVATION_AFTER.json",
+        "status": "added",
+        "additions": 246,
+        "deletions": 0,
+        "changes": 246,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/DIRECTORY_CONTRACT.json",
+        "status": "added",
+        "additions": 38,
+        "deletions": 0,
+        "changes": 38,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/EXECUTION_RESERVATION.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/FIRST_ERROR.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/FUNCTION_BINDINGS.json",
+        "status": "added",
+        "additions": 506,
+        "deletions": 0,
+        "changes": 506,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/INTAKE.json",
+        "status": "added",
+        "additions": 249,
+        "deletions": 0,
+        "changes": 249,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/INTAKE_COMMAND.txt",
+        "status": "added",
+        "additions": 36,
+        "deletions": 0,
+        "changes": 36,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 787,
+        "deletions": 0,
+        "changes": 787,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/PRESEAL.json",
+        "status": "added",
+        "additions": 816,
+        "deletions": 0,
+        "changes": 816,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/PYTHON_SESSION_RETURN.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/READY_INPUTS.json",
+        "status": "added",
+        "additions": 830,
+        "deletions": 0,
+        "changes": 830,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/READY_INPUTS_COMPLETION.json",
+        "status": "added",
+        "additions": 847,
+        "deletions": 0,
+        "changes": 847,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/REPORT_KO.txt",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/SEALED_SOURCES_AFTER.json",
+        "status": "added",
+        "additions": 334,
+        "deletions": 0,
+        "changes": 334,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/SELECTED_SOURCES_AFTER.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/SELECTED_SOURCES_BEFORE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/SOURCE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/STATIC_PREPARATION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/STATIC_PREPARATION_COMMAND.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/STOP_CLOSEOUT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/TASK_ORIGIN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/TOOL_000_ORIGIN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/TOOL_001_INTAKE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/TOOL_002_SOURCE_READ.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/TOOL_003_SOURCE_READ.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/TOOL_004_METADATA_READ.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/TOOL_005_AUTHORING_INVENTORY.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/TOOL_006_STATIC_PREPARATION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/USER_ADOPTION_MESSAGE.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/VALIDATION_PLAN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/CHILD_GUARD.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/CHILD_LAUNCH.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F01/mailbox/acks/a0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F01/mailbox/acks/a0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F01/mailbox/consumption/c0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F01/mailbox/requests/q0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F01/mailbox/requests/q0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F02/mailbox/acks/a0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F02/mailbox/acks/a0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F02/mailbox/consumption/c0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F02/mailbox/requests/q0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F02/mailbox/requests/q0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F03/mailbox/acks/a0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F03/mailbox/acks/a0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F03/mailbox/consumption/c0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F03/mailbox/requests/q0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F03/mailbox/requests/q0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F04/mailbox/acks/a0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F04/mailbox/acks/a0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F04/mailbox/consumption/c0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F04/mailbox/requests/q0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F04/mailbox/requests/q0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F05/mailbox/acks/a0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F05/mailbox/acks/a0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F05/mailbox/consumption/c0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F05/mailbox/requests/q0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F05/mailbox/requests/q0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F06/R01/normal_delivery/v000000000000.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F06/R01/normal_store/v000000000000.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F06/mailbox/acks/a0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F06/mailbox/acks/a0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F06/mailbox/consumption/c0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F06/mailbox/requests/q0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F06/mailbox/requests/q0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F07/mailbox/acks/a0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F07/mailbox/acks/a0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F07/mailbox/consumption/c0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F07/mailbox/requests/q0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/F07/mailbox/requests/q0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/R01/normal_delivery/v000000000000.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/R01/normal_delivery/v000000000001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/R01/normal_store/v000000000000.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/R01/normal_store/v000000000001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/RECEIVER_STDERR.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/RECEIVER_STDOUT.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/FINISH.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/FINISH.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/LIFECYCLE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/LIFECYCLE.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/READY.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/READY.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/acks/a0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/acks/a0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/acks/a0002.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/acks/a0002.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/consumption/c0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/consumption/c0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/consumption/c0002.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/consumption/c0002.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/requests/q0001.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/requests/q0001.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/requests/q0002.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/arena/mailbox/requests/q0002.ready",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/basis/CASE_PLAN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/basis/DIRECTORY_RESPONSIBILITY_PLAN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/basis/INPUT_RESOLUTION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/basis/NEXT_APPROVAL_KO.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/basis/R1_RESTART_PLAN_KO.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/basis/R1_SCOPE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/basis/SOURCE_BASIS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/basis/TOOL_RETURN_PRESERVATION_RULES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/delivery/PHASE_ORIGIN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/delivery/PRESEAL_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/delivery/PYTHON_OUTER_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/delivery/RESULT_READBACK_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/delivery/STOP_DELIVERY_BUILD.ps1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/delivery/STOP_RECORD_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/ADMISSION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F01.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F02.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F03.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F04.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F05.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F06.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F07.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F08.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F09.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/F10.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/L01.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/fixtures/L02.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F01.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F02.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F03.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F04.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F05.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F06.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F07.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F08.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F09.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/F10.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/L01.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/L02.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/RESULTS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/session.stderr.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/results/session.stdout.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/bound_ack_session.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/deadline_receive.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/event_clock_core.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/evidence_admission.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/exact_time.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/file_ports.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/live_file_transport.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/receiver_bridge.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/receiver_finish.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/receiver_protocol.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/receiver_session.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/receiver_worker.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/receiver_worker_candidate.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/snapshot_codec.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/source/state_owner.py.inactive.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/validation/harness_cases.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/validation/launch_once.ps1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/validation/receiver_entry.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/validation/run.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/originals/received/validation/runtime_support.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/outside_zip/DELIVERY_RECEIPT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/outside_zip/PACKAGE_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/outside_zip/SELECTED_LOCAL_INPUTS_POST_PACKAGE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/REIL_C4A_IMPL_V2_PREREVIEW_20261108.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/CODEX_REPLY_KO.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/COMPARE_PRIOR_PIN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/CORRECTION_STATUS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/HEAD_CONFIRMATION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/PINNED_HEAD.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/REVIEW_DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/REVIEW_KO.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/REVIEW_READBACK_CHECK.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/ROOT_STATIC_DATA_CHECK.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/SELECTED_LOCAL_SOURCES_BEFORE_PACKAGE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/SOURCE_CAPTURE_BASE64.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/SOURCE_IDENTITIES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/STATUS_LEDGER_APPEND.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/basis/prior_impl_review/CODEX_REPLY_KO.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/basis/prior_impl_review/DELIVERY_RECEIPT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/basis/prior_impl_review/PACKAGE_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/basis/prior_impl_review/REVIEW_DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/basis/prior_impl_review/REVIEW_KO.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/basis/prior_impl_review/ROOT_STATIC_DATA_CHECK.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/basis/prior_impl_review/SOURCE_IDENTITIES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/input/REIL_C4A_IMPL_REQUEST_SEND_v2_20261106.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/input/REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4A_IMPL_REQUEST_20261106.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_20261106.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_v2_20261106.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4A_SCOPE_20261105.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4A_SCOPE_SEND_20261105.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4A_SCOPE_SEND_v2_20261106.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4A_SCOPE_v2_20261106.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_v3_20261104.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_REQUEST_20261105.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_REQUEST_v2_20261105.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_RESULT_SEND_20261105.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_SEND_20261105.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_SEND_v2_20261105.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_20261007.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_D.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e0_fix_20261014/00_identity_c4.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/00_overall.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/00_start.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.judge.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.launch_epoch.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.leftover_1.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.meta.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_end.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_rc.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_start.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_stderr.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_stdout.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.porcelain_end.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.porcelain_start.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.precheck.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.stderr.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      }
+    ]
+  },
+  "isError": false
+}

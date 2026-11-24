@@ -1,0 +1,158 @@
+{
+  "kind": "REIL_C4A_V3_DOCUMENT_REVIEW_DECISION",
+  "date": "2026-11-24",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "submission_commit": "c7062ced9c48a97bf47d042882fd79451332adf9",
+  "prior_pin": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "request": {
+    "path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v3_20261124.md",
+    "bytes": 96546,
+    "sha256": "2156f12d35c05c3a41307c4c254ce0bf836f9bdcbc33485c1eba2bb995d71c5b"
+  },
+  "decision": "REVISION_REQUIRED_BOOTSTRAP_ALLOWLIST_CYCLE",
+  "prior_subissue_count": 12,
+  "closed_subissues": 11,
+  "open_subissues": 1,
+  "closure_map": [
+    {
+      "id": "C4A-IMPL-N1",
+      "key": "allowlist",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "381–435"
+    },
+    {
+      "id": "C4A-IMPL-N1",
+      "key": "coverage",
+      "status": "CLOSED_NARROWED_DOCUMENT_SCOPE",
+      "request_lines": "205–240,513–514"
+    },
+    {
+      "id": "C4A-IMPL-N1",
+      "key": "before_call",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "215–225"
+    },
+    {
+      "id": "C4A-IMPL-N1",
+      "key": "bootstrap",
+      "status": "OPEN_COLLECTION_ALLOWLIST_DEPENDENCY",
+      "request_lines": "198–199,433,453–455"
+    },
+    {
+      "id": "C4A-IMPL-N3",
+      "key": "distinct",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "119–152,350"
+    },
+    {
+      "id": "C4A-IMPL-N3",
+      "key": "retained_bytes",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "119–122,530"
+    },
+    {
+      "id": "C4A-IMPL-N3",
+      "key": "stderr",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "134–149,189,311–328"
+    },
+    {
+      "id": "C4A-IMPL-N4",
+      "key": "late_completion",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "166–177,351,356"
+    },
+    {
+      "id": "C4A-IMPL-N4",
+      "key": "late_row_validation",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "87–100,157–162,306–308"
+    },
+    {
+      "id": "C4A-IMPL-N4",
+      "key": "cleanup_gate",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "92–103,349"
+    },
+    {
+      "id": "C4A-IMPL-N4",
+      "key": "time_boundaries",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "466–500"
+    },
+    {
+      "id": "C4A-IMPL-N6",
+      "key": "approval_binding",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": "264–286,353"
+    }
+  ],
+  "C2": "CLOSED_DOCUMENT_SCOPE",
+  "retained_closed": [
+    "C4A-IMPL-N2",
+    "C4A-IMPL-N5",
+    "C4A-IMPL-N7",
+    "C4A-IMPL-C1"
+  ],
+  "findings": [
+    {
+      "id": "C4A-IMPL-V3-N1",
+      "priority": "P2",
+      "parent": "C4A-IMPL-N1/bootstrap",
+      "status": "OPEN",
+      "title": "수집 입력 ALLOW_A와 수집 산출 ALLOW_A의 순환 의존",
+      "request_lines": [
+        198,
+        199,
+        433,
+        453,
+        454,
+        455
+      ],
+      "required": "b0에서 수집 전용 허용 입력과 SHA를 봉인하고 b1이 이를 소비하도록 명시. b1은 nodeid별 실행용 ALLOW_A와 SHA를 산출하고 b2/c에서 고정 소비. 단계별 인자/모드와 혼용 거부를 명확히 할 것.",
+      "requires_new_test_session": false
+    }
+  ],
+  "questions": {
+    "Q1": "11/12+C2 closed; bootstrap remains open",
+    "Q2": "Static b0 numeric sealing accepted; incomplete numeric table not pre-verified. Narrowed child coverage accepted as limited claim.",
+    "Q3": "Same outer RED with self-tests first acceptable. Fix b1 input cycle; nested negative subprocess results separate.",
+    "Q4": "Document corrections sufficient; no total-memory or write cap adopted.",
+    "Q5": "Conservative uncertain-completion stop accepted. Timings are proposed and not verified hard return bounds.",
+    "Q6": "Approval kind/decision/scope/request SHA and transitive consumed-value binding adequate as document requirements."
+  },
+  "user_choices": {
+    "U2": "UNSELECTED",
+    "U4": "UNADOPTED",
+    "U5": "UNADOPTED"
+  },
+  "COMSOL": {
+    "state": "PAUSED_BY_USER",
+    "resume_condition": "User reports COMSOL availability and directs resumption",
+    "native_ready": false,
+    "gate": "INCOMPLETE"
+  },
+  "authorizations": {
+    "implementation": false,
+    "pytest_collection": false,
+    "tests": false,
+    "actual_C4A_execution": false,
+    "COMSOL": false,
+    "external_send": false
+  },
+  "performed": {
+    "static_document_source_review": true,
+    "target_import_or_execution": 0,
+    "pytest_collection": 0,
+    "functional_tests": 0,
+    "data_interpretation": 0,
+    "optimization": 0,
+    "OS_probe": 0,
+    "COMSOL": 0,
+    "target_repository_mutation": 0,
+    "external_send": 0
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "next_artifact": "Preserve v1/v2/v3; separate corrected request and N1/bootstrap response. No target execution required by this review."
+}

@@ -1,0 +1,36 @@
+{
+  "kind": "REVIEW_SELECTED_LOCAL_INPUTS",
+  "boundary": "After substantive static review; before review packaging. Not an initial whole-session snapshot.",
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4A_v3_SEND_READY.txt",
+      "bytes": 9148,
+      "sha256": "ebd14f641cf2132c8ab8f39befbe6ae008b03273cee85a46a9f68375df3cd847"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_v2_prereview_20261108\\CODEX_REPLY_KO.txt",
+      "bytes": 2213,
+      "sha256": "2e33b8dd64a19ee2175686137e023869a42123efe08a9dd8a9afa0444529e9fa"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_v2_prereview_20261108\\REVIEW_KO.txt",
+      "bytes": 13726,
+      "sha256": "7886e790a58703affef7649cdd5ffb724287070ec4549b6c487c689cc4779775"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_v2_prereview_20261108\\REVIEW_DECISION.json",
+      "bytes": 14222,
+      "sha256": "0ec11d83d806ca075869b918d3b4d363822254dcac060dc2f8a9306029d79598"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_v2_prereview_20261108\\DELIVERY_RECEIPT.json",
+      "bytes": 2088,
+      "sha256": "aa2f6ff8226dee49adccb03be43b056d03adc225e373e6cdbae47b1d8548783b"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_v2_prereview_20261108\\REIL_C4A_IMPL_V2_PREREVIEW_20261108.zip",
+      "bytes": 1296176,
+      "sha256": "3d346f331b1a89ffa906993f8dd7f75d895fc7af5d05b71d562bf785c2d168e2"
+    }
+  ]
+}

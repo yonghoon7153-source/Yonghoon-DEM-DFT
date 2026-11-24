@@ -1,0 +1,18 @@
+{
+  "kind": "FIXED_GITHUB_READ_ONLY_PROVENANCE",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "submission_commit": "c7062ced9c48a97bf47d042882fd79451332adf9",
+  "prior_pin": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "request": {
+    "path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v3_20261124.md",
+    "bytes": 96546,
+    "sha256": "2156f12d35c05c3a41307c4c254ce0bf836f9bdcbc33485c1eba2bb995d71c5b"
+  },
+  "fetched_references": 27,
+  "git_blob_hashes_verified": true,
+  "prior_exact_matches": 23,
+  "ledger_exact_old_prefix": true,
+  "comparison_limit": "Compare response includes 300 file entries; absence from that response is not proof that any other path is unchanged. No whole-tree equality claim.",
+  "captures": "Original fetch responses stored under capture; source decoding is reviewed metadata work, not target import.",
+  "attachment_and_repository_send_are_distinct": true
+}

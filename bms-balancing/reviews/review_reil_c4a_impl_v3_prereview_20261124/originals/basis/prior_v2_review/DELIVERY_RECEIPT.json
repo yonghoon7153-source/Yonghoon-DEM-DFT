@@ -1,0 +1,49 @@
+{
+  "kind": "REIL_C4A_IMPL_V2_PREREVIEW_DELIVERY_RECEIPT",
+  "recipient": null,
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_v2_prereview_20261108\\REIL_C4A_IMPL_V2_PREREVIEW_20261108.zip",
+    "bytes": 1296176,
+    "sha256": "3d346f331b1a89ffa906993f8dd7f75d895fc7af5d05b71d562bf785c2d168e2"
+  },
+  "manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_v2_prereview_20261108\\PACKAGE_MANIFEST.json",
+    "bytes": 30504,
+    "sha256": "b07d28af47cc8f49049acaeb5fff852842dd1a5e0445ba7b40001d16fdce19a6"
+  },
+  "post_package": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_v2_prereview_20261108\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json",
+    "bytes": 2861,
+    "sha256": "87131aa28e08aadb2b1c7c00c102dba9d70ea49cb98e1032087438874e96e5ae"
+  },
+  "payload_count": 155,
+  "entries": 156,
+  "verification": "Exact member set, safe case-unique relative paths, non-link metadata, decompressed size/SHA256 and independently recomputed CRC32 matched.",
+  "pin": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "decision": "REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL",
+  "remaining_groups": [
+    "C4A-IMPL-N1",
+    "C4A-IMPL-N3",
+    "C4A-IMPL-N4",
+    "C4A-IMPL-N6"
+  ],
+  "closed_document_items": [
+    "C4A-IMPL-N2",
+    "C4A-IMPL-N5",
+    "C4A-IMPL-N7",
+    "C4A-IMPL-C1"
+  ],
+  "nonblocking_clarification": "C4A-IMPL-V2-C2",
+  "prior_scope_N1_N4": "CLOSED_DOCUMENT_SCOPE_RETAINED",
+  "source_copies": 133,
+  "selected_local_originals_preserved": 9,
+  "target_execution": 0,
+  "tests": 0,
+  "pytest_collection": 0,
+  "data_opening": 0,
+  "COMSOL": 0,
+  "new_implementation_or_execution_authorized": false,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "boundary": "After ZIP verification and selected-local rehash; before receipt write/readback and actual tool return."
+}

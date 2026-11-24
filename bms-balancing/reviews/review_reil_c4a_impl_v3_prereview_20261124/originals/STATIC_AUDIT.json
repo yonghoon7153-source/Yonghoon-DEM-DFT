@@ -1,0 +1,1108 @@
+{
+  "kind": "STATIC_TEXT_AST_READ_ONLY_AUDIT",
+  "ledger_previous_exact_prefix": true,
+  "ledger_before_bytes": 490457,
+  "ledger_after_bytes": 504294,
+  "test_call_index": [
+    {
+      "file": "test_reil_c4_0a.py",
+      "test": "test_02_a_slow_sample_past_the_deadline_stops_before_new_tasks_start",
+      "calls": [
+        {
+          "line": 78,
+          "call": "mon.supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0a.py",
+      "test": "test_02_a_late_rss_sample_inside_supervise_is_a_global_stop",
+      "calls": [
+        {
+          "line": 119,
+          "call": "mon.supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0a.py",
+      "test": "test_02_all_tasks_complete_without_a_stop",
+      "calls": [
+        {
+          "line": 126,
+          "call": "mon.supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0a_fix.py",
+      "test": "test_n3_a_a_slow_terminal_disk_sample_cannot_hide_an_rss_gap",
+      "calls": [
+        {
+          "line": 242,
+          "call": "_scripted_supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0a_fix.py",
+      "test": "test_n3_b_a_quick_terminal_disk_sample_still_ends_normally",
+      "calls": [
+        {
+          "line": 249,
+          "call": "_scripted_supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0a_fix.py",
+      "test": "test_n4_b_the_partial_crosses_the_worker_boundary_and_the_task_stays_interrupted",
+      "calls": [
+        {
+          "line": 364,
+          "call": "mon.supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1.py",
+      "test": "test_08_a_run_records_reeval_residuals_class_termination_and_constraints",
+      "calls": [
+        {
+          "line": 407,
+          "call": "h.run_phase_a"
+        },
+        {
+          "line": 414,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1.py",
+      "test": "test_08_a_util_error_is_solver_error_and_our_error_is_structural",
+      "calls": [
+        {
+          "line": 422,
+          "call": "h.run_phase_a"
+        },
+        {
+          "line": 428,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1.py",
+      "test": "test_08_rho_runs_use_the_phase_a_denominators_and_record_both_components",
+      "calls": [
+        {
+          "line": 434,
+          "call": "h.run_phase_a"
+        },
+        {
+          "line": 438,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n1_a_counts_and_the_stop_error_cross_the_worker_boundary",
+      "calls": [
+        {
+          "line": 103,
+          "call": "_supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n1_b_an_unknown_option_stop_keeps_counts_and_warnings",
+      "calls": [
+        {
+          "line": 118,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n1_c_an_error_in_our_code_after_the_run_keeps_the_row_so_far",
+      "calls": [
+        {
+          "line": 129,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 135,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n1_d_the_same_path_without_an_error_completes",
+      "calls": [
+        {
+          "line": 144,
+          "call": "_supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n2_b_an_unclassified_return_stops_before_the_reeval",
+      "calls": [
+        {
+          "line": 165,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 167,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n2_c_success_and_budget_returns_continue_to_the_reeval",
+      "calls": [
+        {
+          "line": 178,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 179,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n2_d_an_unclassified_return_is_a_global_stop_across_the_worker_boundary",
+      "calls": [
+        {
+          "line": 186,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 187,
+          "call": "_supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n3_a_a_local_reeval_exception_is_reeval_error_and_counted_apart",
+      "calls": [
+        {
+          "line": 197,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 199,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n3_b_a_normal_nan_return_stays_nonfinite",
+      "calls": [
+        {
+          "line": 211,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 213,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix.py",
+      "test": "test_n3_c_a_structural_reeval_error_stops_with_the_termination_kept",
+      "calls": [
+        {
+          "line": 220,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 223,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix2.py",
+      "test": "test_r1_a_a_known_return_survives_the_option_warning_stop",
+      "calls": [
+        {
+          "line": 86,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 88,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix2.py",
+      "test": "test_r1_b_the_return_fields_cross_the_worker_boundary",
+      "calls": [
+        {
+          "line": 100,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 101,
+          "call": "mon.supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix2.py",
+      "test": "test_r1_c_without_a_return_nothing_is_filled_and_the_original_error_is_kept",
+      "calls": [
+        {
+          "line": 113,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 116,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix2.py",
+      "test": "test_r1_d_the_same_path_without_the_warning_completes",
+      "calls": [
+        {
+          "line": 127,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 128,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b1_fix2.py",
+      "test": "test_r1_e_the_real_scipy_warning_path_keeps_the_returned_point",
+      "calls": [
+        {
+          "line": 138,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_b0_1_phase_a_rows_are_unchanged_by_the_generalization",
+      "calls": [
+        {
+          "line": 203,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 204,
+          "call": "h.run_phase_a"
+        },
+        {
+          "line": 211,
+          "call": "h.run_phase_a"
+        },
+        {
+          "line": 221,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 223,
+          "call": "h.run_phase_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_b0_2_the_option_warning_stop_keeps_the_return_fields_in_every_phase_b_problem",
+      "calls": [
+        {
+          "line": 235,
+          "call": "_fake_minimize"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_b0_3_an_unclassified_termination_stops_everything_in_phase_b",
+      "calls": [
+        {
+          "line": 248,
+          "call": "_fake_minimize"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_b0_4_phase_b_local_errors_are_rows_and_our_errors_are_structural",
+      "calls": [
+        {
+          "line": 260,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 265,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 269,
+          "call": "_fake_minimize"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_b0_5_phase_b_rows_record_the_free_and_full_point_and_the_extra_residuals",
+      "calls": [
+        {
+          "line": 282,
+          "call": "_fake_minimize"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_p_7_adaptive_starts_are_sealed_before_the_run_and_cannot_be_rewritten",
+      "calls": [
+        {
+          "line": 415,
+          "call": "_fake_minimize"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_r_1_an_h4_unit_that_reaches_ray_stops_the_cell_region_without_an_update",
+      "calls": [
+        {
+          "line": 590,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 593,
+          "call": "hb.stage_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_r_2_with_every_h4_unit_endpoint_gated_ray_is_never_reached_and_never_counted_complete",
+      "calls": [
+        {
+          "line": 604,
+          "call": "hb.stage_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_c_2_non_positive_denominators_or_an_empty_mask_make_the_combined_unit_unfit",
+      "calls": [
+        {
+          "line": 698,
+          "call": "hb.stage_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_c_3_rho_starts_only_after_both_phase_a_completion_records",
+      "calls": [
+        {
+          "line": 706,
+          "call": "hb.stage_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_c_7_not_run_and_unresolved_are_counted_apart_and_the_plan_adds_up",
+      "calls": [
+        {
+          "line": 758,
+          "call": "hb.stage_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2.py",
+      "test": "test_c_8_end_to_end_one_cell_a0_through_supervise_and_phase_b",
+      "calls": [
+        {
+          "line": 772,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 776,
+          "call": "hb.stage_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2_fix.py",
+      "test": "test_n1_a_a_wave_one_structural_stop_classifies_every_planned_unit_and_never_promotes_unfit",
+      "calls": [
+        {
+          "line": 122,
+          "call": "_fake_minimize"
+        },
+        {
+          "line": 130,
+          "call": "hb.stage_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4_0b2_fix.py",
+      "test": "test_n1_b_a_rho_wave_stop_classifies_the_remaining_rho_units_without_running_them",
+      "calls": [
+        {
+          "line": 165,
+          "call": "hb.stage_a"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e.py",
+      "test": "test_m_1_a_rule_reason_is_a_global_stop_with_three_states",
+      "calls": [
+        {
+          "line": 334,
+          "call": "mon.supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e.py",
+      "test": "test_m_2_snapshot_coordinates_and_rule_exception_without_a_process",
+      "calls": [
+        {
+          "line": 367,
+          "call": "mon.supervise"
+        },
+        {
+          "line": 383,
+          "call": "mon.supervise"
+        },
+        {
+          "line": 388,
+          "call": "mon.supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e.py",
+      "test": "test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain",
+      "calls": [
+        {
+          "line": 519,
+          "call": "mon.supervise"
+        },
+        {
+          "line": 531,
+          "call": "mon.supervise"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e.py",
+      "test": "test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo",
+      "calls": [
+        {
+          "line": 762,
+          "call": "_git"
+        },
+        {
+          "line": 768,
+          "call": "_git"
+        },
+        {
+          "line": 769,
+          "call": "_git"
+        },
+        {
+          "line": 771,
+          "call": "_git"
+        },
+        {
+          "line": 772,
+          "call": "_git"
+        },
+        {
+          "line": 770,
+          "call": "_git"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs",
+      "calls": [
+        {
+          "line": 227,
+          "call": "_tree"
+        },
+        {
+          "line": 228,
+          "call": "_pre"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block",
+      "calls": [
+        {
+          "line": 245,
+          "call": "_tree"
+        },
+        {
+          "line": 258,
+          "call": "_pre"
+        },
+        {
+          "line": 256,
+          "call": "_pre"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block",
+      "calls": [
+        {
+          "line": 265,
+          "call": "_tree"
+        },
+        {
+          "line": 283,
+          "call": "_pre"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks",
+      "calls": [
+        {
+          "line": 290,
+          "call": "_tree"
+        },
+        {
+          "line": 309,
+          "call": "_pre"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked",
+      "calls": [
+        {
+          "line": 315,
+          "call": "_tree"
+        },
+        {
+          "line": 326,
+          "call": "_pre"
+        },
+        {
+          "line": 329,
+          "call": "_pre"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths",
+      "calls": [
+        {
+          "line": 357,
+          "call": "_tree"
+        },
+        {
+          "line": 358,
+          "call": "_pre"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false",
+      "calls": [
+        {
+          "line": 378,
+          "call": "_tree"
+        },
+        {
+          "line": 379,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds",
+      "calls": [
+        {
+          "line": 390,
+          "call": "_tree"
+        },
+        {
+          "line": 391,
+          "call": "_launch"
+        },
+        {
+          "line": 400,
+          "call": "_tree"
+        },
+        {
+          "line": 401,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l11_timeout_kills_the_whole_process_group_including_grandchildren",
+      "calls": [
+        {
+          "line": 409,
+          "call": "_tree"
+        },
+        {
+          "line": 410,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder",
+      "calls": [
+        {
+          "line": 425,
+          "call": "_tree"
+        },
+        {
+          "line": 439,
+          "call": "_launch"
+        },
+        {
+          "line": 433,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder",
+      "calls": [
+        {
+          "line": 446,
+          "call": "_tree"
+        },
+        {
+          "line": 450,
+          "call": "_tree"
+        },
+        {
+          "line": 455,
+          "call": "_tree"
+        },
+        {
+          "line": 457,
+          "call": "_tree"
+        },
+        {
+          "line": 447,
+          "call": "_launch"
+        },
+        {
+          "line": 451,
+          "call": "_launch"
+        },
+        {
+          "line": 456,
+          "call": "_launch"
+        },
+        {
+          "line": 458,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it",
+      "calls": [
+        {
+          "line": 518,
+          "call": "_tree"
+        },
+        {
+          "line": 522,
+          "call": "_pre"
+        },
+        {
+          "line": 526,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l16_a_leaf_extension_module_beside_an_approved_module_blocks",
+      "calls": [
+        {
+          "line": 533,
+          "call": "_tree"
+        },
+        {
+          "line": 536,
+          "call": "_pre"
+        },
+        {
+          "line": 539,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l17_extra_executed_files_and_the_seal_lock_binding_each_block",
+      "calls": [
+        {
+          "line": 545,
+          "call": "_tree"
+        },
+        {
+          "line": 548,
+          "call": "_tree"
+        },
+        {
+          "line": 551,
+          "call": "_tree"
+        },
+        {
+          "line": 554,
+          "call": "_pre"
+        },
+        {
+          "line": 556,
+          "call": "_tree"
+        },
+        {
+          "line": 557,
+          "call": "_pre"
+        },
+        {
+          "line": 547,
+          "call": "_pre"
+        },
+        {
+          "line": 550,
+          "call": "_pre"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited",
+      "calls": [
+        {
+          "line": 609,
+          "call": "_tree"
+        },
+        {
+          "line": 611,
+          "call": "_launch"
+        },
+        {
+          "line": 622,
+          "call": "os.killpg"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state",
+      "calls": [
+        {
+          "line": 630,
+          "call": "_tree"
+        },
+        {
+          "line": 645,
+          "call": "_tree"
+        },
+        {
+          "line": 649,
+          "call": "_tree"
+        },
+        {
+          "line": 637,
+          "call": "_launch"
+        },
+        {
+          "line": 646,
+          "call": "_launch"
+        },
+        {
+          "line": 651,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output",
+      "calls": [
+        {
+          "line": 659,
+          "call": "_tree"
+        },
+        {
+          "line": 660,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+      "calls": [
+        {
+          "line": 695,
+          "call": "_tree"
+        },
+        {
+          "line": 700,
+          "call": "subprocess.run"
+        },
+        {
+          "line": 702,
+          "call": "_pre"
+        },
+        {
+          "line": 715,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source",
+      "calls": [
+        {
+          "line": 724,
+          "call": "_tree"
+        },
+        {
+          "line": 725,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+      "calls": [
+        {
+          "line": 737,
+          "call": "_git"
+        },
+        {
+          "line": 738,
+          "call": "_git"
+        },
+        {
+          "line": 747,
+          "call": "_tree"
+        },
+        {
+          "line": 749,
+          "call": "_launch"
+        },
+        {
+          "line": 739,
+          "call": "_git"
+        },
+        {
+          "line": 748,
+          "call": "_git"
+        },
+        {
+          "line": 757,
+          "call": "_git"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child",
+      "calls": [
+        {
+          "line": 765,
+          "call": "_tree"
+        },
+        {
+          "line": 775,
+          "call": "_tree"
+        },
+        {
+          "line": 789,
+          "call": "_tree"
+        },
+        {
+          "line": 767,
+          "call": "_launch"
+        },
+        {
+          "line": 778,
+          "call": "_launch"
+        },
+        {
+          "line": 794,
+          "call": "_launch"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped",
+      "calls": [
+        {
+          "line": 829,
+          "call": "_git"
+        },
+        {
+          "line": 833,
+          "call": "subprocess.run"
+        },
+        {
+          "line": 832,
+          "call": "_git"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+      "calls": [
+        {
+          "line": 921,
+          "call": "_tree"
+        },
+        {
+          "line": 934,
+          "call": "subprocess.run"
+        },
+        {
+          "line": 935,
+          "call": "subprocess.run"
+        },
+        {
+          "line": 938,
+          "call": "_launch"
+        },
+        {
+          "line": 932,
+          "call": "subprocess.run"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+      "calls": [
+        {
+          "line": 963,
+          "call": "_git"
+        },
+        {
+          "line": 965,
+          "call": "_git"
+        },
+        {
+          "line": 966,
+          "call": "_git"
+        },
+        {
+          "line": 968,
+          "call": "_git"
+        },
+        {
+          "line": 969,
+          "call": "_git"
+        },
+        {
+          "line": 975,
+          "call": "subprocess.run"
+        },
+        {
+          "line": 981,
+          "call": "_tree"
+        },
+        {
+          "line": 982,
+          "call": "_launch"
+        },
+        {
+          "line": 967,
+          "call": "_git"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_launch.py",
+      "test": "test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+      "calls": [
+        {
+          "line": 1058,
+          "call": "_tree"
+        },
+        {
+          "line": 1059,
+          "call": "_pre"
+        }
+      ]
+    },
+    {
+      "file": "test_reil_c4e1_runner.py",
+      "test": "test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan",
+      "calls": [
+        {
+          "line": 565,
+          "call": "_git"
+        },
+        {
+          "line": 569,
+          "call": "subprocess.run"
+        },
+        {
+          "line": 568,
+          "call": "_git"
+        }
+      ]
+    }
+  ],
+  "target_import": 0,
+  "target_execution": 0,
+  "pytest_collection": 0,
+  "note": "AST parsing indexes call spellings; not dynamic call counts or exhaustive proof of absence."
+}

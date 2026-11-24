@@ -1,0 +1,218 @@
+[
+  {
+    "path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_v3_20261124.md",
+    "bytes": 9640,
+    "sha256": "bd3efb548e81ef81aadb625f9a19639e66309eb3b6f920c44dc927cb59c90777",
+    "git_blob_sha": "cab5019f14e7cf3faa1aff76ffba8d435cc0b6ff",
+    "prior_exists": false,
+    "matches_prior": null
+  },
+  {
+    "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+    "bytes": 504294,
+    "sha256": "2fc37797499ba75b8718aa29488e567a81296b1a56e7d3c754019c45614c77d2",
+    "git_blob_sha": "a4d5e1416c7c3060719b8a5791b8955e5441a9bc",
+    "prior_exists": true,
+    "matches_prior": false
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+    "bytes": 34092,
+    "sha256": "d85e9a64ed3bbbbfa1fe49360d5a9c5f2132f61d73e22f51ed386071f300732d",
+    "git_blob_sha": "1b3a642370dcefdfa1aad63738b24562f210b866",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_20261106.md",
+    "bytes": 15873,
+    "sha256": "86f2d63134cbf186c9838a2f4124f97e98ce6cfb543557b9c04147d315b917c2",
+    "git_blob_sha": "c8554964943e03909b64318cd9caf961ad4f7c2e",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4A_SCOPE_v2_20261106.md",
+    "bytes": 10258,
+    "sha256": "605520b845bb5a6a1533b001c77a61f1eec964a50d24cc9532bd5d39366c65c8",
+    "git_blob_sha": "71b949edf5d2d39eb62cc9e2fe791ae1df55602c",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+    "bytes": 22921,
+    "sha256": "22dcc8e5ef6430253f55834743e10808b0c3547c8fb560d0ad415dce77da8f87",
+    "git_blob_sha": "5abd201780c9db4685a289053d6eb79d8b0ef8e5",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_h.py",
+    "bytes": 63723,
+    "sha256": "4efb197d2bb799edf1f712a889d826b15207d0e45ff1a7b7958884559bfac150",
+    "git_blob_sha": "6cea82b864bba7270d5c6c7c0296b0738a6e9e9e",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_hb.py",
+    "bytes": 85307,
+    "sha256": "8b8477238290cb35491c060b231031b79b277098bae1c0e7e48621d720a5aa9d",
+    "git_blob_sha": "320b4b61944dc57978ff5e5d398ba71d81929d95",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "bytes": 21546,
+    "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+    "git_blob_sha": "d25a1a7a0d582af8f3e4c0a2ff1745daf7646052",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "bytes": 53853,
+    "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+    "git_blob_sha": "cbc3b56ac5567459a8b5ac24bcacc6a3b3c2c202",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+    "bytes": 62639,
+    "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+    "git_blob_sha": "3e11c6a445ab2cc7fa6d2dfd3289e441372c5779",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4_0a.py",
+    "bytes": 20404,
+    "sha256": "6b2635d4a97e296a4d2d8749209b66461d3bbfd9009465aaeac3d80a57197e17",
+    "git_blob_sha": "c183015e58570b50b6d9bb98a429ddcbad0529cf",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4_0a_fix.py",
+    "bytes": 19183,
+    "sha256": "b2137e1119049f4f2b87c096fbb77a3de26304ea355adac98da85d796728004c",
+    "git_blob_sha": "626abed0d1df0065f208f562545fc18f4f248443",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4_0b1.py",
+    "bytes": 32038,
+    "sha256": "1040e531aa4a6696bb1f37ac1075f23db361ff99d0d3f7b6008afb590c346b2c",
+    "git_blob_sha": "519f85f5b3115c3ccd82000ef8df58b3ac7796fe",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4_0b1_fix.py",
+    "bytes": 17404,
+    "sha256": "7133c550628c819c2eadca1d2e4e468ce9373d0907ccd9dc098a4c471f4e1297",
+    "git_blob_sha": "d2e534d326e7cb7bf1989d16cbf88229ef026890",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4_0b1_fix2.py",
+    "bytes": 8440,
+    "sha256": "b861f16b7fe651b5c68ad57ed77d9079f918bf4ec59d2028cc5b82101f847602",
+    "git_blob_sha": "24211bdbadd4b5a2914051bee13bce83ac80367d",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4_0b2.py",
+    "bytes": 54873,
+    "sha256": "01f58c6d1531054c3aa3745895d6335edd7d967fbd38751cfc7fadc781c57702",
+    "git_blob_sha": "c42744599d5429859829eba7a08e92ac0df20359",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "bytes": 57482,
+    "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+    "git_blob_sha": "0326b4df9217962c79195332df3b7b8adb9ca5a6",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e1_launch.py",
+    "bytes": 74542,
+    "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+    "git_blob_sha": "d5f66b81114440c93a0f940d5bd5bec0e95df3b6",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e1_runner.py",
+    "bytes": 37003,
+    "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13",
+    "git_blob_sha": "cc5e4be184e4cf2ab4156c11836e4e28e6f6becf",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+    "bytes": 32909,
+    "sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c",
+    "git_blob_sha": "1d4afe9f5ef451b9cf479640fd5e361fdbd08bd0",
+    "prior_exists": false,
+    "matches_prior": null
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4_0b2_fix.py",
+    "bytes": 18087,
+    "sha256": "169c9ebb1621ee8ee3b05049daec33c6822ebf48b4fac79d883d5c18b99d10f6",
+    "git_blob_sha": "e169b1676ca747d240836017f265f150071e7020",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "bytes": 19506,
+    "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+    "git_blob_sha": "770a8c106f473c9e429776897b4acf6956258319",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/tests/conftest.py",
+    "bytes": 6170,
+    "sha256": "6ecf97fbdeeb4919bb467a88558d09bfc9c7d4c317816e5c92a693858f360bc7",
+    "git_blob_sha": "2152158ba5963551950ee85c08a2859eb8a2c0b6",
+    "prior_exists": false,
+    "matches_prior": null
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "bytes": 47164,
+    "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+    "git_blob_sha": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "bytes": 23941,
+    "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+    "git_blob_sha": "b7ef272f412e1b10f35ae841d961377ff4854d64",
+    "prior_exists": true,
+    "matches_prior": true
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "bytes": 32311,
+    "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+    "git_blob_sha": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+    "prior_exists": true,
+    "matches_prior": true
+  }
+]

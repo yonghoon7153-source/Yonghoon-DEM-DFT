@@ -1,0 +1,15 @@
+{
+  "kind": "REVIEWER_METADATA_TOOL_ERROR_AND_CORRECTION",
+  "scope": "Reviewer-owned base64 decoding helper only; no target execution",
+  "tool_result": {
+    "chunk_id": "d9490d",
+    "wall_time_seconds": 0.3914,
+    "exit_code": 1,
+    "original_token_count": 176,
+    "output": "Traceback (most recent call last):\r\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_v3_review_20261124\\decode_sources.py\", line 8, in <module>\r\n    v=r['value']; s=v['result']['structuredContent']; b=base64.b64decode(s['content'],validate=True)\r\n                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\base64.py\", line 88, in b64decode\r\n    return binascii.a2b_base64(s, strict_mode=validate)\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nbinascii.Error: Only base64 data is allowed\r\n"
+  },
+  "correction": "Remove whitespace from base64 transport representation before strict decode. Validate every decoded Git blob SHA. Payload bytes not normalized.",
+  "subsequent_success_chunk": "0c11cc",
+  "subsequent_exit_code": 0,
+  "provenance": "This tool result was received in this review and serialized afterward. No independent remote runtime audit claim."
+}

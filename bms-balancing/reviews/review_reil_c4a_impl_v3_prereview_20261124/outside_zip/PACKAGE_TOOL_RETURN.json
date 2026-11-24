@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_C4A_V3_REVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact exec_command result received in this review, saved afterward outside the completed ZIP. Not this file's future write return, independent remote runtime audit, or whole-review timing.",
+  "tool_result": {
+    "chunk_id": "9bd6a2",
+    "wall_time_seconds": 0.73829,
+    "exit_code": 0,
+    "original_token_count": 360,
+    "output": "{\r\n  \"kind\": \"REIL_C4A_V3_REVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_v3_review_20261124\\\\REIL_C4A_IMPL_V3_PREREVIEW_20261124.zip\",\r\n    \"bytes\": 1467669,\r\n    \"sha256\": \"a1202b694048e31a6c21956b825c40a9c534dfd382c1c56a2823edfcc8b53a7a\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_v3_review_20261124\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1604,\r\n    \"sha256\": \"8771396b6fc1d8cb13881fa9b292bf084fa922dd12ba35acce561614357f2b8e\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_v3_review_20261124\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 1963,\r\n    \"sha256\": \"53c91b9a02bf142e777ba30d2bea730a1cff587d4d2b7f48070fb73931fd859b\"\r\n  },\r\n  \"payload_count\": 49,\r\n  \"entries\": 50,\r\n  \"decision\": \"REVISION_REQUIRED_BOOTSTRAP_ALLOWLIST_CYCLE\",\r\n  \"closed_subissues\": 11,\r\n  \"open_subissues\": 1,\r\n  \"C2\": \"CLOSED_DOCUMENT_SCOPE\",\r\n  \"target_execution\": 0,\r\n  \"pytest_collection\": 0,\r\n  \"functional_tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"COMSOL_policy\": \"PAUSED_BY_USER\",\r\n  \"boundary\": \"After review ZIP/receipt readback and selected input rehashes; before this actual return and its subsequent transcription.\"\r\n}\r\n"
+  }
+}
