@@ -12,7 +12,7 @@
 - 2026-11-24 · `kb/reviews/codex_ES_reply_wad_a5_er_fixes_2026_11_24.md` — ES 회신 — W_ad a5 묶음 1da64d0be (MANIFEST 50beb026…) · NO-GO (P0 2 · P1 2 · P2 1) · 회신 수령 2026-11-24 · NO-GO — 업체 발송 보류
 - 2026-11-24 · `kb/reviews/codex_ET_prompt_wad_a5_es_fixes_2026_11_24.md` — ET 프롬프트 — W_ad a5 묶음 Codex ES (NO-GO) 네 건 + P2 고침 확인만 (좁은 확인 한 번): 잠금 회수 한 명령만 · 중간 반송본 증거 보존 · 끝 기록 POTCAR 는 잰 값 · 이력 벽시계 원문 대조 · 잘린 열 제목 — 업체 발송 GO 여부 · 발송 · 회신 수령 2026-11-24 — GO (codex_ET_r…
 - 2026-11-24 · `kb/reviews/codex_ET_reply_wad_a5_es_fixes_2026_11_24.md` — ET 회신 — W_ad a5 묶음 990f8f84 (MANIFEST 01e39753…) · GO (업체 발송 가능) · 회신 수령 2026-11-24 · GO — 업체 발송 가능 (발송은 …
-- 2026-11-24 · `kb/projects/handoff_2026_11_24_litdb18_resume.md` — litdb 18편 병렬 정리 — 이어가기 카드 (2026-11-24 밤 · 세션이 끊겨도 이어지게) · 진행
+- 2026-11-24 · `kb/projects/handoff_2026_11_24_litdb18_resume.md` — litdb 18편 병렬 정리 — 이어가기 카드 (2026-11-24 밤 · 세션이 끊겨도 이어지게) · 끝
 - 2026-11-23 · `kb/reviews/codex_EO_reply_wad_a5_en_fixes_2026_11_23.md` — EO 회신 — W_ad a5 묶음 (EN 고침) 확인: NO-GO (P0 1 · P1 4 · P2 1) — EN 의 재시작 모순 · 잘못된 행 머리는 막힘 · c2 첫 전자 반복행이 SDA: 에서 잘려도 1 행으로 세어 c1 보조 채택 · 영수증 판독 불일치 · 시작 기록 잡 이름 · 중단 시간 상한 · 장부 ↔ 보존 폴더 부분 복구 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 없음) · NO-…
 - 2026-11-23 · `kb/reviews/codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` — EP 프롬프트 — W_ad a5 묶음 Codex EO (NO-GO) 재승인 조건 ①–④ 고침 확인: 완전한 전자행 계수 · 영수증 · 시작 기록 일치 판독 · 중단 시간 · 상한 · 장부 ↔ 보존 폴더 (+ P2 끝 기록 시도 ID) — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
 - 2026-11-23 · `kb/reviews/codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md` — EP 회신 — W_ad a5 묶음 (EO 고침) 확인: NO-GO — EO 원래 반례는 막힘 · 숫자를 못 읽는 c2 행 (칸 수만 맞음) 으로 c1 보조 채택 · 'SDA' (콜론 앞) 절단을 0 스텝으로 받음 · 180 h 넘은 시도에 남의 0 초 영수증 한 장으로 c2 실행 · 채택 · 부분 복구 뒤 status.tsv 의 선행 c1 · 완료 시도 run_id · 빈 영수증 칸 · 비 UTF-8 사유 · 장부 순서 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…
@@ -563,7 +563,7 @@
 - `kb/projects/handoff_2026_11_17_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-12 를 friendly 로 · fast-forward (2026-11-17) · litdb 정리 세션 · 로컬 웹앱 맞추기  (2026-11-17 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…)
 - `kb/projects/handoff_2026_11_20_evacuation.md` — 대피 인계 — 2026-11-20 (friendly 세션 사용 한도 → 서브 세션 · 머지 때 충돌 0 · W_ad 은 a5 고침 이어하기 · [혁주] MD-1 판독)  (2026-11-20 · 진행)
 - `kb/projects/handoff_2026_11_23_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-20 를 friendly 로 · fast-forward (2026-11-23) · litdb 정리 세션 · 로컬 웹앱 · W_ad ES 편지는 본 세션에서  (2026-11-23 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…)
-- `kb/projects/handoff_2026_11_24_litdb18_resume.md` — litdb 18편 병렬 정리 — 이어가기 카드 (2026-11-24 밤 · 세션이 끊겨도 이어지게)  (2026-11-24 · 진행)
+- `kb/projects/handoff_2026_11_24_litdb18_resume.md` — litdb 18편 병렬 정리 — 이어가기 카드 (2026-11-24 밤 · 세션이 끊겨도 이어지게)  (2026-11-24 · 끝)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28)  (2026-10-28 · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다)
 - `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획  (2026-11-22 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…)
@@ -712,4 +712,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 644개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 656개 (정본 목록: litdb/INDEX.md)

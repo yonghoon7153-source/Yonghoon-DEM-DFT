@@ -3,7 +3,7 @@ title: "litdb 18편 병렬 정리 — 이어가기 카드 (2026-11-24 밤 · 세
 date: 2026-11-24
 updated: 2026-11-24
 tags: [handoff, litdb, curator, parallel, wad, lithiophilicity, void, sakamoto]
-status: 진행
+status: 끝
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -12,6 +12,8 @@ effort: medium
 claimType: empirical
 evidenceScope: single-source
 ---
+
+> ✅ **끝 (2026-11-24 낮 · 세션이 안 끊기고 다 했다)** — 18/18 digest · 합치기 `3679fd75` · 웹앱 그림 주석 파서 `adc62956` · W_ad DEM 보고서 8 절 `841e2834`. 18 번 slug 는 `chatterjee2025_diffuse_interface_metal_anode_void_model` (Na 계라 li_anode → metal_anode). 아래는 기록으로 남긴다.
 
 # litdb 18편 병렬 정리 — 이어가기 카드
 
