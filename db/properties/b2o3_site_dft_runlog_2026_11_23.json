@@ -138,5 +138,18 @@
   "읽는_법 (판정 아님)": "UMA 에서는 두 자리 모두 O–B 가족이 O–P 가족보다 낮다 — G3 (O 꼴이 판정을 바꿨는지) 가 실제 질문이 된다 · 판정은 카드 4 대로 DFT 단일점 → 이온 이완 → 압력 어림 · k 탐침 뒤에만 낸다 · 자리 사이 UMA 값으로 D 를 내지 않는다",
   "다음": "GPU 가 비면 프로브 블록 (B-P 128 원자 · disk_io medium · 240 초) · 그 전에 단일점 12 입력 생성 · kgy 실행기 (결과 전 · 판 고정 b2o3_bo_dft.py 설정 · k 3 3 1 · UMA 구조 · 셀 그대로)",
   "by": "claude (본 세션) · 2026-11-24"
+ },
+ "도구_sp_inputs_2026_11_24": {
+  "무엇": "tools/doping/b2o3_site_dft.py sp_inputs — 고른 12 구조의 단일점 scf.in (UMA 구조 · 셀 그대로 · 판 고정 b2o3_bo_dft.py 설정 · k 3 3 1 · tstress 없음 = 9 단계 단일점과 같다) + sp_plan.json (입력 · 구조 · 판 고정 · 유사포텐셜 sha256) · 실행은 tools/doping/run_force_check_scf.sh (kgy 에서 O 배치 · Nd 자리 카드에 쓴 것) · 결과 전",
+  "tool_sha256": "189660143a7394bfa32f8c3282c2cdcaa8cc17e28abe0b53734834aa5575101a",
+  "selftest": "68/68 (sp_inputs 양성 4 · 음성 7)",
+  "깨기": "4/4 빨강 — 개수 검사 · 파일 sha 검사 빼기 · tstress 켜기 · disk_io 무시",
+  "by": "claude (본 세션) · 2026-11-24"
+ },
+ "kgy_블록_4_2026_11_24 (GPU 가 빈 뒤 · 메모리 프로브 · 사용자가 붙여넣는다)": {
+  "블록": "B=claude/friendly-meitner-lldvar; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; P=$HOME/work/pseudo_b2o3s9; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; PW=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x\n( echo \"== ① GPU 가 비었나 (남의 잡 끝 · 그래픽만 ≈ 500 MiB)\" && U=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1) && echo \"  사용 $U MiB\" && [ \"$U\" -lt 1500 ] \\\n && echo \"== ② worktree 를 sp_inputs 판으로 · selftest\" && git -C $W fetch -q origin $B && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log --oneline -1 \\\n && $PY $W/tools/doping/b2o3_site_dft.py --selftest | tail -1 | grep PASS \\\n && echo \"== ③ 메모리 프로브 — 검사용 (GPU pw.x · 300 초 뒤 자동 종료 · run 아님 · 결과 안 씀) · BMP_04_OB 128 원자 · k 3 3 1 · medium → nowf\" \\\n && X=$R/sp_pick/sp_selected/BMP_04_OB.xyz && [ -f $X ] \\\n && for D in medium nowf; do mkdir -p $R/probe_$D && $PY $W/tools/doping/b2o3_site_dft.py probe --xyz $X --pseudo_dir $P --disk_io $D --out $R/probe_$D/scf.in > /dev/null \\\n      && ( O=$(ldd $PW) && M=$(echo \"$O\" | awk '/libmpi\\.so/{print $3; exit}') && Y=$(echo \"$O\" | awk '$3 ~ /^\\//{print $3}' | xargs -r -n1 dirname | sort -u | tr '\\n' ':') \\\n           && export OPAL_PREFIX=$(dirname $(dirname $M)) && export PATH=$OPAL_PREFIX/bin:$PATH LD_LIBRARY_PATH=$(dirname $M):$Y${LD_LIBRARY_PATH:-} OMP_NUM_THREADS=1 GFORTRAN_UNBUFFERED_PRECONNECTED=y \\\n           && cd $R/probe_$D && B0=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1) \\\n           && { ( while :; do nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1; sleep 2; done ) > gpu.log 2>/dev/null & S=$!; \\\n                timeout 300 $OPAL_PREFIX/bin/mpirun --oversubscribe -np 1 $PW -nk 1 -in $R/probe_$D/scf.in > probe.out 2>&1; kill $S; pkill -f \"$R/probe_$D/scf.in\"; true; } \\\n           && echo \"  [$D] GPU 최고 $(sort -n gpu.log | tail -1) MiB (시작 전 $B0) · SCF 반복 줄 $(grep -a -c 'iteration #' probe.out) 개\" \\\n           && grep -a -E \"number of k points|Estimated (max|total|static)|out of memory|Error\" probe.out | head -5 | sed 's/^/    /'; rm -rf $R/probe_$D/tmp ) || exit 1; done \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "기다리기": "watch -n 30 'nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader' — 사용이 1,500 MiB 아래 (그래픽만) 로 내려가면 블록 4",
+  "읽는_법": "[medium] GPU 최고값이 24,576 MiB 에 여유를 두고 들어가면 단일점 12 를 kgy 에서 medium 으로 (블록 5 = sp_inputs + run_force_check_scf.sh · tmux) · SCF 반복 줄이 0 이면 Davidson 전이라 최고값이 낮게 나왔을 수 있다 (적고 판단) · out of memory 가 찍히면 그 disk_io 는 안 된다 → 카드 7 대로 다시 묻는다 (gabia 줄)",
+  "by": "claude (본 세션) · 2026-11-24"
  }
 }

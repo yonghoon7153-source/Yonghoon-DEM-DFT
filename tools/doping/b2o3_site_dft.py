@@ -12,6 +12,8 @@
             어닐용 후보 폴더를 만든다 (post_relax.xyz 를 바이트 그대로 복사 · sha256 · 둘째와의 차 · 끝 꼴)
   pick_dft  카드 4 단계_1 — 자리 × O 꼴 (출발 가족: 10월 O–P 후보 · 11월 O–B 짝) 마다 UMA 최저 셋 = DFT 단일점 12 를 고른다
             (10월 기록은 SHA256SUMS · 셀 · 조성으로 · 11월 어닐은 run_anneal.check_results 로 묶는다 · 끝 꼴은 기록만)
+  sp_inputs pick_dft 가 고른 12 구조의 단일점 scf.in (UMA 구조 · 셀 그대로 · 판 고정 설정 · k 3 3 1 · disk_io 는 프로브로 고름)
+            + sp_plan.json (입력 · 구조 · 판 고정 도구 · 유사포텐셜 sha256) — 실행은 tools/doping/run_force_check_scf.sh
   probe     DFT 메모리 프로브 입력 — 9 단계 판 고정 b2o3_bo_dft.py (sha256 0c3b7f51…) 의 pw_input_text 를 그대로 쓰고
             disk_io 한 줄만 바꾼다 (disk_io 는 숫자에 영향 없음 — QE 설명서: nowf · low 는 파동함수를 메모리에 ·
             medium · high 는 k 점이 둘 이상이면 디스크에)
@@ -545,6 +547,53 @@ def pw_text(mod, atoms, *, prefix, calc, k, pseudo_dir, disk_io, tstress=False) 
     return t.replace(old, f"    disk_io = '{disk_io}'")
 
 
+def cmd_sp_inputs(sp_pick: Path, out: Path, *, pseudo_dir: str, disk_io: str, repo_root: Path, k=(3, 3, 1)) -> dict:
+    """카드 4 단계_1 — pick_dft 가 고른 12 구조의 DFT 단일점 입력 (UMA 구조 · UMA 셀 그대로 · 9 단계 판 고정 설정).
+
+    출력 = <out>/<이름>/scf.in (run_force_check_scf.sh 가 그대로 도는 꼴) + <out>/sp_plan.json
+    (입력 sha256 · 구조 sha256 · 판 고정 도구 sha256 · 유사포텐셜 sha256 · md5 · z_valence · k · disk_io).
+    입력은 결정론이다 — 판독기가 같은 인자로 다시 만들어 sha256 으로 대조한다.
+    ⛔ 못 하는 것: pw.x 를 돌리지 않는다 · disk_io 는 메모리 프로브 결과로 사람이 고른다 (숫자에는 영향 없음 ·
+       9 단계 단일점은 gabia nowf) · 셀을 기준 셀로 옮기지 않는다 (단일점은 UMA 셀 그대로 — 기준 셀은 단계_2 이완).
+    """
+    from ase.io import read
+    mod = load_pinned(repo_root)
+    sp_pick, out = Path(sp_pick), Path(out)
+    man = json.loads((sp_pick / "manifest.json").read_text())
+    if man.get("schema") != "b2o3_site_dft_sp_selected/v1" or man.get("purpose") != PURPOSE_SP:
+        raise SystemExit("⛔ pick_dft 의 단일점 manifest 가 아니다 (schema · purpose)")
+    want = len(BASES) * 2 * N_PER_FAMILY
+    if len(man.get("files", {})) != want:
+        raise SystemExit(f"⛔ 고른 구조 {len(man.get('files', {}))} 개 ≠ {want}")
+    for rel, e in man["files"].items():
+        if sha256_file(sp_pick / rel) != e["sha256"]:
+            raise SystemExit(f"⛔ 고른 구조 파일이 manifest 뒤 바뀌었다: {rel}")
+    if out.exists() and any(out.iterdir()):
+        raise SystemExit(f"⛔ {out} 가 비어 있지 않다 — 덮지 않는다")
+    pp = mod.pseudo_record(pseudo_dir)
+    jobs = {}
+    for rel, e in sorted(man["files"].items()):
+        nm = Path(rel).stem
+        a = read(str(sp_pick / rel))
+        if composition(a) != dict(sorted(MODELS[e["site"]].items())):
+            raise SystemExit(f"⛔ {nm}: 조성이 모델과 다르다")
+        t = pw_text(mod, a, prefix=f"sp_{nm}", calc="scf", k=list(k), pseudo_dir=pseudo_dir, disk_io=disk_io)
+        (out / nm).mkdir(parents=True)
+        (out / nm / "scf.in").write_text(t)
+        jobs[nm] = {"scf_in_sha256": sha256_file(out / nm / "scf.in"), "xyz": rel, "xyz_sha256": e["sha256"],
+                    "site": e["site"], "family": e["family"], "base": e["base"], "E_uma_eV": e["E_uma_eV"],
+                    "end_motif": e["end_motif"], "nat": len(a)}
+    plan = {"schema": "b2o3_site_dft_sp_plan/v1", "purpose": PURPOSE_SP, "card": CARD, "decision": DECISION,
+            "tool": {"path": "tools/doping/b2o3_site_dft.py", "sha256": tool_sha()},
+            "pinned_dft": {"path": PINNED_DFT_REL, "sha256": PINNED_DFT_SHA},
+            "settings": {"calc": "scf", "k": list(k), "disk_io": disk_io, "tstress": False, "cell": "UMA 셀 그대로",
+                         "DFT": {kk: mod.DFT[kk] for kk in ("ecutwfc", "ecutrho", "smearing", "degauss", "nspin", "conv_thr",
+                                                            "mixing_mode", "mixing_beta", "electron_maxstep", "diagonalization")}},
+            "pseudo": pp, "sp_pick_manifest_sha256": sha256_file(sp_pick / "manifest.json"), "jobs": jobs}
+    (out / "sp_plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1) + "\n")
+    return plan
+
+
 def cmd_probe(xyz: Path, out: Path, *, pseudo_dir: str, k, disk_io: str, repo_root: Path) -> str:
     from ase.io import read
     mod = load_pinned(repo_root)
@@ -826,6 +875,58 @@ def selftest() -> int:
             chk("3 3 1 0 0 0" in t1, "[양성] k 격자 3 3 1")
             chk(refuses(pw_text, mod, t_atoms, prefix="x", calc="scf", k=[3, 3, 1], pseudo_dir="/pp", disk_io="fast"),
                 "[음성] 모르는 disk_io → 멈춘다")
+
+            print("— sp_inputs (단일점 12 입력 · 판 고정 설정 · 결정론)")
+            pdir = T / "pp"; pdir.mkdir()
+            for el in mod.SPECIES:
+                mod._write_fake_pp(pdir, el)
+            saved_m2 = dict(MODELS)
+            MODELS["B-P"] = composition(toy()); MODELS["B-Li"] = composition(toy())
+            try:
+                def mk_pick(D, n=12, tamper=False, schema="b2o3_site_dft_sp_selected/v1"):
+                    (D / "sp_selected").mkdir(parents=True)
+                    files = {}
+                    for i in range(n):
+                        site = "B-P" if i < n // 2 else "B-Li"
+                        rel = f"sp_selected/X{i:02d}.xyz"
+                        write(str(D / rel), toy(edge=False), format="extxyz")
+                        files[rel] = {"sha256": sha256_file(D / rel), "site": site, "family": "O-P" if i % 2 else "O-B",
+                                      "base": f"X{i:02d}", "E_uma_eV": -100.0 - i, "end_motif": "O-P"}
+                    if tamper:
+                        (D / "sp_selected" / "X00.xyz").write_text((D / "sp_selected" / "X00.xyz").read_text() + " ")
+                    (D / "manifest.json").write_text(json.dumps({"schema": schema, "purpose": PURPOSE_SP, "files": files}))
+                    return D
+                pk = mk_pick(T / "pk1")
+                pl = cmd_sp_inputs(pk, T / "sp1", pseudo_dir=str(pdir), disk_io="medium", repo_root=root)
+                t00 = (T / "sp1" / "X00" / "scf.in").read_text()
+                chk(len(pl["jobs"]) == 12 and all((T / "sp1" / j / "scf.in").is_file() for j in pl["jobs"]),
+                    "[양성] 잡 12 개 · 잡마다 scf.in (run_force_check_scf.sh 꼴)")
+                chk("calculation = 'scf'" in t00 and "disk_io = 'medium'" in t00 and "3 3 1 0 0 0" in t00 and "tstress" not in t00,
+                    "[양성] scf · disk_io medium · k 3 3 1 · tstress 없음 (9 단계 단일점과 같다)")
+                from ase.io import read as _rd
+                again = pw_text(mod, _rd(str(pk / "sp_selected" / "X00.xyz")), prefix="sp_X00", calc="scf", k=[3, 3, 1],
+                                pseudo_dir=str(pdir), disk_io="medium")
+                chk(again == t00 and pl["jobs"]["X00"]["scf_in_sha256"] == sha256_file(T / "sp1" / "X00" / "scf.in"),
+                    "[양성] 결정론 — 같은 인자로 다시 만들면 같은 바이트 · sha256 기록")
+                chk(pl["pinned_dft"]["sha256"] == PINNED_DFT_SHA and set(pl["pseudo"]["files"]) == set(mod.SPECIES),
+                    "[양성] 판 고정 도구 sha256 · 유사포텐셜 6 개 기록")
+                chk(refuses(cmd_sp_inputs, mk_pick(T / "pk2", n=11), T / "sp2", pseudo_dir=str(pdir), disk_io="medium", repo_root=root),
+                    "[음성] 고른 구조가 12 개가 아님 → 멈춘다")
+                chk(refuses(cmd_sp_inputs, mk_pick(T / "pk3", tamper=True), T / "sp3", pseudo_dir=str(pdir), disk_io="medium", repo_root=root),
+                    "[음성] 고른 구조 파일이 manifest 뒤 바뀜 → 멈춘다")
+                chk(refuses(cmd_sp_inputs, mk_pick(T / "pk4", schema="x"), T / "sp4", pseudo_dir=str(pdir), disk_io="medium", repo_root=root),
+                    "[음성] pick_dft manifest 가 아님 → 멈춘다")
+                chk(refuses(cmd_sp_inputs, pk, T / "sp1", pseudo_dir=str(pdir), disk_io="medium", repo_root=root),
+                    "[음성] 비어 있지 않은 출력 폴더 → 덮지 않는다")
+                chk(refuses(cmd_sp_inputs, pk, T / "sp5", pseudo_dir=str(T / "no_pp"), disk_io="medium", repo_root=root),
+                    "[음성] 유사포텐셜 폴더가 없음 → 멈춘다")
+                chk(refuses(cmd_sp_inputs, pk, T / "sp6", pseudo_dir=str(pdir), disk_io="fast", repo_root=root),
+                    "[음성] 모르는 disk_io → 멈춘다")
+                MODELS["B-Li"] = {"B": 2}
+                chk(refuses(cmd_sp_inputs, pk, T / "sp7", pseudo_dir=str(pdir), disk_io="medium", repo_root=root),
+                    "[음성] 조성이 모델과 다름 → 멈춘다")
+            finally:
+                MODELS.clear(); MODELS.update(saved_m2)
         fake = T / "fake_root"; (fake / "tools" / "doping").mkdir(parents=True)
         (fake / PINNED_DFT_REL).write_text("# 다른 판\n")
         chk(refuses(load_pinned, fake), "[음성] 판 고정 sha256 이 다르면 → 멈춘다")
@@ -843,6 +944,8 @@ def main(argv=None) -> int:
     a2.add_argument("--out", required=True)
     a4 = sp.add_parser("pick_dft"); a4.add_argument("--op_raw", required=True); a4.add_argument("--op_inputs", required=True)
     a4.add_argument("--ob_sel", required=True); a4.add_argument("--ob_results", required=True); a4.add_argument("--out", required=True)
+    a5 = sp.add_parser("sp_inputs"); a5.add_argument("--sp_pick", required=True); a5.add_argument("--out", required=True)
+    a5.add_argument("--pseudo_dir", required=True); a5.add_argument("--disk_io", required=True, choices=DISK_IO)
     a3 = sp.add_parser("probe"); a3.add_argument("--xyz", required=True); a3.add_argument("--out", required=True)
     a3.add_argument("--pseudo_dir", required=True); a3.add_argument("--k", type=int, nargs=3, default=[3, 3, 1])
     a3.add_argument("--disk_io", default="medium", choices=DISK_IO)
@@ -871,6 +974,13 @@ def main(argv=None) -> int:
             print(f"  {site:5s} UMA 최저 O–B − O–P = {c['O-B_minus_O-P_eV']:+.3f} eV (고르기용 · 판정 아님)")
         ch = sum(1 for f in m["files"].values() if f["motif_changed"])
         print(f"단일점 {len(m['files'])} 개 → {a.out}/manifest.json (* = 고름 · 끝 꼴이 출발 가족과 다른 고른 후보 {ch} 개 · 기록만)")
+        return 0
+    if a.cmd == "sp_inputs":
+        root = Path(__file__).resolve().parents[2]
+        pl = cmd_sp_inputs(Path(a.sp_pick), Path(a.out), pseudo_dir=a.pseudo_dir, disk_io=a.disk_io, repo_root=root)
+        for nm, j in pl["jobs"].items():
+            print(f"  {nm:12s} {j['site']:5s} {j['family']} · nat {j['nat']} · scf.in {j['scf_in_sha256'][:12]}")
+        print(f"단일점 입력 {len(pl['jobs'])} 개 → {a.out}/<이름>/scf.in · 계획 {a.out}/sp_plan.json (disk_io {a.disk_io} · k {pl['settings']['k']})")
         return 0
     if a.cmd == "probe":
         root = Path(__file__).resolve().parents[2]
