@@ -3222,6 +3222,9 @@ LIT_DFT_KW = [
 # 스코어로 못 가르는(또는 오분류되는) 논문 수동 지정
 LIT_TRACK_OVERRIDE = {
     # 역학/미세구조/제조 쪽(내용에 DFT·ML 보조가 있어도 주제는 DEM 트랙)
+    #   2026-11-24 배치 — 낱말 하나로 겨우 dem 이라 제목·type 을 고치면 뒤집힌다 (보고서 실측: masias 'contact' 1 점 · chatterjee 'homo' 가 dft 1 점)
+    "masias2019_li_metal_elastic_plastic_creep_properties": "dem",          # Li 금속 탄성·소성·크리프 = 공극·적층압 모델 입력
+    "chatterjee2025_diffuse_interface_metal_anode_void_model": "dem",       # 연속체 (MOOSE) 공극 상장 모델
     "han2025_icep_conductive_elastic_binder": "dem",
     "kang2025_bollard_anchored_binder_dry_electrode": "dem",
     "duquesnoy2023_ml_multiobjective_manufacturing_optimization": "dem",
@@ -3640,6 +3643,34 @@ def _alias_hit(head: str, alias: str) -> bool:
         i = j
 
 
+#: '이 사람은 저자가 아니다' 문장 — 이름이 부정어 **앞**에 온다 (`Jeff Sakamoto 는 저자가 아니다`).
+#:   ⛔ 2026-11-24 실측: metzler2025 저자 줄 끝 `⛔ Jeff Sakamoto 는 저자가 아니다 (참고문헌 7 · 37 에만 나온다)` ·
+#:   cicvaric2026 `> (Jeff Sakamoto 는 저자가 아니다.)` → 두 편 다 sakamoto 배지가 붙었다.
+#:   NEG(그 자리에서 자르기)는 이름이 앞에 있으면 못 막고, DROP(줄 통째)는 같은 줄의 진짜 저자까지 버린다
+#:   → 그 **마디**(· — ; | 괄호 ⛔ 로 나뉜 조각)만 버린다.
+#:   '교신 저자는 아니다' 는 저자다 (masias2019 · fuchs2023 — 공저지만 교신이 아님) → 앞에 역할 말
+#:   (교신 · 1 · 첫 · 끝 · 마지막) 이 오면 부정으로 안 본다.
+_NOT_AUTHOR_RE = re.compile(
+    r"(?<!교신)(?<!교신 )(?<!1)(?<!1 )(?<!첫)(?<!첫 )(?<!끝)(?<!끝 )(?<!마지막)(?<!마지막 )"
+    r"(?:공저자|공저|저자)(?:가|는)?\s?(?:아니|아님)"
+    r"|not (?:an? )?(?:co-?)?author")
+_CLAUSE_SPLIT_RE = re.compile(r"(\s·\s|·|\s—\s|;|\||\(|\)|⛔|\.\s)")
+
+
+def _drop_not_author_clauses(ln: str) -> str:
+    """줄에서 '저자가 아니다' 마디만 빼고 나머지를 그대로 돌려준다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 마디 구분자(· — ; | 괄호 ⛔ '. ') 없이 진짜 저자와 부정문이 한 마디에 섞이면 그 마디를 통째로 버린다.
+      · 역할 말 (교신 · 1 · 첫 · 끝 · 마지막) 밖의 수식어가 붙은 저자 부정 ('주 저자는 아니다' 처럼 저자인데 부정형) 은 부정으로 본다.
+      · 한국어 · 영어 두 꼴만 안다.
+    """
+    if not _NOT_AUTHOR_RE.search(ln):
+        return ln
+    parts = _CLAUSE_SPLIT_RE.split(ln)
+    return "".join(p for p in parts if not _NOT_AUTHOR_RE.search(p))
+
+
 def _paper_pis(slug: str) -> list:
     """digest 앞부분(저자·소속 블록)에서 PI 이름을 찾는다.
 
@@ -3681,6 +3712,7 @@ def _paper_pis(slug: str) -> list:
     for ln in lines:
         if any(d in ln for d in DROP):
             continue
+        ln = _drop_not_author_clauses(ln)
         for tok in NEG:
             i = ln.find(tok)
             if i >= 0:

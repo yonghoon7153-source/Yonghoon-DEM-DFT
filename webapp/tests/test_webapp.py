@@ -4294,6 +4294,47 @@ def test_sakamoto_papers_are_tagged_and_citations_are_not():
         "양성 대조 실패: Jeff Sakamoto 를 놓친다"
 
 
+def test_not_author_sentence_does_not_tag_pi(tmp_path, monkeypatch):
+    """⛔음성 2026-11-24 — '이 사람은 저자가 아니다' 문장 속 이름에 배지가 붙지 않는다.
+
+    실측: metzler2025 · cicvaric2026 digest 머리에 `Jeff Sakamoto 는 저자가 아니다` 가 있어
+    sakamoto 배지가 붙었다 — 이름이 부정어 **앞**이라 NEG(그 자리에서 자르기)로는 못 막는다.
+    양성 대조: ① 같은 줄의 진짜 저자는 살아남는다 (마디만 버린다)
+              ② '교신 저자는 아니다' (공저 · 교신 아님 — masias2019 · fuchs2023) 는 저자로 잡힌다.
+    ⛔ 이 시험이 못 하는 것: 한국어 · 영어 밖의 부정문, 마디 구분자 없이 한 마디에 섞인 저자 + 부정문.
+    """
+    for slug in ("metzler2025_ag_particle_distribution_carbon_interlayer_anode_free",
+                 "cicvaric2026_li_nucleation_ni111_cu111_anode_free"):
+        assert "sakamoto" not in D._paper_pis(slug), f"⛔ '저자가 아니다' 문장으로 {slug} 에 배지가 붙었다"
+    for slug in ("masias2019_li_metal_elastic_plastic_creep_properties",
+                 "fuchs2023_cu_llzo_anode_free_li_growth_modes",
+                 "wang2020_lithium_free_insitu_plating_llzo",
+                 "sandoval2025_electro_chemo_mechanics_anode_free_ssb"):
+        assert "sakamoto" in D._paper_pis(slug), f"양성 대조 실패: 공저 digest {slug} 에서 배지를 잃었다"
+    cases = {
+        "neg_tail": ("> **저자**: A · B — ¹Oxford · ⛔ Jeff Sakamoto 는 저자가 아니다 (참고문헌 7 · 37 에만 나온다).",
+                     set()),
+        "neg_line": ("> **저자**: A · B\n> (Jeff Sakamoto 는 저자가 아니다.)", set()),
+        "neg_en": ("> Authors: A, B. Jeff Sakamoto is not an author.", set()),
+        "neg_coauthor": ("> **저자**: A · B · Jeff Sakamoto 공저 아님", set()),
+        "pos_corr": ("> **저자**: Alvaro Masias · Jeff Sakamoto (마지막 저자 · 교신 저자는 아니다 — 교신 = Masias)",
+                     {"sakamoto"}),
+        "pos_corr_same_clause": ("> **저자**: Alvaro Masias · Jeff Sakamoto 는 교신 저자가 아니다 (교신 = Masias)",
+                                 {"sakamoto"}),
+        "pos_first_same_clause": ("> **저자**: X · Jeff Sakamoto 는 1저자는 아니다", {"sakamoto"}),
+        "pos_same_line": ("> **저자**: Min-Gi Jeong · Jeff Sakamoto · Kelsey B. Hatzell · ⛔ Yoon Seok Jung 은 저자가 아니다",
+                          {"sakamoto"}),
+    }
+    papers = tmp_path / "papers"
+    papers.mkdir()
+    for k, (body, _) in cases.items():
+        (papers / f"{k}.md").write_text(f"# t\n\n{body}\n", encoding="utf-8")
+    monkeypatch.setattr(D, "LITDB", tmp_path)
+    for k, (_, want) in cases.items():
+        got = set(D._paper_pis(k)) & {"sakamoto", "ysjung"}
+        assert got == want, f"⛔ {k}: 배지 {sorted(got)} ≠ 기대 {sorted(want)}"
+
+
 #: 그림 크로핑을 **못 만드는** digest — 원본 PDF 가 `litdb/inbox/` 에 없다.
 #:   ⛔ 이것은 "안 해도 된다" 가 아니라 **"지금 못 한다 + 왜"** 를 적는 자리다. 조용히 건너뛰면
 #:     다음 사람이 그림이 없는 줄도 모른다. 아래 시험이 **면제가 아직 필요한지** 직접 확인한다 —

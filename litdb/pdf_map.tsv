@@ -661,3 +661,8 @@ sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure
 # ── 냉간분무 NMC622 : PVDF : CB 단일 입자 충돌 · 탄소성 결합구 DEM (Gallegos Tovar … Curtis · Surf. Coat. Technol. 541 (2026) 134102 · 최종판 15 쪽 + SI 9 쪽) — litdb 2026-11-23 기존 카드 보강 (처음 2026-11-02 = Journal Pre-proof) · 최종판 파일 이름이 자동 매칭에 안 붙는다
 #   ⚠ 크롭 55 장 = Pre-proof 렌더 그림 16 · SI 8 (최종판과 내용 같아 그대로) + 최종판에서 다시 렌더한 표 2 · 식 10 + 근거 문단 19 — 손작업 (manual_crop · recrop) · --inbox --run 으로 다시 뽑지 말 것
 tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond	cold_spray_deposition_of_cathode_composites_modeled_via_a_dem
+# ── 2026-11-24 배치 (Li 금속 음극 · 공극 · 점착 18 편) — 자동 매칭이 SI 를 못 붙이거나 0 편인 셋만
+masias2019_li_metal_elastic_plastic_creep_properties	masias2019_li_creep
+sandoval2025_electro_chemo_mechanics_anode_free_ssb	afssb2024_electro_chemo_mechanics
+# ── Ag/CB 인터레이어 Ag 두께 방향 분포 (Metzler 외 2025 · ACS Appl. Mater. Interfaces 17, 39089) — litdb 2026-11-24 · 업로드 파일명이 'agdist2025_…' 라 slug 토큰과 안 겹친다 (--inbox --only metzler2025 --dry = 0편) · 본문 · SI 공통 조각 ──
+metzler2025_ag_particle_distribution_carbon_interlayer_anode_free	agdist2025_ag_c_interlayer
