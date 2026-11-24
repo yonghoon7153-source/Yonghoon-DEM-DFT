@@ -7507,6 +7507,30 @@ COLLAB_REPORTS = (
 )
 COLLAB_BY_SLUG = {r["slug"]: r for r in COLLAB_REPORTS}
 
+
+def collab_registration(rel: str) -> dict:
+    """docs/collab 의 HTML rel → 공유 보고서 화면 어디에 걸려 있나 (2026-11-24 · 사용자 '앞으로 html 생성하거나 그럴 때
+    공유 보고서 이 부분 수정하거나 추가하는 걸 자동으로'). 훅 (tools/collab/check_collab_registry.py) 과 시험이 이 함수 하나를 본다.
+
+    → {registered, kind ('integrated' | 'current' | 'earlier' | None), slug, url}
+    ⛔ 못 하는 것: 파일이 실제로 있는지 · 표의 제목이 맞는지는 안 본다 (그건 test_collab_reports 가 본다)."""
+    if rel == INTERFACE_THERMO_REL:
+        return {"registered": True, "kind": "integrated", "slug": None, "url": "/interface-thermo"}
+    for r in COLLAB_REPORTS:
+        if r["rel"] == rel:
+            return {"registered": True, "kind": "current", "slug": r["slug"], "url": f"/reports/{r['slug']}"}
+        for e in r.get("earlier", ()):
+            if e["rel"] == rel:
+                return {"registered": True, "kind": "earlier", "slug": r["slug"], "url": "/reports"}
+    return {"registered": False, "kind": None, "slug": None, "url": None}
+
+
+def collab_unlisted(root=None) -> list:
+    """docs/collab/*.html 중 공유 보고서 화면에 안 걸린 것 (rel 목록). 빈 목록이 정상이다 — 시험이 == [] 을 본다."""
+    base = Path(root) if root else ROOT
+    return sorted(p.relative_to(base).as_posix() for p in (base / "docs" / "collab").glob("*.html")
+                  if not collab_registration(p.relative_to(base).as_posix())["registered"])
+
 #: 화면이 통째로 띄우고 **그 화면에서 여백 메모를 다는** repo 파일 → 그 화면 (2026-11-17 · /interface-thermo · 2026-11-24 · /reports/<slug>).
 #:   ⛔ 이 표가 없으면 그 메모는 '파일' 로 잡혀 /files?q=… 로 간다 — /notes 의 딥링크 `?note=` 가 갤러리에서 헛돈다.
 #:   ⚠ 메모를 **달 수 있는가** 는 여기서 안 정한다 (safe_note_target 이 정한다 · docs/ 는 원래 된다). 여기는 '어디로 데려가나' 만.

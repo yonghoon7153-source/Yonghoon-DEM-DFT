@@ -236,3 +236,25 @@ def test_reports_page_lists_every_campaign_with_its_reports():
         assert f'href="/reports/{r["slug"]}"' in by_url[r["nav_parent"]], f"{r['slug']}: {r['nav_parent']} 줄에 없다"
         others = [u for u in by_url if u != r["nav_parent"]]
         assert not any(f'href="/reports/{r["slug"]}"' in by_url[u] for u in others), f"{r['slug']}: 다른 캠페인 줄에도 달렸다"
+
+
+def test_every_collab_html_is_on_the_reports_page():
+    """⛔음성 그물 (사용자 2026-11-24 '앞으로 html 생성하거나 그럴 때 공유 보고서 이 부분 수정하거나 추가하는 걸 자동으로'):
+    docs/collab/*.html 은 전부 공유 보고서 화면에 걸려 있다 (보기 화면 · 앞 판 · 통합 보고). 새 HTML 을 표에 안 넣으면 여기서 빨간불 —
+    Write/Edit 훅 (tools/collab/check_collab_registry.py) 이 못 보는 Bash 로 쓴 파일도 여기서 잡힌다."""
+    assert D.collab_unlisted() == [], f"공유 보고서 표 밖 HTML: {D.collab_unlisted()} — webapp/data.py COLLAB_REPORTS 에 넣는다"
+
+
+def test_registry_check_is_not_blind(tmp_path):
+    """⛔음성 (시험의 시험): 표에 없는 HTML 이 docs/collab 에 생기면 collab_unlisted 가 실제로 그 파일을 내놓는다 ·
+    표에 있는 이름은 내놓지 않는다 · 통합 보고 · 앞 판도 '걸림' 으로 본다."""
+    d = tmp_path / "docs" / "collab"
+    d.mkdir(parents=True)
+    (d / "brand_new_report_2026_12_01.html").write_text("<main><h1>x</h1></main>", encoding="utf-8")
+    for rel in [D.INTERFACE_THERMO_REL] + [r["rel"] for r in D.COLLAB_REPORTS] + \
+               [e["rel"] for r in D.COLLAB_REPORTS for e in r.get("earlier", ())]:
+        (tmp_path / rel).write_text("<main></main>", encoding="utf-8")
+    assert D.collab_unlisted(tmp_path) == ["docs/collab/brand_new_report_2026_12_01.html"]
+    assert D.collab_registration("docs/collab/brand_new_report_2026_12_01.html")["registered"] is False
+    assert D.collab_registration(D.INTERFACE_THERMO_REL)["kind"] == "integrated"
+    assert D.collab_registration("docs/collab/lzo_coated_nca_lpscl_progress_2026_11_17.html")["kind"] == "earlier"
