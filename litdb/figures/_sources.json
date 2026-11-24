@@ -473,6 +473,14 @@
    "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf"
   ]
  },
+ "chatterjee2025_diffuse_interface_li_anode_void_model": {
+  "figures": 27,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "difint2025_void_diffuse_interface_main.pdf",
+   "difint2025_void_diffuse_interface_SI.pdf"
+  ]
+ },
  "chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed": {
   "figures": 37,
   "generated": "2026-11-23",
@@ -3550,7 +3558,7 @@
   ]
  },
  "seymour2021_void_suppression_interfacial_adhesion_vacancy_transport": {
-  "figures": 5,
+  "figures": 24,
   "generated": "2026-11-24",
   "pdfs": [
    "seymour2021_void_adhesion_main.pdf",
@@ -3597,7 +3605,7 @@
   ]
  },
  "shi2026_argyrodite_stack_pressure_viscoplastic_deformation": {
-  "figures": 24,
+  "figures": 25,
   "generated": "2026-11-24",
   "pdfs": [
    "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
@@ -4410,7 +4418,7 @@
   ]
  },
  "yang2021_atomistic_li_stripping_plating_interface_md": {
-  "figures": 12,
+  "figures": 14,
   "generated": "2026-11-24",
   "pdfs": [
    "yang2021mo_li_strip_plate_md_main.pdf",

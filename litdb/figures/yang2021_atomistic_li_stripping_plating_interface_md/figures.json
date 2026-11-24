@@ -26,7 +26,9 @@
    "h": 1891,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_main.pdf",
-   "blank": 0.606
+   "blank": 0.606,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) - g(r) panel d read, snapshot panels e-h"
   },
   {
    "key": "f2",
@@ -46,7 +48,9 @@
    "h": 2527,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_main.pdf",
-   "blank": 0.502
+   "blank": 0.502,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG)"
   },
   {
    "key": "f3",
@@ -66,7 +70,9 @@
    "h": 2191,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_main.pdf",
-   "blank": 0.686
+   "blank": 0.686,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) - contact-area curves d,e read by eye (figure-read)"
   },
   {
    "key": "f4",
@@ -86,7 +92,9 @@
    "h": 2054,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_main.pdf",
-   "blank": 0.601
+   "blank": 0.601,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) - contact-area curves f,g read by eye (figure-read)"
   },
   {
    "key": "f5",
@@ -106,7 +114,55 @@
    "h": 613,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_main.pdf",
-   "blank": 0.506
+   "blank": 0.506,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + 2x zoom per panel (scratch) + marker centroids by colour segmentation (scratch) - tested (W,P) grid recovered"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The interfacial atom interactions and interfacial adhesion energy for the Li-SE interface. a) The interfacial Li-Li short-range repulsion (dash-line) and Li-O attraction (solid-line) with different parameters as a function of atomic distance. b) The potential parameter ε used in our simulations and corresponding interfacial adhesion energy W.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    68.0,
+    530.0,
+    330.0
+   ],
+   "w": 1934,
+   "h": 1092,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.898,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported fS1 as a number gap ('p3 영역 없음') - SI p.3 holds panel a (raster plot, img bbox 70.8,119.1,303.0,293.2) + panel b (vector table, drawings 334.9,84.8,524.0,326.3) between the panel labels (y 71) and the caption (y 335); clip = union + margin, rendered with pymupdf at 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) - legend eps 0.10-0.50, minima ~ -eps at r ~ 2.0 A; table b cross-checked with PDF text"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Self-interstitial atom (SIA) configurations and formation energy in bulk lithium metal. a) <111>, b) <011>, and c) <001> interstitial configuration. d) Formation energy of the self-interstitial atom and single vacancy in bulk lithium metal, in agreement with prior computation studies.[5]",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    288.0,
+    530.0,
+    534.0
+   ],
+   "w": 1934,
+   "h": 1025,
+   "dpi": 300,
+   "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
+   "blank": 0.835,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported fS2 as a number gap ('p5 영역 없음') - SI p.5 holds panels a-c (one raster image, bbox 70.8,293.4,501.4,440.4) + panel d (vector table, drawings 165.8,454.9,477.2,530.7) between Supplementary Note 1 text (ends y 280) and the caption (y 538); clip = union + margin, pymupdf 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop); table d cross-checked with PDF text"
   },
   {
    "key": "fS3",
@@ -126,7 +182,9 @@
    "h": 805,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
-   "blank": 0.952
+   "blank": 0.952,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop; source raster is 346x260 px, hence small file)"
   },
   {
    "key": "fS4",
@@ -146,7 +204,9 @@
    "h": 1492,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
-   "blank": 0.922
+   "blank": 0.922,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) - Arrhenius slopes read by eye"
   },
   {
    "key": "fS5",
@@ -166,7 +226,9 @@
    "h": 842,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
-   "blank": 0.569
+   "blank": 0.569,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG)"
   },
   {
    "key": "fS6",
@@ -186,7 +248,9 @@
    "h": 1500,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
-   "blank": 0.665
+   "blank": 0.665,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + SI page render: images look swapped with fS7 (slab thins, no cyan = stripping-like) - see digest s10"
   },
   {
    "key": "fS7",
@@ -206,7 +270,9 @@
    "h": 1300,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
-   "blank": 0.559
+   "blank": 0.559,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + SI page render: images look swapped with fS6 (cyan layer grows, slab thickens = plating-like) - see digest s10"
   },
   {
    "key": "fS8",
@@ -226,7 +292,9 @@
    "h": 1132,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
-   "blank": 0.657
+   "blank": 0.657,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG)"
   },
   {
    "key": "tS1",
@@ -246,7 +314,9 @@
    "h": 1067,
    "dpi": 300,
    "src": "yang2021mo_li_strip_plate_md_SI1.pdf",
-   "blank": 0.929
+   "blank": 0.929,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as PNG - read from SI p.4 page render + PDF text (tables: text is exact)"
   }
  ],
  "missing_labels": [
@@ -260,7 +330,8 @@
    "refs": [
     "p10",
     "p3"
-   ]
+   ],
+   "resolved": "manual_crop fig_S1.png (2026-11-24, litdb-curator) - see figures[fS1].manual_crop"
   },
   {
    "key": "fS2",
@@ -272,7 +343,8 @@
    "refs": [
     "p2",
     "p5"
-   ]
+   ],
+   "resolved": "manual_crop fig_S2.png (2026-11-24, litdb-curator) - see figures[fS2].manual_crop"
   }
  ],
  "table_caption_vote": [
@@ -288,5 +360,80 @@
    "below_adjacent": 0,
    "caption_below": false
   }
- ]
+ ],
+ "movies": {
+  "note": "SI movies are not figures - frames kept here for the digest Figure set rows MovieS1/MovieS2. Regenerate: ffmpeg -v error -i litdb/inbox/yang2021mo_li_strip_plate_md_movieN.mov -vf fps=1/5 -q:v 4 litdb/figures/yang2021_atomistic_li_stripping_plating_interface_md/movieN_%03d.jpg . Frame k is at video time ~ (k-1)*5 s. Frames carry no time stamp or scale bar.",
+  "MovieS1": {
+   "src": "yang2021mo_li_strip_plate_md_movie1.mov",
+   "duration_s": 83.2,
+   "size": "1024x768 h264 10 fps",
+   "caption_SI": "Movie S1. MD simulations of Li plating process for the coherent interface (W = 0.77 J/m2) under P = 0 MPa at a nominal current density of 18.9 nA/nm2.",
+   "frames": [
+    "movie1_001.jpg",
+    "movie1_002.jpg",
+    "movie1_003.jpg",
+    "movie1_004.jpg",
+    "movie1_005.jpg",
+    "movie1_006.jpg",
+    "movie1_007.jpg",
+    "movie1_008.jpg",
+    "movie1_009.jpg",
+    "movie1_010.jpg",
+    "movie1_011.jpg",
+    "movie1_012.jpg",
+    "movie1_013.jpg",
+    "movie1_014.jpg",
+    "movie1_015.jpg",
+    "movie1_016.jpg",
+    "movie1_017.jpg"
+   ],
+   "viewed": [
+    "movie1_001.jpg",
+    "movie1_003.jpg",
+    "movie1_005.jpg",
+    "movie1_007.jpg",
+    "movie1_009.jpg",
+    "movie1_011.jpg",
+    "movie1_013.jpg",
+    "movie1_015.jpg",
+    "movie1_017.jpg"
+   ],
+   "viewed_how": "001/009/017 full size; 003/005/007/011/013/015 as a 3x2 montage (scratch)"
+  },
+  "MovieS2": {
+   "src": "yang2021mo_li_strip_plate_md_movie2.mov",
+   "duration_s": 75.0,
+   "size": "1024x768 h264 10 fps",
+   "caption_SI": "Movie S2. MD simulations of Li stripping process for the coherent interface (W = 0.77 J/m2) under P = 0 MPa at a nominal current density of 18.9 nA/nm2.",
+   "frames": [
+    "movie2_001.jpg",
+    "movie2_002.jpg",
+    "movie2_003.jpg",
+    "movie2_004.jpg",
+    "movie2_005.jpg",
+    "movie2_006.jpg",
+    "movie2_007.jpg",
+    "movie2_008.jpg",
+    "movie2_009.jpg",
+    "movie2_010.jpg",
+    "movie2_011.jpg",
+    "movie2_012.jpg",
+    "movie2_013.jpg",
+    "movie2_014.jpg",
+    "movie2_015.jpg"
+   ],
+   "viewed": [
+    "movie2_001.jpg",
+    "movie2_003.jpg",
+    "movie2_005.jpg",
+    "movie2_006.jpg",
+    "movie2_008.jpg",
+    "movie2_010.jpg",
+    "movie2_012.jpg",
+    "movie2_014.jpg",
+    "movie2_015.jpg"
+   ],
+   "viewed_how": "001/008/015 full size; 003/005/006/010/012/014 as a 3x2 montage (scratch)"
+  }
+ }
 }
