@@ -778,3 +778,16 @@ litdb 확인 = 정본 `litdb/papers/` 파일 목록 611 장 (`git ls-tree`) + `g
 - [본 세션 · 11-24] Kasemchainan et al. (Bruce), *Nat. Mater.*, 2019, **18**, 1105. | Li \| LPSCl 임계 박리 전류 · 공극 (보고서 9 편) → ✅ digest `kasemchainan2019_critical_stripping_current_dendrite_on_plating` (2026-11-24b)
 - [본 세션 · 11-24] Xie, Diallo, Kim, Tu, Ceder, *Adv. Energy Mater.*, 2024, **14**, 2302960. | Ag/C 층 리튬화 기전 · Li–Ag 합금 순서 → ✅ digest `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism` (2026-11-24b)
 - [본 세션 · 11-24] Lepley, Holzwarth, *Phys. Rev. B*, 2015, **92**, 214201. | 황화물 쪽 (Li \| Li₂S · Li₃PS₄) DFT 계면 · 점착 방법 원전 → ✅ digest `lepley2015_modeling_interfaces_between_solids_li_battery_materials` (2026-11-24b)
+
+## 2026-11-24b 묶음 12 편 (Li 금속 음극 둘째 묶음) — 다음 우선순위
+전체 (남은 후보 74 편 · 둘 이상의 보고가 추천 12) = `litdb/_curation/batch_2026_11_24b/extra_papers_2026_11_24b.md`. 여기는 우선순위만 (여러 보고가 추천한 것 → 최근 먼저 · 서지는 그 파일 · 각 보고의 Crossref 확인 그대로).
+- [본 세션 · 11-24b] Kotakadi, Aspinall, Burton, Liang, Aihara, Pasta, *Joule*, 2025, **9**, 102175. | W_ad 7 절 — Li \| Li₆PS₅Cl 사이 금속 인터레이어 (우리 계 그대로) · 보고 5 편이 추천
+- [본 세션 · 11-24b] Liu Y., Lu Y., Clemens O., *Electrochim. Acta*, 2026, **574**, 149375. | 탄소 층을 미리 리튬화하면 석출 Li 가 어떻게 서나 — 8-3 Li\|C · 보고 4 편
+- [본 세션 · 11-24b] Park, Naik, Vishnugopi, Mukherjee, Hatzell, *Adv. Energy Mater.*, 2025, **15**, 2405129. | Ag–C 다공 층 안 Li 수송 · 층 기공률 기준값 (≈29 %) · 보고 3 편 · 옛 목록 표 1 #9
+- [본 세션 · 11-24b] Roman, Ravello, Poole, Haslam, Lee K., Jangid, Sakamoto, Dasgupta, *Matter*, 2026, **9**, 102949. 🏷 Jeff Sakamoto | 박리 공극의 생성 · 회복 operando — 8-1 · 8-4 박리 쪽 · 보고 2 편
+- [본 세션 · 11-24b] Banerjee S., Vishnugopi, Mukherjee, *Adv. Sci.*, 2026, **13**, e15827. | 공공 확산이 공극 동역학에 주는 영향 (연속체) — '공급 속도' 쪽 · 보고 2 편
+- [본 세션 · 11-24b] Becker J., Fuchs, Ortmann, Kremer, Richter, Janek, *Adv. Energy Mater.*, 2025, **15**, 2404975. | 강철 \| Li₆PS₅Cl 위 석출 Li 미세구조 (같은 cryo-EBSD) — LPSCl 짝 · 보고 2 편
+- [본 세션 · 11-24b] Becker J., Weintraut, Benz, Fuchs, Lerch, Becker P., Eckhardt, Henß, Richter, Janek, *Nat. Commun.*, 2025, **16**, 5395. | Li 순도와 박리 — 'Ag 가 녹은 Li' 의 박리 쪽 · 보고 2 편
+- [본 세션 · 11-24b] Tong, Wang S., Wei, Guo, Liang, Zhong et al., *ACS Energy Lett.*, 2025, **10**, 6207. | 석출 없는 고용체 Li 합금 음극 — 7 절 3 번 합금 구동력 · 보고 2 편
+- [본 세션 · 11-24b] Orlandi, Li J., Kenny, Martinez, *ACS Appl. Mater. Interfaces*, 2025, **17**, 21958. | Li \| Li₂O 계면 원자 구조 (DFT) — 8-2 반응 뒤 표면 · 보고 2 편
+- [본 세션 · 11-24b] Sandoval et al. (McDowell), *Joule*, 2023, **7**, 2054. | 같은 Au · Ag 층의 황화물 판 — 가넷 실험 (Ko · Haslam) 질문의 LPSCl 판 · 보고 2 편 · 옛 목록 표 2 #6
