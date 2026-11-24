@@ -1,0 +1,373 @@
+{
+ "slug": "lepley2015_modeling_interfaces_between_solids_li_battery_materials",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "lepley2015_modeling_interfaces_between_solids_main.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. (Color online) Structural diagrams of supercells for Li2O/Li interfaces with Li and O represented by small gray and larger blue balls respectively. The lattice directions refer to the Miller indices of the cubic Li2O lattice. In both structures the Li2O was cleaved along the (110) and an interface was formed with one of two different Li conﬁgurations. The Li structure in subﬁgure (a), labeled the Li2O/Li(\u0002\u00021) conﬁguration, is an orthorhombic structure derived from the Li positions within Li2O. The Li structure in subﬁgure (b), the Li2O/Li(\u0002\u00022) conﬁguration, corresponds to a strained fcc Li structure cleaved along the (110) plane.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    64.3,
+    301.1,
+    392.3
+   ],
+   "w": 1072,
+   "h": 1368,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.832
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Plot of \u0002γab for the Li2O/Li(\u0002\u00021) and the Li2O/Li(\u0002\u00022) interfaces showing the linear relationship described in Eq. (6). The y intercept of the graph corresponds to \u0002γ lim ab and the slope corresponds to σ. The numerical values are summarized in Table II.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    65.5,
+    564.1,
+    213.4
+   ],
+   "w": 1072,
+   "h": 617,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. (Color online) Structural diagrams of supercells for Li2S/Li interfaces with Li and S represented by small gray and larger yellow balls respectively. The lattice directions reference the Miller indices of cubic Li2S. Four conﬁgurations are presented. (a) The Li2S/Li(\u0002\u00021) and (b) the Li2S/Li(\u0002\u00022) conﬁgurations are both based on a [110] cleave of Li2S with the Li slab positions derived from the Li structure in Li2S, although the interfaces have two different alignments. (c) The Li2S/Li(\u0002\u00023) has a conﬁguration with a Li structure based on optimizing randomly generated Li positions. (d) The Li2S/Li(\u0002\u00024) conﬁguration shows the interface between the (100) face of Li2S and a Li structure based on optimizing randomly generated Li positions.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    63.9,
+    301.2,
+    613.7
+   ],
+   "w": 1072,
+   "h": 2292,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Plot of \u0002γab for the Li2S/Li(\u0002\u0002i) interfaces for i = 1–4 showing the linear relationship described in Eq. (6). The numerical values are summarized in Table II.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    65.5,
+    564.1,
+    213.4
+   ],
+   "w": 1072,
+   "h": 618,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. (Color online) Structural diagrams of supercells for Li3PO4/Li interfaces with Li, P, and O atoms represented by small gray, tiny black, and medium blue balls, respectively. (a) Li3PO4/Li(\u0002\u00021) interface of [010] β-Li3PO4 and a Li slab. (b) Li3PO4/Li(\u0002\u00023) interface of [010] γ -Li3PO4 and a Li slab.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    64.6,
+    301.1,
+    279.3
+   ],
+   "w": 1072,
+   "h": 895,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Plot of \u0002γab for the Li3PO4/Li(\u0002\u0002i) interfaces for i = 1–3 showing the linear relationship described in Eq. (6). The numerical values are summarized in Table II.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    565.1,
+    301.1,
+    718.6
+   ],
+   "w": 1072,
+   "h": 641,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. (Color online) Structural diagram of γ -Li3PS4[010]/Li interface with 24 Li with Li, P, and S represented by small gray, tiny black, and medium yellow balls respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    64.4,
+    564.2,
+    191.3
+   ],
+   "w": 1072,
+   "h": 529,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "FIG. 9. (Color online) Structural diagram of γ -Li3PS4[010]/ Li2S[110] interface with Li, P, and S represented by small gray, tiny black, and medium yellow balls respectively. The asymmetry of the two interfaces is evident.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    339.1,
+    301.1,
+    707.5
+   ],
+   "w": 1072,
+   "h": 1536,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.697
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "FIG. 10. Plot of \u0002γab for the γ -Li3PS4[010]/Li2S[110] interface. Numerical values for \u0002γ lim ab and σ are reported in Table II.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    64.9,
+    564.1,
+    218.4
+   ],
+   "w": 1072,
+   "h": 640,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "FIG. 12. N Li(E) scaled by a factor of 10, comparing results for the hexagonal (hcp), face centered cubic (fcc), and body centered cubic (bcc) structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    63.7,
+    301.1,
+    221.8
+   ],
+   "w": 1072,
+   "h": 660,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 12,
+   "file": "fig_16.png",
+   "caption": "FIG. 16. (Color online) Partial density of states for γ -Li3PS4/Li interface (left) and corresponding optimized structure (right). The three panels of the N s(E) plot correspond to the Li slab, the interface, and the electrolyte regions, respectively. were (x) denotes the Heaviside step function, eE1 and eE2 represent the magnitudes of the estimated electric ﬁelds mentioned above, and ya denotes the position of atom a. The partial density of states associated with the metallic Li slab is unaffected. charge at the interstitial site and the excess negative charge in the metal slab. The magnitude of these electric ﬁelds can be estimated by analyzing the densities of states associated with core electrons of P at different positions within the electrolyte. We found that for this geometry, the electric ﬁelds in the interface normal direction (y) have magnitudes of approximately eE1 = 0.54 eV/ ",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    64.5,
+    564.1,
+    262.3
+   ],
+   "w": 2168,
+   "h": 825,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 12,
+   "file": "fig_18.png",
+   "caption": "FIG. 18. (Color online) Structural diagram of a supercell of β-Li3PO4[010]/Li with an interstitial defect and 11 Li atoms in the metallic slab. Li, P, and O sites are indicated with small gray, tiny black, and medium blue balls respectively. The vertical direction of the diagram is oriented along the interface normal direction (y). The red arrows indicate the direction, extent (length of arrow) and magnitude (width of arrow) of the electric ﬁelds E1 and E2 within the electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    477.7,
+    564.1,
+    663.7
+   ],
+   "w": 1072,
+   "h": 776,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 13,
+   "file": "fig_19.png",
+   "caption": "FIG. 19. (Color online) Partial density of states for β-Li3PO4[010]/Li interface corresponding to the structure shown in Fig. 18 calculated according Eq. (9). The contributions for the Li interstitial (Li+) and its nearest neighbor oxygen are plotted separately. The zero of energy is set approximately at the top of the electrolyte valence band.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    65.3,
+    301.1,
+    258.5
+   ],
+   "w": 1072,
+   "h": 807,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 13,
+   "file": "fig_20.png",
+   "caption": "FIG. 20. (Color online) Plot of minimum energy barrier EA (in eV) as a function of the normalized reaction coordinate for the breaking of a P-O bond at a β-Li3PO4/Li interface as determined with the NEB approximation. The three inserts represent structural diagrams of the initial, maximal, and ﬁnal conﬁgurations of the process using small gray, tiny black, and medium blue balls to represent Li, P, and O, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    64.7,
+    564.2,
+    221.0
+   ],
+   "w": 1072,
+   "h": 652,
+   "dpi": 300,
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "blank": 0.936
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f8",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p7 그래픽 없음(img0/draw5)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p7"
+   ]
+  },
+  {
+   "key": "f11",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p9 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p9",
+    "p10"
+   ]
+  },
+  {
+   "key": "f13",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p10 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p10"
+   ]
+  },
+  {
+   "key": "f14",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p11 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p10",
+    "p11"
+   ]
+  },
+  {
+   "key": "f15",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p11 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p10",
+    "p11",
+    "p12",
+    "p14"
+   ]
+  },
+  {
+   "key": "f17",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p12 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p11",
+    "p12"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "lepley2015_modeling_interfaces_between_solids_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

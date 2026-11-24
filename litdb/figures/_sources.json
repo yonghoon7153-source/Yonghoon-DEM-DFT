@@ -242,6 +242,14 @@
    "DEM 논문/01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf"
   ]
  },
+ "becker2026_electrodeposited_li_microstructure_metal_interlayers_anode_free": {
+  "figures": 29,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "becker2026_li_microstructure_interlayer_main.pdf",
+   "becker2026_li_microstructure_interlayer_SI.pdf"
+  ]
+ },
  "begat2004_cohesive_adhesive_balance_afm_colloid_probe": {
   "figures": 13,
   "generated": "2026-10-13",
@@ -560,6 +568,14 @@
    "DFT 먹인 논문/17. atomistic-insights-into-cu-amorphous-taxn-interfacial-adhesion-via-machine-learning-interatomic-potentials-effects-of.pdf"
   ]
  },
+ "choi2025_silver_exsolution_argyrodite_anode_free": {
+  "figures": 27,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "choi2025_ag_exsolution_argyrodite_main.pdf",
+   "choi2025_ag_exsolution_argyrodite_SI.pdf"
+  ]
+ },
  "choi2026_bzox_dry_zro2x_nmc_shell_coating": {
   "figures": 13,
   "generated": "2026-08-05",
@@ -586,7 +602,7 @@
   ]
  },
  "chu2026_solubility_guided_interlayer_li_plating_stripping_garnet": {
-  "figures": 39,
+  "figures": 44,
   "generated": "2026-11-24",
   "pdfs": [
    "chu2026_solubility_interlayer_main.pdf",
@@ -1242,6 +1258,14 @@
    "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf"
   ]
  },
+ "haslam2025_alloying_interlayers_li_morphology_microstructure_anode_free": {
+  "figures": 9,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "haslam2025_alloying_interlayer_li_morphology_main.pdf",
+   "haslam2025_alloying_interlayer_li_morphology_SI.pdf"
+  ]
+ },
  "hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode": {
   "figures": 57,
   "generated": "2026-11-22",
@@ -1337,6 +1361,14 @@
   "generated": "2026-11-12",
   "pdfs": [
    "cda474af-11._Determination_of_the_tensile_strength_of_rock_by_a_compression_test_of_an_irregular_test_piece.pdf"
+  ]
+ },
+ "hiraoka2025_operando_raman_carbon_structure_anode_free_sulfide": {
+  "figures": 18,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf"
   ]
  },
  "hlushkou2018_void_space_ion_transport_assb_cathode": {
@@ -2270,6 +2302,13 @@
   "generated": "2026-10-30",
   "pdfs": [
    "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  ]
+ },
+ "lepley2015_modeling_interfaces_between_solids_li_battery_materials": {
+  "figures": 14,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "lepley2015_modeling_interfaces_between_solids_main.pdf"
   ]
  },
  "li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy": {
@@ -3473,6 +3512,14 @@
   "pdfs": [
    "afssb2024_electro_chemo_mechanics_main.pdf",
    "afssb2024_electro_chemo_mechanics_SI.pdf"
+  ]
+ },
+ "sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free": {
+  "figures": 14,
+  "generated": "2026-11-24",
+  "pdfs": [
+   "sandoval2025b_operando_xct_li_growth_main.pdf",
+   "sandoval2025b_operando_xct_li_growth_sup3.pdf"
   ]
  },
  "sangros2019_dem_calendering_lib_electrode": {

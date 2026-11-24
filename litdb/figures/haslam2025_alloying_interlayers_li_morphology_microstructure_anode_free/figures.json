@@ -1,0 +1,207 @@
+{
+ "slug": "haslam2025_alloying_interlayers_li_morphology_microstructure_anode_free",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "haslam2025_alloying_interlayer_li_morphology_main.pdf",
+  "haslam2025_alloying_interlayer_li_morphology_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematics depicting “lithium−metal-free” manufactured cells with (a) a bare copper CC laminated on the LLZO surface, (b) a cell with a gold interlayer, and (c) a cell with a silver interlayer. Parts d−f show the initial cell voltage during plating for the respective three cell types at both 0.10 and 0.25 mA cm−2, while part g shows the full cell voltage profile during plating to a capacity of 6.1 mAh cm−2 (∼30 μm lithium). cells, the effects of these interlayers on the electrodeposited lithium microstructure and global lithium homogeneity have not been thoroughly characterized yet. metal-free” manufactured SSBs is unknown. Therefore, three types of “lithium−metal-free” cells were assembled. Cells with alloying interlayers (gold and silver) were compared to a cell with no interlayer (bare copper CC) as a control. 6.1 mAh cm−2 (∼30 μm) of lithium was plated by using two differen",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    443.2
+   ],
+   "w": 2151,
+   "h": 1621,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_main.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Optical microscopy images of the copper CC, 3D profile of a selected area of the copper CC, and SEM images of cross sections milled using PFIB, all after plating 6.1 mAh cm−2 of lithium in (a−c) bare copper CC cells that were plated at 0.10 mA cm−2, (d−f) gold interlayer cells plated at 0.25 mA cm−2, and (g−i) silver interlayer cells plated at 0.25 mA cm−2. Note the different color scales for panels b, e, and h. ∼0.4 mAh cm−2 lithium plating. Since the plating current is lower than the previously observed critical current density of Lifoil|LLZO|Lifoil symmetric cells at room temperature (∼0.9 mA cm−2), it is likely that the Cu|LLZO contact area is lower than that of the Lifoil|LLZO interface.22 The reduced electrode| LLZO contact area may lead to current constriction, resulting in lithium filament propagation through the LLZO.22,23 absence of the voltage plateaus at 0.10 mA cm−",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    259.4
+   ],
+   "w": 2151,
+   "h": 855,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_main.pdf",
+   "blank": 0.585
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. EBSD results for selected electrodeposited lithium films. The IPF maps of lithium plated at the bare copper CC, with a gold interlayer, and with a silver interlayer are depicted in panels a, b, and c, respectively. A summary of the grain size analysis is shown in panel d. Note that the grain height is normalized to the highest value to compare the maps with different thicknesses or areas of analysis within the EBSD. A close-up of a few gold particles at the interface and inside the lithium, together with Kikuchi patterns indexing the three present phases in this sample, is shown in panel e. The dashed gray line represents a grain boundary within lithium that is otherwise not visible in the phase map. that in a given area (0.16 cm2), the height of the copper CC varies ±17.5 μm (Figure 2b). As the nominal thickness of the lithium should be ∼30 μm based on the capacity of lithium ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    376.0
+   ],
+   "w": 2151,
+   "h": 1341,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_main.pdf",
+   "blank": 0.312
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Voltage profile during initial lithium deposition for cells with Ag interlayer at 0.01 mA cm-2, 0.10 mA cm-2, and 0.25 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    76.3,
+    557.8,
+    374.0
+   ],
+   "w": 2050,
+   "h": 1242,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_SI.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Optical images and 3D profiling of the top surface of the CC for Au and Ag interlayer cells after plating 6.1 mAh cm−2 of lithium at 0.10 mA cm-2 and 0.25 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    461.1,
+    580.2,
+    684.3
+   ],
+   "w": 2143,
+   "h": 931,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_SI.pdf",
+   "blank": 0.537
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 a SEM image of PFIB milled cross sections of and Ag interlayer cell after plating of 0.5 mAh cm−2 lithium, and b corresponding energy dispersive spectroscopy maps showing the secondary phase in the in situ plated lithium to be Ag-rich.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    549.6,
+    410.0
+   ],
+   "w": 2291,
+   "h": 1601,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_SI.pdf",
+   "blank": 0.633
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Morphology of alloying interlayers on polished LLZO for a, c, e Au interlayer, showing the segregation of the Au layer into discrete particles, and b, d, f Ag interlayer, showing the Ag film remaining mostly intact on the LLZO surface with a few pinholes. This difference likely also influences the dissolution of Au and Ag in lithium, as the films exhibit different surface areas.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    26.0,
+    549.0,
+    367.4
+   ],
+   "w": 2013,
+   "h": 1423,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_SI.pdf",
+   "blank": 0.643
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Overview of the full cross-sections where lithium was plated with an Au interlayer (a and b) or an Ag interlayer (c and d) with 0.25 mA cm-2. The first panel shows the SEM image while the second panel shows the IPF map in the y-direction of the respective sample. The dashed white boxes indicate the field of view of the sample that is shown in Figure 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.1,
+    460.5
+   ],
+   "w": 2013,
+   "h": 1644,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_SI.pdf",
+   "blank": 0.448
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Overview of the full cross-sections where lithium was plated with an Au interlayer (a and b) or an Ag interlayer (c and d) with 0.10 mA cm-2. The first panel shows the SEM image while the second panel shows the IPF map in y-direction of the respective sample. The dashed white boxes indicate the field of view of the sample that is shown in Figure 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.1,
+    455.3
+   ],
+   "w": 2013,
+   "h": 1623,
+   "dpi": 300,
+   "src": "haslam2025_alloying_interlayer_li_morphology_SI.pdf",
+   "blank": 0.425
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "haslam2025_alloying_interlayer_li_morphology_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "haslam2025_alloying_interlayer_li_morphology_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

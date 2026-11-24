@@ -1,0 +1,407 @@
+{
+ "slug": "hiraoka2025_operando_raman_carbon_structure_anode_free_sulfide",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+  "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Typical charge–discharge proﬁle (a) and cycle properties (b) of the AF-ASSB with the Ag/C layer and Raman spectra of the SE, CB and cross-sectional Ag/C layer in a pristine cell (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    499.1
+   ],
+   "w": 1090,
+   "h": 1895,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Raman spectra acquired from point 1 in the cross-sectional AF- ASSB with the Ag/C layer at every 0.3 V interval during charge– discharge processes in the operando Raman spectroscopy at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    515.4,
+    558.8,
+    686.8
+   ],
+   "w": 1091,
+   "h": 715,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "blank": 0.783
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Relationships between the aspect ratios (a), R values (b), and positions (c and d) in the D- and G-bands on voltage calculated using the curve ﬁtting analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    384.6,
+    558.8,
+    705.7
+   ],
+   "w": 2177,
+   "h": 1339,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Microscopic images of the cross-sectional AF-ASSB at pristine, 3.9 V (charge) and 2.1 V (discharge) states during operando Raman spectroscopy (a), and their Raman spectra (b) acquired from the observed precipitates in the SE layer after the short-circuit and at points 1 and 2 during potential sweep.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.8,
+    367.1
+   ],
+   "w": 1091,
+   "h": 1345,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "blank": 0.789
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Raman spectra acquired from the cross-sectional AF-ASSB with the Ag/C layer of every SOC during charge–discharge processes in the ex situ Raman spectroscopy.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    527.5,
+    298.1,
+    696.7
+   ],
+   "w": 1090,
+   "h": 705,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Relationships between aspect ratios (a), R values (b), and positions (c) in the D- and G-bands calculated using the curve ﬁtting analysis. All data are described as average values of the 3 measurement points.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    524.8
+   ],
+   "w": 1090,
+   "h": 2002,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Schematic of the reaction model in the cross-sectional AF- ASSB with an Ag/C layer during charging process.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.8,
+    204.9
+   ],
+   "w": 1091,
+   "h": 669,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "blank": 0.597
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. The electrochemical profiles for CV measurement in the range of 0–4.5 V (a) and 0–2.0 V",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    119.5,
+    549.4,
+    641.0
+   ],
+   "w": 2087,
+   "h": 2173,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 The Raman spectra acquired from point 2 in the cross-sectional AF-ASSB with the Ag/C layer",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    258.7,
+    545.2,
+    544.3
+   ],
+   "w": 2069,
+   "h": 1190,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.748
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 The Raman spectra in the range of 200–1800 cm−1 at point 1 during the Operando Raman",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    200.4,
+    532.2,
+    602.6
+   ],
+   "w": 2015,
+   "h": 1676,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.782
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. The baseline corrected Raman spectra in the range of 600–2100 cm-1 acquired from point 1",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    135.8,
+    549.4,
+    518.4
+   ],
+   "w": 2087,
+   "h": 1594,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. The curve fitted Raman spectra in the range of 600–1950 cm-1 at a pristine, 3.9 (charge) and",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    146.2,
+    549.3,
+    656.9
+   ],
+   "w": 2086,
+   "h": 2128,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 Schematic image of definition in an aspect ratio and R value in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    302.5,
+    595.3,
+    500.4
+   ],
+   "w": 2278,
+   "h": 825,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. The charge-discharge profile in the ex-situ Raman spectroscopy (percentages indicate SOCs).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    271.1,
+    549.3,
+    531.6
+   ],
+   "w": 2086,
+   "h": 1086,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. The microscopic images from the cross-sectional AF-ASSB with Ag/C layer in the ex-situ",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    301.0,
+    549.4,
+    502.1
+   ],
+   "w": 2087,
+   "h": 838,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.484
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 12,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Calculated parameters in curve fitting analysis based on pseudo-Voigt function at point 1",
+   "rotated_deg": 0,
+   "bbox": [
+    49.7,
+    66.3,
+    535.6,
+    668.2
+   ],
+   "w": 2025,
+   "h": 2509,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 13,
+   "file": "tab_S2.png",
+   "caption": "Table S2 Calculated parameters in curve fitting analysis based on pseudo-Voigt function at point 2",
+   "rotated_deg": 0,
+   "bbox": [
+    49.7,
+    39.5,
+    535.6,
+    641.5
+   ],
+   "w": 2025,
+   "h": 2509,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 14,
+   "file": "tab_S3.png",
+   "caption": "Table S3 Calculated parameters in curve fitting analysis based on pseudo-Voigt function, as",
+   "rotated_deg": 0,
+   "bbox": [
+    49.7,
+    39.5,
+    526.1,
+    422.5
+   ],
+   "w": 1986,
+   "h": 1597,
+   "dpi": 300,
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "blank": 0.912
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p4",
+    "p5"
+   ]
+  },
+  {
+   "key": "tS4",
+   "why": "끝 번호 — 본문이 Table S4 까지 가리키는데 추출 최대는 3 (남의 논문 그림 참조일 수도 있다 · 확인)",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p8"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 2,
+   "caption_below": false
+  }
+ ]
+}

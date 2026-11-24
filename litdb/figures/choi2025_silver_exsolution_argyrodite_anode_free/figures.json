@@ -1,0 +1,604 @@
+{
+ "slug": "choi2025_silver_exsolution_argyrodite_anode_free",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "choi2025_ag_exsolution_argyrodite_main.pdf",
+  "choi2025_ag_exsolution_argyrodite_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Ag exsolution-induced Li plating mechanism and Li6-xAgxPS5Cl SEs. a Schematic of the proposed Li plating mechanism involving Ag exsolution along grain boundaries and in pores. b Crystal structure in which the Li sites of Li6PS5Cl are partially occupied by Ag+ dopant ions. Li+ and Ag+ are represented by gray and blue spheres, respectively. c XRD patterns of the synthesized Li6-xAgxPS5Cl SEs (x = 0, 0.2, 0.4, and 0.6). d, e Violin plots with regard to (d), cell volume and (e),",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    207.2,
+    546.5,
+    666.7
+   ],
+   "w": 2138,
+   "h": 1915,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_main.pdf",
+   "blank": 0.803
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Ag exsolution from the Ag-doped Li-argyrodite SE. a Schematic illus- tration of the two half-cell conﬁgurations paired with Li metal. b Initial galvano- static discharge proﬁles of the cells shown in (a) when scanned at 1.0 mA cm−2 at 60 oC. c Ex-situ XRD patterns of Li5.4Ag0.6PS5Cl extracted from Cell B at the speciﬁc potentials marked in (b). The peaks denoted as α, β, γ3, and γ2 are characteristic of",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    516.5,
+    394.5
+   ],
+   "w": 2012,
+   "h": 1466,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_main.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Cell performance with the SE bilayer. a Coulombic efﬁciency (CE) of Li| Li6PS5Cl0.5Br0.5 | Li6-xAgxPS5Cl | SUS half-cells at 60 °C (x = 0, 0.2, 0.4, and 0.6). b Critical current density measurement of the Li|Li6PS5Cl0.5Br0.5 | Li5.4Ag0.6PS5Cl | SUS half-cell. The current density was varied for both charge and discharge, and the areal capacity was kept constant at 1.0 mAh cm−2. c–g Cross-sectional SEM-EDS images at (c)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    546.5,
+    558.8
+   ],
+   "w": 2138,
+   "h": 2151,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_main.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Computational simulations of Ag exsolution. a AIMD-simulated Li ion distribution map (gray) of the equal probability density over 400 ps, along with the Ag+ diffusion trajectory (blue) spotted at every 100 fs for 50 ps. (Right) Schematic representation of intra-cage and inter-cage diffusion pathways across the Li 48 h",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    516.5,
+    352.2
+   ],
+   "w": 2012,
+   "h": 1290,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_main.pdf",
+   "blank": 0.725
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Fig. 1. Synthesis of the solid electrolytes. a) Schematic of the synthesis process and digital photographs of the synthesized b) Li6PS5Cl and c) Li5.4Ag0.6PS5Cl powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    452.7
+   ],
+   "w": 1943,
+   "h": 1439,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.577
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Fig. 2. Morphologies of the solid electrolytes. Scanning electron microscopy (SEM) images and elemental mapping of the Li6-xAgxPS5Cl powders. a) x = 0, b) x = 0.2, c) x = 0.4, d) x =0.6. Scale bar = 10 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    431.6
+   ],
+   "w": 1943,
+   "h": 1470,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.435
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Fig. 3. Crystal structure of Li5.25Ag0.75PS5Cl. The (311) and (222) planes are highlighted.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    323.4
+   ],
+   "w": 1943,
+   "h": 900,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Fig. 4. XRD patterns of Li3PS4 and Li2.9Ag0.1PS4 solid electrolytes. a) Full- range and b) magnified view in the 2θ = 28 – 30° region.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    529.3,
+    295.4
+   ],
+   "w": 1931,
+   "h": 784,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Fig. 5. Structural Analysis of Li6-xAgxPS5Cl via Rietveld Refinement. a) Li6PS5Cl, b) Li5.8Ag0.2PS5Cl, c) Li5.6Ag0.4PS5Cl, and d) Li5.4Ag0.6PS5Cl. Measured data = red circles, calculated pattern = black line, Bragg’s position = green lines.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    427.4
+   ],
+   "w": 1943,
+   "h": 1333,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Fig. 6. XPS analysis of Li6-xAgxPS5Cl (x = 0, 0.2, 0.4, 0.6). a) Ag 3d, b) S 2p, and c) P 2p.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    363.7
+   ],
+   "w": 1943,
+   "h": 1068,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Fig. 7. Electrochemical characterization of Li6-xAgxPS5Cl (x = 0, 0.2, 0.4, 0.6). a) Nyquist plots of the AC-impedance spectra and b) DC polarization curves. The cells were rested at open-circuit voltage for 1 hour before measurement.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    299.9
+   ],
+   "w": 1943,
+   "h": 802,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Fig. 8. Arrhenius plots of Li6-xAgxPS5Cl (x = 0, 0.2, 0.4, 0.6). The temperature range was from 288 to 353 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    326.8
+   ],
+   "w": 1943,
+   "h": 914,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Fig. 9. Electrochemical stability calculation. Thermodynamically preferred decomposition reactions of the Li6PS5Cl, Li5.75Ag0.25PS5Cl, Li5.5Ag0.5PS5Cl, Li5.25Ag0.75PS5Cl, and Ag6PS5Cl solid electrolytes with respect to voltage vs. Li/Li+. The blue shaded areas correspond to the potential ranges where the Ag exsolution occurs.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.5,
+    532.3,
+    514.0
+   ],
+   "w": 1943,
+   "h": 1811,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.571
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Fig. 10. Electrochemical analysis of the Li6-xAgxPS5Cl (x = 0.2, 0.4, 0.6) electrodes. a) DC polarization measurements after discharging to 1.2 V and b) AC impedance measurements in the Li|Li6PS5Cl0.5Br0.5|Li symmetric cell configuration to obtain the ionic conductivities after the completion of Ag exsolution. The cells were rested at open-circuit voltage for 1 hour before measurement.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.3,
+    395.4
+   ],
+   "w": 1943,
+   "h": 1319,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Fig. 11. DC polarization measurements of the Li6-xAgxPS5Cl (x = 0.2, 0.4, 0.6) layers. The purpose of the measurements was to evaluate the electronic conductivity after discharging to 1.2 V. The electronic conductivities of the Li5.8Ag0.2PS5Cl, Li5.6Ag0.4PS5Cl, and Li5.4Ag0.6PS5Cl electrolytes were determined to be 1.5 ´ 10−5, 2.1 ´ 10−4, and 2.5 ´ 10−3 S cm−1, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    309.4
+   ],
+   "w": 1943,
+   "h": 842,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Fig. 12. Reversibility of Li plating over cycling. Potential profiles of the Li| Li6PS5Cl0.5Br0.5|Li5.4Ag0.6PS5Cl |SUS half-cells. The current density and areal capacity are 1.0 mA cm−2 and 1.0 mAh cm−2, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    328.4
+   ],
+   "w": 1943,
+   "h": 921,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Fig. 13. Li|Li6PS5Cl0.5Br0.5|Li5.4Ag0.6PS5Cl|SUS half-cell test. a) CEs and b) potential profiles at 1.0 mA cm–2 with a plating capacity of 5.0 mAh cm–2. The operating temperature was 60 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    300.7
+   ],
+   "w": 1943,
+   "h": 806,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 17,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Fig. 14. Li|Li6PS5Cl0.5Br0.5| Li5.4Ag0.6PS5Cl|SUS half-cell test. a) CEs and b) initial potential profile at 1.0 mA cm–1 with a plating capacity of 1.0 mAh cm–1. The evaluation temperature was 30 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    288.7
+   ],
+   "w": 1943,
+   "h": 755,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 18,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Fig. 15. Comparison of Li6PS5Cl-Ag composite and Li5.4Ag0.6PS5Cl electrodes. SEM-EDS images of the a) Li6PS5Cl-Ag composite and b) Li5.4Ag0.6PS5Cl electrodes prepared using the slurry-based coating process. c) Initial potential profiles and d) CEs of their half-cells paired with Li metal. The current density and areal capacity were fixed at 1.0 mA cm–2 and 1.0 mAh cm–2, respectively. The operation temperature was 60 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    505.1
+   ],
+   "w": 1943,
+   "h": 1657,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.609
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 19,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Fig. 16. Cross-sectional analysis. SEM-EDS images of the cell with the Li5.4Ag0.6PS5Cl layer after discharging for 1 minute (0.016 mAh cm–2). The current density was fixed at 1.0 mA cm–2 and the operation temperature was 60 oC. a) Bottom side of Li5.4Ag0.6PS5Cl in contact with the SUS current collector. b) Cross section of the cell. Scale bar = 5 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    336.8
+   ],
+   "w": 1943,
+   "h": 956,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.332
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 20,
+   "file": "fig_S17.png",
+   "caption": "Supplementary Fig. 17. Cross-sectional analysis. SEM-EDS images of the cell with the Li6PS5Cl0.5Br0.5|Li6PS5Cl bilayer after Li plating at 5.0 mAh cm–2. The current density was fixed at 1.0 mA cm–2 and the operation temperature was 60 oC. Scale bar = 10 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    100.8,
+    532.3,
+    372.9
+   ],
+   "w": 1943,
+   "h": 1134,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.409
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 21,
+   "file": "fig_S18.png",
+   "caption": "Supplementary Fig. 18. Cross-sectional analysis. Cross-sectional SEM images of the cells with a) Li6PS5Cl0.5Br0.5|Li6PS5Cl and b) Li6PS5Cl0.5Br0.5|Li5.4Ag0.6PS5Cl bilayers after Li plating of 5.0 mAh cm–2. The current density was fixed at 1.0 mA cm–2 and the operation temperature was 60 oC. Scale bar = 5 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    243.4
+   ],
+   "w": 1943,
+   "h": 686,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.425
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 22,
+   "file": "fig_S19.png",
+   "caption": "Supplementary Fig. 19. Cross-sectional SEM image of the pouch-type full-cell before cycling. Scale bar = 20 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.7,
+    532.3,
+    410.9
+   ],
+   "w": 1943,
+   "h": 1265,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.231
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 23,
+   "file": "fig_S20.png",
+   "caption": "Supplementary Fig. 20. Electrochemical performance of pouch-type initially anode-free ASSB cell with the Li5.4Ag0.6PS5Cl layer when operated at 0.7 mA cm–2 (0.1 C) and 30 °C under 2.0 MPa. a) Initial potential profile and b) cycling performance.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    285.1
+   ],
+   "w": 1943,
+   "h": 859,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 24,
+   "file": "fig_S21.png",
+   "caption": "Supplementary Fig. 21. Ex situ analysis of the pouch-type initially anode-free ASSB cell. a) Digital photograph of the disassembled cell and b) SEM-EDS image of the plated Li metal in the 50% state of discharge in the first cycle. The current density was fixed at 0.7 mA cm–2 (0.1 C) and the operation temperature was 60 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    247.9
+   ],
+   "w": 1943,
+   "h": 704,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.379
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 25,
+   "file": "fig_S22.png",
+   "caption": "Supplementary Fig. 22. Atomic diffusion properties in the Li5.25Ag0.75PS5Cl. Mean squared displacement plots of Li, Ag, P, S, and Cl in the Li5.25Ag0.75PS5Cl over a 400 ps AIMD simulation at 1000 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    293.7
+   ],
+   "w": 1943,
+   "h": 895,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 26,
+   "file": "fig_S23.png",
+   "caption": "Supplementary Fig. 23. Atomic structures of simulated grain boundaries. Relaxed structures of tilt grain boundaries (a) Σ3[110]/(111) and (b) Σ5[100]/(210), the grain boundary systems investigated in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    133.7,
+    532.3,
+    386.9
+   ],
+   "w": 1943,
+   "h": 1056,
+   "dpi": 300,
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "blank": 0.875
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "tS1",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S3 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [
+    "p27 거의 백지(1.000)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p3",
+    "p27"
+   ]
+  },
+  {
+   "key": "tS2",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S3 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [
+    "p28 거의 백지(1.000)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p5",
+    "p28"
+   ]
+  },
+  {
+   "key": "tS3",
+   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S3 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
+   "skipped": [
+    "p29 거의 백지(1.000)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p6",
+    "p29"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "choi2025_ag_exsolution_argyrodite_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "choi2025_ag_exsolution_argyrodite_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}
