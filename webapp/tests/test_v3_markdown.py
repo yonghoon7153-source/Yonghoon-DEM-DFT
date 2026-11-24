@@ -270,10 +270,46 @@ def test_md_fold_renders_details_for_internal_docs():
 
 
 def test_md_fold_is_not_applied_to_external_docs():
-    """⛔음성: 남의 문서 (litdb · origin external) 에는 접기도 주석 빼기도 안 건다 — 글자로 남는다."""
+    """⛔음성: 남의 문서 (litdb · origin external) 에는 접기를 안 건다 — 태그는 글자로 남는다.
+
+    2026-11-24 개정 (사용자 '웹앱 표시 문제 고쳐'): **닫힌** 줄머리 주석만은 외부 문서에서도 뺀다
+      (줄머리 주석이 있는 litdb md 513 개가 글자로 떴다) — 접기와 따로 간다.
+    """
     h = A.md_html(_FOLD_MD, origin="external")
     assert "<details" not in h, "외부 문서의 HTML 태그를 살렸다"
-    assert "&lt;details&gt;" in h and "&lt;!--" in h, "외부 문서의 원문이 사라졌다"
+    assert "&lt;details&gt;" in h, "외부 문서의 원문이 사라졌다"
+    assert "갱신 규칙" not in h and "&lt;!--" not in h, "외부 문서의 닫힌 줄머리 주석이 화면에 나왔다"
+
+
+def test_external_unclosed_comment_does_not_swallow_the_rest():
+    """⛔음성: 외부 문서에서 끝까지 안 닫힌 `<!--` 는 빼지 않는다 — 뒤 본문을 통째로 삼키면 안 된다."""
+    md = "# 제목\n\n<!-- 닫는 표시가 없는 메모\n\n본문 첫 문단\n\n- 항목\n"
+    h = A.md_html(md, origin="external")
+    assert "본문 첫 문단" in h and "<li>항목</li>" in h, "안 닫힌 주석이 뒤 본문을 삼켰다"
+    assert "&lt;!--" in h, "안 닫힌 주석 줄이 조용히 사라졌다 (글자로 남겨야 한다)"
+    # 여러 줄 주석은 닫는 줄까지 통째로 빠지고 뒤 본문은 남는다
+    h2 = A.md_html("# 제목\n\n<!-- 작성 기록\n   둘째 줄 -->\n\n본문\n", origin="external")
+    assert "작성 기록" not in h2 and "둘째 줄" not in h2 and "<p>본문</p>" in h2
+    # 주석 중간에 코드 펜스가 끼면 (판정기가 펜스를 먼저 본다) 그 앞 주석 줄은 조용히 버리지 않고 글자로 둔다
+    h3 = A.md_html("# 제목\n\n<!-- 앞 메모\n```\n코드\n```\n뒤 메모 -->\n\n본문\n", origin="external")
+    assert "&lt;!-- 앞 메모" in h3 and "코드" in h3 and "<p>본문</p>" in h3, "펜스 앞 주석 줄이 조용히 사라졌다"
+
+
+def test_paper_page_hides_header_comment_and_takes_heading_title():
+    """⛔음성: 주석으로 시작하는 digest — /paper 화면에 주석 글자가 없고 제목은 slug 가 아니라 첫 `#` 줄이다."""
+    import data as D
+    slug = next(f.stem for f in sorted((D.LITDB / "papers").glob("*.md"))
+                if not f.stem.startswith("_") and "__seminar" not in f.stem
+                and f.read_text(encoding="utf-8", errors="ignore").startswith("<!--"))
+    r = A.app.test_client().get(f"/paper/{slug}")
+    assert r.status_code == 200
+    body = r.get_data(as_text=True)
+    assert "&lt;!--" not in body, f"{slug}: digest 머리 주석이 화면에 글자로 나왔다"
+    head = D.md_title(A.split_frontmatter(
+        (D.LITDB / "papers" / f"{slug}.md").read_text(encoding="utf-8"))[1], "")
+    assert head and head != slug
+    title_tag = body.split("<title>", 1)[1].split("</title>", 1)[0]
+    assert slug not in title_tag, f"{slug}: 제목이 slug 로 떨어졌다 ({title_tag[:80]})"
 
 
 def test_md_fold_leaves_code_fences_and_mid_line_tags_alone():

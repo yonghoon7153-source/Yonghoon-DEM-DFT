@@ -472,6 +472,19 @@ def md_fold_lines(text: str):
         yield ln, "text", depth, None
 
 
+def md_title(text: str, default: str = "") -> str:
+    """문서의 첫 `#` 제목 줄 (주석 · 코드 펜스 줄은 건너뛴다) → 제목 글. 없으면 `default`.
+
+    왜: `/paper` · `/talk` 은 **첫 줄**이 `#` 일 때만 제목을 읽어서, 작성 기록 주석으로 시작하는
+      digest 404 편은 제목이 slug 로 떨어졌다 (2026-11-24 · 폰 폭에서 끊을 곳 없는 긴 제목이 됐다).
+    ⛔ 못 하는 것: 마크다운 강조는 그대로 둔다 (`title_plain` 이 걷는다) · 밑줄식 제목 (`===`) 은 안 본다.
+    """
+    for ln, kind, _depth, _summ in md_fold_lines(text):
+        if kind == "text" and ln.startswith("#"):
+            return ln.lstrip("# ").strip() or default
+    return default
+
+
 def open_items_summary() -> dict:
     """kb/open_items.md → 대시보드 카드용 요약. mtime 캐시(실시간 동기).
 

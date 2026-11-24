@@ -317,6 +317,8 @@ def md_html(text: str, extensions=("tables", "fenced_code"), origin="internal") 
     folds = []
     if origin == "internal":
         text, folds = _fold_pre(text or "")
+    else:
+        text = _strip_closed_comments(text or "")
     html = md.convert(text or "")
     if folds:
         html = _fold_post(html, folds)
@@ -343,6 +345,28 @@ def _fold_pre(text: str):
             out.append(ln)
     out += ["", "xxFOLDCLOSExx", ""] * depth           # 안 닫힌 접기는 끝에서 닫는다 (뒤 본문을 삼키지 않게)
     return "\n".join(out), folds
+
+
+def _strip_closed_comments(text: str) -> str:
+    """외부 문서 (litdb digest · 발표자료) 의 **닫힌** 줄머리 HTML 주석만 화면에서 뺀다 — 접기는 걸지 않는다.
+
+    왜: digest 의 줄머리 주석 (litdb/papers md 668 개 중 513 개 · 머리 작성 기록으로 시작하는 것 404) 이 raw HTML 을 끈
+      렌더에서 글자로 떴다 (2026-11-24 사용자).
+    줄 판정은 `D.md_fold_lines` 하나다 (우리 문서의 `_fold_pre` 와 같은 판정기).
+    ⛔ 못 하는 것: 끝까지 안 닫힌 주석은 빼지 않는다 (글자로 남긴다 — 남의 문서의 `<!--` 한 줄이 뒤 본문을
+      통째로 삼키지 않게) · 주석 중간에 코드 펜스가 끼면 그 앞 주석 줄은 글자로 남는다 · 줄 중간 주석은 안 본다.
+    """
+    out, buf = [], []
+    for ln, kind, _depth, _summ in D.md_fold_lines(text):
+        if kind == "comment":
+            buf.append(ln)
+            if "-->" in ln:
+                buf = []                  # 닫혔다 — 통째로 뺀다
+            continue
+        out += buf                        # 닫히기 전에 다른 줄 (펜스) 이 끼었다 — 글자로 돌려놓는다
+        buf = []
+        out.append(ln)
+    return "\n".join(out + buf)           # 끝까지 안 닫힌 주석은 글자로 남긴다
 
 
 def _fold_post(html: str, folds: list) -> str:
@@ -2017,7 +2041,7 @@ def paper_page(slug):
     if not p.exists() or slug.startswith("_"):
         abort(404)
     md = p.read_text(encoding="utf-8", errors="ignore")
-    title = md.splitlines()[0].lstrip("# ").strip() if md.startswith("#") else slug
+    title = D.md_title(split_frontmatter(md)[1], slug)   # 본문과 같은 판정 (머리말 · 주석 · 펜스 건너뜀)
     notice = D.paper_notice(slug)
     return render_template(
         "paper.html", active="lit", title=D.title_plain(title),
@@ -2058,7 +2082,7 @@ def talk_page(slug):
         except Exception:
             man = {"_error": "manifest 를 읽지 못했다"}
 
-    title = md.splitlines()[0].lstrip("# ").strip() if md.startswith("#") else slug
+    title = D.md_title(split_frontmatter(md)[1], slug)   # 본문과 같은 판정 (머리말 · 주석 · 펜스 건너뜀)
     return render_template(
         "doc.html", active="lit", title=f"🎤 {title}",
         # ⚠ 발표자료도 남의 문서다 (litdb) — origin="external"
