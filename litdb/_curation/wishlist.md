@@ -763,3 +763,18 @@ litdb 확인 = 정본 `litdb/papers/` 파일 목록 611 장 (`git ls-tree`) + `g
 - [n] Z. Wang and G. Shao, *J. Mater. Chem. A*, 2017, **5**, 21846–21857. (원문 참고 47) | m — 입방 Li₆PS₅Cl 준안정 · P1 0.65 eV/f.u. (USPEX) 의 원전 (카드 §3-2 · p.4) — 우리 comp1 (질서 P1) 의 벌크 모델 근거 대조 | papers/ 에 없음 (grep '21846' 0 건).
 - [n] A. Golov and J. Carrasco, *ACS Appl. Mater. Interfaces*, 2021, **13**, 43734–43745. (원문 참고 48 · 제목 = 원문 목록에 없음 · 서지 일부만) | m — 입방 Li₆PS₅Cl 의 준안정을 짧게 언급한 논문 (p.4 *"metastability of cubic Li6PS5Cl was briefly mentioned in the paper by Carrasco et al."*) · 내용 · 제목 [미확인] (정본에서 같은 권 · 쪽 '43734' 를 인용한 카드 = chaney2024 하나) | papers/ 에 없음 (grep 'Golov' = 인용 카드뿐).
 - [n] R. Schlenker, A.-L. Hansen, A. Senyshyn, T. Zinkevich, M. Knapp, T. Hupfer, H. Ehrenberg and S. Indris, *Chem. Mater.*, 2020, **32**, 8420–8430. (원문 참고 26) | m — 국소 단사 구조 (Model 4 의 근거 · p.2 · p.4) — Li₆PS₅Cl 국소 구조 · PS₄ 비틀림 실측 | papers/ 에 없음 (grep 'Schlenker' = 인용 카드 셋뿐).
+
+## 2026-11-24 배치 18 편 (Li 금속 음극 · 공극 · 점착 · Ag–C 층 · W_ad 보고서) — 전체 목록은 따로
+전체 (99 편 합침 · 최근 2 년 발견 검색 14 편 · 서지 확인 표시) = `litdb/_curation/batch_2026_11_24/extra_papers_2026_11_24.md`. 여기는 우선순위만 (최근 먼저 · 서지 표시는 그 파일).
+- [본 세션 · 11-24] Baer, Shantsila, Figiel, Karasulu, *J. Mater. Chem. A*, 2026, **14**, 20245. | W_ad — Li \| Li₆PS₅Cl 종단 28 개 훑기 + MLIP · 우리 슬랩 종단 선택 대조
+- [본 세션 · 11-24] Chu, Lerch, Chong et al., *Energy Environ. Sci.*, 2026, **19**, 5836. [DOI 미확인] | W_ad §7 — 친Li 최고 Ag 가 박리 때 공공 · 공극을 뭉치게 함 (가넷) · 'W 클수록 좋다' 의 반례 후보
+- [본 세션 · 11-24] Becker, Schuster, Kremer, Fuchs, Janek, *Energy Environ. Sci.*, 2026, **19**, 2367. | Au · Ag · Bi 층별 석출 Li 결정립 · 방위 (EBSD) · Li 면 선택 근거
+- [본 세션 · 11-24] Haslam et al., *ACS Energy Lett.*, 2025, **10**, 2285. 🏷 Jeff Sakamoto | 합금 층과 Li 젖음 · 형태 · §7 Ag 의 실험 짝
+- [본 세션 · 11-24] Choi S. H. … Choi J. W., *Nat. Commun.*, 2025, **16**. [논문 번호 미확인] | Ag 도핑 아지로다이트에서 Ag 석출 → 친Li 씨앗
+- [본 세션 · 11-24] Hiraoka, Sakabe, Suzuki, Seki, *J. Mater. Chem. A*, 2025, **13**, 27960. | 카본블랙도 Li 를 먹는다 (operando Raman) · 탄소 종류 축
+- [본 세션 · 11-24] Sandoval et al. (McDowell), *EES Batteries*, 2025, **1**, 1809. | LPSCl 무음극 operando μCT · DEM 공극 대조
+- [본 세션 · 11-24] Ko et al., *Nat. Commun.*, 2025, **16**, 1066. | 금속 층 위치 ↔ Li 석출 위치
+- [본 세션 · 11-24] Lee Y.-G. et al., *Nat. Energy*, 2020, **5**, 299. | Ag–C 층 원전 (보고서 9 편이 제안 · 카드 없음)
+- [본 세션 · 11-24] Kasemchainan et al. (Bruce), *Nat. Mater.*, 2019, **18**, 1105. | Li \| LPSCl 임계 박리 전류 · 공극 (보고서 9 편)
+- [본 세션 · 11-24] Xie, Diallo, Kim, Tu, Ceder, *Adv. Energy Mater.*, 2024, **14**, 2302960. | Ag/C 층 리튬화 기전 · Li–Ag 합금 순서
+- [본 세션 · 11-24] Lepley, Holzwarth, *Phys. Rev. B*, 2015, **92**, 214201. | 황화물 쪽 (Li \| Li₂S · Li₃PS₄) DFT 계면 · 점착 방법 원전
