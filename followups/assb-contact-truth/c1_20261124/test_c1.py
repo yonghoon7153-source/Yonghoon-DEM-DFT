@@ -438,3 +438,69 @@ def test_dc_qf_identity_with_model_lithium():
     r = tr.qf_identity_check(shape="G05", Wa=10.0, x_mid=0.625854, x0=0.625854, I_A=2.0, t_end=600.0)
     assert r["rel"] <= 1e-6, r
     assert r["Qdl_end_C"] > 0.0                           # 방전: 이중층이 전하를 내놓는다
+
+
+# --------------------------------------------------------------------------------------------
+# 5 차 (§8-11 · 사전 등록) — 메모리 경로 (수는 바뀌지 않아야 한다) · 점진 기록 · 메모리 경비
+# --------------------------------------------------------------------------------------------
+def test_mem_tree_rss_and_kill_targets_fake():
+    """가짜 /proc 표: {pid: (ppid, rss_B)} — 뿌리 10 의 자손 합 (감시자 99 제외) · 죽일 대상 = 자손 − 뿌리 − 감시자."""
+    import c1_memguard as mg
+    table = {1: (0, 5), 10: (1, 100), 11: (10, 200), 12: (10, 300), 13: (12, 400), 99: (10, 50), 20: (1, 7000)}
+    assert mg.tree_rss(10, table, exclude=(99,)) == 100 + 200 + 300 + 400
+    assert sorted(mg.kill_targets(10, table, exclude=(99,))) == [11, 12, 13]
+
+
+def test_mem_watcher_trips_on_first_exceed_and_tracks_peak():
+    import c1_memguard as mg
+    w = mg.Watcher(cap_bytes=12_000)
+    trips = [w.observe(x) for x in (1_000, 5_000, 11_999, 12_001, 3_000)]
+    assert trips == [False, False, False, True, False]
+    assert w.peak == 12_001 and w.tripped and w.trip_value == 12_001
+
+
+def test_inc_jsonl_roundtrip_and_truncated_tail(tmp_path):
+    import c1_grid as cg
+    p = tmp_path / "x.jsonl"
+    for i in range(3):
+        cg.append_jsonl(p, {"i": i, "v": 0.5 * i})
+    with open(p, "a") as fh:
+        fh.write('{"i": 3, "v": ')                       # 충돌로 잘린 마지막 줄
+    rows = cg.read_jsonl(p)
+    assert [r["i"] for r in rows] == [0, 1, 2]
+
+
+LOWRES = {"var_pts": {"x_s": 20, "x_p": 20, "r_p": 20}, "rtol": 1e-8, "atol": 1e-8}
+
+
+def test_lean_pulse_matches_old_full_state_path_low_res():
+    """(a) 가벼운 길 = 옛 길 (펄스 + 휴지 이어 붙인 전체 상태): max |ΔV| ≤ 1e-12 V · Li 상대값 차 ≤ 1e-12 (20 · 1e-8)."""
+    m, s, sim = tr.build_model("G05", **LOWRES)
+    d = tr.base_inputs(shape="G05", Wa=0.1, x_mid=0.625847)
+    for x, I in ((0.844504, 1.9989605), (0.407188, -1.9989605)):
+        old = tr.run_pulse(m, s, sim, d, x_start=x, I_A=I, keep=("Voltage [V]",
+                           "R-averaged positive particle concentration [mol.m-3]",
+                           "Positive electrode surface potential difference [V]"))
+        li_old = tr.li_balance(old, d, I, 10.0)["rel_with_dl"]
+        new = tr.run_pulse_lean(m, s, sim, d, x_start=x, I_A=I)
+        assert new["V"].shape == old["Voltage [V]"].shape
+        assert np.max(np.abs(new["V"] - old["Voltage [V]"])) <= 1e-12
+        assert abs(new["li_rel_with_dl"] - li_old) <= 1e-12
+        assert new["n_pulse"] == old["n_pulse"]
+
+
+def test_restricted_output_cc_matches_full_low_res():
+    """(c) 제한 출력 (V · Δφ̄ · c̄) ↔ 전체 상태: 공통 시각 max |ΔV| ≤ 1e-10 V · |ΔQ_F 끝| ≤ 1e-10·I·t · |Δt_끝| ≤ 1e-6 s (20 · 1e-8)."""
+    mf, sf, simf = tr.build_model("G05", **LOWRES)
+    mr, sr, simr = tr.build_model("G05", output_variables=list(tr.QF_KEEP), **LOWRES)
+    d = tr.base_inputs(shape="G05", Wa=10.0, x_mid=0.625847)
+    I = 6.4477514 / 3.0
+    rf = tr.run_cc(mf, sf, simf, d, x_start=0.261417, I_A=I, t_max=2000.0, dt_out=0.1, V_lo=3.0, V_hi=10.0, keep=tr.QF_KEEP)
+    rr = tr.run_cc(mr, sr, simr, d, x_start=0.261417, I_A=I, t_max=2000.0, dt_out=0.1, V_lo=3.0, V_hi=10.0, keep=tr.QF_KEEP)
+    c = tr.common_max_abs_dv(rf["t"], rf["Voltage [V]"], rr["t"], rr["Voltage [V]"])
+    assert c["n_common"] > 10000 and c["max_abs_dv"] <= 1e-10
+    qf_f = tr.qf_and_li(rf, d, I)
+    qf_r = tr.qf_and_li(rr, d, I)
+    assert abs(float(rf["t"][-1]) - float(rr["t"][-1])) <= 1e-6
+    assert abs(qf_f["qf"][-1] - qf_r["qf"][-1]) <= 1e-10 * I * float(rf["t"][-1])
+    assert qf_r["rel"] <= 1e-6

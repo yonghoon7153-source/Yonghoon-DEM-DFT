@@ -418,9 +418,59 @@ def s5p(out: Path) -> dict:
     return res
 
 
+# ------------------------------------------------------------------ 5 차 (§8-11 ② (c)) — S8 제한 출력 동치 (40 · 1e-9)
+S8_RES = {"var_pts": {"x_s": 40, "x_p": 40, "r_p": 40}, "rtol": 1e-9, "atol": 1e-9}
+
+
+def s8(out: Path) -> dict:
+    """(i) B2 C/3 (0.1 s) · x_top · Wa 10 · G½ 신품: 제한 ↔ 전체 — 통과 조건 · (ii) 펄스 → 휴지 잇기 (제한 출력) ↔ 전체 — 기록."""
+    t0 = time.time()
+    R = reg(out)
+    d = tr.base_inputs(shape="G05", Wa=10.0, x_mid=R["x_mid"])
+    full = tr.build_model("G05", **S8_RES)
+    rest = tr.build_model("G05", output_variables=list(tr.QF_KEEP), **S8_RES)
+    I = R["I_1C_A"] / 3.0
+    rf = tr.run_cc(*full, d, x_start=R["x_top"], I_A=I, t_max=1.6 * 3 * 3600, dt_out=0.1, V_lo=tr.V_LOW, V_hi=10.0, keep=tr.QF_KEEP)
+    rr = tr.run_cc(*rest, d, x_start=R["x_top"], I_A=I, t_max=1.6 * 3 * 3600, dt_out=0.1, V_lo=tr.V_LOW, V_hi=10.0, keep=tr.QF_KEEP)
+    c = tr.common_max_abs_dv(rf["t"], rf["Voltage [V]"], rr["t"], rr["Voltage [V]"])
+    qf_f, qf_r = tr.qf_and_li(rf, d, I), tr.qf_and_li(rr, d, I)
+    dt_end = abs(float(rf["t"][-1]) - float(rr["t"][-1]))
+    dqf = abs(qf_f["qf"][-1] - qf_r["qf"][-1])
+    lim_q = 1e-10 * I * float(rf["t"][-1])
+    ok_i = bool(c["max_abs_dv"] <= 1e-10 and dqf <= lim_q and dt_end <= 1e-6 and qf_r["rel"] <= 1e-6 and c["n_common"] > 0)
+    del rf, rr
+    # (ii) 펄스 → 휴지 (제한 출력 · 끝 상태에서 step)
+    ii = {}
+    try:
+        x, Ip = R["soc_x"]["0.2"], R["pulse_I_A"]["taf-"]
+        lean = tr.run_pulse_lean(*full, d, x_start=x, I_A=Ip)
+        m, so, sim = rest
+        dd = dict(d)
+        dd.update({"I": Ip, "c0": x * tr.C_MAX, "V_lo": 0.0, "V_hi": 10.0})
+        q1 = so.solve(m, t_eval=[0.0, 10.0], t_interp=tr.grid_after_step(10.0), inputs=tr.to_pybamm_inputs(sim, dd))
+        v1 = np.asarray(q1["Voltage [V]"].entries)
+        dd["I"] = 0.0
+        q2 = so.step(q1.last_state, m, dt=60.0, t_interp=tr.grid_after_step(60.0), inputs=tr.to_pybamm_inputs(sim, dd))
+        v2 = np.asarray(q2["Voltage [V]"].entries)[1:]
+        vr = np.concatenate([v1, v2])
+        ii = {"supported": True, "n": int(vr.size), "max_abs_dv": float(np.max(np.abs(vr - lean["V"]))) if vr.size == lean["V"].size else None,
+              "same_length": bool(vr.size == lean["V"].size)}
+        ii["within_1e-10"] = bool(ii["same_length"] and ii["max_abs_dv"] <= 1e-10)
+    except Exception as e:
+        ii = {"supported": False, "error": repr(e)[:300]}
+    res = {"spike": "S8", "res": "40 · 1e-9", "i_cc": {"max_abs_dv": c["max_abs_dv"], "n_common": c["n_common"], "dt_end_s": dt_end,
+           "dQF_end_C": dqf, "lim_QF_C": lim_q, "li_rel_restricted": qf_r["rel"], "li_rel_full": qf_f["rel"], "pass": ok_i},
+           "ii_pulse_rest": ii, "pass": ok_i, "elapsed_s": time.time() - t0}
+    jdump(res, out / "s8.json")
+    print(f"S8 (i) CC C/3 0.1 s 제한 ↔ 전체: max|ΔV| {c['max_abs_dv']:.2e} V (n {c['n_common']}) · |Δt_end| {dt_end:.1e} s · "
+          f"|ΔQ_F| {dqf:.2e} C (lim {lim_q:.2e}) · Li(제한) {qf_r['rel']:.1e} · (ii) {ii}")
+    print("S8 PASS" if ok_i else "S8 FAIL")
+    return res
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("which", choices=["s1", "s2", "s3", "s4", "s5", "s6", "s4p", "s5p", "all", "all2"])
+    ap.add_argument("which", choices=["s1", "s2", "s3", "s4", "s5", "s6", "s4p", "s5p", "s8", "all", "all2", "all5"])
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     out = Path(a.out)
@@ -429,9 +479,11 @@ def main(argv=None):
         order = ["s6", "s1", "s2", "s3", "s4", "s5"]
     elif a.which == "all2":     # 2 차: S4 (1 차 판정 — 정보로만 다시 잼) + S4′ · S5′ (판정)
         order = ["s6", "s1", "s2", "s3", "s4", "s4p", "s5p"]   # 1 차 S5 는 다시 재지 않는다 (k₀ 정규화가 g_reg 로 바뀌어 같은 식이 자명해짐)
+    elif a.which == "all5":     # 5 차: all2 + S8 (제한 출력 동치 · §8-11 ② (c))
+        order = ["s6", "s1", "s2", "s3", "s4", "s4p", "s5p", "s8"]
     else:
         order = [a.which]
-    info_only = {"s4"} if a.which == "all2" else set()
+    info_only = {"s4"} if a.which in ("all2", "all5") else set()
     status = {}
     for w in order:
         r = globals()[w](out)
@@ -441,6 +493,10 @@ def main(argv=None):
     jdump(status, out / "spike_status.json")
     fails = [k for k, v in status.items() if v is False and not k.endswith("_info_pass")]
     print("SPIKES FAIL: " + ",".join(fails) if fails else "SPIKES ALL PASS")
+    import c1_memguard as mg
+    rc_mem = mg.rusage_exit_hook()                       # §8-11 ③ 교차 확인
+    if rc_mem is not None:
+        return rc_mem
     return 3 if fails else 0
 
 

@@ -1,0 +1,12 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/venv/bin/python -I /home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/c1_plumb.py --spk /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/out5/spikes --tmp /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/out5/plumb
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/copy/degradation-degeneracy
+start_utc: 2026-11-24T07:47:23Z
+copy_head: bf61565ba79f3aa66b16fd097da3105752c3248f
+repo_head: c2703f1fe339815ceec4f656bf87123b624aa387
+copy_dirty: 0
+disk_free_start: 26114887680
+end_utc: 2026-11-24T07:53:18Z
+rc: 0
+elapsed_s: 355.55
+disk_free_end: 26101178368
+mem_peak_B: 3959156736

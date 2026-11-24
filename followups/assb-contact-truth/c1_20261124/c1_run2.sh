@@ -15,20 +15,30 @@ par() { # 병렬 단계: 이름접두 · 명령 줄들 (이름|명령)
   return $rc
 }
 left_min() { $PY -I -c "import datetime as d,time;t0=d.datetime.strptime('$C1_T0','%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=d.timezone.utc).timestamp();print(int((t0+4*3600-time.time())//60))"; }
+# §8-11 ③ 메모리 경비: 이 셸을 뿌리로 감시자 하나 (단계들은 C1_TREE_ROOT 를 보고 따로 감시자를 붙이지 않는다)
+export C1_TREE_ROOT=$$
+MEMLOG="$C1_RUN/orchestrator.mem.jsonl"; MEMTRIP="$C1_RUN/orchestrator.memtrip.json"
+"$PY" -I "$C1_DIR/c1_memguard.py" watch --root $$ --log "$MEMLOG" --trip "$MEMTRIP" &
+GPID=$!
+stopguard() { kill -TERM "$GPID" 2>/dev/null; wait "$GPID" 2>/dev/null; }
+memcheck() { if [ -f "$MEMTRIP" ]; then log "STOP memory cap (12e9 B) — $(cat "$MEMTRIP" | head -c 300)"; stopguard; exit 5; fi; }
+trap stopguard EXIT
 log "start · budget left $(left_min) min"
-one 20_conv $G conv --out $OUT --spk $SPK || { log "STOP at 20_conv"; exit 3; }
-par <<P || { log "STOP at 21_c1a"; exit 3; }
+one 20_conv $G conv --out $OUT --spk $SPK || { memcheck; log "STOP at 20_conv"; exit 3; }; memcheck
+par <<P || { memcheck; log "STOP at 21_c1a"; exit 3; }
 21_c1a_G05_Wa10|$G c1a --out $OUT --spk $SPK --shape G05 --Wa 10
 21_c1a_G05_Wa0.1|$G c1a --out $OUT --spk $SPK --shape G05 --Wa 0.1
 21_c1a_G2_Wa10|$G c1a --out $OUT --spk $SPK --shape G2 --Wa 10
 21_c1a_G2_Wa0.1|$G c1a --out $OUT --spk $SPK --shape G2 --Wa 0.1
 P
+memcheck
 one 22_failcheck $A failcheck --out $OUT --spk $SPK || { log "STOP at 22_failcheck (rule 6)"; exit 3; }
-one 23_dc $G dc --out $OUT --spk $SPK || { log "STOP at 23_dc"; exit 3; }
-par <<P || { log "STOP at 24_c1b"; exit 3; }
+one 23_dc $G dc --out $OUT --spk $SPK || { memcheck; log "STOP at 23_dc"; exit 3; }; memcheck
+par <<P || { memcheck; log "STOP at 24_c1b"; exit 3; }
 24_c1b_Wa10|$G c1b --out $OUT --spk $SPK --Wa 10
 24_c1b_Wa0.1|$G c1b --out $OUT --spk $SPK --Wa 0.1
 P
+memcheck
 one 25_failcheck $A failcheck --out $OUT --spk $SPK || { log "STOP at 25_failcheck (rule 6)"; exit 3; }
 L=$(left_min); log "budget left $L min before AD (D3: AD only if ≥ 90 min)"
 if [ "$L" -ge 90 ]; then
@@ -47,7 +57,8 @@ P
 else
   AD=0; log "AD skipped (budget)"
 fi
-one 30_analyze_c1a $A c1a --out $OUT --spk $SPK --csv $CSV || log "30 rc≠0"
-one 31_analyze_c1b $A c1b --out $OUT --spk $SPK --csv $CSV || log "31 rc≠0"
+memcheck
+one 30_analyze_c1a $A c1a --out $OUT --spk $SPK --csv $CSV || { memcheck; log "30 rc≠0"; }
+one 31_analyze_c1b $A c1b --out $OUT --spk $SPK --csv $CSV || { memcheck; log "31 rc≠0"; }
 [ "$AD" = 1 ] && { one 32_analyze_ad $A ad --out $OUT --spk $SPK --csv $CSV || log "32 rc≠0"; }
 log "done · budget left $(left_min) min"

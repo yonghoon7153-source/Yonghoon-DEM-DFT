@@ -168,7 +168,7 @@ STD_TOL = 1e-9
 
 
 def build_model(shape: str, *, var_pts=STD_VAR_PTS, rtol: float = STD_TOL, atol: float = STD_TOL, D_e: float = D_E,
-                ce0: float = CE0, kappa_ce_exp: float = 0.0):
+                ce0: float = CE0, kappa_ce_exp: float = 0.0, output_variables=None):
     """g 모양 하나의 truth 모형을 만들어 (model, solver, sim) 를 돌려준다.
     kappa_ce_exp ≠ 0 은 시험의 음성 대조 전용 (κ ∝ (c_e/CE0)^n — truth 는 0)."""
     import pybamm
@@ -226,7 +226,8 @@ def build_model(shape: str, *, var_pts=STD_VAR_PTS, rtol: float = STD_TOL, atol:
         vp = dict(model.default_var_pts)
         vp.update(var_pts)
         var_pts = vp
-    solver = pybamm.IDAKLUSolver(rtol=rtol, atol=atol)
+    # output_variables: §8-11 ② (c) — B2 (DC) 의 촘촘 출력에서 전체 상태를 저장하지 않는다 (해의 끝 상태는 PyBaMM 이 따로 둔다)
+    solver = pybamm.IDAKLUSolver(rtol=rtol, atol=atol, output_variables=list(output_variables) if output_variables else None)
     sim = pybamm.Simulation(model, parameter_values=pv, solver=solver, var_pts=var_pts)
     sim.build()
     sim._c1_rename = _rename
@@ -273,6 +274,44 @@ def run_pulse(model, solver, sim, d_inputs: dict, *, x_start: float, I_A: float,
     for k in keep:
         out[k] = np.asarray(s2[k].entries)
     return out
+
+
+def run_pulse_lean(model, solver, sim, d_inputs: dict, *, x_start: float, I_A: float, t_on: float = 10.0,
+                   t_off: float = 60.0, no_cutoff: bool = True) -> dict:
+    """§8-11 ② (a): run_pulse 와 같은 계산 — 펄스 해에서 V · 첫 열만 뽑고 버린 뒤, 마지막 상태에서 휴지를 step 으로 잇는다
+    (step 은 어느 쪽이든 마지막 상태를 초기값으로 쓴다). 반환: V (펄스 + 휴지 · run_pulse 와 같은 배치) · Li 상대 오차 (이중층 항 포함)."""
+    import gc
+    d = dict(d_inputs)
+    d.update({"I": I_A, "c0": x_start * C_MAX,
+              "V_lo": 0.0 if no_cutoff else V_LOW, "V_hi": 10.0 if no_cutoff else V_HIGH})
+    inp = to_pybamm_inputs(sim, d)
+    s1 = solver.solve(model, t_eval=[0.0, t_on], t_interp=grid_after_step(t_on), inputs=inp)
+    V1 = np.asarray(s1["Voltage [V]"].entries).copy()
+    c_first = np.asarray(s1["R-averaged positive particle concentration [mol.m-3]"].entries)[:, 0].copy()
+    p_first = np.asarray(s1["Positive electrode surface potential difference [V]"].entries)[:, 0].copy()
+    term1 = s1.termination
+    last = s1.last_state
+    del s1
+    gc.collect()
+    d2 = dict(d)
+    d2["I"] = 0.0
+    s2 = solver.step(last, model, dt=t_off, t_interp=grid_after_step(t_off), inputs=to_pybamm_inputs(sim, d2))
+    V2 = np.asarray(s2["Voltage [V]"].entries)[1:].copy()           # 첫 점 = 넘겨준 마지막 상태 (펄스 끝) — 옛 길과 같은 배치로
+    c_last = np.asarray(s2["R-averaged positive particle concentration [mol.m-3]"].entries)[:, -1].copy()
+    p_last = np.asarray(s2["Positive electrode surface potential difference [V]"].entries)[:, -1].copy()
+    term2 = s2.termination
+    del s2, last
+    gc.collect()
+    eps = d_inputs["eps_am"]
+    a = 3.0 * eps / R_P
+    n_x = c_first.size
+    dx = L_PE / n_x
+    dN = AREA * eps * dx * (c_last.sum() - c_first.sum())
+    Qdl = AREA * a * d_inputs["c_dl"] * dx * (p_last - p_first).sum()
+    q_in = I_A * t_on
+    li = abs(F * dN - Qdl - q_in) / abs(q_in) if q_in != 0 else float("nan")
+    return {"V": np.concatenate([V1, V2]), "n_pulse": int(V1.size), "li_rel_with_dl": float(li),
+            "termination": [term1, term2]}
 
 
 def li_balance(res: dict, d_inputs: dict, I_A: float, t_on: float) -> dict:

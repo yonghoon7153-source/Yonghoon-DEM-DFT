@@ -53,6 +53,34 @@ def jdump(obj, path):
     Path(path).write_text(json.dumps(obj, indent=1, ensure_ascii=False, default=conv))
 
 
+def append_jsonl(path, rec) -> None:
+    """§8-11 ② (b) 점진 기록: 한 줄씩 덧붙이고 바로 디스크로 (충돌해도 앞 줄은 남는다)."""
+    def conv(o):
+        if isinstance(o, (np.floating, np.integer)):
+            return o.item()
+        if isinstance(o, np.ndarray):
+            return o.tolist()
+        return str(o)
+    with open(path, "a") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False, default=conv) + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
+
+
+def read_jsonl(path) -> list:
+    """잘린 마지막 줄은 건너뛴다."""
+    out = []
+    p = Path(path)
+    if not p.exists():
+        return out
+    for line in p.read_text().splitlines():
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return out
+
+
 def deadline() -> float:
     t0 = dt.datetime.strptime(os.environ["C1_T0"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
     return t0.timestamp() + 4 * 3600
@@ -78,10 +106,11 @@ def run_bundle(model, solver, sim, d, R):
     Vs, li = [], []
     for s, amp, sgn in PULSES:
         I = R["pulse_I_A"][amp + sgn]
-        res = tr.run_pulse(model, solver, sim, d, x_start=R["soc_x"][str(s)], I_A=I, keep=LI_KEEP)
-        li.append(tr.li_balance(res, d, I, 10.0)["rel_with_dl"])
-        Vs.append(res["Voltage [V]"])
+        res = tr.run_pulse_lean(model, solver, sim, d, x_start=R["soc_x"][str(s)], I_A=I)   # §8-11 ② (a)
+        li.append(res["li_rel_with_dl"])
+        Vs.append(res["V"])
         n_pulse = res["n_pulse"]
+        del res
     return np.array(Vs), np.array(li), n_pulse
 
 
@@ -115,10 +144,12 @@ def c1a(args, arms=("A", "K"), tag="c1a"):
         except Exception as e:  # 해법 실패 — 조용히 빼지 않는다
             n_fail += 1
             summary.append({"run": name, "status": "solver_fail", "error": repr(e)[:300]})
+            append_jsonl(out / f"{args.shape}_Wa{args.Wa:g}_runs.jsonl", summary[-1])
             continue
         np.savez_compressed(out / f"{name}.npz", V=V, li=li, n_pulse=n_pulse)
         summary.append({"run": name, "arm": arm, "k": k, "f": f, "status": "ok", "elapsed_s": time.time() - t0,
                         "li_max": float(li.max()), "V_min": float(V.min()), "V_max": float(V.max())})
+        append_jsonl(out / f"{args.shape}_Wa{args.Wa:g}_runs.jsonl", summary[-1])
     li_bad = [s for s in summary if s.get("status") == "ok" and s["li_max"] > LI_LIMIT]
     res = {"shape": args.shape, "Wa": args.Wa, "runs": summary, "n_fail": n_fail, "n_runs": len(runs),
            "li_violations": [s["run"] for s in li_bad]}
@@ -184,6 +215,10 @@ def conv(args):
             Vb, l_, n_pulse = run_bundle(model, solver, sim, d, R)
             V[lab][name] = Vb
             li[f"{lab}|{name}"] = float(l_.max())
+            np.savez_compressed(out / f"{lab}_{name}.npz", V=Vb, li=l_, n_pulse=n_pulse)        # §8-11 ② (b)
+            append_jsonl(out / "conv.jsonl", {"variant": lab, "run": name, "li_max": float(l_.max()),
+                                              "elapsed_s": time.time() - t0, "utc": time.strftime("%H:%M:%SZ", time.gmtime())})
+        del model, solver, sim
         el[lab] = time.time() - t0
         print(f"conv variant {lab}: {el[lab]:.1f}s", flush=True)
     rows, worst_tau, worst_z = _conv_compare(V["std"], V["fine"], R, shape, n_pulse, runs)
@@ -252,7 +287,7 @@ def dc_runs(args, arms=("A", "K"), tag="dc", include_fresh=True):
     R = reg(Path(args.spk))
     out = Path(args.out) / tag
     out.mkdir(parents=True, exist_ok=True)
-    model, solver, sim = tr.build_model("G05")
+    model, solver, sim = tr.build_model("G05", output_variables=list(tr.QF_KEEP))   # §8-11 ② (c) — B2 만 제한 출력
     summ = []
     n_fail = 0
     for Wa in WAS:
@@ -272,7 +307,9 @@ def dc_runs(args, arms=("A", "K"), tag="dc", include_fresh=True):
                 summ.append({"run": name, "Wa": Wa, "arm": arm, "k": k, "rate": rname,
                              **{kk: vv for kk, vv in r.items() if kk not in ("t", "V", "QF")},
                              "dqdv_peak_V": dqdv_peak(r["t"], r["V"], rate * R["I_1C_A"]) if rname == "C/20" else None})
-            np.savez_compressed(out / f"{name}.npz", **{k_.replace("/", "_"): v for k_, v in store.items()})
+                np.savez_compressed(out / f"{name}.npz", **{k_.replace("/", "_"): v for k_, v in store.items()})   # 율마다 갱신
+                append_jsonl(out / "dc_runs.jsonl", summ[-1])
+                del r
     jdump({"runs": summ, "n_fail": n_fail}, out / "dc_runs.json")
     return summ, n_fail
 
@@ -420,10 +457,10 @@ def c1b_one(model, solver, sim, d, R, w_fit):
     b0 = run_b0(model, solver, sim, d, R)
     b4 = run_b4(model, solver, sim, d, R)
     I = R["I_C10_A"]
-    res = tr.run_pulse(model, solver, sim, d, x_start=R["x_mid"], I_A=I, keep=LI_KEEP)
-    li_p = tr.li_balance(res, d, I, 10.0)["rel_with_dl"]
+    res = tr.run_pulse_lean(model, solver, sim, d, x_start=R["x_mid"], I_A=I)             # §8-11 ② (a)
+    li_p = res["li_rel_with_dl"]
     tp, idx = onset_samples(res["n_pulse"], 1e-3, w_fit)
-    f1 = ob.fit_f1(tp[idx], res["Voltage [V]"][: res["n_pulse"]][idx], I=I, V0=tr.ocp(R["x_mid"]), dt=1e-3)
+    f1 = ob.fit_f1(tp[idx], res["V"][: res["n_pulse"]][idx], I=I, V0=tr.ocp(R["x_mid"]), dt=1e-3)
     return b0, b4, f1, li_p
 
 
@@ -460,6 +497,7 @@ def c1b(args, mode="off"):
         except Exception as e:
             n_fail += 1
             rows.append({"run": name, "status": "solver_fail", "error": repr(e)[:300], **lab, "f_sigma": fs, "theta": th, "Wa": Wa})
+            append_jsonl(out / f"c1b_Wa{Wa:g}.jsonl", rows[-1])
             continue
         led = tr.ledger(theta=th, xbar_iso=R["x0_assembled"])
         np.savez_compressed(out / f"{name}_b0.npz", t=b0["t"], V=b0["V"])
@@ -470,6 +508,7 @@ def c1b(args, mode="off"):
                      "gitt_dE_t": b4["dE_t"], "gitt_dE_s": b4["dE_s"], "gitt_ratio": b4["ratio"], "gitt_dE_s_10min": b4["dE_s_10min"],
                      "Rp": f1["Rp"], "R0": f1["R0"], "tau": f1["tau"], "k_sqrt": f1["k"],
                      "N_iso_mol": led["N_iso"], "V_iso_m3": led["V_iso"]})
+        append_jsonl(out / f"c1b_Wa{Wa:g}.jsonl", rows[-1])                                      # §8-11 ② (b)
         print(f"{tag} {name}: Qch {b0['Q_ch_Ah']:.4f} Qdis {b0['Q_dis_Ah']:.4f} GITT {b4['ratio']:.4f} Rp {f1['Rp']:.4e} "
               f"li {max(b0['li_rel'], li_p):.1e}", flush=True)
     li_bad = [r["run"] for r in rows if r.get("status") == "ok" and max(r["li_b0"], r["li_pulse"]) > LI_LIMIT]
@@ -491,6 +530,13 @@ def main(argv=None):
     if budget_left() < 0:
         print("STOP rule 7 (벽시계)")
         return 4
+    rc = _dispatch(a)
+    import c1_memguard as mg
+    rc_mem = mg.rusage_exit_hook()                       # §8-11 ③ 교차 확인
+    return rc_mem if (rc_mem is not None and rc == 0) else rc
+
+
+def _dispatch(a):
     if a.step == "conv":
         return conv(a)
     if a.step == "c1a":

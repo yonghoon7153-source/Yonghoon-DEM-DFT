@@ -1,0 +1,13 @@
+2026-11-24T07:47:17Z
+# 09b — 배관 단계 줄에 경과 시각 표기만 더함 (보고용 · 계산 · 판정 무변경)
+44c4b7b47f7dd8f0738ec8552598a4f2cf81ddfc501c44258a06ced2ddbb5e89  followups/assb-contact-truth/c1_20261124/test_c1.py
+155135f8a0373d59ac47e91b5afbb94ff314a464b0fe114c183160ef111a3275  followups/assb-contact-truth/c1_20261124/c1_truth.py
+4020ae899976181b031de66889170bf9fdc7d8da59cd9755d3578a05fdd61bf9  followups/assb-contact-truth/c1_20261124/c1_observe.py
+c4633a3c44a913f08857f2b739dcbd72d4098b12bb699fb3797d0b76b4ed5741  followups/assb-contact-truth/c1_20261124/c1_spikes.py
+03bce7d50e99ade3d5e7ad0832e41e4205cd99573034205ac05e3a83c7737a37  followups/assb-contact-truth/c1_20261124/c1_grid.py
+6a578df5e4b0aaa685e4a2b3d130183bb7524ae8e3933a200a8301a4963d1169  followups/assb-contact-truth/c1_20261124/c1_analyze.py
+25ddbd35e67d38fdd07593ceabe575629a6f7faed46635cf5046d0218c448991  followups/assb-contact-truth/c1_20261124/c1_plumb.py
+a21d15677bad3e403208d1d246385596e03275a474a03619c783b6da025ea821  followups/assb-contact-truth/c1_20261124/c1_memguard.py
+addcffe4bd8c72cbc347c07225ba23cda43f30a4dc89318275832129f1f5247b  followups/assb-contact-truth/c1_20261124/c1_summarize.py
+3404e49007239ff20951575fb7bd42907bccc118f201b6135440bc778addf51b  followups/assb-contact-truth/c1_20261124/c1_run2.sh
+533bc84aa9ed97de16061814143fccb8ac076ee1b2f555206b80a7245e98ca00  followups/assb-contact-truth/c1_20261124/run_step.sh

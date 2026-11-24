@@ -1,0 +1,12 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/venv/bin/python -I -m pytest -q -p no:cacheprovider /home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/copy/degradation-degeneracy
+start_utc: 2026-11-24T07:39:46Z
+copy_head: bf61565ba79f3aa66b16fd097da3105752c3248f
+repo_head: 2a3d0c3520beb20244f6c4dcc1eadff4e7628d51
+copy_dirty: 0
+disk_free_start: 26116694016
+end_utc: 2026-11-24T07:40:11Z
+rc: 0
+elapsed_s: 25.36
+disk_free_end: 26116390912
+mem_peak_B: 2821668864

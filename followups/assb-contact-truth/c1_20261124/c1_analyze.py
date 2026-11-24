@@ -390,6 +390,13 @@ def main(argv=None):
     ap.add_argument("--spk", required=True)
     ap.add_argument("--csv", default=None)
     a = ap.parse_args(argv)
+    rc = _dispatch(a)
+    import c1_memguard as mg
+    rc_mem = mg.rusage_exit_hook()                       # §8-11 ③ 교차 확인
+    return rc_mem if (rc_mem is not None and rc == 0) else rc
+
+
+def _dispatch(a):
     if a.step == "failcheck":
         return failcheck(a)
     if a.step == "c1a":

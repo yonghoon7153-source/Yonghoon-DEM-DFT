@@ -1,0 +1,63 @@
+................................FFFFF                                    [100%]
+=================================== FAILURES ===================================
+___________________ test_mem_tree_rss_and_kill_targets_fake ____________________
+
+    def test_mem_tree_rss_and_kill_targets_fake():
+        """가짜 /proc 표: {pid: (ppid, rss_B)} — 뿌리 10 의 자손 합 (감시자 99 제외) · 죽일 대상 = 자손 − 뿌리 − 감시자."""
+>       import c1_memguard as mg
+E       ModuleNotFoundError: No module named 'c1_memguard'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:448: ModuleNotFoundError
+____________ test_mem_watcher_trips_on_first_exceed_and_tracks_peak ____________
+
+    def test_mem_watcher_trips_on_first_exceed_and_tracks_peak():
+>       import c1_memguard as mg
+E       ModuleNotFoundError: No module named 'c1_memguard'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:455: ModuleNotFoundError
+_________________ test_inc_jsonl_roundtrip_and_truncated_tail __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_inc_jsonl_roundtrip_and_t0')
+
+    def test_inc_jsonl_roundtrip_and_truncated_tail(tmp_path):
+        import c1_grid as cg
+        p = tmp_path / "x.jsonl"
+        for i in range(3):
+>           cg.append_jsonl(p, {"i": i, "v": 0.5 * i})
+            ^^^^^^^^^^^^^^^
+E           AttributeError: module 'c1_grid' has no attribute 'append_jsonl'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:466: AttributeError
+_____________ test_lean_pulse_matches_old_full_state_path_low_res ______________
+
+    def test_lean_pulse_matches_old_full_state_path_low_res():
+        """(a) 가벼운 길 = 옛 길 (펄스 + 휴지 이어 붙인 전체 상태): max |ΔV| ≤ 1e-12 V · Li 상대값 차 ≤ 1e-12 (20 · 1e-8)."""
+        m, s, sim = tr.build_model("G05", **LOWRES)
+        d = tr.base_inputs(shape="G05", Wa=0.1, x_mid=0.625847)
+        for x, I in ((0.844504, 1.9989605), (0.407188, -1.9989605)):
+            old = tr.run_pulse(m, s, sim, d, x_start=x, I_A=I, keep=("Voltage [V]",
+                               "R-averaged positive particle concentration [mol.m-3]",
+                               "Positive electrode surface potential difference [V]"))
+            li_old = tr.li_balance(old, d, I, 10.0)["rel_with_dl"]
+>           new = tr.run_pulse_lean(m, s, sim, d, x_start=x, I_A=I)
+                  ^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'c1_truth' has no attribute 'run_pulse_lean'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:485: AttributeError
+________________ test_restricted_output_cc_matches_full_low_res ________________
+
+    def test_restricted_output_cc_matches_full_low_res():
+        """(c) 제한 출력 (V · Δφ̄ · c̄) ↔ 전체 상태: 공통 시각 max |ΔV| ≤ 1e-10 V · |ΔQ_F 끝| ≤ 1e-10·I·t · |Δt_끝| ≤ 1e-6 s (20 · 1e-8)."""
+        mf, sf, simf = tr.build_model("G05", **LOWRES)
+>       mr, sr, simr = tr.build_model("G05", output_variables=list(tr.QF_KEEP), **LOWRES)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_model() got an unexpected keyword argument 'output_variables'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:495: TypeError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_mem_tree_rss_and_kill_targets_fake
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_mem_watcher_trips_on_first_exceed_and_tracks_peak
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_inc_jsonl_roundtrip_and_truncated_tail
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_lean_pulse_matches_old_full_state_path_low_res
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_restricted_output_cc_matches_full_low_res
+5 failed, 32 passed in 24.33s
