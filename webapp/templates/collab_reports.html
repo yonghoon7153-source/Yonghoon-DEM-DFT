@@ -13,8 +13,11 @@
 
 {# 캠페인 페이지 (2026-11-24 · 사용자 '옆 index 부분이 너무 길어져서 다 보고서 내로') — 사이드바 캠페인 묶음의 접힘 쪽 줄 그대로다
    (app 이 nav.sidebar() 에서 가져온다 · 배지 = 원장에서 센 살아 있는 결정 · 카드 수). 그 캠페인에 딸린 공유 보고서를 같은 줄에 단다. #}
-<h2 style="font-size:1rem;margin:4px 0 8px">캠페인 페이지</h2>
-<table class="tbl" id="camp-list">
+<div class="grid">
+<section class="card" id="camp-card" aria-labelledby="camp-h" style="min-width:0">
+<h3 id="camp-h" style="flex-wrap:wrap">🗂 캠페인 페이지 <span class="sub" style="font-weight:400">— 사이드바 '캠페인 페이지' 토글과 같은 목록 · 배지 = 원장에서 센 살아 있는 결정 · 카드 수</span></h3>
+<div class="tbl-scroll">
+<table class="tbl" id="camp-list" style="min-width:720px">
   <thead><tr><th>캠페인</th><th>상태</th><th>무엇</th><th>딸린 공유 보고서</th></tr></thead>
   <tbody>
     {% for c in camps %}
@@ -27,9 +30,13 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
+</section>
 
-<h2 style="font-size:1rem;margin:22px 0 8px">공유 보고서 (HTML)</h2>
-<table class="tbl" id="collab-reports">
+<section class="card" id="reports-card" aria-labelledby="reports-h" style="min-width:0">
+<h3 id="reports-h" style="flex-wrap:wrap">📑 공유 보고서 (HTML) <span class="sub" style="font-weight:400">— 원본은 docs/collab · 보기 화면에서 여백 메모 · 형광펜</span></h3>
+<div class="tbl-scroll">
+<table class="tbl" id="collab-reports" style="min-width:720px">
   <thead><tr><th>날짜</th><th>트랙</th><th>보고서</th><th>원본</th></tr></thead>
   <tbody>
     <tr>
@@ -53,4 +60,7 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
+</section>
+</div>
 {% endblock %}

@@ -221,7 +221,7 @@ def test_reports_page_lists_every_campaign_with_its_reports():
     camp = _camp()
     rest = camp["items"][camp["fold_after"]:]
     h = _client().get("/reports").get_data(as_text=True)
-    tbl = re.search(r'<table class="tbl" id="camp-list">.*?<tbody>(.*?)</tbody>', h, re.S).group(1)
+    tbl = re.search(r'<table class="tbl" id="camp-list"[^>]*>.*?<tbody>(.*?)</tbody>', h, re.S).group(1)
     rows = re.findall(r"<tr>(.*?)</tr>", tbl, re.S)
     assert len(rows) == len(rest), (len(rows), len(rest))
     by_url = {}
