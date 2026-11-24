@@ -26,7 +26,8 @@
    "h": 1448,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_main.pdf",
-   "blank": 0.48
+   "blank": 0.48,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +47,8 @@
    "h": 1551,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_main.pdf",
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f2 as a number gap ('p5 영역 없음') - Fig. 2 on PDF p.5 is an embedded raster (xref 131, 92.4-540.2 x 58.2-395.5 pt) plus vector axes/text labels (words 60.5-539.1 x 50.2-413.4 pt); clip = label 'a' top to the 'Binding energy (eV)' axis titles, above the caption block at y 421.7"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f2 as a number gap ('p5 영역 없음') - Fig. 2 on PDF p.5 is an embedded raster (xref 131, 92.4-540.2 x 58.2-395.5 pt) plus vector axes/text labels (words 60.5-539.1 x 50.2-413.4 pt); clip = label 'a' top to the 'Binding energy (eV)' axis titles, above the caption block at y 421.7",
+   "viewed": true
   },
   {
    "key": "f3",
@@ -67,7 +69,8 @@
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_main.pdf",
    "blank": 0.64,
-   "recrop": "2026-11-24 litdb-curator: auto crop [33.7, 312.0, 545.2, 387.4] caught only panel e (schematic strip, 2132x316); panels a-d (profile, surface SEM, CP cross-sections, STEM-EELS) were missing; clip = full figure above the caption block at y 389.4"
+   "recrop": "2026-11-24 litdb-curator: auto crop [33.7, 312.0, 545.2, 387.4] caught only panel e (schematic strip, 2132x316); panels a-d (profile, surface SEM, CP cross-sections, STEM-EELS) were missing; clip = full figure above the caption block at y 389.4",
+   "viewed": true
   },
   {
    "key": "f4",
@@ -88,7 +91,8 @@
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_main.pdf",
    "blank": 0.887,
-   "recrop": "2026-11-24 litdb-curator: auto crop right edge x 502.5 cut the right-axis title 'Coulombic efficiency (%)' of panels a and c (vector paths end at x 509.3); widened to 513.0"
+   "recrop": "2026-11-24 litdb-curator: auto crop right edge x 502.5 cut the right-axis title 'Coulombic efficiency (%)' of panels a and c (vector paths end at x 509.3); widened to 513.0",
+   "viewed": true
   },
   {
    "key": "f5",
@@ -108,7 +112,8 @@
    "h": 1899,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_main.pdf",
-   "blank": 0.687
+   "blank": 0.687,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -129,7 +134,8 @@
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_main.pdf",
    "blank": 0.316,
-   "recrop": "2026-11-24 litdb-curator: auto crop top y 68.7 cut the panel letters a-d and the state labels (EoLP / Stage III, y 49.9-58.5); clip starts at y 45.0, ends above the caption block at y 381.9"
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 68.7 cut the panel letters a-d and the state labels (EoLP / Stage III, y 49.9-58.5); clip starts at y 45.0, ends above the caption block at y 381.9",
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -189,7 +195,8 @@
    "h": 2393,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.921
+   "blank": 0.921,
+   "viewed": true
   },
   {
    "key": "fS4",
@@ -209,7 +216,8 @@
    "h": 2589,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.337
+   "blank": 0.337,
+   "viewed": true
   },
   {
    "key": "fS5",
@@ -229,7 +237,8 @@
    "h": 2052,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.807
+   "blank": 0.807,
+   "viewed": true
   },
   {
    "key": "fS6",
@@ -349,7 +358,8 @@
    "h": 985,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.91
+   "blank": 0.91,
+   "viewed": true
   },
   {
    "key": "fS12",
@@ -429,7 +439,8 @@
    "h": 2091,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.654
+   "blank": 0.654,
+   "viewed": true
   },
   {
    "key": "fS16",
@@ -449,7 +460,8 @@
    "h": 2050,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.756
+   "blank": 0.756,
+   "viewed": true
   },
   {
    "key": "fS17",
@@ -529,7 +541,8 @@
    "h": 1569,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.946
+   "blank": 0.946,
+   "viewed": true
   },
   {
    "key": "fS21",
@@ -629,7 +642,8 @@
    "h": 1886,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.296
+   "blank": 0.296,
+   "viewed": true
   },
   {
    "key": "fS26",
@@ -649,7 +663,8 @@
    "h": 1728,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.402
+   "blank": 0.402,
+   "viewed": true
   },
   {
    "key": "fS27",
@@ -709,7 +724,8 @@
    "h": 914,
    "dpi": 300,
    "src": "ko2025_metal_interlayer_anode_less_SI.pdf",
-   "blank": 0.282
+   "blank": 0.282,
+   "viewed": true
   },
   {
    "key": "tS1",
