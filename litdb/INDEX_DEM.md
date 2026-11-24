@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 376편 · 생성 2026-11-23
+> digest 377편 · 생성 2026-11-24
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -367,7 +367,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lee2023_sicspe_digitaltwin_assb` | Lee 2023 (Battery Energy 2, 20220061) — 디지털트윈 기반 SIC-SPE vs LPSCl 복합양극 구조·전기화학 분석 ★ DTBL 디지털트윈 계보의 가장 이른 논문(2023) + LPSCl 전극 구조지표 | DEM | 2026-07-28 | — |
 | `park2020_digitaltwin_assb_foundational` | Park 2020 (Adv. Energy Mater. 10, 2001563) — Digital-Twin-Driven All-Solid-State Battery: 물리·전기화학 거동 규명 ★ DTBL 디지털트윈 계보의 시조(FOUNDATIONAL ROOT, 2020) | FEM·digital-twin | 2026-07-28 | 🖼 26 |
 
-## 기타 (55편)
+## 기타 (56편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -378,6 +378,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `chibwe2020_nnsi_segregation_index` | 근접이웃 분리지수 (NNSI) — 입상물질 분리(segregation)의 정량화 — Chibwe (Powder Technology 2020) | DEM (LIGGGHTS) — 혼합·분리 지표 제안 + DEM 검증 | 2026-09-19 | 🖼 19 |
 | `cho2026_eipc_zn_anode_azib` | Cho 2026 (Energy Storage Materials 89 (2026) 105186, DOI 10.1016/j.ensm.2026.105186) — 전자-이온 폴리머 복합막(EIPC=GO+PAA) + PCET 반응으로 Zn 음극 안정화 (수계 Zn-ion, AZIB) | DEM | 2026-07-28 | — |
 | `choi2026_elastomeric_li_metal_anode` | Choi 2026 (Advanced Energy Materials, DOI 10.1002/aenm.71104) — 친리튬(lithiophilic) 단분자층 + 나노-크럼플/마이크로-오목 탄성 Li metal anode | DEM | 2026-07-28 | — |
+| `damore2022_lpscl_symmetry_breaking_surface_energy_wulff_pbe0` | Li₆PS₅Cl 을 PBE0 (CRYSTAL · TZVP) 로 — 입방 F-43m 은 Γ 허수 진동 두 모드 (F1 · F2) 를 가진 준안정 구조 (P1 의사 입방 24 개가 0.831 eV/f.u. 낮다) · QHA 열팽창 (부피 α 6.55 × 10⁻⁵ K⁻¹ · 298 K) · VRH 탄성 (B 18.71 · G  | DFT (CRYSTAL periodic code · PBE0 global hybrid · Ahlrichs T | 2026-11-24 | 🖼 40 |
 | `deysher2022_transport_mechanical_aspects_assb_review` | Transport and mechanical aspects of all-solid-state lithium batteries — Deysher & Ridley, Meng (Materials Today Physics 2022) [REVIEW] | REVIEW (전달 + 역학, 실험 특성화 중심 — 자체 시뮬레이션 없음) | 2026-06-26 | 🖼 6 |
 | `doux2020_stack_pressure_assb` | Doux 2020 (Adv. Energy Mater. 10, 1903253) — Stack Pressure: 작동압력(operating) vs 제조압력(fabrication)의 정전적(canonical) LPSCl 앵커 | DEM | 2026-07-28 | — |
 | `egermann1983_ordered_vs_interactive_mixture_nomenclature` | '정렬 (ordered)' 은 혼합 정도 (σ < σ_R) 에만 쓰고, 상호작용하는 성분의 혼합 유형 은 'interactive' / 'non-interactive' 로 부르자 — 분말 혼합 용어 정리 제안 (2 쪽 단신): 정렬과 상호작용은 같은 말이 아니다 · 혼합 조작은 무질서화 과정이라 정렬 혼합물을 만들기 어렵다 | nomenclature note (powder mixing terminology — 'ordered' res | 2026-10-13 | 🖼 6 |

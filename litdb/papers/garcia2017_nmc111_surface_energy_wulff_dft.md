@@ -231,6 +231,7 @@ NMC111 의 저지수면 7 종 (비극성 (104) · (100) · 극성 (001) · (012)
 - SE|NCM 계면 W_ad (계산) · AFM: `lee2026_mechanical_halogen_argyrodite_drycoating`.
 - 같은 묶음 (점착 · 표면 에너지 측정): `johnson1971_jkr_surface_energy_contact_elastic_solids` · `begat2004_cohesive_adhesive_balance_afm_colloid_probe`.
 - NCM 기계 물성: `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` · `xu2017_nmc532_nanoindentation_modulus_hardness_toughness`.
+- 판가름 수의 SE 쪽 짝 (PBE0 · 2026-11-24 카드): `damore2022_lpscl_symmetry_breaking_surface_energy_wulff_pbe0` — LPSCl (111) 0.297 · (001) 0.344 · (110) 0.291 J/m² (화학량론 슬랩 두 면 평균) · 이 카드 NMC111 (104) 0.76 과의 비 γ_A/γ_S 2.57 · (001) 0.89 → 3.01 · (012) 1.97 → 6.66 (그 카드 §7-3 · 결합 규칙 어느 문턱보다도 위).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

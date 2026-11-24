@@ -294,3 +294,5 @@ VASP/**PBEsol**(PBE·optB88-vdW 벤치 후 선택)로 **23종 세라믹 알칼�
 - **Zener A = 2C₄₄/(C₁₁−C₁₂)**: cubic 이방성 지표 (A=1 등방). **이 논문은 계산 안 함** — 우리/Torii가 유도.
 - **Monroe–Newman 기준**: 전착 계면 안정화에 필요한 차단층 전단탄성률 ≈ 2×G_Li. 단순 선형탄성 모델 — 균열·결정립계는 반영 안 됨(저자도 Nagao 균열 관찰로 한계 명시).
 - **iso-E 등고선**: G–B 평면에서 E=9BG/(3B+G)가 일정한 곡선 — Fig 1의 점선 가족. 물질군 군집을 E 수준으로 즉독하게 해줌.
+
+> 🔗 **관련 카드 (2026-11-24 한 줄 추가)**: [`damore2022_lpscl_symmetry_breaking_surface_energy_wulff_pbe0`](damore2022_lpscl_symmetry_breaking_surface_energy_wulff_pbe0.md) — 이 논문을 ref 50 으로 인용 (`Table 3` 문헌 열 = 이 카드 표 III Li₆PS₅Cl 28.7 · 8.1 · 22.1 · 0.37 · 0.28 ✓ · 같은 표의 Li₃PS₄ 열은 G/B ↔ ν 를 뒤바꿔 옮김 · 본문은 범함수를 'PBE0sol' 로 적음 = PBEsol) · 그 논문의 PBE0 Model 2 = B 18.71 · G 12.49 · E 30.65 GPa · ν 0.227.

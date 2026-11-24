@@ -376,6 +376,7 @@ Materials Studio Morphology 로 층상 결정의 가능한 형상 모의 (Fig 2)
 - LCO | LPS 계면 · LCO(110) 표면 (⚠ 그 카드의 LNO = LiNbO₃): `haruyama2014_space_charge_layer_oxide_cathode_sulfide_se` · `haruyama2017_cation_mixing_co_diffusion_lco_lps` · `okuno2020_sulfide_vs_oxide_electrolyte_cathode_interfaces`.
 - 단결정 vs 다결정 NCM (우리 랩): `jung2023_single_crystal_ncm_morphology` · `trevisanello2021_sc_pc_ncm_cracking_diffusion`.
 - 점착 · 표면 에너지 측정 (같은 논지 묶음): `johnson1971_jkr_surface_energy_contact_elastic_solids` · `begat2004_cohesive_adhesive_balance_afm_colloid_probe` · `fowkes1964_attractive_forces_interfaces_dispersion` · `mohammadijam2014_inverse_gas_chromatography_review`.
+- 판가름 수의 SE 쪽 짝 (PBE0 · 2026-11-24 카드): `damore2022_lpscl_symmetry_breaking_surface_energy_wulff_pbe0` — LPSCl (111) 0.297 · (001) 0.344 · (110) 0.291 J/m² (화학량론 슬랩 두 면 평균) · 이 카드 LiNiO₂ (003) ≈0.20 과의 비 0.68 · LiCoO₂ (003) ≈0.29 → 0.98 · LiNiO₂ (104) 0.48 → 1.62 (그 카드 §7-3).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
