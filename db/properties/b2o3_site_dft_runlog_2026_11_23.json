@@ -113,5 +113,11 @@
   "실측_사실 (11-24)": "10월 기록의 post_relax 구조 해시는 저장소 구조 파일과 3/3 다르다 (셀은 일치 · 입력 구조 해시는 일치) — 파일로 쓰고 다시 읽은 좌표 자릿수가 1e-6 반올림에서 갈리는 것으로 본다 → post_relax 해시는 묶는 데 안 쓴다",
   "고친_결함": "selftest 가 잡았다 — O–B 짝은 O↔S 를 원소 자리 바꿈으로 만들어 원소 열이 10월 입력과 다르다 → B 변위는 B 번호만 같으면 잰다",
   "by": "claude (본 세션) · 2026-11-24"
+ },
+ "kgy_블록_3_2026_11_24 (어닐 끝 → pick_dft · 사용자가 붙여넣는다)": {
+  "블록": "B=claude/friendly-meitner-lldvar; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python\n( echo \"== ① 어닐 끝 확인 (tmux 없음 · 로그 run_rc · check_rc)\" && ! tmux has-session -t bsite_ob1 2>/dev/null \\\n && tail -4 $R/uma_ob_anneal.log && grep -a -q \"run_rc=0\" $R/uma_ob_anneal.log && grep -a -q \"check_rc=0\" $R/uma_ob_anneal.log \\\n && echo \"== ② worktree 를 pick_dft 판으로 (같은 worktree 에서 fetch · checkout)\" && git -C $W fetch -q origin $B && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log --oneline -1 \\\n && echo \"== ③ 도구 selftest\" && $PY $W/tools/doping/b2o3_site_dft.py --selftest | tail -1 | grep PASS \\\n && echo \"== ④ 단일점 12 고르기 (자리 × 가족마다 UMA 최저 셋 · 새 폴더 sp_pick)\" && [ ! -e $R/sp_pick ] \\\n && $PY $W/tools/doping/b2o3_site_dft.py pick_dft --op_raw $W/db/raw/ndo_site_2026_10_14/uma_modelc10_2026_10_16 --op_inputs $W/db/inputs/b2o3_site_2026_10_14/candidates_modelc10 --ob_sel $R/ob_picked --ob_results $R/uma_ob_anneal/anneal_results.json --out $R/sp_pick \\\n && echo \"== ⑤ GPU (DFT 프로브는 빌 때 — 사용자 11-23)\" && nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "읽는_법": "④ 가 자리 × 가족마다 순위 (* = 고름 · 가족 최저와의 차 eV · 끝 꼴) 와 자리마다 'UMA 최저 O–B − O–P' 를 찍는다 — 고르기용이지 판정이 아니다 (판정은 DFT 이완 뒤) · 끝 꼴이 출발 가족과 다른 고른 후보 수도 찍는다 (기록만)",
+  "다음": "⑤ 에서 GPU 가 비면 (우리 잡 없음 · 남의 잡 끝) DFT 메모리 프로브 블록 (probe · disk_io medium · 240 초) → 단일점 12 입력 · 실행기 (만들 것 · 결과 전) · GPU 가 계속 차 있으면 사용자 결정",
+  "by": "claude (본 세션) · 2026-11-24"
  }
 }
