@@ -6857,6 +6857,12 @@ def paper_figure_notes(pid: str) -> dict:
       ① `## Figure set` 표 (`| Fig | 내용 | 우리 활용 |`) — 그림당 한 줄로 정리돼 있어 제일 정확
       ② 그 그림을 언급한 **소제목**(`### 5.3 … (Fig 6a) …`) — 어느 절에서 다루는지
     본문 문장까지 다 긁으면(zhou2026 은 한 그림에 16줄) 팝업이 넘치므로 3개까지만.
+    ⛔ 2026-11-24 고침 셋 (배치 18 편 에이전트 보고 · 합성 digest 로 재현):
+      · 3 개 자르기를 **정렬 뒤**로 옮겼다 — 앞 소제목 셋이 자리를 먼저 채워 정확한 표 줄이 빠졌다.
+      · 표 칸은 이스케이프 안 된 | 에서만 가른다 — `Li\\|LPSCl` 에서 칸이 갈려 내용이 밀렸다.
+      · 동영상 행 (Movie · Video) 은 건너뛴다 — 'Movie S1' 이 그림 S1 주석으로 붙었다.
+    ⛔ 이 함수가 못 하는 것: 동영상 주석을 따로 모으지 않는다 · 한 칸 안의 그림 번호가 'Fig' 없이
+      문장 속에만 있으면 (bare 는 첫 칸만) 못 잡는다.
     """
     for sub in ("papers", "talks"):
         f = LITDB / sub / f"{pid}.md"
@@ -6882,7 +6888,7 @@ def paper_figure_notes(pid: str) -> dict:
         if not txt or len(txt) < 4:
             return
         lst = notes.setdefault(k, [])
-        if len(lst) < 3 and not any(x["text"] == txt for x in lst):
+        if not any(x["text"] == txt for x in lst):     # 3 개 자르기는 맨 끝에서 (표 줄 먼저 세운 뒤)
             lst.append({"src": src, "text": txt[:400], "find": _plain(find or txt)[:70]})
 
     in_tbl = False
@@ -6900,16 +6906,23 @@ def paper_figure_notes(pid: str) -> dict:
             if not ln.lstrip().startswith("|"):
                 in_tbl = False
                 continue
-            cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+            #   칸은 **이스케이프 안 된** | 에서만 가른다 — `Li\|LPSCl` 은 한 칸이다 (렌더러와 같은 규칙).
+            row = ln.strip()
+            row = row[1:] if row.startswith("|") else row
+            row = row[:-1] if row.endswith("|") and not row.endswith("\\|") else row
+            cells = [c.strip().replace("\\|", "|") for c in re.split(r"(?<!\\)\|", row)]
             if len(cells) < 2 or set(cells[0]) <= set("-: "):
                 continue                            # 구분선
             head = cells[0].replace("*", "")
+            if re.match(r"\s*(movie|video|동영상|영상)", head, re.I):
+                continue                            # 동영상 행 — 'Movie S1' 이 그림 S1 로 붙던 것 (2026-11-24)
             body = " · ".join(c.replace("*", "") for c in cells[1:] if c)
             kind = "t" if re.search(r"tab", head, re.I) else "f"
             for k in _keys_in(head, default_kind=kind, bare=True):
                 put(k, body, "set", cells[1] if len(cells) > 1 else head)
-    for lst in notes.values():                      # 표(정확) → 절 제목(맥락) 순
+    for k, lst in notes.items():                    # 표(정확) → 절 제목(맥락) 순, 그다음 3 개
         lst.sort(key=lambda x: x["src"] != "set")
+        notes[k] = lst[:3]
     return notes
 
 

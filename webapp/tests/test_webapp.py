@@ -4335,6 +4335,32 @@ def test_not_author_sentence_does_not_tag_pi(tmp_path, monkeypatch):
         assert got == want, f"⛔ {k}: 배지 {sorted(got)} ≠ 기대 {sorted(want)}"
 
 
+def test_figure_notes_keep_set_rows_split_escaped_pipes_and_skip_movies(tmp_path, monkeypatch):
+    """⛔음성 2026-11-24 — 그림 주석 파서의 세 결함 (배치 18 편 에이전트 보고 · 합성 digest 로 재현).
+
+    ① 소제목 셋이 먼저 3 자리를 채우면 **정확한 Figure set 표 줄**이 빠졌다 (전체 656 편 중 227 편이 영향).
+    ② 표 칸 안의 `Li\\|LPSCl` 에서 칸이 갈려 내용이 밀렸다 (렌더러는 한 칸으로 본다).
+    ③ 'Movie S1' · '영상 S2' 행이 그림 S1 · S2 (또는 '41.7 s' 에서 그림 41) 주석으로 붙었다.
+    ⛔ 이 시험이 못 하는 것: 동영상 주석을 따로 모으는지는 보지 않는다 (지금은 건너뛰기만 한다).
+    """
+    papers = tmp_path / "papers"
+    papers.mkdir()
+    md = ("# t\n### 3a. Fig. 4 첫 절\n### 3b. Fig. 4 둘째 절\n### 3c. Fig. 4 셋째 절\n\n## Figure set\n"
+          "| Fig | 내용 | 우리 활용 |\n|---|---|---|\n"
+          "| 4 | 정확한 표 줄 | 쓰는 곳 |\n"
+          "| 5 | Li\\|LPSCl 계면 | W 쌍 |\n"
+          "| Movie S1 | 박리 영상 | — |\n"
+          "| 영상 S2 (41.7 s · 10 fps) | 결합 변화 | — |\n")
+    (papers / "x.md").write_text(md, encoding="utf-8")
+    monkeypatch.setattr(D, "LITDB", tmp_path)
+    n = D.paper_figure_notes("x")
+    assert [x["src"] for x in n["f4"]][0] == "set" and len(n["f4"]) == 3, \
+        f"⛔ 표 줄이 소제목에 밀려 빠졌다: {[x['src'] for x in n['f4']]}"
+    assert n["f5"][0]["text"] == "Li|LPSCl 계면 · W 쌍", f"⛔ \\| 에서 칸이 갈렸다: {n['f5'][0]['text']!r}"
+    for bogus in ("fS1", "fS2", "f41", "f10"):
+        assert bogus not in n, f"⛔ 동영상 행이 그림 주석 {bogus} 로 붙었다"
+
+
 #: 그림 크로핑을 **못 만드는** digest — 원본 PDF 가 `litdb/inbox/` 에 없다.
 #:   ⛔ 이것은 "안 해도 된다" 가 아니라 **"지금 못 한다 + 왜"** 를 적는 자리다. 조용히 건너뛰면
 #:     다음 사람이 그림이 없는 줄도 모른다. 아래 시험이 **면제가 아직 필요한지** 직접 확인한다 —
