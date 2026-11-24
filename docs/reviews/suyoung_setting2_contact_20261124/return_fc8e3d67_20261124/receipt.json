@@ -1,0 +1,53 @@
+{
+  "outer": {
+    "suyoung_setting2_contact_result.tar.gz": "fc8e3d67a775eef6c67f171b64e382aba589949d5c8ece82e6a32c6d6546e669",
+    "screen.txt": "56b52d23a531baafc8ab93e8615a56039d6cddbd2769fd866d0b9f3308b6835d"
+  },
+  "inner_verified": 26,
+  "arms": {
+    "8": {
+      "phi": 0.9457617727999866,
+      "seconds": 181.5978817048017,
+      "steps": 2745
+    },
+    "12": {
+      "phi": 0.9972889831918573,
+      "seconds": 472.28355012089014,
+      "steps": 5119
+    },
+    "16": {
+      "phi": 0.9931249263738975,
+      "seconds": 916.8319207539316,
+      "steps": 6722
+    },
+    "24": {
+      "phi": 1.0071354618138404,
+      "seconds": 3166.4457125829067,
+      "steps": 10597
+    }
+  },
+  "delta": 0.004164056817959838,
+  "pairs": {
+    "F8_F16": {
+      "coarse_minus_fine": 0.5334168520521676,
+      "max_abs_difference": 0.5334168520521676,
+      "denominator": 0.6666396546037676,
+      "ratio": 0.800157698943391,
+      "n": 5491,
+      "exceeding": 4051,
+      "first_exceedance_u": 0.015405910595791217,
+      "max_u": 0.12311273532881173
+    },
+    "F12_F24": {
+      "coarse_minus_fine": 0.1750240948817332,
+      "max_abs_difference": 0.1750240948817332,
+      "denominator": 1.0256040312703005,
+      "ratio": 0.1706546479394689,
+      "n": 10239,
+      "exceeding": 891,
+      "first_exceedance_u": 0.016878479439736305,
+      "max_u": 0.1530574601452792
+    }
+  },
+  "operator": "grid\tstart_utc\telapsed_s\tprocess_rc\twatchdog_status\n8\t2026-11-24T05:16:26Z\t195\t0\tnone\n12\t2026-11-24T05:19:41Z\t504\t0\tnone\n16\t2026-11-24T05:28:05Z\t981\t0\tnone\n24\t2026-11-24T05:44:26Z\t3237\t0\tnone\n"
+}
