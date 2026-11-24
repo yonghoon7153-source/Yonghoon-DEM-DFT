@@ -11,7 +11,7 @@
 > **저자**: Changmin Shi\* (Brown Univ. School of Engineering → Syracuse Univ. MAE) · Yixian Wang (UT Austin) · Xing Liu (Brown → NJIT) · Cristina López-Pernía (Brown) · John Watt (LANL · CINT) · Chenjie Gan (Brown) · Aleksander Mijailovic (Brown) · Pradeep R. Guduru (Brown) · David Mitlin\* (UT Austin) · **Brian W. Sheldon\*** (Brown · lead contact). 교신 3 인 (Shi · Mitlin · Sheldon).
 > 접수 2025-06-25 · 수정 2025-09-23 · 채택 2026-03-13 · 온라인 2026-04-10 · 권호 *Matter* 9, 102767 (2026-07-01) · © Elsevier (OA 아님 · TDM/AI 훈련 금지 문구) · 자금 DOE Battery500 · Welch Foundation F-2206 · ONR (Guduru) · **SK On** (Brown 쪽) · 이해충돌 없음 신고.
 > 기여: 개념·실험 설계 Shi · Sheldon / 전기화학 Shi / 역학 실험 López-Pernía / 현미경 Wang · Watt / 모델링 Liu · Gan. SI3 의 `script_for_pore.m` 머리말 "develop by Chenjie" = Chenjie Gan.
-> Jeff Sakamoto 는 **저자가 아니다** (참고문헌 15 · 19 · 44 에만 공저자로 나온다).
+> ※ 이 편의 저자 목록에는 PI 배지 대상 (사카모토 박사) 이 없다 — 그 이름은 참고문헌 15 · 19 · 44 의 공저자로만 나온다.
 >
 > **계보 (같은 Sheldon–Guduru 그룹)**: Athanasiou 2022 *Cell Rep. Phys. Sci.* (황화물 **유리** 점소성 · 압입 FEM 역해석의 원전 · ref 20 · litdb 없음) → `[Song25Mech]` `song2025_porous_argyrodite_modulus_fracture_toughness` (**같은 펠릿 공정** 1 µm · 360 MPa · 60 °C 2 h · 기공 13 ± 2 % · mm 스케일 E 4.7 GPa · K_Ic 0.17 MPa·m^½ · ref 38) → **본 논문** (그 펠릿의 점소성 + Li\|LPSCl 계면 공극 닫힘 + 스택압 · 유지 운전 프로토콜).
 
@@ -493,3 +493,145 @@ Methods 정의 (*"cumulative length of the islands over the total length of the 
 - 이미지당 공극 **1–10 개** (Methods "three to ten" 과 다름 — 5 h 이미지 셋은 1 개).
 - 띠 폭: 코드 51 px × 0.02392 µm/px = **1.22 µm** ↔ Methods · `Fig. 5D` 캡션 *"3.6-µm-wide region"* — 맞지 않는다 (설명 없음).
 - 기운 잘라내기 보정 (`Mod_ratio`) 은 h1 묶음 7 파일에만 작동한다 (W 101–851) — 보정 전 · 후 차가 커서 (h1_PLT_DP1 0.77 % → 10.11 %) h1 점의 값은 이 기하 가정에 기댄다.
+
+---
+
+## 9. Figure set ★
+
+| Fig | 내용 | 우리 활용 |
+|---|---|---|
+| 1A–D | 프로토콜 도식 (기존 · type 1 영전류 유지 · type 2 준사인파, 반주기 0.5 mAh/cm²) · 8 MPa 유지 유무 전압 (4.8 대 1.8 mA/cm²) · CCD 막대 9 개 (압력 × 유지 시간 · figure-read 8 MPa 5 h ≈4.2) · 과전압 (유지 쪽이 1.7 mA/cm² 위에서 더 큼) | 스택압 효과의 **시간 의존** 실측 — DEM · 연속체 접촉 모델이 '압력만' 으로는 설명 못 하는 근거. ⚠ `Table 1` 4.8 은 최고 셀 |
+| 1E–G | type 2 CCD 3.9 · 반주기 4 h 고정 1.2/4.8 대 1.0/4.0 · 수명 대표 곡선 ≈100 대 ≈42 h | 프로토콜 설계 참고 (계산 입력 아님) · 셀 수 없음 |
+| 2A–B | cryo-FIB 단면 — 탈리 · 도금 쪽 × 0 · 12 min · 1 h · 5 h (스케일 3 µm) | **Li\|LPSCl 공극 형상 실물** (동전 모양 · ≈200 nm · ≤ 5 µm) — 계면 모델 기하의 출처 |
+| 2C–D | 공극 길이 · 폭 · 밀도 (C) · 선 분율 (D) vs 유지 시간 | C 는 SI3 로 재현됨 (5 h STR 길이 1 점 제외) → **공극 통계 대조 표적**. ⛔ D 는 Methods 정의로 재현 안 됨 (재계산 ≈10 배) — 인용 금지 |
+| 2E–F | Nyquist (R_b ≈18 · 호 ≈17 → ≈40 Ω·cm²) · R_SEI+CT ≈11.4 → ≈9.9 Ω·cm² (5 h) | 접촉 면적 ↔ 계면 저항 연결의 실측 (−13 %) — 두 계면 나눔 여부 미기재 |
+| 3A–C | 유변 요소 도식 (점소성 = 대시팟 ∥ 슬라이더 + 스프링) · 계면 · 덴드라이트 끝 변형에너지 집중 · 탄성 대 점소성 SE | 발표용 개념도 · Bingham 형 과응력 모델의 그림 설명 |
+| 4A–C | 나노압입 — 석영 (어깨 없음) · LPSCl 부하–제하 (제하 '코') · 40 s · 90 s 다단 | 점소성의 직접 증거 · ⚠ B (≈3.6 µm) 와 C (≈1.8 µm) 의 깊이 · 회복이 크게 다르다 |
+| 4D–F | Vickers 29.4 N 유지 0 → 5 h: 대각선 ≈377 → ≈415 µm · 깊이 ≈54 → ≈59 µm (= 대각선/7) · Table 2 FEM 깊이 ≈38 µm (얕다) | 침대 (펠릿) 규모 경도 [우리 산술 HV ≈0.38 → ≈0.32 GPa] — DEM 압밀 침대의 겉보기 항복 검증 표적 · 나노압입 상수가 큰 스케일에서 **너무 단단함**의 증거 |
+| 4G | 차단전극 정규화 ASR 5 h — LPSCl 8 MPa ≈0.946 · 5 MPa ≈0.975 · LLZTO ≈1.00 | **스택압 영역 LPSCl 크리프의 유일한 표지** (≈5 %) — 구성식 없음 |
+| 5A–C | 공극 SEM (≈3 × 0.5 µm) · 탄성 FEM (10 MPa) · 최대 von Mises 116 MPa (LPSCl 쪽 가장자리 · 2 nm² 요소) | 공극 끝 SE 는 탄성 (116 < 350 MPa) — 연속체 모델에서 SE 를 탄성으로 둬도 되는 근거 (메시 의존 값이므로 자릿수만) |
+| 5D | 면적 분율 vs √t — 도금 ≈14.2 → ≈2.3 % · 탈리 ≈16.4 → ≈2.3 % | SI3 로 8 점 중 6–7 점 재현 (12 min 도금 ❌) · 막대 = ±1 SD · **닫힘 속도의 대조 표적** (마스크 의존 큼) |
+| 5E–F | 소성 접촉 FEM (Li 항복 16 · 8 MPa → 접촉률 10 · 20 %) · 접촉률 vs p/Y₀ (FEM 실선 ≤ ≈40 % · 그 너머 다항 외삽) | **Li 항복 → 접촉률** 지도 · 점착 0 (마찰 없는 경접촉) — W · 젖음각을 넣을 빈자리 |
+| 6A–B | 균열 G_net — 유지 있음 (18 · 36 MPa 유지 중 ≈0.77 → ≈0.69 · ≈0.96 → ≈0.74 J/m²) · 유지 없음 (≈0.96 @ 36 MPa) | 점소성 SE 의 균열 완화 개념 · ⚠ 같은 압력의 최고 G_net 은 같다 · G_c 비교 없음 |
+| S1 | 열처리별 EIS · σ_ion 0.70 / 0.53 / 0.52 / 0.44 mS/cm | (미독) 펠릿 σ 앵커 (60 °C 2 h 시편) |
+| S2 | XRD — 불순물 없음 (★ = Kapton) | (미독) |
+| S3 | Raman — 100 · 250 °C 에서 S₈ (480 cm⁻¹) · 250 °C P₂Sₓ/Li₂S₄ (≈360) | (미독) 열처리 분해의 표지 |
+| S4–S5 | 표면 · 단면 SEM — 표면만 치밀해짐 | (미독) |
+| S6 | 사이클 전 대칭셀 EIS — 계면 ASR 23 / 11 / 12 / 37 Ω·cm² | (미독) Li\|LPSCl 초기 계면 ASR 앵커 (8 MPa) |
+| S7 | 열처리 · 스택압별 CCD — 60 °C 1.8–2.4 mA/cm² @ 8 MPa · 8 MPa 최고 | (미독) |
+| S8 | 5 · 3 MPa 5 h 유지 CCD 3.0 · 1.3 mA/cm² | (미독) |
+| S9 | 한쪽 석출 — 48 µm (9.9 mAh/cm²) → 81 µm (16.7 mAh/cm²) | (미독) |
+| S10 | Berkovich 역해석 — 상대 깊이 (40 · 60 s 유지 · 제하) 의 FEM (빨강) 대 실험 (파랑) | **`Table 2` 상수가 무엇에 맞춘 것인지** 보여 주는 유일한 그림 — 창 = 수십 초 · 진폭 ≈0.15 µm |
+| S11 | LLZTO 대칭셀 8 MPa — 유지 유무 모두 ≈20–23 h 에 무너짐 · 과전압 ≈1–1.6 V | 대조군의 질 (계면이 나쁨) 을 판단하는 근거 |
+| S12 | 접촉 FEM 기하 W 80 · L 105 · h 10 µm · 8 MPa | 연속체 공극 모델 기하 (관찰 공극보다 ≈25 배 크다) |
+| S13 | Video S4 기하 (완전 탄–소성 Li) | (미독) |
+| S14 | 열처리별 상대밀도 85–89 % (60 °C) · 막대 ≈87 % | **DEM 압밀 앵커** — 360 MPa · 1 µm 분말 · 진밀도 분모 미기재 |
+| Table 1 | CCD 문헌 비교 (원문 §3b) | 문헌 CCD 0.4–0.9 (1–3 MPa) 묶음 |
+| Table 2 | LPSCl E 22.1 · ν 0.30 · Y_SE 0.35 GPa · ε̇₀ 10⁻⁵ · n 4 (원문 §3a) | ★ DEM · 연속체 SE 점소성 입력 후보 — 조건 붙여서만 |
+| Table S1 | 순수 Li 크리프 기전 9 종의 특성 시간 @ 8 MPa · d 100 µm (원문 §3a) | ★ Li 층 크리프 시간 규모 (Coble 2.1×10⁴ s) — d · σ 가정 명시 |
+| Table S2 | 기전별 변형률 속도 식 · 상수 + 순수 Li 상수 (원문 §3a · 오타 있음) | 원전 (Jeong & Kim 2024) 확인 뒤에만 |
+| Table S3 | type 2 반주기 예시 (X = 1.6 mA/cm²) | 프로토콜 재현용 |
+
+---
+
+## 10. 비판 — 이 논문의 약한 곳 ★
+
+① **`Table 2` 의 탄성 상수 출처가 끊겨 있다.** E 22.1 GPa · ν 0.30 을 *"obtained from the literature"* 라며 ref 37 을 다는데, ref 37 은 **Abaqus 사용자 매뉴얼**이다. 22.1 은 Deng 2016 DFT (조밀 단결정 · PBEsol) 의 E 와 같고, ν 는 Deng 의 0.37 과 다르다. 같은 그룹이 **같은 펠릿 공정**으로 잰 mm 스케일 E 는 **4.7 ± 1.1 GPa** (`[Song25Mech]` · 이 논문 ref 38) 다. 탄성 FEM 의 116 MPa · Vickers FEM 깊이 · 균열 G_net 은 모두 이 E 에 기대므로 **다공 펠릿 (기공 8–17 %) 에 조밀 결정 E 를 넣은 모델**이다.
+
+② **`Table 1` 은 최고 셀과 문헌 대표값을 맞대 놓는다.** 'this work' 4.8 · 3.0 · 1.3 mA/cm² 는 `Fig. 1C` 막대의 **위 끝** (최고 셀 · SI `Fig. S8` 대표 셀) 이고, 막대 평균은 figure-read ≈4.2 · ≈2.1 · ≈1.25 다. 막대가 무엇 (SD · 범위) 인지, 셀이 몇 개인지 본문 · SI 어디에도 없다. "2–3 배" 도 최고값 기준이다.
+
+③ **유지가 바꾸는 것은 시간만이 아니다.** 5 h 유지 셀은 같은 CCD 단계에 **≈10 배 늦게** 도달하고 (≈400 h 대 ≈35 h, `Fig. 1B`), 유지 동안 SEI 가 자라 과전압이 오히려 커진다 (`Fig. 1D`). '같은 전류 단계에서의 단락 여부' 를 비교하지만, 누적 통과 전하 · 계면 화학 이력 · 시험 시간이 함께 다르다. 저자도 SEI 영향을 범위 밖이라 둔다.
+
+④ **공극 닫힘 '속도' 의 근거가 얇다.**
+- 유지 시간마다 **다른 셀**을 해체해 본 횡단면 자료다 (같은 계면을 시간에 따라 본 것이 아니다). 조건당 이미지 2–5 장 · 이미지당 공극 1–10 개 (SI3).
+- `Fig. 5D` 의 *"roughly linear"* (√t) 는 4 점 · 큰 막대로는 다른 꼴과 가를 수 없고, 탈리 쪽은 눈에 띄게 위로 오목하다.
+- SI3 로 다시 내면 **`Fig. 2D` 가 Methods 정의로 재현되지 않고 (≈10 배 차)** · `Fig. 5D` 의 **12 min 도금 점이 ≈3.3 %p 낮게** 그려져 있으며 (데이터대로면 12 min 에 오히려 증가) · 닫힘의 크기가 **손으로 다듬은 최종 마스크** (`BW` → `BW_sparse`) 에 크게 기댄다 (§8b). 코드의 띠 폭 (1.22 µm) 도 본문 (3.6 µm) 과 다르다.
+- 본문 p.8 의 *"all three effects (in Figures 2D, 2F, and 5G) show changes of less than 10%"* — `Fig. 5G` 는 없고 (아마 `Fig. 4G`), `Fig. 2F` 는 ≈−13 %, `Fig. 2D` 는 상대 ≈−50 %, `Fig. 5D` 는 ≈−85 % 다. '%p' 로 읽어도 `Fig. 5D` (≈−12 %p) 가 넘는다.
+
+⑤ **기전 결론은 측정이 아니라 배제 + 가설이다.**
+- "SEI 가 공극 벽 Li 를 단단하게 한다" 는 **직접 측정 없음** (저자도 *"not investigated directly"*). 대안 (젖음 불량 · 공극이 SE 쪽 ≈200 nm 까지 들어가 Li 흐름만으로는 못 채움 · 계면 마찰) 을 가르는 실험이 없다.
+- Coble 시간 2.1×10⁴ s 는 **결정립 d = 100 µm · 벌크 σ = 8 MPa 가정**의 값이다. Coble 은 t ∝ d³/σ 이므로 d 를 50 µm 로 잡으면 8 배 빨라지고, SI 가 스스로 쓴 공극 모서리 ≈100 MPa 를 넣으면 ≈12 배 빨라진다 (≈28 min) [우리 산술] — '수 시간과 맞는다' 는 자릿수 일치다.
+- 고전 소성의 닫힘 시간이 본문은 *"several seconds"*, SI 는 **0.003 s · 0.0007 s · 1.4×10⁻⁶ s** (하한 추정) 로 3–6 자릿수 어긋난다 — 결론 (수 시간보다 훨씬 빠르다) 은 같지만 수치는 하나로 정리되지 않았다.
+- 접촉 FEM 의 공극 (80 × 20 µm, `Fig. S12`) 은 관찰 공극 (≈3 × 0.5 µm) 보다 ≈25 배 크고, 100 % 닫힘은 FEM 이 아니라 **다항 외삽** (`Fig. 5F` 점선) 과 속도 무관 모델 (Video S4) 에서 온다. 접촉은 **마찰 없음 · 점착 없음**이라 젖음 가설을 시험할 수 없는 모델이다.
+
+⑥ **나노압입 상수의 식별성.** E 를 문헌값으로 고정한 채 Y_SE · ε̇₀ · n 셋을 **40–60 s 유지의 상대 깊이 변화** (진폭 ≈0.15 µm) 하나에 함께 맞췄다 — 해가 유일하다는 근거가 없다. 절대 깊이는 같은 20 mN 에서 `Fig. 4B` ≈3.6 µm 대 `Fig. 4C` ≈1.8 µm 로 두 배 다르고, 그 깊이로 Berkovich 면적 (24.5 h²) 을 잡으면 겉보기 경도는 ≈0.1–0.3 GPa 인데 [우리 산술], Y_SE 0.35 GPa · E 22.1 GPa 라면 H ≈ 1 GPa 급이어야 한다 — 저자 말대로 표면 거칠기 · 기공 탓이겠지만, 그만큼 상수가 표면 상태에 민감하다. 본문은 *"indentation depths are less than the grain size"* (≈1 µm) 라 하지만 그림 깊이는 1.8–3.6 µm 다. Vickers FEM 이 깊이를 ≈35 % 얕게 내는 것 (`Fig. 4F`) 도 **이 상수가 큰 스케일에서 너무 단단하다**는 뜻이다. *"Y_SE 0.35 GPa (which has not been previously reported)"* 는 '맞춘 항복값' 으로는 맞지만, 경도 기반 추정은 이미 있었다 (`papakyriakou2021_…` H ≈1.9 GPa · `var2026_…` H ≈0.5–0.7 GPa · `lee2025_heckel_…` H/3 ≈0.47 GPa — 다른 양).
+
+⑦ **`Fig. 6` 은 '유지가 CCD 를 올린다' 를 직접 지지하지 않는다.** 같은 압력 (36 MPa) 의 최고 G_net 은 유지 있음 · 없음이 **같고** (≈0.96 J/m²), 완화는 유지하는 동안에만 있다가 부하가 다시 오르면 곧 무유지 곡선으로 돌아온다 (6 MPa 유지에서는 완화가 없다). 파괴 기준 G_c 와의 비교가 없고 (같은 그룹 `[Song25Mech]` G_c 5.3–6.2 J/m² 는 그림의 G_net 보다 한 자릿수 크다), 균열 길이 · 형상 · ṗ 의 길이 척도 l 이 미기재다. 유지 중 '압력 고정' 은 가정이다 (실제로는 Li 부피가 고정되면 압력이 풀린다).
+
+⑧ **Vickers 깊이는 독립 측정이 아니다.** `Fig. 4E` 다섯 점이 모두 대각선/7 (Vickers 기하) 과 같다 [우리 산술]. 0–60 min 의 오차막대가 겹치고 유지 효과는 180 · 300 min 두 점에 기댄다. Methods 에 Vickers 절이 없다 (본문은 있다고 한다) · 180 min 점은 설명이 없다.
+
+⑨ **LLZTO 대조의 질.** 2 셀 대 1 셀 · 과전압이 ≈1–1.6 V 까지 오르는 나쁜 계면 (Li–Li 셀의 LLZTO 표면 처리 기술 없음 — Pt/Au 코팅은 차단전극 셀에만) 이라, 유지 효과가 없다는 것이 'SE 가 탄성이라서' 인지 '계면이 처음부터 나빠서' 인지 가를 수 없다. 저자도 *"preliminary"* 라 한다.
+
+⑩ **차단전극 ASR** 은 셀 하나씩 · 오차막대 없음 · 정규화값뿐이고, Methods 는 두 전해질 모두 8 MPa 라 하지만 그림엔 LPSCl 5 MPa 곡선도 있다. LPSCl 차단 펠릿의 60 °C 열처리 여부도 적혀 있지 않다.
+
+⑪ **번호 · 표기 어긋남 (본문 ↔ 캡션 ↔ SI)**: *"Figures 4B and 4C"* → `Fig. 3B` · `Fig. 3C` · 본문은 선 분율을 "Figure 2C", 저항을 "2D", 크기를 "2E" 라 부르는데 캡션은 2C = 크기 · 2D = 분율 · 2E = EIS · 2F = 저항 · `Fig. 5` 압력 본문 8 MPa 대 캡션 · 그림 **10 MPa** · `Fig. 5D` 캡션 *"based on image analysis of the results in Figure 3"* → `Fig. 2` · 본문 *"5-min holds"* 대 그림 12 min · SI 본문 "Figure S9a/S9b" 대 실제 `Fig. S8a`/`Fig. S8b` · `Fig. S14` 에 있다던 펠릿 두께가 없음 · `Table S2` 오타 (G 의 온도계수 · DxxDp 지수 부호 · E = 2G(1+v) 8.38 ≠ 8.24) · √(Dt) 는 10⁻¹⁰ cm²/s · 5 h 에서 ≈13 µm (본문 "10 µm") · 2.099×10⁴ s = 5.8 h (본문 "5 hours") · 스프링 + 슬라이더 직렬을 "Maxwell model" 이라 부름.
+
+⑫ **인용 정합.** ref 37 (Abaqus 매뉴얼) → LPSCl E · ν · refs 41 · 42 (펄스 전류 · CCD 재평가 논문) → Li 특성 변형률 속도 0.05/s · ref 13 은 제목 · 저널이 *"Hybrid electrolytes with 3D bicontinuous ordered ceramic and polymer microchannels…" Energy Environ. Sci.* 11, 185 (2018) 이고 DOI 칸이 `https://doi.org/10.5287/bodleian.` 로 잘려 있는데, *"stack pressures below 10 MPa can effectively reduce electrical shorting in sulfide SEs"* 의 근거로 쓰였다 (같은 항목이 SI ref 10 에도 있다).
+
+⑬ **코드 공개 범위.** *"The modeling code is shared in Code S1"* 인데 받은 SI3 에는 FEM 이 없고 영상 분석 MATLAB 만 있다 (§8b).
+
+⑭ **통계 전반.** CCD 막대 · 공극 막대 · 수명의 셀 수 · 막대 정의가 없다 (`Fig. 5D` 만 SI3 로 ±1 SD 임을 역추적했다). 수명 *"average lifetime more than double"* 은 평균 · n 없이 대표 곡선 하나씩이다.
+
+---
+
+## 11. DEM-DFT 보고서 · 원장에 쓸 곳 (지도)
+
+| 쓸 곳 | 이 논문에서 가져올 것 | 쪽 · 그림 · 표 | 직접 봤나 | 붙일 조건 |
+|---|---|---|---|---|
+| DEM 입자 접촉 소성 (LPSCl) | Y_SE 0.35 GPa · 식 1 (ε̇₀ 10⁻⁵ s⁻¹ · n 4) · E 22.1 · ν 0.30 | p.7 식 1 · p.8 `Table 2` · `Fig. S10` | 표 = PDF 글자 · `Fig. S10` 실독 | 과응력 꼴 · 40–60 s · 20 mN · 상대 깊이 맞춤 · E · ν 는 출처 불명 문헌값 |
+| DEM 압밀 침대 검증 | 360 MPa · 4 min · 1 µm → 상대밀도 85–89 % · Vickers HV ≈0.38 → ≈0.32 GPa [우리 산술] | p.11 Methods · `Fig. S14` · `Fig. 4D` | `Fig. S14` · `Fig. 4D` 실독 | 진밀도 분모 미기재 · Tabor 는 황화물 미검증 |
+| 연속체 Li 층 (Li 금속) | E 5 GPa · ν 0.3 · ε̇₀ 0.05 s⁻¹ · n 6.6 · Y₀ 1–16 MPa · 문헌 항복 0.7–0.8 MPa | p.14 Methods · p.10 | PDF 글자 | 참고문헌 번호 어긋남 (41 · 42) · 원전 (Anand & Narayan · Masias) 확인 |
+| Li 크리프 시간 규모 | Coble 2.1×10⁴ s · GBS-격자 2.6×10² s · 전위 활주 10⁻⁵ s … @ 8 MPa · d 100 µm | SI p.12 `Table S1` · p.13–14 `Table S2` | PDF 글자 | d · σ 가정 · `Table S2` 오타 → 원전 확인 |
+| W_ad 보고서 7 절 (점착과 공극) — 대조 표적 | 공극 길이 ≈2 → ≈0.7 µm · 폭 ≈0.2–0.3 µm · 밀도 ≈0.3–0.5 → ≈0.15 µm⁻¹ · 면적 분율 ≈14–16 → ≈2.3 % (5 h · 8 MPa) | p.4 · `Fig. 2C` · `Fig. 5D` · SI3 | 실독 + SI3 재계산 | 마스크 의존 큼 · 횡단면 자료 · `Fig. 2D` 제외 |
+| W_ad 보고서 7 절 — 빈자리 | 접촉 FEM = 마찰 · 점착 없음 · 저자의 '젖음 불량' 가설 (정량 없음) | p.10 · p.14 · `Fig. 5E–F` · `Fig. S12` | 실독 | 우리 쌍 목록에 Li\|LPSCl 없음 — 값은 싣지 않는다 |
+| 계면 연속체 모델 (SE 탄성 가정) | 공극 끝 최대 116 MPa < Y_SE 350 MPa → LPSCl 탄성 | p.8–9 · `Fig. 5B–C` | 실독 | 메시 의존 (2 nm² 요소) · 10 MPa 로 계산 |
+| 우리 DFT 탄성 (축 C) | E 22.1 = 우리 comp1 22.06 과 같은 계열 | p.8 `Table 2` | PDF 글자 | 독립 확인 아님 |
+
+---
+
+## 12. 적용 인사이트 ★
+
+- ① **'스택압 → 접촉' 을 속도 무관 소성으로만 풀면 수 초 안에 닫힌다 — 실험은 수 시간이다.** DEM · 연속체에서 Li\|SE 접촉을 스택압으로 만들 때, 시간 규모를 정하는 것은 항복이 아니라 **크리프 (Li 의 Coble 형 확산)** 라는 것이 이 논문의 핵심 경고다. 우리 모델이 '압력 P 에서의 평형 접촉' 만 내면 그것은 *t → ∞* 의 상한이다.
+- ② **LPSCl 접촉 소성의 두 자릿수**: 입자 (국소) Y ≈0.35 GPa (이 논문 · 나노압입 역해석) ↔ 침대 (겉보기) Y ≈0.1–0.13 GPa (Vickers-Tabor [우리 산술] · `lee2025_heckel_…` Heckel). DEM 접촉 항복은 앞의 것, 압밀 후 침대 검증은 뒤의 것 — 섞지 않는다.
+- ③ **제조압 360 MPa ≈ Y_SE 0.35 GPa** — 입자 접점 압력은 평균의 몇 배이므로 성형 4 min 유지 동안 접점은 과응력 크리프 영역이다. 식 1 로 어림하면 접점 σ = 2Y 에서 4 min 에 변형률 ≈0.04 · 3Y 에서 ≈0.19 [우리 산술] — **압밀 유지 시간이 밀도에 영향을 줄 수 있는 크기**라, 속도 무관 DEM 압밀과 실험 (유지 있음) 을 비교할 때 감안할 항목이다.
+- ④ **다공 펠릿 모델에 조밀 결정 E 를 넣지 않는다.** 이 논문 FEM 은 22.1 GPa 를 썼지만 같은 펠릿의 겉보기 E 는 4.7 GPa 다. 우리 §I-3 규율 (입자 = 결정값 · 침대 = 창발 · 검증용) 이 그대로 맞는 사례다.
+- ⑤ **W_ad 7 절에 붙일 실험 짝**: 이 논문의 공극 닫힘은 점착 · 젖음 없이 모델링됐고 저자가 젖음을 미해결 요인으로 남겼다 — Li\|LPSCl 의 W/γ_Li (젖음각) 는 우리 쌍 목록에 아직 없지만, 계산하면 **'젖음 불량이 공극 채움을 막는가'** 에 자릿수 답을 줄 수 있는 자리다 (제안 단계 · 값 없음).
+
+---
+
+## 13. 인용 가능 문장 (영문 초안 · 행위 = 과전 · 모델 결과 = 현재)
+
+- "Zero-current holds of 5 h at a stack pressure of 8 MPa raised the critical current density of Li|Li₆PS₅Cl|Li cells to 4.8 mA cm⁻² for the best cell (bar mean ≈4.2 mA cm⁻²), compared with 1.8–2.4 mA cm⁻² without holds (*Matter*, 9, 102767 (2026))."
+- "Inverse finite-element analysis of nanoindentation holds gives a rate-dependent yield surface for Li₆PS₅Cl with *Y* = 0.35 GPa, ε̇₀ = 1 × 10⁻⁵ s⁻¹ and *n* = 4, fitted to relative depth changes during 40–60 s holds at 20 mN with literature elastic constants (*E* = 22.1 GPa, ν = 0.30)."
+- "Interfacial voids at the Li/Li₆PS₅Cl interface shrank over several hours at 8 MPa, whereas rate-dependent plasticity of Li with literature yield strengths predicts closure within seconds; the authors attribute the slow kinetics to diffusional (Coble) creep of Li."
+- "In the elastic analysis, the peak von Mises stress at the void tip (116 MPa) remains below the fitted yield strength of Li₆PS₅Cl, so the electrolyte deforms elastically there."
+
+---
+
+## 14. 주의 / 한계 (인용 규율)
+
+- 문헌 수치는 **소환값**이다 — 우리 db 절대값과 같은 표에 방법 없이 섞지 않는다.
+- E 22.1 · ν 0.30 은 **이 논문의 측정이 아니다** — '문헌값 (출처 불명 · Deng 2016 DFT 와 같은 E)' 으로만 쓴다.
+- Y_SE · ε̇₀ · n 은 **맞춤 조건 (상대 깊이 · 40–60 s · 20 mN · E 고정) 과 함께**만 쓴다 · 스택압 크리프에는 쓰지 않는다 (식 1 은 σ < Y 에서 0).
+- CCD 4.8 은 **최고 셀** — 평균으로 쓰지 않는다.
+- ⛔ `Fig. 2D` 의 선 분율 값은 인용하지 않는다 (SI3 로 재현 안 됨) · `Fig. 5D` 의 12 min 도금 점은 '공개 데이터와 다름' 을 같이 적는다.
+- Coble 지배 · SEI 경화는 **저자 가설** — "~로 해석했다" 로만 쓴다.
+- `Table S2` 상수는 오타가 있어 원전 확인 전에는 옮기지 않는다.
+
+---
+
+## 15. 기법 용어 미니사전
+
+- **점소성 (viscoplasticity)**: 항복을 넘은 뒤의 소성 흐름 속도가 응력에 따라 정해지는 거동. 이 논문 식 1 은 **과응력 (overstress) 꼴** — σ = Y(1 + ε̇ᵖ/ε̇₀)^(1/n) 이라 σ ≤ Y 면 흐름 0, 넘으면 ε̇ᵖ = ε̇₀[(σ/Y)ⁿ − 1]. n 이 작을수록 속도 민감 (n = 4 는 매우 민감 · Li 는 6.6).
+- **Peirce 형식 · UMAT**: Abaqus 에 사용자 구성식을 넣는 Fortran 서브루틴 (UMAT) 으로 구현한 속도 의존 소성 — Peirce–Asaro–Needleman 계열의 멱법칙 과응력식.
+- **Bingham 형 탄–점소성 (`Fig. 3A` 오른쪽)**: 스프링 (탄성) 과 직렬로, 슬라이더 (항복) ∥ 대시팟 (점성) 묶음 — 항복 아래는 탄성만, 위는 과응력에 비례해 흐른다.
+- **CCD (critical current density)**: 전류를 단계적으로 올릴 때 단락 (덴드라이트) 이 나는 전류 밀도. 반주기 용량 · 단계 시간 · 압력 · 유지에 따라 값이 바뀐다 (프로토콜 의존 양).
+- **type 1 · type 2 프로토콜**: type 1 = 반주기 사이 영전류 유지 · type 2 = 전류를 계단식으로 올렸다 내리는 준사인파 (낮은 전류 구간이 완화 시간 역할).
+- **Coble 크리프**: 입계 확산이 지배하는 확산 크리프 · ε̇ ∝ σ D_gb / d³ — 결정립이 작을수록 빠르다. **Nabarro–Herring**: 격자 확산 지배 · ε̇ ∝ σ D_l / d². **GBS**: 입계 미끄럼 · **DCC**: 전위 상승 크리프 · **Harper–Dorn**: 저응력 · 고온의 전위 크리프.
+- **차단전극 ASR**: Li⁺ 를 통과시키지 않는 스테인리스 전극 사이 SE 의 면적 비저항 — 계면 반응 없이 SE (벌크 + 전극 접촉) 만 본다.
+- **J-적분 · G_net**: 균열 끝을 둘러싼 경로 적분으로 구하는 에너지 해방률 — 소성 소산을 뺀 '균열을 밀어 주는 순 에너지'.
+- **접촉률 (contact ratio)**: 계면 길이 중 실제로 맞닿은 비율 (`Fig. 5E–F`).
+- **cryo-FIB-SEM**: 시료를 −150 °C 이하로 식혀 Ga⁺ 이온빔으로 단면을 깎고 보는 전자현미경 — Li 의 빔 손상 · 녹음을 줄인다.
+- **Otsu 문턱**: 회색조 히스토그램을 두 무리로 가장 잘 나누는 문턱을 자동으로 고르는 이진화.
+- **Vickers HV**: 136° 사각뿔 압자 · HV = 1.8544 F/d² (d = 대각선) · 깊이 h = d/7. **Berkovich**: 3 각뿔 (65.3°) · 투영 면적 ≈24.5 h². **Tabor 관계**: 완전 소성 압입에서 H ≈ 3Y (금속 경험식).
+- **C3D6 · C3D8 · CPE8R**: Abaqus 요소 — 3 차원 6 절점 쐐기 · 8 절점 육면체 · 평면 변형 8 절점 감차 적분 사각형.

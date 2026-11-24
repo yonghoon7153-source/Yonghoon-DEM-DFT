@@ -12,7 +12,7 @@
 > **저자**: Michael Metzler¹·² · Christopher Doerrer¹·³ · Yige Sun¹·² · Guillaume Matthews¹·² · Enzo Liotti¹ · **Patrick S. Grant\***¹·² — ¹Department of Materials, University of Oxford · ²The Faraday Institution (Harwell) · ³Department of Mechanical and Industrial Engineering, University of Toronto · 접수 2025-04-01 · 수정 2025-06-11 · 승인 2025-06-16 · 출판 2025-06-26 · **OA CC-BY 4.0** · 자금 Faraday Institution SOLBAT (FIRG022) · Henry Royce Institute (EPSRC EP/R010145) · ⛔ Jeff Sakamoto 는 저자가 아니다 (참고문헌 7 · 37 에만 나온다).
 > **기여** (p.39094): M.M. 전 과정 · C.D. 분무 · 실험 설계 · 해석 보조 · G.M. + M.M. 단면 식각 · SEM/EDX · G.M. CB 의 TEM · XRD · Y.S. PFIB/SIMS · E.L. 단면 SEM 화상 분석 · 구상 M.M. + P.S.G. · 공동 지도 E.L. + P.S.G.
 > **계보**: Lee 2020 *Nat. Energy* 5, 299 (ref 19 · Ag–C 복합 음극 원조 · WIP 공정) → [`spencerjolly2023_ag_graphite_interlayer_operando_xrd`](spencerjolly2023_ag_graphite_interlayer_operando_xrd.md) (ref 25 · 같은 Oxford 그룹 · Ag–**흑연** operando XRD · 같은 22.5 / 67.5 / 10 wt% 배합) → Doerrer 2024 *Device* 2, 100468 (ref 13 · 같은 그룹 분무 LPSCl + Ag–C 다층 · litdb 없음) → **본 논문** (Ag 의 **두께 방향 분포**를 처음 설계 변수로).
-> **이웃 카드 (링크만)**: [`liao2025_interfacial_adhesion_li_plating_carbon_interlayer`](liao2025_interfacial_adhesion_li_plating_carbon_interlayer.md) (탄소|SE 점착이 석출 위치를 정한다 — 이 논문과 **교란 관계**, §7-3) · [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) ([우리 그룹] Ag–C + CNF) · [`ahn2026_cej_agno3_pvp_li3n_anodefree`](ahn2026_cej_agno3_pvp_li3n_anodefree.md) ([우리 그룹] AgNO₃–C) · [`doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density`](doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density.md) (ref 32 · 같은 셀 장치 · 같은 500 MPa 냉간 압착).
+> **이웃 카드 (링크만)**: [`liao2025_interfacial_adhesion_li_plating_carbon_interlayer`](liao2025_interfacial_adhesion_li_plating_carbon_interlayer.md) (탄소|SE 점착이 석출 위치를 정한다 — 이 논문과 **교란 관계**, §7-3) · [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) ([우리 그룹] Ag–C + CNF) · [`ahn2026_cej_agno3_pvp_li3n_anodefree`](ahn2026_cej_agno3_pvp_li3n_anodefree.md) ([우리 그룹] AgNO₃–C) · [`doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density`](doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density.md) (ref 32 · 같은 셀 장치 · 같은 500 MPa 냉간 압착) · [`metzler2026_sputtered_ag_carbon_interlayers_anode_free`](metzler2026_sputtered_ag_carbon_interlayers_anode_free.md) (같은 1저자 후속 · 스퍼터 Ag 박막 + 상용 탄소 2층 · *ACS Appl. Energy Mater.* 2026 — 같은 날 병렬 digest, 값은 그 카드에서만).
 
 > **본 digest 에서 실제로 본 그림 (2026-11-24)**: `Fig. 2` `Fig. 3` `Fig. 4` (패널 a · g 확대 포함) `Fig. 5` `Fig. S2` `Fig. S3` `Fig. S4` `Fig. S5` `Fig. S6` `Fig. S8` `Fig. S9` `Fig. S10` `Fig. S11` `Fig. S12` `Fig. S13` (패널 a · e 확대 포함) `Fig. S14` — 크롭 **16장**. `Fig. 1` 은 크롭이 아니라 본문 쪽 렌더 (p.39090) 로만 봤다.
 > 안 본 것: `Fig. S1` (레이저 절단 vs 펀칭 사진) · `Fig. S7` (SS 단독 풀셀 — 본문 서술만 옮김).
@@ -112,7 +112,7 @@ P-FIB 단면 (열간 압착 셀 · 2.5 mA cm⁻² × 2 h) 에서 **구조화 = C
 
 | 조건 | SS | 구조화 | 비구조화 | 출처 |
 |---|---|---|---|---|
-| 1 mA cm⁻² 최소점 | `figure-read ≈` **−26 mV** | ≈ −14.7 (셀 1–3: ≈ −14.8 / −14 / −16) | ≈ −14.5 (셀 1–3: ≈ −14.5 / −16.3 / −14.5) | `Fig. 3a` · `Fig. S5a` |
+| 1 mA cm⁻² 최소점 | `figure-read ≈` **−26 mV** | ≈ −14.7 (`Fig. 3a`) · 셀 셋 ≈ −14.8 – −16 (`Fig. S5a`) | ≈ −14.5 (`Fig. 3a`) · 셀 셋 ≈ −12 – −16.5 (`Fig. S5a`) | `Fig. 3a` · `Fig. S5a` — 셀별 값은 겹친 곡선이라 범위로만 |
 | 본문 | — | *"∼13 mV less overpotential"* (둘 다) | 〃 | p.39091 |
 | 구조화 vs 비구조화 | — | *"no resolvable nucleation potential difference"* | 〃 | p.39091 · S-9 |
 | 0.5 mA cm⁻² 최소점 | `figure-read ≈` −16.6 mV | ≈ −9.5 – −10 | ≈ −9.5 – −10 | `Fig. S5c` |
@@ -166,7 +166,7 @@ P-FIB 단면 (열간 압착 셀 · 2.5 mA cm⁻² × 2 h) 에서 **구조화 = C
 | 2 mA cm⁻² × 2.5 h | 구조화 · CC 위 **~20 µm** Li | S-17–S-18 · `Fig. S14` |
 | 기대 두께 (논문) | 3482 mAh g⁻¹ × 2.5 mA cm⁻² × 2 h → 0.001436 g cm⁻² · ÷ 0.534 g cm⁻³ → **≈27 µm** | S-15–S-16 |
 | [우리 환산] | 표준 3860 mAh g⁻¹ (본문 p.39089 자신의 값) 이면 1 mAh cm⁻² = 4.85 µm → 5 mAh cm⁻² = **24.3 µm** · 논문 SI 의 3482 는 본문 3860 과 어긋난다 (§10-⑨) | 계산 |
-| 밀려난 인터레이어 두께 | `figure-read ≈` **4–6 µm** (`Fig. 4a` · `Fig. S13e` — 압착 13 µm 의 약 1/3–1/2) · 논문 언급 없음 | `Fig. 4a` · `Fig. S13e` |
+| 밀려난 인터레이어 두께 | `figure-read ≈` **3–6 µm** (`Fig. 4a` ≈3–6 · `Fig. S13e` ≈4–5 — 압착 13 µm 의 약 1/4–1/2) · 논문 언급 없음 | `Fig. 4a` · `Fig. S13e` |
 | CC 에 남은 조각 | `figure-read ≈` 구조화에서도 Ag/CB 조각이 CC 에 붙어 있다 (`Fig. 4a` 오른쪽 위 ≈3 µm 두께 · `Fig. S13e` 점선 두 곳) · 논문 언급 없음 | `Fig. 4a` · `Fig. S13e` |
 | Li 층 결 | `figure-read ≈` CC 가까이 섬유 · 실 모양 결 (`Fig. 4a` 위 가운데 깔때기 꼴 · `Fig. S13e` 왼쪽) · 렌즈 모양 빈 곳 (`Fig. S13e` 오른쪽) — 치밀하지 않은 Li 가 섞여 있다 | 〃 |
 | 구조화 Li 두께 횡편차 | `figure-read ≈` `Fig. S13e` 왼쪽 ≈16 µm → 오른쪽 ≈9 µm (스케일바 기준 · 기울기 보정 없음) — 본문 "20–25 µm" 보다 넓게 흔들린다 (§10-⑤) | `Fig. S13e` |
@@ -332,7 +332,7 @@ P-FIB 단면 (열간 압착 셀 · 2.5 mA cm⁻² × 2 h) 에서 **구조화 = C
   - 구조화: ≈2.53 h 에 0 mV 통과 → ≈2.60 h **≈ −14.7 mV** → ≈ −11.3 mV.
   - 비구조화: ≈2.62 h 통과 → ≈2.68 h **≈ −14.5 mV** → ≈ −10.5 mV.
   - ⇒ 최소점 차 `figure-read ≈` 11–12 mV (본문 *"∼13 mV less overpotential"*). **성장 평탄은 SS 가 오히려 1–2 mV 덜 음**이다 — 인터레이어가 핵생성 장벽은 낮추지만 성장 때는 작은 직렬 저항을 더하는 꼴 (논문 언급 없음 · [우리 환산] ≈1.5 mV ÷ 1 mA cm⁻² ≈ 1.5 Ω cm²).
-- `Fig. S5a` (1 mA cm⁻², 셀 셋씩): 구조화 · 비구조화 최소점이 −14 – −16.5 mV 에 섞여 있다 → *"no resolvable, reproducible overpotential difference"* (S-9). 비구조화 셀 2 는 ≈3.1 h 에 −11.5 → −5 mV 로 튄다 (*"Cell failure"*).
+- `Fig. S5a` (1 mA cm⁻², 셀 셋씩): 구조화 · 비구조화 최소점이 `figure-read ≈` −12 – −16.5 mV 에 섞여 있다 → *"no resolvable, reproducible overpotential difference"* (S-9). 비구조화 셀 2 는 ≈3.1 h 에 −11.5 → −5 mV 로 튄다 (*"Cell failure"*).
 - `Fig. S5b,d` (0–1000 mV 축): 충전이 ≈2.41 h 에 시작해 SS 는 즉시 0 아래로, Ag/CB 는 1000 mV 위에서 비스듬히 내려와 ≈2.55–2.72 h (1 mA cm⁻²) · ≈2.95–3.1 h (0.5 mA cm⁻²) 에 0 을 지난다 → **도금 전 저장량 `figure-read ≈` 0.14–0.35 mAh cm⁻²** (CB 삽입 + Ag 합금의 몫으로 읽힌다 · 논문은 이 구간을 해석하지 않았다).
 - `Fig. S5c` (0.5 mA cm⁻²): SS ≈ −16.6 mV · Ag/CB ≈ −9.5 – −10 mV.
 - 저자 정리 (S-9): *"intercalation and plating dynamics were broadly similar for the first charge"* — 즉 차이는 **어디서 자라느냐** (기하) 이지 **얼마나 쉽게 생기느냐**가 아니다. 본문 p.39093: *"The difference from previous work is principally geometric"*.
@@ -398,7 +398,7 @@ P-FIB 단면 (열간 압착 셀 · 2.5 mA cm⁻² × 2 h) 에서 **구조화 = C
   - ① **서술과 관찰이 살짝 어긋난다** — 비구조화의 관찰 (`Fig. 4g` · `Fig. S13a`) 은 *"predominantly between the Ag/CB interlayer and the LPS separator"* 인데 기전 서술 4 는 *"within the interlayer, as well as on the current collector"* 이고, `Fig. 5a` 는 대부분 층 위 (SE 쪽) 에 그렸다. 셋이 같은 그림이 아니다.
   - ② **왜 섞인 Ag 면 Li 가 SE 쪽으로 가는지** 설명이 없다. 가장 단순한 읽기: Li⁺ 는 SE 쪽에서 들어오므로, SE 가까이 있는 Ag 가 먼저 핵을 만들면 거기서 자란다 — `Fig. S4b` 의 비구조화 단면이 실제로 SE 쪽에 Ag 가 더 많았다 (`figure-read ≈` 73 %). 이온 · 전자 수송 경쟁 논의는 없다.
   - ③ **점착이라는 다른 설명이 열려 있다** — Liao 2025 는 Ag 없는 탄소층에서도 탄소|SE 계면 인성이 ≳ ≈10 J m⁻² 면 Li 가 CC 쪽에 쌓인다고 쟀다. 구조화의 위 절반은 CB-rich (SE 와 탄소 접촉이 많다) 이고, 판독 셀은 200 °C 열간 압착이다. **이 논문은 점착을 재지 않았다** → "Ag 위치" 효과와 "계면 점착" 효과가 분리되지 않는다 (§7-3 · §10-③).
-  - ④ *"spongy · compliant"* 는 **재지 않은 주장**이다. 다만 그림은 그것과 맞는 흔적을 준다 — 밀린 띠가 압착 13 µm 의 1/3–1/2 (4–6 µm, `figure-read ≈`) 로 얇다 (더 눌렸거나 일부가 CC 에 남았거나). 어느 쪽인지 논문은 말하지 않는다.
+  - ④ *"spongy · compliant"* 는 **재지 않은 주장**이다. 다만 그림은 그것과 맞는 흔적을 준다 — 밀린 띠가 압착 13 µm 의 1/4–1/2 (3–6 µm, `figure-read ≈`) 로 얇다 (더 눌렸거나 일부가 CC 에 남았거나). 어느 쪽인지 논문은 말하지 않는다.
   - ⑤ 원자 규모 기전 (CB 삽입 → Ag 합금 → 석출) 은 이 논문이 **보이지 않았다** — *"very likely to follow a similar mechanism to that described by Spencer-Jolly et al."* (p.39093) 이 전부다. 이 논문이 직접 보인 기전 증거는 도금 전 저장 구간 (`Fig. S5b,d`, 해석 안 됨) 과 CB 띠의 낮은 Li SIMS 세기뿐이다.
 
 ## 7. 우리 DFT · DEM 대비 ★ (`../our_dft_baseline.md` · W_ad 보고서 · `../comparison_vs_ours_DEM.md` §I)
@@ -445,7 +445,7 @@ P-FIB 단면 (열간 압착 셀 · 2.5 mA cm⁻² × 2 h) 에서 **구조화 = C
 | Ag 입자 | 1차 ~60 nm · 응집 2–4 µm | `Fig. S2` · `Fig. 2` | 본문 |
 | CB 입자 | 1차 `figure-read ≈` 40–60 nm · 응집체 ~80 nm (NTA) · 사슬 망 | `Fig. S2b` · `Fig. S3` | 판독 + 본문 |
 | 다공도 | **미기재** · [우리 환산] 277.9 mg 이 100 cm² 에 다 붙었다면 고형 두께 ≈11.5–12.6 µm (CB 2.0–1.8 g cm⁻³) → 20 µm 층 다공도 ≈37–42 % · 13 µm 층 ≈3–11 % — *"spongy porous"* 와 안 맞으니 실제 부착률 < 100 % 일 것 | p.39090 · S-2 | **자유 변수로 쓴다** |
-| Li 위치 (구조화) | CC 위 ~20 µm (20–25 µm) · 밀린 띠 `figure-read ≈` 4–6 µm · CC 에 남은 조각 | `Fig. 4a–f` · `Fig. S13e` · `Fig. S14` | 본문 + 판독 |
+| Li 위치 (구조화) | CC 위 ~20 µm (20–25 µm) · 밀린 띠 `figure-read ≈` 3–6 µm · CC 에 남은 조각 | `Fig. 4a–f` · `Fig. S13e` · `Fig. S14` | 본문 + 판독 |
 | Li 위치 (비구조화) | 인터레이어 \| SE 사이 · `figure-read ≈` 두께 37–43 µm (불확실 ±30 % 이상) | `Fig. 4g` · `Fig. S13a` | 본문 (위치) + 판독 (두께) |
 | 기대 Li 두께 | 5 mAh cm⁻² → 27 µm (논문, 3482 mAh g⁻¹) · [우리 환산] 24.3 µm (3860) · 풀셀 첫 충전 ≈3.6 mAh cm⁻² → ≈17.6 µm | S-15 · 계산 | 계산 |
 | 적층압 · 장치 | 4 MPa (범위 2–20) · [다른 카드 doerrer2021] 나사 + 토크 렌치 조인 틀 → 도금 중 압력은 출력 | p.39090 | 본문 + 다른 카드 |
@@ -497,7 +497,7 @@ P-FIB 단면 (열간 압착 셀 · 2.5 mA cm⁻² × 2 h) 에서 **구조화 = C
 ② **공정 교란.** Li 위치 증거 (`Fig. 4` · `Fig. S13`) 는 **열간 500 MPa · 200 °C** 압착 3전극 셀 · 2.5 mA cm⁻² 이고, 성능 (`Fig. 3`) 은 냉간 풀셀 · 1 mA cm⁻² 다. 200 °C 는 PVDF 의 녹는점대 (≈170 °C 근처 — 일반 물성 지식 · 논문 밖) 를 넘을 수 있어 결합제 · 계면 점착 · 층 치밀도가 달라질 수 있다. 같은 셀에서 성능과 위치를 함께 본 자료가 없다 (XPS 셀만 냉간 · 1 mAh cm⁻²).
 ③ **점착 미측정.** Liao 2025 의 "탄소 \| SE 계면 인성이 석출 위치를 정한다" 와 이 논문의 "Ag 위치가 석출 위치를 정한다" 가 같은 방향을 예측하는데 (§7-3), 박리 · 점착 시험이 없어 둘을 못 가른다.
 ④ **Ag 분포 정량이 얇다.** 조건당 단면 1 장 · 2D 면적분율 · 큰 응집체가 지배. 비구조화 `Fig. S4b` 는 `figure-read ≈` 73 % 가 SE 쪽 절반 — "균일 vs CC 집중" 이 아니라 이 단면에선 "SE 쪽 치우침 vs CC 집중" 이다 (오히려 저자 가설에 유리한 쪽으로 비교가 기울었을 수 있다).
-⑤ **두께 판독의 불확실.** FIB 단면 기울기 보정 여부 미기재 (흔한 52° 배치면 세로가 sin 52° ≈ 0.79 배로 줄어 보인다 — 일반 지식) · 같은 논문에서 10 µm SS 박이 스케일바로 7–14 µm 까지 재인다 (`Fig. 4a` · `Fig. S14`). 구조화 Li 두께는 `Fig. S13e` 에서 `figure-read ≈` 9–16 µm 로 흔들려 본문 "20–25 µm" 보다 넓다 · 비구조화 Li 두께는 논문 수치가 없고 그림은 37–43 µm (이론 24–27 µm 보다 큼) · 밀린 띠가 압착 두께의 1/3–1/2 로 얇아진 것과 **CC 에 남은 조각**은 언급이 없다.
+⑤ **두께 판독의 불확실.** FIB 단면 기울기 보정 여부 미기재 (흔한 52° 배치면 세로가 sin 52° ≈ 0.79 배로 줄어 보인다 — 일반 지식) · 같은 논문에서 10 µm SS 박이 스케일바로 7–14 µm 까지 재인다 (`Fig. 4a` · `Fig. S14`). 구조화 Li 두께는 `Fig. S13e` 에서 `figure-read ≈` 9–16 µm 로 흔들려 본문 "20–25 µm" 보다 넓다 · 비구조화 Li 두께는 논문 수치가 없고 그림은 37–43 µm (이론 24–27 µm 보다 큼) · 밀린 띠가 압착 두께의 1/4–1/2 로 얇아진 것과 **CC 에 남은 조각**은 언급이 없다.
 ⑥ **SIMS 는 반정량이다** (저자도 matrix effect 를 인정). 기준 LPS 세기가 깊이에 따라 82 → 100 으로 변하고 셀 Li 층은 30–42 로 출렁여 38 : 100 vs 36 : 100 의 일치는 그 폭 안이다. *"CB 띠 Li 세기 낮음 → CB 는 Li 를 거의 저장 안 함"* 도 matrix effect 에 묶인 추론이다.
 ⑦ **XPS 가 Li⁰ 를 보이지 않는다.** 개관 (1 eV step) 만 실렸고 개별 scan 은 없다 · BE 가 참조 보정 안 된 것으로 보인다 (C 1s 287.31 eV · S · P · Cl 도 우리 anchor 표 대비 +2.1–3.1 eV) · 보정하면 Li 1s ≈54–55 eV (산화 Li 영역) · *"oxidized Li metal"* 은 해석이다. F 1s 도 같은 폭을 빼면 ≈684.4–684.9 eV 로, 저자 귀속 (PVDF) 과 맞는지 확인이 필요하다 (F 참조값은 우리 anchor 표에 없다).
 ⑧ **구조화 배합의 질량 수지가 안 맞는다.** *"C:Ag weight ratios of 1:13 and 1:1"* — 총 CB : Ag = 3 : 1 과 어느 쪽으로 읽어도 맞지 않는다. 글자 그대로면 아래 절반이 ≈71 vol% Ag 가 되어 `Fig. 2d` (탄소 기지 속 흩어진 Ag 점) 와도 어긋난다. CB · PVDF 를 반씩 나눴다고 보면 [우리 환산] 아래 Ag : CB ≈ 1 : 1.7 · 위 ≈ 1 : 12 — 숫자 순서가 바뀌고 C : Ag 를 Ag : C 로 잘못 쓴 오기일 가능성. ⇒ 부층별 조성은 **추정값**으로만 쓴다.
@@ -512,7 +512,7 @@ P-FIB 단면 (열간 압착 셀 · 2.5 mA cm⁻² × 2 h) 에서 **구조화 = C
 
 - ① **탄소 표면 모형은 범위로 낸다.** F-200GS 같은 터보스트래틱 CB 는 기저면 하나로 대표 못 한다 — 기저면 (결정 부영역) ↔ 빈자리 결함 면 (비정질) ↔ 가장자리 (부영역 경계) ↔ LiC₆ (운전 중 리튬화 · 상한 이상화) 를 같은 Li 면 · 같은 기준으로 재서 **범위**를 보고한다. 비율 · 밀도는 실제 쓰는 탄소의 BET · Raman · XPS (O/N) 를 받아야 정해진다 — 이 논문으로는 못 정한다.
 - ② **Li 친화성은 "어디서 자라나" 를 혼자 정하지 않는다.** 이 논문에서 Ag 위치는 핵생성 과전압을 안 바꾸고 석출 위치만 바꿨다. 우리 W (Li \| Ag vs Li \| C) 순서는 "Li 가 어느 면을 적시며 퍼지나" 의 설명에 쓰고, 석출 위치 예측에는 **점착 (계면 셋) + 핵 위치 (Ag 분포) + 이온 유입 방향**을 같이 넣어야 한다.
-- ③ **DEM 은 계면 셋과 층 압축을 허용해야 한다.** 관찰된 꼴은 (i) CC \| 층 분리 + 층 안 일부 갈라짐 (조각이 CC 에 남음) · (ii) 층 \| SE 분리 · (iii) 밀린 층이 13 → 4–6 µm 로 얇아짐 (`figure-read`). 다공도는 미기재라 **훑어 보는 변수**로 둔다. "CB-rich 층이 무르다 (spongy)" 는 DEM 으로 시험할 수 있는 가설이다.
+- ③ **DEM 은 계면 셋과 층 압축을 허용해야 한다.** 관찰된 꼴은 (i) CC \| 층 분리 + 층 안 일부 갈라짐 (조각이 CC 에 남음) · (ii) 층 \| SE 분리 · (iii) 밀린 층이 13 → 3–6 µm 로 얇아짐 (`figure-read`). 다공도는 미기재라 **훑어 보는 변수**로 둔다. "CB-rich 층이 무르다 (spongy)" 는 DEM 으로 시험할 수 있는 가설이다.
 - ④ **합금 끝 상태는 속도에 묶어 계산한다.** 2.5 mA cm⁻² 에서 Li–Ag 상이 안 보였다 (Li 안 Ag 고용 가능) · 저율 문헌은 Li₁₀Ag₃ — 합금 구동력 계산은 "어느 속도 영역의 끝 상태인가" 를 먼저 적는다.
 - ⑤ **연속체 입력 하나**: 인터레이어가 1 mA cm⁻² 에서 성장 과전압에 ≈1–2 mV (≈1.5 Ω cm², `figure-read` · [우리 환산]) 를 더한다 — 크기 자릿수 참고만.
 - ⑥ **구조화의 숨은 효과 후보**: SE 와 닿는 Ag 가 줄어든다 (12.5 %) — Ag \| LPSCl 반응을 줄였을 수 있다. 우리 반응 지도 카드로 물을 질문 (§7-5) · 이 논문은 증거가 없다.
