@@ -10,7 +10,7 @@
 set -euo pipefail
 HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PORT="${WEBAPP_PORT:-5099}"
-CHROME="${CHROME:-$(ls -d /opt/pw-browsers/chromium-*/chrome-linux/chrome 2>/dev/null | head -1 || true)}"
+CHROME="${CHROME:-$(ls -d /opt/pw-browsers/chromium-*/chrome-linux*/chrome 2>/dev/null | head -1 || true)}"  # chrome-linux · chrome-linux64 둘 다 (2026-11-24)
 [ -n "$CHROME" ] && [ -x "$CHROME" ] || { echo "Chromium 실행 파일을 찾지 못했다 — CHROME=<경로> 로 지정한다" >&2; exit 2; }
 OUT="$HERE/static/pdf/microshort_summary.pdf"
 mkdir -p "$(dirname "$OUT")"
