@@ -18269,12 +18269,44 @@
   {
    "id": "SELF-194",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "1저자 11-24 (\"믹서 웹 페이지 관련해서는 오늘 아침부터 얘기했었는데 이제야 하는건 또 뭐야\")",
    "opened_in": "docs/session_20260923_progress.md",
    "title": "1저자가 아침부터 말한 /mixer/story 페이지를 'v1 리포 반영 → 그다음 페이지' 순서로 혼자 묶어 반입 · 게이트 뒤로 저녁까지 미뤘다 — 페이지는 게이트 결과와 무관해 아침에 조수로 나란히 시작할 수 있었다",
-   "note": "고침 = 11-24 저녁 조수로 시작 (J21 에 넣음) · 교훈 = 1저자가 말한 결과물은 게이트 · 반입 뒤로 미루지 않고 바로 따로 시작한다 · 닫는 조건 = 페이지 push"
+   "note": "고침 = 11-24 저녁 조수로 시작 (J21 에 넣음) · 교훈 = 1저자가 말한 결과물은 게이트 · 반입 뒤로 미루지 않고 바로 따로 시작한다 · 닫는 조건 = 페이지 push",
+   "claimed_fixed_sha": "797d8c366",
+   "evidence_tests": [
+    "webapp/test_mixer_story_page.py 46/46 (797d8c366 · J21) → 58/58 (4721f770b · 증거 표 2 = 같은 시드 B2 U ↔ C) · 렌더 = 데스크톱 1280 · 폰 390"
+   ]
+  },
+  {
+   "id": "SELF-195",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "본 세션 11-24 (J21 게이트 126/10 두 번 · 원인 추적)",
+   "opened_in": "docs/session_20260923_progress.md",
+   "title": "J21 게이트 끝맺음 스크립트를 조각 선택 환경 변수 ONLY=p1 로 띄웠다 — 게이트 안 test_launcher 가 그 변수를 물려받아 run_all.sh 가 모든 런을 건너뛰어 126/10 (두 번) · 처음엔 부하 탓으로 잘못 진단하고 AVI 조수에게 ffmpeg 을 줄이라고까지 했다",
+   "note": "고침 = 끝맺음 스크립트는 조각을 위치 인자로 받고 ONLY · ALLOW_LH · FORCE 를 unset · test_launcher.sh 는 런처 · 생성기 · 재개기 · 감시 · start_check.py 가 읽는 변수를 전부 unset (부른 쪽 환경을 물려받지 않음) · 교훈 = 게이트에 조각 선택을 환경 변수로 넘기지 않는다 · 실패를 부하 탓으로 돌리기 전에 같은 환경으로 그 시험을 다시 돌린다",
+   "claimed_fixed_sha": "c2d164656",
+   "evidence_tests": [
+    "dem_scripts/mixer_20260921/test_launcher.sh — ONLY=p1 으로 부르면 126/10 (고치기 전) → 136/0 · FORCE=1 DRY=1 MAXJ=1 NP=3 BACKEND=slurm = 83/53 → 136/0 · 깨끗한 환경 136/0"
+   ]
+  },
+  {
+   "id": "SELF-196",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "본 세션 11-24 (Codex WSL30 동결 README 읽기 · 반입 ㉞)",
+   "opened_in": "docs/reviews/lhs_wsl30_source_freeze_20261124/README.md",
+   "title": "LHS WSL30 출처 확인을 넘기며 '하베스트 step 이 두 로그 thermo 에 정확히 있음' · 화면 전용 줄 = 경고 를 1저자 확인처럼 적어 Codex 동결 README 에 '1저자 확인' 두 곳으로 들어갔다 — 도구는 정수로 시작하는 줄의 첫 정수만 대조했고 (thermo 머리글은 검증 안 함) 경고 분류는 Claude 해석이었다",
+   "note": "고침 = Codex 가 README 두 문장을 도구 확인 ↔ Claude 해석으로 나눔 (2917d1274 → 반입 ㉟ 5849cb331) · 값 열람 결과 (30/30 OK) 와 무관 · 교훈 = 도구 출력의 범위를 넘는 해석은 '해석' 으로 적고 1저자 발화로 옮기지 않는다",
+   "claimed_fixed_sha": "5849cb331",
+   "evidence_tests": [
+    "docs/reviews/lhs_wsl30_source_freeze_20261124/README.md 15 줄 = '도구는 30/30 에서 두 로그 모두 정수로 시작하는 줄의 첫 정수가 하베스트 step 과 일치함을 확인 · 이를 thermo 행으로 본 것은 Claude 의 해석' (반입 ㉟ 5849cb331)"
+   ]
   }
  ]
 }
