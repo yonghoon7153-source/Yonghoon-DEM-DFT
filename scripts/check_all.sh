@@ -396,6 +396,9 @@ run 'rint_r_chain_e2e (Rint ② R 사슬 · 실제 러너 끝-끝 · 픽스처 �
 #    UNIT_PROVENANCE_MISMATCH) · 옮긴 폴더의 합치기 · 판정 · 다시 판정 · 갈라진 원장.  시험만 (사슬 · 러너 · payload 무변경) · 단언 33 · 실제 러너
 #    100 회쯤 · 11-11 실측 418 s (3.11) · 331 s (kgy 판 3.8).  꼴 = 원장 공유 권고안 (이어달리기) 기준 · 1저자 비준 전.
 run 'rint_r_chain_e2e12 (Rint ② R 사슬 · 12 단위 합성 끝-끝 + 이동 대조 · 실제 러너 · 픽스처 킷 · CPU)' python3 scripts/test_rint_r_chain_e2e12.py
+# ★ 2026-11-24 (Rint ② 부록 팔 ①·② · 등록 docs/reviews/rint2_middle_arm_ptfe05_sdcp0_registration_20261124.md 개정 1) — 실행기 시험 32 (사슬 sha 무변경 ·
+#   env 차이 = 등록 칸만 · 단조 = 양쪽 증서 띠 (사슬 arm_band) · PATH_CUT / SOLVE_FAILED / NOT_COMPUTED · σ 비출력 · 합성 값만 · 가짜 러너 · 신호 없음 · 3.8 컴파일).
+run 'rint2_middle_arm (부록 팔 ①·② 실행기 · 등록 개정 1 · 합성 · 사슬 무변경)' python3 -I -X utf8 -B scripts/test_rint2_middle_arm.py
 run 'step3_target_cert (STEP3 목표량 증서 ⓓ · RCA-07 · 13 · 해 상태 · 빠른 판 · 시험 먼저)' python3 scripts/test_step3_target_cert.py
 run 'step3_conv_cert (STEP3 수렴 증서 A/B/C · 봉인 표 · 10-21 실측 115–124 s 로 게이트에 넣음)' python3 scripts/test_step3_conv_cert.py
 # (10-21 · 1저자 *"더 꼼꼼하게"* → 위 두 줄로 게이트에 넣음 · 실측 115–124 s · 부하 낮음 · BLAS 스레드 1 · 옛 2,305 s 는 부하 8–12 때 · ⚠ K8b 는 OpenBLAS Sandybridge 경로에서 실패 = 봉인값의 경로 의존 (원장 RCA-07 메모) · 긴 판 `python3 scripts/test_step3_target_cert.py --long` ≈ 400 s = 게이트 밖 · 증서 코드를 바꾼 커밋 뒤 한 번)

@@ -58,8 +58,12 @@
 
 ## 8. 코드 (커밋 2 · 시험 먼저)
 
-- 실행기 (새 파일 · 커밋 2 에서 만든다 · 이름 예정 = scripts 의 rint2_middle_arm) — 사슬 모듈을 불러 env 조립 (`runner_env_delta`) · R_j,0 읽기 · 팔 기록 읽기를 그대로 쓰고, ① 에만 `SIGMA_SDCP_OVERRIDE=0` · ② 에만 새 킷 이름 · 봉인 사슬 파일 무변경.
-- 시험: 합성 침대에서 σ_SDCP 0 = SDCP 셀을 빈칸으로 둔 것과 σ_e 같음 · env 차이 = 등록한 칸만 · 사슬 sha 같음 · 단조 검사 (개정 1) = σ_lo(①) > σ_hi(DBE) 를 위반으로 잡고 '점값 역전 · 띠 겹침' 은 `MONO_UNDETERMINED` 로 내는지 · `PATH_CUT` 0 을 실패로 · `SOLVE_FAILED` 를 0 으로 세지 않는지 (변이 시험 · 합성 값만).
+- 실행기 = `scripts/rint2_middle_arm.py` (하위 명령 `plan` · `run` · `check-mono`) — 봉인 사슬 `scripts/rint_r_chain.py` 를 경로로 불러 (sha256 앞 16 `5fbc1c3417f17eba` · 파일 무변경) env 조립 (`runner_env_delta`) · R_j,0 (`load_ladders`) · 팔 목록 (`unit_runs`) · 팔 기록 · 띠 (`arm_band`) · 판독 (`read_run`) 을 그대로 쓴다 · ① 에만 `SIGMA_SDCP_OVERRIDE=0` · ② 에만 새 킷 이름.
+- `run` 의 러너 전 확인 = 깨끗한 git 트리 · 코드 파일 지문 = 사다리 기록 · 환경 판 = 계획 봉인 판 · 침대 (① = S0 단계 2 의 DBE 침대 · ② = 입력 지문 기록) · `--registration` = 봉인 등록 사본 · `--machine` = 계획의 허용 기계 · 매니페스트에 σ 없음.
+- `check-mono` = 팔마다 판정 낱말 (`PASS` · `MONO_UNDETERMINED` · `MONO_VIOLATION` · `MISSING`) · 칸 기록 (`--record` · 두 띠 = 정확 분수) 은 **리포 밖 경로만** (리포 · 다른 git 작업 트리 안 = 실행기가 쓰기 전에 거부 · §5).
+- 시험 = `scripts/test_rint2_middle_arm.py` 32 (T1–T7 · R1–R7 · P1 · Python 3.11 · 3.8 둘 다 · 게이트 단계) — 개정 1 반영 전 실행기에서 13/32 실패 → 반영 뒤 32/32 · 실행기 변이 36 전부 잡힘 · 합성 값만 · σ_SDCP 0 = SDCP 셀 빈칸과 σ_e · n_dof · 잔차 비트 같음 (평범한 FV 풀이 한정 · 생산 경로 (face_alpha + 탄소 접합 + SV) 는 코드 읽기로만).
+- 실행기 밖 (발사 블록에서 따로 · 기록): §3 새 침대 ② 점검 (압밀 표지 · 상별 점 수 · 두께 · 기공률) · recover · 재실행 꼴 없음 (실행기가 SIGKILL 되면 매니페스트가 RUNNING 인 채 남는다 → 사람이 판단) · SV 끝 그래프 봉인 원천 (`RunnerGraphSource`) 은 돌리지 않는다 (SV 귀속 = 미확인 기록).
+- ⬜ ② 모서리 런의 SV 반사실 (`CJUNC_SV_CF`) — 지금 실행기는 R 단위와 같게 켠다 · ② 는 SDCP 가 없어 끊을 다리가 0 개 (반사실 = 주 그래프 · 같은 풀이 한 번 더) · R 은 SDCP 없는 침대에서 SV 반사실을 돌린 적이 없다 · 주 σ 에는 무관 = 1저자 결정 (권고 = ② 만 끔).
 
 ## 9. 개정 기록
 
