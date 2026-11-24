@@ -1,0 +1,169 @@
+{
+  "actual_entries": [
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "function": "live_file_transport.FileAckPorts.marker",
+      "line": 53
+    }
+  ],
+  "clock_calls": [],
+  "elapsed_seconds": 0.062000000034458935,
+  "evidence": {
+    "ack_fixture": {
+      "bytes": 801,
+      "sha256": "37abc2f18d464566eba1e74bc7dca0e15f473f15df7d7167cf79a53459f5d6f8",
+      "utf8": "{\"case_ref\":\"R01\",\"channel\":\"normal_delivery\",\"consumption_ref\":\"mailbox/consumption/c0001.json\",\"consumption_sha256\":\"1625764b9668416866985f0b6c38da86161d228c964a254700b400f6969e4df8\",\"handoff_ref\":\"fixture:F03:handoff:0001\",\"kind\":\"RECEIVER_ACK_V1\",\"reason\":null,\"receiver_pid\":4242,\"receiver_ref\":\"receiver:integration\",\"record_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"request_index\":1,\"request_sha256\":\"93061c05f1365b84c230ff253e6c78c0ac842d381909d8f0cc76e6455d70df77\",\"session_ref\":\"fixture:F03\",\"status\":\"ACCEPTED\",\"ticket\":{\"epoch_ref\":\"fixture:epoch\",\"owner_ref\":\"fixture:owner\",\"producer\":{\"generation_ref\":\"fixture:P:generation\",\"instance_ref\":\"fixture:P:instance\",\"process_evidence_ref\":\"fixture:P:process\",\"role\":\"P\"},\"run_ref\":\"fixture:R3\",\"version\":0}}"
+    },
+    "expected_errors": [
+      {
+        "reason": "ACK_MARKER_INVALID",
+        "text": "ACK_MARKER_INVALID",
+        "type": "ProtocolError"
+      }
+    ],
+    "first_failure": "ACK_MARKER_INVALID",
+    "port_calls": {
+      "ack_reads": 0,
+      "consumption_reads": 0,
+      "polls": 1,
+      "reader_calls": 0,
+      "request_markers": 1,
+      "request_writes": 1
+    },
+    "port_trace": [
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox\\requests"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox\\requests"
+      },
+      {
+        "action": "write_request",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox\\requests\\q0001.json"
+      },
+      {
+        "action": "publish_request_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox\\requests\\q0001.ready"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox\\acks"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox\\acks"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\F03\\mailbox\\acks\\a0001.ready"
+      },
+      {
+        "action": "FIRST_FAILURE",
+        "reason": "ACK_MARKER_INVALID",
+        "text": "ACK_MARKER_INVALID",
+        "type": "ProtocolError"
+      }
+    ],
+    "posted": {
+      "1": {
+        "bytes": 609,
+        "sha256": "93061c05f1365b84c230ff253e6c78c0ac842d381909d8f0cc76e6455d70df77",
+        "utf8": "{\"case_ref\":\"R01\",\"channel\":\"normal_delivery\",\"handoff_ref\":\"fixture:F03:handoff:0001\",\"kind\":\"RECEIVER_REQUEST_V1\",\"previous_digest\":null,\"receiver_ref\":\"receiver:integration\",\"record_relpath\":\"R01/normal_delivery/v000000000000.json\",\"record_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"request_index\":1,\"session_ref\":\"fixture:F03\",\"ticket\":{\"epoch_ref\":\"fixture:epoch\",\"owner_ref\":\"fixture:owner\",\"producer\":{\"generation_ref\":\"fixture:P:generation\",\"instance_ref\":\"fixture:P:instance\",\"process_evidence_ref\":\"fixture:P:process\",\"role\":\"P\"},\"run_ref\":\"fixture:R3\",\"version\":0}}"
+      }
+    }
+  },
+  "expected": {
+    "expectation": "ACK payload 열기0, descriptor 생성0",
+    "expected_clock_stages": [],
+    "expected_reason": "ACK_MARKER_INVALID",
+    "expected_target_counts": {
+      "bound_ack_session.BoundAckSession.exchange": 0,
+      "bound_ack_session.BoundAckSession.verify_consumption": 0,
+      "evidence_admission.EvidenceAdmission.admit": 0,
+      "live_file_transport.BoundLiveSession.exchange": 0,
+      "live_file_transport.BoundLiveSession.verify_consumption": 0,
+      "live_file_transport.FileAckPorts.consumption": 0,
+      "live_file_transport.FileAckPorts.marker": 1,
+      "live_file_transport.FileAckPorts.reader": 0,
+      "receiver_bridge.ReceiverBridge.publish": 0,
+      "receiver_finish.publish_finish": 0,
+      "receiver_finish.validate_finish": 0,
+      "receiver_finish.wait_finish": 0,
+      "receiver_session.FileReceiverSession.start": 0,
+      "receiver_session.FileReceiverSession.stop_owned": 0,
+      "state_owner.StateOwner.assess_count": 0,
+      "state_owner.StateOwner.bootstrap": 0
+    },
+    "expected_transport_io": {
+      "ack_reads": 0,
+      "consumption_reads": 0,
+      "polls": 1,
+      "reader_calls": 0,
+      "request_markers": 1,
+      "request_writes": 1
+    },
+    "group": "new file ports",
+    "id": "F03",
+    "input": "빈 파일이어야 할 ACK.ready가 비어 있지 않음",
+    "kind": "SEALED_R3_CASE_FIXTURE",
+    "operating_deadlines": null,
+    "reserve": null,
+    "stage": "marker validation",
+    "synthetic_binding_only": true
+  },
+  "id": "F03",
+  "observed_reason": "ACK_MARKER_INVALID",
+  "status": "PASS",
+  "target_counts": {
+    "bound_ack_session.BoundAckSession.exchange": 0,
+    "bound_ack_session.BoundAckSession.verify_consumption": 0,
+    "evidence_admission.EvidenceAdmission.admit": 0,
+    "live_file_transport.BoundLiveSession.exchange": 0,
+    "live_file_transport.BoundLiveSession.verify_consumption": 0,
+    "live_file_transport.FileAckPorts.consumption": 0,
+    "live_file_transport.FileAckPorts.marker": 1,
+    "live_file_transport.FileAckPorts.reader": 0,
+    "receiver_bridge.ReceiverBridge.publish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "state_owner.StateOwner.assess_count": 0,
+    "state_owner.StateOwner.bootstrap": 0
+  }
+}

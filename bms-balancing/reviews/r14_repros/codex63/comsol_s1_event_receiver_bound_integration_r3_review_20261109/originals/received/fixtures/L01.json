@@ -1,0 +1,40 @@
+{
+  "id": "L01",
+  "group": "live composition",
+  "input": "실제 자식이 R01 v0 파일 소비·ACK·소비 근거 게시",
+  "expectation": "실제 owner.bootstrap 경로, 전 checkpoint 합성 count90<B100; bridge/owner verified headv0; 정상 호출 완료1",
+  "expected_reason": "NORMAL_DELIVERY_COMPLETED",
+  "stage": "real worker→new file callbacks→BoundAckSession→Bridge→Owner",
+  "kind": "SEALED_R3_CASE_FIXTURE",
+  "synthetic_binding_only": true,
+  "operating_deadlines": null,
+  "reserve": null,
+  "expected_target_counts": {
+    "live_file_transport.FileAckPorts.marker": 1,
+    "live_file_transport.FileAckPorts.reader": 1,
+    "live_file_transport.FileAckPorts.consumption": 1,
+    "live_file_transport.BoundLiveSession.exchange": 1,
+    "live_file_transport.BoundLiveSession.verify_consumption": 1,
+    "bound_ack_session.BoundAckSession.exchange": 1,
+    "bound_ack_session.BoundAckSession.verify_consumption": 1,
+    "state_owner.StateOwner.bootstrap": 1,
+    "state_owner.StateOwner.assess_count": 0,
+    "receiver_bridge.ReceiverBridge.publish": 1,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_session.FileReceiverSession.start": 1,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "evidence_admission.EvidenceAdmission.admit": 1
+  },
+  "expected_clock_stages": [
+    "C0",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5"
+  ],
+  "expected_transport_io": null
+}
+

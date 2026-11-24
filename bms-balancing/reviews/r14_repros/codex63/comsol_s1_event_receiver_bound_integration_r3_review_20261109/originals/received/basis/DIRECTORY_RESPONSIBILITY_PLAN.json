@@ -1,0 +1,97 @@
+{
+  "kind": "FUTURE_DIRECTORY_CONTRACT_REQUIREMENTS_NOT_ACTUAL_CONTRACT",
+  "future_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R1_20261106",
+  "actual_contract_created": false,
+  "sequence": [
+    "fresh timing origin and collision check",
+    "intake creates approved root and seven containers once",
+    "selected input identity check and raw copies",
+    "root writes INTAKE.json with stage-specific completion only",
+    "root writes CONFIG.json",
+    "root writes DIRECTORY_CONTRACT.json",
+    "root reads and validates all three actual files and hashes",
+    "root writes READY_INPUTS.json containing exact existing input paths/identities and separate intended outputs",
+    "root rereads READY_INPUTS before any implementation delegation or source access by role"
+  ],
+  "owners": [
+    {
+      "paths": [
+        "root",
+        "basis",
+        "source",
+        "validation",
+        "fixtures",
+        "results",
+        "arena",
+        "delivery"
+      ],
+      "creator": "intake",
+      "rules": "Exclusive creation; root must be absent; validate intended parents/reparse flags; no overwrite/delete/fallback"
+    },
+    {
+      "paths": [
+        "results/session.stdout.txt",
+        "results/session.stderr.txt"
+      ],
+      "creator": "launcher",
+      "rules": "CreateNew after preseal and empty-container readback; reservation prevents second session; preserve partial logs on error"
+    },
+    {
+      "paths": [
+        "arena/F01..F10"
+      ],
+      "creator": "offline harness",
+      "rules": "Create each used case directory once after test start; no pre-creation by intake/launcher"
+    },
+    {
+      "paths": [
+        "arena/R01 and its FilePorts subdirectories"
+      ],
+      "creator": "FilePorts under live harness orchestration",
+      "rules": "Confirm actual constructor ownership before seal; exactly one creator per directory, avoid harness/FilePorts double mkdir"
+    },
+    {
+      "paths": [
+        "arena/mailbox",
+        "arena/mailbox/requests",
+        "arena/mailbox/acks",
+        "arena/mailbox/consumption",
+        "arena/RECEIVER_STDOUT.txt",
+        "arena/RECEIVER_STDERR.txt"
+      ],
+      "creator": "owned receiver session start",
+      "rules": "One owned session only, only after F01..F10 succeed"
+    },
+    {
+      "paths": [
+        "source candidate files",
+        "validation harness/control files",
+        "fixtures files"
+      ],
+      "creator": "root authoring before seal",
+      "rules": "Only approved new output names; existing input source files unchanged"
+    },
+    {
+      "paths": [
+        "delivery artifacts"
+      ],
+      "creator": "root preservation phase",
+      "rules": "New records only; no changes to sealed inputs or previous stopped work"
+    }
+  ],
+  "seal_scope": "Source/contract/engine/harness/individual fixtures/argv/cwd frozen before test; results/delivery append-only outputs excluded from immutable source set but inventoried separately",
+  "ready_fields": [
+    "logical_name",
+    "exact_absolute_path",
+    "bytes",
+    "sha256",
+    "producer",
+    "permitted_consumer",
+    "existing_input_or_future_output"
+  ],
+  "completion_rule": "Do not label overall intake complete based only on directory creation or CONFIG. All required contract/identity/readback steps must be evidenced.",
+  "flags": {
+    "native_ready": false,
+    "contract_adopted": false
+  }
+}

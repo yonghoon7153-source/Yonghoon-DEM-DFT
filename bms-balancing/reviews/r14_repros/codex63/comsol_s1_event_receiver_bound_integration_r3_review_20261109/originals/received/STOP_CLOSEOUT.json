@@ -1,0 +1,100 @@
+{
+  "native_ready": false,
+  "error_phase": "JavaScript orchestration parser before report/normal packaging",
+  "retry": 0,
+  "kind": "R3_RESULTS_PRESERVED_DELIVERY_PREPARATION_ERROR",
+  "snapshot": {
+    "bytes_limit": 52428800,
+    "delivery_limit": 600,
+    "whole_limit": 3600,
+    "root_bytes": 1078663.0,
+    "whole_snapshot_seconds": 1468.115433,
+    "delivery_snapshot_seconds": 346.6469989
+  },
+  "full_procedure_compliance": false,
+  "boundary": "Preservation-only closeout after first error, before archive creation.",
+  "functional_results_not_revoked": true,
+  "target_sessions_after_error": 0,
+  "external_acceptance_pending": true,
+  "python_process_rc": 0,
+  "python_seconds": 2.3092717,
+  "test_result": {
+    "cases": [
+      {
+        "id": "F01",
+        "reason": "PASS",
+        "status": "PASS"
+      },
+      {
+        "id": "F02",
+        "reason": "REQUEST_ALREADY_POSTED",
+        "status": "PASS"
+      },
+      {
+        "id": "F03",
+        "reason": "ACK_MARKER_INVALID",
+        "status": "PASS"
+      },
+      {
+        "id": "F04",
+        "reason": "ACK_FRAME_TOO_LARGE",
+        "status": "PASS"
+      },
+      {
+        "id": "F05",
+        "reason": "CONSUMPTION_PATH_MISMATCH",
+        "status": "PASS"
+      },
+      {
+        "id": "F06",
+        "reason": "CONSUMPTION_SHA_MISMATCH",
+        "status": "PASS"
+      },
+      {
+        "id": "F07",
+        "reason": "ACK_TRANSPORT_TIMEOUT",
+        "status": "PASS"
+      },
+      {
+        "id": "F08",
+        "reason": "RECEIVER_NOT_ALIVE",
+        "status": "PASS"
+      },
+      {
+        "id": "F09",
+        "reason": "FINISH_SESSION_MISMATCH",
+        "status": "PASS"
+      },
+      {
+        "id": "F10",
+        "reason": "RECEIVER_LIFETIME_EXCEEDED",
+        "status": "PASS"
+      },
+      {
+        "id": "L01",
+        "reason": "NORMAL_DELIVERY_COMPLETED",
+        "status": "PASS"
+      },
+      {
+        "id": "L02",
+        "reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT",
+        "status": "PASS"
+      }
+    ],
+    "child_spawn_count": 1,
+    "contract_adopted": false,
+    "counts": {
+      "FAIL": 0,
+      "NOT_RUN": 0,
+      "PASS": 12
+    },
+    "failure_cleanup": null,
+    "guard_events": [],
+    "kind": "R3_ONE_SESSION_RESULT",
+    "native_ready": false,
+    "normal_live_completions": 1,
+    "overall": "INCOMPLETE",
+    "parent_elapsed_seconds": 2.077999999979511
+  },
+  "overall": "INCOMPLETE"
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_R3_RECIPIENT_REVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact exec_command result received during this review, serialized afterward outside the completed ZIP. No certification of this file's own future write return, whole-review elapsed time, or independent remote execution.",
+  "tool_result": {
+    "chunk_id": "b3b9c1",
+    "wall_time_seconds": 0.5150987,
+    "exit_code": 0,
+    "original_token_count": 396,
+    "output": "{\r\n  \"kind\": \"R3_RECEIVER_BOUND_REVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_event_receiver_bound_integration_R3_review_20261109\\\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_REVIEW_20261109.zip\",\r\n    \"bytes\": 560393,\r\n    \"sha256\": \"d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_event_receiver_bound_integration_R3_review_20261109\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 2257,\r\n    \"sha256\": \"3a482d74258cd479348ce53745701390b64ee2b3abf2d4329913e31bace92ad4\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_event_receiver_bound_integration_R3_review_20261109\\\\SELECTED_LOCAL_INPUTS_POST_PACKAGE.json\",\r\n    \"bytes\": 812,\r\n    \"sha256\": \"286581a58124ad29bdd1d861a1d1d50ce9071eeb812d3f7b2a09a0eeb7dab708\"\r\n  },\r\n  \"payload_count\": 174,\r\n  \"entries\": 175,\r\n  \"decision\": \"LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED\",\r\n  \"accepted_cases\": 12,\r\n  \"normal_live_completions\": 1,\r\n  \"native_ready\": false,\r\n  \"full_procedure_pass\": false,\r\n  \"resume_authorized\": false,\r\n  \"target_execution\": 0,\r\n  \"functional_tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"boundary\": \"After review ZIP/receipt/post-preservation write/readback; before actual tool return and its later transcription.\"\r\n}\r\n"
+  }
+}

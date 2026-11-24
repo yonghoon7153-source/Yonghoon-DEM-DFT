@@ -1,0 +1,39 @@
+{
+  "actual_entries": [
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+      "function": "receiver_worker_candidate.run_receiver",
+      "line": 308
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+      "function": "receiver_worker_candidate._consume_record",
+      "line": 177
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+      "function": "receiver_worker_candidate._consume_record",
+      "line": 177
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+      "function": "receiver_finish.wait_finish",
+      "line": 33
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+      "function": "receiver_finish.validate_finish",
+      "line": 18
+    }
+  ],
+  "guard_events": [],
+  "kind": "OWNED_RECEIVER_GUARD_RESULT",
+  "process_creation_count": 0,
+  "rc": 0,
+  "target_counts": {
+    "receiver_finish.validate_finish": 1,
+    "receiver_finish.wait_finish": 1,
+    "receiver_worker_candidate._consume_record": 2,
+    "receiver_worker_candidate.run_receiver": 1
+  }
+}

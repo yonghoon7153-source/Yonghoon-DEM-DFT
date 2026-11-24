@@ -1,0 +1,1639 @@
+{
+  "actual_entries": [
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\state_owner.py.inactive.txt",
+      "function": "state_owner.StateOwner.assess_count",
+      "line": 316
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_bridge.py.inactive.txt",
+      "function": "receiver_bridge.ReceiverBridge.publish",
+      "line": 181
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "function": "live_file_transport.BoundLiveSession.exchange",
+      "line": 160
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\bound_ack_session.py.inactive.txt",
+      "function": "bound_ack_session.BoundAckSession.exchange",
+      "line": 291
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "function": "live_file_transport.FileAckPorts.marker",
+      "line": 53
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "function": "live_file_transport.FileAckPorts.reader",
+      "line": 110
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "function": "live_file_transport.BoundLiveSession.verify_consumption",
+      "line": 165
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\bound_ack_session.py.inactive.txt",
+      "function": "bound_ack_session.BoundAckSession.verify_consumption",
+      "line": 382
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "function": "live_file_transport.FileAckPorts.consumption",
+      "line": 123
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+      "function": "receiver_finish.publish_finish",
+      "line": 61
+    },
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_session.py.inactive.txt",
+      "function": "receiver_session.FileReceiverSession.stop_owned",
+      "line": 107
+    }
+  ],
+  "clock_calls": [
+    {
+      "count": 90,
+      "request_index": 2,
+      "stage": "C0"
+    },
+    {
+      "count": 90,
+      "request_index": 2,
+      "stage": "C1"
+    },
+    {
+      "count": 90,
+      "request_index": 2,
+      "stage": "C2"
+    },
+    {
+      "count": 90,
+      "request_index": 2,
+      "stage": "C3"
+    },
+    {
+      "count": 90,
+      "request_index": 2,
+      "stage": "C4"
+    },
+    {
+      "count": 100,
+      "request_index": 2,
+      "stage": "C5"
+    }
+  ],
+  "elapsed_seconds": 0.34399999992456287,
+  "evidence": {
+    "adapter_failure": {
+      "cause_text": null,
+      "cause_type": null,
+      "reason": "DEADLINE_NOT_BEFORE",
+      "stage": "C5"
+    },
+    "adapter_trace": [
+      {
+        "event": "OWNER_BOUND",
+        "request_index": 0,
+        "source": "adapter",
+        "stage": "bind_owner"
+      },
+      {
+        "entry": 1,
+        "event": "ENTRY",
+        "request_index": 0,
+        "source": "adapter",
+        "stage": "exchange_entry"
+      },
+      {
+        "bytes": 679,
+        "event": "REQUEST_BOUND",
+        "request_index": 1,
+        "sha256": "34fbb13970b941bc3ad215d8d02dce7d40c432ad895a73eba97a19c47204d017",
+        "source": "adapter",
+        "stage": "REQUEST_BUILD"
+      },
+      {
+        "event": "RECEIVE_HELPER_CREATED",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "RECEIVE"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C0"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C0"
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "marker"
+      },
+      {
+        "event": "PORT_RETURN",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "marker_return"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C1"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C1"
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "payload"
+      },
+      {
+        "event": "PORT_RETURN",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "payload_return"
+      },
+      {
+        "bytes": 872,
+        "event": "ACK_BUFFER_CAPTURED",
+        "request_index": 1,
+        "sha256": "0dca98492d671c55722aa0d8f83be4cae481051f767bc8e3c688ad1853705780",
+        "source": "adapter",
+        "stage": "payload_return"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C2"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C2"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C3"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C3"
+      },
+      {
+        "event": "ENTRY",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "entry"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C0"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C0"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C0",
+        "within": true
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "marker"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C1"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C1"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C1",
+        "within": true
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "payload"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C2"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C2"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C2",
+        "within": true
+      },
+      {
+        "event": "VERIFY",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "verify"
+      },
+      {
+        "bytes": 872,
+        "event": "DECODE",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "decode",
+        "verified_sha256": "0dca98492d671c55722aa0d8f83be4cae481051f767bc8e3c688ad1853705780"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C3"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C3"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C3",
+        "within": true
+      },
+      {
+        "event": "CANDIDATE_RETURN",
+        "request_index": 1,
+        "source": "receive",
+        "stage": "C3"
+      },
+      {
+        "event": "ACK_PARSE",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "ACK_PARSE"
+      },
+      {
+        "event": "ACK_VALIDATE",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "ACK_VALIDATE"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C4"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C4"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C4",
+        "within": true
+      },
+      {
+        "event": "EXCHANGE_RETURN",
+        "request_index": 1,
+        "sha256": "0dca98492d671c55722aa0d8f83be4cae481051f767bc8e3c688ad1853705780",
+        "source": "adapter",
+        "stage": "C4"
+      },
+      {
+        "event": "ENTRY",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "consumption_entry"
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "CONSUMPTION_READ"
+      },
+      {
+        "event": "PORT_RETURN",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "CONSUMPTION_READ_return"
+      },
+      {
+        "event": "CONSUMPTION_VALIDATE",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "CONSUMPTION_VALIDATE"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C5"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C5"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "C5",
+        "within": true
+      },
+      {
+        "bytes": 1033,
+        "event": "CONSUMPTION_VERIFIED",
+        "request_index": 1,
+        "sha256": "cec1437d54e925f82a9afed6bb8712275853cf9e4310b01f668f552474f8e72c",
+        "source": "adapter",
+        "stage": "C5"
+      },
+      {
+        "entry": 2,
+        "event": "ENTRY",
+        "request_index": 1,
+        "source": "adapter",
+        "stage": "exchange_entry"
+      },
+      {
+        "bytes": 741,
+        "event": "REQUEST_BOUND",
+        "request_index": 2,
+        "sha256": "0ca9c1c059acda42bc60e975a6770c84aa09c7255daec92c1aca834b54cfbdee",
+        "source": "adapter",
+        "stage": "REQUEST_BUILD"
+      },
+      {
+        "event": "RECEIVE_HELPER_CREATED",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "RECEIVE"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C0"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C0"
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "marker"
+      },
+      {
+        "event": "PORT_RETURN",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "marker_return"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C1"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C1"
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "payload"
+      },
+      {
+        "event": "PORT_RETURN",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "payload_return"
+      },
+      {
+        "bytes": 872,
+        "event": "ACK_BUFFER_CAPTURED",
+        "request_index": 2,
+        "sha256": "2aaec8321004b2c342e9faed5b9c9bd1f66bedca8f6a7b186e394235997c0757",
+        "source": "adapter",
+        "stage": "payload_return"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C2"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C2"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C3"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C3"
+      },
+      {
+        "event": "ENTRY",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "entry"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C0"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C0"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C0",
+        "within": true
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "marker"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C1"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C1"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C1",
+        "within": true
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "payload"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C2"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C2"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C2",
+        "within": true
+      },
+      {
+        "event": "VERIFY",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "verify"
+      },
+      {
+        "bytes": 872,
+        "event": "DECODE",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "decode",
+        "verified_sha256": "2aaec8321004b2c342e9faed5b9c9bd1f66bedca8f6a7b186e394235997c0757"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C3"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C3"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C3",
+        "within": true
+      },
+      {
+        "event": "CANDIDATE_RETURN",
+        "request_index": 2,
+        "source": "receive",
+        "stage": "C3"
+      },
+      {
+        "event": "ACK_PARSE",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "ACK_PARSE"
+      },
+      {
+        "event": "ACK_VALIDATE",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "ACK_VALIDATE"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C4"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 90,
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C4"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C4",
+        "within": true
+      },
+      {
+        "event": "EXCHANGE_RETURN",
+        "request_index": 2,
+        "sha256": "2aaec8321004b2c342e9faed5b9c9bd1f66bedca8f6a7b186e394235997c0757",
+        "source": "adapter",
+        "stage": "C4"
+      },
+      {
+        "event": "ENTRY",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "consumption_entry"
+      },
+      {
+        "event": "PORT_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "CONSUMPTION_READ"
+      },
+      {
+        "event": "PORT_RETURN",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "CONSUMPTION_READ_return"
+      },
+      {
+        "event": "CONSUMPTION_VALIDATE",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "CONSUMPTION_VALIDATE"
+      },
+      {
+        "event": "CLOCK_CALL",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C5"
+      },
+      {
+        "event": "COUNT_BOUND",
+        "raw_count": 100,
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C5"
+      },
+      {
+        "event": "COMPLETION_ASSESSED",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C5",
+        "within": false
+      },
+      {
+        "event": "FIRST_FAILURE",
+        "reason": "DEADLINE_NOT_BEFORE",
+        "request_index": 2,
+        "source": "adapter",
+        "stage": "C5"
+      }
+    ],
+    "bridge_head": {
+      "epoch_ref": "fixture:epoch:L01",
+      "owner_ref": "fixture:owner:L01",
+      "producer": {
+        "generation_ref": "fixture:P:generation",
+        "instance_ref": "fixture:P:instance",
+        "process_evidence_ref": "fixture:P:process",
+        "role": "P"
+      },
+      "run_ref": "fixture:R3",
+      "version": 0
+    },
+    "child_consumed_v1": {
+      "calls": {
+        "_consume_record": 1,
+        "_read_record": 1,
+        "_verify_normal_head": 1,
+        "decode_snapshot": 1
+      },
+      "case_ref": "R01",
+      "channel": "normal_delivery",
+      "handoff_ref": "receiver_bound_integration_R3_20261108_001:handoff:0002",
+      "kind": "RECEIVER_CONSUMPTION_V1",
+      "reason": null,
+      "receiver_pid": 14820,
+      "receiver_ref": "receiver:integration",
+      "record_bytes": 2707,
+      "record_relpath": "R01/normal_delivery/v000000000001.json",
+      "record_sha256": "2a64397f101e0da938460bbd7b09ee76dddb64019f936e8dfa236bf6d7e11781",
+      "request_index": 2,
+      "request_sha256": "0ca9c1c059acda42bc60e975a6770c84aa09c7255daec92c1aca834b54cfbdee",
+      "session_ref": "receiver_bound_integration_R3_20261108_001",
+      "stages": [
+        "READ_OPEN",
+        "READ_COMPLETE",
+        "HASH_MATCH",
+        "DECODE_ENTER",
+        "DECODE_OK",
+        "TICKET_MATCH",
+        "CONTEXT_CHECK",
+        "CONTEXT_OK"
+      ],
+      "status": "ACCEPTED",
+      "ticket": {
+        "epoch_ref": "fixture:epoch:L01",
+        "owner_ref": "fixture:owner:L01",
+        "producer": {
+          "generation_ref": "fixture:P:generation",
+          "instance_ref": "fixture:P:instance",
+          "process_evidence_ref": "fixture:P:process",
+          "role": "P"
+        },
+        "run_ref": "fixture:R3",
+        "version": 1
+      }
+    },
+    "child_guard": {
+      "actual_entries": [
+        {
+          "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+          "function": "receiver_worker_candidate.run_receiver",
+          "line": 308
+        },
+        {
+          "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+          "function": "receiver_worker_candidate._consume_record",
+          "line": 177
+        },
+        {
+          "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+          "function": "receiver_worker_candidate._consume_record",
+          "line": 177
+        },
+        {
+          "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+          "function": "receiver_finish.wait_finish",
+          "line": 33
+        },
+        {
+          "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+          "function": "receiver_finish.validate_finish",
+          "line": 18
+        }
+      ],
+      "guard_events": [],
+      "kind": "OWNED_RECEIVER_GUARD_RESULT",
+      "process_creation_count": 0,
+      "rc": 0,
+      "target_counts": {
+        "receiver_finish.validate_finish": 1,
+        "receiver_finish.wait_finish": 1,
+        "receiver_worker_candidate._consume_record": 2,
+        "receiver_worker_candidate.run_receiver": 1
+      }
+    },
+    "child_rc": 0,
+    "cleanup": {
+      "error": null,
+      "exited": true,
+      "graceful": false,
+      "returncode": 0,
+      "terminate_calls": 0,
+      "termination_requested": false
+    },
+    "finish": {
+      "kind": "RECEIVER_FINISH_V1",
+      "last_request_sha256": "0ca9c1c059acda42bc60e975a6770c84aa09c7255daec92c1aca834b54cfbdee",
+      "receiver_pid": 14820,
+      "request_count": 2,
+      "session_ref": "receiver_bound_integration_R3_20261108_001",
+      "source_manifest_sha256": "d8263f549c3633cfcf7a6a1724b8c7cb53b4c5176ad290ff8b518399d82cffcb"
+    },
+    "legacy_cleanup_graceful_field_not_reinterpreted": true,
+    "lifecycle": {
+      "acks_published": 2,
+      "case_first_failures": {
+        "R01": null
+      },
+      "elapsed_ms": 562,
+      "kind": "RECEIVER_LIFECYCLE_V1",
+      "reason": null,
+      "receiver_pid": 14820,
+      "requests_consumed": 2,
+      "session_ref": "receiver_bound_integration_R3_20261108_001",
+      "status": "COMPLETED"
+    },
+    "natural_finish_completed": true,
+    "owner_view": {
+      "busy": false,
+      "events": [
+        {
+          "attempted_ticket": {
+            "epoch_ref": "fixture:epoch:L01",
+            "owner_ref": "fixture:owner:L01",
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "version": 0
+          },
+          "observed_result": "RETURNED_NOT_YET_VERIFIED",
+          "step": "STORE_WRITE"
+        },
+        {
+          "attempted_ticket": {
+            "epoch_ref": "fixture:epoch:L01",
+            "owner_ref": "fixture:owner:L01",
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "version": 0
+          },
+          "observed_result": "RETURNED_NOT_YET_VERIFIED",
+          "step": "STORE_READ"
+        },
+        {
+          "attempted_ticket": {
+            "epoch_ref": "fixture:epoch:L01",
+            "owner_ref": "fixture:owner:L01",
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "version": 0
+          },
+          "observed_result": "RETURNED_NOT_YET_VERIFIED",
+          "step": "DELIVERY"
+        },
+        {
+          "attempted_ticket": {
+            "epoch_ref": "fixture:epoch:L01",
+            "owner_ref": "fixture:owner:L01",
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "version": 1
+          },
+          "observed_result": "RETURNED_NOT_YET_VERIFIED",
+          "step": "STORE_WRITE"
+        },
+        {
+          "attempted_ticket": {
+            "epoch_ref": "fixture:epoch:L01",
+            "owner_ref": "fixture:owner:L01",
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "version": 1
+          },
+          "observed_result": "RETURNED_NOT_YET_VERIFIED",
+          "step": "STORE_READ"
+        },
+        {
+          "attempted_ticket": {
+            "epoch_ref": "fixture:epoch:L01",
+            "owner_ref": "fixture:owner:L01",
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "version": 1
+          },
+          "observed_result": "EXCEPTION_UNKNOWN_EFFECT:BoundAckError",
+          "step": "DELIVERY"
+        }
+      ],
+      "last_verified_delivered_ticket": {
+        "epoch_ref": "fixture:epoch:L01",
+        "owner_ref": "fixture:owner:L01",
+        "producer": {
+          "generation_ref": "fixture:P:generation",
+          "instance_ref": "fixture:P:instance",
+          "process_evidence_ref": "fixture:P:process",
+          "role": "P"
+        },
+        "run_ref": "fixture:R3",
+        "version": 0
+      },
+      "last_verified_stored_ticket": {
+        "epoch_ref": "fixture:epoch:L01",
+        "owner_ref": "fixture:owner:L01",
+        "producer": {
+          "generation_ref": "fixture:P:generation",
+          "instance_ref": "fixture:P:instance",
+          "process_evidence_ref": "fixture:P:process",
+          "role": "P"
+        },
+        "run_ref": "fixture:R3",
+        "version": 1
+      },
+      "snapshot": {
+        "core": {
+          "binding": {
+            "clock": {
+              "api_abi_evidence_ref": "fixture:api_abi",
+              "boot_evidence_ref": "fixture:boot",
+              "clock_ref": "fixture:clock",
+              "comparison_contract_ref": "fixture:comparison",
+              "domain_ref": "fixture:domain",
+              "environment_evidence_ref": "fixture:environment",
+              "frequency_evidence_ref": "fixture:frequency",
+              "frequency_hz": 1,
+              "manifest_ref": "sha256:0b5754b6d58401947949c976c3c5632ba59f527276598e9d7af5dacac4d60e4a",
+              "origin_count": 0,
+              "origin_ref": "fixture:origin",
+              "run_ref": "fixture:R3"
+            },
+            "external_binding_check_ref": "fixture:external-consistency-only",
+            "roles": [
+              {
+                "generation_ref": "fixture:P:generation",
+                "instance_ref": "fixture:P:instance",
+                "process_evidence_ref": "fixture:P:process",
+                "role": "P"
+              },
+              {
+                "generation_ref": "fixture:S:generation",
+                "instance_ref": "fixture:S:instance",
+                "process_evidence_ref": "fixture:S:process",
+                "role": "S"
+              },
+              {
+                "generation_ref": "fixture:M:generation",
+                "instance_ref": "fixture:M:instance",
+                "process_evidence_ref": "fixture:M:process",
+                "role": "M"
+              },
+              {
+                "generation_ref": "fixture:Q:generation",
+                "instance_ref": "fixture:Q:instance",
+                "process_evidence_ref": "fixture:Q:process",
+                "role": "Q"
+              }
+            ]
+          },
+          "latch": {
+            "errors": [
+              {
+                "cause_ref": "fixture:owner:L01:fixture:epoch:L01:error:2",
+                "evidence_ref": "fixture:L02:assess",
+                "producer": {
+                  "generation_ref": "fixture:P:generation",
+                  "instance_ref": "fixture:P:instance",
+                  "process_evidence_ref": "fixture:P:process",
+                  "role": "P"
+                },
+                "reason": "DELIVERY_EXCEPTION",
+                "run_ref": "fixture:R3"
+              }
+            ],
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "stop_causes": []
+          }
+        },
+        "previous": {
+          "epoch_ref": "fixture:epoch:L01",
+          "owner_ref": "fixture:owner:L01",
+          "producer": {
+            "generation_ref": "fixture:P:generation",
+            "instance_ref": "fixture:P:instance",
+            "process_evidence_ref": "fixture:P:process",
+            "role": "P"
+          },
+          "run_ref": "fixture:R3",
+          "version": 1
+        },
+        "ticket": {
+          "epoch_ref": "fixture:epoch:L01",
+          "owner_ref": "fixture:owner:L01",
+          "producer": {
+            "generation_ref": "fixture:P:generation",
+            "instance_ref": "fixture:P:instance",
+            "process_evidence_ref": "fixture:P:process",
+            "role": "P"
+          },
+          "run_ref": "fixture:R3",
+          "version": 2
+        }
+      },
+      "started": true
+    },
+    "port_calls": {
+      "ack_reads": 2,
+      "consumption_reads": 2,
+      "polls": 15,
+      "reader_calls": 2,
+      "request_markers": 2,
+      "request_writes": 2
+    },
+    "port_trace": [
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\requests"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\requests"
+      },
+      {
+        "action": "write_request",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\requests\\q0001.json"
+      },
+      {
+        "action": "publish_request_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\requests\\q0001.ready"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0001.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0001.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0001.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0001.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0001.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0001.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0001.ready"
+      },
+      {
+        "action": "read_ack",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0001.json"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\consumption"
+      },
+      {
+        "action": "read_consumption",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\consumption\\c0001.json"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\requests"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\requests"
+      },
+      {
+        "action": "write_request",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\requests\\q0002.json"
+      },
+      {
+        "action": "publish_request_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\requests\\q0002.ready"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.ready"
+      },
+      {
+        "action": "poll_ack_marker",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.ready"
+      },
+      {
+        "action": "read_ack",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\acks\\a0002.json"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox"
+      },
+      {
+        "action": "check_directory",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\consumption"
+      },
+      {
+        "action": "read_consumption",
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\mailbox\\consumption\\c0002.json"
+      }
+    ],
+    "request_buffers": [
+      {
+        "bytes": 679,
+        "sha256": "34fbb13970b941bc3ad215d8d02dce7d40c432ad895a73eba97a19c47204d017",
+        "utf8": "{\"case_ref\":\"R01\",\"channel\":\"normal_delivery\",\"handoff_ref\":\"receiver_bound_integration_R3_20261108_001:handoff:0001\",\"kind\":\"RECEIVER_REQUEST_V1\",\"previous_digest\":null,\"receiver_ref\":\"receiver:integration\",\"record_relpath\":\"R01/normal_delivery/v000000000000.json\",\"record_sha256\":\"f86a84d792a6659880f96f54e1128c9fcba09e842d9a2f097af330e4430813f1\",\"request_index\":1,\"session_ref\":\"receiver_bound_integration_R3_20261108_001\",\"ticket\":{\"epoch_ref\":\"fixture:epoch:L01\",\"owner_ref\":\"fixture:owner:L01\",\"producer\":{\"generation_ref\":\"fixture:P:generation\",\"instance_ref\":\"fixture:P:instance\",\"process_evidence_ref\":\"fixture:P:process\",\"role\":\"P\"},\"run_ref\":\"fixture:R3\",\"version\":0}}"
+      },
+      {
+        "bytes": 741,
+        "sha256": "0ca9c1c059acda42bc60e975a6770c84aa09c7255daec92c1aca834b54cfbdee",
+        "utf8": "{\"case_ref\":\"R01\",\"channel\":\"normal_delivery\",\"handoff_ref\":\"receiver_bound_integration_R3_20261108_001:handoff:0002\",\"kind\":\"RECEIVER_REQUEST_V1\",\"previous_digest\":\"f86a84d792a6659880f96f54e1128c9fcba09e842d9a2f097af330e4430813f1\",\"receiver_ref\":\"receiver:integration\",\"record_relpath\":\"R01/normal_delivery/v000000000001.json\",\"record_sha256\":\"2a64397f101e0da938460bbd7b09ee76dddb64019f936e8dfa236bf6d7e11781\",\"request_index\":2,\"session_ref\":\"receiver_bound_integration_R3_20261108_001\",\"ticket\":{\"epoch_ref\":\"fixture:epoch:L01\",\"owner_ref\":\"fixture:owner:L01\",\"producer\":{\"generation_ref\":\"fixture:P:generation\",\"instance_ref\":\"fixture:P:instance\",\"process_evidence_ref\":\"fixture:P:process\",\"role\":\"P\"},\"run_ref\":\"fixture:R3\",\"version\":1}}"
+      }
+    ],
+    "transition": {
+      "normal_complete": false,
+      "reason": "DELIVERY_EXCEPTION",
+      "value": {
+        "external_binding_check_ref": "fixture:external-consistency-only",
+        "seconds_from_run_origin": {
+          "denominator": 1,
+          "numerator": 90
+        },
+        "source": {
+          "api_success": true,
+          "clock": {
+            "api_abi_evidence_ref": "fixture:api_abi",
+            "boot_evidence_ref": "fixture:boot",
+            "clock_ref": "fixture:clock",
+            "comparison_contract_ref": "fixture:comparison",
+            "domain_ref": "fixture:domain",
+            "environment_evidence_ref": "fixture:environment",
+            "frequency_evidence_ref": "fixture:frequency",
+            "frequency_hz": 1,
+            "manifest_ref": "sha256:0b5754b6d58401947949c976c3c5632ba59f527276598e9d7af5dacac4d60e4a",
+            "origin_count": 0,
+            "origin_ref": "fixture:origin",
+            "run_ref": "fixture:R3"
+          },
+          "observation_ref": "fixture:initial-count",
+          "observed_stage": "INITIAL",
+          "output_valid": true,
+          "producer": {
+            "generation_ref": "fixture:P:generation",
+            "instance_ref": "fixture:P:instance",
+            "process_evidence_ref": "fixture:P:process",
+            "role": "P"
+          },
+          "purpose_ref": "fixture:integration-only",
+          "raw_count": 90,
+          "stage_binding_evidence_ref": "fixture:initial-stage",
+          "unit": "QPC_COUNT"
+        }
+      },
+      "view": {
+        "busy": false,
+        "events": [
+          {
+            "attempted_ticket": {
+              "epoch_ref": "fixture:epoch:L01",
+              "owner_ref": "fixture:owner:L01",
+              "producer": {
+                "generation_ref": "fixture:P:generation",
+                "instance_ref": "fixture:P:instance",
+                "process_evidence_ref": "fixture:P:process",
+                "role": "P"
+              },
+              "run_ref": "fixture:R3",
+              "version": 0
+            },
+            "observed_result": "RETURNED_NOT_YET_VERIFIED",
+            "step": "STORE_WRITE"
+          },
+          {
+            "attempted_ticket": {
+              "epoch_ref": "fixture:epoch:L01",
+              "owner_ref": "fixture:owner:L01",
+              "producer": {
+                "generation_ref": "fixture:P:generation",
+                "instance_ref": "fixture:P:instance",
+                "process_evidence_ref": "fixture:P:process",
+                "role": "P"
+              },
+              "run_ref": "fixture:R3",
+              "version": 0
+            },
+            "observed_result": "RETURNED_NOT_YET_VERIFIED",
+            "step": "STORE_READ"
+          },
+          {
+            "attempted_ticket": {
+              "epoch_ref": "fixture:epoch:L01",
+              "owner_ref": "fixture:owner:L01",
+              "producer": {
+                "generation_ref": "fixture:P:generation",
+                "instance_ref": "fixture:P:instance",
+                "process_evidence_ref": "fixture:P:process",
+                "role": "P"
+              },
+              "run_ref": "fixture:R3",
+              "version": 0
+            },
+            "observed_result": "RETURNED_NOT_YET_VERIFIED",
+            "step": "DELIVERY"
+          },
+          {
+            "attempted_ticket": {
+              "epoch_ref": "fixture:epoch:L01",
+              "owner_ref": "fixture:owner:L01",
+              "producer": {
+                "generation_ref": "fixture:P:generation",
+                "instance_ref": "fixture:P:instance",
+                "process_evidence_ref": "fixture:P:process",
+                "role": "P"
+              },
+              "run_ref": "fixture:R3",
+              "version": 1
+            },
+            "observed_result": "RETURNED_NOT_YET_VERIFIED",
+            "step": "STORE_WRITE"
+          },
+          {
+            "attempted_ticket": {
+              "epoch_ref": "fixture:epoch:L01",
+              "owner_ref": "fixture:owner:L01",
+              "producer": {
+                "generation_ref": "fixture:P:generation",
+                "instance_ref": "fixture:P:instance",
+                "process_evidence_ref": "fixture:P:process",
+                "role": "P"
+              },
+              "run_ref": "fixture:R3",
+              "version": 1
+            },
+            "observed_result": "RETURNED_NOT_YET_VERIFIED",
+            "step": "STORE_READ"
+          },
+          {
+            "attempted_ticket": {
+              "epoch_ref": "fixture:epoch:L01",
+              "owner_ref": "fixture:owner:L01",
+              "producer": {
+                "generation_ref": "fixture:P:generation",
+                "instance_ref": "fixture:P:instance",
+                "process_evidence_ref": "fixture:P:process",
+                "role": "P"
+              },
+              "run_ref": "fixture:R3",
+              "version": 1
+            },
+            "observed_result": "EXCEPTION_UNKNOWN_EFFECT:BoundAckError",
+            "step": "DELIVERY"
+          }
+        ],
+        "last_verified_delivered_ticket": {
+          "epoch_ref": "fixture:epoch:L01",
+          "owner_ref": "fixture:owner:L01",
+          "producer": {
+            "generation_ref": "fixture:P:generation",
+            "instance_ref": "fixture:P:instance",
+            "process_evidence_ref": "fixture:P:process",
+            "role": "P"
+          },
+          "run_ref": "fixture:R3",
+          "version": 0
+        },
+        "last_verified_stored_ticket": {
+          "epoch_ref": "fixture:epoch:L01",
+          "owner_ref": "fixture:owner:L01",
+          "producer": {
+            "generation_ref": "fixture:P:generation",
+            "instance_ref": "fixture:P:instance",
+            "process_evidence_ref": "fixture:P:process",
+            "role": "P"
+          },
+          "run_ref": "fixture:R3",
+          "version": 1
+        },
+        "snapshot": {
+          "core": {
+            "binding": {
+              "clock": {
+                "api_abi_evidence_ref": "fixture:api_abi",
+                "boot_evidence_ref": "fixture:boot",
+                "clock_ref": "fixture:clock",
+                "comparison_contract_ref": "fixture:comparison",
+                "domain_ref": "fixture:domain",
+                "environment_evidence_ref": "fixture:environment",
+                "frequency_evidence_ref": "fixture:frequency",
+                "frequency_hz": 1,
+                "manifest_ref": "sha256:0b5754b6d58401947949c976c3c5632ba59f527276598e9d7af5dacac4d60e4a",
+                "origin_count": 0,
+                "origin_ref": "fixture:origin",
+                "run_ref": "fixture:R3"
+              },
+              "external_binding_check_ref": "fixture:external-consistency-only",
+              "roles": [
+                {
+                  "generation_ref": "fixture:P:generation",
+                  "instance_ref": "fixture:P:instance",
+                  "process_evidence_ref": "fixture:P:process",
+                  "role": "P"
+                },
+                {
+                  "generation_ref": "fixture:S:generation",
+                  "instance_ref": "fixture:S:instance",
+                  "process_evidence_ref": "fixture:S:process",
+                  "role": "S"
+                },
+                {
+                  "generation_ref": "fixture:M:generation",
+                  "instance_ref": "fixture:M:instance",
+                  "process_evidence_ref": "fixture:M:process",
+                  "role": "M"
+                },
+                {
+                  "generation_ref": "fixture:Q:generation",
+                  "instance_ref": "fixture:Q:instance",
+                  "process_evidence_ref": "fixture:Q:process",
+                  "role": "Q"
+                }
+              ]
+            },
+            "latch": {
+              "errors": [
+                {
+                  "cause_ref": "fixture:owner:L01:fixture:epoch:L01:error:2",
+                  "evidence_ref": "fixture:L02:assess",
+                  "producer": {
+                    "generation_ref": "fixture:P:generation",
+                    "instance_ref": "fixture:P:instance",
+                    "process_evidence_ref": "fixture:P:process",
+                    "role": "P"
+                  },
+                  "reason": "DELIVERY_EXCEPTION",
+                  "run_ref": "fixture:R3"
+                }
+              ],
+              "producer": {
+                "generation_ref": "fixture:P:generation",
+                "instance_ref": "fixture:P:instance",
+                "process_evidence_ref": "fixture:P:process",
+                "role": "P"
+              },
+              "run_ref": "fixture:R3",
+              "stop_causes": []
+            }
+          },
+          "previous": {
+            "epoch_ref": "fixture:epoch:L01",
+            "owner_ref": "fixture:owner:L01",
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "version": 1
+          },
+          "ticket": {
+            "epoch_ref": "fixture:epoch:L01",
+            "owner_ref": "fixture:owner:L01",
+            "producer": {
+              "generation_ref": "fixture:P:generation",
+              "instance_ref": "fixture:P:instance",
+              "process_evidence_ref": "fixture:P:process",
+              "role": "P"
+            },
+            "run_ref": "fixture:R3",
+            "version": 2
+          }
+        },
+        "started": true
+      }
+    }
+  },
+  "expected": {
+    "expectation": "C0–C4=90,C5=B; DEADLINE_NOT_BEFORE/C5, owner DELIVERY_EXCEPTION; 부모 검증 headv0 유지, 자식 소비v1 구분; 이후 finish1·lifecycle2소비/2ACK·자식rc0 확인",
+    "expected_clock_stages": [
+      "C0",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "expected_reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT",
+    "expected_target_counts": {
+      "bound_ack_session.BoundAckSession.exchange": 1,
+      "bound_ack_session.BoundAckSession.verify_consumption": 1,
+      "evidence_admission.EvidenceAdmission.admit": 0,
+      "live_file_transport.BoundLiveSession.exchange": 1,
+      "live_file_transport.BoundLiveSession.verify_consumption": 1,
+      "live_file_transport.FileAckPorts.consumption": 1,
+      "live_file_transport.FileAckPorts.marker": 1,
+      "live_file_transport.FileAckPorts.reader": 1,
+      "receiver_bridge.ReceiverBridge.publish": 1,
+      "receiver_finish.publish_finish": 1,
+      "receiver_finish.validate_finish": 0,
+      "receiver_finish.wait_finish": 0,
+      "receiver_session.FileReceiverSession.start": 0,
+      "receiver_session.FileReceiverSession.stop_owned": 1,
+      "state_owner.StateOwner.assess_count": 1,
+      "state_owner.StateOwner.bootstrap": 0
+    },
+    "expected_transport_io": null,
+    "group": "live composition",
+    "id": "L02",
+    "input": "같은 인스턴스/B에서 v1 실제 소비·유효 ACK 후 합성 C5=100",
+    "kind": "SEALED_R3_CASE_FIXTURE",
+    "operating_deadlines": null,
+    "reserve": null,
+    "stage": "C5 refusal then separate lifecycle finish",
+    "synthetic_binding_only": true
+  },
+  "id": "L02",
+  "observed_reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT",
+  "status": "PASS",
+  "target_counts": {
+    "bound_ack_session.BoundAckSession.exchange": 1,
+    "bound_ack_session.BoundAckSession.verify_consumption": 1,
+    "evidence_admission.EvidenceAdmission.admit": 0,
+    "live_file_transport.BoundLiveSession.exchange": 1,
+    "live_file_transport.BoundLiveSession.verify_consumption": 1,
+    "live_file_transport.FileAckPorts.consumption": 1,
+    "live_file_transport.FileAckPorts.marker": 1,
+    "live_file_transport.FileAckPorts.reader": 1,
+    "receiver_bridge.ReceiverBridge.publish": 1,
+    "receiver_finish.publish_finish": 1,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 1,
+    "state_owner.StateOwner.assess_count": 1,
+    "state_owner.StateOwner.bootstrap": 0
+  }
+}

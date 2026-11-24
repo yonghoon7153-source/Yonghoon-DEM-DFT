@@ -1,0 +1,40 @@
+{
+  "id": "L02",
+  "group": "live composition",
+  "input": "같은 인스턴스/B에서 v1 실제 소비·유효 ACK 후 합성 C5=100",
+  "expectation": "C0–C4=90,C5=B; DEADLINE_NOT_BEFORE/C5, owner DELIVERY_EXCEPTION; 부모 검증 headv0 유지, 자식 소비v1 구분; 이후 finish1·lifecycle2소비/2ACK·자식rc0 확인",
+  "expected_reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT",
+  "stage": "C5 refusal then separate lifecycle finish",
+  "kind": "SEALED_R3_CASE_FIXTURE",
+  "synthetic_binding_only": true,
+  "operating_deadlines": null,
+  "reserve": null,
+  "expected_target_counts": {
+    "live_file_transport.FileAckPorts.marker": 1,
+    "live_file_transport.FileAckPorts.reader": 1,
+    "live_file_transport.FileAckPorts.consumption": 1,
+    "live_file_transport.BoundLiveSession.exchange": 1,
+    "live_file_transport.BoundLiveSession.verify_consumption": 1,
+    "bound_ack_session.BoundAckSession.exchange": 1,
+    "bound_ack_session.BoundAckSession.verify_consumption": 1,
+    "state_owner.StateOwner.bootstrap": 0,
+    "state_owner.StateOwner.assess_count": 1,
+    "receiver_bridge.ReceiverBridge.publish": 1,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_finish.publish_finish": 1,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 1,
+    "evidence_admission.EvidenceAdmission.admit": 0
+  },
+  "expected_clock_stages": [
+    "C0",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5"
+  ],
+  "expected_transport_io": null
+}
+

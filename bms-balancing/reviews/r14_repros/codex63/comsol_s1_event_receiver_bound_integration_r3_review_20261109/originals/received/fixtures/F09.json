@@ -1,0 +1,33 @@
+{
+  "id": "F09",
+  "group": "new finish validator",
+  "input": "정상 finish frame에서 session_ref 한 필드만 불일치",
+  "expectation": "FINISH_SESSION_MISMATCH; 정상 종료 승인0, 원 failure 유지; malformed fixture는 실제 자식에 전송하지 않음",
+  "expected_reason": "FINISH_SESSION_MISMATCH",
+  "stage": "finish binding",
+  "kind": "SEALED_R3_CASE_FIXTURE",
+  "synthetic_binding_only": true,
+  "operating_deadlines": null,
+  "reserve": null,
+  "expected_target_counts": {
+    "live_file_transport.FileAckPorts.marker": 0,
+    "live_file_transport.FileAckPorts.reader": 0,
+    "live_file_transport.FileAckPorts.consumption": 0,
+    "live_file_transport.BoundLiveSession.exchange": 0,
+    "live_file_transport.BoundLiveSession.verify_consumption": 0,
+    "bound_ack_session.BoundAckSession.exchange": 0,
+    "bound_ack_session.BoundAckSession.verify_consumption": 0,
+    "state_owner.StateOwner.bootstrap": 0,
+    "state_owner.StateOwner.assess_count": 0,
+    "receiver_bridge.ReceiverBridge.publish": 0,
+    "receiver_finish.validate_finish": 1,
+    "receiver_finish.wait_finish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "evidence_admission.EvidenceAdmission.admit": 0
+  },
+  "expected_clock_stages": [],
+  "expected_transport_io": null
+}
+

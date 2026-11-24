@@ -1,0 +1,29 @@
+{
+  "kind": "R3_FIRST_UNEXPECTED_ERROR",
+  "phase": "preservation_delivery",
+  "origin": "functions.exec JavaScript orchestration parser before any statement execution",
+  "observed_result": {
+    "error": "SyntaxError: Unexpected identifier 'r'",
+    "wall_time_seconds": 0
+  },
+  "target_session_completed_before_error": true,
+  "target_results": {
+    "PASS": 12,
+    "FAIL": 0,
+    "NOT_RUN": 0,
+    "parent_rc": 0,
+    "receiver_rc": 0
+  },
+  "failed_call_side_effects": 0,
+  "failed_call_apply_patch_executed": false,
+  "failed_call_package_script_created": false,
+  "failed_call_shell_execution": false,
+  "original_tool_chunk_id": null,
+  "original_process_rc": null,
+  "exact_error_monotonic_tick": null,
+  "automatic_fix_or_retry": 0,
+  "stop_action": "No further implementation/testing or retry of failed normal packaging call; preservation-only closeout follows.",
+  "full_procedure_compliance": false,
+  "native_ready": false,
+  "overall": "INCOMPLETE"
+}

@@ -1,0 +1,48 @@
+{
+  "normal_live_completions": 1,
+  "verification": "Exact member set, safe case-unique paths, decompressed sizes/SHA256 matched. CRC32 not independently recomputed.",
+  "boundary": "After archive readback and selected input rehash; before receipt write/readback and tool return.",
+  "usable": false,
+  "overall": "INCOMPLETE",
+  "failed_call_retry": 0,
+  "normal_gate": "INCOMPLETE",
+  "contract_adopted": false,
+  "native_ready": false,
+  "child_rc": 0,
+  "archive": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\delivery\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_RESULT_AND_DELIVERY_STOP_20261108.zip",
+    "bytes": 252451,
+    "sha256": "f0b118bd6320eea7ecaf26bb81b59f0b20992603ae5e4aa218c25fcaf9122184"
+  },
+  "recipient": null,
+  "original_source_copies": 12,
+  "sealed_inputs_preserved": 63,
+  "kind": "R3_RESULT_AND_DELIVERY_STOP_RECEIPT",
+  "selected_inputs_preserved": 185,
+  "entries": 157,
+  "normal_packaging_attempt_executed": false,
+  "payload_count": 156,
+  "functional_counts": {
+    "FAIL": 0,
+    "NOT_RUN": 0,
+    "PASS": 12
+  },
+  "full_procedure_compliance": false,
+  "closeout_scope": "Preserve already completed results and orchestration error only",
+  "manifest": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\PACKAGE_MANIFEST.json",
+    "bytes": 26380,
+    "sha256": "6b08fafe63b0c5d467da19932724898b141039ac672d1c57be54251437ee1459"
+  },
+  "parent_rc": 0,
+  "snapshot": {
+    "bytes_limit": 52428800,
+    "delivery_limit": 600,
+    "whole_limit": 3600,
+    "root_bytes": 1418870.0,
+    "whole_snapshot_seconds": 1469.8071462,
+    "delivery_snapshot_seconds": 348.3361231
+  },
+  "first_error_preserved": true,
+  "approved": false
+}

@@ -1,0 +1,272 @@
+"""Inactive event-clock candidate; consumes supplied facts, performs no I/O.
+
+Reference equality is not authentication, clock observation, IPC atomicity or
+permission to dispatch. This source is intentionally stored as inactive text.
+It has not been imported, executed, tested or connected to a production parent.
+"""
+
+from dataclasses import dataclass
+from fractions import Fraction
+
+from exact_time import CoreError, WaitAssessment, assess_wait, exact_seconds
+
+
+def _ref(value: str, field: str) -> None:
+    if type(value) is not str or not value.strip():
+        raise CoreError("MISSING_REFERENCE:" + field)
+
+
+@dataclass(frozen=True)
+class ClockIdentity:
+    run_ref: str
+    manifest_ref: str
+    clock_ref: str
+    domain_ref: str
+    boot_evidence_ref: str
+    environment_evidence_ref: str
+    api_abi_evidence_ref: str
+    origin_ref: str
+    origin_count: int
+    frequency_evidence_ref: str
+    frequency_hz: int
+    comparison_contract_ref: str
+
+    def __post_init__(self) -> None:
+        for name in (
+            "run_ref", "manifest_ref", "clock_ref", "domain_ref",
+            "boot_evidence_ref", "environment_evidence_ref",
+            "api_abi_evidence_ref", "origin_ref", "frequency_evidence_ref",
+            "comparison_contract_ref",
+        ):
+            _ref(getattr(self, name), name)
+        # Validates exact signed counts/frequency without reading a real clock.
+        exact_seconds(self.origin_count, self.origin_count, self.frequency_hz)
+
+
+@dataclass(frozen=True)
+class RoleIdentity:
+    role: str
+    instance_ref: str
+    generation_ref: str
+    process_evidence_ref: str
+
+    def __post_init__(self) -> None:
+        if type(self.role) is not str or self.role not in ("P", "S", "M", "Q"):
+            raise CoreError("UNKNOWN_ROLE")
+        for name in ("instance_ref", "generation_ref", "process_evidence_ref"):
+            _ref(getattr(self, name), name)
+
+
+@dataclass(frozen=True)
+class ExpectedBinding:
+    clock: ClockIdentity
+    roles: tuple[RoleIdentity, ...]
+    external_binding_check_ref: str
+
+    def __post_init__(self) -> None:
+        if type(self.clock) is not ClockIdentity:
+            raise CoreError("CLOCK_IDENTITY_TYPE")
+        if type(self.roles) is not tuple or any(
+            type(role) is not RoleIdentity for role in self.roles
+        ):
+            raise CoreError("ROLE_SET_TYPE")
+        if len(self.roles) != 4 or {role.role for role in self.roles} != {
+            "P", "S", "M", "Q"
+        }:
+            raise CoreError("ROLE_SET_INCOMPLETE_OR_DUPLICATE")
+        if len({role.instance_ref for role in self.roles}) != 4:
+            raise CoreError("ROLE_INSTANCE_DUPLICATE")
+        _ref(self.external_binding_check_ref, "external_binding_check_ref")
+
+
+@dataclass(frozen=True)
+class SuppliedCount:
+    observation_ref: str
+    clock: ClockIdentity
+    producer: RoleIdentity
+    raw_count: int
+    unit: str
+    observed_stage: str
+    stage_binding_evidence_ref: str
+    purpose_ref: str
+    api_success: bool
+    output_valid: bool
+
+
+@dataclass(frozen=True)
+class BoundTime:
+    """Exact arithmetic plus the original supplied evidence; not an OS proof."""
+
+    source: SuppliedCount
+    seconds_from_run_origin: Fraction
+    external_binding_check_ref: str
+
+
+def compare_supplied_count(
+    expected: ExpectedBinding, supplied: SuppliedCount
+) -> BoundTime:
+    if type(expected) is not ExpectedBinding or type(supplied) is not SuppliedCount:
+        raise CoreError("BINDING_INPUT_TYPE")
+    for name in (
+        "observation_ref", "observed_stage", "stage_binding_evidence_ref",
+        "purpose_ref",
+    ):
+        _ref(getattr(supplied, name), name)
+    if type(supplied.clock) is not ClockIdentity or supplied.clock != expected.clock:
+        raise CoreError("CLOCK_BINDING_MISMATCH")
+    if type(supplied.producer) is not RoleIdentity or supplied.producer not in expected.roles:
+        raise CoreError("ROLE_GENERATION_BINDING_MISMATCH")
+    if type(supplied.unit) is not str or supplied.unit != "QPC_COUNT":
+        raise CoreError("CLOCK_UNIT_MISMATCH")
+    if supplied.api_success is not True or supplied.output_valid is not True:
+        raise CoreError("COUNT_UNAVAILABLE_OR_INVALID")
+    elapsed = exact_seconds(
+        supplied.raw_count, expected.clock.origin_count, expected.clock.frequency_hz
+    )
+    return BoundTime(supplied, elapsed, expected.external_binding_check_ref)
+
+
+@dataclass(frozen=True)
+class Cause:
+    cause_ref: str
+    producer: RoleIdentity
+    run_ref: str
+    reason: str
+    evidence_ref: str
+
+    def __post_init__(self) -> None:
+        if type(self.producer) is not RoleIdentity:
+            raise CoreError("CAUSE_PRODUCER_TYPE")
+        for name in ("cause_ref", "run_ref", "reason", "evidence_ref"):
+            _ref(getattr(self, name), name)
+
+
+@dataclass(frozen=True)
+class FailureLatch:
+    """Immutable producer-local history. No reset or global-first assertion."""
+
+    producer: RoleIdentity
+    run_ref: str
+    errors: tuple[Cause, ...] = ()
+    stop_causes: tuple[Cause, ...] = ()
+
+    def __post_init__(self) -> None:
+        if type(self.producer) is not RoleIdentity:
+            raise CoreError("LATCH_PRODUCER_TYPE")
+        _ref(self.run_ref, "run_ref")
+        for collection in (self.errors, self.stop_causes):
+            if type(collection) is not tuple:
+                raise CoreError("CAUSE_COLLECTION_TYPE")
+            for cause in collection:
+                self._check(cause)
+            if len({cause.cause_ref for cause in collection}) != len(collection):
+                raise CoreError("CAUSE_REFERENCE_DUPLICATE")
+        # One event may be both the first error and the first stop cause, but
+        # the same reference must never name two different facts.
+        refs: dict[str, Cause] = {}
+        for cause in self.errors + self.stop_causes:
+            if cause.cause_ref in refs and refs[cause.cause_ref] != cause:
+                raise CoreError("CAUSE_REFERENCE_CONFLICT")
+            refs[cause.cause_ref] = cause
+
+    def _check(self, cause: Cause) -> None:
+        if type(cause) is not Cause:
+            raise CoreError("CAUSE_TYPE")
+        if cause.producer != self.producer or cause.run_ref != self.run_ref:
+            raise CoreError("CAUSE_OWNER_OR_RUN_MISMATCH")
+
+    def _append(self, cause: Cause, stopping: bool) -> "FailureLatch":
+        self._check(cause)
+        for previous in self.errors + self.stop_causes:
+            if previous.cause_ref == cause.cause_ref and previous != cause:
+                raise CoreError("CAUSE_REFERENCE_CONFLICT")
+        target = self.stop_causes if stopping else self.errors
+        if cause in target:
+            return self
+        if stopping:
+            return FailureLatch(self.producer, self.run_ref, self.errors, target + (cause,))
+        return FailureLatch(self.producer, self.run_ref, target + (cause,), self.stop_causes)
+
+    def record_error(self, cause: Cause) -> "FailureLatch":
+        return self._append(cause, stopping=False)
+
+    def record_stop_cause(self, cause: Cause) -> "FailureLatch":
+        return self._append(cause, stopping=True)
+
+    @property
+    def first_error(self) -> Cause | None:
+        return self.errors[0] if self.errors else None
+
+    @property
+    def first_stop_cause(self) -> Cause | None:
+        return self.stop_causes[0] if self.stop_causes else None
+
+    def require_local_normal_path_clear(self) -> None:
+        # Passing this local check is necessary only. It grants no normal-call,
+        # monitoring, failure-write, stop, dispatch or runtime authority.
+        if self.errors or self.stop_causes:
+            raise CoreError("LOCAL_NORMAL_PATH_LATCHED")
+
+    def preserve_on_late_success_or_resume(self) -> "FailureLatch":
+        return self
+
+
+@dataclass(frozen=True)
+class OwnedClockCore:
+    """Pure input assessment for one role; caller must retain returned state.
+
+    There are no callbacks and thus no clock/writer/readback/OS calls to fire
+    after a latch. Cross-role synchronization and durable state remain OPEN.
+    """
+
+    binding: ExpectedBinding
+    latch: FailureLatch
+
+    def __post_init__(self) -> None:
+        if type(self.binding) is not ExpectedBinding or type(self.latch) is not FailureLatch:
+            raise CoreError("CORE_INPUT_TYPE")
+        if self.latch.producer not in self.binding.roles:
+            raise CoreError("CORE_PRODUCER_MISMATCH")
+        if self.latch.run_ref != self.binding.clock.run_ref:
+            raise CoreError("CORE_RUN_MISMATCH")
+
+    def _failed(
+        self, reason: str, cause_ref: str, evidence_ref: str
+    ) -> "OwnedClockCore":
+        cause = Cause(cause_ref, self.latch.producer, self.latch.run_ref, reason, evidence_ref)
+        return OwnedClockCore(self.binding, self.latch.record_error(cause))
+
+    def assess_normal_count(
+        self, supplied: SuppliedCount, failure_cause_ref: str, failure_evidence_ref: str
+    ) -> tuple["OwnedClockCore", BoundTime | None, str | None]:
+        # Failure references identify supplied evidence. No clock/writer is
+        # invoked to obtain a new timestamp or repair rejected evidence.
+        self.latch.require_local_normal_path_clear()
+        _ref(failure_cause_ref, "failure_cause_ref")
+        _ref(failure_evidence_ref, "failure_evidence_ref")
+        try:
+            value = compare_supplied_count(self.binding, supplied)
+        except CoreError as error:
+            return self._failed(str(error), failure_cause_ref, failure_evidence_ref), None, str(error)
+        return self, value, None
+
+    def assess_wait_numbers(
+        self, candidate_ms: int, remaining: Fraction, reserve: Fraction | None,
+        failure_cause_ref: str, failure_evidence_ref: str,
+    ) -> tuple["OwnedClockCore", WaitAssessment | None, str | None]:
+        """Check supplied numbers, never actual receive admission or dispatch.
+
+        Remaining-time provenance, entry freshness, the complete obligation
+        set, ownership and peer state still require an unimplemented adapter.
+        Rejected candidates latch locally; no automatic shorter-wait retry.
+        """
+        self.latch.require_local_normal_path_clear()
+        _ref(failure_cause_ref, "failure_cause_ref")
+        _ref(failure_evidence_ref, "failure_evidence_ref")
+        try:
+            result = assess_wait(candidate_ms, remaining, reserve)
+        except CoreError as error:
+            return self._failed(str(error), failure_cause_ref, failure_evidence_ref), None, str(error)
+        if not result.arithmetic_within_limits:
+            return self._failed(result.reason, failure_cause_ref, failure_evidence_ref), result, result.reason
+        return self, result, None

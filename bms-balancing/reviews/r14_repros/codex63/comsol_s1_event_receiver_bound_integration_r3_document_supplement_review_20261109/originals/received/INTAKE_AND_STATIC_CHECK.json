@@ -1,0 +1,22 @@
+{
+  "review_entries": 175,
+  "review_archive": {
+    "path": "C:\\Users\\BML\\Desktop\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_REVIEW_20261109.zip",
+    "bytes": 560393,
+    "sha256": "d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971"
+  },
+  "child_module_count": 7,
+  "kind": "R3_DOCUMENT_SUPPLEMENT_STATIC_CHECK",
+  "review_verification": "Exact member set, safe case-unique paths/nonlink metadata, sizes/SHA256 checked. CRC32 not independently recomputed.",
+  "elapsed_claim": null,
+  "tests": 0,
+  "numeric_budget_seconds": null,
+  "original_r3_files": 165,
+  "preserved_seal_files": 63,
+  "OS_Job_CIM_COMSOL": 0,
+  "code_import_execution": 0,
+  "scope": "Only document correction and data/byte inspection.",
+  "old_budget_reuse": false,
+  "review_payloads": 174,
+  "parent_module_count": 13
+}

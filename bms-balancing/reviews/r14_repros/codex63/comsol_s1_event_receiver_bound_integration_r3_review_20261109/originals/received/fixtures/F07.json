@@ -1,0 +1,40 @@
+{
+  "id": "F07",
+  "group": "new file ports",
+  "input": "fake transport timer가 고정 대기 상한에 도달한 뒤 late marker 제시",
+  "expectation": "첫 ACK_TRANSPORT_TIMEOUT 유지; 재진입 이후 추가 publish/poll/read0; 실제 sleep/child0",
+  "expected_reason": "ACK_TRANSPORT_TIMEOUT",
+  "stage": "transport wait boundary and latched repeat",
+  "kind": "SEALED_R3_CASE_FIXTURE",
+  "synthetic_binding_only": true,
+  "operating_deadlines": null,
+  "reserve": null,
+  "expected_target_counts": {
+    "live_file_transport.FileAckPorts.marker": 2,
+    "live_file_transport.FileAckPorts.reader": 1,
+    "live_file_transport.FileAckPorts.consumption": 0,
+    "live_file_transport.BoundLiveSession.exchange": 0,
+    "live_file_transport.BoundLiveSession.verify_consumption": 0,
+    "bound_ack_session.BoundAckSession.exchange": 0,
+    "bound_ack_session.BoundAckSession.verify_consumption": 0,
+    "state_owner.StateOwner.bootstrap": 0,
+    "state_owner.StateOwner.assess_count": 0,
+    "receiver_bridge.ReceiverBridge.publish": 0,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "evidence_admission.EvidenceAdmission.admit": 0
+  },
+  "expected_clock_stages": [],
+  "expected_transport_io": {
+    "request_writes": 1,
+    "request_markers": 1,
+    "polls": 0,
+    "ack_reads": 0,
+    "reader_calls": 0,
+    "consumption_reads": 0
+  }
+}
+

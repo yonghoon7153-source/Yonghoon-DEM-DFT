@@ -1,0 +1,10 @@
+{
+  "kind": "ACTUAL_R3_STOP_RECORD_TOOL_RETURN",
+  "tool_result": {
+    "chunk_id": "43e5fb",
+    "wall_time_seconds": 1.5782547,
+    "exit_code": 0,
+    "original_token_count": 27,
+    "output": "{\r\n  \"whole_seconds\": 1410.9016362,\r\n  \"delivery_seconds\": 289.4340613,\r\n  \"first_error_exists\": true\r\n}\r\n"
+  }
+}

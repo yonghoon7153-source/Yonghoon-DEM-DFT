@@ -1,0 +1,40 @@
+COMSOL S1 receiver–bound ACK 통합 R3 문서 보충 검토
+2026-11-09
+
+판정: DOCUMENT_SUPPLEMENT_ACCEPTED_RBI_R1_READY_01_CLOSED
+
+1. 문서 지적 종결
+
+RBI_R3_C1_COUNT_WORDING의 총 12개(F01–F10 오프라인 10개, L01–L02 실제 연결 2개), 정상 실제 전달 완료 1회가 본문과 짧은 회신에 명시돼 있습니다. L02에서 수신자가 v1을 소비했지만 부모 검증 head는 v0에 머물며, 합성 C5=100=B의 DEADLINE_NOT_BEFORE/C5와 owner DELIVERY_EXCEPTION이 정상 자식 종료로 해제되지 않는다는 설명도 유지됐습니다. 문서 종결을 수용하며 기능 결과의 범위를 넓히지 않습니다.
+
+RBI_R1_READY_01의 잔여 항목도 종결합니다. INPUT_READ_VS_LOAD_ROLES의 63행은 PRESEAL.files와 path/bytes/SHA가 같고 모두 부모·자식 runtime_support.initialize를 식별 읽기 소비자로 적습니다. engine은 별도 공통 읽기 대상으로, PRESEAL 자체는 자기 봉인 63개에 포함되지 않는 제어 입력으로 구분합니다. CONFIG 최초 읽기와 SOURCE_MANIFEST 추가 SHA 확인도 별도로 기술합니다.
+
+기존 runtime_support.py의 NAMES/CHILD_NAMES를 AST 데이터로만 읽어 부모 13개·자식 7개의 정확한 순서와 각 행의 load_target_roles를 대조했습니다. 공통 6개, 서로 다른 모듈 14개가 일치합니다. 보존된 receiver_worker.py.inactive.txt는 해시 확인 대상이지만 이번 load_target 대상이 아니고, 새 receiver_worker_candidate만 자식 로딩 대상입니다. 이 관계를 실행 허용 확대나 보안 격리 보증으로 쓰지 않은 점도 적절합니다.
+
+run.py는 runtime_support/harness_cases를 import한 뒤 initialize('parent')를 호출하고, receiver_entry.py는 runtime_support import 후 initialize('child')를 호출합니다. 본문은 이 bootstrap/harness import와 load_target을 구분하며, 모든 코드 로딩이 봉인 검사 뒤에만 일어난다는 잘못된 주장을 하지 않습니다. audit hook 전 PRESEAL/CONFIG 읽기도 설명합니다. 소스 해당 구간과 역할표에 모순이 없습니다.
+
+2. 원본·기록 연결
+
+보충 ZIP 31,567 B / SHA-256 2ca5367dd12ffe473cb53c69294c61d873cd5686867be84a15a6f78be3fedb14. 9 payload+manifest 10개에 대해 정확 집합, 안전한 상대경로, 대소문자 중복 없음, 비링크 메타데이터, 압축 해제 크기/SHA와 별도 CRC32를 확인했습니다. 새 소스/시험/실행 결과를 포함한 패키지가 아니라 별도 문서 보충입니다.
+
+영수증 원파일은 55,075 B / SHA-256 b55467479e4743860cefaabe79c09c1cb89060c7b0cc821f2dcf712b51c9a428이며 ZIP/manifest 식별과 맞습니다. BEFORE/AFTER/영수증 POST의 선택 166행은 동일합니다. 원 R3 폴더의 165개 식별과 이전 검토 ZIP 1개의 식별 모두 이 검토 기기에 있는 대응 보존 바이트와 연결됩니다. 이 중 이전 마지막 반환 원파일은 이번 보충 ZIP에서 새로 수신했습니다. 이는 원격 BML 경로의 현재 파일 또는 전체 시스템을 재측정했다는 뜻이 아니며, 이전 선택 185개 등 겹치는 집합과 합산하지 않습니다.
+
+역할표의 근거 참조 10개는 대응 바이트와 일치합니다. PRESEAL, FIRST_ERROR, 결과, 실행 반환, 원 READY_INPUTS/COMPLETION은 그대로입니다. basis/RECEIVED_CODEX_REPLY_KO.txt는 이전 검토자의 회신 원파일과 바이트까지 같습니다. 이전 검토 ZIP 560,393 B / SHA d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971의 식별도 일치합니다.
+
+3. 도구 반환의 수신 범위
+
+basis/R3_DELIVERY_TRANSPORT_TOOL_RETURN.json은 1,278 B / SHA-256 92d88b62c0cece6c0dca8781d3b89f408b64b8fa3d84ff1ea4dd8a402470d1d1입니다. 633768의 metadata와 output을 이전 채팅 전사와 의미 대조했고, 가리키는 DELIVERY_RECORDS 원파일 식별도 일치합니다. 이전 회신의 '원파일 미수신' 한계는 이번 수신으로 보완됐습니다. 과거 도구 실행의 독립 인증으로 확대하지 않습니다.
+
+이번 e0e7e1 포장 반환은 사용자 채팅 전사로만 받았습니다. ZIP/manifest/영수증의 크기·SHA와 전사의 식별이 맞는다는 범위로 기록하며, PACKAGE_TOOL_RETURN.json 원파일 바이트를 받았다고 표시하지 않습니다. 새 전체 작업 시간이나 과거 예산 준수 주장은 하지 않습니다. 이 제한은 이번 문서 지적 종결을 막지 않습니다.
+
+4. 검토자 처리 기록
+
+검토자 보조 도구는 출력 복사 경로가 260자에 도달한 문제와 delivery/PHASE_ORIGIN.json의 로컬 대응 위치를 잘못 가정한 문제로 각각 한 번 중단됐습니다. 두 원 반환을 REVIEWER_TOOL_ERROR와 REVIEWER_MAPPING_ERROR에 보존했고, 출력 폴더를 짧게 바꾸고 이미 수신된 정확 상대경로를 먼저 사용하는 방식으로 정정했습니다. 원본 수신 바이트나 대상 기능 결과의 오류가 아니며 대상 실행·재시험·송신자 중지 작업 재개도 아닙니다. 최종 정적 대조는 완료됐습니다.
+
+5. 유지 상태와 후속 경계
+
+기존 한정 기능 수용은 유지하고, 검증 후 전달 준비 구문 오류와 전체 절차 PASS 불인정을 유지합니다. 문서 지적 종결만으로 준비 절차 전체 준수나 운영 준비 완료를 인정하지 않습니다. 계약 미채택, native_ready/approved/usable=false, 전체·정상 gate INCOMPLETE, 네 운영 기한/reserve=null, JOB_CURRENT_COMMIT 및 기존 운영 OPEN은 그대로입니다.
+
+운영 clock/role/freshness, 실제 동시성, 복구/내구성, 막힌 callback/잔류 Q, C4/C5 뒤 물리 완료, ResourceSession/Parent, OS/Job/COMSOL 검증은 여전히 별개입니다. 이번 보충에 대한 추가 정정·원본 재포장·재시험 요구는 없습니다. 새 구현·시험·재개는 이 문서 회신으로 승인되지 않습니다.
+
+이번 검토는 기존 문서·소스 텍스트/AST·JSON·ZIP과 해시 대조 및 검토 산출물 작성에 한정했습니다. 받은 코드 import/실행·기능시험·수신자·OS/Job/CIM·COMSOL·외부 발송은 0입니다.

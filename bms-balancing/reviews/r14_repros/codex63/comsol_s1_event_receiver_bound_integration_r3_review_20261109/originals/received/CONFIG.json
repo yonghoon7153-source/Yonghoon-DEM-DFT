@@ -1,0 +1,48 @@
+{
+  "kind": "R3_12_CASE_CONFIG",
+  "root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R3_20261108",
+  "engine": {
+    "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "bytes": 107312,
+    "sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea"
+  },
+  "session_ref": "receiver_bound_integration_R3_20261108_001",
+  "case_ref": "R01",
+  "receiver_ref": "receiver:integration",
+  "parent_argv": [
+    "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-I",
+    "-B",
+    "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation\\run.py"
+  ],
+  "parent_cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation",
+  "child_entry": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation\\receiver_entry.py",
+  "child_cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R3_20261108",
+  "parent_limit": 180,
+  "child_limit": 120,
+  "case_ids": [
+    "F01",
+    "F02",
+    "F03",
+    "F04",
+    "F05",
+    "F06",
+    "F07",
+    "F08",
+    "F09",
+    "F10",
+    "L01",
+    "L02"
+  ],
+  "source": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source",
+  "arena": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena",
+  "results": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\results",
+  "requests": 2,
+  "finish": 1,
+  "native_ready": false,
+  "contract_adopted": false,
+  "approved": false,
+  "usable": false,
+  "operating_deadlines": null,
+  "reserve": null
+}

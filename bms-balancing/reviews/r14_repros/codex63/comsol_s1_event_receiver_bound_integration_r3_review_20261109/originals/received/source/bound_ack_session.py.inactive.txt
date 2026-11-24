@@ -1,0 +1,432 @@
+"""Inactive, fixture-only ACK/owner composition with an immutable boundary.
+
+All observations and receiver responses are supplied memory callbacks. There
+is no clock read, request transmission, process inspection or consumption-file
+read here. C4/C5 constrain their observations, not later physical bridge/owner
+assignments. Public owner views are observed; owner state is never replaced.
+"""
+from dataclasses import dataclass
+from fractions import Fraction
+from pathlib import PurePath
+import json
+
+from deadline_receive import BoundReceiveSession, ReceiveError
+from event_clock_core import ExpectedBinding, SuppliedCount, compare_supplied_count
+from exact_time import CoreError, assess_completion
+from receiver_protocol import (
+    FRAME_MAX, RECORD_MAX, ProtocolError, canonical_bytes, digest,
+    is_ref, parse_ack, parse_request, ticket_to_wire, validate_ack,
+)
+from state_owner import Snapshot, StateOwner
+
+
+class BoundAckError(RuntimeError):
+    def __init__(self, reason, stage, first_reason=None):
+        self.reason = reason
+        self.stage = stage
+        self.first_reason = reason if first_reason is None else first_reason
+        super().__init__(reason + " at " + stage)
+
+
+class ConsumptionUnavailable(RuntimeError):
+    """Declared fixture callback failure, without an actual receiver read."""
+
+
+@dataclass(frozen=True)
+class FailureFact:
+    reason: str
+    stage: str
+    cause_type: str | None = None
+    cause_text: str | None = None
+
+
+@dataclass(frozen=True)
+class Exchange:
+    request: dict
+    raw_ack: bytes
+
+
+@dataclass(frozen=True)
+class _Context:
+    admission: object
+    expected: ExpectedBinding
+    boundary: Fraction
+    session_ref: str
+    receiver_pid: int
+
+
+@dataclass(frozen=True)
+class _Pending:
+    snapshot: Snapshot
+    request_raw: bytes
+    raw_ack: bytes
+
+
+class BoundAckSession:
+    """One owner, fixed B, persistent count history and a permanent first error.
+
+    clock_port(stage) -> SuppliedCount
+    marker_port(request_raw) -> None or {bytes, sha256}
+    reader_port(request_raw, marker) -> original ACK bytes
+    consumption_port(original_ack_raw) -> consumption-frame bytes
+
+    A fresh BoundReceiveSession is used once for each constructed request.
+    The outer state is neither reset nor reconstructed between requests.
+    """
+    def __init__(self, admission, boundary, session_ref, receiver_pid,
+                 clock_port, marker_port, reader_port, consumption_port):
+        if (getattr(admission, "reason", None) != "SYNTHETIC_BINDING_ADMITTED"
+                or getattr(admission, "fixture_only", None) is not True
+                or getattr(admission, "operational", None) is not False
+                or type(getattr(admission, "expected", None)) is not ExpectedBinding
+                or type(getattr(admission, "supplied", None)) is not SuppliedCount):
+            raise BoundAckError("ADMISSION_REQUIRED", "init")
+        if type(boundary) is not Fraction:
+            raise BoundAckError("EXACT_BOUNDARY_REQUIRED", "init")
+        if not is_ref(session_ref):
+            raise BoundAckError("SESSION_REFERENCE_INVALID", "init")
+        if type(receiver_pid) is not int or receiver_pid <= 0:
+            raise BoundAckError("RECEIVER_PID_INVALID", "init")
+        if not all(callable(port) for port in (
+                clock_port, marker_port, reader_port, consumption_port)):
+            raise BoundAckError("PORT_REQUIRED", "init")
+        self._context = _Context(admission, admission.expected, boundary,
+                                 session_ref, receiver_pid)
+        self._clock = clock_port
+        self._marker = marker_port
+        self._reader = reader_port
+        self._consumption = consumption_port
+        self._owner = None
+        self._owner_identity = None
+        self._active_snapshot = None
+        self._pending = None
+        self._first = None
+        self._busy = False
+        self._last_raw_count = None
+        self._required_times = ()
+        self._request_count = 0
+        self._requests = ()
+        self._exchange_entries = 0
+        self._last_invocation = None
+        self._trace = []
+
+    @property
+    def boundary(self):
+        return self._context.boundary
+
+    @property
+    def receiver_pid(self):
+        return self._context.receiver_pid
+
+    def is_alive(self):
+        """Fixed synthetic fixture value; no process-liveness evidence."""
+        return True
+
+    @property
+    def first_failure(self):
+        return self._first
+
+    @property
+    def trace(self):
+        return tuple(dict(row) for row in self._trace)
+
+    @property
+    def request_count(self):
+        return self._request_count
+
+    @property
+    def requests(self):
+        """Immutable canonical request buffers, including failed exchanges."""
+        return self._requests
+
+    @property
+    def exchange_entries(self):
+        return self._exchange_entries
+
+    @property
+    def last_invocation(self):
+        return self._last_invocation
+
+    def _record(self, event, stage, **values):
+        self._trace.append({"source": "adapter", "event": event,
+                            "stage": stage, "request_index": self._request_count,
+                            **values})
+
+    def _fail(self, reason, stage, cause=None):
+        if self._first is None:
+            self._first = FailureFact(reason, stage,
+                None if cause is None else type(cause).__name__,
+                None if cause is None else str(cause))
+            self._record("FIRST_FAILURE", stage, reason=reason)
+        raise BoundAckError(self._first.reason, self._first.stage,
+                            self._first.reason) from cause
+
+    def _clear(self):
+        if self._first is not None:
+            raise BoundAckError(self._first.reason, self._first.stage,
+                                self._first.reason)
+
+    @staticmethod
+    def _identity(snapshot):
+        ticket = snapshot.ticket
+        return (ticket.owner_ref, ticket.epoch_ref, ticket.run_ref,
+                ticket.producer, snapshot.core.binding)
+
+    def bind_owner(self, owner):
+        self._clear()
+        if self._owner is not None:
+            self._fail("OWNER_ALREADY_BOUND", "bind_owner")
+        if type(owner) is not StateOwner:
+            self._fail("OWNER_TYPE_INVALID", "bind_owner")
+        view = owner.view
+        latch = view.snapshot.core.latch
+        if (view.started or view.busy
+                or view.snapshot.ticket.version != 0
+                or view.snapshot.previous is not None
+                or view.snapshot.core.binding != self._context.expected
+                or latch.first_error or latch.first_stop_cause):
+            self._fail("OWNER_INITIAL_BINDING_MISMATCH", "bind_owner")
+        self._owner = owner
+        self._owner_identity = self._identity(view.snapshot)
+        self._record("OWNER_BOUND", "bind_owner")
+
+    def _owner_guard(self, stage):
+        self._clear()
+        if self._owner is None:
+            self._fail("OWNER_UNBOUND", stage)
+        view = self._owner.view
+        latch = view.snapshot.core.latch
+        if (self._active_snapshot is None
+                or view.snapshot is not self._active_snapshot
+                or self._identity(view.snapshot) != self._owner_identity
+                or not view.busy
+                or latch.first_error or latch.first_stop_cause):
+            self._fail("OWNER_CHANGED_DURING_ACK", stage)
+
+    def _port(self, function, stage, failure_reason, *args):
+        self._owner_guard(stage)
+        self._record("PORT_CALL", stage)
+        try:
+            result = function(*args)
+        except Exception as error:
+            # A callback may have changed the owner before raising. No clock
+            # is called to compensate for a missing or failed observation.
+            self._owner_guard(stage + "_return")
+            reason = ("CONSUMPTION_UNAVAILABLE"
+                      if stage == "CONSUMPTION_READ"
+                      and isinstance(error, ConsumptionUnavailable)
+                      else failure_reason)
+            self._fail(reason, stage, error)
+        self._owner_guard(stage + "_return")
+        self._record("PORT_RETURN", stage + "_return")
+        return result
+
+    def _observe(self, stage):
+        """Validate binding/history; C0-C3 deadlines belong to the helper."""
+        self._owner_guard(stage)
+        self._record("CLOCK_CALL", stage)
+        try:
+            supplied = self._clock(stage)
+        except Exception as error:
+            self._owner_guard(stage + "_return")
+            self._fail("CLOCK_UNAVAILABLE", stage, error)
+        self._owner_guard(stage + "_return")
+        try:
+            bound = compare_supplied_count(self._context.expected, supplied)
+        except CoreError as error:
+            self._fail("COUNT_BINDING_REJECTED", stage, error)
+        if supplied.observed_stage != stage:
+            self._fail("COUNT_STAGE_MISMATCH", stage)
+        self._record("COUNT_BOUND", stage, raw_count=supplied.raw_count)
+        if self._last_raw_count is not None and supplied.raw_count < self._last_raw_count:
+            self._fail("CLOCK_REGRESSION", stage)
+        self._last_raw_count = supplied.raw_count
+        self._required_times += (bound.seconds_from_run_origin,)
+        return supplied
+
+    def _checkpoint(self, stage):
+        self._observe(stage)
+        try:
+            assessment = assess_completion(self.boundary, self._required_times)
+        except CoreError as error:
+            self._fail("COMPLETION_INPUT_REJECTED", stage, error)
+        self._record("COMPLETION_ASSESSED", stage,
+                     within=assessment.arithmetic_within_limits)
+        if not assessment.arithmetic_within_limits:
+            self._fail("DEADLINE_NOT_BEFORE", stage)
+        self._owner_guard(stage + "_complete")
+
+    def _request(self, case_ref, snapshot, channel, receiver_ref,
+                 path, previous_digest, file_digest):
+        if case_ref != "R01" or channel != "normal_delivery":
+            self._fail("FIXTURE_NORMAL_REQUEST_REQUIRED", "REQUEST_BUILD")
+        if self._request_count >= 2:
+            self._fail("REQUEST_LIMIT", "REQUEST_BUILD")
+        index = self._request_count + 1
+        expected_parts = (case_ref, channel, "v%012d.json" % snapshot.ticket.version)
+        # This is a lexical comparison only. No path is resolved or opened.
+        if tuple(PurePath(path).parts[-3:]) != expected_parts:
+            self._fail("REQUEST_PATH_INVALID", "REQUEST_BUILD")
+        request = {
+            "kind": "RECEIVER_REQUEST_V1",
+            "session_ref": self._context.session_ref,
+            "case_ref": case_ref,
+            "handoff_ref": self._context.session_ref + ":handoff:%04d" % index,
+            "request_index": index,
+            "ticket": ticket_to_wire(snapshot.ticket),
+            "channel": channel,
+            "receiver_ref": receiver_ref,
+            "record_relpath": "/".join(expected_parts),
+            "record_sha256": file_digest,
+            "previous_digest": previous_digest,
+        }
+        raw = canonical_bytes(request)
+        parse_request(raw)
+        self._request_count = index
+        self._requests += (raw,)
+        self._record("REQUEST_BOUND", "REQUEST_BUILD", bytes=len(raw),
+                     sha256=digest(raw))
+        return request, raw
+
+    def exchange(self, case_ref, snapshot, channel, receiver_ref,
+                 path, previous_digest, file_digest):
+        self._exchange_entries += 1
+        self._last_invocation = (case_ref, snapshot, channel, receiver_ref,
+                                 path, previous_digest, file_digest)
+        self._record("ENTRY", "exchange_entry", entry=self._exchange_entries)
+        if self._first is not None:
+            raise BoundAckError("ACK_SESSION_LATCHED", "exchange_entry",
+                                self._first.reason)
+        if self._busy:
+            self._fail("REENTRANT_ACK_REQUEST", "exchange_entry")
+        if self._pending is not None:
+            self._fail("CONSUMPTION_NOT_VERIFIED", "exchange_entry")
+        if type(snapshot) is not Snapshot:
+            self._fail("SNAPSHOT_TYPE_INVALID", "exchange_entry")
+        self._active_snapshot = snapshot
+        self._owner_guard("exchange_entry")
+        self._busy = True
+        try:
+            try:
+                request, request_raw = self._request(case_ref, snapshot, channel,
+                    receiver_ref, path, previous_digest, file_digest)
+            except ProtocolError as error:
+                self._fail(error.reason, "REQUEST_BUILD", error)
+            captured_raw = None
+
+            def marker():
+                return self._port(self._marker, "marker", "MARKER_PROBE_FAILED",
+                                  request_raw)
+
+            def reader(descriptor):
+                nonlocal captured_raw
+                raw = self._port(self._reader, "payload", "PAYLOAD_READ_FAILED",
+                                 request_raw, descriptor)
+                if type(raw) is not bytes or len(raw) > FRAME_MAX:
+                    self._fail("ACK_FORMAT_INVALID", "payload_return")
+                if captured_raw is not None:
+                    self._fail("ACK_BUFFER_ALREADY_CAPTURED", "payload_return")
+                captured_raw = raw
+                self._record("ACK_BUFFER_CAPTURED", "payload_return",
+                             bytes=len(raw), sha256=digest(raw))
+                return raw
+
+            helper = BoundReceiveSession(self._context.admission, self.boundary,
+                                         self._observe, marker, reader)
+            self._record("RECEIVE_HELPER_CREATED", "RECEIVE")
+            try:
+                candidate = helper.receive_once()
+            except ReceiveError as error:
+                # In particular, a callback's owner-change first failure
+                # survives the helper's PAYLOAD_READ_FAILED reclassification.
+                self._clear()
+                self._fail(error.reason, error.stage, error)
+            finally:
+                for row in helper.trace:
+                    self._trace.append({**row, "source": "receive",
+                                        "request_index": self._request_count})
+            self._owner_guard("RECEIVE_RESULT")
+            if candidate.reason == "PENDING":
+                self._fail("ACK_NOT_READY", "RECEIVE_RESULT")
+            if candidate.reason != "RECEIVE_CANDIDATE_WITHIN_OBSERVED_BOUNDARY":
+                self._fail("RECEIVE_RESULT_INVALID", "RECEIVE_RESULT")
+            decoded = [row for row in helper.trace if row["event"] == "DECODE"]
+            if (type(captured_raw) is not bytes or len(decoded) != 1
+                    or decoded[0]["bytes"] != len(captured_raw)
+                    or decoded[0]["verified_sha256"] != digest(captured_raw)):
+                self._fail("ACK_RECEIVE_BUFFER_MISMATCH", "ACK_PARSE")
+            self._record("ACK_PARSE", "ACK_PARSE")
+            try:
+                ack = parse_ack(captured_raw)
+                if canonical_bytes(candidate.value) != captured_raw:
+                    self._fail("ACK_FORMAT_INVALID", "ACK_PARSE")
+            except ProtocolError as error:
+                self._fail(error.reason, "ACK_PARSE", error)
+            self._record("ACK_VALIDATE", "ACK_VALIDATE")
+            try:
+                validate_ack(ack, request, self.receiver_pid)
+            except ProtocolError as error:
+                self._fail(error.reason, "ACK_VALIDATE", error)
+            self._checkpoint("C4")
+            self._pending = _Pending(snapshot, request_raw, captured_raw)
+            self._record("EXCHANGE_RETURN", "C4", sha256=digest(captured_raw))
+            return Exchange(request, captured_raw)
+        except BoundAckError:
+            raise
+        except Exception as error:
+            self._clear()
+            self._fail("ACK_INTERNAL_ERROR", "exchange", error)
+        finally:
+            self._busy = False
+
+    def verify_consumption(self, ack):
+        self._record("ENTRY", "consumption_entry")
+        if self._first is not None:
+            raise BoundAckError("ACK_SESSION_LATCHED", "consumption_entry",
+                                self._first.reason)
+        if self._busy:
+            self._fail("REENTRANT_ACK_REQUEST", "consumption_entry")
+        if self._pending is None:
+            self._fail("ACK_EXCHANGE_REQUIRED", "consumption_entry")
+        self._owner_guard("consumption_entry")
+        self._busy = True
+        try:
+            pending = self._pending
+            if (type(ack) is not dict or pending.snapshot is not self._active_snapshot
+                    or canonical_bytes(ack) != pending.raw_ack):
+                self._fail("CONSUMPTION_ACK_MISMATCH", "CONSUMPTION_VALIDATE")
+            expected_ref = "mailbox/consumption/c%04d.json" % self._request_count
+            if type(ack["consumption_ref"]) is not str or ack["consumption_ref"] != expected_ref:
+                self._fail("CONSUMPTION_PATH_MISMATCH", "CONSUMPTION_VALIDATE")
+            raw = self._port(self._consumption, "CONSUMPTION_READ",
+                             "CONSUMPTION_READ_FAILED", pending.raw_ack)
+            self._record("CONSUMPTION_VALIDATE", "CONSUMPTION_VALIDATE")
+            if type(raw) is not bytes or len(raw) > RECORD_MAX:
+                self._fail("CONSUMPTION_FORMAT_INVALID", "CONSUMPTION_VALIDATE")
+            if digest(raw) != ack["consumption_sha256"]:
+                self._fail("CONSUMPTION_SHA_MISMATCH", "CONSUMPTION_VALIDATE")
+            try:
+                record = json.loads(raw.decode("utf-8"))
+                if type(record) is not dict or canonical_bytes(record) != raw:
+                    self._fail("CONSUMPTION_FORMAT_INVALID", "CONSUMPTION_VALIDATE")
+            except (UnicodeError, ValueError, TypeError, RecursionError) as error:
+                self._fail("CONSUMPTION_FORMAT_INVALID", "CONSUMPTION_VALIDATE", error)
+            for key in ("session_ref", "case_ref", "handoff_ref", "request_index",
+                        "request_sha256", "record_sha256", "ticket", "channel",
+                        "receiver_ref", "receiver_pid", "status", "reason"):
+                if (key not in record or type(record[key]) is not type(ack[key])
+                        or record[key] != ack[key]):
+                    self._fail("CONSUMPTION_FIELD_MISMATCH:" + key,
+                               "CONSUMPTION_VALIDATE")
+            self._checkpoint("C5")
+            self._record("CONSUMPTION_VERIFIED", "C5", bytes=len(raw),
+                         sha256=digest(raw))
+            self._pending = None
+            self._active_snapshot = None
+        except BoundAckError:
+            raise
+        except Exception as error:
+            self._clear()
+            self._fail("ACK_INTERNAL_ERROR", "verify_consumption", error)
+        finally:
+            self._busy = False

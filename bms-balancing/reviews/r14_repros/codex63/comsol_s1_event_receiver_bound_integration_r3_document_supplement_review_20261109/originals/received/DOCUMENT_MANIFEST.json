@@ -1,0 +1,55 @@
+{
+  "kind": "R3_DOCUMENT_SUPPLEMENT_MANIFEST",
+  "external_recipient_review_pending": true,
+  "payload_count": 9,
+  "code_changes": 0,
+  "self_excluded": true,
+  "target_execution": 0,
+  "files": [
+    {
+      "path": "basis/R3_DELIVERY_TRANSPORT_TOOL_RETURN.json",
+      "bytes": 1278,
+      "sha256": "92d88b62c0cece6c0dca8781d3b89f408b64b8fa3d84ff1ea4dd8a402470d1d1"
+    },
+    {
+      "path": "basis/RECEIVED_CODEX_REPLY_KO.txt",
+      "bytes": 2459,
+      "sha256": "729bd98c433818a0a1bacaf66e842016670d7966cec32fa939aa96cda6416da1"
+    },
+    {
+      "path": "CODEX_REPLY_KO.txt",
+      "bytes": 1120,
+      "sha256": "24ea93d94ffebcfb11d4b47a8981f52f397a7a38a32ad6ab517a222a2d59f282"
+    },
+    {
+      "path": "DOCUMENT_SUPPLEMENT_KO.txt",
+      "bytes": 7243,
+      "sha256": "0f674557c94243fe1f708499366ea9c0a0d3de00ce34f925460783e95f9f8bab"
+    },
+    {
+      "path": "INPUT_READ_VS_LOAD_ROLES.json",
+      "bytes": 54809,
+      "sha256": "f6b825150bd56162e082cc3ec091519a91f39ecf16b8d48d916ab95d2d66287c"
+    },
+    {
+      "path": "INTAKE_AND_STATIC_CHECK.json",
+      "bytes": 840,
+      "sha256": "40dad1cea0d5c4afb9f07199968e8c83d3d07a4b2c89430f5a566c273aa27bc2"
+    },
+    {
+      "path": "SELECTED_INPUTS_AFTER.json",
+      "bytes": 53380,
+      "sha256": "7d95021ad084a9694bd9a724470971e20c289a2387f4de568281647425fb261c"
+    },
+    {
+      "path": "SELECTED_INPUTS_BEFORE.json",
+      "bytes": 53360,
+      "sha256": "6315f8f680a82bb4e4ad2d71e6bb97b3caaa534443d8864ffe691bfd3f82efa9"
+    },
+    {
+      "path": "STATIC_TOOL_RETURN.json",
+      "bytes": 651,
+      "sha256": "a9675610d50b29e25be81f69216d51285b3313b3bdc75c3d3930878120125c3d"
+    }
+  ]
+}

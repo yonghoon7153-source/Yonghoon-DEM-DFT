@@ -1,0 +1,145 @@
+{
+  "source_kind": "FIXTURE_ONLY",
+  "run_ref": "fixture:R3",
+  "manifest_raw_utf8": "{\"source_kind\":\"FIXTURE_ONLY\",\"run_ref\":\"fixture:R3\"}",
+  "manifest_sha256": "0b5754b6d58401947949c976c3c5632ba59f527276598e9d7af5dacac4d60e4a",
+  "axes": {
+    "boot": {
+      "status": "SUPPLIED_FIXTURE",
+      "evidence_ref": "fixture:boot"
+    },
+    "domain": {
+      "status": "SUPPLIED_FIXTURE",
+      "evidence_ref": "fixture:domain"
+    },
+    "environment": {
+      "status": "SUPPLIED_FIXTURE",
+      "evidence_ref": "fixture:environment"
+    },
+    "api_abi": {
+      "status": "SUPPLIED_FIXTURE",
+      "evidence_ref": "fixture:api_abi"
+    },
+    "origin": {
+      "status": "SUPPLIED_FIXTURE",
+      "evidence_ref": "fixture:origin"
+    },
+    "frequency": {
+      "status": "SUPPLIED_FIXTURE",
+      "evidence_ref": "fixture:frequency"
+    },
+    "freshness": {
+      "status": "SUPPLIED_FIXTURE",
+      "policy_ref": "fixture:freshness-policy",
+      "evidence_ref": "fixture:freshness"
+    }
+  },
+  "roles": [
+    {
+      "role": "P",
+      "instance_ref": "fixture:P:instance",
+      "generation_ref": "fixture:P:generation",
+      "process_evidence_ref": "fixture:P:process",
+      "pid": 100,
+      "creation_filetime": 1000
+    },
+    {
+      "role": "S",
+      "instance_ref": "fixture:S:instance",
+      "generation_ref": "fixture:S:generation",
+      "process_evidence_ref": "fixture:S:process",
+      "pid": 101,
+      "creation_filetime": 1001
+    },
+    {
+      "role": "M",
+      "instance_ref": "fixture:M:instance",
+      "generation_ref": "fixture:M:generation",
+      "process_evidence_ref": "fixture:M:process",
+      "pid": 102,
+      "creation_filetime": 1002
+    },
+    {
+      "role": "Q",
+      "instance_ref": "fixture:Q:instance",
+      "generation_ref": "fixture:Q:generation",
+      "process_evidence_ref": "fixture:Q:process",
+      "pid": 103,
+      "creation_filetime": 1003
+    }
+  ],
+  "clock": {
+    "clock_ref": "fixture:clock",
+    "origin_count": 0,
+    "frequency_hz": 1,
+    "comparison_contract_ref": "fixture:comparison"
+  },
+  "expected": {
+    "run_ref": "fixture:R3",
+    "manifest_sha256": "0b5754b6d58401947949c976c3c5632ba59f527276598e9d7af5dacac4d60e4a",
+    "axis_evidence_refs": {
+      "boot": "fixture:boot",
+      "domain": "fixture:domain",
+      "environment": "fixture:environment",
+      "api_abi": "fixture:api_abi",
+      "origin": "fixture:origin",
+      "frequency": "fixture:frequency"
+    },
+    "roles": [
+      {
+        "role": "P",
+        "instance_ref": "fixture:P:instance",
+        "generation_ref": "fixture:P:generation",
+        "process_evidence_ref": "fixture:P:process",
+        "pid": 100,
+        "creation_filetime": 1000
+      },
+      {
+        "role": "S",
+        "instance_ref": "fixture:S:instance",
+        "generation_ref": "fixture:S:generation",
+        "process_evidence_ref": "fixture:S:process",
+        "pid": 101,
+        "creation_filetime": 1001
+      },
+      {
+        "role": "M",
+        "instance_ref": "fixture:M:instance",
+        "generation_ref": "fixture:M:generation",
+        "process_evidence_ref": "fixture:M:process",
+        "pid": 102,
+        "creation_filetime": 1002
+      },
+      {
+        "role": "Q",
+        "instance_ref": "fixture:Q:instance",
+        "generation_ref": "fixture:Q:generation",
+        "process_evidence_ref": "fixture:Q:process",
+        "pid": 103,
+        "creation_filetime": 1003
+      }
+    ],
+    "producer_role": "P",
+    "freshness_policy_ref": "fixture:freshness-policy",
+    "freshness_evidence_ref": "fixture:freshness",
+    "clock": {
+      "clock_ref": "fixture:clock",
+      "origin_count": 0,
+      "frequency_hz": 1,
+      "comparison_contract_ref": "fixture:comparison"
+    }
+  },
+  "observation": {
+    "role": "P",
+    "availability": "OBSERVED",
+    "api_success": true,
+    "output_valid": true,
+    "raw_count": 90,
+    "observation_ref": "fixture:initial-count",
+    "unit": "QPC_COUNT",
+    "observed_stage": "INITIAL",
+    "stage_binding_evidence_ref": "fixture:initial-stage",
+    "purpose_ref": "fixture:integration-only"
+  }
+}
+

@@ -1,0 +1,165 @@
+"""Inactive pure-arithmetic candidate; no clock, I/O or operating authority.
+
+Inputs are already-decoded Python integers/Fractions, never wire data. Callers
+must establish clock, unit, origin, role and evidence bindings before using the
+arithmetic. An arithmetic success is not permission to dispatch, wait or stop.
+No duration, reserve, timeout or clock frequency is selected by this module.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from fractions import Fraction
+from typing import Optional, Tuple
+
+
+SIGNED64_MIN = -(1 << 63)
+SIGNED64_MAX = (1 << 63) - 1
+POSITIVE_FINITE_DWORD_MAX = (1 << 32) - 2
+
+
+class CoreError(ValueError):
+    """Stable reason and field; callers preserve these without repairing input."""
+
+    def __init__(self, reason: str, field: str = "") -> None:
+        self.reason = reason
+        self.field = field
+        super().__init__(reason + (":" + field if field else ""))
+
+
+def require_int(value: object, field: str) -> int:
+    if type(value) is not int:
+        raise CoreError("EXACT_INTEGER_REQUIRED", field)
+    return value
+
+
+def require_fraction(value: object, field: str) -> Fraction:
+    if value is None:
+        raise CoreError("EXACT_VALUE_UNBOUND", field)
+    if type(value) is not Fraction:
+        raise CoreError("EXACT_FRACTION_REQUIRED", field)
+    return value
+
+
+def signed64(value: object, field: str) -> int:
+    result = require_int(value, field)
+    if not SIGNED64_MIN <= result <= SIGNED64_MAX:
+        raise CoreError("SIGNED64_OUT_OF_RANGE", field)
+    return result
+
+
+def positive_frequency(value: object) -> int:
+    result = signed64(value, "frequency")
+    if result <= 0:
+        raise CoreError("POSITIVE_FREQUENCY_REQUIRED", "frequency")
+    return result
+
+
+def exact_seconds(observation_count: object, origin_count: object,
+                  frequency: object) -> Fraction:
+    """Exact signed coordinate only; caller decides whether negative is valid.
+
+    The difference uses an unbounded Python integer, not a signed64 cast.
+    This function does not establish causal ordering or clock comparability.
+    """
+    observed = signed64(observation_count, "observation_count")
+    origin = signed64(origin_count, "origin_count")
+    ticks_per_second = positive_frequency(frequency)
+    return Fraction(observed - origin, ticks_per_second)
+
+
+def effective_boundary(origin: Fraction, duration: Optional[Fraction],
+                       upper_bounds: Optional[Tuple[Fraction, ...]]) -> Fraction:
+    """An explicit empty tuple asserts no upper bounds; None is unknown.
+
+    The caller must establish the complete applicable set. No unknown set is
+    replaced by an empty set, infinity or a guessed phase/overall boundary.
+    """
+    start = require_fraction(origin, "origin")
+    span = require_fraction(duration, "duration")
+    if span < 0:
+        raise CoreError("NEGATIVE_DURATION", "duration")
+    if upper_bounds is None:
+        raise CoreError("UPPER_BOUNDS_UNBOUND", "upper_bounds")
+    if type(upper_bounds) is not tuple:
+        raise CoreError("EXPLICIT_BOUND_TUPLE_REQUIRED", "upper_bounds")
+    bounds = tuple(require_fraction(value, "upper_bounds[" + str(i) + "]")
+                   for i, value in enumerate(upper_bounds))
+    return min((start + span,) + bounds)
+
+
+def _wait_inputs(remaining: Fraction, reserve: Optional[Fraction]
+                 ) -> Tuple[Fraction, Fraction]:
+    remainder = require_fraction(remaining, "remaining")
+    held = require_fraction(reserve, "reserve")
+    if held < 0:
+        raise CoreError("NEGATIVE_RESERVE", "reserve")
+    return remainder, held
+
+
+def strict_wait_upper_bound(remaining: Fraction,
+                           reserve: Optional[Fraction]) -> int:
+    """Mathematical ceil(1000 * (R-rho))-1, never a selected DWORD wait.
+
+    A result below one means no positive encoding. A result above the DWORD
+    finite range is kept as an integer, without cast, clamp or fallback.
+    """
+    remainder, held = _wait_inputs(remaining, reserve)
+    slack_ms = (remainder - held) * 1000
+    quotient, residue = divmod(slack_ms.numerator, slack_ms.denominator)
+    return quotient if residue else quotient - 1
+
+
+@dataclass(frozen=True)
+class WaitAssessment:
+    candidate_ms: int
+    remaining: Fraction
+    reserve: Fraction
+    mathematical_upper_ms: int
+    arithmetic_within_limits: bool
+    reason: str
+
+
+def assess_wait(candidate_ms: int, remaining: Fraction,
+                reserve: Optional[Fraction]) -> WaitAssessment:
+    candidate = require_int(candidate_ms, "candidate_ms")
+    remainder, held = _wait_inputs(remaining, reserve)
+    upper = strict_wait_upper_bound(remainder, held)
+    if not 1 <= candidate <= POSITIVE_FINITE_DWORD_MAX:
+        reason = "WAIT_NOT_POSITIVE_FINITE_DWORD"
+    elif Fraction(candidate, 1000) + held >= remainder:
+        reason = "WAIT_NOT_STRICTLY_WITHIN_REMAINING"
+    else:
+        reason = "ARITHMETIC_WITHIN_LIMITS"
+    return WaitAssessment(candidate, remainder, held, upper,
+                          reason == "ARITHMETIC_WITHIN_LIMITS", reason)
+
+
+@dataclass(frozen=True)
+class CompletionAssessment:
+    boundary: Fraction
+    required_times: Tuple[Fraction, ...]
+    arithmetic_within_limits: bool
+    reason: str
+    first_not_before_index: Optional[int]
+
+
+def assess_completion(boundary: Fraction,
+                      required_times: Tuple[Fraction, ...]
+                      ) -> CompletionAssessment:
+    """Every supplied required time must be strictly before the boundary.
+
+    The caller identifies the complete completion/publication/independent
+    observation set and must reject missing or unproved causal evidence.
+    """
+    limit = require_fraction(boundary, "boundary")
+    if type(required_times) is not tuple or not required_times:
+        raise CoreError("REQUIRED_TIME_TUPLE_EMPTY_OR_INVALID", "required_times")
+    times = tuple(require_fraction(value, "required_times[" + str(i) + "]")
+                  for i, value in enumerate(required_times))
+    for index, value in enumerate(times):
+        if value >= limit:
+            return CompletionAssessment(limit, times, False,
+                                        "COMPLETION_NOT_STRICTLY_BEFORE", index)
+    return CompletionAssessment(limit, times, True,
+                                "ARITHMETIC_WITHIN_LIMITS", None)

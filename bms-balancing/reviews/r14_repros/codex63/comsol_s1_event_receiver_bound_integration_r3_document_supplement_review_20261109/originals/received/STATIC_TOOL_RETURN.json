@@ -1,0 +1,10 @@
+{
+  "kind": "DOCUMENT_STATIC_DATA_INSPECTION_TOOL_RETURN",
+  "tool_result": {
+    "chunk_id": "6a138a",
+    "wall_time_seconds": 3.7565554,
+    "exit_code": 0,
+    "original_token_count": 100,
+    "output": "{\r\n  \"selected_inputs\": 166,\r\n  \"target_execution\": 0,\r\n  \"seal_files\": 63,\r\n  \"out\": \"C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R3_document_supplement_20261109\",\r\n  \"parent_load_target\": 13,\r\n  \"review_zip_hash\": \"d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971\",\r\n  \"child_load_target\": 7\r\n}\r\n"
+  }
+}

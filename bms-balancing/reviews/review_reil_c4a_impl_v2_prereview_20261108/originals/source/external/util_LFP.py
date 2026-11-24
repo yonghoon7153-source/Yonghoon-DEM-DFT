@@ -1,0 +1,847 @@
+import numpy as np
+import pandas as pd
+import datetime
+
+from scipy.interpolate import PchipInterpolator, interp1d
+from scipy.signal import find_peaks
+
+import pickle
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import seaborn as sns
+from pymoo.core.problem import ElementwiseProblem
+from pymoo.algorithms.soo.nonconvex.ga import GA
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.algorithms.moo.nsga3 import NSGA3
+from pymoo.optimize import minimize
+from pymoo.termination import get_termination
+from pymoo.util.ref_dirs import get_reference_directions
+from pymoo.core.result import Result
+
+
+
+
+def visualize_LFP_data(data_file, 
+                       sheet_name, 
+                       cycle_number=3, 
+                       step_idx=4, 
+                       figsize=(4, 4), 
+                       dpi=300,
+                       visualize=False):
+    '''
+    Visualizes LFP half-cell data at a specified cycle and step index.
+    
+    Parameters:
+    - data_file (str): Path to the Excel file containing the data.
+    - sheet_name (str): The sheet name in the Excel file.
+    - cycle_number (int): The cycle number to visualize.
+    - step_idx (int): The step index to visualize. Default is 4.
+    - figsize (tuple): The size of the figure. Default is (4, 4).
+    - dpi (int): Dots per inch for figure resolution. Default is 300.
+    
+    Returns:
+    - LFP_data (dict): Dictionary containing capacity and voltage data for each cell.
+    '''
+
+    # Load the half-cell data
+    LFP_half_cell = pd.read_excel(data_file, sheet_name=sheet_name)
+
+    # Find the column whose name is a datetime to locate the newest data
+    try:
+        datetime_col = [col for col in LFP_half_cell.columns if isinstance(col, datetime.datetime)][-1]
+        col_idx = LFP_half_cell.columns.get_loc(datetime_col)
+
+        # Drop all columns before the datetime column
+        LFP_half_cell = LFP_half_cell.iloc[:, col_idx + 1:]
+    except:
+        print("No datetime column found. Proceeding with the original data.")
+
+
+    # Drop all columns that are not needed
+    LFP_half_cell.drop(columns=[col for col in LFP_half_cell.columns if 'Unnamed' in col or col.startswith('S')], inplace=True)
+
+    # Visualize the data from three LFP cells, at specified cycle
+    step_loc_LFP = []
+    LFP_data = {}
+    for col in np.arange(0, LFP_half_cell.shape[1] - 1, 2):
+        missing_index = LFP_half_cell[LFP_half_cell.iloc[:, col].isna()].index.to_list()
+        missing_index.insert(0, 0)
+        missing_index.append(LFP_half_cell.shape[0])
+        step_loc_LFP.append(missing_index)
+    # print(step_loc_LFP)
+    if visualize:
+        # Plot configuration
+        plt.figure(figsize=figsize, dpi=dpi)
+        plt.title(f'{sheet_name} @ Step {step_idx}')
+        plt.xlabel('Capacity (mAh)')
+        plt.ylabel('Voltage (V)')
+
+    # Plot each cell's data
+    for i,col in enumerate(np.arange(0, LFP_half_cell.shape[1] - 1, 2)):
+        CC_end = LFP_half_cell.iloc[step_loc_LFP[i][step_idx]:step_loc_LFP[i][step_idx + 1],  col].idxmax()
+       
+
+        # Save the data for later use
+        LFP_data[i] = np.array([LFP_half_cell.iloc[step_loc_LFP[i][step_idx] + 1:CC_end, col],
+                                LFP_half_cell.iloc[step_loc_LFP[i][step_idx] + 1:CC_end, col + 1]])
+        
+    # Filter out repeating values
+    for key in LFP_data.keys():
+        LFP_data[key] = filter_first_occurrences_by_column(LFP_data[key],0)
+        if visualize:
+            plt.plot(LFP_data[key][0], LFP_data[key][1], label=f'Cell {key + 1}')
+    if visualize:
+        plt.legend()
+        plt.show()
+    
+    return LFP_data
+
+
+
+def extract_battery_data(data,idx):
+    Model={}
+    # Extract the data for the specified index
+    QV = data[idx]
+    # First column is capacity, second column is voltage
+    Q_C50Chg_exp = QV[0]  # Capacity in mAh/g
+    V_C50Chg_exp = QV[1]  # Voltage in V
+
+    dVdQC50Chg_exp = np.gradient(V_C50Chg_exp, Q_C50Chg_exp)
+    dQdVC50Chg_exp = np.gradient(Q_C50Chg_exp, V_C50Chg_exp)
+    
+    Model['Q_exp'] = Q_C50Chg_exp
+    Model['V_exp'] = V_C50Chg_exp
+    Model['dVdQ_exp'] = dVdQC50Chg_exp
+    Model['Q_exp_max'] = max(Q_C50Chg_exp)
+    Model['dQdV_exp'] = dQdVC50Chg_exp
+
+    # Interpolate Experimental Data
+    Q_exp_interp = np.linspace(0, max(Q_C50Chg_exp), 100)
+    V_exp_interp = PchipInterpolator(Q_C50Chg_exp, V_C50Chg_exp)(Q_exp_interp)
+
+    Model['Q_exp_interp'] = Q_exp_interp
+    Model['V_exp_interp'] = V_exp_interp
+
+    Model['dVdQ_exp_interp']= np.gradient(V_exp_interp, Q_exp_interp)
+    Model['dQdV_exp_interp'] = np.gradient(Q_exp_interp, V_exp_interp)
+    
+    return Model
+
+def dVdQ_hc(V_PE_hc, q_PE_hc, V_NE_hc, q_NE_hc, m_P, m_N, d_P, d_N,interp_len=300):
+    qPE_hc_sim = np.linspace(np.min(q_PE_hc), np.max(q_PE_hc), interp_len)
+    qNE_hc_sim = np.linspace(np.min(q_NE_hc), np.max(q_NE_hc), interp_len)
+
+    VPE_hc_sim = PchipInterpolator(q_PE_hc, V_PE_hc)(qPE_hc_sim)
+    VNE_hc_sim = PchipInterpolator(q_NE_hc, V_NE_hc)(qNE_hc_sim)
+
+    Q_PE_hc = qPE_hc_sim * m_P
+    Q_NE_hc = qNE_hc_sim * m_N
+
+    # dVdQ_PE_hc = np.diff(VPE_hc_sim) / np.diff(Q_PE_hc)
+    dVdQ_PE_hc = np.gradient(VPE_hc_sim, Q_PE_hc)  # Use gradient for dV/dQ
+    # dVdQ_NE_hc = np.diff(VNE_hc_sim) / np.diff(Q_NE_hc)
+    dVdQ_NE_hc = np.gradient(VNE_hc_sim, Q_NE_hc)  # Use gradient for dV/dQ
+
+    # # Extend the last value to match original array size
+    # dVdQ_PE_hc = np.append(dVdQ_PE_hc, dVdQ_PE_hc[-1])
+    # dVdQ_NE_hc = np.append(dVdQ_NE_hc, dVdQ_NE_hc[-1])
+
+    Q_PE_hc_ad = Q_PE_hc - d_P
+    Q_NE_hc_ad = Q_NE_hc - d_N
+
+    dQdV_PE_hc = np.gradient(Q_PE_hc_ad, VPE_hc_sim)
+    dQdV_NE_hc = np.gradient(Q_NE_hc_ad, VNE_hc_sim)
+
+    return Q_PE_hc_ad, Q_NE_hc_ad, dVdQ_PE_hc, dVdQ_NE_hc, VPE_hc_sim, VNE_hc_sim, dQdV_PE_hc, dQdV_NE_hc
+
+def objective_fun(x, Model, halfcell):
+
+    Q_exp = Model['Q_exp_interp']
+    dVdQ_exp = Model['dVdQ_exp_interp']
+    V_exp = Model['V_exp_interp']
+    
+    # Load half-cell data
+    q_PE_hc = halfcell[0]
+    V_PE_hc = halfcell[1]
+    q_NE_hc = halfcell[2]
+    V_NE_hc = halfcell[3]
+    
+    # Extract parameters
+    m_P, m_N, d_P, d_N = x
+    
+    # Get half-cell VQ and dVdQ curves (function to be implemented separately)
+    Q_PE_hc_ad, Q_NE_hc_ad, dVdQ_PE_hc, dVdQ_NE_hc, VPE_hc_sim, VNE_hc_sim, dQdV_PE_hc, dQdV_NE_hc = dVdQ_hc(
+        V_PE_hc, q_PE_hc, V_NE_hc, q_NE_hc, m_P, m_N, d_P, d_N, interp_len=500
+    )
+    
+    # Find indices where Q is closest to zero
+    Q0P_ID = np.argmin(np.abs(Q_PE_hc_ad))
+    Q0N_ID = np.argmin(np.abs(Q_NE_hc_ad))
+    QmaxP_ID = np.argmax(Q_PE_hc_ad)
+    QmaxN_ID = np.argmax(Q_NE_hc_ad)
+    
+    # Interpolate using experimental data
+    VPE_interp = interp1d(Q_PE_hc_ad[Q0P_ID:QmaxP_ID], VPE_hc_sim[Q0P_ID:QmaxP_ID], fill_value='extrapolate')
+    VNE_interp = interp1d(Q_NE_hc_ad[Q0N_ID:QmaxN_ID], VNE_hc_sim[Q0N_ID:QmaxN_ID], fill_value=(1.5,0.01), bounds_error=False)
+    
+    VPE_sim = VPE_interp(Q_exp)
+    VNE_sim = VNE_interp(Q_exp)
+    Vf_sim = VPE_sim - VNE_sim
+    Model['Vf_sim'] = Vf_sim
+    
+    # Capacity estimation
+    Q_sim = np.linspace(0, Q_PE_hc_ad[QmaxP_ID], 250)
+    VPE_sim_4Cap = VPE_interp(Q_sim)
+    VNE_sim_4Cap = VNE_interp(Q_sim)
+    Vf_sim_4Cap = VPE_sim_4Cap - VNE_sim_4Cap
+    
+    Vexp_max, Vexp_min = 3.6, 2
+    
+    Vmin_ID = np.argmin(np.abs(Vf_sim_4Cap - Vexp_min))
+    Vmax_ID = np.argmin(np.abs(Vf_sim_4Cap - Vexp_max))
+    
+    Model['Q_sim'] = Q_sim[Vmin_ID:Vmax_ID]
+    Model['Vf_sim_4Cap'] = Vf_sim_4Cap[Vmin_ID:Vmax_ID]
+    Model['Q_sim_max'] = np.max(Model['Q_sim'])
+    
+    # Calculate dV/dQ
+    unique_Q, unique_indices = np.unique(Q_exp, return_index=True)
+    dVdQ_sim = np.diff(Vf_sim[unique_indices]) / np.diff(unique_Q)
+    dVdQ_sim = np.append(dVdQ_sim, dVdQ_sim[-1])
+    Model['dVdQ_sim'] = dVdQ_sim
+    
+    # Compute errors
+    # QV end-point error
+    f1 = (np.mean((np.max(Vf_sim) - np.max(V_exp)) ** 2)) + np.sqrt(np.mean((np.min(Vf_sim) - np.min(V_exp)) ** 2))/2
+    # QV curve error
+    f2 = np.mean((Vf_sim - V_exp) ** 2)
+    # dVdQ peak error (identify the two peaks)
+    try:
+        # First peak location
+        peak_loc_exp = find_peaks(dVdQ_exp,distance=20,prominence=0.05)[0][0] # Returns a scalar value
+        peak_loc_sim = find_peaks(dVdQ_sim,distance=20,prominence=0.05)[0][0] # Returns a scalar value
+
+        f3 = np.mean((Q_exp[peak_loc_sim] - Q_exp[peak_loc_exp]) ** 2) # peak location error
+        # peak magnitude error of a range of 16 points, also only look at the peak region of experiment
+        f3 += np.mean((dVdQ_sim[peak_loc_exp-8:peak_loc_exp+8] - 
+                               dVdQ_exp[peak_loc_exp-8:peak_loc_exp+8])**2) 
+    except:
+        f3 = 1
+    
+    # dVdQ curve error
+    # Only consider the range where experimental dV/dQ is above a threshold to avoid noise-dominated regions
+    dVdQ_clean_range = dVdQ_exp < 0.4 # Adjust threshold as needed
+    f4 = np.mean((dVdQ_sim[dVdQ_clean_range] - dVdQ_exp[dVdQ_clean_range]) ** 2)
+
+    return np.array([f1, f2, f3, f4])
+
+def plot_half_cell_analysis(Model, Q_PE_hc_ad, VPE_hc_sim,
+                             Q_NE_hc_ad, VNE_hc_sim,
+                             dVdQ_PE_hc, dVdQ_NE_hc,
+                             dVdQ_f_sim, capacity_factor,
+                             Colors):
+    """
+    Plot voltage vs. normalized capacity and dV/dQ vs. normalized capacity
+    for full cell, PE, NE, and experiment data.
+
+    Parameters:
+        Model: an object or dict with attributes:
+            Q_exp, V_exp, dVdQ_exp
+        Q_PE_hc_ad, VPE_hc_sim: Positive electrode capacity & voltage
+        Q_NE_hc_ad, VNE_hc_sim: Negative electrode capacity & voltage
+        dVdQ_PE_hc, dVdQ_NE_hc: dV/dQ values for PE and NE
+        dVdQ_f_sim: dV/dQ for full cell simulation
+        capacity_factor: normalization factor
+        Colors: list of 4 color codes (strings or RGB tuples)
+    
+    Returns: 
+    None, but displays the plots.
+    """
+    Q_exp = Model['Q_exp_interp']
+    V_exp = Model['V_exp_interp']
+    dVdQ_exp = Model['dVdQ_exp_interp']
+    dVdQ_f_sim = Model['dVdQ_sim']
+    Vf_sim = Model['Vf_sim']
+    ## ---- First Plot: Voltage vs Capacity ---- ##
+    fig1, ax1 = plt.subplots()
+    fig1.set_size_inches(5, 5)
+    fig1.subplots_adjust(left=0.15, bottom=0.16, right=0.85, top=0.91)
+
+    ax2 = ax1.twinx()
+
+    hLine2, = ax1.plot(Q_PE_hc_ad / capacity_factor, VPE_hc_sim, '--', color=Colors[1], linewidth=2)
+    hLine3, = ax2.plot(Q_NE_hc_ad / capacity_factor, VNE_hc_sim, '-.', color=Colors[2], linewidth=2)
+    hLine4, = ax1.plot(Q_exp / capacity_factor, V_exp, '-', color=Colors[3], linewidth=3)
+    hLine1, = ax1.plot(Q_exp / capacity_factor, Vf_sim, ':', color=Colors[0], linewidth=2)
+
+
+    ax1.set_xlabel('Normalized capacity', fontsize=18, fontname='Times New Roman')
+    ax1.set_ylabel('PE/full cell voltage (V)', fontsize=18, fontname='Times New Roman', color=Colors[1])
+    ax2.set_ylabel('NE voltage (V)', fontsize=18, fontname='Times New Roman', color=Colors[2])
+    ax1.tick_params(axis='y', colors=Colors[1])
+    ax2.tick_params(axis='y', colors=Colors[2])
+
+    ax1.set_xlim(-0.40, 3.2)
+    ax2.set_xlim(-0.40, 3.2)
+    ax1.set_ylim(2, 3.7)
+    ax2.set_ylim(0, 1)
+    ax1.set_yticks(np.arange(2, 3.7, 0.2))
+    ax2.set_yticks(np.arange(0, 1.01, 0.2))
+
+    fig1.legend(
+        [hLine1, hLine2, hLine3, hLine4],
+        ['Full cell', 'PE', 'NE', 'Experiment'],
+        loc='center left',
+        bbox_to_anchor=(0.98, 0.5),
+        fontsize=12
+    )
+    ax1.grid(True)
+    ax1.set_box_aspect(1)
+
+    ## ---- Second Plot: dV/dQ vs Capacity ---- ##
+    fig2, ax3 = plt.subplots()
+    fig2.set_size_inches(5, 5)
+    fig2.subplots_adjust(left=0.15, bottom=0.16, right=0.85, top=0.91)
+
+    ax4 = ax3.twinx()
+
+    hLine2, = ax3.plot(Q_PE_hc_ad / capacity_factor, dVdQ_PE_hc, '--', color=Colors[1], linewidth=2)
+    hLine3, = ax4.plot(Q_NE_hc_ad / capacity_factor, dVdQ_NE_hc, '-.', color=Colors[2], linewidth=2)
+    hLine4, = ax3.plot(Q_exp / capacity_factor, dVdQ_exp, '-', color=Colors[3], linewidth=3)
+    hLine1, = ax3.plot(Q_exp / capacity_factor, dVdQ_f_sim[:len(Q_exp)], ':', color=Colors[0], linewidth=2)
+
+
+    ax3.set_xlabel('Normalized capacity', fontsize=18, fontname='Times New Roman')
+    ax3.set_ylabel('PE and full cell dV/dQ (V mAh$^{-1}$)', fontsize=18, fontname='Times New Roman', color=Colors[1])
+    ax4.set_ylabel('NE dV/dQ (V mAh$^{-1}$)', fontsize=18, fontname='Times New Roman', color=Colors[2])
+    ax3.tick_params(axis='y', colors=Colors[1])
+    ax4.tick_params(axis='y', colors=Colors[2])
+
+    ax3.set_xlim(-0.40, 3.2)
+    ax4.set_xlim(-0.40, 3.2)
+    ax3.set_ylim(-0.7, 0.7)
+    ax4.set_ylim(-.7, .7)
+    ax3.set_yticks(np.arange(-.7, .7, .2))
+    ax4.set_yticks(np.arange(-.7, .7, .2))
+
+    fig2.legend(
+        [hLine1, hLine2, hLine3, hLine4],
+        ['Full cell', 'PE', 'NE', 'Experiment'],
+        loc='center left',
+        bbox_to_anchor=(0.98, 0.5),
+        fontsize=12
+    )
+    ax3.grid(True)
+    ax3.set_box_aspect(1)
+
+    plt.show()
+
+def manual_radviz(F, selected_indices, ax, cmap):
+    num_obj = F.shape[1]
+    anchors = np.array([
+        [np.cos(2 * np.pi * i / num_obj), np.sin(2 * np.pi * i / num_obj)]
+        for i in range(num_obj)
+    ])  # unit circle anchors
+
+    # Normalize F across each objective (column-wise)
+    F_norm = (F - F.min(axis=0)) / (F.max(axis=0) - F.min(axis=0) + 1e-8)
+
+    # Compute projections
+    norm_sums = F_norm.sum(axis=1, keepdims=True) + 1e-8
+    projections = (F_norm @ anchors) / norm_sums
+
+    # Plot all points in light gray
+    ax.scatter(projections[:, 0], projections[:, 1], color='lightgray', label='All Solutions')
+
+    # Highlight selected solutions
+    for j, idx in enumerate(selected_indices):
+        ax.scatter(projections[idx, 0], projections[idx, 1], color=cmap(j), label=f'Pt {j+1}')
+
+    # Circle boundary for anchors
+    ax.add_patch(plt.Circle((0, 0), 1.0, fill=False, linestyle='--', color='gray'))
+    for i, (x, y) in enumerate(anchors):
+        ax.text(x * 1.1, y * 1.1, f'$f_{i+1}$', ha='center', va='center')
+
+    ax.set_xlim(-1.2, 1.2)
+    ax.set_ylim(-1.2, 1.2)
+    ax.set_aspect('equal')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_title('Manual RadViz')
+
+def plot_nsga_results(selection, results, Models, objective_fun, halfcell,
+                      square_size=3, row2_height=2, row3_height=2, hspace=0.3, margin_frac=0.05):
+    
+    """
+    Plot NSGA results in a grid layout with square subplots for Pareto front and voltage/dV/dQ curves.
+    
+    Parameters:
+        selection: List of tuples (LFP_size, Gr_size, LII) for each model.
+        results: List of NSGA results for each model.
+        Models: List of models corresponding to the results.
+        objective_fun: Function to compute objectives.
+        halfcell: Half-cell data for the models.
+        square_size: Size of the square subplot for Pareto front.
+        row2_height: Height of the voltage subplot.
+        row3_height: Height of the dV/dQ subplot.
+        hspace: Height space between rows.
+        margin_frac: Fraction of figure width for left/right margins.
+        
+    Returns:
+        None, but displays the plots.
+    """
+    
+    n_cols = len(selection)
+
+    fig_width = square_size * n_cols
+    fig_height = square_size + row2_height + row3_height + 2 * hspace
+
+    fig = plt.figure(figsize=(fig_width, fig_height), dpi=300)
+    cmap = plt.get_cmap("tab10")
+
+    margin = margin_frac  # Fraction of figure width
+    usable_width = 1.0 - 2 * margin
+    subplot_width = usable_width / n_cols
+
+    inter_col_gap = 0.03  # gap between subplots as a fraction of figure width
+    margin = margin_frac  # left/right margin as fraction
+    total_gutter = (n_cols - 1) * inter_col_gap
+    usable_width = 1.0 - 2 * margin - total_gutter
+    subplot_width = usable_width / n_cols
+
+    for i, (LFP_size, Gr_size, LII) in enumerate(selection):
+        ...
+        # New left position: margin + previous columns + gaps
+        left = margin + i * (subplot_width + inter_col_gap)
+        width = subplot_width
+
+        Model = Models[i]
+        nsga_result = results[i]
+        F = nsga_result.F
+        X = nsga_result.X
+        num_obj = F.shape[1]
+
+        sorted_idx = np.argsort(F[:, 0])
+        F_sorted = F[sorted_idx]
+        X_sorted = X[sorted_idx]
+
+        indices = np.linspace(0, len(F_sorted) - 1, min(5, len(F_sorted)), dtype=int)
+        selected_F = F_sorted[indices]
+        selected_X = X_sorted[indices]
+
+        # Compute positions with left/right margin
+        # left = margin + i * subplot_width
+        # width = subplot_width
+        # height_sq = square_size / fig_height
+        # height_sq = subplot_width
+        height_sq = subplot_width * (fig_width / fig_height)
+        height_v = row2_height / fig_height
+        height_dq = row3_height / fig_height
+        space = hspace / fig_height
+
+        # Row 1 (square Pareto)
+        bottom_sq = (height_dq + height_v + 2 * space)
+        ax1 = fig.add_axes([left, bottom_sq, width, height_sq])
+        # Force scientific notation for axis values
+        ax1.xaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
+        ax1.xaxis.get_major_formatter().set_scientific(True)
+        ax1.xaxis.get_major_formatter().set_powerlimits((-2, 2))
+
+        ax1.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
+        ax1.yaxis.get_major_formatter().set_scientific(True)
+        ax1.yaxis.get_major_formatter().set_powerlimits((-2, 2))
+
+        # Row 2 (voltage)
+        bottom_v = height_dq + space
+        ax2 = fig.add_axes([left, bottom_v, width, height_v])
+
+        # Row 3 (dV/dQ)
+        ax3 = fig.add_axes([left, 0, width, height_dq])
+
+        # === PARETO or Radviz
+        if num_obj == 2:
+            ax1.scatter(F[:, 0], F[:, 1], c='lightgray', label='All Solutions')
+            for j, idx in enumerate(indices):
+                ax1.scatter(F_sorted[idx, 0], F_sorted[idx, 1], color=cmap(j), label=f"Pt {j+1}")
+            ax1.set_xlabel('$f_1$')
+            ax1.set_ylabel('$f_2$')
+            ax1.set_title(f'{LFP_size}-mm LFP/{Gr_size}-mm Gr/LII {LII}%')
+        elif num_obj in [3, 4]:
+            manual_radviz(F_sorted, indices, ax1, cmap)
+            ax1.set_title(f'{LFP_size}-mm LFP/{Gr_size}-mm Gr/LII {LII}%')
+        else:
+            ax1.text(0.5, 0.5, f"{num_obj} objectives not supported", ha='center')
+
+        ax2.set_xlabel('Q')
+        ax2.set_ylabel('V')
+        ax2.set_xlim(-0.05, 3.2)
+        ax2.set_ylim(2.5, 3.6)
+
+        ax3.set_xlabel('Q')
+        ax3.set_ylabel('dV/dQ')
+        ax3.set_xlim(-0.05, 3.2)
+        ax3.set_ylim(-0.1, 0.5)
+
+        for j, x in enumerate(selected_X):
+            _ = objective_fun(x, Model, halfcell)
+            ax2.plot(Model['Q_exp_interp'], Model['Vf_sim'], linestyle='--', color=cmap(j), label=f'Solution {j+1}')
+            ax3.plot(Model['Q_exp_interp'], Model['dVdQ_sim'], linestyle='--', color=cmap(j))
+
+        ax2.plot(Model['Q_exp_interp'], Model['V_exp_interp'], 'k', label='Experimental')
+        ax3.plot(Model['Q_exp_interp'], Model['dVdQ_exp_interp'], 'k')
+
+        ax2.grid()
+        ax3.grid()
+        ax2.legend()
+
+    plt.show()
+
+def compare_nsga_manual(selection, results, Models, objective_fun, halfcell, manual_results):
+    n_cols = len(selection)
+    fig = plt.figure(figsize=(4*n_cols, 8), dpi=300)
+    grid = fig.add_gridspec(2, n_cols)
+
+    ax_voltage = [fig.add_subplot(grid[0, i]) for i in range(n_cols)]
+    ax_dv_dq = [fig.add_subplot(grid[1, i]) for i in range(n_cols)]
+
+    cmap = plt.get_cmap("tab10")  # Use tab10 for distinct, consistent colors
+
+    for iii, (ngroup, ncell, RPT_num) in enumerate(selection):
+        Model = Models[iii]
+        nsga_result = results[iii]
+        F = nsga_result.F
+        X = nsga_result.X
+        num_obj = F.shape[1]
+
+        # === Sort by first objective
+        sorted_idx = np.argsort(F[:, 0])
+        F_sorted = F[sorted_idx]
+        X_sorted = X[sorted_idx]
+
+        # === Pick 5 evenly spaced points
+        if len(F_sorted) >= 5:
+            indices = np.linspace(0, len(F_sorted) - 1, 5, dtype=int)
+        else:
+            indices = np.arange(len(F_sorted))
+        selected_F = F_sorted[indices]
+        selected_X = X_sorted[indices]
+
+        # === Voltage vs Capacity
+        ax_voltage[iii].set_xlabel('Q')
+        ax_voltage[iii].set_ylabel('V')
+        ax_voltage[iii].set_xlim(-1, 107)
+        ax_voltage[iii].set_ylim(3.4, 4.1)
+
+        # === dV/dQ
+        ax_dv_dq[iii].set_xlabel('Q')
+        ax_dv_dq[iii].set_ylabel('dV/dQ')
+        ax_dv_dq[iii].set_xlim(-1, 107)
+        ax_dv_dq[iii].set_ylim(1e-3, 0.01)
+
+        for j, x in enumerate(selected_X):
+            _ = objective_fun(x, Model, halfcell)
+            ax_voltage[iii].plot(Model['Q_exp'], Model['Vf_sim'], linestyle='--', color=cmap(j), label=f'Solution {j+1}')
+            ax_dv_dq[iii].plot(Model['Q_exp'], Model['dVdQ_sim'], linestyle='--', color=cmap(j))
+
+        # === Manual Results
+        _ = objective_fun(manual_results[iii], Model, halfcell)
+        ax_voltage[iii].plot(Model['Q_exp'], Model['Vf_sim'], linestyle=':', color='red', label='Manual Result')
+        ax_dv_dq[iii].plot(Model['Q_exp'], Model['dVdQ_sim'], linestyle=':', color='red')
+
+        ax_voltage[iii].set_title(f'G{ngroup}C{ncell} RPT{RPT_num}')
+
+        ax_voltage[iii].plot(Model['Q_exp'], Model['V_exp'], 'k', label='Experimental')
+        ax_dv_dq[iii].plot(Model['Q_exp'], Model['dVdQ_exp'], 'k')
+
+        ax_voltage[iii].grid()
+        ax_dv_dq[iii].grid()
+        ax_voltage[iii].legend()
+
+    plt.tight_layout()
+    plt.show()
+
+# Define a function to run multiple GA optimizations
+def run_multiple_ga(Model, halfcell, obj_selection, n_runs=20, pop_size=50, n_gen=100):
+    X_all = []
+    F_all = []
+    G_all = []
+
+    for seed in range(n_runs):
+        problem = BatteryOptimizationGA(Model, halfcell, obj_selection)
+        algorithm = GA(pop_size=pop_size)
+        termination = get_termination("n_gen", n_gen)
+
+        res = minimize(problem, algorithm, termination, seed=seed, verbose=False)
+
+        X_all.append(res.X)
+        F_all.append(res.F[0])  # scalar objective value
+        if res.G is not None:
+            G_all.append(res.G)
+
+    X_all = np.array(X_all)
+    F_all = np.array(F_all).reshape(-1, 1)
+    G_all = np.array(G_all) if G_all else None
+
+    result = Result()
+    result.X = X_all
+    result.F = F_all
+    result.G = G_all
+    result.success = True
+
+    return result
+
+# Define the problem class for GA (single-objective optimization)
+class BatteryOptimizationGA(ElementwiseProblem):
+    def __init__(self, Model, halfcell, obj_selection):
+        if len(obj_selection) != 1:
+            raise ValueError("GA is intended for single-objective optimization only.")
+        
+        super().__init__(
+            n_var=4,
+            n_obj=1,
+            n_constr=1,
+            xl=np.array([0.6, 0.5, 0.005, 0.0]),
+            xu=np.array([1.1, 1.1, 0.5, 1])
+        )
+        self.Model = Model
+        self.halfcell = halfcell
+        self.obj_index = obj_selection[0]  # Single objective
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        all_objectives = objective_fun(x, self.Model, self.halfcell)
+        out["F"] = [all_objectives[self.obj_index]]  # Single objective as list
+        out["G"] = [x[3] - x[2] + 1e-4]  # Constraint
+
+# Define the problem class for NSGA2
+class BatteryOptimizationNSGA2(ElementwiseProblem):
+    def __init__(self, Model, halfcell, obj_selection):
+        n_obj = len(obj_selection)  # Determine the number of objectives dynamically
+        super().__init__(
+            n_var=4, # Number of design variables
+            n_obj=n_obj, # Number of objectives
+            n_constr=1,  # Number of constraints
+            xl=np.array([0.6, 0.5, 0.005, 0.0]), # Lower bounds for the design variables
+            xu=np.array([1.1, 1.1, 0.5, 1]) # Upper bounds for the design variables
+            )
+        self.Model = Model  # Store the model
+        self.halfcell = halfcell # Store the half-cell data
+        self.obj_selection = obj_selection  # Store the selected objectives
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        all_objectives = objective_fun(x, self.Model, self.halfcell)  # Compute all objectives
+        selected_objectives = [all_objectives[i] for i in self.obj_selection]  # Filter the selected objectives
+        out["F"] = selected_objectives  # Assign only the chosen objectives
+        out['G'] = [x[3]-x[2] +1e-4]  # Constraint: d_N - d_P <= 0
+
+# Define the problem class for NSGA3
+class BatteryOptimizationNSGA3(ElementwiseProblem):
+    def __init__(self, Model, halfcell, obj_selection):
+        n_obj = len(obj_selection)  # Ensure the number of objectives matches
+        super().__init__(
+            n_var=4, # Number of design variables
+            n_obj=n_obj, # Number of objectives
+            n_constr=1, # Number of constraints
+            xl=np.array([0.6, 0.5, 0.005, 0.0]), # Lower bounds for the design variables
+            xu=np.array([1.1, 1.1, 0.5, 1]) # Upper bounds for the design variables
+        )
+        self.Model = Model # Store the model
+        self.halfcell = halfcell # Store the half-cell data
+        self.obj_selection = obj_selection  # Store the selected objectives
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        all_objectives = objective_fun(x, self.Model, self.halfcell)  # Compute all objectives
+        selected_objectives = [all_objectives[i] for i in self.obj_selection]  # Filter the selected objectives
+        out["F"] = selected_objectives  # Assign only the chosen objectives
+        out['G'] = [x[3]-x[2] +1e-4]  # Constraint: d_N - d_P <= 0
+
+
+# Run the optimization using NSGA2 or NSGA3
+def run_nsga(Model, halfcell, obj_selection, pop_size=50):
+    n_obj = len(obj_selection)  # Automatically set based on selected objectives
+
+    if n_obj > 4 or n_obj < 2: # Check if the number of objectives is within the range
+        raise ValueError('Number of objectives must be between 2 and 4')
+
+    if n_obj < 4: 
+        # Use NSGA2 for 2 or 3 objectives
+        problem = BatteryOptimizationNSGA2(Model, halfcell, obj_selection)
+        algorithm = NSGA2(pop_size=pop_size)
+        termination = get_termination("n_gen", 150)
+    
+    else: 
+        # Use NSGA3 for 4 objectives
+        problem = BatteryOptimizationNSGA3(Model, halfcell, obj_selection)
+        ref_dirs = get_reference_directions("das-dennis", 4, n_partitions=8)
+        algorithm = NSGA3(ref_dirs=ref_dirs, pop_size=len(ref_dirs))
+        termination = get_termination("n_gen", 150)
+
+    # Run the optimization
+    res = minimize(problem, algorithm, termination, seed=1, verbose=True)
+    return res
+
+def run_optimization(Model, halfcell, obj_selection, pop_size=50):
+    n_obj = len(obj_selection)
+
+    if n_obj == 1:
+        res = run_multiple_ga(Model, halfcell, obj_selection=obj_selection)
+    elif n_obj in [2, 3]:
+        problem = BatteryOptimizationNSGA2(Model, halfcell, obj_selection)
+        algorithm = NSGA2(pop_size=pop_size)
+        termination = get_termination("n_gen", 100)
+        res = minimize(problem, algorithm, termination, seed=1, verbose=False)
+    elif n_obj == 4:
+        problem = BatteryOptimizationNSGA3(Model, halfcell, obj_selection)
+        ref_dirs = get_reference_directions("das-dennis", 4, n_partitions=8)
+        algorithm = NSGA3(ref_dirs=ref_dirs, pop_size=len(ref_dirs))
+        termination = get_termination("n_gen", 100)
+        res = minimize(problem, algorithm, termination, seed=1, verbose=False)
+    else:
+        raise ValueError('Number of objectives must be between 1 and 4')
+
+    return res
+
+def extract_health_parameter(nsga_result,halfcell):
+    '''
+    Extracts health parameters from the optimization result.
+
+    Args:
+        nsga_result: The result of the NSGA optimization.
+        halfcell: The half-cell data used in the optimization.
+
+    Returns:
+        health_params: A numpy array containing the three health parameters.
+    '''
+    # Extract the half-cell parameters from the optimization result
+    X = nsga_result.X
+
+    # Calculate the maximum PE capacity
+    q_PE_hc = halfcell[0].flatten()
+    max_q = np.max(q_PE_hc)
+    Q_max = X[:, 0] * max_q
+
+    # Calculate the LII
+    d_P = X[:, 2]
+    d_N = X[:, 3]
+    LII = (Q_max - (d_P - d_N))/max_q
+
+    # Output the health parameters
+    health_params = np.concatenate((X[:,:2], LII.reshape(-1, 1)), axis=1)
+    return health_params
+
+def plot_health_parameters(health_params_results, selection, theoretical_value=None,
+                           param_names=["$m_p$", "$m_n$", "LII"], figsize=(8, 4.5), dpi=300,
+                           xtick_labels=None):
+    '''
+    Plots violin plots for the specified parameters of each cell.
+
+    Parameters:
+    - health_params_results: Dictionary containing optimization results per cell.
+    - selection: List of tuples indicating the selected cells.
+    - theoretical_value: Optional 2D array of theoretical values.
+    - param_names: List of parameter names to label the plots. Default is ["$m_p$", "$m_n$", "LII"].
+    - figsize: Tuple indicating the size of the figure. Default is (8, 4.5).
+    - dpi: Resolution of the figure. Default is 300.
+    - xtick_labels: Optional list of custom tick labels for x-axis (must match number of cells).
+    '''
+
+    # Create a dictionary of n×3 arrays for each cell
+    cells_data = {iii: health_params_results[iii] for iii, _ in enumerate(selection)}
+
+    # Convert data into long-form DataFrame
+    df_list = []
+    for cell, values in cells_data.items():
+        temp_df = pd.DataFrame(values, columns=param_names)
+        temp_df["Cell"] = cell  # Add cell information
+        df_list.append(temp_df)
+
+    df = pd.concat(df_list, ignore_index=True)
+    df = df.melt(id_vars=["Cell"], var_name="Parameter", value_name="Value")
+
+    # Create subplots
+    fig, axes = plt.subplots(1, len(param_names), figsize=figsize, dpi=dpi)
+
+    for i, ax in enumerate(axes.flat):
+        param = param_names[i]
+        subset = df[df["Parameter"] == param]
+
+        # Get cell order and mapping
+        cell_order = sorted(subset["Cell"].unique())
+        cell_to_pos = {cell: idx for idx, cell in enumerate(cell_order)}
+
+        sns.violinplot(
+            x="Cell",
+            y="Value",
+            data=subset,
+            ax=ax,
+            width=0.5,
+            bw_adjust=0.2,
+            cut=0,
+            density_norm="width",
+            inner="point",
+            color="lightgray",
+            split=True,
+            linewidth=0.5,
+            order=cell_order
+        )
+
+        # Calculate medians and means
+        medians = subset.groupby("Cell")["Value"].median().reindex(cell_order)
+        means = subset.groupby("Cell")["Value"].mean().reindex(cell_order)
+
+        x_positions = [cell_to_pos[cell] for cell in cell_order]
+
+        ax.plot(x_positions, medians.values, marker='o', markersize=4, color='black', label='Median', linestyle='')
+        ax.plot(x_positions, means.values, marker='s', markersize=4, color='blue', label='Mean', linestyle='')
+
+        if theoretical_value is not None:
+            ax.plot(x_positions, theoretical_value[:, i], marker='x', markersize=4, color='red', label='Theoretical', linestyle='')
+
+        ax.set_title(param)
+        ax.set_xlabel("")
+        ax.set_ylabel("")
+        ax.set_xticks(x_positions)
+
+        if xtick_labels is not None:
+            ax.set_xticklabels(xtick_labels)
+        else:
+            ax.set_xticklabels(cell_order)
+
+        if i == 0:
+            ax.legend(loc="best", fontsize="small")
+
+    plt.tight_layout()
+    plt.show()
+
+# Clean up this data by only keeping the first occurrence of each value
+# and removing duplicates
+def filter_first_occurrences_by_column(arr, row_index):
+    _, idx = np.unique(arr[row_index,:], return_index=True)
+    return arr[:,np.sort(idx)]
+
+# Define a function to find the balanced solution from a Pareto front
+def find_balanced_solution(objectives: np.ndarray, solutions: np.ndarray) -> np.ndarray:
+    """
+    Selects the most balanced solution from the Pareto front.
+
+    Args:
+        - objectives: np.ndarray of shape (n_points, n_objectives), all loss-type
+        - solutions: np.ndarray of shape (n_points, solution_dim)
+
+    Returns:
+        - The solution (1D array) corresponding to the most balanced Pareto-optimal point
+    """
+    assert objectives.shape[0] == solutions.shape[0], "Mismatch in number of points"
+
+    # Normalize objectives to [0, 1] for fair comparison
+    min_vals = np.min(objectives, axis=0)
+    max_vals = np.max(objectives, axis=0)
+    denom = max_vals - min_vals + 1e-10  # avoid division by zero
+
+    normalized_objectives = (objectives - min_vals) / denom
+    ideal_point = np.zeros(objectives.shape[1])  # Since lower is better
+
+    # Compute Euclidean distances to the ideal point
+    distances = np.linalg.norm(normalized_objectives - ideal_point, axis=1)
+    best_idx = np.argmin(distances)
+
+    return solutions[best_idx]

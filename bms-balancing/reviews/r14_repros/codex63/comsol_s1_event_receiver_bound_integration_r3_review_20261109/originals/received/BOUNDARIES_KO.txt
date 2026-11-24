@@ -1,0 +1,10 @@
+이 작업은 오프라인 10사례와 실제 소유 수신자 연결 2시나리오의 한정 기능 검증이다. 운영 clock/boot/domain/P/S/M/Q 신원 결속은 수행하지 않는다. 실제 경과/수신자 생존 관측은 이번 시험의 수명 관리에 한정하고 입장 근거는 FIXTURE_ONLY다. C4/C5 이후 물리 반영 완료의 엄격 마감은 보장하지 않는다.
+12개 기존 생산/legacy 소스는 그대로 두고 새 모듈2개 및 worker 후보 사본1개만 추가했다. FileReceiverSession의 start/receiver_pid/is_alive/stop_owned를 재사용한다. legacy exchange와 과거19요청 시험은 실행하지 않는다. candidateworker의 소비 의미는 원본과 같고 두 요청/finish 대기만 새로 연결했다.
+FileAckPorts.marker가 ACK 원파일을 읽고 descriptor를 만들므로 C1은 실제 ACK 파일 읽기 뒤이다. reader는 캐시의 같은 바이트 객체를 반환한다. descriptor는 부모가 산출한 무결성 근거이며 수신자가 발행한 인증이 아니다. 소비 SHA 검증은 기존 BoundAckSession.verify_consumption에서 한다.
+L02 예상 C5 거부 뒤의 finish는 실패 해제나 정상 전달 승인으로 취급하지 않는다. 자식이 v1을 소비한 사실과 부모 검증 headv0 유지를 구분한다. natural rc0 종료 뒤 legacy stop_owned의 graceful=false 필드는 고치거나 graceful=true로 대체하지 않는다. 별도 natural_finish_completed 근거를 기록한다.
+상한180/120초 및 transport5초는 순차 코드/외부 대기의 절차 상한이며 OS 실시간 반환 보증이 아니다. 실제 막힌 callback의 취소·잔류 Q·운영 중지·Job 보호·ResourceSession/Parent·COMSOL 연결·동시성·복구/내구성은 미검증이다. 파일 경로 검사 역시 동시 경로 교체 방어를 보장하지 않는다.
+부모1회 외 수신자1회만 정확 argv/cwd로 허용한다. 오프라인 첫 실패면 자식 시작0. 예상 밖 오류 뒤 직접 소유한 수신자만 terminate 최대1회 및 종료 확인5초를 허용하며 다른 PID/Job/kill fallback은 없다. 부모 대기180초 초과시 무승인 강제 종료로 우회하지 않는다.
+검토 도움은 제공된 텍스트만 이용했다. 기존 BoundAckSession.exchange에는 consumption callback이 없고 bridge가 verify_consumption 한 번을 호출한다. read_bounded는 limit+1 바이트를 읽어 초과를 거부한다는 원소스 근거로 설명 검토의 두 조건부 우려를 해소했다. 실행이나 독립 전체 코드 감사를 뜻하지 않는다.
+과거 실패/NOT_RUN·R1/R2 중지본을 보존하며 이번 동일12사례와 합산하지 않는다. native_ready/approved/usable/contract_adopted=false, 전체·정상 gate INCOMPLETE, 운영 네 기한·reserve=null과 JOB_CURRENT_COMMIT 및 기존 OPEN은 유지한다.
+
+

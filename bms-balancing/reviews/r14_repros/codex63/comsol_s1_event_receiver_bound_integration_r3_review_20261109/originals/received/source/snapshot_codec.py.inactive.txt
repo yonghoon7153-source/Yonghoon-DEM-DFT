@@ -1,0 +1,353 @@
+"""Inactive, in-memory Snapshot codec; no file, OS, IPC, or restore operation.
+
+The wire representation uses the exact accepted dataclass identities imported
+below.  It cannot choose an import, constructor, or class from external input.
+SHA-256 detects byte corruption; it is not authentication or operating authority.
+The 1 MiB and 32-container bounds are provisional format limits, not native
+platform or accepted-core policy.  This source is stored as inactive text.
+
+The envelope is {"body": BODY, "sha256": SHA256(CANONICAL_JSON(BODY))}.
+BODY binds format, channel, receiver_ref, previous_digest, and snapshot.
+Integers are tagged canonical decimal strings, tuples have explicit item lists,
+and dataclasses have an explicit class tag and their complete named fields.
+digest_bytes() instead hashes the complete raw envelope for a subsequent link.
+There are no Boolean fields in this Snapshot schema, so Boolean values reject.
+"""
+
+import hashlib
+import json
+
+from event_clock_core import (
+    Cause, ClockIdentity, ExpectedBinding, FailureLatch, OwnedClockCore,
+    RoleIdentity,
+)
+from exact_time import CoreError
+from state_owner import Snapshot, Ticket
+
+
+MAX_RAW_BYTES = 1_048_576
+MAX_DEPTH = 32
+FORMAT = "snapshot-envelope/v1"
+CHANNELS = frozenset((
+    "normal_store", "normal_delivery", "failure_retain", "failure_delivery",
+))
+
+
+class CodecError(ValueError):
+    """A rejected value or representation; reason is a stable error string."""
+
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+        super().__init__(reason)
+
+
+# All names and field descriptors are internal constants, never import paths.
+_CLASSES = {
+    "Snapshot": Snapshot,
+    "Ticket": Ticket,
+    "OwnedClockCore": OwnedClockCore,
+    "ExpectedBinding": ExpectedBinding,
+    "ClockIdentity": ClockIdentity,
+    "RoleIdentity": RoleIdentity,
+    "FailureLatch": FailureLatch,
+    "Cause": Cause,
+}
+_NAMES = {cls: name for name, cls in _CLASSES.items()}
+_FIELDS = {
+    Snapshot: {
+        "ticket": "Ticket", "core": "OwnedClockCore",
+        "previous": "optional:Ticket",
+    },
+    Ticket: {
+        "owner_ref": "str", "epoch_ref": "str", "run_ref": "str",
+        "producer": "RoleIdentity", "version": "int",
+    },
+    OwnedClockCore: {"binding": "ExpectedBinding", "latch": "FailureLatch"},
+    ExpectedBinding: {
+        "clock": "ClockIdentity", "roles": "tuple:RoleIdentity",
+        "external_binding_check_ref": "str",
+    },
+    ClockIdentity: {
+        "run_ref": "str", "manifest_ref": "str", "clock_ref": "str",
+        "domain_ref": "str", "boot_evidence_ref": "str",
+        "environment_evidence_ref": "str", "api_abi_evidence_ref": "str",
+        "origin_ref": "str", "origin_count": "int",
+        "frequency_evidence_ref": "str", "frequency_hz": "int",
+        "comparison_contract_ref": "str",
+    },
+    RoleIdentity: {
+        "role": "str", "instance_ref": "str", "generation_ref": "str",
+        "process_evidence_ref": "str",
+    },
+    FailureLatch: {
+        "producer": "RoleIdentity", "run_ref": "str",
+        "errors": "tuple:Cause", "stop_causes": "tuple:Cause",
+    },
+    Cause: {
+        "cause_ref": "str", "producer": "RoleIdentity", "run_ref": "str",
+        "reason": "str", "evidence_ref": "str",
+    },
+}
+
+
+def _is_digest(value: object) -> bool:
+    return (type(value) is str and len(value) == 64
+            and all(char in "0123456789abcdef" for char in value))
+
+
+def _binding(channel: object, receiver_ref: object,
+             previous_digest: object) -> None:
+    if type(channel) is not str or channel not in CHANNELS:
+        raise CodecError("BINDING_CHANNEL_INVALID")
+    if type(receiver_ref) is not str or not receiver_ref.strip():
+        raise CodecError("BINDING_RECEIVER_INVALID")
+    if previous_digest is not None and not _is_digest(previous_digest):
+        raise CodecError("BINDING_PREVIOUS_DIGEST_INVALID")
+
+
+def _exact_keys(value: object, names, reason: str) -> None:
+    if (type(value) is not dict or not all(type(key) is str for key in value)
+            or set(value) != set(names)):
+        raise CodecError(reason)
+
+
+def _field_types(cls: type, values: dict) -> None:
+    """Validate exact semantic types before any accepted constructor is called."""
+    for name, descriptor in _FIELDS[cls].items():
+        value = values[name]
+        if descriptor == "str":
+            valid = type(value) is str
+        elif descriptor == "int":
+            valid = type(value) is int
+        elif descriptor == "optional:Ticket":
+            valid = value is None or type(value) is Ticket
+        elif descriptor.startswith("tuple:"):
+            item_cls = _CLASSES[descriptor[6:]]
+            valid = type(value) is tuple and all(
+                type(item) is item_cls for item in value
+            )
+        else:
+            valid = type(value) is _CLASSES[descriptor]
+        if not valid:
+            raise CodecError("FIELD_TYPE_INVALID:" + _NAMES[cls] + "." + name)
+
+
+def _decimal_text(value: int) -> str:
+    # Avoid interpreter-wide decimal conversion limits without changing them.
+    # More than four bits per allowed byte necessarily exceeds the byte bound.
+    if value.bit_length() > MAX_RAW_BYTES * 4:
+        raise CodecError("RAW_SIZE_LIMIT")
+    if value == 0:
+        return "0"
+    negative = value < 0
+    magnitude = -value if negative else value
+    chunks = []
+    while magnitude:
+        magnitude, remainder = divmod(magnitude, 1_000_000_000)
+        chunks.append(remainder)
+    result = str(chunks[-1]) + "".join(
+        format(chunk, "09d") for chunk in reversed(chunks[:-1])
+    )
+    return "-" + result if negative else result
+
+
+def _decimal_value(value: object) -> int:
+    if type(value) is not str or not value:
+        raise CodecError("INTEGER_DECIMAL_INVALID")
+    if value == "0":
+        return 0
+    negative = value.startswith("-")
+    digits = value[1:] if negative else value
+    if (not digits or digits[0] == "0"
+            or any(char < "0" or char > "9" for char in digits)):
+        raise CodecError("INTEGER_DECIMAL_INVALID")
+    magnitude = 0
+    for start in range(0, len(digits), 9):
+        chunk = digits[start:start + 9]
+        magnitude = magnitude * (10 ** len(chunk)) + int(chunk)
+    return -magnitude if negative else magnitude
+
+
+def _pack(value: object, depth: int = 0):
+    # This guard also terminates a deliberately mutated cyclic dataclass graph.
+    # The final JSON-container bound is independently checked on the wire text.
+    if depth > MAX_DEPTH:
+        raise CodecError("RAW_DEPTH_LIMIT")
+    cls = type(value)
+    if value is None:
+        return None
+    if cls is str:
+        if len(value) > MAX_RAW_BYTES:
+            raise CodecError("RAW_SIZE_LIMIT")
+        return value
+    if cls is int:
+        return {"type": "int", "value": _decimal_text(value)}
+    if cls is tuple:
+        if len(value) > MAX_RAW_BYTES:
+            raise CodecError("RAW_SIZE_LIMIT")
+        return {"type": "tuple", "items": [
+            _pack(item, depth + 1) for item in value
+        ]}
+    if not any(cls is allowed for allowed in _FIELDS):
+        raise CodecError("VALUE_TYPE_INVALID")
+    values = vars(value)
+    _exact_keys(values, _FIELDS[cls], "DATACLASS_FIELDS_INVALID:" + _NAMES[cls])
+    values = dict(values)
+    _field_types(cls, values)
+    return {"type": _NAMES[cls], "fields": {
+        name: _pack(values[name], depth + 1) for name in _FIELDS[cls]
+    }}
+
+
+def _unpack(value: object, depth: int = 0):
+    if depth > MAX_DEPTH:
+        raise CodecError("RAW_DEPTH_LIMIT")
+    if value is None or type(value) is str:
+        return value
+    if type(value) is not dict:
+        raise CodecError("VALUE_TYPE_INVALID")
+    tag = value.get("type")
+    if type(tag) is not str:
+        raise CodecError("NODE_TAG_INVALID")
+    if tag == "int":
+        _exact_keys(value, ("type", "value"), "NODE_FIELDS_INVALID")
+        return _decimal_value(value["value"])
+    if tag == "tuple":
+        _exact_keys(value, ("type", "items"), "NODE_FIELDS_INVALID")
+        if type(value["items"]) is not list:
+            raise CodecError("TUPLE_ITEMS_INVALID")
+        return tuple(_unpack(item, depth + 1) for item in value["items"])
+    cls = _CLASSES.get(tag)
+    if cls is None:
+        raise CodecError("NODE_TAG_INVALID")
+    _exact_keys(value, ("type", "fields"), "NODE_FIELDS_INVALID")
+    fields = value["fields"]
+    _exact_keys(fields, _FIELDS[cls], "DATACLASS_FIELDS_INVALID:" + tag)
+    decoded = {name: _unpack(fields[name], depth + 1) for name in _FIELDS[cls]}
+    _field_types(cls, decoded)
+    try:
+        return cls(**decoded)
+    except CoreError as error:
+        raise CodecError("SEMANTIC_INVALID:" + str(error)) from error
+
+
+def _canonical(value: object) -> bytes:
+    try:
+        return json.dumps(value, ensure_ascii=False, allow_nan=False,
+                          sort_keys=True, separators=(",", ":")).encode("utf-8")
+    except UnicodeError as error:
+        raise CodecError("RAW_UTF8_INVALID") from error
+    except (TypeError, ValueError, RecursionError) as error:
+        raise CodecError("JSON_INVALID") from error
+
+
+def _wire_depth(text: str) -> None:
+    """Bound container nesting before handing untrusted text to json.loads."""
+    depth = 0
+    in_string = False
+    escaped = False
+    for char in text:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+        elif char == '"':
+            in_string = True
+        elif char in "{[":
+            depth += 1
+            if depth > MAX_DEPTH:
+                raise CodecError("RAW_DEPTH_LIMIT")
+        elif char in "}]":
+            depth -= 1
+
+
+def _pairs(pairs: list) -> dict:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise CodecError("JSON_DUPLICATE_KEY")
+        result[key] = value
+    return result
+
+
+def _number_forbidden(token: str):
+    raise CodecError("JSON_NUMBER_FORBIDDEN")
+
+
+def digest_bytes(raw: bytes) -> str:
+    """Return lowercase SHA-256 of exact bytes, without parsing or doing I/O."""
+    if type(raw) is not bytes:
+        raise CodecError("RAW_TYPE_INVALID")
+    return hashlib.sha256(raw).hexdigest()
+
+
+def encode_snapshot(snapshot: Snapshot, channel: str, receiver_ref: str,
+                    previous_digest: str | None) -> bytes:
+    _binding(channel, receiver_ref, previous_digest)
+    if type(snapshot) is not Snapshot:
+        raise CodecError("SNAPSHOT_TYPE_INVALID")
+    body = {
+        "format": FORMAT,
+        "channel": channel,
+        "receiver_ref": receiver_ref,
+        "previous_digest": previous_digest,
+        "snapshot": _pack(snapshot),
+    }
+    raw = _canonical({"body": body, "sha256": digest_bytes(_canonical(body))})
+    if len(raw) > MAX_RAW_BYTES:
+        raise CodecError("RAW_SIZE_LIMIT")
+    # Reconstruct through the exact accepted classes and their constructors.
+    restored = decode_snapshot(raw, channel, receiver_ref, previous_digest)
+    if restored != snapshot:
+        raise CodecError("SNAPSHOT_ROUNDTRIP_MISMATCH")
+    return raw
+
+
+def decode_snapshot(raw: bytes, channel: str, receiver_ref: str,
+                    previous_digest: str | None) -> Snapshot:
+    _binding(channel, receiver_ref, previous_digest)
+    if type(raw) is not bytes:
+        raise CodecError("RAW_TYPE_INVALID")
+    if len(raw) > MAX_RAW_BYTES:
+        raise CodecError("RAW_SIZE_LIMIT")
+    try:
+        text = raw.decode("utf-8", errors="strict")
+    except UnicodeError as error:
+        raise CodecError("RAW_UTF8_INVALID") from error
+    _wire_depth(text)
+    try:
+        envelope = json.loads(
+            text, object_pairs_hook=_pairs, parse_int=_number_forbidden,
+            parse_float=_number_forbidden, parse_constant=_number_forbidden,
+            strict=True,
+        )
+    except CodecError:
+        raise
+    except (TypeError, ValueError, RecursionError) as error:
+        raise CodecError("JSON_INVALID") from error
+    if _canonical(envelope) != raw:
+        raise CodecError("JSON_NONCANONICAL")
+    _exact_keys(envelope, ("body", "sha256"), "ENVELOPE_FIELDS_INVALID")
+    body = envelope["body"]
+    _exact_keys(body, ("format", "channel", "receiver_ref", "previous_digest",
+                       "snapshot"), "BODY_FIELDS_INVALID")
+    if type(body["format"]) is not str or body["format"] != FORMAT:
+        raise CodecError("FORMAT_INVALID")
+    if not _is_digest(envelope["sha256"]):
+        raise CodecError("ENVELOPE_DIGEST_INVALID")
+    if digest_bytes(_canonical(body)) != envelope["sha256"]:
+        raise CodecError("DIGEST_MISMATCH")
+    _binding(body["channel"], body["receiver_ref"], body["previous_digest"])
+    if body["channel"] != channel:
+        raise CodecError("CHANNEL_MISMATCH")
+    if body["receiver_ref"] != receiver_ref:
+        raise CodecError("RECEIVER_MISMATCH")
+    if body["previous_digest"] != previous_digest:
+        raise CodecError("PREVIOUS_DIGEST_MISMATCH")
+    snapshot = _unpack(body["snapshot"])
+    if type(snapshot) is not Snapshot:
+        raise CodecError("SNAPSHOT_TYPE_INVALID")
+    return snapshot

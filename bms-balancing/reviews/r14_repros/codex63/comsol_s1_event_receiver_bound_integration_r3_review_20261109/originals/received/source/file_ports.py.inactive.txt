@@ -1,0 +1,235 @@
+"""Prototype local file ports for one live StateOwner, sequential calls only.
+
+No restore, concurrent CAS, external receiver, durability or native permission.
+Files are exclusive-create and never removed or overwritten by these ports.
+Static path checks do not defend against a concurrent path replacement.
+"""
+from dataclasses import dataclass
+from pathlib import Path
+import re
+import stat
+
+from state_owner import Snapshot, Ticket, StoreAck, DeliveryAck, FailureAck, valid_ref
+from snapshot_codec import encode_snapshot, decode_snapshot, digest_bytes
+
+
+MAX_RECORD_BYTES = 1024 * 1024
+CHANNELS = ("normal_store", "normal_delivery", "failure_retain", "failure_delivery")
+
+
+class FilePortError(ValueError):
+    def __init__(self, reason):
+        self.reason = reason
+        super().__init__(reason)
+
+
+@dataclass(frozen=True)
+class FileHead:
+    snapshot: Snapshot
+    digest: str
+    previous_digest: str | None
+
+
+def _plain_path(path, directory):
+    """Read-only static ancestry/type check; no handle/ACL/TOCTOU guarantee."""
+    for current in (path, *path.parents):
+        info = current.lstat()
+        if stat.S_ISLNK(info.st_mode) or (
+            getattr(info, "st_file_attributes", 0)
+            & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+        ):
+            raise FilePortError("REPARSE_PATH_REJECTED")
+        if current != path or directory:
+            if not stat.S_ISDIR(info.st_mode):
+                raise FilePortError("DIRECTORY_REQUIRED")
+        elif not stat.S_ISREG(info.st_mode):
+            raise FilePortError("REGULAR_FILE_REQUIRED")
+
+
+class FilePorts:
+    """All four ports share identity but separate files and acknowledgement heads.
+
+    SHA is an in-process integrity witness, not identity authentication. Every
+    acknowledged head is re-read before advancing that channel. Normal history
+    beyond the latest head is retained but not re-audited on every commit.
+    """
+
+    def __init__(self, sandbox, leaf, initial_snapshot, receiver_ref):
+        if type(leaf) is not str or re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{0,63}", leaf) is None:
+            raise FilePortError("LEAF_INVALID")
+        if type(initial_snapshot) is not Snapshot or initial_snapshot.previous is not None:
+            raise FilePortError("INITIAL_SNAPSHOT_INVALID")
+        if initial_snapshot.core.latch.first_error or initial_snapshot.core.latch.first_stop_cause:
+            raise FilePortError("INITIAL_FAILURE_REJECTED")
+        if not valid_ref(receiver_ref):
+            raise FilePortError("RECEIVER_INVALID")
+        # Normalize no user-provided run/owner reference into a filesystem name.
+        arena = Path(sandbox)
+        if not arena.is_absolute() or ".." in arena.parts:
+            raise FilePortError("SANDBOX_ABSOLUTE_REQUIRED")
+        _plain_path(arena, True)
+        self.root = arena / leaf
+        self._initial = initial_snapshot
+        self._receiver = receiver_ref
+        self._heads = {channel: None for channel in CHANNELS}
+        self._normal_blocked = False
+        self._failure_attempted = {"failure_retain": False, "failure_delivery": False}
+        self._errors = ()
+        self._calls = ()
+        # Existing roots, even empty ones, are never opened as recovery state.
+        self.root.mkdir(exist_ok=False)
+        for channel in CHANNELS:
+            (self.root / channel).mkdir(exist_ok=False)
+
+    @property
+    def errors(self):
+        return self._errors
+
+    @property
+    def calls(self):
+        return self._calls
+
+    @property
+    def normal_blocked(self):
+        return self._normal_blocked
+
+    def record_path(self, channel, version):
+        if channel not in CHANNELS or type(version) is not int or not 0 <= version <= 999999999999:
+            raise FilePortError("RECORD_PATH_INPUT_INVALID")
+        return self.root / channel / ("v%012d.json" % version)
+
+    def _invoke(self, operation, normal, action):
+        if normal and self._normal_blocked:
+            raise FilePortError("NORMAL_FILE_PATH_LATCHED")
+        self._calls += (operation,)
+        try:
+            return action()
+        except BaseException as error:
+            self._errors += ((operation, getattr(error, "reason", type(error).__name__)),)
+            self._normal_blocked = True
+            raise
+
+    def _identity(self, snapshot, failed):
+        if type(snapshot) is not Snapshot:
+            raise FilePortError("SNAPSHOT_TYPE_INVALID")
+        initial = self._initial
+        ticket = snapshot.ticket
+        if (ticket.owner_ref, ticket.epoch_ref, ticket.run_ref, ticket.producer,
+            snapshot.core.binding) != (
+            initial.ticket.owner_ref, initial.ticket.epoch_ref, initial.ticket.run_ref,
+            initial.ticket.producer, initial.core.binding
+        ):
+            raise FilePortError("FILE_BINDING_MISMATCH")
+        has_failure = bool(snapshot.core.latch.first_error or snapshot.core.latch.first_stop_cause)
+        if has_failure is not failed:
+            raise FilePortError("FAILURE_CHANNEL_STATE_MISMATCH")
+
+    def _read_bytes(self, path):
+        _plain_path(path, False)
+        with path.open("rb") as stream:
+            raw = stream.read(MAX_RECORD_BYTES + 1)
+        if len(raw) > MAX_RECORD_BYTES:
+            raise FilePortError("RECORD_TOO_LARGE")
+        return raw
+
+    def _write_new(self, path, raw):
+        _plain_path(path.parent, True)
+        # x is exclusive creation, not atomic publication for concurrent readers.
+        with path.open("xb") as stream:
+            if stream.write(raw) != len(raw):
+                raise FilePortError("SHORT_WRITE")
+            stream.flush()
+        # No fsync/power-loss assertion; the caller performs actual fresh readback.
+
+    def _verify(self, channel, head):
+        raw = self._read_bytes(self.record_path(channel, head.snapshot.ticket.version))
+        if digest_bytes(raw) != head.digest:
+            raise FilePortError("FILE_DIGEST_MISMATCH")
+        decoded = decode_snapshot(raw, channel, self._receiver, head.previous_digest)
+        if decoded != head.snapshot:
+            raise FilePortError("FILE_SNAPSHOT_MISMATCH")
+        return decoded
+
+    def _append(self, channel, snapshot):
+        head = self._heads[channel]
+        if head is not None:
+            self._verify(channel, head)
+        previous_digest = head.digest if head else None
+        raw = encode_snapshot(snapshot, channel, self._receiver, previous_digest)
+        if len(raw) > MAX_RECORD_BYTES:
+            raise FilePortError("RECORD_TOO_LARGE")
+        path = self.record_path(channel, snapshot.ticket.version)
+        self._write_new(path, raw)
+        fresh = self._read_bytes(path)
+        if fresh != raw:
+            raise FilePortError("WRITE_READBACK_BYTES_MISMATCH")
+        decoded = decode_snapshot(fresh, channel, self._receiver, previous_digest)
+        if decoded != snapshot:
+            raise FilePortError("WRITE_READBACK_SNAPSHOT_MISMATCH")
+        new_head = FileHead(snapshot, digest_bytes(fresh), previous_digest)
+        self._heads[channel] = new_head
+        return "local-file-readback:" + channel + ":" + new_head.digest
+
+    def commit(self, previous, snapshot):
+        def action():
+            self._identity(snapshot, False)
+            head = self._heads["normal_store"]
+            if head is None:
+                if previous is not None or snapshot != self._initial:
+                    raise FilePortError("STORE_GENESIS_MISMATCH")
+            elif type(previous) is not Ticket or previous != head.snapshot.ticket:
+                raise FilePortError("STORE_PREVIOUS_MISMATCH")
+            if snapshot.previous != previous:
+                raise FilePortError("STORE_SNAPSHOT_PREVIOUS_MISMATCH")
+            receipt = self._append("normal_store", snapshot)
+            return StoreAck(snapshot.ticket, previous, True, receipt)
+        return self._invoke("commit", True, action)
+
+    def readback(self, ticket):
+        def action():
+            head = self._heads["normal_store"]
+            if head is None or type(ticket) is not Ticket or ticket != head.snapshot.ticket:
+                raise FilePortError("READBACK_HEAD_MISMATCH")
+            return self._verify("normal_store", head)
+        return self._invoke("readback", True, action)
+
+    def publish(self, snapshot):
+        def action():
+            self._identity(snapshot, False)
+            stored = self._heads["normal_store"]
+            if stored is None or self._verify("normal_store", stored) != snapshot:
+                raise FilePortError("DELIVERY_STORE_MISMATCH")
+            delivered = self._heads["normal_delivery"]
+            if delivered is None:
+                if snapshot != self._initial:
+                    raise FilePortError("DELIVERY_GENESIS_MISMATCH")
+            elif snapshot.previous != delivered.snapshot.ticket:
+                raise FilePortError("DELIVERY_PREVIOUS_MISMATCH")
+            receipt = self._append("normal_delivery", snapshot)
+            return DeliveryAck(snapshot.ticket, self._receiver, True, receipt)
+        return self._invoke("publish", True, action)
+
+    def retain(self, snapshot):
+        def action():
+            if self._failure_attempted["failure_retain"]:
+                raise FilePortError("FAILURE_RETAIN_ALREADY_ATTEMPTED")
+            self._failure_attempted["failure_retain"] = True
+            self._normal_blocked = True
+            self._identity(snapshot, True)
+            receipt = self._append("failure_retain", snapshot)
+            return FailureAck(snapshot, "RETAIN", self._receiver, True, receipt)
+        return self._invoke("retain", False, action)
+
+    def publish_failure(self, snapshot):
+        def action():
+            if self._failure_attempted["failure_delivery"]:
+                raise FilePortError("FAILURE_DELIVERY_ALREADY_ATTEMPTED")
+            self._failure_attempted["failure_delivery"] = True
+            self._normal_blocked = True
+            self._identity(snapshot, True)
+            retained = self._heads["failure_retain"]
+            if retained is None or self._verify("failure_retain", retained) != snapshot:
+                raise FilePortError("FAILURE_RETAIN_MISMATCH")
+            receipt = self._append("failure_delivery", snapshot)
+            return FailureAck(snapshot, "PUBLISH", self._receiver, True, receipt)
+        return self._invoke("publish_failure", False, action)

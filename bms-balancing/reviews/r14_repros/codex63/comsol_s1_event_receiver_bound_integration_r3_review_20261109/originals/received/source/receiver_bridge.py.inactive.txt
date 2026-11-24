@@ -1,0 +1,243 @@
+"""Inactive, sequential bridge from one StateOwner to one receiver session.
+
+FilePorts publication is a local write/readback only. The separate receiver
+head advances only after a bound external ACK and a fresh owner-state check.
+PID/session equality and SHA-256 are local evidence, not authentication,
+durability, concurrent-process coordination or operating permission.
+
+This source does not launch a process, select a wait, read a clock, retry,
+restore a snapshot, or replace the owner's accepted core. The session owns
+the single process/IPC boundary. This file is intentionally inactive text.
+"""
+
+from file_ports import FileHead, FilePorts
+from receiver_protocol import canonical_bytes, digest, parse_ack, validate_ack, ticket_to_wire
+from state_owner import DeliveryAck, FailureAck, Snapshot, StateOwner, valid_ref
+
+
+class ReceiverBridgeError(ValueError):
+    def __init__(self, reason):
+        self.reason = reason
+        super().__init__(reason)
+
+
+class ReceiverBridge:
+    """One binding, separate normal/failure heads, and no normal-path retry.
+
+    The accepted FilePorts has no public head accessor. Reading its existing
+    _heads metadata here is a narrow composition dependency; it does not turn
+    a local FileHead or local receipt into an external receiver ACK.
+    """
+
+    def __init__(self, local_ports, session, case_ref, receiver_ref):
+        if type(local_ports) is not FilePorts:
+            raise ReceiverBridgeError("LOCAL_PORTS_TYPE_INVALID")
+        if not valid_ref(case_ref) or not valid_ref(receiver_ref):
+            raise ReceiverBridgeError("BRIDGE_REFERENCE_INVALID")
+        if local_ports._receiver != receiver_ref:
+            raise ReceiverBridgeError("BRIDGE_RECEIVER_BINDING_MISMATCH")
+        if (not callable(getattr(session, "exchange", None))
+                or not callable(getattr(session, "is_alive", None))
+                or not callable(getattr(session, "verify_consumption", None))):
+            raise ReceiverBridgeError("SESSION_PORT_INVALID")
+        receiver_pid = session.receiver_pid
+        if type(receiver_pid) is not int or receiver_pid <= 0:
+            raise ReceiverBridgeError("RECEIVER_PID_INVALID")
+        self._local = local_ports
+        self._session = session
+        self._case_ref = case_ref
+        self._receiver_ref = receiver_ref
+        self._receiver_pid = receiver_pid
+        self._owner = None
+        self._receiver_accepted_head = None
+        self._failure_receiver_accepted_head = None
+        self._retained_snapshot = None
+        self._normal_blocked = False
+        self._first_error_reason = None
+        self._failure_attempted = {"retain": False, "publish_failure": False}
+        self._errors = ()
+        self._calls = ()
+
+    @property
+    def receiver_accepted_head(self):
+        return self._receiver_accepted_head
+
+    @property
+    def failure_receiver_accepted_head(self):
+        return self._failure_receiver_accepted_head
+
+    @property
+    def normal_blocked(self):
+        return self._normal_blocked
+
+    @property
+    def first_error_reason(self):
+        return self._first_error_reason
+
+    @property
+    def errors(self):
+        return self._errors
+
+    @property
+    def calls(self):
+        return self._calls
+
+    def bind_owner(self, owner):
+        """Bind once to the actual owner whose callbacks use these ports."""
+        if self._owner is not None:
+            raise ReceiverBridgeError("OWNER_ALREADY_BOUND")
+        if type(owner) is not StateOwner:
+            raise ReceiverBridgeError("OWNER_TYPE_INVALID")
+        if (owner._store is not self._local or owner._delivery is not self
+                or owner._failure_channel not in (None, self)
+                or owner._receiver_ref != self._receiver_ref):
+            raise ReceiverBridgeError("OWNER_PORT_BINDING_MISMATCH")
+        view = owner.view
+        if (view.started or view.busy
+                or view.snapshot != self._local._initial):
+            raise ReceiverBridgeError("OWNER_INITIAL_BINDING_MISMATCH")
+        self._owner = owner
+
+    def _invoke(self, operation, normal, action):
+        # A blocked repeat does not reach either local files or receiver IPC,
+        # and does not replace the recorded first error with a retry error.
+        if normal and self._normal_blocked:
+            raise ReceiverBridgeError("NORMAL_RECEIVER_PATH_LATCHED")
+        self._calls += (operation,)
+        try:
+            return action()
+        except BaseException as error:
+            reason = getattr(error, "reason", type(error).__name__)
+            if type(reason) is not str or not reason:
+                reason = type(error).__name__
+            self._errors += ((operation, reason),)
+            if self._first_error_reason is None:
+                self._first_error_reason = reason
+            self._normal_blocked = True
+            # The StateOwner sees the original exception and records its own
+            # DELIVERY_EXCEPTION or failure-export exception without recovery.
+            raise
+
+    def _owner_snapshot(self, snapshot, failed):
+        if self._owner is None:
+            raise ReceiverBridgeError("OWNER_UNBOUND")
+        if type(snapshot) is not Snapshot:
+            raise ReceiverBridgeError("SNAPSHOT_TYPE_INVALID")
+        current = self._owner.view.snapshot
+        if current is not snapshot:
+            raise ReceiverBridgeError("OWNER_SNAPSHOT_SUPERSEDED")
+        latch = current.core.latch
+        has_failure = bool(latch.first_error or latch.first_stop_cause)
+        if failed:
+            if not has_failure:
+                raise ReceiverBridgeError("OWNER_FAILURE_REQUIRED")
+        elif has_failure:
+            raise ReceiverBridgeError("OWNER_NORMAL_PATH_LATCHED")
+        return (latch.errors, latch.stop_causes,
+                latch.first_error, latch.first_stop_cause)
+
+    def _receiver_live(self):
+        if (type(self._session.receiver_pid) is not int
+                or self._session.receiver_pid != self._receiver_pid):
+            raise ReceiverBridgeError("RECEIVER_PID_CHANGED")
+        if self._session.is_alive() is not True:
+            raise ReceiverBridgeError("RECEIVER_NOT_ALIVE")
+
+    def _publication(self, channel, snapshot):
+        head = self._local._heads[channel]
+        if type(head) is not FileHead or head.snapshot is not snapshot:
+            raise ReceiverBridgeError("LOCAL_PUBLICATION_HEAD_MISMATCH")
+        path = self._local.record_path(channel, snapshot.ticket.version)
+        return path, head.previous_digest, head.digest
+
+    def _exchange(self, snapshot, channel):
+        path, previous_digest, file_digest = self._publication(channel, snapshot)
+        captured_ticket = canonical_bytes(ticket_to_wire(snapshot.ticket))
+        self._receiver_live()
+        exchange = self._session.exchange(
+            self._case_ref, snapshot, channel, self._receiver_ref,
+            path, previous_digest, file_digest,
+        )
+        ack = parse_ack(exchange.raw_ack)
+        validate_ack(ack, exchange.request, self._receiver_pid)
+        # validate_ack binds to the actual posted request. Independently bind
+        # accepted content to this invocation, so a mutated posted request does
+        # not grant authority to accept a different ticket/channel/record.
+        if canonical_bytes(ack["ticket"]) != captured_ticket:
+            raise ReceiverBridgeError("ACK_CAPTURED_TICKET_MISMATCH")
+        if ack["channel"] != channel:
+            raise ReceiverBridgeError("ACK_CAPTURED_CHANNEL_MISMATCH")
+        if ack["receiver_ref"] != self._receiver_ref:
+            raise ReceiverBridgeError("ACK_CAPTURED_RECEIVER_MISMATCH")
+        if ack["record_sha256"] != file_digest:
+            raise ReceiverBridgeError("ACK_CAPTURED_RECORD_DIGEST_MISMATCH")
+        if ack["case_ref"] != self._case_ref:
+            raise ReceiverBridgeError("ACK_CAPTURED_CASE_MISMATCH")
+        # The ACK receipt must name the actual receiver consumption artifact,
+        # whose bytes and digest the session re-reads without new receiver IPC.
+        self._session.verify_consumption(ack)
+        return "receiver-ack:" + ack["consumption_ref"] + ":" + digest(exchange.raw_ack)
+
+    def publish(self, snapshot):
+        def action():
+            self._owner_snapshot(snapshot, False)
+            local_ack = self._local.publish(snapshot)
+            if (type(local_ack) is not DeliveryAck or local_ack.accepted is not True
+                    or local_ack.ticket != snapshot.ticket
+                    or local_ack.receiver_ref != self._receiver_ref):
+                raise ReceiverBridgeError("LOCAL_DELIVERY_ACK_INVALID")
+            receipt = self._exchange(snapshot, "normal_delivery")
+            # An ACK for a formerly current snapshot cannot advance the
+            # external head after a reentrant failure, supersession or exit.
+            self._receiver_live()
+            self._owner_snapshot(snapshot, False)
+            if self._normal_blocked:
+                raise ReceiverBridgeError("NORMAL_RECEIVER_PATH_LATCHED")
+            self._receiver_accepted_head = snapshot.ticket
+            return DeliveryAck(snapshot.ticket, self._receiver_ref, True, receipt)
+        return self._invoke("publish", True, action)
+
+    def _begin_failure(self, operation, snapshot):
+        if self._failure_attempted[operation]:
+            raise ReceiverBridgeError("BRIDGE_FAILURE_ALREADY_ATTEMPTED:" + operation)
+        # Each explicit stage is consumed before any local or receiver I/O.
+        self._failure_attempted[operation] = True
+        self._normal_blocked = True
+        return self._owner_snapshot(snapshot, True)
+
+    def _failure_unchanged(self, snapshot, history):
+        if self._owner_snapshot(snapshot, True) != history:
+            raise ReceiverBridgeError("OWNER_FAILURE_HISTORY_CHANGED")
+
+    def retain(self, snapshot):
+        def action():
+            history = self._begin_failure("retain", snapshot)
+            ack = self._local.retain(snapshot)
+            if (type(ack) is not FailureAck or ack.accepted is not True
+                    or ack.snapshot is not snapshot or ack.stage != "RETAIN"
+                    or ack.receiver_ref != self._receiver_ref
+                    or not valid_ref(ack.receipt_ref)):
+                raise ReceiverBridgeError("LOCAL_FAILURE_RETAIN_ACK_INVALID")
+            self._failure_unchanged(snapshot, history)
+            self._retained_snapshot = snapshot
+            return ack
+        return self._invoke("retain", False, action)
+
+    def publish_failure(self, snapshot):
+        def action():
+            history = self._begin_failure("publish_failure", snapshot)
+            if self._retained_snapshot is not snapshot:
+                raise ReceiverBridgeError("BRIDGE_FAILURE_RETAIN_MISMATCH")
+            local_ack = self._local.publish_failure(snapshot)
+            if (type(local_ack) is not FailureAck or local_ack.accepted is not True
+                    or local_ack.snapshot is not snapshot or local_ack.stage != "PUBLISH"
+                    or local_ack.receiver_ref != self._receiver_ref):
+                raise ReceiverBridgeError("LOCAL_FAILURE_PUBLISH_ACK_INVALID")
+            receipt = self._exchange(snapshot, "failure_delivery")
+            self._receiver_live()
+            self._failure_unchanged(snapshot, history)
+            # Successful explicit failure export never advances normal state
+            # or clears either the bridge error or the owner's failure latch.
+            self._failure_receiver_accepted_head = snapshot.ticket
+            return FailureAck(snapshot, "PUBLISH", self._receiver_ref, True, receipt)
+        return self._invoke("publish_failure", False, action)

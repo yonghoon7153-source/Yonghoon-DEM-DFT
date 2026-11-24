@@ -1,0 +1,847 @@
+{
+  "kind": "R3_EXACT_ROLE_AND_OUTPUT_BINDINGS",
+  "initial_ready": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\READY_INPUTS.json",
+    "bytes": 42791,
+    "sha256": "f45261066e6414823a8c3461d285f2dd4b03850acd5e68931b66d77c6090e458"
+  },
+  "existing_inputs": [
+    {
+      "logical_name": "CONFIG.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\CONFIG.json",
+      "bytes": 2344,
+      "sha256": "6d1f0ff852efe7ed76ff1a8f8bcd807ac6238bceccd122f853842c723b97a42e",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "DIRECTORY_CONTRACT.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\DIRECTORY_CONTRACT.json",
+      "bytes": 995,
+      "sha256": "5bdb4dda06d71457c88c9269923659988122509117851f2fb02232dab3b5ac57",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "FUNCTION_BINDINGS.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\FUNCTION_BINDINGS.json",
+      "bytes": 29137,
+      "sha256": "dcf9f7176968e2d4f7fbe97871c84d532128fe8b7444f139b23989d350009961",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "INTAKE.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\INTAKE.json",
+      "bytes": 14278,
+      "sha256": "7ba2ddae5fa8702b5f4524836959dcb6a06a96591b206488d07fffad097a8f8e",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "READY_INPUTS.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\READY_INPUTS.json",
+      "bytes": 42791,
+      "sha256": "f45261066e6414823a8c3461d285f2dd4b03850acd5e68931b66d77c6090e458",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "SELECTED_SOURCES_BEFORE.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\SELECTED_SOURCES_BEFORE.json",
+      "bytes": 58801,
+      "sha256": "7ce8d7c114abeab800f0f876973c9521c064bfe331dba75c1e58f8543247ce1a",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "SOURCE_MANIFEST.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\SOURCE_MANIFEST.json",
+      "bytes": 8577,
+      "sha256": "d8263f549c3633cfcf7a6a1724b8c7cb53b4c5176ad290ff8b518399d82cffcb",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "TASK_ORIGIN.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\TASK_ORIGIN.json",
+      "bytes": 375,
+      "sha256": "8a9faf6f90b2dce924eeb7e33a7b3d01ecbdc72936607baf53a74724247eb4c3",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "TOOL_000_ORIGIN.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\TOOL_000_ORIGIN.json",
+      "bytes": 422,
+      "sha256": "d00a3fbbfdaa36c173c2bac1726aa0c875a3d956f71620d6caa474567db63e60",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "TOOL_001_INTAKE.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\TOOL_001_INTAKE.json",
+      "bytes": 825,
+      "sha256": "1d2a2326460c4b4b3d1d08233a85fb04c6933ca81a4ac3fa221fcfe41d22fbbf",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "TOOL_002_SOURCE_READ.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\TOOL_002_SOURCE_READ.json",
+      "bytes": 54611,
+      "sha256": "6d4400aefac5f33e1101e4dfa09997855795f6d7ecbeddec00cb2d6015fb1288",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "TOOL_003_SOURCE_READ.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\TOOL_003_SOURCE_READ.json",
+      "bytes": 89735,
+      "sha256": "6b6f36c7afc1ff4e7f6b68f5df13b4c4c569218fc6099bf55322d5805ad91732",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "TOOL_004_METADATA_READ.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\TOOL_004_METADATA_READ.json",
+      "bytes": 698,
+      "sha256": "ce6c792c1d0f079ff394eb87a63e188b469f63de8f67cfed8a0044a881d08304",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "VALIDATION_PLAN.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\VALIDATION_PLAN.json",
+      "bytes": 14657,
+      "sha256": "7ca16cb05b801b4ea1c0713139bde2d9191570e88e998dae47e226c95d9a3b2c",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "basis/CASE_PLAN.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\basis\\CASE_PLAN.json",
+      "bytes": 4719,
+      "sha256": "aafea26c5c0fdaa3c6a33b36dc6b4e4944bb2bf3ae3a1b9a6f0eb928530c1084",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "basis/DIRECTORY_RESPONSIBILITY_PLAN.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\basis\\DIRECTORY_RESPONSIBILITY_PLAN.json",
+      "bytes": 3468,
+      "sha256": "9bb7515ad92d0fa27819336204bb6d8bb5796d441abb9457e07a89f82eeb2168",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "basis/INPUT_RESOLUTION.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\basis\\INPUT_RESOLUTION.json",
+      "bytes": 1404,
+      "sha256": "f92823f9edd12e3aa2d9c92705d35123540a90550e5258ca42429e9aff43b4cb",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "basis/NEXT_APPROVAL_KO.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\basis\\NEXT_APPROVAL_KO.txt",
+      "bytes": 1620,
+      "sha256": "cfc6abd2d5262cb81fee16e2f23cc7dcb4cc9459e91b4c97da4eac525dbd412b",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "basis/R1_RESTART_PLAN_KO.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\basis\\R1_RESTART_PLAN_KO.txt",
+      "bytes": 7076,
+      "sha256": "47d47d8fb49c41dfba6ab5ecd081b2e2360b2043743fa0ec457045f78b720de9",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "basis/R1_SCOPE.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\basis\\R1_SCOPE.json",
+      "bytes": 6650,
+      "sha256": "6b7fbf47d121db658ba667427d061718c5e2dcfe1fb092a2223e623f5ea64e80",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "basis/SOURCE_BASIS.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\basis\\SOURCE_BASIS.json",
+      "bytes": 4882,
+      "sha256": "871cae8923e008689431e5e4aa51b86a6991c4708b42368a0e07962cd395259b",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "basis/TOOL_RETURN_PRESERVATION_RULES.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\basis\\TOOL_RETURN_PRESERVATION_RULES.json",
+      "bytes": 2268,
+      "sha256": "270807fa1a1f76a8829f57f62cf8fe3134f7966d17de6b20a7089ba2e612cecc",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/ADMISSION.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\ADMISSION.json",
+      "bytes": 4106,
+      "sha256": "0528543b45eecab3cbc1bd44479a1ce8695c1f5677c0a3735c32831b33de703f",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F01.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F01.json",
+      "bytes": 1513,
+      "sha256": "b51ea6d7105bbe788827b27614f287deff3ccf6d5b04aeb5abeab3015550c1f2",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F02.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F02.json",
+      "bytes": 1444,
+      "sha256": "a33325e9952ff2d19fdfdb3ab9220e11982e62af1e76ffe891369d335ba0f1a6",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F03.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F03.json",
+      "bytes": 1427,
+      "sha256": "a3e698c680029453afb9e364cd70144b9f27adbe2396a3f7fb7df6f697d25336",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F04.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F04.json",
+      "bytes": 1433,
+      "sha256": "00cb793da30cb03c6f2bab5a8e1016f9d4fc844162cdaaa97e23e2032d0adbbd",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F05.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F05.json",
+      "bytes": 1448,
+      "sha256": "d14b44509f81f1d584f3638bc2ce62980126e1b5d4481a6def16eb9b82a3e8e5",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F06.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F06.json",
+      "bytes": 1658,
+      "sha256": "d780816e3a146f7a3b4ba73dcc3b08bdc3c2198493b1f5cddcf338cda9532b40",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F07.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F07.json",
+      "bytes": 1536,
+      "sha256": "f96f2704de38fa5330ca50c70eb133b279d75a5349bf2db4a97f92ca47a755f0",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F08.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F08.json",
+      "bytes": 1312,
+      "sha256": "d302f25be649dd81bdb51a0c8e789ac4c895777021fa9a2f0b9f9501e7154272",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F09.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F09.json",
+      "bytes": 1387,
+      "sha256": "79f28935d0b3d7b25d9e19eb30bcee61861d2a95cf08370354c9c5d84bb14518",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/F10.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F10.json",
+      "bytes": 1374,
+      "sha256": "e9d6daa1ff500bdf75044b6ecae94d376f2b6ede84bd523c5c695bebec7751d6",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/L01.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\L01.json",
+      "bytes": 1496,
+      "sha256": "3d10e7bf8458edc6d80981856866d2a0ebc595e3168f2ef75212c435f47bcd21",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "fixtures/L02.json",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\L02.json",
+      "bytes": 1554,
+      "sha256": "fd35c06b79893d77ac2be452f500a55b9be5ebcda4bb5a1f43c8968a0fa50aaf",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "sealed_parent_and_child_identity_checks",
+        "parent_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/bound_ack_session.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\bound_ack_session.py.inactive.txt",
+      "bytes": 18794,
+      "sha256": "e9e169604cd60cf3ab77b8885a4ac37e5a601edc163af25d7ef1d965fa9ab105",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/deadline_receive.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\deadline_receive.py.inactive.txt",
+      "bytes": 8787,
+      "sha256": "d098b0415b844b75e2d73cb094c3eb93ed0b42f2a2df6c67773378a2b5a48307",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/event_clock_core.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\event_clock_core.py.inactive.txt",
+      "bytes": 10634,
+      "sha256": "e7d2d32dadf2c5eb887a4013a380e5ff6ab67d21b5aed527a1b2e0ccf19c7879",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/evidence_admission.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\evidence_admission.py.inactive.txt",
+      "bytes": 14007,
+      "sha256": "92267d568705f479e5a5ef2e30d59879a0d0d653f85b9ddb819ea0bc52fc2e39",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/exact_time.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\exact_time.py.inactive.txt",
+      "bytes": 6307,
+      "sha256": "3d6b50375b7dab992a3de247f6421c64048f43f4b5893ab5214854ed3d30f934",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/file_ports.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\file_ports.py.inactive.txt",
+      "bytes": 10342,
+      "sha256": "53bfd873eae3b58c93bb9f54ce6ef8fb0a355cdc6d49cfa66319478ca3e040a1",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/live_file_transport.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "bytes": 6996,
+      "sha256": "844a6f705dd3b7eb83107b02d529a6e547c55ae1f7459823c7458a352aef7993",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/receiver_bridge.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_bridge.py.inactive.txt",
+      "bytes": 11649,
+      "sha256": "6e62f105b4008d044bc776e6f4849159a813b4829f711a415547095fcbfbcc80",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/receiver_finish.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+      "bytes": 2779,
+      "sha256": "03ae89e774dbb52f7ee0c986a4129373288bebd0968c638977ba8e8a27fb3d65",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/receiver_protocol.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_protocol.py.inactive.txt",
+      "bytes": 7419,
+      "sha256": "4248ad991c70901dc700a1a9f073dbe8ac30c398c2ea1e2f89f923f16d614031",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/receiver_session.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_session.py.inactive.txt",
+      "bytes": 9066,
+      "sha256": "da007b4d599c77c171497599321d9033e5314dd7a656909fbdf0ea58a63bb54a",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/receiver_worker_candidate.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+      "bytes": 17480,
+      "sha256": "6959a93bf52b1610859e7a3d186e2472200a9d6331da742b71c46dd349396fef",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_child_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/receiver_worker.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker.py.inactive.txt",
+      "bytes": 17256,
+      "sha256": "b3911ba78ca72ee3bd438258462601f337223860e70ec725d357b640c0f68f7c",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/snapshot_codec.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\snapshot_codec.py.inactive.txt",
+      "bytes": 13145,
+      "sha256": "68b12f814091ac600d528230d79c5a8610953c95351d708ec3051816b6f5f4eb",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "source/state_owner.py.inactive.txt",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\state_owner.py.inactive.txt",
+      "bytes": 17274,
+      "sha256": "4d07321000d54a7716e9e958e3c99b83deb21235f71647406179413f23c91cc1",
+      "producer": "R3 intake raw copy; origin bound in INTAKE",
+      "permitted_consumer": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "validation/harness_cases.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation\\harness_cases.py",
+      "bytes": 22245,
+      "sha256": "101177f7b45334a3edb880396ac5c6aa48010a99446ec07bdcb2e7ed25497400",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "one_parent_launcher_or_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "validation/launch_once.ps1",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation\\launch_once.ps1",
+      "bytes": 3845,
+      "sha256": "d72eaba5528bb6d0879bb62d42471f067cf711acd4d8f5be964b5270d748d4a5",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "one_parent_launcher_or_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "validation/receiver_entry.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation\\receiver_entry.py",
+      "bytes": 1330,
+      "sha256": "635067e6fa80201bba97de8456ffdc7137a8aa3a290ddae6946bf3e243a2e843",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "guarded_parent_or_child_bootstrap"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "validation/run.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation\\run.py",
+      "bytes": 362,
+      "sha256": "f9c992bdced93db5e7c68840c8d9e28b575e9ba657576931c2cb498aae6ee52f",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "one_parent_launcher_or_harness"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    },
+    {
+      "logical_name": "validation/runtime_support.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation\\runtime_support.py",
+      "bytes": 7867,
+      "sha256": "aa8588e47a1e967114b9022f56a6df9fc269a2a3359ed5998ae117ae3e537f8e",
+      "producer": "R3 root authoring",
+      "permitted_consumer": [
+        "root_static_and_preservation",
+        "guarded_parent_or_child_bootstrap"
+      ],
+      "existing_input_or_future_output": "EXISTING_INPUT",
+      "readback": "identified"
+    }
+  ],
+  "read_only_references": [
+    {
+      "logical_name": "reference:harness_cases.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\validation\\harness_cases.py",
+      "bytes": 23617,
+      "sha256": "7261cdc97957d22aa791bbd4535bb7aa6c989eac5a8508c31a4627090ccd5503",
+      "producer": "Prior accepted validation author",
+      "permitted_consumer": [
+        "root_static_authoring"
+      ],
+      "existing_input_or_future_output": "EXISTING_REFERENCE",
+      "target_execution_allowed": false
+    },
+    {
+      "logical_name": "reference:support.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\validation\\support.py",
+      "bytes": 4579,
+      "sha256": "808a3dba4b1efabe4a475b0962e08f1fb3cc9bba31efc062e7d69ba5daf03815",
+      "producer": "Prior accepted validation author",
+      "permitted_consumer": [
+        "root_static_authoring"
+      ],
+      "existing_input_or_future_output": "EXISTING_REFERENCE",
+      "target_execution_allowed": false
+    },
+    {
+      "logical_name": "reference:runtime_support.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_ack_20261104\\validation\\runtime_support.py",
+      "bytes": 6879,
+      "sha256": "af504521ad73288aa5eb05a3ceeec49334410236da13b8392180b986d34042a6",
+      "producer": "Prior accepted validation author",
+      "permitted_consumer": [
+        "root_static_authoring"
+      ],
+      "existing_input_or_future_output": "EXISTING_REFERENCE",
+      "target_execution_allowed": false
+    },
+    {
+      "logical_name": "reference:harness.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_ack_20261104\\validation\\harness.py",
+      "bytes": 27219,
+      "sha256": "542f859462fc9dd55f3bdf7489193c0abeb803eb9e6310a2b1231f60b922f9a6",
+      "producer": "Prior accepted validation author",
+      "permitted_consumer": [
+        "root_static_authoring"
+      ],
+      "existing_input_or_future_output": "EXISTING_REFERENCE",
+      "target_execution_allowed": false
+    },
+    {
+      "logical_name": "reference:receiver_entry.py",
+      "exact_absolute_path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_ack_20261104\\validation\\receiver_entry.py",
+      "bytes": 960,
+      "sha256": "99e3b1829b461a5327a2a4f36a6e9fc4352c38f7afefe1912e734071d86c76b6",
+      "producer": "Prior accepted validation author",
+      "permitted_consumer": [
+        "root_static_authoring"
+      ],
+      "existing_input_or_future_output": "EXISTING_REFERENCE",
+      "target_execution_allowed": false
+    }
+  ],
+  "future_outputs": [
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\PRESEAL.json",
+      "producer": "root preseal",
+      "consumer": [
+        "launcher",
+        "parent_bootstrap",
+        "child_bootstrap"
+      ],
+      "status": "NOT_YET_CREATED",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\EXECUTION_RESERVATION.json",
+      "producer": "launcher exclusive reservation",
+      "consumer": [
+        "root preservation"
+      ],
+      "status": "NOT_YET_CREATED",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\PYTHON_SESSION_RETURN.json",
+      "producer": "launcher after one Python session",
+      "consumer": [
+        "root preservation"
+      ],
+      "status": "NOT_YET_CREATED",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\results\\*",
+      "producer": "launcher stdout/stderr then parent evidence",
+      "consumer": [
+        "root preservation"
+      ],
+      "status": "NOT_YET_CREATED",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\arena\\*",
+      "producer": "case harness/FilePorts/owned session/receiver by DIRECTORY_CONTRACT",
+      "consumer": [
+        "guarded_parent",
+        "owned_receiver",
+        "root preservation"
+      ],
+      "status": "NOT_YET_CREATED",
+      "bytes": null,
+      "sha256": null
+    }
+  ],
+  "status": "AUTHORING_BOUND_AWAITING_PRESEAL_NOT_TEST_STARTED",
+  "RBI_R1_READY_01": "PRODUCERS_CONSUMERS_IDENTITIES_AND_NOT_CREATED_OUTPUTS_SEPARATED"
+}

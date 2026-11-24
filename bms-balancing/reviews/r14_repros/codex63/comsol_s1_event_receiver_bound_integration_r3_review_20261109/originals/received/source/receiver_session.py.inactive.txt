@@ -1,0 +1,187 @@
+"""One owned receiver process and sequential file-mailbox requests for this test."""
+from dataclasses import dataclass
+import json
+from pathlib import Path
+import subprocess
+import time
+from receiver_protocol import (ProtocolError, FRAME_MAX, canonical_bytes, digest, ticket_to_wire,
+    parse_request, read_bounded, write_new_json, publish_marker, plain_path)
+
+
+class SessionError(ProtocolError):
+    pass
+
+
+@dataclass(frozen=True)
+class Exchange:
+    request: dict
+    raw_ack: bytes
+
+
+class FileReceiverSession:
+    def __init__(self, arena, session_ref, source_manifest_sha256, child_entry, engine):
+        self.arena = Path(arena)
+        self.mailbox = self.arena / "mailbox"
+        self.session_ref = session_ref
+        self.source_manifest_sha256 = source_manifest_sha256
+        self.child_entry = str(child_entry)
+        self.engine = str(engine)
+        self._proc = None
+        self._launch_attempted = False
+        self._terminate_attempted = False
+        self._out = self._err = None
+        self._request_count = 0
+        self._after_consumption = None
+        self._child_start = None
+        self.events = []
+
+    @property
+    def receiver_pid(self):
+        return None if self._proc is None else self._proc.pid
+
+    @property
+    def request_count(self):
+        return self._request_count
+
+    def is_alive(self):
+        return self._proc is not None and self._proc.poll() is None
+
+    def _live(self):
+        if not self.is_alive():
+            raise SessionError("CHILD_EXITED")
+        if time.monotonic() - self._child_start >= 120:
+            raise SessionError("CHILD_LIFETIME_EXCEEDED")
+
+    def start(self):
+        if self._launch_attempted:
+            raise SessionError("CHILD_START_ALREADY_ATTEMPTED")
+        self._launch_attempted = True
+        plain_path(self.arena, True)
+        self.mailbox.mkdir(exist_ok=False)
+        for folder in ("requests", "acks", "consumption"):
+            (self.mailbox / folder).mkdir(exist_ok=False)
+        self._out = (self.arena / "RECEIVER_STDOUT.txt").open("xb")
+        self._err = (self.arena / "RECEIVER_STDERR.txt").open("xb")
+        argv = [self.engine, "-I", "-B", self.child_entry, self.session_ref, self.source_manifest_sha256]
+        self._child_start = time.monotonic()
+        self._proc = subprocess.Popen(argv, executable=self.engine, cwd=str(self.arena.parent), stdin=subprocess.DEVNULL,
+            stdout=self._out, stderr=self._err, shell=False, creationflags=subprocess.CREATE_NO_WINDOW)
+        self.events.append({"event": "CHILD_STARTED", "pid": self.receiver_pid, "argv": argv})
+        write_new_json(self.arena / "CHILD_LAUNCH.json", {"pid": self.receiver_pid, "argv": argv,
+            "cwd": str(self.arena.parent), "session_ref": self.session_ref, "source_manifest_sha256": self.source_manifest_sha256})
+        deadline = time.monotonic() + 5
+        marker = self.mailbox / "READY.ready"
+        while not marker.exists():
+            self._live()
+            if time.monotonic() >= deadline:
+                raise SessionError("READY_TIMEOUT")
+            time.sleep(0.01)
+        self._live()
+        if time.monotonic() >= deadline or read_bounded(marker, 0) != b"":
+            raise SessionError("READY_TIMEOUT_OR_MARKER_INVALID")
+        raw = read_bounded(self.mailbox / "READY.json", FRAME_MAX)
+        ready = json.loads(raw.decode("utf-8"))
+        expected = {"kind": "RECEIVER_READY_V1", "session_ref": self.session_ref,
+                    "receiver_pid": self.receiver_pid, "source_manifest_sha256": self.source_manifest_sha256}
+        if canonical_bytes(ready) != raw or ready != expected or type(ready.get("receiver_pid")) is not int:
+            raise SessionError("READY_BINDING_MISMATCH")
+        self.events.append({"event": "READY_VERIFIED", "pid": self.receiver_pid, "sha256": digest(raw)})
+        return ready
+
+    def verify_consumption(self, ack):
+        expected_ref = "mailbox/consumption/c%04d.json" % ack["request_index"]
+        if ack["consumption_ref"] != expected_ref:
+            raise SessionError("CONSUMPTION_PATH_MISMATCH")
+        raw = read_bounded(self.arena / expected_ref)
+        if digest(raw) != ack["consumption_sha256"]:
+            raise SessionError("CONSUMPTION_SHA_MISMATCH")
+        record = json.loads(raw.decode("utf-8"))
+        if canonical_bytes(record) != raw:
+            raise SessionError("CONSUMPTION_FORMAT_INVALID")
+        for key in ("session_ref", "case_ref", "handoff_ref", "request_index", "request_sha256",
+                    "record_sha256", "ticket", "channel", "receiver_ref", "receiver_pid", "status", "reason"):
+            if type(record.get(key)) is not type(ack[key]) or record[key] != ack[key]:
+                raise SessionError("CONSUMPTION_FIELD_MISMATCH:" + key)
+        self.events.append({"event": "CONSUMPTION_VERIFIED", "index": ack["request_index"], "sha256": digest(raw)})
+
+    def stop_owned(self):
+        result = {"terminate_calls": 0, "returncode": None, "exited": False,
+                  "graceful": False, "termination_requested": False, "error": None}
+        try:
+            if self._proc is None:
+                result["error"] = "NO_CHILD_CREATED"
+                return result
+            if self._proc.poll() is None:
+                if self._terminate_attempted:
+                    result["error"] = "TERMINATE_ALREADY_ATTEMPTED"
+                    return result
+                self._terminate_attempted = True
+                result["terminate_calls"] = 1
+                result["termination_requested"] = True
+                self.events.append({"event": "OWNED_TERMINATE_REQUEST", "pid": self.receiver_pid})
+                self._proc.terminate()
+                self._proc.wait(timeout=5)
+            result["returncode"] = self._proc.returncode
+            result["exited"] = self._proc.returncode is not None
+        except BaseException as exc:
+            result["error"] = type(exc).__name__ + ":" + str(exc)
+        finally:
+            for stream in (self._out, self._err):
+                if stream is not None:
+                    stream.close()
+            self.events.append({"event": "OWNED_CHILD_FINAL", **result})
+        return result
+
+    def _post_request(self, request):
+        raw = canonical_bytes(request)
+        request = parse_request(raw)
+        index = request["request_index"]
+        write_new_json(self.mailbox / "requests" / ("q%04d.json" % index), request, FRAME_MAX)
+        publish_marker(self.mailbox / "requests" / ("q%04d.ready" % index))
+        return request
+
+    def _read_ack(self, index):
+        return read_bounded(self.mailbox / "acks" / ("a%04d.json" % index), FRAME_MAX)
+
+    def exchange(self, case_ref, snapshot, channel, receiver_ref, path, previous_digest, file_digest):
+        self._live()
+        if self._request_count >= 19:
+            raise SessionError("REQUEST_LIMIT")
+        self._request_count += 1
+        index = self._request_count
+        path = Path(path)
+        request = {"kind": "RECEIVER_REQUEST_V1", "session_ref": self.session_ref,
+            "case_ref": case_ref, "handoff_ref": self.session_ref + ":handoff:%04d" % index,
+            "request_index": index, "ticket": ticket_to_wire(snapshot.ticket), "channel": channel,
+            "receiver_ref": receiver_ref, "record_relpath": path.relative_to(self.arena).as_posix(),
+            "record_sha256": file_digest, "previous_digest": previous_digest}
+        parse_request(canonical_bytes(request))
+        request = self._post_request(request)
+        self.events.append({"event": "REQUEST_POSTED", "index": index, "case_ref": case_ref,
+                            "sha256": digest(canonical_bytes(request))})
+        deadline = time.monotonic() + 5
+        ack_marker = self.mailbox / "acks" / ("a%04d.ready" % index)
+        consumed_marker = self.mailbox / "consumption" / ("c%04d.ready" % index)
+        notified = False
+        while True:
+            self._live()
+            if time.monotonic() >= deadline:
+                self.events.append({"event": "ACK_TIMEOUT", "index": index})
+                raise SessionError("ACK_TIMEOUT")
+            if not notified and consumed_marker.exists():
+                if read_bounded(consumed_marker, 0) != b"":
+                    raise SessionError("CONSUMPTION_MARKER_INVALID")
+                notified = True
+                self.events.append({"event": "CONSUMPTION_POSTED", "index": index})
+                if self._after_consumption is not None:
+                    self._after_consumption(request)
+            if ack_marker.exists():
+                if not notified or read_bounded(ack_marker, 0) != b"":
+                    raise SessionError("ACK_PUBLICATION_ORDER_INVALID")
+                raw = self._read_ack(index)
+                if time.monotonic() >= deadline:
+                    raise SessionError("ACK_TIMEOUT")
+                self._live()
+                self.events.append({"event": "ACK_READ", "index": index, "bytes": len(raw), "sha256": digest(raw)})
+                return Exchange(request, raw)
+            time.sleep(0.01)

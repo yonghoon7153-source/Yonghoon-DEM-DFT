@@ -1,0 +1,19 @@
+{
+  "kind": "R3_REVIEW_LOCAL_INPUT_PRESERVATION",
+  "count": 2,
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_RESULT_AND_DELIVERY_STOP_20261108.zip",
+      "bytes": 252451,
+      "sha256": "f0b118bd6320eea7ecaf26bb81b59f0b20992603ae5e4aa218c25fcaf9122184"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\.codex\\attachments\\7e34d886-a853-4e99-8b17-a030a431e5f6\\붙여넣은 텍스트.txt",
+      "bytes": 162320,
+      "sha256": "7598f6115d3341997161617df573ce46f3ee2b9d349503887a27fdd85dcb1335"
+    }
+  ],
+  "all_match": true,
+  "scope": "Local received ZIP and raw-byte transport attachment only; not current remote BML filesystem verification.",
+  "boundary": "After review ZIP readback; before receipt and actual tool return."
+}

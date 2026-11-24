@@ -1,0 +1,25 @@
+{
+  "kind": "C4A_IMPL_V2_PREREVIEW_DOCUMENT_CHECK",
+  "pin": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "remaining_finding_groups": [
+    "C4A-IMPL-N1",
+    "C4A-IMPL-N3",
+    "C4A-IMPL-N4",
+    "C4A-IMPL-N6"
+  ],
+  "closed_document_items": [
+    "C4A-IMPL-N2",
+    "C4A-IMPL-N5",
+    "C4A-IMPL-N7",
+    "C4A-IMPL-C1"
+  ],
+  "evidence_paths_present": true,
+  "source_copies_size_sha256_matched": 133,
+  "git_blob_ids_matched": 133,
+  "selected_local_originals_matched": 9,
+  "report_reply_decision_consistent": true,
+  "pytest_collection": 0,
+  "target_execution": 0,
+  "tests": 0,
+  "scope": "Reviewer document/identity processing only; not target functional testing or independent remote runtime audit."
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "R3_TASK_ORIGIN",
+  "utc": "2026-11-08T05:11:14.3941071Z",
+  "tick": 5348059629301,
+  "frequency": 10000000,
+  "whole_limit": 3600,
+  "preparation_limit": 2400,
+  "seal_limit": 300,
+  "parent_limit": 180,
+  "child_within_parent_limit": 120,
+  "delivery_limit": 600,
+  "incomplete_limit": 120,
+  "bytes_limit": 52428800,
+  "phase_transfer": false
+}

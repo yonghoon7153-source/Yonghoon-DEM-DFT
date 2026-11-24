@@ -1,0 +1,211 @@
+{
+  "kind": "R3_SOURCE_MANIFEST",
+  "files": [
+    {
+      "module": "bound_ack_session",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\bound_ack_session.py.inactive.txt",
+        "bytes": 18794,
+        "sha256": "e9e169604cd60cf3ab77b8885a4ac37e5a601edc163af25d7ef1d965fa9ab105"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "deadline_receive",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\deadline_receive.py.inactive.txt",
+        "bytes": 8787,
+        "sha256": "d098b0415b844b75e2d73cb094c3eb93ed0b42f2a2df6c67773378a2b5a48307"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "event_clock_core",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\event_clock_core.py.inactive.txt",
+        "bytes": 10634,
+        "sha256": "e7d2d32dadf2c5eb887a4013a380e5ff6ab67d21b5aed527a1b2e0ccf19c7879"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "evidence_admission",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\evidence_admission.py.inactive.txt",
+        "bytes": 14007,
+        "sha256": "92267d568705f479e5a5ef2e30d59879a0d0d653f85b9ddb819ea0bc52fc2e39"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "exact_time",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\exact_time.py.inactive.txt",
+        "bytes": 6307,
+        "sha256": "3d6b50375b7dab992a3de247f6421c64048f43f4b5893ab5214854ed3d30f934"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "file_ports",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\file_ports.py.inactive.txt",
+        "bytes": 10342,
+        "sha256": "53bfd873eae3b58c93bb9f54ce6ef8fb0a355cdc6d49cfa66319478ca3e040a1"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "live_file_transport",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+        "bytes": 6996,
+        "sha256": "844a6f705dd3b7eb83107b02d529a6e547c55ae1f7459823c7458a352aef7993"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "original_preserved": false
+    },
+    {
+      "module": "receiver_bridge",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_bridge.py.inactive.txt",
+        "bytes": 11649,
+        "sha256": "6e62f105b4008d044bc776e6f4849159a813b4829f711a415547095fcbfbcc80"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "receiver_finish",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+        "bytes": 2779,
+        "sha256": "03ae89e774dbb52f7ee0c986a4129373288bebd0968c638977ba8e8a27fb3d65"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "original_preserved": false
+    },
+    {
+      "module": "receiver_protocol",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_protocol.py.inactive.txt",
+        "bytes": 7419,
+        "sha256": "4248ad991c70901dc700a1a9f073dbe8ac30c398c2ea1e2f89f923f16d614031"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "receiver_session",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_session.py.inactive.txt",
+        "bytes": 9066,
+        "sha256": "da007b4d599c77c171497599321d9033e5314dd7a656909fbdf0ea58a63bb54a"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "receiver_worker_candidate",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+        "bytes": 17480,
+        "sha256": "6959a93bf52b1610859e7a3d186e2472200a9d6331da742b71c46dd349396fef"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_child_loader"
+      ],
+      "original_preserved": false
+    },
+    {
+      "module": "receiver_worker",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker.py.inactive.txt",
+        "bytes": 17256,
+        "sha256": "b3911ba78ca72ee3bd438258462601f337223860e70ec725d357b640c0f68f7c"
+      },
+      "permitted_consumers": [
+        "root_static_authoring"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "snapshot_codec",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\snapshot_codec.py.inactive.txt",
+        "bytes": 13145,
+        "sha256": "68b12f814091ac600d528230d79c5a8610953c95351d708ec3051816b6f5f4eb"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "original_preserved": true
+    },
+    {
+      "module": "state_owner",
+      "identity": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\state_owner.py.inactive.txt",
+        "bytes": 17274,
+        "sha256": "4d07321000d54a7716e9e958e3c99b83deb21235f71647406179413f23c91cc1"
+      },
+      "permitted_consumers": [
+        "root_static_authoring",
+        "guarded_parent_loader",
+        "guarded_child_loader"
+      ],
+      "original_preserved": true
+    }
+  ],
+  "original_count": 12,
+  "new_candidate_count": 3,
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "contract_adopted": false
+}

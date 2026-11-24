@@ -1,0 +1,397 @@
+"""Inactive synchronous single-owner adapter; no OS, IPC or durable backend.
+
+The owner holds the canonical core. Callers supply only a version ticket and
+inputs, never a replacement core. All ports in validation are memory fakes.
+An acknowledged snapshot is not an operating permission or an OS identity.
+"""
+from dataclasses import dataclass
+from fractions import Fraction
+from event_clock_core import Cause, OwnedClockCore, RoleIdentity, SuppliedCount
+from exact_time import CoreError
+
+
+def valid_ref(value: object) -> bool:
+    return type(value) is str and bool(value.strip())
+
+
+@dataclass(frozen=True)
+class Ticket:
+    owner_ref: str
+    epoch_ref: str
+    run_ref: str
+    producer: RoleIdentity
+    version: int
+
+    def __post_init__(self) -> None:
+        if not all(valid_ref(v) for v in (self.owner_ref, self.epoch_ref, self.run_ref)):
+            raise CoreError("TICKET_REFERENCE_INVALID")
+        if type(self.producer) is not RoleIdentity:
+            raise CoreError("TICKET_PRODUCER_INVALID")
+        if type(self.version) is not int or self.version < 0:
+            raise CoreError("TICKET_VERSION_INVALID")
+
+
+@dataclass(frozen=True)
+class Snapshot:
+    ticket: Ticket
+    core: OwnedClockCore
+    previous: Ticket | None
+
+    def __post_init__(self) -> None:
+        if type(self.ticket) is not Ticket or type(self.core) is not OwnedClockCore:
+            raise CoreError("SNAPSHOT_TYPE_INVALID")
+        if self.ticket.run_ref != self.core.latch.run_ref or self.ticket.producer != self.core.latch.producer:
+            raise CoreError("SNAPSHOT_CORE_BINDING_MISMATCH")
+        if self.previous is None:
+            if self.ticket.version != 0:
+                raise CoreError("SNAPSHOT_GENESIS_VERSION_INVALID")
+        elif type(self.previous) is not Ticket or (
+            self.previous.owner_ref, self.previous.epoch_ref, self.previous.run_ref,
+            self.previous.producer, self.previous.version + 1
+        ) != (
+            self.ticket.owner_ref, self.ticket.epoch_ref, self.ticket.run_ref,
+            self.ticket.producer, self.ticket.version
+        ):
+            raise CoreError("SNAPSHOT_CHAIN_INVALID")
+
+
+@dataclass(frozen=True)
+class StoreAck:
+    ticket: Ticket
+    previous: Ticket | None
+    accepted: bool
+    receipt_ref: str
+
+
+@dataclass(frozen=True)
+class DeliveryAck:
+    ticket: Ticket
+    receiver_ref: str
+    accepted: bool
+    receipt_ref: str
+
+
+@dataclass(frozen=True)
+class AdapterEvent:
+    step: str
+    attempted_ticket: Ticket
+    observed_result: str
+
+
+@dataclass(frozen=True)
+class OwnerView:
+    snapshot: Snapshot
+    last_verified_stored_ticket: Ticket | None
+    last_verified_delivered_ticket: Ticket | None
+    events: tuple[AdapterEvent, ...]
+    started: bool
+    busy: bool
+
+
+@dataclass(frozen=True)
+class TransitionResult:
+    normal_complete: bool
+    view: OwnerView
+    value: object | None
+    reason: str | None
+
+
+@dataclass(frozen=True)
+class FailureAck:
+    snapshot: Snapshot
+    stage: str
+    receiver_ref: str
+    accepted: bool
+    receipt_ref: str
+
+
+@dataclass(frozen=True)
+class FailureExportResult:
+    status: str
+    view: OwnerView
+    retained_ticket: Ticket | None
+    delivered_ticket: Ticket | None
+    normal_complete: bool = False
+
+
+class StateOwner:
+    """Serial, same-instance authority only; not thread/process synchronization.
+
+    Store port: commit(previous, snapshot)->StoreAck; readback(ticket)->Snapshot.
+    Delivery port: publish(snapshot)->DeliveryAck.
+    Those contracts are checked using fake ports, not implemented as OS I/O.
+    Failure port: retain(snapshot)->FailureAck; publish_failure(snapshot)->FailureAck.
+    This is explicitly invoked once and never substitutes for a normal path.
+    No restore/reset/retry/replace-core API.
+    """
+
+    def __init__(self, owner_ref: str, epoch_ref: str, core: OwnedClockCore,
+                 receiver_ref: str, store: object, delivery: object,
+                 failure_channel: object | None = None) -> None:
+        if type(core) is not OwnedClockCore or not valid_ref(receiver_ref):
+            raise CoreError("OWNER_INPUT_INVALID")
+        ticket = Ticket(owner_ref, epoch_ref, core.latch.run_ref, core.latch.producer, 0)
+        self._snapshot = Snapshot(ticket, core, None)
+        self._receiver_ref = receiver_ref
+        self._store = store
+        self._delivery = delivery
+        self._stored = None
+        self._delivered = None
+        self._events: tuple[AdapterEvent, ...] = ()
+        self._started = False
+        self._busy = False
+        self._failure_channel = failure_channel
+        self._failure_attempted = False
+        self._failure_retained = None
+        self._failure_delivered = None
+
+    @property
+    def view(self) -> OwnerView:
+        return OwnerView(self._snapshot, self._stored, self._delivered,
+                         self._events, self._started, self._busy)
+
+    def _reason(self) -> str | None:
+        latch = self._snapshot.core.latch
+        first = latch.first_error or latch.first_stop_cause
+        return first.reason if first is not None else None
+
+    def _adopt(self, core: OwnedClockCore) -> None:
+        old = self._snapshot.ticket
+        new = Ticket(old.owner_ref, old.epoch_ref, old.run_ref, old.producer, old.version + 1)
+        self._snapshot = Snapshot(new, core, old)
+
+    def _fail(self, reason: str, evidence_ref: str) -> None:
+        current = self._snapshot
+        # Deterministic local identifiers, not timestamps or real evidence.
+        cause_ref = (current.ticket.owner_ref + ":" + current.ticket.epoch_ref
+                     + ":error:" + str(current.ticket.version + 1))
+        existing = {cause.cause_ref for cause in current.core.latch.errors + current.core.latch.stop_causes}
+        while cause_ref in existing:
+            cause_ref += ":next"
+        evidence = evidence_ref if valid_ref(evidence_ref) else "unavailable:invalid-request-evidence"
+        cause = Cause(cause_ref, current.core.latch.producer, current.core.latch.run_ref,
+                      reason, evidence)
+        self._adopt(OwnedClockCore(current.core.binding, current.core.latch.record_error(cause)))
+
+    def _result(self, value: object | None = None) -> TransitionResult:
+        reason = self._reason()
+        complete = (reason is None and self._started and not self._busy
+                    and self._stored == self._snapshot.ticket
+                    and self._delivered == self._snapshot.ticket)
+        return TransitionResult(complete, self.view, value, reason)
+
+    def _begin(self, ticket: Ticket | None, evidence_ref: str, bootstrap: bool) -> bool:
+        # Repeated normal entries after a failure add neither calls nor causes.
+        if self._reason() is not None:
+            return False
+        if self._busy:
+            self._fail("REENTRANT_REQUEST", evidence_ref)
+            return False
+        if not valid_ref(evidence_ref):
+            self._fail("REQUEST_EVIDENCE_INVALID", evidence_ref)
+            return False
+        if bootstrap:
+            if self._started:
+                self._fail("OWNER_ALREADY_STARTED", evidence_ref)
+                return False
+        elif not self._started:
+            self._fail("OWNER_NOT_STARTED", evidence_ref)
+            return False
+        elif type(ticket) is not Ticket:
+            self._fail("TICKET_TYPE_INVALID", evidence_ref)
+            return False
+        elif (ticket.owner_ref, ticket.epoch_ref, ticket.run_ref, ticket.producer) != (
+            self._snapshot.ticket.owner_ref, self._snapshot.ticket.epoch_ref,
+            self._snapshot.ticket.run_ref, self._snapshot.ticket.producer
+        ):
+            self._fail("TICKET_BINDING_MISMATCH", evidence_ref)
+            return False
+        elif ticket.version != self._snapshot.ticket.version:
+            self._fail("STALE_OR_FUTURE_TICKET", evidence_ref)
+            return False
+        self._busy = True
+        return True
+
+    def _call(self, step: str, snapshot: Snapshot, evidence_ref: str, function, *args):
+        if self._reason() is not None or self._snapshot is not snapshot:
+            return False, None
+        try:
+            returned = function(*args)
+        except BaseException as error:
+            self._events += (AdapterEvent(step, snapshot.ticket,
+                                           "EXCEPTION_UNKNOWN_EFFECT:" + type(error).__name__),)
+            if not isinstance(error, Exception):
+                # The outer owner records cancellation before re-raising it.
+                raise
+            self._fail(step + "_EXCEPTION", evidence_ref)
+            return False, None
+        self._events += (AdapterEvent(step, snapshot.ticket, "RETURNED_NOT_YET_VERIFIED"),)
+        # A port can swallow a reentrant refusal and return an apparently good
+        # ACK. Such a late return must not clear the newer local failure.
+        if self._reason() is not None or self._snapshot is not snapshot:
+            return False, None
+        return True, returned
+
+    def _sync(self, snapshot: Snapshot, evidence_ref: str) -> bool:
+        previous = snapshot.previous
+        ok, ack = self._call("STORE_WRITE", snapshot, evidence_ref,
+                             self._store.commit, previous, snapshot)
+        if not ok:
+            return False
+        if type(ack) is not StoreAck or type(ack.accepted) is not bool:
+            self._fail("STORE_ACK_INVALID", evidence_ref)
+            return False
+        if ack.accepted is not True:
+            self._fail("STORE_CAS_REJECTED", evidence_ref)
+            return False
+        if (type(ack.ticket) is not Ticket or ack.ticket != snapshot.ticket
+                or (ack.previous is not None and type(ack.previous) is not Ticket)
+                or ack.previous != previous or not valid_ref(ack.receipt_ref)):
+            self._fail("STORE_ACK_MISMATCH", evidence_ref)
+            return False
+        ok, readback = self._call("STORE_READ", snapshot, evidence_ref,
+                                  self._store.readback, snapshot.ticket)
+        if not ok:
+            return False
+        if type(readback) is not Snapshot or readback != snapshot:
+            self._fail("STORE_READBACK_MISMATCH", evidence_ref)
+            return False
+        self._stored = snapshot.ticket
+        ok, delivered = self._call("DELIVERY", snapshot, evidence_ref,
+                                    self._delivery.publish, snapshot)
+        if not ok:
+            return False
+        if type(delivered) is not DeliveryAck or type(delivered.accepted) is not bool:
+            self._fail("DELIVERY_ACK_INVALID", evidence_ref)
+            return False
+        if delivered.accepted is not True:
+            self._fail("DELIVERY_REJECTED", evidence_ref)
+            return False
+        if (type(delivered.ticket) is not Ticket or delivered.ticket != snapshot.ticket
+                or type(delivered.receiver_ref) is not str
+                or delivered.receiver_ref != self._receiver_ref or not valid_ref(delivered.receipt_ref)):
+            self._fail("DELIVERY_ACK_MISMATCH", evidence_ref)
+            return False
+        self._delivered = snapshot.ticket
+        return True
+
+    def bootstrap(self, evidence_ref: str) -> TransitionResult:
+        if not self._begin(None, evidence_ref, bootstrap=True):
+            return self._result()
+        try:
+            if self._sync(self._snapshot, evidence_ref):
+                self._started = True
+        except BaseException as error:
+            # Includes malformed port attributes; no fallback I/O follows.
+            self._fail("OWNER_BOOTSTRAP_EXCEPTION:" + type(error).__name__, evidence_ref)
+            if not isinstance(error, Exception):
+                raise
+        finally:
+            self._busy = False
+        return self._result()
+
+    def _assess(self, ticket: Ticket, evidence_ref: str, method: str, args: tuple) -> TransitionResult:
+        if not self._begin(ticket, evidence_ref, bootstrap=False):
+            return self._result()
+        value = None
+        try:
+            current = self._snapshot
+            cause_ref = (current.ticket.owner_ref + ":" + current.ticket.epoch_ref
+                         + ":core:" + str(current.ticket.version + 1))
+            operation = getattr(current.core, method)
+            next_core, value, reason = operation(*args, cause_ref, evidence_ref)
+            self._adopt(next_core)
+            if reason is None and self._reason() is None:
+                self._sync(self._snapshot, evidence_ref)
+            # A rejected core result is local failure evidence only. Do not
+            # begin normal persistence/delivery after that first failure.
+        except BaseException as error:
+            self._fail("OWNER_ASSESS_EXCEPTION:" + type(error).__name__, evidence_ref)
+            if not isinstance(error, Exception):
+                raise
+        finally:
+            self._busy = False
+        return self._result(value)
+
+    def assess_count(self, ticket: Ticket, supplied: SuppliedCount, evidence_ref: str) -> TransitionResult:
+        return self._assess(ticket, evidence_ref, "assess_normal_count", (supplied,))
+
+    def assess_wait(self, ticket: Ticket, candidate_ms: int, remaining: Fraction,
+                    reserve: Fraction | None, evidence_ref: str) -> TransitionResult:
+        return self._assess(ticket, evidence_ref, "assess_wait_numbers",
+                            (candidate_ms, remaining, reserve))
+
+    def _failure_result(self, status: str) -> FailureExportResult:
+        return FailureExportResult(status, self.view, self._failure_retained,
+                                   self._failure_delivered, False)
+
+    def _failure_call(self, step: str, snapshot: Snapshot, evidence_ref: str, function):
+        # Failure evidence is a separate purpose, not a relabelled normal call.
+        if self._snapshot is not snapshot:
+            return False, None
+        try:
+            returned = function(snapshot)
+        except BaseException as error:
+            self._events += (AdapterEvent(step, snapshot.ticket,
+                                           "EXCEPTION_UNKNOWN_EFFECT:" + type(error).__name__),)
+            if not isinstance(error, Exception):
+                raise
+            self._fail(step + "_EXCEPTION", evidence_ref)
+            return False, None
+        self._events += (AdapterEvent(step, snapshot.ticket, "RETURNED_NOT_YET_VERIFIED"),)
+        if self._snapshot is not snapshot:
+            return False, None
+        return True, returned
+
+    def _check_failure_ack(self, ack: object, snapshot: Snapshot, stage: str,
+                           evidence_ref: str) -> bool:
+        if (type(ack) is not FailureAck or ack.accepted is not True
+                or type(ack.snapshot) is not Snapshot or ack.snapshot != snapshot
+                or type(ack.stage) is not str or ack.stage != stage
+                or type(ack.receiver_ref) is not str or ack.receiver_ref != self._receiver_ref
+                or not valid_ref(ack.receipt_ref)):
+            self._fail("FAILURE_" + stage + "_ACK_INVALID", evidence_ref)
+            return False
+        return True
+
+    def flush_failure(self, evidence_ref: str) -> FailureExportResult:
+        """One explicit fake-channel attempt; never recovery or normal completion.
+
+        An ACK describes the captured ticket only. A later export failure adds
+        a newer local cause; do not claim that newer snapshot was retained.
+        """
+        if self._failure_attempted:
+            if self._busy:
+                self._fail("REENTRANT_FAILURE_EXPORT", evidence_ref)
+            return self._failure_result("FAILURE_EXPORT_ALREADY_ATTEMPTED")
+        if self._reason() is None:
+            return self._failure_result("NO_FAILURE_TO_EXPORT")
+        if self._busy:
+            self._fail("FAILURE_EXPORT_WHILE_BUSY", evidence_ref)
+            return self._failure_result("FAILURE_EXPORT_BLOCKED")
+        if self._failure_channel is None:
+            return self._failure_result("FAILURE_CHANNEL_UNBOUND")
+        self._failure_attempted = True
+        if not valid_ref(evidence_ref):
+            self._fail("FAILURE_EXPORT_EVIDENCE_INVALID", evidence_ref)
+            return self._failure_result("FAILURE_EXPORT_FAILED")
+        self._busy = True
+        snapshot = self._snapshot
+        status = "FAILURE_EXPORT_FAILED"
+        try:
+            ok, ack = self._failure_call("FAILURE_RETAIN", snapshot, evidence_ref,
+                                          self._failure_channel.retain)
+            if ok and self._check_failure_ack(ack, snapshot, "RETAIN", evidence_ref):
+                self._failure_retained = snapshot.ticket
+                ok, ack = self._failure_call("FAILURE_PUBLISH", snapshot, evidence_ref,
+                                              self._failure_channel.publish_failure)
+                if ok and self._check_failure_ack(ack, snapshot, "PUBLISH", evidence_ref):
+                    self._failure_delivered = snapshot.ticket
+                    status = "FAILURE_EVIDENCE_ACKNOWLEDGED"
+        except BaseException as error:
+            self._fail("OWNER_FAILURE_EXPORT_EXCEPTION:" + type(error).__name__, evidence_ref)
+            if not isinstance(error, Exception):
+                raise
+        finally:
+            self._busy = False
+        return self._failure_result(status)

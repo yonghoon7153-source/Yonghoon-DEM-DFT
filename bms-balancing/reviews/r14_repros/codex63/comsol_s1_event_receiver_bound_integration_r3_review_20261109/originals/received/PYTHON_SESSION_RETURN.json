@@ -1,0 +1,29 @@
+{
+  "kind": "R3_PARENT_PYTHON_SESSION_RETURN",
+  "started": true,
+  "parent_sessions": 1,
+  "argv": [
+    "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-I",
+    "-B",
+    "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation\\run.py"
+  ],
+  "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\validation",
+  "pid": 28948,
+  "process_rc": 0,
+  "elapsed_seconds": 2.3092717,
+  "limit_seconds": 180,
+  "timed_out": false,
+  "stdout": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\results\\session.stdout.txt",
+    "bytes": 1976,
+    "sha256": "7cb8231d60f7fc828918fcbf8cb846059e8b61b93b3b51a70dbb927765ed9666"
+  },
+  "stderr": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\results\\session.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "native_ready": false,
+  "boundary": "After owned Python exit and raw output stream closure; before this return file write/readback and outer tool return."
+}

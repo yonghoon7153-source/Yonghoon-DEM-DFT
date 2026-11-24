@@ -1,0 +1,25 @@
+{
+  "kind": "R1_MISSING_REVIEW_INPUT_RESOLVED_ADDENDUM",
+  "decision": "MISSING_REVIEW_ZIP_IDENTITY_RESOLVED",
+  "input": {
+    "kind": "REDELIVERED_R2_REVIEW_IDENTITY_MATCHED",
+    "path": "C:\\Users\\BML\\Desktop\\COMSOL_S1_EVENT_BOUND_ACK_OWNER_R2_LIMITED_VALIDATION_REVIEW_20261105.zip",
+    "bytes": 4997257,
+    "sha256": "ea8cdadc62d42e8e324421b8572f17faebf952ec01c2c0863a458fedb0ad3005",
+    "expected_identity_matched": true,
+    "archive_internal_review_reperformed": false,
+    "target_execution": 0,
+    "new_execution_approval": false
+  },
+  "supersedes_only": "The unavailable old R2 review ZIP item in INPUT_AVAILABILITY.json and the R1 proposal prerequisites. Historical documents remain unchanged.",
+  "prior_proposal_manifest_sha256": "9517c641ca163a2d8c9fdee9136e68bc953f7bf67221ccbbb7197e898e7d073b",
+  "other_basis_rows": "15 rows matched during prior proposal preparation; not remeasured in this addendum.",
+  "execution_start_rule": "Recheck all selected inputs after explicit R1 approval, within a new timing origin; any mismatch stops the attempt.",
+  "review_status": "Received archive size/SHA only; no repeated archive review, target import, test, receiver or COMSOL execution.",
+  "target_execution": 0,
+  "new_execution_approval": false,
+  "ready_for_user_adoption_request": true,
+  "native_ready": false,
+  "overall": "INCOMPLETE",
+  "prior_stop_records_unchanged": true
+}

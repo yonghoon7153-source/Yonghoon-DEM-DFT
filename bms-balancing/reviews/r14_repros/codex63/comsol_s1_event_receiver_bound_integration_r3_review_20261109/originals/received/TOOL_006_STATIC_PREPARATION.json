@@ -1,0 +1,8 @@
+{
+  "chunk_id": "3fc8b0",
+  "wall_time_seconds": 2.7422462,
+  "exit_code": 0,
+  "original_token_count": 219,
+  "output": "{\r\n  \"kind\": \"R3_STATIC_PREPARATION_RETURN\",\r\n  \"preparation_end_tick\": 5357777554338,\r\n  \"elapsed\": 971.7925037,\r\n  \"original12_unchanged\": true,\r\n  \"fixed_cases\": 12,\r\n  \"function_bindings\": 18,\r\n  \"target_execution\": 0,\r\n  \"ready_completion\": {\r\n    \"path\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\work\\\\microshort_s1_event_receiver_bound_integration_R3_20261108\\\\READY_INPUTS_COMPLETION.json\",\r\n    \"bytes\": 41053,\r\n    \"sha256\": \"4836f9641abda1032e5ecece42c33bd06b92385f566239af80f71b18be4d2307\"\r\n  },\r\n  \"source_manifest\": {\r\n    \"path\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\work\\\\microshort_s1_event_receiver_bound_integration_R3_20261108\\\\SOURCE_MANIFEST.json\",\r\n    \"bytes\": 8577,\r\n    \"sha256\": \"d8263f549c3633cfcf7a6a1724b8c7cb53b4c5176ad290ff8b518399d82cffcb\"\r\n  }\r\n}\r\n"
+}
+

@@ -1,0 +1,403 @@
+{
+ "execution_validity": true,
+ "failed": [],
+ "inputs": {
+  "00_overall.json": {
+   "bytes": 101,
+   "sha256": "884c8edc22e179c311c8ca9f6fa9781c41ad00805aa7c1a7ba70b8b912ff6e59"
+  },
+  "04_fetch.launch_epoch.txt": {
+   "bytes": 11,
+   "sha256": "e97c53ae71273b148c69581ba568aceefd6be1060d0a56023dd19886fce2174c"
+  },
+  "04_fetch.leftover_1.json": {
+   "bytes": 476,
+   "sha256": "22f1fd9c8e08e36863d875322f8f9f076097706f4fd5e694fffc1f99f8ba34af"
+  },
+  "04_fetch.meta.json": {
+   "bytes": 9567,
+   "sha256": "84366b059719164a4d92267c2289abb865259dd7f7375e67e9a18f876a6b9353"
+  },
+  "04_fetch.outer_end.json": {
+   "bytes": 486,
+   "sha256": "acd3473c6281ab9e7aa8c9521a354e01a8c6a1a17298050e2ddbb58e0684a838"
+  },
+  "04_fetch.outer_rc.txt": {
+   "bytes": 2,
+   "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "04_fetch.outer_start.json": {
+   "bytes": 1274,
+   "sha256": "cf5b0eacfd6624c4cb36342df46232a20cc578840454d50fa2b91f137c5cd362"
+  },
+  "04_fetch.outer_stderr.txt": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "04_fetch.outer_stdout.txt": {
+   "bytes": 96,
+   "sha256": "6082043e7bde8ce482e4087a954a1eb905965279ef04c6b27949169caceebea0"
+  },
+  "04_fetch.watch.json": {
+   "bytes": 586,
+   "sha256": "39294d20cbd254d6ec03436edf074e219c76af8574aab1cfc857a992e40c3de2"
+  },
+  "04_fetch.watch_1.begin.json": {
+   "bytes": 233,
+   "sha256": "457893764906df9dd8b9923986b2fd505d622e423a5fc8181f5ab54fc4a46eca"
+  },
+  "04_fetch.wrapper_output.txt": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+ },
+ "items": [
+  {
+   "id": "overall.values",
+   "observed": {
+    "R": 1800,
+    "T_a": 1793863173,
+    "T_end": 1793884773,
+    "kind": "REIL_E113_OVERALL",
+    "section": "§120"
+   },
+   "ok": true
+  },
+  {
+   "id": "launch.epoch",
+   "observed": [
+    "1793863454\n",
+    1793863173
+   ],
+   "ok": true
+  },
+  {
+   "id": "outer.start_kind_step",
+   "observed": [
+    "REIL_E113_OUTER_START",
+    "fetch",
+    "04_fetch",
+    "§120"
+   ],
+   "ok": true
+  },
+  {
+   "id": "outer.start_argv",
+   "observed": [
+    "/usr/bin/python3.11",
+    "-I",
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e1_launch.py",
+    "fetch",
+    "--evidence",
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261106",
+    "--approval-section",
+    "§120"
+   ],
+   "ok": true
+  },
+  {
+   "id": "outer.start_launcher",
+   "observed": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+   "ok": true
+  },
+  {
+   "id": "outer.start_session_leader",
+   "observed": [
+    901,
+    901,
+    901
+   ],
+   "ok": true
+  },
+  {
+   "id": "outer.start_allow",
+   "observed": 1800.0,
+   "ok": true
+  },
+  {
+   "id": "outer.start_deadline",
+   "observed": [
+    1793863454.3372905,
+    1793865254.3372905
+   ],
+   "ok": true
+  },
+  {
+   "id": "outer.start_window",
+   "observed": [
+    1793863454,
+    1793863454,
+    0.33729052543640137
+   ],
+   "ok": true
+  },
+  {
+   "id": "outer.start_budget",
+   "observed": [
+    1793865254.3372905,
+    1793884773,
+    1800,
+    "884c8edc22e179c311c8ca9f6fa9781c41ad00805aa7c1a7ba70b8b912ff6e59",
+    "884c8edc22e179c311c8ca9f6fa9781c41ad00805aa7c1a7ba70b8b912ff6e59"
+   ],
+   "ok": true
+  },
+  {
+   "id": "outer.rc",
+   "observed": "300a",
+   "ok": true
+  },
+  {
+   "id": "outer.end",
+   "observed": {
+    "end_snapshot_epoch": 1793863460.050101,
+    "kind": "REIL_E113_OUTER_END",
+    "launcher_exit_epoch": 1793863460.0500367,
+    "rc": 0,
+    "start_sha256": "cf5b0eacfd6624c4cb36342df46232a20cc578840454d50fa2b91f137c5cd362"
+   },
+   "ok": true
+  },
+  {
+   "id": "outer.absent.outer_error.json",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "outer.absent.outer_start.json.tmp",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "outer.absent.outer_end.json.tmp",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "outer.absent.outer_rc.txt.tmp",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "outer.absent.outer_error.json.tmp",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "outer.absent.kill.json",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "outer.absent.leftover_2.json",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "outer.empty.outer_stderr.txt",
+   "observed": 0,
+   "ok": true
+  },
+  {
+   "id": "outer.empty.wrapper_output.txt",
+   "observed": 0,
+   "ok": true
+  },
+  {
+   "id": "outer.stdout_summary",
+   "observed": {
+    "complete": true,
+    "errors": 0,
+    "launched": true,
+    "rc": 0,
+    "step": "fetch",
+    "timed_out": false
+   },
+   "ok": true
+  },
+  {
+   "id": "watch.calls",
+   "observed": {
+    "begins": [
+     1
+    ],
+    "max": 1,
+    "slices": []
+   },
+   "ok": true
+  },
+  {
+   "id": "watch.chain",
+   "observed": [
+    {
+     "k": 1,
+     "ok": true
+    }
+   ],
+   "ok": true
+  },
+  {
+   "id": "watch.published",
+   "observed": {
+    "deadline_epoch": 1793865254.3372905,
+    "k": 1,
+    "kind": "REIL_E113_WATCH",
+    "observed_epoch": 1793863463.9789076,
+    "rc": 0,
+    "state": "published"
+   },
+   "ok": true
+  },
+  {
+   "id": "watch.no_tmp",
+   "observed": [],
+   "ok": true
+  },
+  {
+   "id": "leftover.1",
+   "observed": [
+    0,
+    0,
+    901,
+    null
+   ],
+   "ok": true
+  },
+  {
+   "id": "leftover.not_frozen",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "meta.present",
+   "observed": null,
+   "ok": true
+  },
+  {
+   "id": "meta.identity",
+   "observed": [
+    "fetch",
+    "04_fetch",
+    "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+    "§120"
+   ],
+   "ok": true
+  },
+  {
+   "id": "meta.launcher",
+   "observed": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e1_launch.py",
+    "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+   },
+   "ok": true
+  },
+  {
+   "id": "meta.stage",
+   "observed": {
+    "complete": true,
+    "rule": "precheck_ok AND child_ok AND rc_0 AND timeout_false AND postcheck_ok",
+    "terms": {
+     "child_ok": true,
+     "postcheck_ok": true,
+     "precheck_ok": true,
+     "rc_0": true,
+     "timeout_false": true
+    }
+   },
+   "ok": true
+  },
+  {
+   "id": "meta.precheck_ok",
+   "observed": true,
+   "ok": true
+  },
+  {
+   "id": "meta.postcheck",
+   "observed": [],
+   "ok": true
+  },
+  {
+   "id": "meta.errors",
+   "observed": [
+    [],
+    null
+   ],
+   "ok": true
+  },
+  {
+   "id": "meta.child_started",
+   "observed": [
+    true,
+    true
+   ],
+   "ok": true
+  },
+  {
+   "id": "meta.child_rc",
+   "observed": [
+    0,
+    false
+   ],
+   "ok": true
+  },
+  {
+   "id": "meta.child_group_empty",
+   "observed": "empty",
+   "ok": true
+  },
+  {
+   "id": "meta.child_deadline",
+   "observed": false,
+   "ok": true
+  },
+  {
+   "id": "meta.child_errors",
+   "observed": [],
+   "ok": true
+  },
+  {
+   "id": "meta.head_unchanged",
+   "observed": [
+    "f363cec5150e455d3fb79a36910b4241744f3467",
+    "f363cec5150e455d3fb79a36910b4241744f3467"
+   ],
+   "ok": true
+  },
+  {
+   "id": "fetch.data",
+   "observed": {
+    "LFP_Data.xlsx": {
+     "bytes": 10841377,
+     "ok": true,
+     "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+    },
+    "util_LFP.py": {
+     "bytes": 33754,
+     "ok": true,
+     "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+    }
+   },
+   "ok": true
+  },
+  {
+   "id": "fetch.child_ok",
+   "observed": {
+    "ok": true,
+    "problems": null,
+    "stop": null
+   },
+   "ok": true
+  }
+ ],
+ "judge": {
+  "bytes": 18578,
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261106/00_judge.py",
+  "sha256": "ad986c19905723a233abac667cd846f41c1427a7197e522eb78bc1c4d0d738c0"
+ },
+ "kind": "REIL_E113_JUDGE",
+ "name": "04_fetch",
+ "section": "§120",
+ "step": "fetch",
+ "utc": "2026-11-05T07:24:36Z",
+ "verdict": "MATCH"
+}

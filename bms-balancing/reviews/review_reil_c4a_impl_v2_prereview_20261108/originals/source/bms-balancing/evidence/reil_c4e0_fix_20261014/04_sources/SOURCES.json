@@ -1,0 +1,28 @@
+{
+ "base": "bms-balancing/",
+ "files": {
+  "scripts/reil_c4_e3a.py": {
+   "bytes": 32311,
+   "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+  },
+  "scripts/reil_c4_monitor.py": {
+   "bytes": 21546,
+   "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+  },
+  "scripts/reil_c4e_run.py": {
+   "bytes": 53853,
+   "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+  },
+  "scripts/reil_c5_pilot.py": {
+   "bytes": 47164,
+   "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+  },
+  "scripts/reil_p0.py": {
+   "bytes": 23941,
+   "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+  }
+ },
+ "schema": "reil-c4e-sources-v1",
+ "scope": "C4-E E1 실행 모듈 다섯의 승인 대상 바이트 (C4E-E0-N1 · 상태 문서 §69)",
+ "trust": "이 파일 자체는 신뢰의 근거가 아니다 — 목록 바이트의 sha256 을 결과 기록 · 검토 회신 · 사용자 E1 승인 기록에 고정하고 run 은 그 값을 명시 인자 (--sources-sha256) 로만 받는다"
+}

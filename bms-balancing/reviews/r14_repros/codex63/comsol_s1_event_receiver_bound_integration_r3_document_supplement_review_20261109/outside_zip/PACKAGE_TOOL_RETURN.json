@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_R3_DOCUMENT_SUPPLEMENT_REVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact exec_command result received for this review packaging, serialized afterward outside the completed ZIP. Does not certify its own future file-write return, whole-review elapsed time, or historical remote execution.",
+  "tool_result": {
+    "chunk_id": "a18710",
+    "wall_time_seconds": 0.4285048,
+    "exit_code": 0,
+    "original_token_count": 382,
+    "output": "{\r\n  \"kind\": \"R3_DOCUMENT_SUPPLEMENT_REVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_R3_doc_review_20261109\\\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_REVIEW_20261109.zip\",\r\n    \"bytes\": 124498,\r\n    \"sha256\": \"ec9a6adbff3c443c76846369b2ce1db9e8760c1aa7347476796937afe5a25266\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_R3_doc_review_20261109\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 2140,\r\n    \"sha256\": \"193aa06dabe062cc068795752dbda4e3eb774ff05d86000c78a2e690c16346ba\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_R3_doc_review_20261109\\\\SELECTED_LOCAL_INPUTS_POST_PACKAGE.json\",\r\n    \"bytes\": 1005,\r\n    \"sha256\": \"b312b11ac95bec457301dbcf6da9f37d6c1c29afffc8d8056b6fe3c2e56e48b4\"\r\n  },\r\n  \"payload_count\": 35,\r\n  \"entries\": 36,\r\n  \"decision\": \"DOCUMENT_SUPPLEMENT_ACCEPTED_RBI_R1_READY_01_CLOSED\",\r\n  \"RBI_R1_READY_01\": \"CLOSED_DOCUMENT_SCOPE\",\r\n  \"new_blocking_findings\": 0,\r\n  \"native_ready\": false,\r\n  \"full_procedure_pass\": false,\r\n  \"target_execution\": 0,\r\n  \"tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"resume_authorized\": false,\r\n  \"boundary\": \"After review ZIP/receipt/post-preservation write/readback; before this actual tool return and its subsequent transcription.\"\r\n}\r\n"
+  }
+}

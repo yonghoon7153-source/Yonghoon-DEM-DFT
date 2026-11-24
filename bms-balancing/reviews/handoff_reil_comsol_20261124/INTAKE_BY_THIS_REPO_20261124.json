@@ -1,0 +1,171 @@
+{
+ "kind": "THIS_REPO_HANDOFF_INTAKE_RECORD",
+ "date": "2026-11-24",
+ "written_by": "this repository's session (intake only)",
+ "received": {
+  "name": "REIL_COMSOL_CLAUDE_HANDOFF_20261124.zip",
+  "bytes": 1971276,
+  "sha256": "573cef34f4fb88bc9de3302e7fc6404d7e172e94ce776d9d3aaff39122dc6638",
+  "entries": 26,
+  "zip_testzip_first_bad": null,
+  "stored_as_bytes": false,
+  "why_not_stored": "transport wrapper only; all 25 payload files are stored byte-exact at the paths below (3 duplicated reply/review/decision files per review equal the bytes inside that review ZIP and are kept once, inside originals/)",
+  "separately_uploaded_texts_equal_bundle_copies": [
+   "CLAUDE_HANDOFF_KO.txt",
+   "CLAUDE_MESSAGE_KO.txt"
+  ]
+ },
+ "checks": {
+  "handoff_manifest_rows": 25,
+  "handoff_manifest_rows_matched": 25,
+  "source_identities_rows": 21,
+  "source_identities_rows_matched_copy_bytes": 21,
+  "inner_review_zips": {
+   "reil": {
+    "zip_bytes": 1296176,
+    "zip_sha256": "3d346f331b1a89ffa906993f8dd7f75d895fc7af5d05b71d562bf785c2d168e2",
+    "files_extracted": 156,
+    "manifest_rows": 155,
+    "manifest_rows_matched": 155,
+    "unlisted": [
+     "PACKAGE_MANIFEST.json"
+    ],
+    "zip_testzip_first_bad": null
+   },
+   "r3": {
+    "zip_bytes": 560393,
+    "zip_sha256": "d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971",
+    "files_extracted": 175,
+    "manifest_rows": 174,
+    "manifest_rows_matched": 174,
+    "unlisted": [
+     "PACKAGE_MANIFEST.json"
+    ],
+    "zip_testzip_first_bad": null
+   },
+   "r3doc": {
+    "zip_bytes": 124498,
+    "zip_sha256": "ec9a6adbff3c443c76846369b2ce1db9e8760c1aa7347476796937afe5a25266",
+    "files_extracted": 36,
+    "manifest_rows": 35,
+    "manifest_rows_matched": 35,
+    "unlisted": [
+     "PACKAGE_MANIFEST.json"
+    ],
+    "zip_testzip_first_bad": null
+   }
+  },
+  "reil_source_files_equal_pin": {
+   "pin": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+   "equal": 132,
+   "other": [
+    {
+     "path": "source/external/util_LFP.py",
+     "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76",
+     "at_pin": false,
+     "equals_preserved_copy": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/external/util_LFP.py"
+    }
+   ]
+  },
+  "reil_input_files": [
+   {
+    "path": "input/REIL_C4A_IMPL_REQUEST_SEND_v2_20261106.md",
+    "bytes": 3990,
+    "sha256": "9031a651256f45f72ba60370bfa14fe5a05ebcb7873df18625f9a86c79e6823e",
+    "equals_pin_file": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_v2_20261106.md"
+   },
+   {
+    "path": "input/REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+    "bytes": 34092,
+    "sha256": "d85e9a64ed3bbbbfa1fe49360d5a9c5f2132f61d73e22f51ed386071f300732d",
+    "equals_pin_file": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v2_20261106.md"
+   }
+  ],
+  "nested_zips_inside_comsol_originals": "kept as bytes, not extracted",
+  "secret_scan": {
+   "secret_hits": 0,
+   "privacy_hits": "fixture emails @example.invalid x2 and 127.0.0.1 inside REIL source/ test fixtures (already in this repo at the pin); no download stamps, no institution names, no other IPs"
+  }
+ },
+ "placed": [
+  {
+   "path": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/REIL_C4A_IMPL_V2_PREREVIEW_20261108.zip",
+   "sha256": "3d346f331b1a89ffa906993f8dd7f75d895fc7af5d05b71d562bf785c2d168e2"
+  },
+  {
+   "path": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/outside_zip/DELIVERY_RECEIPT.json",
+   "sha256": "aa2f6ff8226dee49adccb03be43b056d03adc225e373e6cdbae47b1d8548783b"
+  },
+  {
+   "path": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/outside_zip/PACKAGE_TOOL_RETURN.json",
+   "sha256": "5317e5fc38c3f8a49c2d677d4d644dea9703b8bb42d9622917b648d9babcc8c2"
+  },
+  {
+   "path": "bms-balancing/reviews/review_reil_c4a_impl_v2_prereview_20261108/outside_zip/SELECTED_LOCAL_SOURCES_POST_PACKAGE.json",
+   "sha256": "87131aa28e08aadb2b1c7c00c102dba9d70ea49cb98e1032087438874e96e5ae"
+  },
+  {
+   "path": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_REVIEW_20261109.zip",
+   "sha256": "d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971"
+  },
+  {
+   "path": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/outside_zip/DELIVERY_RECEIPT.json",
+   "sha256": "3a482d74258cd479348ce53745701390b64ee2b3abf2d4329913e31bace92ad4"
+  },
+  {
+   "path": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/outside_zip/PACKAGE_TOOL_RETURN.json",
+   "sha256": "86e02a0ff57721fd4d782236e5a8e46df0c0fba4c757efe8ef157ae763fd9fde"
+  },
+  {
+   "path": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/outside_zip/SELECTED_LOCAL_INPUTS_POST_PACKAGE.json",
+   "sha256": "286581a58124ad29bdd1d861a1d1d50ce9071eeb812d3f7b2a09a0eeb7dab708"
+  },
+  {
+   "path": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_REVIEW_20261109.zip",
+   "sha256": "ec9a6adbff3c443c76846369b2ce1db9e8760c1aa7347476796937afe5a25266"
+  },
+  {
+   "path": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/outside_zip/DELIVERY_RECEIPT.json",
+   "sha256": "193aa06dabe062cc068795752dbda4e3eb774ff05d86000c78a2e690c16346ba"
+  },
+  {
+   "path": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/outside_zip/PACKAGE_TOOL_RETURN.json",
+   "sha256": "8f0fc57e0fc05f12a3721a8b19679aafd15f88a80a80afdde6786364e15af7d7"
+  },
+  {
+   "path": "bms-balancing/reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/outside_zip/SELECTED_LOCAL_INPUTS_POST_PACKAGE.json",
+   "sha256": "b312b11ac95bec457301dbcf6da9f37d6c1c29afffc8d8056b6fe3c2e56e48b4"
+  },
+  {
+   "path": "bms-balancing/reviews/handoff_reil_comsol_20261124/CLAUDE_HANDOFF_KO.txt",
+   "sha256": "09ce1fde18db1b4e05d8ce6d9a2b2a04adc89fe7d1a9bdc58a21337077cf0854"
+  },
+  {
+   "path": "bms-balancing/reviews/handoff_reil_comsol_20261124/CLAUDE_MESSAGE_KO.txt",
+   "sha256": "1c1d67c08fed5f0554d473ab730a4aed9233121afebc3f698e0563cf23780df5"
+  },
+  {
+   "path": "bms-balancing/reviews/handoff_reil_comsol_20261124/CURRENT_DIRECTION.json",
+   "sha256": "12bd74500ff4dd145d040efdd324279ee4f007d31c17964dd4adf55f752c2fe5"
+  },
+  {
+   "path": "bms-balancing/reviews/handoff_reil_comsol_20261124/HANDOFF_MANIFEST.json",
+   "sha256": "874c533769c396f9261841c4f291aeb5b501e8ab80bfbca3907970a69790c91d"
+  },
+  {
+   "path": "bms-balancing/reviews/handoff_reil_comsol_20261124/SOURCE_IDENTITIES.json",
+   "sha256": "41c74c2afbc84f5adab115ab6aeaf049467cea0cab828f8b5572a582b4268340"
+  }
+ ],
+ "not_done": [
+  "no file from the bundle was executed, imported or collected",
+  "nested ZIPs not extracted",
+  "no COMSOL / OS / Job / receiver / pytest activity",
+  "no external transmission"
+ ],
+ "authority": {
+  "new_execution_authorization": false,
+  "comsol": "PAUSED_BY_USER_UNTIL_AVAILABLE (2026-11-24) — no automatic resume",
+  "reil_next": "C4-A request v3 + N1/N3/N4/N6 correction table + C2 (document only)"
+ }
+}

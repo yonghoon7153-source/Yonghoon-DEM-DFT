@@ -1,0 +1,18 @@
+COMSOL S1 receiver–bound ACK 통합 R3 검토 회신
+2026-11-09
+
+12시나리오의 한정 기능 결과를 수용합니다. 수신 소스·사전 봉인·실제 함수 호출 기록·기대 결과·요청/ACK/소비 파일·반환 기록은 서로 일치합니다. 수용을 막는 새 기능 지적은 없습니다.
+
+전달문 첫 줄은 “총 12시나리오(F01–F10, L01–L02)가 기대 결과와 일치했다”로 정정합니다. 실제 수신자 연결 시나리오는 2개이며 정상 실제 전달 완료는 L01 한 번입니다. 부모/수신자 각 1세션·rc0, 요청/ACK 각 2건·terminate 0입니다.
+
+L02는 수신자가 v1을 소비했어도 합성 C5=100=B에서 부모가 거부해 검증된 전달 head는 v0입니다. 정상 자식 종료는 DEADLINE_NOT_BEFORE/C5와 owner DELIVERY_EXCEPTION을 해제하지 않습니다.
+
+검증 후 전달 준비 구문 오류와 중지 기록은 그대로 유지합니다. 기능 결과 수용을 전체 절차 PASS로 확대하지 않습니다. 구문 오류의 process rc는 null이며, 정상 실행기 rc0와 구분합니다.
+
+RBI_R1_READY_01은 대부분 보완됐지만 해시 확인용 읽기 주체 한 항목은 남습니다. runtime_support.initialize는 부모·자식 모두 봉인 63개와 engine을 읽는 반면 일부 역할표는 한쪽 loader만 적습니다. 양쪽 bootstrap의 식별 읽기와 역할별 코드 로딩을 별도로 명시해 주세요. 기존 ZIP·봉인·소스·결과를 고치거나 재시험할 필요는 없으며 별도 문서 보충으로 처리할 수 있습니다.
+
+ZIP 252,451 B / SHA-256 f0b118bd6320eea7ecaf26bb81b59f0b20992603ae5e4aa218c25fcaf9122184 및 외부 원기록 5개의 연결을 확인했습니다. 선택 185행은 전후/포장 후 기록 일치이고 원격 전체 재측정이 아닙니다. 마지막 633768 반환은 채팅 전사로 대조했으며 원파일 바이트 수신과 구분합니다.
+
+운영 clock/role/freshness·동시성·복구/내구성·막힌 callback/잔류 Q·C4/C5 이후 물리 완료·ResourceSession/Parent·OS/Job/COMSOL은 미검증입니다. 네 운영 기한/reserve=null, JOB_CURRENT_COMMIT=OPEN, contract_adopted/native_ready/approved/usable=false, 전체·정상 gate INCOMPLETE를 유지합니다.
+
+이번 검토에서는 대상 코드/import·재시험·수신자·OS/Job·COMSOL을 실행하지 않았습니다. 새 구현·시험·재개·운영 승인이나 외부 발송은 없습니다.

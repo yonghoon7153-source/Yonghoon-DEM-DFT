@@ -1,0 +1,21 @@
+{
+  "kind": "R3_SUPPLEMENT_REVIEW_LOCAL_POST_PACKAGE",
+  "count": 2,
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_20261109.zip",
+      "bytes": 31567,
+      "sha256": "2ca5367dd12ffe473cb53c69294c61d873cd5686867be84a15a6f78be3fedb14"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\.codex\\attachments\\a43cbdc2-95a2-4d86-a119-7c99cd418a26\\붙여넣은 텍스트.txt",
+      "bytes": 55075,
+      "sha256": "b55467479e4743860cefaabe79c09c1cb89060c7b0cc821f2dcf712b51c9a428"
+    }
+  ],
+  "all_match": true,
+  "mapped_local_basis_rows_rechecked": 166,
+  "mapped_local_basis_reference": "STATIC_REVIEW_CHECK.json: mapped_local_copies",
+  "scope": "Two original user attachments preserved and 166 corresponding local preserved byte identities unchanged. Counts overlap and are not summed; no remote current filesystem audit.",
+  "boundary": "After review ZIP readback; before receipt write and tool return."
+}

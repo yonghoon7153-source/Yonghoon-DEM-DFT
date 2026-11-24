@@ -1,0 +1,182 @@
+{
+  "kind": "R3_SUPPLEMENT_RECIPIENT_REVIEW_MANIFEST",
+  "payload_count": 35,
+  "files": [
+    {
+      "path": "CHAT_REPORTED_PACKAGE_RETURN.json",
+      "bytes": 1940,
+      "sha256": "01d86c2fca4921388c002f39d96c3b64cba2e1c290667acd6b8ced5f2bc533fd"
+    },
+    {
+      "path": "CODEX_REPLY_KO.txt",
+      "bytes": 1560,
+      "sha256": "06b6b7460776a90165875ee9eaebb86267c5d9c4662103b7715fda9aca38431f"
+    },
+    {
+      "path": "FIRST_LOCAL_INPUT_SNAPSHOT.json",
+      "bytes": 688,
+      "sha256": "742e6802724ad253ab336ccfb323dff61e4a3fb0de7c53af586e3dc95be566ba"
+    },
+    {
+      "path": "LOCAL_INPUTS_BEFORE.json",
+      "bytes": 688,
+      "sha256": "742e6802724ad253ab336ccfb323dff61e4a3fb0de7c53af586e3dc95be566ba"
+    },
+    {
+      "path": "REVIEWER_MAPPING_ERROR.json",
+      "bytes": 1698,
+      "sha256": "4889b415a20d3c30263404bf99cc87fcb1748f634dea51d121dfe024a6afbc5a"
+    },
+    {
+      "path": "REVIEWER_TOOL_ERROR.json",
+      "bytes": 1697,
+      "sha256": "fcc9df28af4fe0579b403078f612d19ff9e5ac50b8394287fa03cd657e50ed2f"
+    },
+    {
+      "path": "REVIEW_DECISION.json",
+      "bytes": 3333,
+      "sha256": "6b285f069fde8df047ee8979b10b2908c027b64aea41c01760f305ea1753fdf2"
+    },
+    {
+      "path": "REVIEW_KO.txt",
+      "bytes": 6161,
+      "sha256": "37fabf1fc6083ce70f3cdb6c9d3fb289ad5b568f04ab9c94b796447749205072"
+    },
+    {
+      "path": "STATIC_REVIEW_CHECK.json",
+      "bytes": 106959,
+      "sha256": "2d692a24ad1d93fbb534b50bb6a070563ce4fbea6c075f75013e50124a41c716"
+    },
+    {
+      "path": "STATIC_REVIEW_TOOL_RETURN.json",
+      "bytes": 892,
+      "sha256": "0d2feaccf4b5103f7971924fde03c06da3e598558f7ad48377301a0ae8613b46"
+    },
+    {
+      "path": "basis/FIRST_ERROR.json",
+      "bytes": 968,
+      "sha256": "5abe3ff64c022eae5b62934cedbd80466cbd447e7194d770743d33dcdd50f7b6"
+    },
+    {
+      "path": "basis/PRESEAL.json",
+      "bytes": 48046,
+      "sha256": "b1a0209011f718a0253a707efea4bb5f542775ad339b10fe37c142df2d24abae"
+    },
+    {
+      "path": "basis/PRIOR_CHAT_REPORTED_TRANSPORT_RETURN.json",
+      "bytes": 1363,
+      "sha256": "645d883a64c3ce6d96edf7d8821778dd66beaeb2206e55f3ef2ac646a41cde3e"
+    },
+    {
+      "path": "basis/PRIOR_CODEX_REPLY_KO.txt",
+      "bytes": 2459,
+      "sha256": "729bd98c433818a0a1bacaf66e842016670d7966cec32fa939aa96cda6416da1"
+    },
+    {
+      "path": "basis/PRIOR_REVIEW_DECISION.json",
+      "bytes": 6057,
+      "sha256": "f233c60ee2a67c7632c844c74c64bd500d398ce5b101ba5d9d2fc4027b2a0cfa"
+    },
+    {
+      "path": "basis/PYTHON_SESSION_RETURN.json",
+      "bytes": 1501,
+      "sha256": "9ebe739028cedefcd77f67bc6ad88c52dc8dbd837fd6bfd74ccebcce7164646f"
+    },
+    {
+      "path": "basis/READY_INPUTS.json",
+      "bytes": 42791,
+      "sha256": "f45261066e6414823a8c3461d285f2dd4b03850acd5e68931b66d77c6090e458"
+    },
+    {
+      "path": "basis/READY_INPUTS_COMPLETION.json",
+      "bytes": 41053,
+      "sha256": "4836f9641abda1032e5ecece42c33bd06b92385f566239af80f71b18be4d2307"
+    },
+    {
+      "path": "basis/delivery/DELIVERY_TRANSPORT_TOOL_RETURN.json",
+      "bytes": 1278,
+      "sha256": "92d88b62c0cece6c0dca8781d3b89f408b64b8fa3d84ff1ea4dd8a402470d1d1"
+    },
+    {
+      "path": "basis/results/RESULTS.json",
+      "bytes": 1524,
+      "sha256": "a6a53878755763ef169a10b42162d8a8e1ce16e760ce427d090ba300bd14dcf9"
+    },
+    {
+      "path": "basis/validation/receiver_entry.py",
+      "bytes": 1330,
+      "sha256": "635067e6fa80201bba97de8456ffdc7137a8aa3a290ddae6946bf3e243a2e843"
+    },
+    {
+      "path": "basis/validation/run.py",
+      "bytes": 362,
+      "sha256": "f9c992bdced93db5e7c68840c8d9e28b575e9ba657576931c2cb498aae6ee52f"
+    },
+    {
+      "path": "basis/validation/runtime_support.py",
+      "bytes": 7867,
+      "sha256": "aa8588e47a1e967114b9022f56a6df9fc269a2a3359ed5998ae117ae3e537f8e"
+    },
+    {
+      "path": "input/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_20261109.zip",
+      "bytes": 31567,
+      "sha256": "2ca5367dd12ffe473cb53c69294c61d873cd5686867be84a15a6f78be3fedb14"
+    },
+    {
+      "path": "input/DELIVERY_RECEIPT.original.json",
+      "bytes": 55075,
+      "sha256": "b55467479e4743860cefaabe79c09c1cb89060c7b0cc821f2dcf712b51c9a428"
+    },
+    {
+      "path": "received/CODEX_REPLY_KO.txt",
+      "bytes": 1120,
+      "sha256": "24ea93d94ffebcfb11d4b47a8981f52f397a7a38a32ad6ab517a222a2d59f282"
+    },
+    {
+      "path": "received/DOCUMENT_MANIFEST.json",
+      "bytes": 1726,
+      "sha256": "e543f63a5ff70dc56a46dd8480b4a393b0fe1e1241c40aa76546b96622540317"
+    },
+    {
+      "path": "received/DOCUMENT_SUPPLEMENT_KO.txt",
+      "bytes": 7243,
+      "sha256": "0f674557c94243fe1f708499366ea9c0a0d3de00ce34f925460783e95f9f8bab"
+    },
+    {
+      "path": "received/INPUT_READ_VS_LOAD_ROLES.json",
+      "bytes": 54809,
+      "sha256": "f6b825150bd56162e082cc3ec091519a91f39ecf16b8d48d916ab95d2d66287c"
+    },
+    {
+      "path": "received/INTAKE_AND_STATIC_CHECK.json",
+      "bytes": 840,
+      "sha256": "40dad1cea0d5c4afb9f07199968e8c83d3d07a4b2c89430f5a566c273aa27bc2"
+    },
+    {
+      "path": "received/SELECTED_INPUTS_AFTER.json",
+      "bytes": 53380,
+      "sha256": "7d95021ad084a9694bd9a724470971e20c289a2387f4de568281647425fb261c"
+    },
+    {
+      "path": "received/SELECTED_INPUTS_BEFORE.json",
+      "bytes": 53360,
+      "sha256": "6315f8f680a82bb4e4ad2d71e6bb97b3caaa534443d8864ffe691bfd3f82efa9"
+    },
+    {
+      "path": "received/STATIC_TOOL_RETURN.json",
+      "bytes": 651,
+      "sha256": "a9675610d50b29e25be81f69216d51285b3313b3bdc75c3d3930878120125c3d"
+    },
+    {
+      "path": "received/basis/R3_DELIVERY_TRANSPORT_TOOL_RETURN.json",
+      "bytes": 1278,
+      "sha256": "92d88b62c0cece6c0dca8781d3b89f408b64b8fa3d84ff1ea4dd8a402470d1d1"
+    },
+    {
+      "path": "received/basis/RECEIVED_CODEX_REPLY_KO.txt",
+      "bytes": 2459,
+      "sha256": "729bd98c433818a0a1bacaf66e842016670d7966cec32fa939aa96cda6416da1"
+    }
+  ],
+  "boundary": "Current review receipt/post-preservation/actual return are outside this archive. Original supplement ZIP is an unchanged input. Historical source/approval records are evidence, not execution instructions. Current sender e0e7e1 return is chat-derived only."
+}

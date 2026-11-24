@@ -1,0 +1,55 @@
+{
+  "kind": "REIL_C4A_IMPL_V2_PREREVIEW_LOCAL_POST_PACKAGE",
+  "count": 9,
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+      "bytes": 34092,
+      "sha256": "d85e9a64ed3bbbbfa1fe49360d5a9c5f2132f61d73e22f51ed386071f300732d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4A_IMPL_REQUEST_SEND_v2_20261106.md",
+      "bytes": 3990,
+      "sha256": "9031a651256f45f72ba60370bfa14fe5a05ebcb7873df18625f9a86c79e6823e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\REVIEW_DECISION.json",
+      "bytes": 7799,
+      "sha256": "9141ae6f953fd994a193a48c3aefae69ac4add4e8afb1d7df488c739a9a58311"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\REVIEW_KO.txt",
+      "bytes": 14952,
+      "sha256": "78f6679c7d49e3b91ec39ca636adbebcade50d499d1851759fb9e9b4e208f106"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\CODEX_REPLY_KO.txt",
+      "bytes": 1644,
+      "sha256": "c3de992a2ebf5ccfe04c254223fe9793a90dc3997f7e48199063779cf3596457"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\ROOT_STATIC_DATA_CHECK.json",
+      "bytes": 85668,
+      "sha256": "11becde0c7b90d6e4a24d7ebf7415ab4ca39c81810c06c7d06a32dfc9679cbd8"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\DELIVERY_RECEIPT.json",
+      "bytes": 1843,
+      "sha256": "d27dcff327282155b9a7c05e16e328318659224fe56aaa62f6945bc5894b3a2c"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 2039,
+      "sha256": "8b53ebde5995e27f65e309abfe26fd80f9fe7052e5d8919b847d6eb9d92a40eb"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\SOURCE_IDENTITIES.json",
+      "bytes": 71092,
+      "sha256": "ce51e2f6634e9743636782710759af961ce11413765b72834016d9b51da1b578"
+    }
+  ],
+  "all_match": true,
+  "received_source_copies_verified": 133,
+  "scope": "Two current user attachments and seven prior local review records. Not whole-machine preservation or independent remote runtime audit.",
+  "boundary": "After review ZIP readback; before receipt write and actual tool return."
+}

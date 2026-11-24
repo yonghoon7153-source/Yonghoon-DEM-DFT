@@ -1,0 +1,262 @@
+"""Inactive supplied-evidence admission adapter; no I/O or operating authority.
+
+Complete synthetic facts can reach the unchanged clock core for a limited test.
+Raw historical pilot facts remain UNBOUND. Nonempty references and hashes are
+consistency evidence, not external authentication or operational adoption.
+"""
+from dataclasses import dataclass
+import hashlib
+import json
+
+from event_clock_core import (
+    ClockIdentity, RoleIdentity, ExpectedBinding, SuppliedCount, BoundTime,
+    compare_supplied_count,
+)
+
+
+class EvidenceError(ValueError):
+    def __init__(self, reason, stage):
+        self.reason = reason
+        self.stage = stage
+        super().__init__(reason + ":" + stage)
+
+
+@dataclass(frozen=True)
+class AdmissionDecision:
+    reason: str
+    expected: ExpectedBinding
+    supplied: SuppliedCount
+    bound: BoundTime
+    fixture_only: bool = True
+    operational: bool = False
+
+
+def _ref(value, stage):
+    if type(value) is not str or not value.strip():
+        raise EvidenceError("REFERENCE_UNBOUND", stage)
+    return value
+
+
+def _int(value, minimum, maximum, stage):
+    if type(value) is not int or not minimum <= value <= maximum:
+        raise EvidenceError("EXACT_VALUE_INVALID", stage)
+    return value
+
+
+def _json_bytes(raw, stage):
+    if type(raw) is not bytes:
+        raise EvidenceError("RAW_BYTES_REQUIRED", stage)
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise EvidenceError("DUPLICATE_JSON_KEY", stage)
+            result[key] = value
+        return result
+    try:
+        value = json.loads(raw.decode("utf-8"), object_pairs_hook=unique)
+    except EvidenceError:
+        raise
+    except (UnicodeError, ValueError, TypeError) as exc:
+        raise EvidenceError("JSON_INVALID", stage) from exc
+    if type(value) is not dict:
+        raise EvidenceError("JSON_OBJECT_REQUIRED", stage)
+    return value
+
+
+def normalize_pilot(raw_records, identities):
+    """Read only supplied bytes; preserve available raw facts and missing axes.
+
+    The caller supplies previously sealed bytes and identities, not filesystem
+    paths to open. This routine neither manufactures a core identity nor queries
+    a process/clock. Its three-source relationship is checked before admission.
+    """
+    names = {"ACTUAL_OBSERVATION.json", "PARENT_SELF.json", "CHILD_REPORT.json"}
+    if type(raw_records) is not dict or set(raw_records) != names:
+        raise EvidenceError("PILOT_RECORD_SET_INVALID", "normalize_pilot:records")
+    if type(identities) is not dict or set(identities) != names:
+        raise EvidenceError("PILOT_IDENTITY_SET_INVALID", "normalize_pilot:identities")
+    decoded = {}
+    for name in sorted(names):
+        raw = raw_records[name]
+        expected = identities[name]
+        if (type(raw) is not bytes or type(expected) is not dict
+                or len(raw) != expected.get("bytes")
+                or hashlib.sha256(raw).hexdigest() != expected.get("sha256")):
+            raise EvidenceError("PILOT_RAW_IDENTITY_MISMATCH", "normalize_pilot:" + name)
+        decoded[name] = _json_bytes(raw, "normalize_pilot:" + name)
+    try:
+        actual = decoded["ACTUAL_OBSERVATION.json"]
+        parent = decoded["PARENT_SELF.json"]["observation"]
+        child = decoded["CHILD_REPORT.json"]["observation"]
+        owned = actual["owned_handle_observation"]
+        pair = actual["pair"]
+        sessions = {parent["session_ref"], child["session_ref"], owned["session_ref"]}
+        if (len(sessions) != 1 or parent["role"] != "parent" or child["role"] != "child"
+                or parent["status"] != "OBSERVED" or child["status"] != "OBSERVED"
+                or child["pid"] != pair["child_pid"]
+                or child["creation_filetime"] != owned["creation_filetime"]
+                or parent["frequency_hz"] != child["frequency_hz"]):
+            raise EvidenceError("PILOT_FACT_LINKAGE_MISMATCH", "normalize_pilot:facts")
+        for record in (parent, child):
+            _int(record["pid"], 1, 2**32 - 1, "normalize_pilot:pid")
+            _int(record["creation_filetime"], 0, 2**64 - 1, "normalize_pilot:creation")
+            _int(record["frequency_hz"], 1, 2**63 - 1, "normalize_pilot:frequency")
+            _int(record["q_before"], -(2**63), 2**63 - 1, "normalize_pilot:qpc")
+            _int(record["q_after"], -(2**63), 2**63 - 1, "normalize_pilot:qpc")
+            if record["q_after"] < record["q_before"]:
+                raise EvidenceError("PILOT_COUNT_REGRESSION", "normalize_pilot:facts")
+        # Original statuses remain visible; no string is substituted for a fact.
+        raw_binding = {"parent": dict(parent["binding"]), "child": dict(child["binding"]),
+                       "owned": dict(owned["binding"])}
+        expected_unbound = {"boot": "UNBOUND", "domain": "UNBOUND",
+                            "environment": "UNBOUND", "production_roles": "UNBOUND"}
+        if any(value != expected_unbound for value in raw_binding.values()):
+            raise EvidenceError("PILOT_BINDING_STATUS_CHANGED", "normalize_pilot:binding")
+    except EvidenceError:
+        raise
+    except (KeyError, TypeError, ValueError) as exc:
+        raise EvidenceError("PILOT_SCHEMA_INVALID", "normalize_pilot:facts") from exc
+    return {
+        "source_kind": "HISTORICAL_PILOT",
+        "normalization_status": "NORMALIZED",
+        "run_ref": parent["session_ref"],
+        "raw_identities": {name: dict(identities[name]) for name in sorted(names)},
+        "facts": {
+            "parent_pid": parent["pid"], "child_pid": child["pid"],
+            "child_creation_filetime": child["creation_filetime"],
+            "parent_qpc": [parent["q_before"], parent["q_after"]],
+            "child_qpc": [child["q_before"], child["q_after"]],
+            "frequency_hz": parent["frequency_hz"],
+        },
+        "raw_binding": raw_binding,
+        "unbound_axes": ["boot", "domain", "environment", "production_roles", "freshness"],
+        "core_identity_created": False,
+        "operational": False,
+    }
+
+
+class EvidenceAdmission:
+    """One caller-supplied bundle assessment, not a trusted evidence issuer."""
+    def __init__(self):
+        self.trace = []
+        self.normalization = None
+
+    def normalize_pilot(self, raw_records, identities):
+        self.trace.append("normalize_pilot:entry")
+        normalized = normalize_pilot(raw_records, identities)
+        self.normalization = normalized
+        self.trace.append("normalize_pilot:completed")
+        return normalized
+
+    def admit(self, bundle):
+        self.trace.append("admit:entry")
+        if type(bundle) is not dict:
+            raise EvidenceError("BUNDLE_INVALID", "admit:input")
+        if bundle.get("source_kind") == "HISTORICAL_PILOT":
+            self.trace.append("admit:historical_unbound")
+            if bundle.get("normalization_status") != "NORMALIZED":
+                raise EvidenceError("PILOT_NOT_NORMALIZED", "admit:historical_unbound")
+            # Even internally consistent process and clock facts do not complete
+            # boot/domain/role/freshness evidence. Never create a fake identity.
+            raise EvidenceError("BINDING_UNBOUND", "admit:historical_unbound")
+        if bundle.get("source_kind") != "FIXTURE_ONLY":
+            raise EvidenceError("SOURCE_KIND_NOT_SUPPORTED", "admit:input")
+        try:
+            expected = bundle["expected"]
+            if type(expected) is not dict:
+                raise EvidenceError("EXPECTED_INPUT_INVALID", "admit:run")
+            self.trace.append("admit:run")
+            if bundle["run_ref"] != expected["run_ref"]:
+                raise EvidenceError("RUN_MISMATCH", "admit:run")
+            _ref(bundle["run_ref"], "admit:run")
+            self.trace.append("admit:manifest")
+            raw = bundle["manifest_raw_utf8"].encode("utf-8")
+            digest = hashlib.sha256(raw).hexdigest()
+            if digest != bundle["manifest_sha256"] or digest != expected["manifest_sha256"]:
+                raise EvidenceError("MANIFEST_BYTES_MISMATCH", "admit:manifest")
+            manifest = _json_bytes(raw, "admit:manifest")
+            if (manifest.get("source_kind") != "FIXTURE_ONLY"
+                    or manifest.get("run_ref") != bundle["run_ref"]):
+                raise EvidenceError("MANIFEST_CONTENT_MISMATCH", "admit:manifest")
+            axes = bundle["axes"]
+            for axis, reason in (("boot", "BOOT_EVIDENCE_UNBOUND"),
+                                 ("domain", "DOMAIN_EVIDENCE_UNBOUND"),
+                                 ("environment", "ENVIRONMENT_EVIDENCE_UNBOUND"),
+                                 ("api_abi", "API_ABI_EVIDENCE_UNBOUND"),
+                                 ("origin", "ORIGIN_EVIDENCE_UNBOUND"),
+                                 ("frequency", "FREQUENCY_EVIDENCE_UNBOUND")):
+                stage = "admit:" + axis
+                self.trace.append(stage)
+                value = axes.get(axis)
+                if (type(value) is not dict or value.get("status") != "SUPPLIED_FIXTURE"
+                        or type(value.get("evidence_ref")) is not str
+                        or not value["evidence_ref"].startswith("fixture:")
+                        or value["evidence_ref"] != expected["axis_evidence_refs"][axis]):
+                    raise EvidenceError(reason, stage)
+            self.trace.append("admit:roles")
+            roles = bundle["roles"]
+            required_roles = expected["roles"]
+            if (type(roles) is not list or type(required_roles) is not list
+                    or len(roles) != 4 or len(required_roles) != 4
+                    or {row["role"] for row in roles} != {"P", "S", "M", "Q"}
+                    or {row["role"] for row in required_roles} != {"P", "S", "M", "Q"}
+                    or len({row["instance_ref"] for row in roles}) != 4
+                    or len({row["generation_ref"] for row in roles}) != 4):
+                raise EvidenceError("ROLE_SET_INVALID", "admit:roles")
+            expected_roles = {row["role"]: row for row in required_roles}
+            for row in roles:
+                goal = expected_roles[row["role"]]
+                if (row["instance_ref"], row["generation_ref"]) != (
+                        goal["instance_ref"], goal["generation_ref"]):
+                    raise EvidenceError("ROLE_GENERATION_MISMATCH", "admit:roles")
+                _int(row["pid"], 1, 2**32 - 1, "admit:process")
+                _int(row["creation_filetime"], 0, 2**64 - 1, "admit:process")
+                if (row["pid"], row["creation_filetime"]) != (goal["pid"], goal["creation_filetime"]):
+                    raise EvidenceError("PROCESS_GENERATION_MISMATCH", "admit:process")
+                if row["process_evidence_ref"] != goal["process_evidence_ref"]:
+                    raise EvidenceError("PROCESS_EVIDENCE_MISMATCH", "admit:process")
+            self.trace.append("admit:observation")
+            observation = bundle["observation"]
+            if observation.get("role") != expected["producer_role"]:
+                raise EvidenceError("OBSERVATION_ROLE_MISMATCH", "admit:observation")
+            if (observation.get("availability") != "OBSERVED"
+                    or observation.get("api_success") is not True
+                    or observation.get("output_valid") is not True):
+                raise EvidenceError("OBSERVATION_UNAVAILABLE", "admit:observation")
+            self.trace.append("admit:freshness")
+            freshness = axes.get("freshness")
+            if (type(freshness) is not dict or freshness.get("status") != "SUPPLIED_FIXTURE"
+                    or not freshness.get("policy_ref") or not freshness.get("evidence_ref")
+                    or freshness.get("policy_ref") != expected["freshness_policy_ref"]
+                    or freshness.get("evidence_ref") != expected["freshness_evidence_ref"]):
+                raise EvidenceError("FRESHNESS_EVIDENCE_UNBOUND", "admit:freshness")
+            values = bundle["clock"]
+            if values != expected["clock"]:
+                raise EvidenceError("CLOCK_FACTS_MISMATCH", "admit:clock")
+            _int(values["origin_count"], -(2**63), 2**63 - 1, "admit:clock")
+            _int(values["frequency_hz"], 1, 2**63 - 1, "admit:clock")
+            _int(observation["raw_count"], -(2**63), 2**63 - 1, "admit:observation")
+            self.trace.append("admit:core_construct")
+            clock = ClockIdentity(
+                bundle["run_ref"], "sha256:" + digest, values["clock_ref"],
+                axes["domain"]["evidence_ref"], axes["boot"]["evidence_ref"],
+                axes["environment"]["evidence_ref"], axes["api_abi"]["evidence_ref"],
+                axes["origin"]["evidence_ref"], values["origin_count"],
+                axes["frequency"]["evidence_ref"], values["frequency_hz"],
+                values["comparison_contract_ref"])
+            core_roles = tuple(RoleIdentity(row["role"], row["instance_ref"],
+                row["generation_ref"], row["process_evidence_ref"]) for row in roles)
+            binding = ExpectedBinding(clock, core_roles, "fixture:external-consistency-only")
+            producer = next(role for role in core_roles if role.role == observation["role"])
+            supplied = SuppliedCount(observation["observation_ref"], clock, producer,
+                observation["raw_count"], observation["unit"], observation["observed_stage"],
+                observation["stage_binding_evidence_ref"], observation["purpose_ref"], True, True)
+            self.trace.append("admit:compare_supplied_count")
+            bound = compare_supplied_count(binding, supplied)
+            self.trace.append("admit:admitted_fixture_only")
+            return AdmissionDecision("SYNTHETIC_BINDING_ADMITTED", binding, supplied, bound)
+        except EvidenceError:
+            raise
+        except (KeyError, TypeError, AttributeError, ValueError, StopIteration) as exc:
+            raise EvidenceError("BUNDLE_SCHEMA_OR_CORE_INVALID", "admit:unexpected_input") from exc

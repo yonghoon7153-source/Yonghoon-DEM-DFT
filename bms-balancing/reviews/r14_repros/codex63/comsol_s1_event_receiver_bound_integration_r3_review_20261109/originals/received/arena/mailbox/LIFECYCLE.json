@@ -1,0 +1,1 @@
+{"acks_published":2,"case_first_failures":{"R01":null},"elapsed_ms":562,"kind":"RECEIVER_LIFECYCLE_V1","reason":null,"receiver_pid":14820,"requests_consumed":2,"session_ref":"receiver_bound_integration_R3_20261108_001","status":"COMPLETED"}

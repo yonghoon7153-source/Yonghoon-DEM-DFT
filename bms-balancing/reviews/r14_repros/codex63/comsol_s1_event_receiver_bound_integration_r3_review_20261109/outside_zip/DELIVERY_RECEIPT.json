@@ -1,0 +1,46 @@
+{
+  "kind": "R3_RECEIVER_BOUND_REVIEW_DELIVERY_RECEIPT",
+  "recipient": null,
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_receiver_bound_integration_R3_review_20261109\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_REVIEW_20261109.zip",
+    "bytes": 560393,
+    "sha256": "d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971"
+  },
+  "manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_receiver_bound_integration_R3_review_20261109\\PACKAGE_MANIFEST.json",
+    "bytes": 30342,
+    "sha256": "d9f268e53bc03bee4d9265001f46c3997c37c80a17d26745c9e038268da8b75b"
+  },
+  "post_package": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_receiver_bound_integration_R3_review_20261109\\SELECTED_LOCAL_INPUTS_POST_PACKAGE.json",
+    "bytes": 812,
+    "sha256": "286581a58124ad29bdd1d861a1d1d50ce9071eeb812d3f7b2a09a0eeb7dab708"
+  },
+  "payload_count": 174,
+  "entries": 175,
+  "verification": "Exact set, safe case-unique relative paths, non-link metadata, decompressed sizes/SHA256 and independently recomputed CRC32 matched.",
+  "decision": "LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED",
+  "accepted_cases": 12,
+  "offline": 10,
+  "live_scenarios": 2,
+  "normal_live_completions": 1,
+  "blocking_findings_for_limited_result_acceptance": 0,
+  "RBI_R1_READY_01": "PARTIALLY_RESOLVED_IDENTITY_READ_CONSUMERS_REMAIN_OPEN",
+  "full_procedure_compliance_accepted": false,
+  "first_delivery_error_preserved": true,
+  "local_originals_preserved": 2,
+  "reviewer_checker_corrections_preserved": 3,
+  "received_program_execution": 0,
+  "functional_tests": 0,
+  "COMSOL": 0,
+  "native_ready": false,
+  "contract_adopted": false,
+  "approved": false,
+  "usable": false,
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "resume_authorized": false,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "boundary": "After review ZIP verification and local original rehash; before receipt write/readback and actual tool return."
+}

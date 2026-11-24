@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_RECIPIENT_STATIC_REVIEW_TOOL_RETURN",
+  "provenance": "Exact reviewer helper result received, serialized afterward; no target import or execution.",
+  "tool_result": {
+    "chunk_id": "4b7abc",
+    "wall_time_seconds": 0.513678,
+    "exit_code": 0,
+    "original_token_count": 124,
+    "output": "{\r\n  \"kind\": \"R3_SUPPLEMENT_REVIEW_STATIC_RETURN\",\r\n  \"output\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_R3_doc_review_20261109\",\r\n  \"archive_bytes\": 31567,\r\n  \"entries\": 10,\r\n  \"selected_identity_rows\": 166,\r\n  \"local_byte_matches\": 166,\r\n  \"role_seal_rows\": 63,\r\n  \"parent_load_target\": 13,\r\n  \"child_load_target\": 7,\r\n  \"prior_reply_exact_bytes\": true,\r\n  \"prior_633768_raw_received\": true,\r\n  \"target_execution\": 0\r\n}\r\n"
+  }
+}

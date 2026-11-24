@@ -1,0 +1,47 @@
+{
+  "kind": "R3_FINAL_CHECK",
+  "archive": {
+    "sha256": "f0b118bd6320eea7ecaf26bb81b59f0b20992603ae5e4aa218c25fcaf9122184",
+    "bytes": 252451,
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\delivery\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_RESULT_AND_DELIVERY_STOP_20261108.zip"
+  },
+  "external_records": [
+    {
+      "sha256": "73da716397bd570ab2218a8bb0f8162a39cf6de1fbc909ad729a6bccf59154f5",
+      "bytes": 1947,
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\delivery\\DELIVERY_RECEIPT.json"
+    },
+    {
+      "sha256": "0ece9039e5bd5340e63aa3f6180ce7379226c1b4a55cb01707bd45b118db82ea",
+      "bytes": 58850,
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\delivery\\SELECTED_SOURCES_POST_PACKAGE.json"
+    },
+    {
+      "sha256": "6a73e0579e64cda8337ed71e97ddfba51534f517d7e8c529bf623a90c1048d66",
+      "bytes": 1737,
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\delivery\\PACKAGE_TOOL_RETURN.json"
+    }
+  ],
+  "whole_snapshot_seconds": 1495.3147818,
+  "delivery_snapshot_seconds": 373.8473666,
+  "root_bytes": 1422554.0,
+  "limits": {
+    "whole": 3600,
+    "delivery": 600,
+    "bytes": 52428800
+  },
+  "functional_counts": {
+    "FAIL": 0,
+    "PASS": 12,
+    "NOT_RUN": 0
+  },
+  "first_error": "Orchestration parser error after completed test; preserved; no retry",
+  "full_procedure_compliance": false,
+  "target_calls_after_error": 0,
+  "normal_live_completions": 1,
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "overall": "INCOMPLETE",
+  "boundary": "After ZIP and three external records readback; before this final check write/readback. Later tool snapshot distinguished."
+}

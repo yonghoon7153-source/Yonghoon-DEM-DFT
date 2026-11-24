@@ -1,0 +1,2118 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "head": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "status": "ahead",
+  "ahead_by": 11,
+  "behind_by": 0,
+  "total_commits": 11,
+  "too_large": null,
+  "base_commit": {
+    "sha": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/86cab053cf814ae516d95fb8a38a81ebdc4ac378"
+  },
+  "merge_base_commit": {
+    "sha": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/86cab053cf814ae516d95fb8a38a81ebdc4ac378"
+  },
+  "files": [
+    {
+      "filename": ".claude/agents/paper-curator.md",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 0,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/.gitattributes",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_v2_20261106.md",
+      "status": "added",
+      "additions": 39,
+      "deletions": 0,
+      "changes": 39,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+      "status": "added",
+      "additions": 270,
+      "deletions": 0,
+      "changes": 270,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "status": "modified",
+      "additions": 47,
+      "deletions": 0,
+      "changes": 47,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/REIL_C4A_IMPL_PREREVIEW_20261106.zip",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/ADDITIONAL_SOURCE_CAPTURE_BASE64.json",
+      "status": "added",
+      "additions": 101,
+      "deletions": 0,
+      "changes": 101,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/CODEX_REPLY_KO.txt",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/COMPARE_PRIOR_PIN.json",
+      "status": "added",
+      "additions": 2280,
+      "deletions": 0,
+      "changes": 2280,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/HEAD_CONFIRMATION.json",
+      "status": "added",
+      "additions": 29,
+      "deletions": 0,
+      "changes": 29,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/PACKAGE_MANIFEST.json",
+      "status": "added",
+      "additions": 778,
+      "deletions": 0,
+      "changes": 778,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/PINNED_HEAD.json",
+      "status": "added",
+      "additions": 82,
+      "deletions": 0,
+      "changes": 82,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/REVIEW_DECISION.json",
+      "status": "added",
+      "additions": 193,
+      "deletions": 0,
+      "changes": 193,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/REVIEW_KO.txt",
+      "status": "added",
+      "additions": 75,
+      "deletions": 0,
+      "changes": 75,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/REVIEW_READBACK_CHECK.json",
+      "status": "added",
+      "additions": 15,
+      "deletions": 0,
+      "changes": 15,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/ROOT_STATIC_DATA_CHECK.json",
+      "status": "added",
+      "additions": 1301,
+      "deletions": 0,
+      "changes": 1301,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/SELECTED_LOCAL_SOURCES_BEFORE_PACKAGE.json",
+      "status": "added",
+      "additions": 51,
+      "deletions": 0,
+      "changes": 51,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/SOURCE_CAPTURE_BASE64.json",
+      "status": "added",
+      "additions": 39,
+      "deletions": 0,
+      "changes": 39,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/SOURCE_IDENTITIES.json",
+      "status": "added",
+      "additions": 1060,
+      "deletions": 0,
+      "changes": 1060,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/STATUS_LEDGER_APPEND.txt",
+      "status": "added",
+      "additions": 36,
+      "deletions": 0,
+      "changes": 36,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/TEST_DIRECTORY_LIST.json",
+      "status": "added",
+      "additions": 690,
+      "deletions": 0,
+      "changes": 690,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/basis/prior_scope_v2_review/CODEX_REPLY_KO.txt",
+      "status": "added",
+      "additions": 11,
+      "deletions": 0,
+      "changes": 11,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/basis/prior_scope_v2_review/DELIVERY_RECEIPT.json",
+      "status": "added",
+      "additions": 38,
+      "deletions": 0,
+      "changes": 38,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/basis/prior_scope_v2_review/PACKAGE_TOOL_RETURN.json",
+      "status": "added",
+      "additions": 11,
+      "deletions": 0,
+      "changes": 11,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/basis/prior_scope_v2_review/REVIEW_DECISION.json",
+      "status": "added",
+      "additions": 145,
+      "deletions": 0,
+      "changes": 145,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/basis/prior_scope_v2_review/REVIEW_KO.txt",
+      "status": "added",
+      "additions": 38,
+      "deletions": 0,
+      "changes": 38,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/basis/prior_scope_v2_review/ROOT_STATIC_DATA_CHECK.json",
+      "status": "added",
+      "additions": 1303,
+      "deletions": 0,
+      "changes": 1303,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/basis/prior_scope_v2_review/SOURCE_IDENTITIES.json",
+      "status": "added",
+      "additions": 940,
+      "deletions": 0,
+      "changes": 940,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/input/REIL_C4A_IMPL_REQUEST_20261106.md",
+      "status": "added",
+      "additions": 164,
+      "deletions": 0,
+      "changes": 164,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/input/REIL_C4A_IMPL_REQUEST_SEND_20261106.md",
+      "status": "added",
+      "additions": 31,
+      "deletions": 0,
+      "changes": 31,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4A_IMPL_REQUEST_20261106.md",
+      "status": "added",
+      "additions": 164,
+      "deletions": 0,
+      "changes": 164,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4A_IMPL_REQUEST_SEND_20261106.md",
+      "status": "added",
+      "additions": 31,
+      "deletions": 0,
+      "changes": 31,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4A_SCOPE_20261105.md",
+      "status": "added",
+      "additions": 66,
+      "deletions": 0,
+      "changes": 66,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4A_SCOPE_SEND_20261105.md",
+      "status": "added",
+      "additions": 33,
+      "deletions": 0,
+      "changes": 33,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4A_SCOPE_SEND_v2_20261106.md",
+      "status": "added",
+      "additions": 36,
+      "deletions": 0,
+      "changes": 36,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4A_SCOPE_v2_20261106.md",
+      "status": "added",
+      "additions": 89,
+      "deletions": 0,
+      "changes": 89,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt",
+      "status": "added",
+      "additions": 191,
+      "deletions": 0,
+      "changes": 191,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt",
+      "status": "added",
+      "additions": 307,
+      "deletions": 0,
+      "changes": 307,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+      "status": "added",
+      "additions": 662,
+      "deletions": 0,
+      "changes": 662,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_v3_20261104.md",
+      "status": "added",
+      "additions": 417,
+      "deletions": 0,
+      "changes": 417,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_REQUEST_20261105.md",
+      "status": "added",
+      "additions": 83,
+      "deletions": 0,
+      "changes": 83,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_REQUEST_v2_20261105.md",
+      "status": "added",
+      "additions": 90,
+      "deletions": 0,
+      "changes": 90,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_RESULT_SEND_20261105.md",
+      "status": "added",
+      "additions": 33,
+      "deletions": 0,
+      "changes": 33,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_SEND_20261105.md",
+      "status": "added",
+      "additions": 32,
+      "deletions": 0,
+      "changes": 32,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_SEND_v2_20261105.md",
+      "status": "added",
+      "additions": 34,
+      "deletions": 0,
+      "changes": 34,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_20261007.md",
+      "status": "added",
+      "additions": 96,
+      "deletions": 0,
+      "changes": 96,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "status": "added",
+      "additions": 231,
+      "deletions": 0,
+      "changes": 231,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "status": "added",
+      "additions": 426,
+      "deletions": 0,
+      "changes": 426,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "status": "added",
+      "additions": 172,
+      "deletions": 0,
+      "changes": 172,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+      "status": "added",
+      "additions": 128,
+      "deletions": 0,
+      "changes": 128,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_D.md",
+      "status": "added",
+      "additions": 150,
+      "deletions": 0,
+      "changes": 150,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "status": "added",
+      "additions": 3520,
+      "deletions": 0,
+      "changes": 3520,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e0_fix_20261014/00_identity_c4.py",
+      "status": "added",
+      "additions": 30,
+      "deletions": 0,
+      "changes": 30,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "status": "added",
+      "additions": 28,
+      "deletions": 0,
+      "changes": 28,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/00_overall.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/00_start.txt",
+      "status": "added",
+      "additions": 23,
+      "deletions": 0,
+      "changes": 23,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.json",
+      "status": "added",
+      "additions": 18,
+      "deletions": 0,
+      "changes": 18,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.judge.json",
+      "status": "added",
+      "additions": 396,
+      "deletions": 0,
+      "changes": 396,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.launch_epoch.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.leftover_1.json",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0,
+      "changes": 22,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.meta.json",
+      "status": "added",
+      "additions": 240,
+      "deletions": 0,
+      "changes": 240,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_end.json",
+      "status": "added",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_rc.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_start.json",
+      "status": "added",
+      "additions": 40,
+      "deletions": 0,
+      "changes": 40,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_stderr.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_stdout.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.porcelain_end.txt",
+      "status": "added",
+      "additions": 9,
+      "deletions": 0,
+      "changes": 9,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.porcelain_start.txt",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.precheck.json",
+      "status": "added",
+      "additions": 177,
+      "deletions": 0,
+      "changes": 177,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.stdout.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.watch.json",
+      "status": "added",
+      "additions": 17,
+      "deletions": 0,
+      "changes": 17,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.watch_1.begin.json",
+      "status": "added",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/03_identity.wrapper_output.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/06_end.json",
+      "status": "added",
+      "additions": 378,
+      "deletions": 0,
+      "changes": 378,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261105/07_g3_return_1.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/00_end_writer.py",
+      "status": "added",
+      "additions": 191,
+      "deletions": 0,
+      "changes": 191,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/00_identity_c4.py",
+      "status": "added",
+      "additions": 30,
+      "deletions": 0,
+      "changes": 30,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/00_judge.py",
+      "status": "added",
+      "additions": 307,
+      "deletions": 0,
+      "changes": 307,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/00_outer.py",
+      "status": "added",
+      "additions": 662,
+      "deletions": 0,
+      "changes": 662,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/00_overall.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/00_start.txt",
+      "status": "added",
+      "additions": 23,
+      "deletions": 0,
+      "changes": 23,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/01_probe/done.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/01_probe/err.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/01_probe/obs1.txt",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/01_probe/out.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/01_probe/pid.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/01_probe/t0.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/01_probe/t_obs2.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/01_probe/t_ret.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/03_read_path.json",
+      "status": "added",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.judge.json",
+      "status": "added",
+      "additions": 403,
+      "deletions": 0,
+      "changes": 403,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.launch_epoch.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.leftover_1.json",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0,
+      "changes": 22,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.meta.json",
+      "status": "added",
+      "additions": 311,
+      "deletions": 0,
+      "changes": 311,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_end.json",
+      "status": "added",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_rc.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_start.json",
+      "status": "added",
+      "additions": 40,
+      "deletions": 0,
+      "changes": 40,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_stderr.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_stdout.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.porcelain_end.txt",
+      "status": "added",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.porcelain_start.txt",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.precheck.json",
+      "status": "added",
+      "additions": 203,
+      "deletions": 0,
+      "changes": 203,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.stdout.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.watch.json",
+      "status": "added",
+      "additions": 17,
+      "deletions": 0,
+      "changes": 17,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.watch_1.begin.json",
+      "status": "added",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/04_fetch.wrapper_output.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.judge.json",
+      "status": "added",
+      "additions": 424,
+      "deletions": 0,
+      "changes": 424,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.launch_epoch.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.leftover_1.json",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0,
+      "changes": 22,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.meta.json",
+      "status": "added",
+      "additions": 277,
+      "deletions": 0,
+      "changes": 277,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_end.json",
+      "status": "added",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_rc.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_start.json",
+      "status": "added",
+      "additions": 40,
+      "deletions": 0,
+      "changes": 40,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_stderr.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_stdout.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.porcelain_end.txt",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.porcelain_start.txt",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.precheck.json",
+      "status": "added",
+      "additions": 193,
+      "deletions": 0,
+      "changes": 193,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.stderr.log",
+      "status": "added",
+      "additions": 154,
+      "deletions": 0,
+      "changes": 154,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.stdout.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.watch.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.watch_1.begin.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/05_run.wrapper_output.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/06_end.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/07_g3_return_1.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/run/AGGREGATE.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/run/END_RECORD.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/run/HEADER.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/run/IDENTITY.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/run/OPERATION.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/run/RESOURCES.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/run/ROWS.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/evidence/reil_c4e1_20261106/run/RULE.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/reil_c4_arrays_20261013/ARRAYS.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/reil_c4_arrays_20261013/MANIFEST.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_c4_e3a.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_c4_h.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_c4_hb.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_c4_monitor.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_c4e1_launch.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_c4e_run.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_c5_pilot.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_c6_profile.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/scripts/reil_p0.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4_0a.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4_0a_fix.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4_0b1.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4_0b1_fix.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4_0b1_fix2.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4_0b2.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4_0b2_fix.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4e.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4e1_launch.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4e1_runner.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/bms-balancing/tests/test_reil_c4e_fix.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/degradation-degeneracy/tools/env_profile.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4a_impl_prereview_20261106/originals/source/external/util_LFP.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/P3_APPROVAL_REQUEST.md",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/STATUS.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/LARGE_OUTPUTS_SHA256.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/README.md",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/copy_patch_ff0e416.patch",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/p3_fit5.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/00_env.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/01_red.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/01_red.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/01_red.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/01b_red.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/01b_red.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/01b_red.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/02_green.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/02_green.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/02_green.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/09_rules_fixed_before_fits.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/10_curves.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/10_curves.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/10_curves.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run/10_curves_failed.json",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/00_env.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/02_green.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/02_green.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/02_green.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/10_curves.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/10_curves.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/10_curves.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_analyze.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_analyze.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_analyze.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_f4.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_f4.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_f4.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_f5.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_f5.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_f5.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_s.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_s.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_s.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_w.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_w.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11_plumb_w.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_analyze.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_analyze.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_analyze.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_f4.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_f4.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_f4.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_f5.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_f5.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_f5.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_s.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_s.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_s.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_w.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_w.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11b_plumb_w.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11c_plumb_analyze.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11c_plumb_analyze.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/11c_plumb_analyze.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/19_rules_fixed_before_fits.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/20_f4.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/20_f4.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run2/20_f4.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/00_env.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/02_green.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/02_green.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/02_green.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/10_curves.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/10_curves.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/10_curves.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/19_rules_fixed_before_fits.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/20_f4.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/20_f4.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/20_f4.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/21_f5.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/21_f5.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run3/21_f5.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/00_env.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/00_inputs_sha.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/02_green.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/02_green.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/02_green.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/11_plumb_sc.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/11_plumb_sc.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/11_plumb_sc.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/19_rules_fixed_before_fits.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/20_sc.meta.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/20_sc.stderr.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run4/20_sc.stdout.log",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/run_step.sh",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "followups/phantom-pocv/p3_20261106/test_p3.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "wiki/concepts/fitting-degeneracy.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "wiki/concepts/halfcell-ocp-shape-invariance.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "wiki/concepts/pocv-nonequilibrium-mode-bias.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "wiki/concepts/pvs-sev-degradation-mode-features.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "wiki/entities/isu-uconn-lfp-gr-emulated-degradation.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "wiki/index.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "wiki/log.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "wiki/questions/22p-physics-or-degeneracy.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    }
+  ]
+}

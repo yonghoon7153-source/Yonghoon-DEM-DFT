@@ -1,0 +1,8 @@
+{
+  "chunk_id": "ffbf6c",
+  "wall_time_seconds": 1.6194001999999998,
+  "exit_code": 0,
+  "original_token_count": 328,
+  "output": "{\r\n  \"elapsed\": 795.2436361,\r\n  \"new_files\": [\r\n    {\r\n      \"Name\": \"harness_cases.py\",\r\n      \"Length\": 22245\r\n    },\r\n    {\r\n      \"Name\": \"launch_once.ps1\",\r\n      \"Length\": 3845\r\n    },\r\n    {\r\n      \"Name\": \"receiver_entry.py\",\r\n      \"Length\": 1330\r\n    },\r\n    {\r\n      \"Name\": \"run.py\",\r\n      \"Length\": 362\r\n    },\r\n    {\r\n      \"Name\": \"runtime_support.py\",\r\n      \"Length\": 7867\r\n    }\r\n  ],\r\n  \"fixtures\": [\r\n    {\r\n      \"Name\": \"ADMISSION.json\",\r\n      \"Length\": 4106\r\n    },\r\n    {\r\n      \"Name\": \"F01.json\",\r\n      \"Length\": 1513\r\n    },\r\n    {\r\n      \"Name\": \"F02.json\",\r\n      \"Length\": 1444\r\n    },\r\n    {\r\n      \"Name\": \"F03.json\",\r\n      \"Length\": 1427\r\n    },\r\n    {\r\n      \"Name\": \"F04.json\",\r\n      \"Length\": 1433\r\n    },\r\n    {\r\n      \"Name\": \"F05.json\",\r\n      \"Length\": 1448\r\n    },\r\n    {\r\n      \"Name\": \"F06.json\",\r\n      \"Length\": 1658\r\n    },\r\n    {\r\n      \"Name\": \"F07.json\",\r\n      \"Length\": 1536\r\n    },\r\n    {\r\n      \"Name\": \"F08.json\",\r\n      \"Length\": 1312\r\n    },\r\n    {\r\n      \"Name\": \"F09.json\",\r\n      \"Length\": 1387\r\n    },\r\n    {\r\n      \"Name\": \"F10.json\",\r\n      \"Length\": 1374\r\n    },\r\n    {\r\n      \"Name\": \"L01.json\",\r\n      \"Length\": 1496\r\n    },\r\n    {\r\n      \"Name\": \"L02.json\",\r\n      \"Length\": 1554\r\n    }\r\n  ],\r\n  \"results_count\": 0,\r\n  \"arena_count\": 0\r\n}\r\n"
+}
+

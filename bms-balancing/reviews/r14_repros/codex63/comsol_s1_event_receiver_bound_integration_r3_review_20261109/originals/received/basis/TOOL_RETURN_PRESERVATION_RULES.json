@@ -1,0 +1,45 @@
+{
+  "kind": "FUTURE_FULL_TOOL_RETURN_AND_STOP_REQUIREMENTS",
+  "shell": {
+    "ErrorActionPreference": "Stop",
+    "literal_paths_only": true,
+    "cmdlet_ErrorAction": "Stop where supported",
+    "native_exit_codes": "Explicitly capture and evaluate actual exit code; ErrorActionPreference alone does not handle every native nonzero result.",
+    "no_unguarded_read_batch": true
+  },
+  "tool_boundary": {
+    "capture": "Await each tools.exec_command result, retain the full returned object and emit the full metadata rather than text(output) alone.",
+    "fields": [
+      "chunk_id",
+      "wall_time_seconds",
+      "exit_code",
+      "session_id if running",
+      "output",
+      "original_token_count if returned"
+    ],
+    "persist": "Save full result unchanged to a separately identified record after return and before the next scope action. Missing fields remain absent/null with explanation; never infer rc from output.",
+    "output": "Bound individual reads to avoid truncated results; preserve original native stdout/stderr as files for the single approved session.",
+    "running": "Initial running result and final wait result belong to one session and must both be saved.",
+    "exceptions": "If tool itself rejects/throws/aborts, preserve actual available exception/cancellation; do not fabricate a native rc.",
+    "future_return": "A record cannot contain its own future tool return. Distinguish snapshots, serialization and later actual returns."
+  },
+  "first_error": {
+    "actions_allowed_after_error": [
+      "stop target/preparation actions immediately",
+      "notify root and cancel any text-only assistants",
+      "record first and available subsequent error without replacing it",
+      "retain acquired outputs and list NOT_RUN cases",
+      "only authorized owned-child cleanup if one exists",
+      "record incomplete and preserve/package within reserved phase budgets"
+    ],
+    "forbidden": [
+      "corrective read retry",
+      "guess another filename",
+      "candidate modification",
+      "test/probe/partial rerun",
+      "new child or fallback shell",
+      "retroactive fill of old DIRECTORY_CONTRACT"
+    ]
+  },
+  "governance": "This file is a document requirement, not a runtime guard implementation or test result."
+}

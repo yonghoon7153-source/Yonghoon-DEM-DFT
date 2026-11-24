@@ -1,0 +1,22 @@
+{
+ "alive_count": 0,
+ "errors": [],
+ "kind": "REIL_E113_LEFTOVER",
+ "markers": [
+  "pycache_prefix=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1/pycache/04_fetch",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261106"
+ ],
+ "round": "1",
+ "rows": [],
+ "sid": 901,
+ "sid_error": null,
+ "skipped_self_and_ancestors": [
+  84,
+  85,
+  106,
+  991,
+  995
+ ],
+ "step": "fetch",
+ "utc": "2026-11-05T07:24:30.560Z"
+}

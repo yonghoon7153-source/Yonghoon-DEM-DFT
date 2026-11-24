@@ -1,0 +1,105 @@
+{
+  "kind": "PROPOSED_12_SCENARIOS_NOT_EXECUTED",
+  "harness_fixture_bytes_exist": false,
+  "case_count": 12,
+  "live_child_count": 1,
+  "cases": [
+    {
+      "id": "F01",
+      "group": "new file ports",
+      "input": "정확 요청 게시·원 ACK 캐시·소비 파일 읽기",
+      "expectation": "요청 JSON/marker 각1, ACK 원파일 읽기1, reader는 같은 bytes, 소비 읽기1; 원바이트·크기·SHA 일치",
+      "expected_reason": "PASS",
+      "stage": "same bytes, no second ACK file open"
+    },
+    {
+      "id": "F02",
+      "group": "new file ports",
+      "input": "같은 요청의 두 번째 게시 시도",
+      "expectation": "첫 게시 뒤 중복 호출은 추가 쓰기/대기/읽기0; 원본 보존",
+      "expected_reason": "REQUEST_ALREADY_POSTED",
+      "stage": "post entry"
+    },
+    {
+      "id": "F03",
+      "group": "new file ports",
+      "input": "빈 파일이어야 할 ACK.ready가 비어 있지 않음",
+      "expectation": "ACK payload 열기0, descriptor 생성0",
+      "expected_reason": "ACK_MARKER_INVALID",
+      "stage": "marker validation"
+    },
+    {
+      "id": "F04",
+      "group": "new file ports",
+      "input": "FRAME_MAX보다 큰 ACK 원파일",
+      "expectation": "한 번의 제한 읽기로 초과 거부; decoder/descriptor 반환0",
+      "expected_reason": "ACK_FRAME_TOO_LARGE",
+      "stage": "bounded ACK read"
+    },
+    {
+      "id": "F05",
+      "group": "new file ports",
+      "input": "허용 소비 경로 대신 ../outside.json 지정",
+      "expectation": "소비 파일 열기0; 외부 파일 생성/접근0",
+      "expected_reason": "CONSUMPTION_PATH_MISMATCH",
+      "stage": "consumption path admission"
+    },
+    {
+      "id": "F06",
+      "group": "new file ports",
+      "input": "소비 원파일 SHA와 ACK 지정 SHA 불일치",
+      "expectation": "새 port가 소비 원파일 읽기1 후 같은 raw bytes를 반환하고 기존 BoundAckSession.verify_consumption이 SHA 불일치를 거부; C5 clock0, 원파일 그대로",
+      "expected_reason": "CONSUMPTION_SHA_MISMATCH",
+      "stage": "existing BoundAckSession.verify_consumption:CONSUMPTION_VALIDATE"
+    },
+    {
+      "id": "F07",
+      "group": "new file ports",
+      "input": "fake transport timer가 고정 대기 상한에 도달한 뒤 late marker 제시",
+      "expectation": "첫 ACK_TRANSPORT_TIMEOUT 유지; 재진입 이후 추가 publish/poll/read0; 실제 sleep/child0",
+      "expected_reason": "ACK_TRANSPORT_TIMEOUT",
+      "stage": "transport wait boundary and latched repeat"
+    },
+    {
+      "id": "F08",
+      "group": "new liveness wrapper",
+      "input": "가짜 소유 process poll이 종료를 반환",
+      "expectation": "가짜 생존 true 대체 금지; bound exchange/게시/읽기0",
+      "expected_reason": "RECEIVER_NOT_ALIVE",
+      "stage": "before bound exchange"
+    },
+    {
+      "id": "F09",
+      "group": "new finish validator",
+      "input": "정상 finish frame에서 session_ref 한 필드만 불일치",
+      "expectation": "FINISH_SESSION_MISMATCH; 정상 종료 승인0, 원 failure 유지; malformed fixture는 실제 자식에 전송하지 않음",
+      "expected_reason": "FINISH_SESSION_MISMATCH",
+      "stage": "finish binding"
+    },
+    {
+      "id": "F10",
+      "group": "new finish wait",
+      "input": "fake lifecycle elapsed가 120초 상한과 같고 finish 부재",
+      "expectation": "lifetime은 finish wait까지 포함, 연장/정상 종료 판정0; fake clock이며 실제 120초 대기0",
+      "expected_reason": "RECEIVER_LIFETIME_EXCEEDED",
+      "stage": "finish wait boundary"
+    },
+    {
+      "id": "L01",
+      "group": "live composition",
+      "input": "실제 자식이 R01 v0 파일 소비·ACK·소비 근거 게시",
+      "expectation": "실제 owner.bootstrap 경로, 전 checkpoint 합성 count90<B100; bridge/owner verified headv0; 정상 호출 완료1",
+      "expected_reason": "NORMAL_DELIVERY_COMPLETED",
+      "stage": "real worker→new file callbacks→BoundAckSession→Bridge→Owner"
+    },
+    {
+      "id": "L02",
+      "group": "live composition",
+      "input": "같은 인스턴스/B에서 v1 실제 소비·유효 ACK 후 합성 C5=100",
+      "expectation": "C0–C4=90,C5=B; DEADLINE_NOT_BEFORE/C5, owner DELIVERY_EXCEPTION; 부모 검증 headv0 유지, 자식 소비v1 구분; 이후 finish1·lifecycle2소비/2ACK·자식rc0 확인",
+      "expected_reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT",
+      "stage": "C5 refusal then separate lifecycle finish"
+    }
+  ],
+  "seal_requirement": "Fix exact source spans, reasons/stages/call counts and argv/cwd before first test after approval. No pre-test dry-run/probe."
+}

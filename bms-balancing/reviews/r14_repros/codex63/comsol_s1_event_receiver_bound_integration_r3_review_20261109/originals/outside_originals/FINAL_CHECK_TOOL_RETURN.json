@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_R3_FINAL_CHECK_TOOL_RETURN_TRANSCRIPTION",
+  "provenance": "Exact received final-check result serialized afterward. Not its own future write return or full-task completion measurement.",
+  "tool_result": {
+    "chunk_id": "f780a2",
+    "wall_time_seconds": 1.7433693,
+    "exit_code": 0,
+    "original_token_count": 139,
+    "output": "{\r\n  \"boundary\": \"After FINAL_CHECK write/readback/hash; before actual tool return and transcript.\",\r\n  \"final_check\": {\r\n    \"sha256\": \"d264a98b1cfca0e576a88f0f6564f1ef59c7474d8d6a4517ab1c0dab40a7f113\",\r\n    \"bytes\": 2145,\r\n    \"path\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\work\\\\microshort_s1_event_receiver_bound_integration_R3_20261108\\\\delivery\\\\FINAL_CHECK.json\"\r\n  },\r\n  \"delivery_snapshot_seconds\": 373.8937566,\r\n  \"whole_snapshot_seconds\": 1495.3647823,\r\n  \"kind\": \"R3_FINAL_CHECK_TOOL_RETURN\"\r\n}\r\n"
+  }
+}

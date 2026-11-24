@@ -1,0 +1,29 @@
+{
+  "kind": "CHAT_REPORTED_R3_TRANSPORT_RETURN",
+  "provenance": "Structured transcription of the user's pasted final transport return; not received as the original DELIVERY_TRANSPORT_TOOL_RETURN.json file and not its exact-byte identity certification.",
+  "reported_tool_metadata": {
+    "chunk_id": "633768",
+    "wall_time_seconds": 1.8631266,
+    "exit_code": 0,
+    "original_token_count": 191
+  },
+  "reported_output_parsed": {
+    "delivery_records": {
+      "sha256": "7598f6115d3341997161617df573ce46f3ee2b9d349503887a27fdd85dcb1335",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\delivery\\DELIVERY_RECORDS.json",
+      "bytes": 162320
+    },
+    "root_bytes": 1588003,
+    "boundary": "After DELIVERY_RECORDS write/readback/base64/hash verification; before actual tool return and later transcription.",
+    "delivery_snapshot_seconds": 397.0866718,
+    "native_ready": false,
+    "record_count": 5,
+    "whole_snapshot_seconds": 1518.5543938,
+    "first_error_preserved": true,
+    "kind": "R3_DELIVERY_RECORDS_TOOL_RETURN",
+    "raw_identity_and_parsed_view_match": true
+  },
+  "transport_raw_original_received_and_hash_matched": true,
+  "original_transcript_file_received": false,
+  "independent_historical_runtime_audit": false
+}

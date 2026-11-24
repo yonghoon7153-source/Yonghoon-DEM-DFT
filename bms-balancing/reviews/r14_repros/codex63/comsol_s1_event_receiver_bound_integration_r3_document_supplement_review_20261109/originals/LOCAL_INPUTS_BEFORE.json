@@ -1,0 +1,16 @@
+{
+  "kind": "LOCAL_REVIEW_INPUT_SNAPSHOT",
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_20261109.zip",
+      "bytes": 31567,
+      "sha256": "2ca5367dd12ffe473cb53c69294c61d873cd5686867be84a15a6f78be3fedb14"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\.codex\\attachments\\a43cbdc2-95a2-4d86-a119-7c99cd418a26\\붙여넣은 텍스트.txt",
+      "bytes": 55075,
+      "sha256": "b55467479e4743860cefaabe79c09c1cb89060c7b0cc821f2dcf712b51c9a428"
+    }
+  ],
+  "boundary": "After read-only intake inspection; before review copy and artifact authoring. Not a remote historical snapshot."
+}

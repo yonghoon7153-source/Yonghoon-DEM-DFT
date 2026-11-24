@@ -1,0 +1,7 @@
+{
+ "ARRAYS.json": "c06929b45e24ce65c5468663cfa52ee12079dea8cdcc69553c5db1c099c208fe",
+ "sobol_A0_their_box_seed0.npy": "916ac3733713bc49618ccfdee0aa1090372d05b4cc01fabcfe89b7f40a6cd4f9",
+ "sobol_A0_their_box_seed1.npy": "0e8daccaf05476af5324fb3f4d227b3a1781fc980f19576af8f6132f0ebef445",
+ "sobol_A1_A2_wide_box_seed0.npy": "2e7ba141ddf09bac178bed803bfd82049116ede2691a5758b1055c1e730708d4",
+ "sobol_A1_A2_wide_box_seed1.npy": "72a3372631a51496e452a26cae3a96ad65582d8c4385bae99a749900fb88b872"
+}

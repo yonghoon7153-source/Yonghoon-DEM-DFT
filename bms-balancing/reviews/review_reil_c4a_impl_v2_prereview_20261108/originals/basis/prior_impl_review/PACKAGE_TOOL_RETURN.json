@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_C4A_IMPL_PREREVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Received exec_command result serialized after return. Outside the completed ZIP; not its own future write return, whole-review timing, or independent remote runtime audit.",
+  "tool_result": {
+    "chunk_id": "22eda5",
+    "wall_time_seconds": 0.7999869,
+    "exit_code": 0,
+    "original_token_count": 362,
+    "output": "{\r\n  \"kind\": \"REIL_C4A_IMPL_PREREVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_impl_prereview_20261106\\\\REIL_C4A_IMPL_PREREVIEW_20261106.zip\",\r\n    \"bytes\": 1717671,\r\n    \"sha256\": \"590d27d9864ddadaa9d71ee858d3cd5ac670b5ed1c86a58eb907c2bae30088b3\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_impl_prereview_20261106\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1843,\r\n    \"sha256\": \"d27dcff327282155b9a7c05e16e328318659224fe56aaa62f6945bc5894b3a2c\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_impl_prereview_20261106\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 2858,\r\n    \"sha256\": \"76ff61a1dec1bc37aa37ba89cf46fb0bd7b7a6d172c258e1b5077f5d6cd2c319\"\r\n  },\r\n  \"payload_count\": 154,\r\n  \"entries\": 155,\r\n  \"decision\": \"REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL\",\r\n  \"findings\": 7,\r\n  \"source_copies\": 131,\r\n  \"selected_local_originals_preserved\": 9,\r\n  \"target_execution\": 0,\r\n  \"tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"new_implementation_or_execution_authorized\": false,\r\n  \"boundary\": \"After ZIP, receipt and post-package records write/readback; before actual tool return and its later transcription.\"\r\n}\r\n"
+  }
+}

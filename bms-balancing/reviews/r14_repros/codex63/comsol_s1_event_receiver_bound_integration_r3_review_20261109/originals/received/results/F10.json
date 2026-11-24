@@ -1,0 +1,77 @@
+{
+  "actual_entries": [
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+      "function": "receiver_finish.wait_finish",
+      "line": 33
+    }
+  ],
+  "clock_calls": [],
+  "elapsed_seconds": 0.0,
+  "evidence": {
+    "expected_errors": [
+      {
+        "reason": "RECEIVER_LIFETIME_EXCEEDED",
+        "text": "RECEIVER_LIFETIME_EXCEEDED",
+        "type": "ProtocolError"
+      }
+    ],
+    "fake_timer_calls": {
+      "clock": 1,
+      "sleep": 0
+    }
+  },
+  "expected": {
+    "expectation": "lifetime은 finish wait까지 포함, 연장/정상 종료 판정0; fake clock이며 실제 120초 대기0",
+    "expected_clock_stages": [],
+    "expected_reason": "RECEIVER_LIFETIME_EXCEEDED",
+    "expected_target_counts": {
+      "bound_ack_session.BoundAckSession.exchange": 0,
+      "bound_ack_session.BoundAckSession.verify_consumption": 0,
+      "evidence_admission.EvidenceAdmission.admit": 0,
+      "live_file_transport.BoundLiveSession.exchange": 0,
+      "live_file_transport.BoundLiveSession.verify_consumption": 0,
+      "live_file_transport.FileAckPorts.consumption": 0,
+      "live_file_transport.FileAckPorts.marker": 0,
+      "live_file_transport.FileAckPorts.reader": 0,
+      "receiver_bridge.ReceiverBridge.publish": 0,
+      "receiver_finish.publish_finish": 0,
+      "receiver_finish.validate_finish": 0,
+      "receiver_finish.wait_finish": 1,
+      "receiver_session.FileReceiverSession.start": 0,
+      "receiver_session.FileReceiverSession.stop_owned": 0,
+      "state_owner.StateOwner.assess_count": 0,
+      "state_owner.StateOwner.bootstrap": 0
+    },
+    "expected_transport_io": null,
+    "group": "new finish wait",
+    "id": "F10",
+    "input": "fake lifecycle elapsed가 120초 상한과 같고 finish 부재",
+    "kind": "SEALED_R3_CASE_FIXTURE",
+    "operating_deadlines": null,
+    "reserve": null,
+    "stage": "finish wait boundary",
+    "synthetic_binding_only": true
+  },
+  "id": "F10",
+  "observed_reason": "RECEIVER_LIFETIME_EXCEEDED",
+  "status": "PASS",
+  "target_counts": {
+    "bound_ack_session.BoundAckSession.exchange": 0,
+    "bound_ack_session.BoundAckSession.verify_consumption": 0,
+    "evidence_admission.EvidenceAdmission.admit": 0,
+    "live_file_transport.BoundLiveSession.exchange": 0,
+    "live_file_transport.BoundLiveSession.verify_consumption": 0,
+    "live_file_transport.FileAckPorts.consumption": 0,
+    "live_file_transport.FileAckPorts.marker": 0,
+    "live_file_transport.FileAckPorts.reader": 0,
+    "receiver_bridge.ReceiverBridge.publish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 1,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "state_owner.StateOwner.assess_count": 0,
+    "state_owner.StateOwner.bootstrap": 0
+  }
+}

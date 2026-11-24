@@ -1,0 +1,156 @@
+"""Local sequential receiver-test wire format; integrity, not authentication."""
+import hashlib
+import json
+from pathlib import Path
+import re
+import stat
+from state_owner import Ticket
+
+FRAME_MAX = 16384
+RECORD_MAX = 1048576
+REQUEST_KEYS = frozenset(("kind", "session_ref", "case_ref", "handoff_ref", "request_index", "ticket", "channel", "receiver_ref", "record_relpath", "record_sha256", "previous_digest"))
+ACK_KEYS = frozenset(("kind", "session_ref", "case_ref", "handoff_ref", "request_index", "request_sha256", "record_sha256", "ticket", "channel", "receiver_ref", "receiver_pid", "status", "reason", "consumption_ref", "consumption_sha256"))
+
+class ProtocolError(ValueError):
+    def __init__(self, reason):
+        self.reason = reason
+        super().__init__(reason)
+
+def digest(raw):
+    if type(raw) is not bytes:
+        raise ProtocolError("BYTES_REQUIRED")
+    return hashlib.sha256(raw).hexdigest()
+
+def canonical_bytes(obj):
+    return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+
+def _pairs(pairs):
+    out = {}
+    for key, value in pairs:
+        if key in out:
+            raise ValueError("DUPLICATE_KEY")
+        out[key] = value
+    return out
+
+def _forbidden_number(value):
+    raise ValueError("NONINTEGER_NUMBER")
+
+def _decode(raw, keys, kind, error):
+    try:
+        if type(raw) is not bytes or len(raw) > FRAME_MAX:
+            raise ValueError("FRAME_BOUND")
+        obj = json.loads(raw.decode("utf-8"), object_pairs_hook=_pairs, parse_float=_forbidden_number, parse_constant=_forbidden_number)
+        if type(obj) is not dict or set(obj) != keys or canonical_bytes(obj) != raw or obj["kind"] != kind:
+            raise ValueError("FORMAT")
+        return obj
+    except (ValueError, TypeError, UnicodeError, RecursionError) as exc:
+        raise ProtocolError(error) from exc
+
+def is_ref(value):
+    return type(value) is str and bool(value.strip()) and len(value) <= 512
+
+def is_digest(value):
+    return type(value) is str and re.fullmatch(r"[0-9a-f]{64}", value) is not None
+
+def ticket_to_wire(ticket):
+    if type(ticket) is not Ticket:
+        raise ProtocolError("TICKET_TYPE_INVALID")
+    p = ticket.producer
+    return {"owner_ref": ticket.owner_ref, "epoch_ref": ticket.epoch_ref, "run_ref": ticket.run_ref,
+            "producer": {"role": p.role, "instance_ref": p.instance_ref, "generation_ref": p.generation_ref, "process_evidence_ref": p.process_evidence_ref}, "version": ticket.version}
+
+def _ticket_wire(value):
+    if type(value) is not dict or set(value) != {"owner_ref", "epoch_ref", "run_ref", "producer", "version"}:
+        return False
+    if not all(is_ref(value[name]) for name in ("owner_ref", "epoch_ref", "run_ref")):
+        return False
+    if type(value["version"]) is not int or not 0 <= value["version"] <= 999999999999:
+        return False
+    p = value["producer"]
+    return (type(p) is dict and set(p) == {"role", "instance_ref", "generation_ref", "process_evidence_ref"}
+            and p["role"] in ("P", "S", "M", "Q") and all(is_ref(v) for v in p.values()))
+
+def parse_request(raw):
+    obj = _decode(raw, REQUEST_KEYS, "RECEIVER_REQUEST_V1", "REQUEST_FORMAT_INVALID")
+    if (not all(is_ref(obj[k]) for k in ("session_ref", "case_ref", "handoff_ref", "receiver_ref"))
+        or re.fullmatch(r"R(?:0[1-9]|1[0-6])", obj["case_ref"]) is None
+        or type(obj["request_index"]) is not int or not 1 <= obj["request_index"] <= 19
+        or obj["channel"] not in ("normal_delivery", "failure_delivery")
+        or not _ticket_wire(obj["ticket"]) or not is_digest(obj["record_sha256"])
+        or (obj["previous_digest"] is not None and not is_digest(obj["previous_digest"]))
+        or type(obj["record_relpath"]) is not str):
+        raise ProtocolError("REQUEST_FORMAT_INVALID")
+    expected = obj["case_ref"] + "/" + obj["channel"] + "/v%012d.json" % obj["ticket"]["version"]
+    if obj["record_relpath"] != expected:
+        raise ProtocolError("REQUEST_PATH_INVALID")
+    return obj
+
+def parse_ack(raw):
+    obj = _decode(raw, ACK_KEYS, "RECEIVER_ACK_V1", "ACK_FORMAT_INVALID")
+    if (not all(is_ref(obj[k]) for k in ("session_ref", "case_ref", "handoff_ref", "receiver_ref"))
+        or type(obj["request_index"]) is not int or not 1 <= obj["request_index"] <= 19
+        or type(obj["receiver_pid"]) is not int or obj["receiver_pid"] <= 0
+        or not is_digest(obj["request_sha256"]) or not is_digest(obj["consumption_sha256"])
+        or obj["channel"] not in ("normal_delivery", "failure_delivery")
+        or obj["status"] not in ("ACCEPTED", "REJECTED")
+        or (obj["record_sha256"] is not None and not is_digest(obj["record_sha256"]))
+        or (obj["ticket"] is not None and not _ticket_wire(obj["ticket"]))
+        or type(obj["consumption_ref"]) is not str
+        or obj["consumption_ref"] != "mailbox/consumption/c%04d.json" % obj["request_index"]):
+        raise ProtocolError("ACK_FORMAT_INVALID")
+    if obj["status"] == "ACCEPTED":
+        if obj["reason"] is not None or obj["record_sha256"] is None or obj["ticket"] is None:
+            raise ProtocolError("ACK_FORMAT_INVALID")
+    elif not is_ref(obj["reason"]):
+        raise ProtocolError("ACK_FORMAT_INVALID")
+    return obj
+
+def validate_ack(ack, request, pid):
+    ack = parse_ack(canonical_bytes(ack))
+    request = parse_request(canonical_bytes(request))
+    expected = {name: request[name] for name in ("session_ref", "case_ref", "handoff_ref", "request_index")}
+    expected.update(receiver_pid=pid, request_sha256=digest(canonical_bytes(request)))
+    for key, value in expected.items():
+        if type(ack[key]) is not type(value) or ack[key] != value:
+            raise ProtocolError("ACK_FIELD_MISMATCH:" + key)
+    if ack["status"] == "REJECTED":
+        raise ProtocolError("ACK_REJECTED:" + ack["reason"])
+    for key in ("record_sha256", "ticket", "channel", "receiver_ref"):
+        if ack[key] != request[key]:
+            raise ProtocolError("ACK_FIELD_MISMATCH:" + key)
+
+def plain_path(path, is_dir):
+    path = Path(path)
+    for current in (path, *path.parents):
+        info = current.lstat()
+        if stat.S_ISLNK(info.st_mode) or getattr(info, "st_file_attributes", 0) & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400):
+            raise ProtocolError("REPARSE_PATH_REJECTED")
+        if (current != path or is_dir) and not stat.S_ISDIR(info.st_mode):
+            raise ProtocolError("DIRECTORY_REQUIRED")
+        if current == path and not is_dir and not stat.S_ISREG(info.st_mode):
+            raise ProtocolError("REGULAR_FILE_REQUIRED")
+
+def read_bounded(path, max_bytes=RECORD_MAX):
+    plain_path(path, False)
+    with Path(path).open("rb") as stream:
+        raw = stream.read(max_bytes + 1)
+    if len(raw) > max_bytes:
+        raise ProtocolError("RECORD_TOO_LARGE")
+    return raw
+
+def write_new_json(path, obj, max_bytes=RECORD_MAX):
+    raw = canonical_bytes(obj)
+    if len(raw) > max_bytes:
+        raise ProtocolError("RECORD_TOO_LARGE")
+    plain_path(Path(path).parent, True)
+    with Path(path).open("xb") as stream:
+        if stream.write(raw) != len(raw):
+            raise ProtocolError("SHORT_WRITE")
+        stream.flush()
+    if read_bounded(path, max_bytes) != raw:
+        raise ProtocolError("WRITE_READBACK_MISMATCH")
+
+def publish_marker(path):
+    plain_path(Path(path).parent, True)
+    with Path(path).open("xb"):
+        pass

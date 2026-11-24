@@ -1,0 +1,110 @@
+{
+  "kind": "R3_RECIPIENT_STATIC_EVIDENCE_CHECK",
+  "received_package": 157,
+  "sealed_files_total": 63,
+  "sealed_payload_bytes_matched": 63,
+  "sealed_external_identity_rows_not_remeasured": [],
+  "source_count": 15,
+  "preserved_source_copies_matched_locally": 12,
+  "selected_identity_rows_before_after_post": 185,
+  "selected_remote_original_files_remeasured": 0,
+  "copy_original_identity_pairs": 20,
+  "function_spans_matched": 18,
+  "case_results": [
+    {
+      "id": "F01",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "PASS",
+      "target_call_entries": 3
+    },
+    {
+      "id": "F02",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "REQUEST_ALREADY_POSTED",
+      "target_call_entries": 2
+    },
+    {
+      "id": "F03",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "ACK_MARKER_INVALID",
+      "target_call_entries": 1
+    },
+    {
+      "id": "F04",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "ACK_FRAME_TOO_LARGE",
+      "target_call_entries": 1
+    },
+    {
+      "id": "F05",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "CONSUMPTION_PATH_MISMATCH",
+      "target_call_entries": 3
+    },
+    {
+      "id": "F06",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "CONSUMPTION_SHA_MISMATCH",
+      "target_call_entries": 10
+    },
+    {
+      "id": "F07",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "ACK_TRANSPORT_TIMEOUT",
+      "target_call_entries": 3
+    },
+    {
+      "id": "F08",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "RECEIVER_NOT_ALIVE",
+      "target_call_entries": 1
+    },
+    {
+      "id": "F09",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "FINISH_SESSION_MISMATCH",
+      "target_call_entries": 1
+    },
+    {
+      "id": "F10",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "RECEIVER_LIFETIME_EXCEEDED",
+      "target_call_entries": 1
+    },
+    {
+      "id": "L01",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "NORMAL_DELIVERY_COMPLETED",
+      "target_call_entries": 11
+    },
+    {
+      "id": "L02",
+      "status": "PASS_RECORD_MATCHED",
+      "reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT",
+      "target_call_entries": 11
+    }
+  ],
+  "parent_raw_rc": 0,
+  "child_raw_rc": 0,
+  "normal_live_completions": 1,
+  "wire_chains": [
+    {
+      "request": 1,
+      "version": 0,
+      "bytes_bound": true,
+      "receiver_pid": 14820
+    },
+    {
+      "request": 2,
+      "version": 1,
+      "bytes_bound": true,
+      "receiver_pid": 14820
+    }
+  ],
+  "source_seal_results_stdout_outer_return_matched": true,
+  "first_error_preserved": true,
+  "full_procedure_pass": false,
+  "reviewer_target_execution": 0,
+  "reviewer_tests": 0,
+  "limitations": "Static received evidence audit only. Prior remote execution, clock and whole-machine preservation are not independently observed."
+}

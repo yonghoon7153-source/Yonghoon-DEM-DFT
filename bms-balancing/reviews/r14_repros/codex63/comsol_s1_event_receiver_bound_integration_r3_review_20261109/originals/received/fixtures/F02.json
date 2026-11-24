@@ -1,0 +1,40 @@
+{
+  "id": "F02",
+  "group": "new file ports",
+  "input": "같은 요청의 두 번째 게시 시도",
+  "expectation": "첫 게시 뒤 중복 호출은 추가 쓰기/대기/읽기0; 원본 보존",
+  "expected_reason": "REQUEST_ALREADY_POSTED",
+  "stage": "post entry",
+  "kind": "SEALED_R3_CASE_FIXTURE",
+  "synthetic_binding_only": true,
+  "operating_deadlines": null,
+  "reserve": null,
+  "expected_target_counts": {
+    "live_file_transport.FileAckPorts.marker": 2,
+    "live_file_transport.FileAckPorts.reader": 0,
+    "live_file_transport.FileAckPorts.consumption": 0,
+    "live_file_transport.BoundLiveSession.exchange": 0,
+    "live_file_transport.BoundLiveSession.verify_consumption": 0,
+    "bound_ack_session.BoundAckSession.exchange": 0,
+    "bound_ack_session.BoundAckSession.verify_consumption": 0,
+    "state_owner.StateOwner.bootstrap": 0,
+    "state_owner.StateOwner.assess_count": 0,
+    "receiver_bridge.ReceiverBridge.publish": 0,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "evidence_admission.EvidenceAdmission.admit": 0
+  },
+  "expected_clock_stages": [],
+  "expected_transport_io": {
+    "request_writes": 1,
+    "request_markers": 1,
+    "polls": 1,
+    "ack_reads": 1,
+    "reader_calls": 0,
+    "consumption_reads": 0
+  }
+}
+

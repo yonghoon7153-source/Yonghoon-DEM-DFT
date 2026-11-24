@@ -1,0 +1,56 @@
+COMSOL S1 receiver–bound ACK 통합 R3 — 독립 수신 자료 검토
+2026-11-09
+
+판정: LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED
+
+1. 수용 범위
+
+F01–F10 오프라인 10개와 L01–L02 실제 소유 수신자 연결 2개, 총 12개의 기대 결과 일치를 수신 근거 범위에서 수용합니다. 실제 관측을 이 기기에서 반복하거나 이전 실행을 독립 OS 감사한 것은 아닙니다. 새 차단 기능 지적은 없습니다. 전달문 “2시나리오 모두”는 전체 수를 뜻하면 잘못된 요약이므로 이 별도 회신에서 12개로 정정합니다. ZIP 내부 CASE_PLAN·VALIDATION_PLAN·개별 결과·RESULTS·REPORT는 모두 12개로 일치합니다.
+
+F01은 요청/marker 각 1회, ACK 원파일 1회 읽기와 같은 캐시 바이트 반환, 소비 1회 읽기를 다룹니다. F02 중복 게시 추가 I/O 0, F03 잘못된 marker 뒤 payload 읽기 0, F04 16,385 B ACK의 한 번 제한 읽기 거부, F05 외부 소비 경로 접근 전 거부, F06 기존 BoundAckSession.verify_consumption의 SHA 불일치 거부 및 C5 미도달, F07 timeout 이후 late ACK에도 최초 실패 유지, F08 종료된 가짜 process에서 bound 호출 0, F09 finish session 불일치, F10 합성 120초 경계에서 읽기/대기 전 거부가 고정 계획과 맞습니다.
+
+VALIDATION_PLAN과 fixture는 최초 봉인에 포함돼 있습니다. 개별 결과에 복사된 기대값만 믿지 않고, 고정 계획 원필드·실제 소스 함수 위치/해시·하네스 분기·sys.setprofile 진입 기록·함수별 호출 수·clock 단계와 대조했습니다. 기존 후보 시험을 다시 실행하지 않았습니다.
+
+2. 실제 전달과 거부의 분리
+
+L01은 FileReceiverSession.start → FileAckPorts → BoundAckSession → ReceiverBridge → StateOwner.bootstrap 경로입니다. 실제 요청 q0001, ACK a0001, 소비 c0001, v0 normal_delivery의 바이트·SHA·ticket·session·수신자 PID 14820이 연결되며 부모/bridge 검증 head v0로 끝납니다. 정상 실제 전달 완료는 1회입니다.
+
+L02는 같은 소유 수신자와 같은 경계 B를 유지한 두 번째 요청입니다. 수신자는 v1을 소비하고 ACCEPTED ACK를 게시하지만, 부모의 합성 C5 count=100=B가 DEADLINE_NOT_BEFORE를 발생시킵니다. local normal_delivery/stored v1, 부모 last_verified_delivered v0, bridge accepted head v0가 구분됩니다. owner에는 DELIVERY_EXCEPTION이 남습니다. 이 사건은 기대한 거부이므로 시나리오 PASS이며, v1의 정상 전달 승인이라는 뜻이 아닙니다.
+
+FINISH는 session·source manifest SHA·PID·두 요청·마지막 요청 SHA에 결속됩니다. lifecycle는 소비 2/ACK 2와 rc0로 연결됩니다. 부모 Python 1세션 rc0/2.3092717초, 수신자 1세션 rc0, terminate 0입니다. stop_owned.graceful=false는 원필드 그대로이며 별도 natural_finish_completed 근거로 정상 종료를 설명합니다. 과거 19요청 경로를 재실행한 것이 아닙니다.
+
+신규 worker 후보의 차이는 finish helper import, 요청 수 19→2, ACK2 뒤 finish 대기, 마지막 개행뿐입니다. 기존 worker 및 나머지 생산/legacy 소스 12개는 이전 로컬 수신 사본과 바이트가 같습니다. 신규 3개를 포함한 소스 총수는 15입니다.
+
+3. 준비 역할표의 잔여 보완
+
+READY_INPUTS_COMPLETION과 DIRECTORY_CONTRACT는 작성 주체, 소비 주체, 식별된 입력, 미생성 출력, 폴더 생성 책임을 분리했습니다. 이전 폴더 중복 생성·입력 부재 중지 상태를 소급 변경하지 않고 R3의 새 준비 기록으로 연결한 점을 수용합니다.
+
+다만 RBI_R1_READY_01의 완전 종결은 보류합니다. validation/runtime_support.py 130–145행은 역할과 관계없이 seal.files 63개와 engine을 모두 해시 확인합니다. 역할별 코드 로딩 구분은 그 뒤 149–150행입니다. READY_INPUTS_COMPLETION.json 462–473행의 bound_ack_session은 guarded_parent_loader만, 609–620행의 receiver_worker_candidate는 guarded_child_loader만 기재돼 있습니다. 실제로는 반대쪽 bootstrap도 해당 파일을 식별 목적으로 읽습니다.
+
+보완 문구: “부모·자식 bootstrap은 PRESEAL에 결속된 모든 입력과 engine을 읽기 전용 식별 확인할 수 있다. 이 권한은 코드 로딩·실행 권한이 아니다. 코드 로딩은 각 역할의 기존 모듈 목록으로 제한한다.” 필요하면 identity_read_consumers와 code_load_consumers를 별도 열로 두세요. 이 항목은 이번 관측 결과를 취소하는 기능 실패나 새 재시험 요구가 아닙니다. 기존 원본을 보존한 별도 문서 보충 또는 이후 명시적으로 승인된 준비 문서에서 반영하면 됩니다.
+
+4. 전달 준비 오류와 시각 경계
+
+FIRST_ERROR는 검증 뒤 functions.exec의 JavaScript 구문 해석 단계 SyntaxError: Unexpected identifier 'r'를 기록합니다. 원 process rc·chunk·정확 오류 tick은 null입니다. 수신 기록은 해당 호출의 shell/apply_patch 미실행과 자동 수정/재시도 0을 보고하며 이후 중지 보존용 포장과 구분합니다. 이를 후보 기능 실패로 바꾸거나 원 실행 rc0로 덮지 않습니다. 기능 결과는 수용하되 full_procedure_compliance=false를 유지합니다.
+
+실행기 원문 93962c의 선행 System.Threading.Tasks.VoidTaskResult 두 줄은 보존돼 있고 뒤 JSON은 PYTHON_SESSION_RETURN과 일치합니다. 이것을 추가 세션으로 세지 않습니다. 부모 하네스 내부 약 2.078초, 외부 Python 구간 2.3092717초, 자식 lifecycle 562ms는 서로 다른 경계입니다. 작업 단계 snapshot이나 도구 wall time과 합산하지 않습니다.
+
+최종 전달 묶음은 원파일로 수신했고 162,320 B / SHA-256 7598f6115d3341997161617df573ce46f3ee2b9d349503887a27fdd85dcb1335입니다. 마지막 633768 반환은 채팅 전사만 수신했으며 DELIVERY_TRANSPORT_TOOL_RETURN.json의 원파일 해시를 새로 인증하지 않습니다. 전사의 1518.5543938/3600초, 전달 397.0866718/600초, 1,588,003/52,428,800 B는 해당 반환 전 snapshot 범위의 수치 비교입니다. 전사 파일의 이후 저장이나 전체 역사 소요를 포함한다고 확장하지 않습니다.
+
+5. 무결성·보존 대조와 한계
+
+수신 ZIP은 252,451 B / SHA-256 f0b118bd6320eea7ecaf26bb81b59f0b20992603ae5e4aa218c25fcaf9122184입니다. 156 payload+manifest 157개에 대해 정확 집합, 안전한 상대경로, 대소문자 중복, 링크 메타데이터, 압축 해제 크기/SHA와 별도 CRC32를 확인했습니다. 외부 원기록 5개의 base64 원바이트·크기·SHA·parsed_view와 영수증→ZIP/manifest, FINAL_CHECK→외부 기록, 포장/최종 반환→지정 원파일 연결을 확인했습니다.
+
+봉인 파일 63개는 동봉 바이트로 대조했고, 함수 span 18개는 작성 도구의 LF 분리/마지막 빈 필드 유지 규칙으로 일치합니다. 선택 185행의 BEFORE/AFTER/POST 식별 집합, 사본 20쌍, 이전 수신 소스 12개도 일치합니다. 이 집합들은 겹치므로 더하지 않습니다. 원격 185개 원본의 현재 파일을 재측정하거나 BML 기기 전체를 감사한 것은 아닙니다. engine 원격 현재 바이너리는 이 검토에서 실행·재측정하지 않았습니다.
+
+검토자 자료 처리에서 engine 객체/1개 배열 형식 및 EOF span의 마지막 빈 필드를 처음에 다르게 가정해 대조가 두 번 멈췄습니다. 원 반환을 각각 REVIEWER_CHECKER_CORRECTION과 REVIEWER_SPAN_CHECKER_CORRECTION에 보존하고 송신자가 실제 사용한 형식으로 정정했습니다. 수신 바이트·소스·기능 결과를 수정한 것이 아니며 대상 재시험도 아닙니다.
+
+회신 포장 전 점검에서도 모든 .json을 파싱하려 한 검토자 가정이 F04의 의도된 16,385 B 비정상 ACK 파일에서 멈췄습니다. 이 원 반환은 REVIEWER_PACKAGE_CHECK_CORRECTION에 보존했습니다. F04는 크기 초과를 JSON 해석 전에 거부하는 시나리오이므로 해당 파일을 정상 JSON으로 고치지 않았습니다. 검토자 메타데이터의 JSON 파싱과 수신 모든 파일의 원바이트 크기/SHA 검증을 구분해 포장 점검을 정정했습니다. 총 세 건 모두 검토자 보조 도구의 정정이며 대상 기능 재시험이 아닙니다.
+
+6. 유지 상태
+
+운영 clock/boot/domain/P/S/M/Q/freshness, 실제 동시성·경로 교체, 재시작 복구/저장 내구성, 막힌 callback 반환·취소/잔류 Q, C4/C5 관측 이후 실제 반영 완료의 엄격 마감, ResourceSession/Parent, OS Job 보호와 COMSOL은 미검증입니다. 파일/상태 전달 연결이 한 단계 검증됐다는 범위로만 수용합니다.
+
+네 운영 기한/reserve=null, JOB_CURRENT_COMMIT 및 기존 OPEN, contract_adopted/native_ready/approved/usable=false, 전체·정상 gate INCOMPLETE를 유지합니다. 과거 중지 시도의 NOT_RUN을 이번 12개와 합산하거나 재분류하지 않습니다.
+
+이번 검토는 텍스트·JSON·ZIP·해시·수신 결과의 정적 대조와 검토 산출물 작성뿐입니다. 수신 프로그램/import·기능시험·수신자 시작·OS/Job/CIM·COMSOL·원 ZIP 재포장·원 소스/결과 수정·외부 발송은 0입니다. 재개나 새 실행 권한은 생성하지 않습니다. 현재 검토의 새 수치 예산과 전체 소요 시간 주장은 없습니다.

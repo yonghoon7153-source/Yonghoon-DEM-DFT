@@ -1,0 +1,153 @@
+{
+  "kind": "INACTIVE_R1_RESTART_SCOPE_INPUT_RESOLUTION_REQUIRED",
+  "date": "2026-11-06",
+  "proposal_only": true,
+  "new_execution_authorized": false,
+  "review_basis": {
+    "path": "C:\\Users\\BML\\Desktop\\COMSOL_S1_EVENT_BOUND_ACK_OWNER_R2_LIMITED_VALIDATION_REVIEW_20261105.zip",
+    "bytes": 4997257,
+    "sha256": "ea8cdadc62d42e8e324421b8572f17faebf952ec01c2c0863a458fedb0ad3005",
+    "identity_matched_user_report": true,
+    "internal_review_not_reperformed": true
+  },
+  "future_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R1_20261106",
+  "future_root_created": false,
+  "source_basis": "basis/SOURCE_BASIS.json",
+  "changes_allowed_after_adoption": [
+    "new file-transport callbacks and liveness facade",
+    "new finish-frame validation/wait helper",
+    "new receiver_worker candidate: 2-request lifecycle and validated finish wait only, consumption semantics unchanged",
+    "new harness, fixtures and execution controls"
+  ],
+  "unchanged_source_count": 10,
+  "legacy_session_reuse": "FileReceiverSession.start/receiver_pid/is_alive/stop_owned only; do not use legacy exchange or old 19-request suite",
+  "cases": 12,
+  "offline_cases": 10,
+  "live_scenarios": 2,
+  "data_requests": 2,
+  "finish_control_messages": 1,
+  "parent_sessions": 1,
+  "child_sessions": 1,
+  "budgets_seconds": {
+    "implementation": 2400,
+    "preseal": 300,
+    "parent_session_including_child": 180,
+    "child_lifetime_within_parent": 120,
+    "preservation_delivery": 600,
+    "incomplete_record": 120,
+    "whole": 3600,
+    "stage_transfer": false
+  },
+  "limits": {
+    "root_bytes": 52428800,
+    "ack_bytes": 16384,
+    "consumption_bytes": 1048576,
+    "transport_wait_seconds": 5,
+    "transport_poll_seconds": 0.01,
+    "owned_child_exit_wait_seconds": 5,
+    "owned_child_terminate_max": 1,
+    "automatic_retry": 0
+  },
+  "engine": {
+    "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "bytes": 107312,
+    "sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea"
+  },
+  "parent_argv": [
+    "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-I",
+    "-B",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R1_20261106/validation/run.py"
+  ],
+  "parent_cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R1_20261106/validation",
+  "child_argv": [
+    "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-I",
+    "-B",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R1_20261106/validation/receiver_entry.py",
+    "<new fixed session_ref>",
+    "<new candidate SOURCE_MANIFEST SHA256>"
+  ],
+  "child_cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R1_20261106",
+  "argv_placeholders": "Both child arguments fixed as actual values in first-test seal, no runtime fallback",
+  "actual_IO_authorization_needed": [
+    "Owned new-root file IO",
+    "One directly owned Python child with fixed argv/cwd, READY and 2 data exchanges, finish1",
+    "Child os.getpid and parent Popen PID/poll/wait",
+    "Administrative monotonic timing/sleep for fixture lifecycle, not operating QPC binding",
+    "On unexpected failure only: <=1 terminate of directly retained Popen and exit observation; no other PID/Job/kill fallback"
+  ],
+  "clock_scope": {
+    "admission": "FIXTURE_ONLY",
+    "B": 100,
+    "normal_count": 90,
+    "second_C5_count": 100,
+    "operational": false,
+    "clock_identity_pilot_reuse_as_operational_evidence": false
+  },
+  "remaining_opens": [
+    "operating clock/boot/domain/P/S/M/Q binding and freshness",
+    "hard completion deadline after C4/C5",
+    "blocked callback cancellation",
+    "concurrency, recovery and durability",
+    "ResourceSession/Parent, OS Job protection and COMSOL",
+    "four operating deadlines, reserve, tail policy, exact operational stop and residual Q"
+  ],
+  "state": {
+    "native_ready": false,
+    "approved": false,
+    "usable": false,
+    "contract_adopted": false,
+    "overall": "INCOMPLETE",
+    "normal_gate": "INCOMPLETE",
+    "operating_deadlines": null,
+    "reserve": null,
+    "JOB_CURRENT_COMMIT": "OPEN"
+  },
+  "first_unexpected_failure_stop": true,
+  "skip_child_if_offline_failure": true,
+  "old_suites_rerun": false,
+  "this_preparation": {
+    "documents_only": true,
+    "target_imports": 0,
+    "tests": 0,
+    "child_receivers": 0,
+    "COMSOL": 0,
+    "numeric_budget_seconds": null,
+    "whole_elapsed_claim": null,
+    "prior_budget_reused": false,
+    "document_lookup_error": "c8ccf6/rc1: one previously selected review ZIP absent; terminal PowerShell behavior stopped that lookup command. No execution attempt begun.",
+    "available_basis_matches": 15,
+    "unresolved_basis_rows": 1
+  },
+  "revision": "R1",
+  "restart_authorized": false,
+  "input_resolution_complete": false,
+  "input_resolution_rule": "Existing missing R2 review ZIP requires user-supplied exact path and original size/SHA match before execution; do not search broadly, fetch, substitute, or silently drop.",
+  "current_missing_input": {
+    "path": "C:/Users/BML/Desktop/COMSOL_S1_EVENT_BOUND_ACK_OWNER_R2_LIMITED_VALIDATION_REVIEW_20261105.zip",
+    "bytes": 4997257,
+    "sha256": "ea8cdadc62d42e8e324421b8572f17faebf952ec01c2c0863a458fedb0ad3005"
+  },
+  "prior_stop_review": {
+    "path": "C:\\Users\\BML\\Desktop\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_PREPARATION_STOP_REVIEW_20261106.zip",
+    "bytes": 191679,
+    "sha256": "c131074cb3d1e560dd2967a5f4a66c0e1cd8c31e71125bbdf80156ec75120643"
+  },
+  "fixed_case_plan": {
+    "path": "basis/CASE_PLAN.json",
+    "bytes": 4719,
+    "sha256": "aafea26c5c0fdaa3c6a33b36dc6b4e4944bb2bf3ae3a1b9a6f0eb928530c1084",
+    "raw_unchanged": true,
+    "previous_not_run": 12
+  },
+  "orchestration_corrections": {
+    "intake_owner": "root_only_serial",
+    "delegates": "After READY_INPUTS readback, text-only assistance on supplied source text; no delegated file IO, tests, target imports or tool launches",
+    "exact_input_names_only": true,
+    "terminating_shell_errors": true,
+    "native_rc_checked_separately": true,
+    "full_tool_return_retention": true,
+    "directory_contract_readback_before_ready": true
+  }
+}

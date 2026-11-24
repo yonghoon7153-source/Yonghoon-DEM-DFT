@@ -1,0 +1,40 @@
+{
+  "id": "F04",
+  "group": "new file ports",
+  "input": "FRAME_MAX보다 큰 ACK 원파일",
+  "expectation": "한 번의 제한 읽기로 초과 거부; decoder/descriptor 반환0",
+  "expected_reason": "ACK_FRAME_TOO_LARGE",
+  "stage": "bounded ACK read",
+  "kind": "SEALED_R3_CASE_FIXTURE",
+  "synthetic_binding_only": true,
+  "operating_deadlines": null,
+  "reserve": null,
+  "expected_target_counts": {
+    "live_file_transport.FileAckPorts.marker": 1,
+    "live_file_transport.FileAckPorts.reader": 0,
+    "live_file_transport.FileAckPorts.consumption": 0,
+    "live_file_transport.BoundLiveSession.exchange": 0,
+    "live_file_transport.BoundLiveSession.verify_consumption": 0,
+    "bound_ack_session.BoundAckSession.exchange": 0,
+    "bound_ack_session.BoundAckSession.verify_consumption": 0,
+    "state_owner.StateOwner.bootstrap": 0,
+    "state_owner.StateOwner.assess_count": 0,
+    "receiver_bridge.ReceiverBridge.publish": 0,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "evidence_admission.EvidenceAdmission.admit": 0
+  },
+  "expected_clock_stages": [],
+  "expected_transport_io": {
+    "request_writes": 1,
+    "request_markers": 1,
+    "polls": 1,
+    "ack_reads": 1,
+    "reader_calls": 0,
+    "consumption_reads": 0
+  }
+}
+

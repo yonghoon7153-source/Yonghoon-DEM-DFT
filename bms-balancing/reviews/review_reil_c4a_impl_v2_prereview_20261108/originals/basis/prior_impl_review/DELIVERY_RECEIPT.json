@@ -1,0 +1,37 @@
+{
+  "kind": "REIL_C4A_IMPL_PREREVIEW_DELIVERY_RECEIPT",
+  "recipient": null,
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\REIL_C4A_IMPL_PREREVIEW_20261106.zip",
+    "bytes": 1717671,
+    "sha256": "590d27d9864ddadaa9d71ee858d3cd5ac670b5ed1c86a58eb907c2bae30088b3"
+  },
+  "manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\PACKAGE_MANIFEST.json",
+    "bytes": 30303,
+    "sha256": "7142d98a716eddb0df261d9eab7e8dca7b6e1972911b1f795d8efcd5085608cf"
+  },
+  "post_package": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_impl_prereview_20261106\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json",
+    "bytes": 2858,
+    "sha256": "76ff61a1dec1bc37aa37ba89cf46fb0bd7b7a6d172c258e1b5077f5d6cd2c319"
+  },
+  "payload_count": 154,
+  "entries": 155,
+  "verification": "Exact member set, safe case-unique relative paths, non-link metadata, decompressed size/SHA256 and independently recomputed CRC32 matched.",
+  "pin": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "decision": "REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL",
+  "new_findings": 7,
+  "prior_scope_N1_N4": "CLOSED_DOCUMENT_SCOPE_RETAINED",
+  "source_copies": 131,
+  "selected_local_originals_preserved": 9,
+  "prior_review_blobs_matched": 139,
+  "target_execution": 0,
+  "tests": 0,
+  "data_opening": 0,
+  "COMSOL": 0,
+  "new_implementation_or_execution_authorized": false,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "boundary": "After ZIP verification and selected-local rehash; before receipt write/readback and actual tool return."
+}

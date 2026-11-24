@@ -1,0 +1,14 @@
+{
+  "kind": "RECIPIENT_STATIC_CHECKER_SHAPE_CORRECTION",
+  "failed_tool_result": {
+    "chunk_id": "b5901a",
+    "wall_time_seconds": 0.402288,
+    "exit_code": 1,
+    "original_token_count": 116,
+    "output": "Traceback (most recent call last):\r\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\_review_tools\\check_receiver_bound_R3.py\", line 31, in <module>\r\n    after=j(R/'SEALED_SOURCES_AFTER.json');assert idx(after['files'])==idx(pre['files']) and after['engine']==pre['engine']\r\n                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nAssertionError\r\n"
+  },
+  "cause": "Reviewer compared PRESEAL.engine object directly to SEALED_SOURCES_AFTER.engine single-element array. All 63 file identity rows matched; the one engine identity also matches.",
+  "correction": "Compare after.engine to [pre.engine]; retain exact identity fields. No supplied source, result, archive or record changed.",
+  "target_test_or_execution": 0,
+  "scope": "Correction to reviewer-authored static evidence processing, not retry or resumption of the stopped target task."
+}

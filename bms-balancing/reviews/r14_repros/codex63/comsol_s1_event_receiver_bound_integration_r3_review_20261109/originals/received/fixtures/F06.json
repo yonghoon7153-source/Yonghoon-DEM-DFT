@@ -1,0 +1,46 @@
+{
+  "id": "F06",
+  "group": "new file ports",
+  "input": "소비 원파일 SHA와 ACK 지정 SHA 불일치",
+  "expectation": "새 port가 소비 원파일 읽기1 후 같은 raw bytes를 반환하고 기존 BoundAckSession.verify_consumption이 SHA 불일치를 거부; C5 clock0, 원파일 그대로",
+  "expected_reason": "CONSUMPTION_SHA_MISMATCH",
+  "stage": "existing BoundAckSession.verify_consumption:CONSUMPTION_VALIDATE",
+  "kind": "SEALED_R3_CASE_FIXTURE",
+  "synthetic_binding_only": true,
+  "operating_deadlines": null,
+  "reserve": null,
+  "expected_target_counts": {
+    "live_file_transport.FileAckPorts.marker": 1,
+    "live_file_transport.FileAckPorts.reader": 1,
+    "live_file_transport.FileAckPorts.consumption": 1,
+    "live_file_transport.BoundLiveSession.exchange": 1,
+    "live_file_transport.BoundLiveSession.verify_consumption": 1,
+    "bound_ack_session.BoundAckSession.exchange": 1,
+    "bound_ack_session.BoundAckSession.verify_consumption": 1,
+    "state_owner.StateOwner.bootstrap": 1,
+    "state_owner.StateOwner.assess_count": 0,
+    "receiver_bridge.ReceiverBridge.publish": 1,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "evidence_admission.EvidenceAdmission.admit": 1
+  },
+  "expected_clock_stages": [
+    "C0",
+    "C1",
+    "C2",
+    "C3",
+    "C4"
+  ],
+  "expected_transport_io": {
+    "request_writes": 1,
+    "request_markers": 1,
+    "polls": 2,
+    "ack_reads": 1,
+    "reader_calls": 1,
+    "consumption_reads": 1
+  }
+}
+

@@ -1,0 +1,9 @@
+{
+  "kind": "R3_PRESERVATION_PHASE_ORIGIN",
+  "utc": "2026-11-08T05:29:55.8794306Z",
+  "tick": 5359274339735,
+  "frequency": 10000000,
+  "whole_seconds_at_phase_start": 1121.4710434,
+  "limit_seconds": 600,
+  "note": "After sole target session return; records/preservation only, no further target calls."
+}

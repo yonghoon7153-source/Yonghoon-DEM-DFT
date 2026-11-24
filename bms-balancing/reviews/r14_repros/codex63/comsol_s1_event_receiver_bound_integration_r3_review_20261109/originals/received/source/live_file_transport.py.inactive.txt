@@ -1,0 +1,167 @@
+"""Owned file mailbox callbacks; sequential fixture integration, not operating IPC."""
+import json
+import time
+from pathlib import Path
+from receiver_protocol import ProtocolError, digest, parse_request, plain_path, publish_marker, read_bounded
+
+class FileAckPorts:
+    def __init__(self, arena, session_ref, receiver_pid, is_alive, clock=time.monotonic, sleeper=time.sleep):
+        self.arena = Path(arena)
+        self.session_ref = session_ref
+        self.receiver_pid = receiver_pid
+        self.is_alive = is_alive
+        self.clock = clock
+        self.sleeper = sleeper
+        self.trace = []
+        self.calls = dict.fromkeys(("request_writes", "request_markers", "polls", "ack_reads", "reader_calls", "consumption_reads"), 0)
+        self.first_failure = None
+        self.first_failure_detail = None
+        self._posted = {}
+        self._acks = {}
+        self._consumptions = {}
+
+    @property
+    def posted(self):
+        return self._posted.items().mapping
+
+    def _guard(self, operation):
+        if self.first_failure is not None:
+            raise ProtocolError(self.first_failure)
+        try:
+            return operation()
+        except Exception as error:
+            if self.first_failure is None:
+                self.first_failure = getattr(error, "reason", "FILE_TRANSPORT_ERROR")
+                self.first_failure_detail = {"type": type(error).__name__, "text": str(error)}
+                self.trace.append({"action": "FIRST_FAILURE", "reason": self.first_failure, **self.first_failure_detail})
+            raise ProtocolError(self.first_failure) from error
+
+    def _record(self, action, path):
+        self.trace.append({"action": action, "path": str(path)})
+
+    def _path(self, area, name):
+        path = self.arena / "mailbox" / area / name
+        for parent in (self.arena, self.arena / "mailbox", path.parent):
+            self._record("check_directory", parent)
+            plain_path(parent, True)
+        return path
+
+    def _alive(self):
+        if self.is_alive() is not True:
+            raise ProtocolError("RECEIVER_NOT_ALIVE")
+
+    def marker(self, request_raw):
+        return self._guard(lambda: self._marker(request_raw))
+
+    def _marker(self, request_raw):
+        request = parse_request(request_raw)
+        index = request["request_index"]
+        if index in self._posted or request_raw in self._posted.values():
+            raise ProtocolError("REQUEST_ALREADY_POSTED")
+        if request["session_ref"] != self.session_ref:
+            raise ProtocolError("REQUEST_SESSION_MISMATCH")
+        if len(self._posted) >= 2 or index > 2:
+            raise ProtocolError("REQUEST_LIMIT_EXCEEDED")
+        if index != len(self._posted) + 1:
+            raise ProtocolError("REQUEST_INDEX_MISMATCH")
+        self._alive()
+        path = self._path("requests", "q%04d.json" % index)
+        marker = self._path("requests", "q%04d.ready" % index)
+        self.calls["request_writes"] += 1
+        self._record("write_request", path)
+        with path.open("xb") as stream:
+            if stream.write(request_raw) != len(request_raw):
+                raise ProtocolError("REQUEST_WRITE_INCOMPLETE")
+        self.calls["request_markers"] += 1
+        self._record("publish_request_marker", marker)
+        publish_marker(marker)
+        self._posted[index] = request_raw
+        deadline = self.clock() + 5
+        ready = self._path("acks", "a%04d.ready" % index)
+        payload = self._path("acks", "a%04d.json" % index)
+        while True:
+            self._alive()
+            remaining = deadline - self.clock()
+            if remaining <= 0:
+                raise ProtocolError("ACK_TRANSPORT_TIMEOUT")
+            self.calls["polls"] += 1
+            self._record("poll_ack_marker", ready)
+            try:
+                info = ready.lstat()
+            except FileNotFoundError:
+                self.sleeper(min(0.01, remaining))
+                continue
+            if info.st_size != 0:
+                raise ProtocolError("ACK_MARKER_INVALID")
+            plain_path(ready, False)
+            plain_path(payload, False)
+            self.calls["ack_reads"] += 1
+            self._record("read_ack", payload)
+            try:
+                raw = read_bounded(payload, 16384)
+            except ProtocolError as error:
+                if error.reason == "RECORD_TOO_LARGE":
+                    raise ProtocolError("ACK_FRAME_TOO_LARGE") from error
+                raise
+            descriptor = {"bytes": len(raw), "sha256": digest(raw)}
+            self._acks[index] = (request_raw, raw, descriptor)
+            return dict(descriptor)
+
+    def reader(self, request_raw, descriptor):
+        return self._guard(lambda: self._reader(request_raw, descriptor))
+
+    def _reader(self, request_raw, descriptor):
+        self.calls["reader_calls"] += 1
+        row = next((r for r in self._acks.values() if r[0] == request_raw), None)
+        if row is None:
+            raise ProtocolError("ACK_CACHE_MISMATCH")
+        if (type(descriptor) is not dict or type(descriptor.get("bytes")) is not int
+            or type(descriptor.get("sha256")) is not str or descriptor != row[2]):
+            raise ProtocolError("ACK_DESCRIPTOR_MISMATCH")
+        return row[1]
+
+    def consumption(self, ack_raw):
+        return self._guard(lambda: self._consumption(ack_raw))
+
+    def _consumption(self, ack_raw):
+        found = next(((i, r) for i, r in self._acks.items() if r[1] == ack_raw), None)
+        if found is None:
+            raise ProtocolError("ACK_CACHE_MISMATCH")
+        index, row = found
+        ack = json.loads(row[1].decode("utf-8"))
+        if ack.get("consumption_ref") != "mailbox/consumption/c%04d.json" % index:
+            raise ProtocolError("CONSUMPTION_PATH_MISMATCH")
+        if (ack.get("session_ref") != self.session_ref or type(ack.get("request_index")) is not int
+            or ack["request_index"] != index or type(ack.get("receiver_pid")) is not int
+            or ack["receiver_pid"] != self.receiver_pid):
+            raise ProtocolError("ACK_BINDING_MISMATCH")
+        if index in self._consumptions:
+            return self._consumptions[index]
+        path = self._path("consumption", "c%04d.json" % index)
+        plain_path(path, False)
+        self.calls["consumption_reads"] += 1
+        self._record("read_consumption", path)
+        raw = read_bounded(path, 1048576)
+        self._consumptions[index] = raw
+        return raw
+
+class BoundLiveSession:
+    def __init__(self, bound, owned):
+        self.bound = bound
+        self.owned = owned
+
+    @property
+    def receiver_pid(self):
+        return self.owned.receiver_pid
+
+    def is_alive(self):
+        return self.owned.is_alive()
+
+    def exchange(self, *args, **kwargs):
+        if self.owned.is_alive() is not True:
+            raise ProtocolError("RECEIVER_NOT_ALIVE")
+        return self.bound.exchange(*args, **kwargs)
+
+    def verify_consumption(self, *args, **kwargs):
+        return self.bound.verify_consumption(*args, **kwargs)
+

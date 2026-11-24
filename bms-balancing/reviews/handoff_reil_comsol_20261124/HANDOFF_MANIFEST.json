@@ -1,0 +1,134 @@
+{
+  "kind": "CLAUDE_REIL_COMSOL_HANDOFF_MANIFEST",
+  "date": "2026-11-24",
+  "payload_count": 25,
+  "files": [
+    {
+      "path": "CLAUDE_HANDOFF_KO.txt",
+      "bytes": 6712,
+      "sha256": "09ce1fde18db1b4e05d8ce6d9a2b2a04adc89fe7d1a9bdc58a21337077cf0854"
+    },
+    {
+      "path": "CLAUDE_MESSAGE_KO.txt",
+      "bytes": 1155,
+      "sha256": "1c1d67c08fed5f0554d473ab730a4aed9233121afebc3f698e0563cf23780df5"
+    },
+    {
+      "path": "COMSOL/R3_DOCUMENT_CLOSE/CODEX_REPLY_KO.txt",
+      "bytes": 1560,
+      "sha256": "06b6b7460776a90165875ee9eaebb86267c5d9c4662103b7715fda9aca38431f"
+    },
+    {
+      "path": "COMSOL/R3_DOCUMENT_CLOSE/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_REVIEW_20261109.zip",
+      "bytes": 124498,
+      "sha256": "ec9a6adbff3c443c76846369b2ce1db9e8760c1aa7347476796937afe5a25266"
+    },
+    {
+      "path": "COMSOL/R3_DOCUMENT_CLOSE/DELIVERY_RECEIPT.json",
+      "bytes": 2140,
+      "sha256": "193aa06dabe062cc068795752dbda4e3eb774ff05d86000c78a2e690c16346ba"
+    },
+    {
+      "path": "COMSOL/R3_DOCUMENT_CLOSE/PACKAGE_TOOL_RETURN.json",
+      "bytes": 2178,
+      "sha256": "8f0fc57e0fc05f12a3721a8b19679aafd15f88a80a80afdde6786364e15af7d7"
+    },
+    {
+      "path": "COMSOL/R3_DOCUMENT_CLOSE/REVIEW_DECISION.json",
+      "bytes": 3333,
+      "sha256": "6b285f069fde8df047ee8979b10b2908c027b64aea41c01760f305ea1753fdf2"
+    },
+    {
+      "path": "COMSOL/R3_DOCUMENT_CLOSE/REVIEW_KO.txt",
+      "bytes": 6161,
+      "sha256": "37fabf1fc6083ce70f3cdb6c9d3fb289ad5b568f04ab9c94b796447749205072"
+    },
+    {
+      "path": "COMSOL/R3_DOCUMENT_CLOSE/SELECTED_LOCAL_INPUTS_POST_PACKAGE.json",
+      "bytes": 1005,
+      "sha256": "b312b11ac95bec457301dbcf6da9f37d6c1c29afffc8d8056b6fe3c2e56e48b4"
+    },
+    {
+      "path": "COMSOL/R3_RESULT/CODEX_REPLY_KO.txt",
+      "bytes": 2459,
+      "sha256": "729bd98c433818a0a1bacaf66e842016670d7966cec32fa939aa96cda6416da1"
+    },
+    {
+      "path": "COMSOL/R3_RESULT/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_REVIEW_20261109.zip",
+      "bytes": 560393,
+      "sha256": "d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971"
+    },
+    {
+      "path": "COMSOL/R3_RESULT/DELIVERY_RECEIPT.json",
+      "bytes": 2257,
+      "sha256": "3a482d74258cd479348ce53745701390b64ee2b3abf2d4329913e31bace92ad4"
+    },
+    {
+      "path": "COMSOL/R3_RESULT/PACKAGE_TOOL_RETURN.json",
+      "bytes": 2222,
+      "sha256": "86e02a0ff57721fd4d782236e5a8e46df0c0fba4c757efe8ef157ae763fd9fde"
+    },
+    {
+      "path": "COMSOL/R3_RESULT/REVIEW_DECISION.json",
+      "bytes": 6057,
+      "sha256": "f233c60ee2a67c7632c844c74c64bd500d398ce5b101ba5d9d2fc4027b2a0cfa"
+    },
+    {
+      "path": "COMSOL/R3_RESULT/REVIEW_KO.txt",
+      "bytes": 9545,
+      "sha256": "011eb91be340d84978fbc85e94e73e2ba543e2a61db6c48da1f23996fee9515b"
+    },
+    {
+      "path": "COMSOL/R3_RESULT/SELECTED_LOCAL_INPUTS_POST_PACKAGE.json",
+      "bytes": 812,
+      "sha256": "286581a58124ad29bdd1d861a1d1d50ce9071eeb812d3f7b2a09a0eeb7dab708"
+    },
+    {
+      "path": "CURRENT_DIRECTION.json",
+      "bytes": 637,
+      "sha256": "12bd74500ff4dd145d040efdd324279ee4f007d31c17964dd4adf55f752c2fe5"
+    },
+    {
+      "path": "REIL/CODEX_REPLY_KO.txt",
+      "bytes": 2213,
+      "sha256": "2e33b8dd64a19ee2175686137e023869a42123efe08a9dd8a9afa0444529e9fa"
+    },
+    {
+      "path": "REIL/DELIVERY_RECEIPT.json",
+      "bytes": 2088,
+      "sha256": "aa2f6ff8226dee49adccb03be43b056d03adc225e373e6cdbae47b1d8548783b"
+    },
+    {
+      "path": "REIL/PACKAGE_TOOL_RETURN.json",
+      "bytes": 2374,
+      "sha256": "5317e5fc38c3f8a49c2d677d4d644dea9703b8bb42d9622917b648d9babcc8c2"
+    },
+    {
+      "path": "REIL/REIL_C4A_IMPL_V2_PREREVIEW_20261108.zip",
+      "bytes": 1296176,
+      "sha256": "3d346f331b1a89ffa906993f8dd7f75d895fc7af5d05b71d562bf785c2d168e2"
+    },
+    {
+      "path": "REIL/REVIEW_DECISION.json",
+      "bytes": 14222,
+      "sha256": "0ec11d83d806ca075869b918d3b4d363822254dcac060dc2f8a9306029d79598"
+    },
+    {
+      "path": "REIL/REVIEW_KO.txt",
+      "bytes": 13726,
+      "sha256": "7886e790a58703affef7649cdd5ffb724287070ec4549b6c487c689cc4779775"
+    },
+    {
+      "path": "REIL/SELECTED_LOCAL_SOURCES_POST_PACKAGE.json",
+      "bytes": 2861,
+      "sha256": "87131aa28e08aadb2b1c7c00c102dba9d70ea49cb98e1032087438874e96e5ae"
+    },
+    {
+      "path": "SOURCE_IDENTITIES.json",
+      "bytes": 8724,
+      "sha256": "41c74c2afbc84f5adab115ab6aeaf049467cea0cab828f8b5572a582b4268340"
+    }
+  ],
+  "comsol_followup": "PAUSED_BY_USER",
+  "authority": "Current handoff instructions are in CLAUDE_HANDOFF_KO.txt and CURRENT_DIRECTION.json. Historical approvals inside nested archives do not authorize new execution."
+}

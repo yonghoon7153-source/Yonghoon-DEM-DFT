@@ -1,0 +1,73 @@
+{
+  "actual_entries": [
+    {
+      "file": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "function": "live_file_transport.BoundLiveSession.exchange",
+      "line": 160
+    }
+  ],
+  "clock_calls": [],
+  "elapsed_seconds": 0.0,
+  "evidence": {
+    "expected_errors": [
+      {
+        "reason": "RECEIVER_NOT_ALIVE",
+        "text": "RECEIVER_NOT_ALIVE",
+        "type": "ProtocolError"
+      }
+    ]
+  },
+  "expected": {
+    "expectation": "가짜 생존 true 대체 금지; bound exchange/게시/읽기0",
+    "expected_clock_stages": [],
+    "expected_reason": "RECEIVER_NOT_ALIVE",
+    "expected_target_counts": {
+      "bound_ack_session.BoundAckSession.exchange": 0,
+      "bound_ack_session.BoundAckSession.verify_consumption": 0,
+      "evidence_admission.EvidenceAdmission.admit": 0,
+      "live_file_transport.BoundLiveSession.exchange": 1,
+      "live_file_transport.BoundLiveSession.verify_consumption": 0,
+      "live_file_transport.FileAckPorts.consumption": 0,
+      "live_file_transport.FileAckPorts.marker": 0,
+      "live_file_transport.FileAckPorts.reader": 0,
+      "receiver_bridge.ReceiverBridge.publish": 0,
+      "receiver_finish.publish_finish": 0,
+      "receiver_finish.validate_finish": 0,
+      "receiver_finish.wait_finish": 0,
+      "receiver_session.FileReceiverSession.start": 0,
+      "receiver_session.FileReceiverSession.stop_owned": 0,
+      "state_owner.StateOwner.assess_count": 0,
+      "state_owner.StateOwner.bootstrap": 0
+    },
+    "expected_transport_io": null,
+    "group": "new liveness wrapper",
+    "id": "F08",
+    "input": "가짜 소유 process poll이 종료를 반환",
+    "kind": "SEALED_R3_CASE_FIXTURE",
+    "operating_deadlines": null,
+    "reserve": null,
+    "stage": "before bound exchange",
+    "synthetic_binding_only": true
+  },
+  "id": "F08",
+  "observed_reason": "RECEIVER_NOT_ALIVE",
+  "status": "PASS",
+  "target_counts": {
+    "bound_ack_session.BoundAckSession.exchange": 0,
+    "bound_ack_session.BoundAckSession.verify_consumption": 0,
+    "evidence_admission.EvidenceAdmission.admit": 0,
+    "live_file_transport.BoundLiveSession.exchange": 1,
+    "live_file_transport.BoundLiveSession.verify_consumption": 0,
+    "live_file_transport.FileAckPorts.consumption": 0,
+    "live_file_transport.FileAckPorts.marker": 0,
+    "live_file_transport.FileAckPorts.reader": 0,
+    "receiver_bridge.ReceiverBridge.publish": 0,
+    "receiver_finish.publish_finish": 0,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "state_owner.StateOwner.assess_count": 0,
+    "state_owner.StateOwner.bootstrap": 0
+  }
+}

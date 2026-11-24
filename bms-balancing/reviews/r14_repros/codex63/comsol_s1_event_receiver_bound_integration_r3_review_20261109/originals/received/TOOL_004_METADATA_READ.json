@@ -1,0 +1,8 @@
+{
+  "chunk_id": "92fff7",
+  "wall_time_seconds": 1.6471578999999998,
+  "exit_code": 0,
+  "original_token_count": 121,
+  "output": "{\r\n  \"engine_rows\": [\r\n    {\r\n      \"path\": \"C:\\\\Users\\\\BML\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python.exe\",\r\n      \"bytes\": 107312,\r\n      \"sha256\": \"b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea\"\r\n    }\r\n  ],\r\n  \"fixture_manifest_raw\": \"{\\\"source_kind\\\":\\\"FIXTURE_ONLY\\\",\\\"run_ref\\\":\\\"fixture:R3\\\"}\",\r\n  \"fixture_manifest_sha256\": \"0b5754b6d58401947949c976c3c5632ba59f527276598e9d7af5dacac4d60e4a\",\r\n  \"elapsed\": 210.1065182\r\n}\r\n"
+}
+

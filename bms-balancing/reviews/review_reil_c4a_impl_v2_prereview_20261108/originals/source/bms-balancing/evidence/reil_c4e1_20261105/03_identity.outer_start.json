@@ -1,0 +1,40 @@
+{
+ "R": 1800,
+ "T_a": 1793841301,
+ "T_end": 1793862901,
+ "allow_s": 900.0,
+ "argv": [
+  "/usr/bin/python3.11",
+  "-I",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e1_launch.py",
+  "identity",
+  "--evidence",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105",
+  "--approval-section",
+  "§115"
+ ],
+ "cwd": "/home/user/Yonghoon-DEM-DFT/bms-balancing",
+ "deadline_epoch": 1793842448.9310858,
+ "epoch": 1793841548.9310858,
+ "kind": "REIL_E113_OUTER_START",
+ "launch_epoch": 1793841548,
+ "launcher": {
+  "expected": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e1_launch.py",
+  "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+ },
+ "name": "03_identity",
+ "outer": {
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_outer.py",
+  "sha256": "e107d566bc0dc9af37e2a53839720678be8ab6f15624ec54c605755b0001251e"
+ },
+ "overall_sha256": "88c44e3cde84a781e9c008335ea48d27d8429ecf610ba78d082df97352c59dd5",
+ "pgid": 693,
+ "pid": 693,
+ "ppid": 1,
+ "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+ "section": "§115",
+ "sid": 693,
+ "step": "identity",
+ "utc": "2026-11-05T01:19:08.931Z"
+}

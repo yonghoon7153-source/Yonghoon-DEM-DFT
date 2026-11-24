@@ -1,0 +1,13 @@
+{
+  "kind": "USER_HANDOFF_DIRECTION_SUMMARY",
+  "date": "2026-11-24",
+  "provenance": "Assistant summary of current user messages in this chat; not a platform raw export.",
+  "reil_next": "Corrected C4-A request v3 and N1/N3/N4/N6 response map; C2 clarification. Document work only.",
+  "comsol": "PAUSED_BY_USER_UNTIL_AVAILABLE",
+  "pause_reason": "User cannot use COMSOL for the time being.",
+  "resume_date": null,
+  "resume_trigger": "User states COMSOL is available again; continue from preserved state within the then-defined scope.",
+  "automatic_resume": false,
+  "new_execution_authorization": false,
+  "external_sent": false
+}

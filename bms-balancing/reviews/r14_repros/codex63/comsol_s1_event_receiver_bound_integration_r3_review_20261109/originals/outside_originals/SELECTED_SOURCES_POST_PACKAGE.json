@@ -1,0 +1,933 @@
+{
+  "all_match": true,
+  "count": 185,
+  "scope": "185 same unique selected inputs; not additive to overlapping seal/copy sets.",
+  "kind": "R3_SELECTED_POST_PACKAGE",
+  "files": [
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "bytes": 107312,
+      "sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TOOL_005_STOP_RECORD_CLOCK.json",
+      "bytes": 218,
+      "sha256": "8d041d74c850feb7c48e6ffc97e53b635d71edd34041a1a1d93e80c02498b175"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TOOL_006_STOP_READBACK.json",
+      "bytes": 9153,
+      "sha256": "0a9f974660df2b5907b2c9f7a40909eca3bb7f9d2049f0173840ab28cab2f8b5"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TOOL_007_PRESERVATION.json",
+      "bytes": 486,
+      "sha256": "437ee2c36589c76e9a6f00c62214de2ee61b7fb5364f16839443ea6975c991bc"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\USER_ADOPTION_MESSAGE.txt",
+      "bytes": 149,
+      "sha256": "fd7fd72903b2c55c8ef19e8890b2da9f8de3d9f0d4ef30f64972c0c485fc0a25"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\basis\\CASE_PLAN.json",
+      "bytes": 4719,
+      "sha256": "aafea26c5c0fdaa3c6a33b36dc6b4e4944bb2bf3ae3a1b9a6f0eb928530c1084"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\basis\\DIRECTORY_RESPONSIBILITY_PLAN.json",
+      "bytes": 3468,
+      "sha256": "9bb7515ad92d0fa27819336204bb6d8bb5796d441abb9457e07a89f82eeb2168"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\basis\\INPUT_RESOLUTION.json",
+      "bytes": 1404,
+      "sha256": "f92823f9edd12e3aa2d9c92705d35123540a90550e5258ca42429e9aff43b4cb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\basis\\NEXT_APPROVAL_KO.txt",
+      "bytes": 1620,
+      "sha256": "cfc6abd2d5262cb81fee16e2f23cc7dcb4cc9459e91b4c97da4eac525dbd412b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\basis\\R1_RESTART_PLAN_KO.txt",
+      "bytes": 7076,
+      "sha256": "47d47d8fb49c41dfba6ab5ecd081b2e2360b2043743fa0ec457045f78b720de9"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\basis\\R1_SCOPE.json",
+      "bytes": 6650,
+      "sha256": "6b7fbf47d121db658ba667427d061718c5e2dcfe1fb092a2223e623f5ea64e80"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\basis\\SOURCE_BASIS.json",
+      "bytes": 4882,
+      "sha256": "871cae8923e008689431e5e4aa51b86a6991c4708b42368a0e07962cd395259b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\basis\\TOOL_RETURN_PRESERVATION_RULES.json",
+      "bytes": 2268,
+      "sha256": "270807fa1a1f76a8829f57f62cf8fe3134f7966d17de6b20a7089ba2e612cecc"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\delivery\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R1_PREPARATION_STOP_20261106.zip",
+      "bytes": 107979,
+      "sha256": "8f16037b25d211e5e6f1c019736444e2d13d821b066ce701996329f643b2341d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\delivery\\DELIVERY_RECEIPT.json",
+      "bytes": 1822,
+      "sha256": "4284af2067fba8cd077bd0fc2c8cc87832edbeaf7a989b7ee71f9d0f59f82aad"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\delivery\\DELIVERY_RECORDS.json",
+      "bytes": 91854,
+      "sha256": "75c477e97dd435e32a1f0ab2a786223cdee6b07e49f7b16f65e4b2f6379e6716"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\delivery\\DELIVERY_TRANSPORT_TOOL_RETURN.json",
+      "bytes": 1454,
+      "sha256": "3bee8630350b4cad3af877e5a17437e5b05bbcf0e445b28d2233a21cfd4ed3f0"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\delivery\\FINAL_CHECK_TOOL_RETURN.json",
+      "bytes": 1061,
+      "sha256": "8db02b5b2ffc5e62e4f08f5260c32fba0db82ef88953a05c47eb8cbf3f56c731"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\delivery\\FINAL_CHECK.json",
+      "bytes": 2324,
+      "sha256": "6c3c6d1f1d9bb9811cbb4ee4aff7198d785616a87cd290afd657a651c6718aad"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\delivery\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 2108,
+      "sha256": "cd44d48ab0a52b6f0b60ab6ca7237b72d55ed96daebcb4e8d97a8254a1a855e8"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TOOL_004_FIRST_ERROR.json",
+      "bytes": 196,
+      "sha256": "5d529fc42d446175671219da863335b32283ea678efdc12090c4e071515c54a7"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\delivery\\SELECTED_SOURCES_POST_PACKAGE.json",
+      "bytes": 29567,
+      "sha256": "656beab7159362819cb229235834a85e24da4986986588d497da2de72e0dd484"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TOOL_003_SOURCE_READ.json",
+      "bytes": 52035,
+      "sha256": "cbdd69466c29039c3cdcff1cf7e07f690d6b9a20eb6549c63705a135102ea2a0"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TOOL_001_INTAKE.json",
+      "bytes": 2937,
+      "sha256": "9465d72ce126509922c53800697d2efcb4fd6b6c50e9b7d3380b0bed20469b3d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\CONFIG.json",
+      "bytes": 2715,
+      "sha256": "e5ac76a088ead619539410aa814447ab3faa91345df6334dc377c4f07f7387d2"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\DELIVERY_INDEX.json",
+      "bytes": 695,
+      "sha256": "67dae1b51510c7f297d7ee5eec22b8f945c659974218c72c87153fabaf517cff"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\DIRECTORY_CONTRACT.json",
+      "bytes": 1353,
+      "sha256": "92ef718ec17244147b03cceabdf6d6be66b52a5898062028e713513ecb70a087"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\EXECUTION_NOT_STARTED.json",
+      "bytes": 572,
+      "sha256": "321a01644ce3855126dc70b1f6b296d43aa2290a8c54172f2c13c956502af6c3"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\FIRST_ERROR.json",
+      "bytes": 1428,
+      "sha256": "8eeb21f428dfa84a281ef3cb35cb0e3f95bee5c51a8a5184f6b4ffffbc24c7c3"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\INTAKE.json",
+      "bytes": 490,
+      "sha256": "0e5889dc90a0431a060535f0ba1620a181922020f48c1d1669f959d3417b5bb7"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\PACKAGE_MANIFEST.json",
+      "bytes": 8083,
+      "sha256": "2f055742ed3680ee636a2572ff5312b31886bb285b55ed20a84117b07f8e491d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\PACKAGING_COMMAND.txt",
+      "bytes": 5567,
+      "sha256": "2b32626a756e6b00b3baa6330f035379b8cdd454384f03a31d01f5a6352c1bc5"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\PREPACKAGE_BUDGET.json",
+      "bytes": 732,
+      "sha256": "011c3497fa1e2cffe44a2abbf0a50c17b17547681df235b44baa64f448bcfddc"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\PRESERVATION_COMMAND.txt",
+      "bytes": 3756,
+      "sha256": "87a2e2ebe7741d55d93be4197b966c0dbf599e51dc93bfdb7cb6024902ea9f85"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\READY_INPUTS.json",
+      "bytes": 6934,
+      "sha256": "f0d29111c92e583efcc33692ec0ce0091ff2a90b2ed806c8b39cad9a3241dc92"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\REPORT_KO.txt",
+      "bytes": 3499,
+      "sha256": "f1208f851fc9f74e158ac92e36101cba31d0ccab6811d538d9ac5ca87cf52b29"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\SELECTED_SOURCES_AFTER.json",
+      "bytes": 29550,
+      "sha256": "2e2ec54bc340f0d893416783b82c94d375c3c07bb3215928106a20e6e8d182a0"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\SELECTED_SOURCES_BEFORE.json",
+      "bytes": 29431,
+      "sha256": "ddb6369731a7d49c96977d55accc45e005890f4bb9ecc0f45ded9ac88a901487"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\SOURCE_COPY_IDENTITIES.json",
+      "bytes": 9673,
+      "sha256": "02f491a14e7157573b0dca3e568575e65498151cd8e9c3ae0060284719e43541"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\STOP_BOUNDARY.json",
+      "bytes": 744,
+      "sha256": "0b8f53fe85f0aa6d54a28071cee769d4d36307e8ccf09764fd95f30ee1632863"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\STOP_DIRECTORY_OBSERVATION.json",
+      "bytes": 473,
+      "sha256": "03cc50f0436d5bbbf92c74bb8656e61d86f829793c68c41b466955d117ee9454"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TASK_ORIGIN.json",
+      "bytes": 580,
+      "sha256": "fe2f2bc9a4a024f532419b98a85bff5546e3482481a7b5a15e6d76264fdd503a"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TOOL_000_ORIGIN.json",
+      "bytes": 1107,
+      "sha256": "50e8ce9bed9f8d8017a213aebd5f02cc4726697274b11b308a75ce136f2f63e4"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\TOOL_002_SOURCE_READ.json",
+      "bytes": 24535,
+      "sha256": "f94043bead5ff0eb91095480ecafc0f9adbedff86c7e2dfdc1aeeeea095bb140"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\bound_ack_session.py.inactive.txt",
+      "bytes": 18794,
+      "sha256": "e9e169604cd60cf3ab77b8885a4ac37e5a601edc163af25d7ef1d965fa9ab105"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\deadline_receive.py.inactive.txt",
+      "bytes": 8787,
+      "sha256": "d098b0415b844b75e2d73cb094c3eb93ed0b42f2a2df6c67773378a2b5a48307"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\event_clock_core.py.inactive.txt",
+      "bytes": 10634,
+      "sha256": "e7d2d32dadf2c5eb887a4013a380e5ff6ab67d21b5aed527a1b2e0ccf19c7879"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\TOOL_001_INTAKE_FAILURE.json",
+      "bytes": 472,
+      "sha256": "e6ad5fd33ee15ef4137c98b50d71970e7d8139ad6e8997526d990efcef923018"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\TOOL_002_STOP_PRESERVATION_ORIGIN.json",
+      "bytes": 405,
+      "sha256": "8f974adbc7207bbb533bc270cea24a7b75ecd2fbfe7cba1dda7d15e11577bea6"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\TOOL_003_STOP_PRESERVATION.json",
+      "bytes": 446,
+      "sha256": "55948b24aadab7b7dd40dfd82bcc71634a2053c94d61693ca01cd78ba4120fd0"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\USER_ADOPTION_MESSAGE.txt",
+      "bytes": 647,
+      "sha256": "61eaddc42f6cc53975d11384089b6006f6e4623a7f3183fa286d4c7af0b3cf40"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\basis\\R1_CASE_PLAN.json",
+      "bytes": 4719,
+      "sha256": "aafea26c5c0fdaa3c6a33b36dc6b4e4944bb2bf3ae3a1b9a6f0eb928530c1084"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\basis\\R1_CASE_RESULTS.json",
+      "bytes": 1982,
+      "sha256": "7c61d7d51f11b5d18716f739e7e0a4d48e29ca923caa5846838c69daeae748c8"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\basis\\R1_PACKAGE_MANIFEST.json",
+      "bytes": 8083,
+      "sha256": "2f055742ed3680ee636a2572ff5312b31886bb285b55ed20a84117b07f8e491d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\basis\\R1_PREPARATION_STOP_REVIEW.zip",
+      "bytes": 257082,
+      "sha256": "114eab90f31189d287de986a75bd6fe53fa7c02f23191c074fa36d5387e7601f"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\basis\\R1_R1_SCOPE.json",
+      "bytes": 6650,
+      "sha256": "6b7fbf47d121db658ba667427d061718c5e2dcfe1fb092a2223e623f5ea64e80"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\basis\\R1_READY_INPUTS.json",
+      "bytes": 6934,
+      "sha256": "f0d29111c92e583efcc33692ec0ce0091ff2a90b2ed806c8b39cad9a3241dc92"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\basis\\R1_SELECTED_SOURCES_BEFORE.json",
+      "bytes": 29431,
+      "sha256": "ddb6369731a7d49c96977d55accc45e005890f4bb9ecc0f45ded9ac88a901487"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\basis\\R1_SOURCE_COPY_IDENTITIES.json",
+      "bytes": 9673,
+      "sha256": "02f491a14e7157573b0dca3e568575e65498151cd8e9c3ae0060284719e43541"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\delivery\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R2_INTAKE_STOP_20261106.zip",
+      "bytes": 288084,
+      "sha256": "de6f0e0eadddda9493daedee5a133293ada50b3d14462e34b30c6859141768e4"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\delivery\\DELIVERY_RECEIPT.json",
+      "bytes": 1944,
+      "sha256": "91386e274348e18b02f4b8003d54e4fedaddab63c153a7e7d6a1203e8075a36c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\delivery\\DELIVERY_RECORDS.json",
+      "bytes": 64371,
+      "sha256": "4eb19cd613eb5972fb25983b357e86723d78d2949d9195372eed110dcb7870dd"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\delivery\\DELIVERY_TRANSPORT_TOOL_RETURN.json",
+      "bytes": 1432,
+      "sha256": "fc37d9c4afccb4f43386c6de99a3fb3b2eb91b185e36b7893abab650f2c64d5b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\delivery\\FINAL_CHECK_TOOL_RETURN.json",
+      "bytes": 1039,
+      "sha256": "b4923712632abf08752f6f2f09c9acbbefb89b1fb9e6f4f6bb835008692f0695"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\delivery\\FINAL_CHECK.json",
+      "bytes": 2121,
+      "sha256": "5ec290a6ee3dab7a8802ea06e330b8eece6c83d74bd51ac583a7d3875031050c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\delivery\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 2022,
+      "sha256": "270b0a60944c62e5fa5bf0799a371c2ccfbb5100584c2a8ccca02cf34a3b9ce6"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\TOOL_000_ORIGIN.json",
+      "bytes": 540,
+      "sha256": "99ecbe388a22c192cbaeea0a35e2981daf88fb1435c13c7daabab4ca03058354"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\TASK_ORIGIN.json",
+      "bytes": 669,
+      "sha256": "6b76a319e75ef203c16c854564092d5112b07eb9fcc689fddc8cc9f693613f98"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\STOP_BOUNDARY.json",
+      "bytes": 982,
+      "sha256": "6b0590ffad02230b1c9e3b413a7f078143c496f52f82255e03fc13b3a1f9fdbd"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\STOP_BASIS_IDENTITIES.json",
+      "bytes": 5304,
+      "sha256": "01ffea49668b61e2768802db4f4fdccd3211eba1e61a5e80bc39e65223655c5d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\evidence_admission.py.inactive.txt",
+      "bytes": 14007,
+      "sha256": "92267d568705f479e5a5ef2e30d59879a0d0d653f85b9ddb819ea0bc52fc2e39"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\exact_time.py.inactive.txt",
+      "bytes": 6307,
+      "sha256": "3d6b50375b7dab992a3de247f6421c64048f43f4b5893ab5214854ed3d30f934"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\file_ports.py.inactive.txt",
+      "bytes": 10342,
+      "sha256": "53bfd873eae3b58c93bb9f54ce6ef8fb0a355cdc6d49cfa66319478ca3e040a1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\receiver_bridge.py.inactive.txt",
+      "bytes": 11649,
+      "sha256": "6e62f105b4008d044bc776e6f4849159a813b4829f711a415547095fcbfbcc80"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\receiver_protocol.py.inactive.txt",
+      "bytes": 7419,
+      "sha256": "4248ad991c70901dc700a1a9f073dbe8ac30c398c2ea1e2f89f923f16d614031"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\receiver_session.py.inactive.txt",
+      "bytes": 9066,
+      "sha256": "da007b4d599c77c171497599321d9033e5314dd7a656909fbdf0ea58a63bb54a"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\receiver_worker.py.inactive.txt",
+      "bytes": 17256,
+      "sha256": "b3911ba78ca72ee3bd438258462601f337223860e70ec725d357b640c0f68f7c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\snapshot_codec.py.inactive.txt",
+      "bytes": 13145,
+      "sha256": "68b12f814091ac600d528230d79c5a8610953c95351d708ec3051816b6f5f4eb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\source\\state_owner.py.inactive.txt",
+      "bytes": 17274,
+      "sha256": "4d07321000d54a7716e9e958e3c99b83deb21235f71647406179413f23c91cc1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_20261106\\CASE_RESULTS.json",
+      "bytes": 1982,
+      "sha256": "7c61d7d51f11b5d18716f739e7e0a4d48e29ca923caa5846838c69daeae748c8"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\ATTEMPTED_INTAKE_COMMAND.txt",
+      "bytes": 4166,
+      "sha256": "a9c8d2b134330e97fd0822d2f5a5ce1079107b8c34a03a61b92c088d0222eb7a"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\DELIVERY_INDEX.json",
+      "bytes": 608,
+      "sha256": "386355a11e9099071a62ef447d5a13479211cc4ca06a61cd6c73cca3c0296a23"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\FIRST_ERROR.json",
+      "bytes": 1465,
+      "sha256": "4b425abe26f4f827a11d59a8a14c2e76e21200210d436d347180ccc9db0d92ff"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\INPUT_STATUS.json",
+      "bytes": 860,
+      "sha256": "44b0496d0cf6964cc89f56022eb6ab70413e8f003e1df96baa2c4114c85593d0"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\PACKAGE_MANIFEST.json",
+      "bytes": 4496,
+      "sha256": "b31808b36a7bb39c4c5f04e5eaf5a61478eeebcd1c662785ae120b8ca83e8278"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\PACKAGING_COMMAND.txt",
+      "bytes": 5400,
+      "sha256": "4469a2a3f56a083c853a87c4a1bf520725875732f36f67fec7bc55dc807f8764"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\PREPACKAGE_BUDGET.json",
+      "bytes": 482,
+      "sha256": "5168b565988e6f6a8dc023c4a2f386dff20cb11fe18316b5380623dcf4282a55"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\PRESERVATION_COMMAND.txt",
+      "bytes": 4286,
+      "sha256": "b1fd867557e9d16a4d6a708db17977deec8fb5a7ff600e126e5c94ce1185cf5a"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\REPORT_KO.txt",
+      "bytes": 2827,
+      "sha256": "f482d44572135bb6045a24caab941d928b260e42a9ce68ceee1229b31b8b99d4"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\SELECTED_EXISTING_EVIDENCE_AFTER_STOP.json",
+      "bytes": 18567,
+      "sha256": "87a04beb8946b70d1a652d7a950dc7056a0695762a3c7a03fc25658b383fbe12"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\CASE_RESULTS.json",
+      "bytes": 1853,
+      "sha256": "cb9bf9d3744716a559145a9854cdb3a6340670e34ad63d88b3f39244a0b8b020"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R2_20261106\\delivery\\SELECTED_SOURCES_POST_PACKAGE.json",
+      "bytes": 18459,
+      "sha256": "2a06a553038f58734a24a42bc6602043ecb6eb9eadb59f262105b75469d19ea1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\TOOL_RETURN_PRESERVATION_RULES.json",
+      "bytes": 2268,
+      "sha256": "270807fa1a1f76a8829f57f62cf8fe3134f7966d17de6b20a7089ba2e612cecc"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\R1_SCOPE.json",
+      "bytes": 6650,
+      "sha256": "6b7fbf47d121db658ba667427d061718c5e2dcfe1fb092a2223e623f5ea64e80"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\basis\\DOCUMENT_MANIFEST.json",
+      "bytes": 1265,
+      "sha256": "a5f8c515fd4d213d356945e855c81a73f789b55d31d9bb007ebd5160f5f98d64"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\basis\\NEXT_APPROVAL_KO.txt",
+      "bytes": 1779,
+      "sha256": "7513bd24c8b7d778bdb293f5f16166438dddd1c00f26dcc4e3dc1f78764d4b41"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\basis\\PROPOSAL_KO.txt",
+      "bytes": 7613,
+      "sha256": "63304a55a9737805889b3666ac6fc47310abeec077e475a8083d4ab887f99c1d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\basis\\SCOPE.json",
+      "bytes": 4900,
+      "sha256": "68e1ce99e2e401d085ffd5c3156112dac1a0c66bf91958bdb2c7572a1711d3fa"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\basis\\SOURCE_BASIS.json",
+      "bytes": 4882,
+      "sha256": "871cae8923e008689431e5e4aa51b86a6991c4708b42368a0e07962cd395259b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\basis\\SOURCE_IDENTITIES_AFTER.json",
+      "bytes": 5376,
+      "sha256": "4633bb000f43c852fba6ab8bae4ab20ec86eae327641636c17c8a45797ee8e25"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\basis\\STATIC_DOCUMENT_CHECK.json",
+      "bytes": 627,
+      "sha256": "827c2ff85df8e34d14c7fa2fb36edf69b3b26cf6a0926487d265b15cafd98a2f"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\CONFIG.json",
+      "bytes": 2763,
+      "sha256": "2e19355e696adaad3939caacecd84b098610a5af4c101a4642fe402804d3b590"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\COPIED_INPUT_IDENTITIES.json",
+      "bytes": 10627,
+      "sha256": "208a7e6f1b792d239b77c4ad4955940ccdd8456e48a5b9c70e47915f663afd28"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\DELEGATED_READ_OUTPUT_TRANSCRIPTION.txt",
+      "bytes": 9165,
+      "sha256": "5d14287bb878ffc63160b2b6cccfdee667dccefdf7c437168baa42707e9b93ee"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\DELIVERY_INDEX.json",
+      "bytes": 543,
+      "sha256": "0a3582d64917214e8e378686d02cf000e3fd0d127e689e0f73dde8589727056d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\delivery\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_PREPARATION_STOP_20261106.zip",
+      "bytes": 80526,
+      "sha256": "64b3eb0f176ebebd4dd01294afd203da3937f164013d53315a22ae95e19dc9b4"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\delivery\\DELIVERY_RECEIPT.json",
+      "bytes": 1745,
+      "sha256": "11bfeaeb44549f49f7bed35ec9d6b83b09c6fa0826169937fae28e6dfadf2a95"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\delivery\\DELIVERY_RECORDS.json",
+      "bytes": 49028,
+      "sha256": "370b9823f3a2d164595242b0463980a7c9c7042a559d0c83fe06392ce48d7a7d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\delivery\\DELIVERY_TRANSPORT_TOOL_RETURN.json",
+      "bytes": 1519,
+      "sha256": "8aafcb209fd77b5ff1c72403c2473c372e86bd9d8d6afb1b44542be5a773fa47"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\delivery\\FINAL_CHECK_TOOL_RETURN.json",
+      "bytes": 1105,
+      "sha256": "ca07792a812f6113e040a84fe0fc0ec4f4eab399705f80db136a5edc60618021"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\delivery\\FINAL_CHECK.json",
+      "bytes": 939,
+      "sha256": "82ff3096d8971b3965b74220f1fbfaa08da3dc539ca338e64d24cd40481e30c1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\delivery\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 1771,
+      "sha256": "99c2eb51f3d5014b4f6b351a9464677159ca64479a2341245de33951cff2c470"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\delivery\\SELECTED_SOURCES_POST_PACKAGE.json",
+      "bytes": 14042,
+      "sha256": "74f1a88d42e6bdb1fbf40e027325a8c5aff41657a6c981a6501be91722b6e08a"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\basis\\CASE_PLAN.json",
+      "bytes": 4719,
+      "sha256": "aafea26c5c0fdaa3c6a33b36dc6b4e4944bb2bf3ae3a1b9a6f0eb928530c1084"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\FIRST_ERROR.json",
+      "bytes": 1829,
+      "sha256": "e722428052f94102c1854f1e21f97a333505e042deec36af7414c373fd361a1d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\ACTUAL_STOP_RECORD_TOOL_RETURN.json",
+      "bytes": 300,
+      "sha256": "33e7a9faf6ece31eee1819daa7fdcad9b896c8d900171d73ad10bfd6d8bdbe57"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_ack_20261104\\validation\\runtime_support.py",
+      "bytes": 6879,
+      "sha256": "af504521ad73288aa5eb05a3ceeec49334410236da13b8392180b986d34042a6"
+    },
+    {
+      "path": "C:\\Users\\BML\\Desktop\\COMSOL_S1_EVENT_BOUND_ACK_OWNER_R2_LIMITED_VALIDATION_REVIEW_20261105.zip",
+      "bytes": 4997257,
+      "sha256": "ea8cdadc62d42e8e324421b8572f17faebf952ec01c2c0863a458fedb0ad3005"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\CODE_MANIFEST.json",
+      "bytes": 3414,
+      "sha256": "3d933b22962cc6f5893fc79d1dd4e6948c9cf58e4e7abb59cf1a5aeef16e410b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\PRETEST_SEAL.json",
+      "bytes": 41901,
+      "sha256": "a2102ac670a3278cd39419b56b0bd17426239c71ac3e483c593f8df7ef4371fd"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\bound_ack_session.py.inactive.txt",
+      "bytes": 18794,
+      "sha256": "e9e169604cd60cf3ab77b8885a4ac37e5a601edc163af25d7ef1d965fa9ab105"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\deadline_receive.py.inactive.txt",
+      "bytes": 8787,
+      "sha256": "d098b0415b844b75e2d73cb094c3eb93ed0b42f2a2df6c67773378a2b5a48307"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\event_clock_core.py.inactive.txt",
+      "bytes": 10634,
+      "sha256": "e7d2d32dadf2c5eb887a4013a380e5ff6ab67d21b5aed527a1b2e0ccf19c7879"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\evidence_admission.py.inactive.txt",
+      "bytes": 14007,
+      "sha256": "92267d568705f479e5a5ef2e30d59879a0d0d653f85b9ddb819ea0bc52fc2e39"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\exact_time.py.inactive.txt",
+      "bytes": 6307,
+      "sha256": "3d6b50375b7dab992a3de247f6421c64048f43f4b5893ab5214854ed3d30f934"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\file_ports.py.inactive.txt",
+      "bytes": 10342,
+      "sha256": "53bfd873eae3b58c93bb9f54ce6ef8fb0a355cdc6d49cfa66319478ca3e040a1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\receiver_bridge.py.inactive.txt",
+      "bytes": 11649,
+      "sha256": "6e62f105b4008d044bc776e6f4849159a813b4829f711a415547095fcbfbcc80"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\receiver_protocol.py.inactive.txt",
+      "bytes": 7419,
+      "sha256": "4248ad991c70901dc700a1a9f073dbe8ac30c398c2ea1e2f89f923f16d614031"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\snapshot_codec.py.inactive.txt",
+      "bytes": 13145,
+      "sha256": "68b12f814091ac600d528230d79c5a8610953c95351d708ec3051816b6f5f4eb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\source\\state_owner.py.inactive.txt",
+      "bytes": 17274,
+      "sha256": "4d07321000d54a7716e9e958e3c99b83deb21235f71647406179413f23c91cc1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\validation\\harness_cases.py",
+      "bytes": 23617,
+      "sha256": "7261cdc97957d22aa791bbd4535bb7aa6c989eac5a8508c31a4627090ccd5503"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_bound_ack_owner_R2_20261105\\validation\\support.py",
+      "bytes": 4579,
+      "sha256": "808a3dba4b1efabe4a475b0962e08f1fb3cc9bba31efc062e7d69ba5daf03815"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_ack_20261104\\source\\receiver_session.py.inactive.txt",
+      "bytes": 9066,
+      "sha256": "da007b4d599c77c171497599321d9033e5314dd7a656909fbdf0ea58a63bb54a"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_ack_20261104\\source\\receiver_worker.py.inactive.txt",
+      "bytes": 17256,
+      "sha256": "b3911ba78ca72ee3bd438258462601f337223860e70ec725d357b640c0f68f7c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_ack_20261104\\validation\\harness.py",
+      "bytes": 27219,
+      "sha256": "542f859462fc9dd55f3bdf7489193c0abeb803eb9e6310a2b1231f60b922f9a6"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_ack_20261104\\validation\\receiver_entry.py",
+      "bytes": 960,
+      "sha256": "99e3b1829b461a5327a2a4f36a6e9fc4352c38f7afefe1912e734071d86c76b6"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\ACTUAL_INTAKE_TOOL_RETURN.json",
+      "bytes": 3753,
+      "sha256": "e969ac9e92426b6dc3c730b9e71a237ec849928266c0a5b0bea947ffca9f30f5"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\HARNESS_INTERRUPTION_RECORD.json",
+      "bytes": 531,
+      "sha256": "7d5cbc8f470326a334517be320b5d732799a4b02f993739a38c25900c13583fa"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\INTAKE.json",
+      "bytes": 972,
+      "sha256": "4f566c59472f9a9a8462babe4fb8c027cd6bbd5d105824350b777a0e14563fea"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\PACKAGE_MANIFEST.json",
+      "bytes": 7384,
+      "sha256": "62b08ca071f11a7d52e41360fe922d0f7262a93bda85a8bddd34f3db64c6f7bb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\USER_ADOPTION_MESSAGE.txt",
+      "bytes": 111,
+      "sha256": "5a56f97ad9e16bf50da74739366f8ea88c84a2264fd715753683a3f59fcb438f"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\USER_ADOPTION_PROVENANCE.json",
+      "bytes": 299,
+      "sha256": "c42fc132607ee00c2fa0db26a533d0648f3cead9eaa152827c6135c6833469bb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\basis\\CASE_PLAN.json",
+      "bytes": 4719,
+      "sha256": "aafea26c5c0fdaa3c6a33b36dc6b4e4944bb2bf3ae3a1b9a6f0eb928530c1084"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\basis\\DOCUMENT_MANIFEST.json",
+      "bytes": 1265,
+      "sha256": "a5f8c515fd4d213d356945e855c81a73f789b55d31d9bb007ebd5160f5f98d64"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\basis\\PROPOSAL_KO.txt",
+      "bytes": 7613,
+      "sha256": "63304a55a9737805889b3666ac6fc47310abeec077e475a8083d4ab887f99c1d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\basis\\SCOPE.json",
+      "bytes": 4900,
+      "sha256": "68e1ce99e2e401d085ffd5c3156112dac1a0c66bf91958bdb2c7572a1711d3fa"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\basis\\SOURCE_BASIS.json",
+      "bytes": 4882,
+      "sha256": "871cae8923e008689431e5e4aa51b86a6991c4708b42368a0e07962cd395259b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\DIRECTORY_RESPONSIBILITY_PLAN.json",
+      "bytes": 3468,
+      "sha256": "9bb7515ad92d0fa27819336204bb6d8bb5796d441abb9457e07a89f82eeb2168"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\DOCUMENT_MANIFEST.json",
+      "bytes": 2678,
+      "sha256": "9517c641ca163a2d8c9fdee9136e68bc953f7bf67221ccbbb7197e898e7d073b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\DOCUMENT_PREPARATION_LOOKUP_ERROR.json",
+      "bytes": 806,
+      "sha256": "9071a3742f87c30c6a47d7ae853eb7cc6fd83548254b365f4ab8f73eaa77c9d8"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\INPUT_AVAILABILITY.json",
+      "bytes": 8091,
+      "sha256": "f24ff2d0dcb560bbfa944a73115c4722ae3e01943c07de015bdc2e7014768aea"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\input_resolution_001\\ADDENDUM_MANIFEST.json",
+      "bytes": 651,
+      "sha256": "24868416dd911092e831d5b4787994db5131759cd16499f4cb09dd1baf0fa40b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\input_resolution_001\\IDENTITY_TOOL_RETURN.json",
+      "bytes": 805,
+      "sha256": "8e7f56f9f01eeeeda6d539db46c44e829557e318f8f9f04d9e78dcce2517abaf"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\input_resolution_001\\INPUT_RESOLUTION.json",
+      "bytes": 1404,
+      "sha256": "f92823f9edd12e3aa2d9c92705d35123540a90550e5258ca42429e9aff43b4cb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\input_resolution_001\\READY_FOR_USER_APPROVAL_KO.txt",
+      "bytes": 2286,
+      "sha256": "e9b2c545bc321c3a909e2f7733c3bb3d786e2f9d79afc36c5daf3d18de6acb91"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\NEXT_APPROVAL_KO.txt",
+      "bytes": 1620,
+      "sha256": "cfc6abd2d5262cb81fee16e2f23cc7dcb4cc9459e91b4c97da4eac525dbd412b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\PRESERVATION_AFTER.json",
+      "bytes": 19380,
+      "sha256": "1af98eced3906ce209954352bd46f1fd52cf7830080d3460ce2fc66cf4b0ebcb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\PRESERVATION_BEFORE.json",
+      "bytes": 19426,
+      "sha256": "0051c9b8b424172d55e2cff69239403ce15594e3d0ca4519e20474fa6cb7f0ac"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\R1_RESTART_PLAN_KO.txt",
+      "bytes": 7076,
+      "sha256": "47d47d8fb49c41dfba6ab5ecd081b2e2360b2043743fa0ec457045f78b720de9"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\TASK_ORIGIN.json",
+      "bytes": 678,
+      "sha256": "b1b9f1ee9e7cf6d6397ec0c5b7bec659880664c83ea8b79b45b38ab9e7f6fddb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\STOP_REPORT_KO.txt",
+      "bytes": 4285,
+      "sha256": "558393128e69bfd118a912d525ae83ff5419faa7965b3821e30b30995c42d0e7"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\STOP_BOUNDARY.json",
+      "bytes": 930,
+      "sha256": "1a1fbd61878159ac3c130cd63d41e7093622ded254c864510789d12eaa79b6ea"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\state_owner.py.inactive.txt",
+      "bytes": 17274,
+      "sha256": "4d07321000d54a7716e9e958e3c99b83deb21235f71647406179413f23c91cc1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\PREPACKAGE_TIMING.json",
+      "bytes": 206,
+      "sha256": "854f98617cdeb6799474734b4532b25db86343313a1ad7a730a010da9af06a46"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\PRESERVATION_ORIGIN.json",
+      "bytes": 448,
+      "sha256": "1940fef4af7d81edde7a8acf05c3f3f12a36f92c34caa165257b28e03279ca30"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\preserve_package.ps1",
+      "bytes": 7954,
+      "sha256": "ba49e68051682491b465637ecd431c59c73dd700afc0bdaac6b237c2e86c25f0"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\READ_ERROR_CALL.json",
+      "bytes": 1316,
+      "sha256": "bee613aecad551f31e123b82bd0a5f190086e510fc396a3f7ed9e917d6f191ca"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\READ_ERROR_EXCERPT.txt",
+      "bytes": 1036,
+      "sha256": "22c7c3a9ef07b4b3588e06411f85e141de7fe43f26bc52a14a5d544b6a7af3ef"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\READ_OUTPUT_PROVENANCE.json",
+      "bytes": 616,
+      "sha256": "2afad48134d7fa77e0aa6d1133b4977fa58a6dbb93894e1dab7d7ee42991f6c7"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\RESULTS.json",
+      "bytes": 1200,
+      "sha256": "40fd8fd5c05339d7a24fb5feaf7f8d42784ab42d8c34bc2576902f6568714635"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\SELECTED_SOURCES_AFTER.json",
+      "bytes": 7482,
+      "sha256": "25b96e2e7465a3a05a85b6f4a2ce22239b41c1953f58c14649eb2d7d1d24f1c3"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\SELECTED_SOURCES_BEFORE.json",
+      "bytes": 7452,
+      "sha256": "f746c06a796718da8dd6a9be6be6560f295a34a545507fa46d1bb9fdc7b20c20"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R1_scope_20261106\\STATIC_DOCUMENT_CHECK.json",
+      "bytes": 824,
+      "sha256": "25673e8521b224a31926381e6f3412c10d8dd8ba73a6641398bf06219ca1604e"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\bound_ack_session.py.inactive.txt",
+      "bytes": 18794,
+      "sha256": "e9e169604cd60cf3ab77b8885a4ac37e5a601edc163af25d7ef1d965fa9ab105"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\event_clock_core.py.inactive.txt",
+      "bytes": 10634,
+      "sha256": "e7d2d32dadf2c5eb887a4013a380e5ff6ab67d21b5aed527a1b2e0ccf19c7879"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\evidence_admission.py.inactive.txt",
+      "bytes": 14007,
+      "sha256": "92267d568705f479e5a5ef2e30d59879a0d0d653f85b9ddb819ea0bc52fc2e39"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\exact_time.py.inactive.txt",
+      "bytes": 6307,
+      "sha256": "3d6b50375b7dab992a3de247f6421c64048f43f4b5893ab5214854ed3d30f934"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\file_ports.py.inactive.txt",
+      "bytes": 10342,
+      "sha256": "53bfd873eae3b58c93bb9f54ce6ef8fb0a355cdc6d49cfa66319478ca3e040a1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\receiver_bridge.py.inactive.txt",
+      "bytes": 11649,
+      "sha256": "6e62f105b4008d044bc776e6f4849159a813b4829f711a415547095fcbfbcc80"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\receiver_protocol.py.inactive.txt",
+      "bytes": 7419,
+      "sha256": "4248ad991c70901dc700a1a9f073dbe8ac30c398c2ea1e2f89f923f16d614031"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\receiver_session.py.inactive.txt",
+      "bytes": 9066,
+      "sha256": "da007b4d599c77c171497599321d9033e5314dd7a656909fbdf0ea58a63bb54a"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\receiver_worker.py.inactive.txt",
+      "bytes": 17256,
+      "sha256": "b3911ba78ca72ee3bd438258462601f337223860e70ec725d357b640c0f68f7c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\snapshot_codec.py.inactive.txt",
+      "bytes": 13145,
+      "sha256": "68b12f814091ac600d528230d79c5a8610953c95351d708ec3051816b6f5f4eb"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_20261106\\source\\deadline_receive.py.inactive.txt",
+      "bytes": 8787,
+      "sha256": "d098b0415b844b75e2d73cb094c3eb93ed0b42f2a2df6c67773378a2b5a48307"
+    },
+    {
+      "path": "C:\\Users\\BML\\Desktop\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R1_PREPARATION_STOP_REVIEW_20261106.zip",
+      "bytes": 257082,
+      "sha256": "114eab90f31189d287de986a75bd6fe53fa7c02f23191c074fa36d5387e7601f"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "kind": "RECEIVER_BOUND_INTEGRATION_R3_RECIPIENT_REVIEW_DECISION",
+  "date": "2026-11-09",
+  "decision": "LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED",
+  "blocking_findings_for_limited_result_acceptance": 0,
+  "accepted_scope": "Ten offline file/lifecycle scenarios plus two sequential live-composition scenarios sharing one directly owned receiver; fixture clock/binding only.",
+  "results": {
+    "cases": 12,
+    "offline": 10,
+    "live_scenarios": 2,
+    "passed": 12,
+    "failed": 0,
+    "not_run": 0,
+    "normal_live_completions": 1,
+    "parent_sessions": 1,
+    "receiver_sessions": 1,
+    "parent_rc": 0,
+    "receiver_rc": 0,
+    "requests": 2,
+    "acks": 2,
+    "terminate_calls": 0,
+    "target_retry": 0,
+    "reported_parent_python_seconds": 2.3092717
+  },
+  "L02": {
+    "child_consumed_version": 1,
+    "local_normal_delivery_version": 1,
+    "parent_verified_delivered_version": 0,
+    "bridge_accepted_version": 0,
+    "adapter_first_failure": "DEADLINE_NOT_BEFORE",
+    "stage": "C5",
+    "synthetic_count": 100,
+    "synthetic_boundary": 100,
+    "owner_error": "DELIVERY_EXCEPTION",
+    "natural_child_exit_does_not_clear_failure": true
+  },
+  "delivery_error": {
+    "phase": "post-validation JavaScript orchestration parser",
+    "message": "SyntaxError: Unexpected identifier 'r'",
+    "original_process_rc": null,
+    "whole_procedure_pass": false,
+    "automatic_normal_packaging_retry_reported": 0,
+    "prior_results_revoked": false,
+    "independent_reproduction": false
+  },
+  "documentation_items": [
+    {
+      "id": "RBI_R3_C1_COUNT_WORDING",
+      "status": "CORRECTED_BY_SEPARATE_REVIEW_REPLY",
+      "blocking_for_limited_result": false,
+      "finding": "User handoff says two scenarios; the preserved plan/results/report all record 12 total: 10 offline + 2 live.",
+      "correction": "총 12시나리오가 기대 결과와 일치했습니다. 이 중 실제 수신자 연결 시나리오는 2개이며 정상 실제 전달 완료는 1회입니다.",
+      "rewrite_original_required": false
+    },
+    {
+      "id": "RBI_R1_READY_01",
+      "status": "PARTIALLY_RESOLVED_IDENTITY_READ_CONSUMERS_REMAIN_OPEN",
+      "blocking_for_limited_result": false,
+      "finding": "Producer/consumer/actual-input/future-output separation is substantially supplied. However both parent and child hash-read all 63 seal files and the engine, while several role rows name only the loader for one process.",
+      "evidence": [
+        "received/validation/runtime_support.py:130",
+        "received/validation/runtime_support.py:143",
+        "received/validation/runtime_support.py:149",
+        "received/READY_INPUTS_COMPLETION.json:462",
+        "received/READY_INPUTS_COMPLETION.json:609"
+      ],
+      "required": "Add a separate identity-read permission/consumer rule for both sealed bootstraps, distinct from role-specific code loading. Parent/child loaders stay limited to their declared module lists. State this in a separate addendum or future authorized preparation; preserve existing seal/source/results.",
+      "new_test_required_by_review": false,
+      "prior_item_fully_closed": false
+    }
+  ],
+  "evidence": {
+    "received_archive_bytes": 252451,
+    "received_archive_sha256": "f0b118bd6320eea7ecaf26bb81b59f0b20992603ae5e4aa218c25fcaf9122184",
+    "payloads": 156,
+    "entries": 157,
+    "outside_raw_records": 5,
+    "transport_bytes": 162320,
+    "transport_sha256": "7598f6115d3341997161617df573ce46f3ee2b9d349503887a27fdd85dcb1335",
+    "sealed_payloads_matched": 63,
+    "function_spans_matched": 18,
+    "preserved_source_copies_matched_to_prior_local_received_bytes": 12,
+    "source_files_total": 15,
+    "selected_identity_rows_before_after_post_matched": 185,
+    "copy_pairs_matched": 20,
+    "remote_current_originals_remeasured": 0,
+    "overlapping_counts_not_added": true,
+    "last_transport_return_received_as": "USER_CHAT_TRANSCRIPTION_ONLY"
+  },
+  "timing": {
+    "reported_transport_snapshot_seconds": 1518.5543938,
+    "reported_delivery_snapshot_seconds": 397.0866718,
+    "reported_whole_limit_seconds": 3600,
+    "reported_delivery_limit_seconds": 600,
+    "reported_root_bytes": 1588003,
+    "reported_root_limit_bytes": 52428800,
+    "reported_snapshot_comparisons_within_limits": true,
+    "whole_historical_elapsed_independently_measured": false,
+    "tool_wall_times_added": false,
+    "numeric_review_budget_seconds": null
+  },
+  "retained": {
+    "native_ready": false,
+    "approved": false,
+    "usable": false,
+    "contract_adopted": false,
+    "overall": "INCOMPLETE",
+    "normal_gate": "INCOMPLETE",
+    "four_operating_deadlines": null,
+    "reserve": null,
+    "JOB_CURRENT_COMMIT": "OPEN",
+    "prior_stop_records": "PRESERVED_NOT_RECLASSIFIED"
+  },
+  "unverified": [
+    "Operational clock/boot/domain/role/freshness binding",
+    "Concurrent file replacement and process concurrency",
+    "Restart recovery and durability",
+    "Blocked callback cancellation and residual Q ownership",
+    "Physical completion deadline after C4/C5 observations",
+    "ResourceSession/Parent integration",
+    "OS Job protection and COMSOL"
+  ],
+  "performed": {
+    "static_source_result_record_review": true,
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "functional_tests": 0,
+    "receiver_launch": 0,
+    "OS_Job_CIM_COMSOL": 0,
+    "original_archive_repack": 0,
+    "original_code_or_result_changes": 0,
+    "external_transmission": 0,
+    "reviewer_metadata_helpers_only": true
+  },
+  "authorizations": {
+    "resume": false,
+    "implementation": false,
+    "tests": false,
+    "receiver_execution": false,
+    "OS_Job_experiments": false,
+    "COMSOL": false,
+    "contract_adoption": false,
+    "release": false
+  },
+  "reviewer_checker_corrections": {
+    "count": 3,
+    "scope": "Reviewer-only schema/normalization assumptions (two) and blanket JSON parsing of the deliberately oversized F04 non-JSON ACK artifact (one); failed returns retained; no received input mismatch or target functional failure."
+  }
+}

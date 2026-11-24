@@ -1,0 +1,36 @@
+{
+  "kind": "CHAT_REPORTED_SUPPLEMENT_PACKAGE_RETURN",
+  "provenance": "Semantic transcription of user-pasted e0e7e1 tool metadata and parsed output. Not the original PACKAGE_TOOL_RETURN.json file, its exact bytes, or independent historical execution audit.",
+  "reported_tool_metadata": {
+    "chunk_id": "e0e7e1",
+    "wall_time_seconds": 2.6729507999999997,
+    "exit_code": 0,
+    "original_token_count": 337
+  },
+  "reported_output_parsed": {
+    "native_ready": false,
+    "target_execution": 0,
+    "selected_inputs_preserved": 166,
+    "boundary": "After receipt write/readback; before actual tool return and separate transcription.",
+    "kind": "R3_DOCUMENT_SUPPLEMENT_PACKAGE_RETURN",
+    "archive": {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_document_supplement_20261109\\COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_DOCUMENT_SUPPLEMENT_20261109.zip",
+      "bytes": 31567,
+      "sha256": "2ca5367dd12ffe473cb53c69294c61d873cd5686867be84a15a6f78be3fedb14"
+    },
+    "payload_count": 9,
+    "entries": 10,
+    "manifest": {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_document_supplement_20261109\\DOCUMENT_MANIFEST.json",
+      "bytes": 1726,
+      "sha256": "e543f63a5ff70dc56a46dd8480b4a393b0fe1e1241c40aa76546b96622540317"
+    },
+    "receipt": {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_document_supplement_20261109\\DELIVERY_RECEIPT.json",
+      "bytes": 55075,
+      "sha256": "b55467479e4743860cefaabe79c09c1cb89060c7b0cc821f2dcf712b51c9a428"
+    }
+  },
+  "original_transcript_file_received": false,
+  "archive_manifest_receipt_identities_checked_against_received_bytes": true
+}

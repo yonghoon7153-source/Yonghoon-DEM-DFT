@@ -1,0 +1,421 @@
+from receiver_finish import make_finish_expected, wait_finish
+"""Inactive source for the one authorized, directly owned receiver helper.
+
+The helper observes closed files after request markers and records what it
+actually read before publishing an ACK.  SHA and the reported PID are evidence
+bindings, not authentication, durability, or native operating permission.
+There is no restore, reset, retry, extra process, network, or console interface.
+Static plain-path checks do not establish concurrent replacement safety.
+"""
+
+import os
+from pathlib import Path
+import time
+
+from receiver_protocol import (
+    ProtocolError, canonical_bytes, digest, parse_request, plain_path,
+    publish_marker, read_bounded, ticket_to_wire, write_new_json,
+)
+from snapshot_codec import CodecError, decode_snapshot
+
+
+MAX_REQUEST_BYTES = 16 * 1024
+MAX_RECORD_BYTES = 1024 * 1024
+MAX_REQUESTS = 2
+MAX_LIFETIME_SECONDS = 120
+POLL_SECONDS = 0.01
+CASE_REFS = frozenset("R%02d" % value for value in range(1, 17))
+
+
+class _RecordRejection(ValueError):
+    def __init__(self, reason):
+        self.reason = reason
+        super().__init__(reason)
+
+
+def _deadline(started):
+    if time.monotonic() - started >= MAX_LIFETIME_SECONDS:
+        raise ProtocolError("RECEIVER_LIFETIME_EXCEEDED")
+
+
+def _marker_exists(path):
+    """An absent marker is pending; a present nonzero marker is fatal."""
+    try:
+        plain_path(path, False)
+    except FileNotFoundError:
+        return False
+    if read_bounded(path, 1) != b"":
+        raise ProtocolError("MARKER_NOT_EMPTY")
+    return True
+
+
+def _publish_json(path, value, max_bytes=MAX_RECORD_BYTES):
+    # Both helpers use exclusive creation.  The JSON is closed before marker.
+    write_new_json(path, value, max_bytes=max_bytes)
+    publish_marker(path.with_suffix(".ready"))
+
+
+def _new_context():
+    return {
+        "identity": None,
+        "binding": None,
+        "receiver_ref": None,
+        "normal_head": None,
+        "first_failure": None,
+        "failure_attempted": False,
+        "failure_snapshot": None,
+    }
+
+
+def _select_context(state, case_ref):
+    if case_ref in state["closed_cases"]:
+        raise _RecordRejection("CASE_CONTEXT_CLOSED")
+    previous = state["active_case"]
+    if previous != case_ref:
+        if previous is not None:
+            state["closed_cases"].add(previous)
+        state["active_case"] = case_ref
+    if case_ref not in state["contexts"]:
+        state["contexts"][case_ref] = _new_context()
+    return state["contexts"][case_ref]
+
+
+def _read_record(path, calls, stages):
+    """Count entry even when missing; READ_OPEN means an actual open succeeded."""
+    calls["_read_record"] += 1
+    plain_path(path, False)
+    with path.open("rb") as stream:
+        stages.append("READ_OPEN")
+        raw = stream.read(MAX_RECORD_BYTES + 1)
+    stages.append("READ_COMPLETE")
+    return raw
+
+
+def _verify_normal_head(head, receiver_ref, calls):
+    """Re-read the acknowledged head before any normal head advancement."""
+    calls["_verify_normal_head"] += 1
+    try:
+        plain_path(head["path"], False)
+        raw = read_bounded(head["path"], MAX_RECORD_BYTES)
+    except FileNotFoundError as error:
+        raise _RecordRejection("NORMAL_HEAD_MISSING") from error
+    except (OSError, ProtocolError) as error:
+        raise _RecordRejection(
+            "NORMAL_HEAD_READ_ERROR:" + getattr(error, "reason", type(error).__name__)
+        ) from error
+    if digest(raw) != head["sha256"]:
+        raise _RecordRejection("NORMAL_HEAD_SHA_MISMATCH")
+    try:
+        decoded = decode_snapshot(
+            raw, "normal_delivery", receiver_ref, head["previous_digest"]
+        )
+    except CodecError as error:
+        raise _RecordRejection("NORMAL_HEAD_DECODE_ERROR:" + error.reason) from error
+    if decoded != head["snapshot"]:
+        raise _RecordRejection("NORMAL_HEAD_SNAPSHOT_MISMATCH")
+
+
+def _check_context(state, context, request, snapshot, path, actual_sha, calls):
+    ticket = snapshot.ticket
+    identity = (ticket.owner_ref, ticket.epoch_ref, ticket.run_ref, ticket.producer)
+    if context["identity"] is None:
+        previous_case = state["identity_cases"].get(identity)
+        if previous_case is not None and previous_case != request["case_ref"]:
+            raise _RecordRejection("CASE_IDENTITY_REUSED")
+        context["identity"] = identity
+        context["binding"] = snapshot.core.binding
+        context["receiver_ref"] = request["receiver_ref"]
+        state["identity_cases"][identity] = request["case_ref"]
+    elif (identity != context["identity"]
+          or snapshot.core.binding != context["binding"]
+          or request["receiver_ref"] != context["receiver_ref"]):
+        raise _RecordRejection("CASE_IDENTITY_MISMATCH")
+
+    failure = snapshot.core.latch.first_error or snapshot.core.latch.first_stop_cause
+    is_failure_channel = request["channel"] == "failure_delivery"
+    if bool(failure) != is_failure_channel:
+        raise _RecordRejection("CHANNEL_FAILURE_STATE_MISMATCH")
+
+    if is_failure_channel:
+        if context["failure_attempted"]:
+            raise _RecordRejection("FAILURE_ALREADY_ATTEMPTED")
+        context["failure_attempted"] = True
+        if context["first_failure"] is None:
+            context["first_failure"] = failure.reason
+        # The failure channel has its own first record.  It does not recover or
+        # advance the normal channel, and may follow a previously normal head.
+        if request["previous_digest"] is not None:
+            raise _RecordRejection("FAILURE_PREVIOUS_DIGEST_MISMATCH")
+        head = context["normal_head"]
+        if head is not None and ticket.version <= head["snapshot"].ticket.version:
+            raise _RecordRejection("FAILURE_TICKET_NOT_NEWER")
+        context["failure_snapshot"] = snapshot
+        return
+
+    if context["first_failure"] is not None:
+        raise _RecordRejection("CASE_NORMAL_LATCHED")
+    head = context["normal_head"]
+    if head is None:
+        if request["previous_digest"] is not None:
+            raise _RecordRejection("NORMAL_PREVIOUS_DIGEST_MISMATCH")
+        if snapshot.previous is not None or ticket.version != 0:
+            raise _RecordRejection("NORMAL_GENESIS_MISMATCH")
+    else:
+        _verify_normal_head(head, request["receiver_ref"], calls)
+        if request["previous_digest"] != head["sha256"]:
+            raise _RecordRejection("NORMAL_PREVIOUS_DIGEST_MISMATCH")
+        if snapshot.previous != head["snapshot"].ticket:
+            raise _RecordRejection("NORMAL_PREVIOUS_TICKET_MISMATCH")
+    context["normal_head"] = {
+        "path": path,
+        "sha256": actual_sha,
+        "snapshot": snapshot,
+        "previous_digest": request["previous_digest"],
+    }
+
+
+def _consume_record(arena, request, request_sha, state, receiver_pid):
+    """Consume once.  Selective counters and stages describe actual branches.
+
+    decode_snapshot counts the requested record only; _verify_normal_head
+    separately identifies a previous-head verification (including its decode).
+    These counters are deliberately not presented as an exhaustive call trace.
+    record_bytes is the count actually read, not the request's claimed length.
+    """
+    calls = {
+        "_consume_record": 1, "_read_record": 0,
+        "decode_snapshot": 0, "_verify_normal_head": 0,
+    }
+    stages = []
+    actual_sha = None
+    actual_size = None
+    decoded_ticket = None
+    context = None
+    reason = None
+    try:
+        context = _select_context(state, request["case_ref"])
+        version = request["ticket"]["version"]
+        expected_relpath = (
+            request["case_ref"] + "/" + request["channel"]
+            + "/v%012d.json" % version
+        )
+        if request["record_relpath"] != expected_relpath:
+            raise _RecordRejection("RECORD_PATH_MISMATCH")
+        # Only these fixed components choose a path.  No supplied path is
+        # normalized, resolved, or followed outside the arena.
+        path = arena / request["case_ref"] / request["channel"] / (
+            "v%012d.json" % version
+        )
+        try:
+            raw = _read_record(path, calls, stages)
+        except FileNotFoundError as error:
+            raise _RecordRejection("RECORD_MISSING") from error
+        except (OSError, ProtocolError) as error:
+            raise _RecordRejection(
+                "RECORD_READ_ERROR:" + getattr(error, "reason", type(error).__name__)
+            ) from error
+        actual_size = len(raw)
+        actual_sha = digest(raw)
+        if actual_size > MAX_RECORD_BYTES:
+            raise _RecordRejection("RECORD_TOO_LARGE")
+        if actual_sha != request["record_sha256"]:
+            raise _RecordRejection("RECORD_SHA_MISMATCH")
+        stages.append("HASH_MATCH")
+        calls["decode_snapshot"] += 1
+        stages.append("DECODE_ENTER")
+        try:
+            snapshot = decode_snapshot(
+                raw, request["channel"], request["receiver_ref"],
+                request["previous_digest"],
+            )
+        except CodecError as error:
+            raise _RecordRejection("RECORD_DECODE_ERROR:" + error.reason) from error
+        stages.append("DECODE_OK")
+        decoded_ticket = ticket_to_wire(snapshot.ticket)
+        if decoded_ticket != request["ticket"]:
+            raise _RecordRejection("TICKET_MISMATCH")
+        stages.append("TICKET_MATCH")
+        stages.append("CONTEXT_CHECK")
+        _check_context(state, context, request, snapshot, path, actual_sha, calls)
+        stages.append("CONTEXT_OK")
+    except _RecordRejection as error:
+        reason = error.reason
+        if context is not None and context["first_failure"] is None:
+            context["first_failure"] = reason
+        if context is not None and request["channel"] == "failure_delivery":
+            context["failure_attempted"] = True
+
+    return {
+        "kind": "RECEIVER_CONSUMPTION_V1",
+        "session_ref": request["session_ref"],
+        "case_ref": request["case_ref"],
+        "handoff_ref": request["handoff_ref"],
+        "request_index": request["request_index"],
+        "request_sha256": request_sha,
+        "record_relpath": request["record_relpath"],
+        "record_bytes": actual_size,
+        "record_sha256": actual_sha,
+        "ticket": decoded_ticket,
+        "channel": request["channel"],
+        "receiver_ref": request["receiver_ref"],
+        "receiver_pid": receiver_pid,
+        "status": "ACCEPTED" if reason is None else "REJECTED",
+        "reason": reason,
+        "calls": calls,
+        "stages": stages,
+    }
+
+
+def _ack(request, consumption, consumption_ref, consumption_sha):
+    return {
+        "kind": "RECEIVER_ACK_V1",
+        "session_ref": request["session_ref"],
+        "case_ref": request["case_ref"],
+        "handoff_ref": request["handoff_ref"],
+        "request_index": request["request_index"],
+        "request_sha256": consumption["request_sha256"],
+        "record_sha256": consumption["record_sha256"],
+        "ticket": consumption["ticket"],
+        "channel": request["channel"],
+        "receiver_ref": request["receiver_ref"],
+        "receiver_pid": consumption["receiver_pid"],
+        "status": consumption["status"],
+        "reason": consumption["reason"],
+        "consumption_ref": consumption_ref,
+        "consumption_sha256": consumption_sha,
+    }
+
+
+def _write_lifecycle(mailbox, session_ref, receiver_pid, started, state, reason):
+    """Best-effort single terminal record; never forge an ACK for bad input."""
+    value = {
+        "kind": "RECEIVER_LIFECYCLE_V1",
+        "session_ref": session_ref,
+        "receiver_pid": receiver_pid,
+        "status": "FAILED" if reason is not None else "COMPLETED",
+        "reason": reason,
+        "requests_consumed": state["requests_consumed"],
+        "acks_published": state["acks_published"],
+        "elapsed_ms": int((time.monotonic() - started) * 1000),
+        "case_first_failures": {
+            case_ref: context["first_failure"]
+            for case_ref, context in state["contexts"].items()
+        },
+    }
+    _publish_json(mailbox / "LIFECYCLE.json", value)
+
+
+def run_receiver(arena: Path, session_ref: str, config: dict) -> int:
+    """Run one sequential mailbox session; R16 deliberately awaits termination.
+
+    The entry layer loads the sealed modules and installs the execution guard.
+    A marker is a publication signal, not a power-loss or atomic-path guarantee.
+    The 120-second monotonic bound is procedural, not an OS real-time guarantee.
+    """
+    started = time.monotonic()
+    receiver_pid = os.getpid()
+    mailbox = Path(arena) / "mailbox"
+    state = {
+        "contexts": {}, "closed_cases": set(), "active_case": None,
+        "identity_cases": {}, "seen_handoffs": set(),
+        "requests_consumed": 0, "acks_published": 0,
+    }
+    terminal_reason = None
+    mailbox_validated = False
+    try:
+        arena = Path(arena)
+        if not arena.is_absolute() or ".." in arena.parts:
+            raise ProtocolError("ARENA_ABSOLUTE_REQUIRED")
+        if type(session_ref) is not str or not session_ref.strip():
+            raise ProtocolError("SESSION_REFERENCE_INVALID")
+        if type(config) is not dict or config.get("hold_case_ref") != "R16":
+            raise ProtocolError("RECEIVER_CONFIG_INVALID")
+        manifest_sha = config.get("source_manifest_sha256")
+        if (type(manifest_sha) is not str or len(manifest_sha) != 64
+                or any(char not in "0123456789abcdef" for char in manifest_sha)):
+            raise ProtocolError("SOURCE_MANIFEST_DIGEST_INVALID")
+        for directory in (
+            arena, mailbox, mailbox / "requests", mailbox / "acks",
+            mailbox / "consumption",
+        ):
+            plain_path(directory, True)
+        mailbox_validated = True
+        _deadline(started)
+        _publish_json(mailbox / "READY.json", {
+            "kind": "RECEIVER_READY_V1",
+            "session_ref": session_ref,
+            "receiver_pid": receiver_pid,
+            "source_manifest_sha256": manifest_sha,
+        }, max_bytes=MAX_REQUEST_BYTES)
+
+        for request_index in range(1, MAX_REQUESTS + 1):
+            request_path = mailbox / "requests" / ("q%04d.json" % request_index)
+            while not _marker_exists(request_path.with_suffix(".ready")):
+                _deadline(started)
+                time.sleep(POLL_SECONDS)
+            _deadline(started)
+            raw_request = read_bounded(request_path, MAX_REQUEST_BYTES)
+            request = parse_request(raw_request)
+            if request["session_ref"] != session_ref:
+                raise ProtocolError("REQUEST_SESSION_MISMATCH")
+            if request["request_index"] != request_index:
+                raise ProtocolError("REQUEST_SEQUENCE_MISMATCH")
+            if request["case_ref"] not in CASE_REFS:
+                raise ProtocolError("REQUEST_CASE_INVALID")
+            if request["handoff_ref"] in state["seen_handoffs"]:
+                raise ProtocolError("REQUEST_HANDOFF_REUSED")
+            state["seen_handoffs"].add(request["handoff_ref"])
+
+            consumption = _consume_record(
+                arena, request, digest(raw_request), state, receiver_pid
+            )
+            _deadline(started)
+            consumption_ref = "mailbox/consumption/c%04d.json" % request_index
+            consumption_path = mailbox / "consumption" / (
+                "c%04d.json" % request_index
+            )
+            _publish_json(consumption_path, consumption)
+            state["requests_consumed"] += 1
+
+            if request["case_ref"] == config["hold_case_ref"]:
+                _publish_json(mailbox / "HOLD.json", {
+                    "kind": "RECEIVER_ACK_HOLD_FIXTURE_V1",
+                    "session_ref": session_ref,
+                    "case_ref": request["case_ref"],
+                    "handoff_ref": request["handoff_ref"],
+                    "request_index": request_index,
+                    "receiver_pid": receiver_pid,
+                    "consumption_ref": consumption_ref,
+                    "reason": "AUTHORIZED_R16_ACK_OMISSION_FIXTURE",
+                })
+                # This is deliberate fixture behavior, not an observed crash.
+                # The directly owning parent may perform its one termination.
+                while True:
+                    _deadline(started)
+                    time.sleep(POLL_SECONDS)
+
+            acknowledgement = _ack(
+                request, consumption, consumption_ref,
+                digest(canonical_bytes(consumption)),
+            )
+            _deadline(started)
+            _publish_json(
+                mailbox / "acks" / ("a%04d.json" % request_index),
+                acknowledgement, max_bytes=MAX_REQUEST_BYTES,
+            )
+            state["acks_published"] += 1
+        expected_finish = make_finish_expected(session_ref, manifest_sha, receiver_pid, digest(raw_request))
+        wait_finish(arena, expected_finish, started)
+    except Exception as error:
+        terminal_reason = getattr(error, "reason", "RECEIVER_EXCEPTION:" + type(error).__name__)
+    if not mailbox_validated:
+        # Do not use an unvalidated path even to report its own rejection.
+        return 1
+    try:
+        _write_lifecycle(mailbox, session_ref, receiver_pid, started, state, terminal_reason)
+    except Exception:
+        # Failure to persist lifecycle evidence is itself failure; no alternate
+        # destination, console, retry, overwrite, or fabricated ACK is used.
+        return 1
+    return 1 if terminal_reason is not None else 0
+

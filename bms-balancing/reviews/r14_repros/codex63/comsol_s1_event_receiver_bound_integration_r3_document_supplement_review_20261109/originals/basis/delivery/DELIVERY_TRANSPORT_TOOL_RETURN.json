@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_R3_DELIVERY_TRANSPORT_TOOL_RETURN",
+  "provenance": "Exact received tools.exec_command return for DELIVERY_RECORDS creation/readback. Saved afterward; outside sealed archive. Does not claim its own future file-write return or whole-task elapsed time.",
+  "tool_result": {
+    "chunk_id": "633768",
+    "wall_time_seconds": 1.8631266,
+    "exit_code": 0,
+    "original_token_count": 191,
+    "output": "{\r\n  \"delivery_records\": {\r\n    \"sha256\": \"7598f6115d3341997161617df573ce46f3ee2b9d349503887a27fdd85dcb1335\",\r\n    \"path\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\work\\\\microshort_s1_event_receiver_bound_integration_R3_20261108\\\\delivery\\\\DELIVERY_RECORDS.json\",\r\n    \"bytes\": 162320\r\n  },\r\n  \"root_bytes\": 1588003.0,\r\n  \"boundary\": \"After DELIVERY_RECORDS write/readback/base64/hash verification; before actual tool return and later transcription.\",\r\n  \"delivery_snapshot_seconds\": 397.0866718,\r\n  \"native_ready\": false,\r\n  \"record_count\": 5,\r\n  \"whole_snapshot_seconds\": 1518.5543938,\r\n  \"first_error_preserved\": true,\r\n  \"kind\": \"R3_DELIVERY_RECORDS_TOOL_RETURN\",\r\n  \"raw_identity_and_parsed_view_match\": true\r\n}\r\n"
+  }
+}

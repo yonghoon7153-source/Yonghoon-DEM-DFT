@@ -1,0 +1,12 @@
+{
+  "kind": "ACTUAL_R3_ONE_PARENT_SESSION_TOOL_RETURN",
+  "provenance": "Exact root-received tool result; leading VoidTaskResult lines are preserved with the JSON output. Not a separate process invocation.",
+  "tool_result": {
+    "chunk_id": "93962c",
+    "wall_time_seconds": 4.2259111,
+    "exit_code": 0,
+    "original_token_count": 395,
+    "output": "System.Threading.Tasks.VoidTaskResult\r\nSystem.Threading.Tasks.VoidTaskResult\r\n{\r\n  \"kind\": \"R3_PARENT_PYTHON_SESSION_RETURN\",\r\n  \"started\": true,\r\n  \"parent_sessions\": 1,\r\n  \"argv\": [\r\n    \"C:\\\\Users\\\\BML\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python.exe\",\r\n    \"-I\",\r\n    \"-B\",\r\n    \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\work\\\\microshort_s1_event_receiver_bound_integration_R3_20261108\\\\validation\\\\run.py\"\r\n  ],\r\n  \"cwd\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\work\\\\microshort_s1_event_receiver_bound_integration_R3_20261108\\\\validation\",\r\n  \"pid\": 28948,\r\n  \"process_rc\": 0,\r\n  \"elapsed_seconds\": 2.3092717,\r\n  \"limit_seconds\": 180,\r\n  \"timed_out\": false,\r\n  \"stdout\": {\r\n    \"path\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\work\\\\microshort_s1_event_receiver_bound_integration_R3_20261108\\\\results\\\\session.stdout.txt\",\r\n    \"bytes\": 1976,\r\n    \"sha256\": \"7cb8231d60f7fc828918fcbf8cb846059e8b61b93b3b51a70dbb927765ed9666\"\r\n  },\r\n  \"stderr\": {\r\n    \"path\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\work\\\\microshort_s1_event_receiver_bound_integration_R3_20261108\\\\results\\\\session.stderr.txt\",\r\n    \"bytes\": 0,\r\n    \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\r\n  },\r\n  \"native_ready\": false,\r\n  \"boundary\": \"After owned Python exit and raw output stream closure; before this return file write/readback and outer tool return.\"\r\n}\r\n"
+  }
+}
+

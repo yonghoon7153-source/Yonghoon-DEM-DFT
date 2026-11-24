@@ -1,0 +1,210 @@
+"""Inactive receive-only adapter for supplied evidence and memory callbacks.
+
+The fixed boundary is a supplied exact coordinate. This module reads no actual
+clock or filesystem, publishes no ACK, and cannot interrupt a blocked callback.
+An observed return checkpoint is not a guarantee about physical return/dispatch
+time, boot identity, operating freshness or interprocess synchronization.
+"""
+from dataclasses import dataclass
+from fractions import Fraction
+import hashlib
+import json
+
+from event_clock_core import ExpectedBinding, SuppliedCount, compare_supplied_count
+from exact_time import CoreError, assess_completion
+
+
+class ClockUnavailable(RuntimeError):
+    """Declared synthetic clock-port failure; never an actual OS clock probe."""
+
+
+class ReceiveError(RuntimeError):
+    def __init__(self, reason, stage, first_reason=None):
+        self.reason = reason
+        self.stage = stage
+        self.first_reason = reason if first_reason is None else first_reason
+        super().__init__(reason + " at " + stage)
+
+
+@dataclass(frozen=True)
+class FailureFact:
+    reason: str
+    stage: str
+    cause_type: str | None = None
+    cause_text: str | None = None
+
+
+@dataclass(frozen=True)
+class ReceiveResult:
+    reason: str
+    value: object | None
+    candidate_only: bool = True
+    operational: bool = False
+    native_ready: bool = False
+
+
+@dataclass(frozen=True)
+class _Context:
+    expected: ExpectedBinding
+    boundary: Fraction
+
+
+class BoundReceiveSession:
+    """Sequential single-instance ownership; no reset or replacement-context API.
+
+clock(checkpoint) supplies one SuppliedCount; marker() returns None or a closed
+{bytes, sha256} descriptor; reader(marker) returns one immutable byte buffer.
+The callback boundary is explicit: no interruption or inspection of work inside
+a callback is claimed. The same verified buffer is decoded exactly once.
+"""
+    def __init__(self, admission, boundary, clock_port, marker_port, reader_port):
+        if (getattr(admission, "reason", None) != "SYNTHETIC_BINDING_ADMITTED"
+                or getattr(admission, "fixture_only", None) is not True
+                or getattr(admission, "operational", None) is not False
+                or type(getattr(admission, "expected", None)) is not ExpectedBinding
+                or type(getattr(admission, "supplied", None)) is not SuppliedCount):
+            raise ReceiveError("ADMISSION_REQUIRED", "init")
+        if type(boundary) is not Fraction:
+            raise ReceiveError("EXACT_BOUNDARY_REQUIRED", "init")
+        if not all(callable(port) for port in (clock_port, marker_port, reader_port)):
+            raise ReceiveError("PORT_REQUIRED", "init")
+        self._context = _Context(admission.expected, boundary)
+        self._clock = clock_port
+        self._marker = marker_port
+        self._reader = reader_port
+        self._first = None
+        self._busy = False
+        self._complete = False
+        self._last_raw_count = None
+        self._required_times = ()
+        self._trace = []
+
+    @property
+    def boundary(self):
+        return self._context.boundary
+
+    @property
+    def first_failure(self):
+        return self._first
+
+    @property
+    def trace(self):
+        return tuple(dict(row) for row in self._trace)
+
+    def _fail(self, reason, stage, cause=None):
+        if self._first is None:
+            self._first = FailureFact(reason, stage,
+                None if cause is None else type(cause).__name__,
+                None if cause is None else str(cause))
+            self._trace.append({"event": "FIRST_FAILURE", "reason": reason, "stage": stage})
+        raise ReceiveError(self._first.reason, self._first.stage, self._first.reason) from cause
+
+    def _clear(self):
+        if self._first is not None:
+            # No new clock or cause is generated to inspect the existing failure.
+            raise ReceiveError(self._first.reason, self._first.stage, self._first.reason)
+
+    def _checkpoint(self, stage):
+        self._clear()
+        self._trace.append({"event": "CLOCK_CALL", "stage": stage})
+        try:
+            supplied = self._clock(stage)
+        except Exception as error:
+            self._clear()
+            self._fail("CLOCK_UNAVAILABLE", stage, error)
+        self._clear()  # Reentry caught by a port cannot be healed by its return.
+        try:
+            bound = compare_supplied_count(self._context.expected, supplied)
+        except CoreError as error:
+            self._fail("COUNT_BINDING_REJECTED", stage, error)
+        self._trace.append({"event": "COUNT_BOUND", "stage": stage,
+                            "raw_count": supplied.raw_count})
+        if self._last_raw_count is not None and supplied.raw_count < self._last_raw_count:
+            self._fail("CLOCK_REGRESSION", stage)
+        try:
+            assessment = assess_completion(self._context.boundary,
+                self._required_times + (bound.seconds_from_run_origin,))
+        except CoreError as error:
+            self._fail("COMPLETION_INPUT_REJECTED", stage, error)
+        self._trace.append({"event": "COMPLETION_ASSESSED", "stage": stage,
+                            "within": assessment.arithmetic_within_limits})
+        if not assessment.arithmetic_within_limits:
+            self._fail("DEADLINE_NOT_BEFORE", stage)
+        self._last_raw_count = supplied.raw_count
+        self._required_times += (bound.seconds_from_run_origin,)
+
+    def _callback(self, function, stage, failure_reason, *args):
+        self._clear()
+        self._trace.append({"event": "PORT_CALL", "stage": stage})
+        try:
+            result = function(*args)
+        except Exception as error:
+            self._clear()
+            self._fail(failure_reason, stage, error)
+        self._clear()  # Crucially before the next normal checkpoint.
+        return result
+
+    def _verify_decode(self, marker, raw):
+        self._clear()
+        self._trace.append({"event": "VERIFY", "stage": "verify"})
+        if (type(marker) is not dict or set(marker) != {"bytes", "sha256"}
+                or type(marker["bytes"]) is not int or marker["bytes"] < 0
+                or type(marker["sha256"]) is not str or len(marker["sha256"]) != 64
+                or type(raw) is not bytes):
+            self._fail("PAYLOAD_DESCRIPTOR_INVALID", "verify")
+        if len(raw) != marker["bytes"]:
+            self._fail("PAYLOAD_SIZE_MISMATCH", "verify")
+        actual_sha = hashlib.sha256(raw).hexdigest()
+        if actual_sha != marker["sha256"]:
+            self._fail("PAYLOAD_HASH_MISMATCH", "verify")
+        self._clear()
+        self._trace.append({"event": "DECODE", "stage": "decode",
+                            "verified_sha256": actual_sha, "bytes": len(raw)})
+        def unique(pairs):
+            result = {}
+            for key, value in pairs:
+                if key in result:
+                    raise ValueError("DUPLICATE_JSON_KEY")
+                result[key] = value
+            return result
+        def no_constant(value):
+            raise ValueError("NONFINITE_JSON_CONSTANT:" + value)
+        try:
+            # The verified raw object is consumed directly, never a second read.
+            decoded = json.loads(raw.decode("utf-8"), object_pairs_hook=unique,
+                                 parse_constant=no_constant)
+        except (UnicodeError, ValueError) as error:
+            self._fail("PAYLOAD_DECODE_FAILED", "decode", error)
+        return decoded
+
+    def receive_once(self):
+        self._trace.append({"event": "ENTRY", "stage": "entry"})
+        if self._first is not None:
+            raise ReceiveError("RECEIVE_LATCHED", "entry", self._first.reason)
+        if self._busy:
+            self._fail("REENTRANT_RECEIVE", "entry")
+        if self._complete:
+            self._fail("RECEIVE_ALREADY_COMPLETE", "entry")
+        self._busy = True
+        try:
+            self._checkpoint("C0")
+            marker = self._callback(self._marker, "marker", "MARKER_PROBE_FAILED")
+            self._checkpoint("C1")
+            if marker is None:
+                self._trace.append({"event": "PENDING", "stage": "C1"})
+                return ReceiveResult("PENDING", None)
+            raw = self._callback(self._reader, "payload", "PAYLOAD_READ_FAILED", marker)
+            self._checkpoint("C2")
+            value = self._verify_decode(marker, raw)
+            self._checkpoint("C3")
+            self._clear()
+            self._complete = True
+            self._trace.append({"event": "CANDIDATE_RETURN", "stage": "C3"})
+            return ReceiveResult("RECEIVE_CANDIDATE_WITHIN_OBSERVED_BOUNDARY", value)
+        except ReceiveError:
+            raise
+        except Exception as error:
+            self._clear()
+            self._fail("RECEIVE_INTERNAL_ERROR", "receive_once", error)
+        finally:
+            self._busy = False

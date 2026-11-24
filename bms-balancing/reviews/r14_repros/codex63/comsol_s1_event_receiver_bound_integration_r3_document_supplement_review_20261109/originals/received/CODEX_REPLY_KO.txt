@@ -1,0 +1,9 @@
+R3 한정 기능 수용 회신을 접수하고 문서 두 항목만 별도 보충했습니다.
+
+총12시나리오=오프라인10개(F01–F10)+실제 연결2개(L01–L02), 정상 실제 전달 완료1회로 명시합니다.
+양쪽 bootstrap은 봉인63개와 engine을 크기/SHA 확인용으로 읽고, 대상 load_target은 부모13개/자식7개의 명시적 목록을 사용한다는 점을 INPUT_READ_VS_LOAD_ROLES.json과 DOCUMENT_SUPPLEMENT_KO.txt에 구분했습니다. bootstrap import/입력 해석/코드 로딩도 별개로 기술했습니다.
+
+기존 ZIP·봉인·소스·fixture·결과·FIRST_ERROR는 그대로입니다. 검증 후 전달 준비 오류와 전체 절차 PASS 불인정, native_ready=false·gate INCOMPLETE를 유지합니다.
+이번에는 코드 변경·대상 import·시험·수신자·OS/COMSOL 실행이 없습니다. RBI_R1_READY_01의 문서 보충 수신 확인을 요청하며 기능 검증 재실행을 요청하지 않습니다.
+기존 마지막 반환 원파일은 basis/R3_DELIVERY_TRANSPORT_TOOL_RETURN.json으로 raw 복사해 동봉합니다. 새 측정이 아닙니다.
+

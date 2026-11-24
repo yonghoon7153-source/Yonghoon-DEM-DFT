@@ -1,0 +1,13 @@
+{"id": "F01", "status": "PASS", "reason": "PASS"}
+{"id": "F02", "status": "PASS", "reason": "REQUEST_ALREADY_POSTED"}
+{"id": "F03", "status": "PASS", "reason": "ACK_MARKER_INVALID"}
+{"id": "F04", "status": "PASS", "reason": "ACK_FRAME_TOO_LARGE"}
+{"id": "F05", "status": "PASS", "reason": "CONSUMPTION_PATH_MISMATCH"}
+{"id": "F06", "status": "PASS", "reason": "CONSUMPTION_SHA_MISMATCH"}
+{"id": "F07", "status": "PASS", "reason": "ACK_TRANSPORT_TIMEOUT"}
+{"id": "F08", "status": "PASS", "reason": "RECEIVER_NOT_ALIVE"}
+{"id": "F09", "status": "PASS", "reason": "FINISH_SESSION_MISMATCH"}
+{"id": "F10", "status": "PASS", "reason": "RECEIVER_LIFETIME_EXCEEDED"}
+{"id": "L01", "status": "PASS", "reason": "NORMAL_DELIVERY_COMPLETED"}
+{"id": "L02", "status": "PASS", "reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT"}
+{"kind": "R3_ONE_SESSION_RESULT", "counts": {"PASS": 12, "FAIL": 0, "NOT_RUN": 0}, "cases": [{"id": "F01", "status": "PASS", "reason": "PASS"}, {"id": "F02", "status": "PASS", "reason": "REQUEST_ALREADY_POSTED"}, {"id": "F03", "status": "PASS", "reason": "ACK_MARKER_INVALID"}, {"id": "F04", "status": "PASS", "reason": "ACK_FRAME_TOO_LARGE"}, {"id": "F05", "status": "PASS", "reason": "CONSUMPTION_PATH_MISMATCH"}, {"id": "F06", "status": "PASS", "reason": "CONSUMPTION_SHA_MISMATCH"}, {"id": "F07", "status": "PASS", "reason": "ACK_TRANSPORT_TIMEOUT"}, {"id": "F08", "status": "PASS", "reason": "RECEIVER_NOT_ALIVE"}, {"id": "F09", "status": "PASS", "reason": "FINISH_SESSION_MISMATCH"}, {"id": "F10", "status": "PASS", "reason": "RECEIVER_LIFETIME_EXCEEDED"}, {"id": "L01", "status": "PASS", "reason": "NORMAL_DELIVERY_COMPLETED"}, {"id": "L02", "status": "PASS", "reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT"}], "parent_elapsed_seconds": 2.077999999979511, "child_spawn_count": 1, "guard_events": [], "failure_cleanup": null, "normal_live_completions": 1, "native_ready": false, "contract_adopted": false, "overall": "INCOMPLETE"}

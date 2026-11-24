@@ -1,0 +1,55 @@
+COMSOL S1 receiver–bound ACK 통합 R3 문서 보충
+2026-11-09 · 원본 불변 별도 문서 · 구현/실행/재개 승인 아님
+
+1. 수용 범위와 전달 문구
+총 12시나리오(F01–F10 오프라인10개, L01–L02 실제 연결2개)가 기대 결과와 일치했다는 한정 기능 수용을 접수합니다. 정상 실제 전달 완료는 L01 한 번입니다. 이후 전달문은 이 문장을 사용합니다. 기존 보고서·채팅·ZIP을 소급 편집하지 않습니다.
+부모/수신자 각1세션 rc0, 요청/ACK 각2건, terminate0을 유지합니다. L02의 실제 소비 v1과 부모의 검증된 전달 head v0은 다릅니다. 합성 C5=100=B에서 DEADLINE_NOT_BEFORE/C5 및 owner DELIVERY_EXCEPTION이 유지되고 정상 자식 종료로 해제되지 않습니다.
+검증 뒤 전달 준비 구문 오류 FIRST_ERROR는 보존합니다. 그 오류 process rc=null과 정상 Python/포장 rc0을 구분하며 기능 수용을 전체 절차 PASS로 확대하지 않습니다.
+
+2. RBI_R1_READY_01에 붙이는 공통 보충 문구
+READY_INPUTS.json 및 READY_INPUTS_COMPLETION.json의 permitted_consumer는 목적별로 해석합니다. 식별 확인용 원바이트 읽기와 Python 대상 모듈 로딩은 별개의 소비입니다.
+부모 bootstrap과 자식 bootstrap은 각각 runtime_support.initialize의 공통 경로에서 PRESEAL.files의 63개 파일과 PRESEAL.engine의 원바이트를 읽어 크기/SHA256을 대조합니다. 그러므로 개별 표에 parent loader 또는 child loader만 기재되어 있어도, 그 파일이 봉인 63개에 포함되면 양쪽 bootstrap의 식별 읽기를 별도로 명시해야 합니다. 이 보충 문서의 INPUT_READ_VS_LOAD_ROLES.json은 63개 각각의 식별 읽기 주체와 대상 로딩 역할을 구분합니다.
+해시 확인용 읽기 허용은 import/exec 또는 다른 역할의 대상 코드 로딩 권한을 뜻하지 않습니다. 대상 로딩은 initialize가 고른 목록과 load_target 경로에 한정하여 기술합니다. 이것은 당시 고정 초기화 흐름의 문서 설명이며 새로운 권한 부여, 운영 계약 채택 또는 악의적 코드에 대한 보안 격리 보증이 아닙니다.
+
+3. 정확한 소스 대응
+validation/runtime_support.py SHA256 aa8588e47a1e967114b9022f56a6df9fc269a2a3359ed5998ae117ae3e537f8e
+- 27–32행: NAMES와 CHILD_NAMES.
+- 129–135행: 양쪽 bootstrap이 PRESEAL/CONFIG를 읽고 records=seal.files+[seal.engine], 읽기 목록과 정확 child argv를 구성.
+- 136행: audit hook 설치. PRESEAL/CONFIG의 최초 bootstrap 읽기는 이 설치 전입니다.
+- 138–146행: engine/flags/argv 대조 및 공통 records의 크기/SHA 대조.
+- 147–148행: SOURCE_MANIFEST를 추가로 읽어 명시된 SHA를 확인.
+- 149–150행: 역할별 목록 선택 후 load_target 호출.
+- 99–122행: 선택한 소스를 읽고 AST/import 제한 확인 및 모듈 구성·실행. 단순 식별 읽기와 다른 단계입니다.
+validation/run.py 6–10행은 runtime_support/harness_cases의 bootstrap import 후 initialize('parent')를 호출합니다.
+validation/receiver_entry.py 4·15행은 runtime_support import 후 initialize('child')를 호출합니다.
+따라서 bootstrap/harness 자체의 import를 load_target 대상 목록과 섞지 않으며, 모든 종류의 코드 로딩이 봉인 대조 뒤에만 발생한다고 주장하지 않습니다.
+
+4. 대상 로딩 역할표
+양쪽 공통6개:
+exact_time, event_clock_core, state_owner, snapshot_codec, receiver_protocol, receiver_finish.
+부모 전용7개:
+file_ports, evidence_admission, deadline_receive, bound_ack_session, receiver_session, receiver_bridge, live_file_transport.
+자식 전용1개:
+receiver_worker_candidate.
+총 부모13개·자식7개이며 공통6개가 중복되므로 서로 다른 모듈은14개입니다.
+보존된 원 receiver_worker.py.inactive.txt는 봉인 식별 읽기 대상이지만 이 R3의 부모/자식 load_target 목록에는 없습니다. 해시가 확인됐다는 이유로 실행됐다고 표시하지 않습니다.
+run.py는 부모 진입점, receiver_entry.py는 자식 진입점, runtime_support.py는 양쪽 bootstrap import, harness_cases.py는 부모 harness import입니다. launch_once.ps1은 당시 host PowerShell launcher이며 Python 대상 모듈이 아닙니다. 이 파일들도 봉인 목록에 포함된 식별 읽기와 원래 역할을 구분합니다.
+문서/JSON/fixture/이력 파일의 식별 읽기는 해당 파일의 실행을 뜻하지 않습니다. PRESEAL 자체는 읽기 기준을 담는 bootstrap 입력이고 자기 자신의 63개 목록에는 포함되지 않습니다. engine은 공통 식별 읽기 대상인 실행기 파일이며 load_target 모듈이 아닙니다.
+
+5. 기존 입력/예정 출력과 과거 기록
+기존 READY_INPUTS와 COMPLETION의 시간별 상태를 그대로 보존합니다. AUTHORING 상태의 FUTURE_OUTPUT/NOT_YET_CREATED를 현재 상태로 덮어쓰지 않습니다. 실제 시험 전 결속은 기존 PRESEAL, 실행 이후 생성은 기존 결과/반환 기록으로 확인합니다. 이번 문서 보충은 당시의 입력·출력 또는 봉인을 새로 생성/활성화하지 않습니다.
+PRESEAL SHA256 b1a0209011f718a0253a707efea4bb5f542775ad339b10fe37c142df2d24abae.
+원 R3 결과 ZIP SHA256 f0b118bd6320eea7ecaf26bb81b59f0b20992603ae5e4aa218c25fcaf9122184.
+수신 검토 ZIP 560393B/SHA256 d7444e5290344879d7cbb671dc0ab9688b04f95333e81d0fcdc4fa3e182e3971.
+
+6. 이번 작업의 검산과 범위
+원 R3 폴더의 현재165개 파일과 이번 수신 검토 ZIP, 총166개 로컬 입력을 전후 비교합니다. 이는 과거 선택185개/원격 전체 보존을 새로 재측정한 것이 아닙니다. 그 집합과 합산하지 않습니다.
+봉인63개 현재 파일 식별과 코드의 명시적 부모13/자식7 목록을 정적으로 대조했습니다. 원 엔진의 현재 실행/버전 관측이나 재측정은 하지 않았으며 역할표의 engine 식별은 PRESEAL에 기록된 근거입니다.
+기존 DELIVERY_TRANSPORT_TOOL_RETURN.json의 원바이트도 basis/R3_DELIVERY_TRANSPORT_TOOL_RETURN.json에 변경 없이 동봉했습니다. 이는 앞선 633768 도구 반환의 보존 전사이며 자체 미래 반환·전체 작업 시간·독립 역사 감사를 증명하지 않습니다. 이번 전달 자체의 기록과 구분합니다.
+이번 새 문서에 수치 예산은 지정되지 않았으므로 이전3600초를 전용하거나 새 전체 경과/예산 준수 판정을 하지 않습니다.
+코드 수정·대상 import·재시험·수신자·OS/API/Job/CIM·COMSOL 실행은0입니다. 문서 보충 작성 완료이며 검토자의 보충 수신 확인 전 RBI_R1_READY_01의 종결을 선취하지 않습니다.
+
+7. 유지
+운영 clock/role/freshness·동시성·복구/내구성·막힌 callback/잔류 Q·C4/C5 이후 물리 완료·ResourceSession/Parent·OS/Job/COMSOL은 미검증입니다.
+네 운영 기한/reserve=null, JOB_CURRENT_COMMIT=OPEN, contract_adopted/native_ready/approved/usable=false, 전체/정상 gate INCOMPLETE, 전체 절차 PASS 아님을 유지합니다. 새 구현·시험·재개·운영 승인 없이 문서만 제출하고 멈춥니다.
+

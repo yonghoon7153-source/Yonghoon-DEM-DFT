@@ -1,0 +1,13 @@
+{
+  "kind": "RECIPIENT_FUNCTION_SPAN_CHECKER_CORRECTION",
+  "failed_tool_result": {
+    "chunk_id": "e1199f",
+    "wall_time_seconds": 0.4274896,
+    "exit_code": 1,
+    "original_token_count": 95,
+    "output": "Traceback (most recent call last):\r\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\_review_tools\\check_receiver_bound_R3.py\", line 39, in <module>\r\n    assert sha(span.encode())==f['span_sha256'],f['function']\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nAssertionError: live_file_transport.BoundLiveSession.verify_consumption\r\n"
+  },
+  "cause": "Reviewer splitlines removed the final empty LF field. Sender's declared line offsets retain that field using split on LF; five EOF spans match exactly under that original normalization. No supplied source bytes changed.",
+  "correction": "Normalize CRLF/CR to LF then split on LF, retain empty terminal field and join the declared inclusive span without adding a new LF.",
+  "target_execution": 0
+}

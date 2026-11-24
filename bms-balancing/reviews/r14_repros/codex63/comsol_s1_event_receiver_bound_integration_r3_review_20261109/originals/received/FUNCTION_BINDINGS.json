@@ -1,0 +1,506 @@
+{
+  "kind": "STATIC_SOURCE_FUNCTION_BINDINGS",
+  "count": 18,
+  "functions": [
+    {
+      "function": "live_file_transport.FileAckPorts.marker",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "file_sha256": "844a6f705dd3b7eb83107b02d529a6e547c55ae1f7459823c7458a352aef7993",
+      "start_line": 53,
+      "end_line_inclusive": 55,
+      "span_sha256": "57b3473a283fe957c53a059202acfae76d50b085d8f703131016c676205cc268",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "live_file_transport.FileAckPorts.reader",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "file_sha256": "844a6f705dd3b7eb83107b02d529a6e547c55ae1f7459823c7458a352aef7993",
+      "start_line": 110,
+      "end_line_inclusive": 112,
+      "span_sha256": "a1cfaed000e4cb36df557ec28ec069e2f23001643b1cd06ed99b4562fb63a61f",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "live_file_transport.FileAckPorts.consumption",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "file_sha256": "844a6f705dd3b7eb83107b02d529a6e547c55ae1f7459823c7458a352aef7993",
+      "start_line": 123,
+      "end_line_inclusive": 125,
+      "span_sha256": "b63e3778745f6816cfc4f69c1341fec2d1b71070962ce2a7d48073972b241ffe",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "live_file_transport.BoundLiveSession.exchange",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "file_sha256": "844a6f705dd3b7eb83107b02d529a6e547c55ae1f7459823c7458a352aef7993",
+      "start_line": 160,
+      "end_line_inclusive": 164,
+      "span_sha256": "d5ae0afcb89e1bee1a3474f34f65f8d37add14c74802aa7ad81561baa7ac2f12",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "live_file_transport.BoundLiveSession.verify_consumption",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\live_file_transport.py.inactive.txt",
+      "file_sha256": "844a6f705dd3b7eb83107b02d529a6e547c55ae1f7459823c7458a352aef7993",
+      "start_line": 165,
+      "end_line_inclusive": 168,
+      "span_sha256": "dc0cf38cabae97596525c188542d7971022f218d3c74b03207f47cf8572ab962",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "bound_ack_session.BoundAckSession.exchange",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\bound_ack_session.py.inactive.txt",
+      "file_sha256": "e9e169604cd60cf3ab77b8885a4ac37e5a601edc163af25d7ef1d965fa9ab105",
+      "start_line": 291,
+      "end_line_inclusive": 381,
+      "span_sha256": "43c1989b695e07d2c9fadb193004dab6f826770cfbeb7bf4f346bbee1f630b02",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "bound_ack_session.BoundAckSession.verify_consumption",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\bound_ack_session.py.inactive.txt",
+      "file_sha256": "e9e169604cd60cf3ab77b8885a4ac37e5a601edc163af25d7ef1d965fa9ab105",
+      "start_line": 382,
+      "end_line_inclusive": 433,
+      "span_sha256": "ac559c02c93c47e59d9898a5b306272ea84e4ba64932ef809bff58ca58b9c580",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "state_owner.StateOwner.bootstrap",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\state_owner.py.inactive.txt",
+      "file_sha256": "4d07321000d54a7716e9e958e3c99b83deb21235f71647406179413f23c91cc1",
+      "start_line": 278,
+      "end_line_inclusive": 292,
+      "span_sha256": "e33b0cb7940a08fd742f3b4cf8cca49e840adc833c17ac3f1b4e8ee4251c3e82",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "state_owner.StateOwner.assess_count",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\state_owner.py.inactive.txt",
+      "file_sha256": "4d07321000d54a7716e9e958e3c99b83deb21235f71647406179413f23c91cc1",
+      "start_line": 316,
+      "end_line_inclusive": 318,
+      "span_sha256": "82310e185bb1451cae543f0df556c2537195132df83137de005ef2b22b0016c1",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "receiver_bridge.ReceiverBridge.publish",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_bridge.py.inactive.txt",
+      "file_sha256": "6e62f105b4008d044bc776e6f4849159a813b4829f711a415547095fcbfbcc80",
+      "start_line": 181,
+      "end_line_inclusive": 199,
+      "span_sha256": "486d18473a9aef0285a65a367ae4c1b4d4340de673af4df502ba1af93729ea59",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "receiver_finish.validate_finish",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+      "file_sha256": "03ae89e774dbb52f7ee0c986a4129373288bebd0968c638977ba8e8a27fb3d65",
+      "start_line": 18,
+      "end_line_inclusive": 32,
+      "span_sha256": "a354faca1c74589426365f62d6bfae0bdc998daea87c90bef874bef73ddbc1b4",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "receiver_finish.wait_finish",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+      "file_sha256": "03ae89e774dbb52f7ee0c986a4129373288bebd0968c638977ba8e8a27fb3d65",
+      "start_line": 33,
+      "end_line_inclusive": 60,
+      "span_sha256": "fe67fd902b5f3dfb4ccb1b909d6f0296cbce3a525369c7326811a1ca2e1c8707",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "receiver_finish.publish_finish",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_finish.py.inactive.txt",
+      "file_sha256": "03ae89e774dbb52f7ee0c986a4129373288bebd0968c638977ba8e8a27fb3d65",
+      "start_line": 61,
+      "end_line_inclusive": 67,
+      "span_sha256": "ba00e60fca39d2f2da89a47e51f8d8a0c18322d76a05e5624d12011b3bf04fc4",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "receiver_session.FileReceiverSession.start",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_session.py.inactive.txt",
+      "file_sha256": "da007b4d599c77c171497599321d9033e5314dd7a656909fbdf0ea58a63bb54a",
+      "start_line": 55,
+      "end_line_inclusive": 90,
+      "span_sha256": "4f695b7ca4d02fe9f8f02aa97622de6bfa371f964d0e4b5ada24582bfffee427",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "receiver_session.FileReceiverSession.stop_owned",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_session.py.inactive.txt",
+      "file_sha256": "da007b4d599c77c171497599321d9033e5314dd7a656909fbdf0ea58a63bb54a",
+      "start_line": 107,
+      "end_line_inclusive": 134,
+      "span_sha256": "46dce849be4d2dfc4d068d0659577424a11c7b70479583cd99a9f655dd85de5e",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "evidence_admission.EvidenceAdmission.admit",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\evidence_admission.py.inactive.txt",
+      "file_sha256": "92267d568705f479e5a5ef2e30d59879a0d0d653f85b9ddb819ea0bc52fc2e39",
+      "start_line": 152,
+      "end_line_inclusive": 263,
+      "span_sha256": "62a1ceee24adc59bef6b7943c3c9f426ed573c3c5a400d4d619d79d561c80b69",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "receiver_worker_candidate.run_receiver",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+      "file_sha256": "6959a93bf52b1610859e7a3d186e2472200a9d6331da742b71c46dd349396fef",
+      "start_line": 308,
+      "end_line_inclusive": 422,
+      "span_sha256": "3f7d6f42aba0d4037817726f1cee68f1b1ca7f61174b0bf7f7b359e6c67c2880",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    },
+    {
+      "function": "receiver_worker_candidate._consume_record",
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\source\\receiver_worker_candidate.py.inactive.txt",
+      "file_sha256": "6959a93bf52b1610859e7a3d186e2472200a9d6331da742b71c46dd349396fef",
+      "start_line": 177,
+      "end_line_inclusive": 268,
+      "span_sha256": "9f29d3df17724782bc8c6df5c9c45024d550ac789691047477ffd74d1d1adf2a",
+      "span_rule": "LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF"
+    }
+  ],
+  "case_bindings": [
+    {
+      "id": "F01",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F01.json",
+        "bytes": 1513,
+        "sha256": "b51ea6d7105bbe788827b27614f287deff3ccf6d5b04aeb5abeab3015550c1f2"
+      },
+      "reason": "PASS",
+      "stage": "same bytes, no second ACK file open",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 1,
+        "live_file_transport.FileAckPorts.reader": 1,
+        "live_file_transport.FileAckPorts.consumption": 1,
+        "live_file_transport.BoundLiveSession.exchange": 0,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "F02",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F02.json",
+        "bytes": 1444,
+        "sha256": "a33325e9952ff2d19fdfdb3ab9220e11982e62af1e76ffe891369d335ba0f1a6"
+      },
+      "reason": "REQUEST_ALREADY_POSTED",
+      "stage": "post entry",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 2,
+        "live_file_transport.FileAckPorts.reader": 0,
+        "live_file_transport.FileAckPorts.consumption": 0,
+        "live_file_transport.BoundLiveSession.exchange": 0,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "F03",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F03.json",
+        "bytes": 1427,
+        "sha256": "a3e698c680029453afb9e364cd70144b9f27adbe2396a3f7fb7df6f697d25336"
+      },
+      "reason": "ACK_MARKER_INVALID",
+      "stage": "marker validation",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 1,
+        "live_file_transport.FileAckPorts.reader": 0,
+        "live_file_transport.FileAckPorts.consumption": 0,
+        "live_file_transport.BoundLiveSession.exchange": 0,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "F04",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F04.json",
+        "bytes": 1433,
+        "sha256": "00cb793da30cb03c6f2bab5a8e1016f9d4fc844162cdaaa97e23e2032d0adbbd"
+      },
+      "reason": "ACK_FRAME_TOO_LARGE",
+      "stage": "bounded ACK read",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 1,
+        "live_file_transport.FileAckPorts.reader": 0,
+        "live_file_transport.FileAckPorts.consumption": 0,
+        "live_file_transport.BoundLiveSession.exchange": 0,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "F05",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F05.json",
+        "bytes": 1448,
+        "sha256": "d14b44509f81f1d584f3638bc2ce62980126e1b5d4481a6def16eb9b82a3e8e5"
+      },
+      "reason": "CONSUMPTION_PATH_MISMATCH",
+      "stage": "consumption path admission",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 1,
+        "live_file_transport.FileAckPorts.reader": 1,
+        "live_file_transport.FileAckPorts.consumption": 1,
+        "live_file_transport.BoundLiveSession.exchange": 0,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "F06",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F06.json",
+        "bytes": 1658,
+        "sha256": "d780816e3a146f7a3b4ba73dcc3b08bdc3c2198493b1f5cddcf338cda9532b40"
+      },
+      "reason": "CONSUMPTION_SHA_MISMATCH",
+      "stage": "existing BoundAckSession.verify_consumption:CONSUMPTION_VALIDATE",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 1,
+        "live_file_transport.FileAckPorts.reader": 1,
+        "live_file_transport.FileAckPorts.consumption": 1,
+        "live_file_transport.BoundLiveSession.exchange": 1,
+        "live_file_transport.BoundLiveSession.verify_consumption": 1,
+        "bound_ack_session.BoundAckSession.exchange": 1,
+        "bound_ack_session.BoundAckSession.verify_consumption": 1,
+        "state_owner.StateOwner.bootstrap": 1,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 1,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 1
+      }
+    },
+    {
+      "id": "F07",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F07.json",
+        "bytes": 1536,
+        "sha256": "f96f2704de38fa5330ca50c70eb133b279d75a5349bf2db4a97f92ca47a755f0"
+      },
+      "reason": "ACK_TRANSPORT_TIMEOUT",
+      "stage": "transport wait boundary and latched repeat",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 2,
+        "live_file_transport.FileAckPorts.reader": 1,
+        "live_file_transport.FileAckPorts.consumption": 0,
+        "live_file_transport.BoundLiveSession.exchange": 0,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "F08",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F08.json",
+        "bytes": 1312,
+        "sha256": "d302f25be649dd81bdb51a0c8e789ac4c895777021fa9a2f0b9f9501e7154272"
+      },
+      "reason": "RECEIVER_NOT_ALIVE",
+      "stage": "before bound exchange",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 0,
+        "live_file_transport.FileAckPorts.reader": 0,
+        "live_file_transport.FileAckPorts.consumption": 0,
+        "live_file_transport.BoundLiveSession.exchange": 1,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "F09",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F09.json",
+        "bytes": 1387,
+        "sha256": "79f28935d0b3d7b25d9e19eb30bcee61861d2a95cf08370354c9c5d84bb14518"
+      },
+      "reason": "FINISH_SESSION_MISMATCH",
+      "stage": "finish binding",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 0,
+        "live_file_transport.FileAckPorts.reader": 0,
+        "live_file_transport.FileAckPorts.consumption": 0,
+        "live_file_transport.BoundLiveSession.exchange": 0,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 1,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "F10",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\F10.json",
+        "bytes": 1374,
+        "sha256": "e9d6daa1ff500bdf75044b6ecae94d376f2b6ede84bd523c5c695bebec7751d6"
+      },
+      "reason": "RECEIVER_LIFETIME_EXCEEDED",
+      "stage": "finish wait boundary",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 0,
+        "live_file_transport.FileAckPorts.reader": 0,
+        "live_file_transport.FileAckPorts.consumption": 0,
+        "live_file_transport.BoundLiveSession.exchange": 0,
+        "live_file_transport.BoundLiveSession.verify_consumption": 0,
+        "bound_ack_session.BoundAckSession.exchange": 0,
+        "bound_ack_session.BoundAckSession.verify_consumption": 0,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 0,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 1,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    },
+    {
+      "id": "L01",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\L01.json",
+        "bytes": 1496,
+        "sha256": "3d10e7bf8458edc6d80981856866d2a0ebc595e3168f2ef75212c435f47bcd21"
+      },
+      "reason": "NORMAL_DELIVERY_COMPLETED",
+      "stage": "real worker→new file callbacks→BoundAckSession→Bridge→Owner",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 1,
+        "live_file_transport.FileAckPorts.reader": 1,
+        "live_file_transport.FileAckPorts.consumption": 1,
+        "live_file_transport.BoundLiveSession.exchange": 1,
+        "live_file_transport.BoundLiveSession.verify_consumption": 1,
+        "bound_ack_session.BoundAckSession.exchange": 1,
+        "bound_ack_session.BoundAckSession.verify_consumption": 1,
+        "state_owner.StateOwner.bootstrap": 1,
+        "state_owner.StateOwner.assess_count": 0,
+        "receiver_bridge.ReceiverBridge.publish": 1,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 0,
+        "receiver_session.FileReceiverSession.start": 1,
+        "receiver_session.FileReceiverSession.stop_owned": 0,
+        "evidence_admission.EvidenceAdmission.admit": 1
+      }
+    },
+    {
+      "id": "L02",
+      "fixture": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\work\\microshort_s1_event_receiver_bound_integration_R3_20261108\\fixtures\\L02.json",
+        "bytes": 1554,
+        "sha256": "fd35c06b79893d77ac2be452f500a55b9be5ebcda4bb5a1f43c8968a0fa50aaf"
+      },
+      "reason": "EXPECTED_C5_REFUSAL_AND_ORDERLY_CHILD_EXIT",
+      "stage": "C5 refusal then separate lifecycle finish",
+      "expected_target_counts": {
+        "live_file_transport.FileAckPorts.marker": 1,
+        "live_file_transport.FileAckPorts.reader": 1,
+        "live_file_transport.FileAckPorts.consumption": 1,
+        "live_file_transport.BoundLiveSession.exchange": 1,
+        "live_file_transport.BoundLiveSession.verify_consumption": 1,
+        "bound_ack_session.BoundAckSession.exchange": 1,
+        "bound_ack_session.BoundAckSession.verify_consumption": 1,
+        "state_owner.StateOwner.bootstrap": 0,
+        "state_owner.StateOwner.assess_count": 1,
+        "receiver_bridge.ReceiverBridge.publish": 1,
+        "receiver_finish.validate_finish": 0,
+        "receiver_finish.wait_finish": 0,
+        "receiver_finish.publish_finish": 1,
+        "receiver_session.FileReceiverSession.start": 0,
+        "receiver_session.FileReceiverSession.stop_owned": 1,
+        "evidence_admission.EvidenceAdmission.admit": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "kind": "REVIEWER_PACKAGE_PREFLIGHT_ERROR",
+  "provenance": "Exact reviewer tool result received and serialized afterward. No target execution.",
+  "tool_result": {
+    "chunk_id": "5016e6",
+    "wall_time_seconds": 0.3784064,
+    "exit_code": 1,
+    "original_token_count": 301,
+    "output": "Traceback (most recent call last):\r\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\_review_tools\\package_receiver_bound_R3_review.py\", line 45, in <module>\r\n    j(p)\r\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\_review_tools\\package_receiver_bound_R3_review.py\", line 8, in j\r\n    return json.loads(p.read_bytes())\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\json\\__init__.py\", line 346, in loads\r\n    return _default_decoder.decode(s)\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\json\\decoder.py\", line 338, in decode\r\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\r\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\json\\decoder.py\", line 356, in raw_decode\r\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\r\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\r\n"
+  },
+  "cause": "Blanket JSON parsing included received artifacts with a .json extension; inspect the intended malformed fixture and restrict semantic JSON checks to review-owned metadata. All received bytes remain under manifest SHA verification.",
+  "review_archive_created": false,
+  "target_execution": 0
+}

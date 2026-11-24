@@ -1,0 +1,33 @@
+{
+  "id": "F10",
+  "group": "new finish wait",
+  "input": "fake lifecycle elapsed가 120초 상한과 같고 finish 부재",
+  "expectation": "lifetime은 finish wait까지 포함, 연장/정상 종료 판정0; fake clock이며 실제 120초 대기0",
+  "expected_reason": "RECEIVER_LIFETIME_EXCEEDED",
+  "stage": "finish wait boundary",
+  "kind": "SEALED_R3_CASE_FIXTURE",
+  "synthetic_binding_only": true,
+  "operating_deadlines": null,
+  "reserve": null,
+  "expected_target_counts": {
+    "live_file_transport.FileAckPorts.marker": 0,
+    "live_file_transport.FileAckPorts.reader": 0,
+    "live_file_transport.FileAckPorts.consumption": 0,
+    "live_file_transport.BoundLiveSession.exchange": 0,
+    "live_file_transport.BoundLiveSession.verify_consumption": 0,
+    "bound_ack_session.BoundAckSession.exchange": 0,
+    "bound_ack_session.BoundAckSession.verify_consumption": 0,
+    "state_owner.StateOwner.bootstrap": 0,
+    "state_owner.StateOwner.assess_count": 0,
+    "receiver_bridge.ReceiverBridge.publish": 0,
+    "receiver_finish.validate_finish": 0,
+    "receiver_finish.wait_finish": 1,
+    "receiver_finish.publish_finish": 0,
+    "receiver_session.FileReceiverSession.start": 0,
+    "receiver_session.FileReceiverSession.stop_owned": 0,
+    "evidence_admission.EvidenceAdmission.admit": 0
+  },
+  "expected_clock_stages": [],
+  "expected_transport_io": null
+}
+

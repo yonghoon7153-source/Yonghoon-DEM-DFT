@@ -1,0 +1,6 @@
+{
+  "sha": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "message": "REIL C4-A 구현 요청서 v2 · 재검토 발송문 · 원장 §129 (N1 = 가 · 문서만 · 실행 0)\n\n- 사용자 원문 \"권고대로\" → C4A-IMPL-N1 의 회귀 범위 = (가) 전체 회귀 + 합성 실제 호출\n  허용표 (파일별 종류 · 시험당 상한 · 환경 · RED 전 nodeid 고정 · 계수기 플러그인).\n- 구현 요청서 v2 (v1 보존): §0 대응표 — N2 세 기대 dict 의 키 추가만 · N3 상한 있는\n  경고 기록기 · N4 runner 어댑터 (공통 절대 마감 · StopRule_A · supervisor 반환 보존) ·\n  마감 연결표 · N5 비용 표본 자격 · N6 소스 목록 sha 선대조 + 구현 기준 ↔ 실행 승인\n  분리 · N7 행 무결성 · C1 STORE_A 한 번 게시.\n- 재검토 발송문 v2 (질문 다섯). U2 미선택 유지. 구현 · 시험 · 실행 승인 아님.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm",
+  "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "provenance": "GitHub connector fetch_commit at known branch; files fetched at resulting immutable SHA."
+}

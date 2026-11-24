@@ -1,0 +1,38 @@
+{
+  "kind": "R3_DIRECTORY_CONTRACT",
+  "intake_creates": [
+    "root",
+    "basis",
+    "source",
+    "validation",
+    "fixtures",
+    "results",
+    "arena",
+    "delivery"
+  ],
+  "launcher_creates": [
+    "results/session.stdout.txt",
+    "results/session.stderr.txt"
+  ],
+  "harness_creates": "arena/F01..F10, results case files; no duplicate container mkdir",
+  "FilePorts_creates": "R01 and channel directories under selected case arena, live arena/R01",
+  "session_start_creates": [
+    "arena/mailbox",
+    "arena/mailbox/requests",
+    "arena/mailbox/acks",
+    "arena/mailbox/consumption",
+    "arena/RECEIVER_STDOUT.txt",
+    "arena/RECEIVER_STDERR.txt"
+  ],
+  "seal_requires_empty": [
+    "arena",
+    "results"
+  ],
+  "harness_initial_results": [
+    "session.stdout.txt",
+    "session.stderr.txt"
+  ],
+  "writer_rule": "exclusive new paths only",
+  "delegates": "text-only; no tool/file access",
+  "no_reuse_overwrite_delete_fallback": true
+}

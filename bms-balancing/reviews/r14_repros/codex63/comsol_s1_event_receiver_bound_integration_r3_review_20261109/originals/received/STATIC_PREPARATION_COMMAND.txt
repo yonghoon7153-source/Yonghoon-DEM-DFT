@@ -1,0 +1,51 @@
+$ErrorActionPreference='Stop'
+$root='C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R3_20261108'
+function Id($p){$f=Get-Item -LiteralPath $p -ErrorAction Stop;[ordered]@{path=$f.FullName;bytes=$f.Length;sha256=(Get-FileHash -LiteralPath $p -Algorithm SHA256 -ErrorAction Stop).Hash.ToLowerInvariant()}}
+function HashText($v){$s=[Security.Cryptography.SHA256]::Create();try{[BitConverter]::ToString($s.ComputeHash([Text.Encoding]::UTF8.GetBytes($v))).Replace('-','').ToLowerInvariant()}finally{$s.Dispose()}}
+function Save($n,$v){$p=Join-Path $root $n;if(Test-Path -LiteralPath $p){throw ('RECORD_EXISTS:'+ $n)};[IO.File]::WriteAllText($p,($v|ConvertTo-Json -Depth 45)+[Environment]::NewLine,[Text.UTF8Encoding]::new($false));[void](Get-Content -LiteralPath $p -Raw -ErrorAction Stop|ConvertFrom-Json)}
+$intake=Get-Content -LiteralPath (Join-Path $root 'INTAKE.json') -Raw|ConvertFrom-Json
+$originals=@($intake.copies|Where-Object{$_.copy.path -match '[\\/]source[\\/]'})
+if($originals.Count -ne 12){throw 'ORIGINAL_COUNT'}
+foreach($row in $originals){$now=Id $row.copy.path;if($now.bytes -ne $row.copy.bytes -or $now.sha256 -ne $row.copy.sha256){throw 'ORIGINAL_SOURCE_CHANGED'}}
+$original=Get-Content -LiteralPath (Join-Path $root 'source/receiver_worker.py.inactive.txt') -Raw
+$candidate=Get-Content -LiteralPath (Join-Path $root 'source/receiver_worker_candidate.py.inactive.txt') -Raw
+$prefix="from receiver_finish import make_finish_expected, wait_finish`n"
+$insertion="        expected_finish = make_finish_expected(session_ref, manifest_sha, receiver_pid, digest(raw_request))`n        wait_finish(arena, expected_finish, started)`n"
+if(-not $candidate.StartsWith($prefix)){throw 'WORKER_PREFIX'}
+$reversed=$candidate.Substring($prefix.Length).Replace('MAX_REQUESTS = 2','MAX_REQUESTS = 19').Replace($insertion,'')
+if($reversed.TrimEnd([char[]]"`r`n") -cne $original.TrimEnd([char[]]"`r`n")){throw 'WORKER_UNEXPECTED_BODY_CHANGE'}
+$plan=Get-Content -LiteralPath (Join-Path $root 'VALIDATION_PLAN.json') -Raw|ConvertFrom-Json
+$basis=Get-Content -LiteralPath (Join-Path $root 'basis/CASE_PLAN.json') -Raw|ConvertFrom-Json
+if($plan.cases.Count -ne 12 -or $basis.cases.Count -ne 12){throw 'CASE_COUNT'}
+$seen=[Collections.Generic.HashSet[string]]::new()
+$caseRows=@(foreach($row in $plan.cases){if(-not $seen.Add($row.id)){throw 'DUPLICATE_CASE'};$b=@($basis.cases|Where-Object{$_.id -ceq $row.id});$fp=Join-Path $root $row.fixture;$f=Get-Content -LiteralPath $fp -Raw|ConvertFrom-Json;if($b.Count -ne 1 -or $f.id -cne $row.id -or $f.expected_reason -cne $b[0].expected_reason -or $f.stage -cne $b[0].stage){throw 'FIXED_CASE_CHANGED'};[ordered]@{id=$row.id;fixture=(Id $fp);reason=$f.expected_reason;stage=$f.stage;expected_target_counts=$f.expected_target_counts}})
+$parent=@('exact_time','event_clock_core','state_owner','snapshot_codec','file_ports','receiver_protocol','evidence_admission','deadline_receive','bound_ack_session','receiver_session','receiver_bridge','receiver_finish','live_file_transport')
+$child=@('exact_time','event_clock_core','state_owner','snapshot_codec','receiver_protocol','receiver_finish','receiver_worker_candidate')
+$sourceRows=@(foreach($f in Get-ChildItem -LiteralPath (Join-Path $root 'source') -File){$name=$f.Name.Replace('.py.inactive.txt','');$roles=@('root_static_authoring');if($parent -contains $name){$roles+='guarded_parent_loader'};if($child -contains $name){$roles+='guarded_child_loader'};[ordered]@{module=$name;identity=(Id $f.FullName);permitted_consumers=$roles;original_preserved=($name -notin @('live_file_transport','receiver_finish','receiver_worker_candidate'))}})
+if($sourceRows.Count -ne 15){throw 'SOURCE_SET_COUNT'}
+Save 'SOURCE_MANIFEST.json' ([ordered]@{kind='R3_SOURCE_MANIFEST';files=$sourceRows;original_count=12;new_candidate_count=3;native_ready=$false;approved=$false;usable=$false;contract_adopted=$false})
+$keys=@($plan.target_profile_keys)+@('receiver_worker_candidate.run_receiver','receiver_worker_candidate._consume_record')
+$bindings=@(foreach($key in $keys){$dot=$key.IndexOf('.');$module=$key.Substring(0,$dot);$wanted=$key.Substring($dot+1);$path=Join-Path $root ('source/'+$module+'.py.inactive.txt');$raw=Get-Content -LiteralPath $path -Raw;$lines=$raw.Replace("`r`n","`n").Split("`n");$class=$null;$matchesFound=@();for($i=0;$i -lt $lines.Length;$i++){if($lines[$i] -match '^class\s+(\w+)'){$class=$Matches[1]};$q=$null;$indent=0;if($lines[$i] -match '^def\s+(\w+)'){$class=$null;$q=$Matches[1]}elseif($class -and $lines[$i] -match '^    def\s+(\w+)'){$q=$class+'.'+$Matches[1];$indent=4};if($q -ceq $wanted){$end=$lines.Length;for($j=$i+1;$j -lt $lines.Length;$j++){if($lines[$j].Trim() -eq '' -or $lines[$j].TrimStart().StartsWith('#')){continue};$space=$lines[$j].Length-$lines[$j].TrimStart().Length;if($space -le $indent){$end=$j;break}};$span=($lines[$i..($end-1)] -join "`n");$matchesFound+=,[ordered]@{function=$key;path=$path;file_sha256=(Id $path).sha256;start_line=$i+1;end_line_inclusive=$end;span_sha256=(HashText $span);span_rule='LF normalized; def line inclusive through before next noncomment/nonblank line at same/lower indentation; join without appended LF'}}};if($matchesFound.Count -ne 1){throw ('FUNCTION_BINDING_AMBIGUOUS:'+ $key)};$matchesFound[0]})
+Save 'FUNCTION_BINDINGS.json' ([ordered]@{kind='STATIC_SOURCE_FUNCTION_BINDINGS';count=$bindings.Count;functions=$bindings;case_bindings=$caseRows})
+$ready=Get-Content -LiteralPath (Join-Path $root 'READY_INPUTS.json') -Raw|ConvertFrom-Json
+$allExisting=@(foreach($f in Get-ChildItem -LiteralPath $root -File -Recurse|Where-Object{$_.FullName -notmatch '[\\/](results|arena|delivery)[\\/]'}){
+ $id=Id $f.FullName;$rel=$f.FullName.Substring($root.Length+1).Replace('\','/');$consumers=@('root_static_and_preservation');$producer='R3 root authoring';
+ if($rel.StartsWith('source/')){$r=@($sourceRows|Where-Object{$_.identity.path -ceq $f.FullName})[0];$consumers=$r.permitted_consumers;if($r.original_preserved){$producer='R3 intake raw copy; origin bound in INTAKE'}}
+ elseif($rel -in @('validation/run.py','validation/harness_cases.py','validation/launch_once.ps1')){$consumers+=@('one_parent_launcher_or_harness')}
+ elseif($rel -in @('validation/runtime_support.py','validation/receiver_entry.py')){$consumers+=@('guarded_parent_or_child_bootstrap')}
+ elseif($rel.StartsWith('fixtures/') -or $rel -in @('CONFIG.json','VALIDATION_PLAN.json','SOURCE_MANIFEST.json')){$consumers+=@('sealed_parent_and_child_identity_checks','parent_harness')}
+ [ordered]@{logical_name=$rel;exact_absolute_path=$id.path;bytes=$id.bytes;sha256=$id.sha256;producer=$producer;permitted_consumer=$consumers;existing_input_or_future_output='EXISTING_INPUT';readback='identified'}}
+)
+$future=@(
+ [ordered]@{path=(Join-Path $root 'PRESEAL.json');producer='root preseal';consumer=@('launcher','parent_bootstrap','child_bootstrap');status='NOT_YET_CREATED';bytes=$null;sha256=$null},
+ [ordered]@{path=(Join-Path $root 'EXECUTION_RESERVATION.json');producer='launcher exclusive reservation';consumer=@('root preservation');status='NOT_YET_CREATED';bytes=$null;sha256=$null},
+ [ordered]@{path=(Join-Path $root 'PYTHON_SESSION_RETURN.json');producer='launcher after one Python session';consumer=@('root preservation');status='NOT_YET_CREATED';bytes=$null;sha256=$null},
+ [ordered]@{path=(Join-Path $root 'results/*');producer='launcher stdout/stderr then parent evidence';consumer=@('root preservation');status='NOT_YET_CREATED';bytes=$null;sha256=$null},
+ [ordered]@{path=(Join-Path $root 'arena/*');producer='case harness/FilePorts/owned session/receiver by DIRECTORY_CONTRACT';consumer=@('guarded_parent','owned_receiver','root preservation');status='NOT_YET_CREATED';bytes=$null;sha256=$null}
+)
+Save 'READY_INPUTS_COMPLETION.json' ([ordered]@{kind='R3_EXACT_ROLE_AND_OUTPUT_BINDINGS';initial_ready=(Id (Join-Path $root 'READY_INPUTS.json'));existing_inputs=$allExisting;read_only_references=@($ready.existing_inputs|Where-Object{$_.existing_input_or_future_output -eq 'EXISTING_REFERENCE'});future_outputs=$future;status='AUTHORING_BOUND_AWAITING_PRESEAL_NOT_TEST_STARTED';RBI_R1_READY_01='PRODUCERS_CONSUMERS_IDENTITIES_AND_NOT_CREATED_OUTPUTS_SEPARATED'})
+$t=[Diagnostics.Stopwatch]::GetTimestamp()
+if(($t-5348059629301)/10000000 -gt 2400){throw 'PREPARATION_LIMIT'}
+Save 'STATIC_PREPARATION.json' ([ordered]@{kind='STATIC_SCOPE_CHECKS_NOT_FUNCTIONAL_TEST';original12_unchanged=$true;worker_body_reverse_matches=$true;worker_original_trailing_newline_characters=$original.Length-$original.TrimEnd([char[]]"`r`n").Length;worker_candidate_trailing_newline_characters=$candidate.Length-$candidate.TrimEnd([char[]]"`r`n").Length;worker_changes=@('finish helper import','MAX_REQUESTS 19 to 2','bound finish wait after ACK2','terminal newline as separately counted');fixed_cases=12;function_bindings=$bindings.Count;source_files=15;target_execution=0;preparation_end_tick=$t;preparation_elapsed_seconds=($t-5348059629301)/10000000;preparation_limit_seconds=2400;native_ready=$false})
+[ordered]@{kind='R3_STATIC_PREPARATION_RETURN';preparation_end_tick=$t;elapsed=($t-5348059629301)/10000000;original12_unchanged=$true;fixed_cases=12;function_bindings=$bindings.Count;target_execution=0;ready_completion=(Id (Join-Path $root 'READY_INPUTS_COMPLETION.json'));source_manifest=(Id (Join-Path $root 'SOURCE_MANIFEST.json'))}|ConvertTo-Json -Depth 5
+

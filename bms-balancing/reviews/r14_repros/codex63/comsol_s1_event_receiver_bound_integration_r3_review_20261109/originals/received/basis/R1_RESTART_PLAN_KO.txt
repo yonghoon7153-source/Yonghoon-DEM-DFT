@@ -1,0 +1,38 @@
+실제 수신자–bound ACK 통합 R1 재개안
+2026-11-06 · 문서 준비만 · 현재 입력1개 미확인 · 재개 미승인
+
+목적과 새 경로
+이전 미실행12시나리오의 구현·사전 봉인·최초 검증을 새 C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/work/microshort_s1_event_receiver_bound_integration_R1_20261106 에서 수행하는 별도 승인안이다. 실행 폴더는 현재 만들지 않았다. 승인 뒤 첫 작업 전에 새 시간 원점을 잡고, root가 이미 있거나 부모 위치·신원이 불명확하면 쓰지 않고 중지한다. 원 중지 폴더와 기존 ZIP/실패/rc=null을 그대로 보존한다.
+
+현재 입력 확인
+기존 SOURCE_BASIS16행 중15개는 현재 크기/SHA가 일치한다. 과거 R2 검토 ZIP의 기록된 Desktop 경로1개는 비어 있다. 기대값은4,997,257B / ea8cdadc62d42e8e324421b8572f17faebf952ec01c2c0863a458fedb0ad3005다. 동일 파일의 현재 절대 경로나 원파일을 받아 식별을 연결하기 전에는 실행하지 않는다. 광범위 탐색·fetch·다른 ZIP 선택·입력 항목 삭제로 대체하지 않는다.
+이번 문서 준비 중 c8ccf6/rc1로 그 부재를 확인했다. PowerShell 종료 오류로 해당 호출은 즉시 끝났고 새 실행 폴더·코드·시험은 생성하지 않았다. 이후 작업은 비활성 승인안 작성과 읽기 가능한 원본 보존 확인뿐이다. 과거 실행의 first-error나 시간 기록과 합치지 않는다.
+최신 중지 검토 ZIP191,679B / c131074cb3d1e560dd2967a5f4a66c0e1cd8c31e71125bbdf80156ec75120643는 사용자 제공 식별과 일치했다. 내부 검토를 다시 수행했다는 주장은 아니다.
+
+이번에 보완할 네 절차
+1. 실제 목록·manifest의 정확 이름만 사용한다. 원문은 basis/SCOPE.json과 basis/PROPOSAL_KO.txt다. SCOPE.txt/PROPOSAL.txt 같은 추정 이름을 열지 않는다. 주담당이 초기 입력 열람·생성·쓰기·읽기를 직렬 수행한다. 보조 담당에는 READY_INPUTS 확인 뒤 필요한 원문을 직접 전달하며 별도 파일 도구 실행을 맡기지 않는다.
+2. PowerShell은 처음부터 ErrorActionPreference=Stop과 필요한 ErrorAction Stop을 적용한다. native 외부 프로그램 rc는 별도로 확인한다. 첫 실패 이후 다음 파일 읽기를 같은 호출 안에서 계속하지 않는다. try/catch로 실패를 삼키거나 정상 반환으로 바꾸지 않는다.
+3. 도구 반환 전체를 보존한다. 출력 문자열만 전달하지 않고 chunk/rc/wall/session/output 등 실제 반환 객체를 저장한다. 오류·취소·실행 중·반환 누락을 구분한다. 원래 rc가 없으면 null/미확보로 기록하며 이후 포장 rc0으로 대신하지 않는다.
+4. intake의 폴더 생성 뒤 INTAKE.json·CONFIG.json·DIRECTORY_CONTRACT.json을 모두 신규 작성하고 실제 재읽기·내용/크기/SHA 확인을 마친 뒤 READY_INPUTS.json을 생성·재읽기한다. 이 증거 전에는 intake 전체 완료나 구현 착수로 표시하지 않는다. DIRECTORY_RESPONSIBILITY_PLAN.json은 요구 명세이며 미래 실제 계약을 작성했다는 증거가 아니다.
+
+폴더·봉인
+intake, launcher, harness, FilePorts, receiver session, 보존 담당의 생성 책임을 각 경로마다 하나로 고정한다. results/arena를 서로 두 번 생성하지 않는다. logger가 먼저 만든 두 로그와 harness가 기대하는 목록이 일치해야 한다. 초기 계약 문서는 root만 작성한다. 실제 필요한 파일명/경로/생성자/소비자/크기/SHA의 READY_INPUTS가 위임의 유일한 입력 목록이다.
+사전 시험 봉인은 소스·계약·엔진·하네스·개별 fixture·정확 argv/cwd·기대 이유/도달/호출 수를 고정한다. 결과·전달 경로는 새 산출물 영역으로 따로 목록화한다. 포장 manifest를 사전 봉인으로 대신하지 않는다. 미래 파일의 미완 placeholder를 실제 존재 파일로 열람하지 않는다.
+
+기능 범위는 동일
+basis/CASE_PLAN.json 원바이트4719B / aafea26c5c0fdaa3c6a33b36dc6b4e4944bb2bf3ae3a1b9a6f0eb928530c1084 그대로다.
+F01–F10의 새 연결부 오프라인10 뒤 L01–L02의 실제 동일 자식 순차2를 부모Python1세션에서 수행한다. 앞단 예상 밖 실패이면 자식을 시작하지 않는다. 실제 데이터 요청2, finish제어1이며 기존20/24/16사례나19요청suite를 반복하지 않는다.
+L01의 정상 전달1회와 L02의 실제 유효ACK 뒤 합성C5=B 예상 거부1회를 구분한다. 수신자 소비v1과 부모 검증headv0/최초 실패 보존을 확인한다. 실제 수신자는 부모의 판정·finish 뒤 종결하며 실제rc/lifecycle을 확인한다. finish는 제3데이터 요청이나 실패 해제가 아니다.
+R2 생산10개와 기존 session/worker 원본은 보존한다. 원 승인안에 정한 새 파일 callback·실제 생존 facade·finish검증·worker의2요청/finish 종료 변경만 새 사본으로 작성한다. 실제 근거 입장은 FIXTURE_ONLY이고 운영 시계로 승격하지 않는다. 과거 pilot의 UNBOUND를 우회하지 않는다.
+
+한도
+새 원점 전체3600초·새root50MiB. 준비2400·봉인300·부모Python1세션180·보존전달600·미완기록120초, 단계 전용0. 자식1세션120초는 부모180초 안에 포함한다. 행정 실제 경과는 합성case clock과 분리한다. 파일 상한은 source/fixture/log/result/ZIP/외부반환을 포함한 새root 전체다.
+소유 자식 생존/poll/wait와 시험용시간·파일IO만 새 실제 연결 범위로 제안한다. 예상 밖 실패 시 직접 보유한 자식Popen terminate최대1회/종료확인5초, 다른PID/Job/taskkill/셸/권한 fallback0. 강제 종료는 graceful/정상rc로 바꾸지 않는다.
+첫 예상 밖 실패 뒤 허용되는 일은 대상 중지, 오류·미완 기록, 이미 소유한 자식의 한정 정리, 자료 보존·전달뿐이다. 추가 구현·정정·다른 경로읽기 재시도·별도probe·자동재시험은 없다.
+
+제출
+채택 원문/출처, 실제 필수 intake문서와 READY_INPUTS, 원도구 반환 전체, 최소diff·원본불변표, 사전봉인,12사례결과/원문trace와stdout/stderr, 부모/자식rc, 보존/단계별예산, 결과ZIP, ZIP밖 DELIVERY_RECORDS.json과 DELIVERY_TRANSPORT_TOOL_RETURN.json을 함께 제출하고 멈춘다.
+과거 snapshot/pending을 소급 변경하지 않는다. 원래12NOT_RUN/미평가/rc=null과 별도 새 시도를 구분한다. 기록 수용을 절차 전체PASS나 운영완료로 확대하지 않는다.
+
+현재 한계
+지금은 제안 문서 작성뿐이며 새 후보·harness·fixture·READY_INPUTS·실제DIRECTORY_CONTRACT·시험·수신자를 만들지 않았다. 네 운영기한/reserve=null, JOB_CURRENT_COMMIT 및 기존OPEN, contract_adopted/native_ready/approved/usable=false와 gate INCOMPLETE 유지. COMSOL/JVM/compile/solve·Job/CIM·운영API 조사·정책 변경·실제approval/release/runtime/token은 제외한다.

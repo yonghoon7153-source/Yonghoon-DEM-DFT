@@ -1,0 +1,21 @@
+{
+  "kind": "STATIC_SCOPE_CHECKS_NOT_FUNCTIONAL_TEST",
+  "original12_unchanged": true,
+  "worker_body_reverse_matches": true,
+  "worker_original_trailing_newline_characters": 1,
+  "worker_candidate_trailing_newline_characters": 2,
+  "worker_changes": [
+    "finish helper import",
+    "MAX_REQUESTS 19 to 2",
+    "bound finish wait after ACK2",
+    "terminal newline as separately counted"
+  ],
+  "fixed_cases": 12,
+  "function_bindings": 18,
+  "source_files": 15,
+  "target_execution": 0,
+  "preparation_end_tick": 5357777554338,
+  "preparation_elapsed_seconds": 971.7925037,
+  "preparation_limit_seconds": 2400,
+  "native_ready": false
+}

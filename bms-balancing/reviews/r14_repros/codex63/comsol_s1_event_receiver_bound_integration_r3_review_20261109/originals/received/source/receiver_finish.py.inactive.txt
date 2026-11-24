@@ -1,0 +1,66 @@
+"""Two-request test lifecycle finish binding; no operating authority."""
+import json
+import time
+from pathlib import Path
+from receiver_protocol import ProtocolError, canonical_bytes, read_bounded, plain_path, write_new_json, publish_marker
+
+KEYS = frozenset(("kind", "session_ref", "source_manifest_sha256", "receiver_pid", "request_count", "last_request_sha256"))
+
+def make_finish_expected(session_ref, source_manifest_sha256, receiver_pid, last_request_sha256):
+    if (type(session_ref) is not str or not session_ref or type(receiver_pid) is not int or receiver_pid <= 0
+        or any(type(h) is not str or len(h) != 64 or any(c not in "0123456789abcdef" for c in h)
+               for h in (source_manifest_sha256, last_request_sha256))):
+        raise ProtocolError("FINISH_FORMAT_INVALID")
+    return dict(kind="RECEIVER_FINISH_V1", session_ref=session_ref,
+                source_manifest_sha256=source_manifest_sha256, receiver_pid=receiver_pid,
+                request_count=2, last_request_sha256=last_request_sha256)
+
+def validate_finish(raw, expected):
+    try:
+        if type(raw) is not bytes or len(raw) > 16384:
+            raise ValueError("size")
+        value = json.loads(raw.decode("utf-8"))
+        if type(value) is not dict or set(value) != KEYS or canonical_bytes(value) != raw:
+            raise ValueError("format")
+    except (UnicodeError, ValueError, TypeError, OverflowError, RecursionError) as error:
+        raise ProtocolError("FINISH_FORMAT_INVALID") from error
+    if value["session_ref"] != expected["session_ref"]:
+        raise ProtocolError("FINISH_SESSION_MISMATCH")
+    if raw != canonical_bytes(expected):
+        raise ProtocolError("FINISH_BINDING_MISMATCH")
+    return value
+
+def wait_finish(arena, expected, started, clock=time.monotonic, sleeper=time.sleep):
+    def alive():
+        if clock() - started >= 120:
+            raise ProtocolError("RECEIVER_LIFETIME_EXCEEDED")
+    alive()
+    mailbox = Path(arena) / "mailbox"
+    while True:
+        alive()
+        plain_path(mailbox, True)
+        marker = mailbox / "FINISH.ready"
+        alive()
+        try:
+            marker.lstat()
+        except FileNotFoundError:
+            alive()
+            sleeper(0.01)
+            continue
+        alive()
+        raw_marker = read_bounded(marker, 1)
+        alive()
+        if raw_marker != b"":
+            raise ProtocolError("FINISH_FORMAT_INVALID")
+        raw = read_bounded(mailbox / "FINISH.json", 16384)
+        alive()
+        result = validate_finish(raw, expected)
+        alive()
+        return result
+
+def publish_finish(arena, expected):
+    mailbox = Path(arena) / "mailbox"
+    plain_path(mailbox, True)
+    write_new_json(mailbox / "FINISH.json", expected, 16384)
+    publish_marker(mailbox / "FINISH.ready")
+

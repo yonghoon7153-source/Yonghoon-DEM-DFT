@@ -1,0 +1,31 @@
+{
+  "kind": "C4A_IMPL_V2_STATIC_IDENTITY_CHECK",
+  "pin": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "prior_pin": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "attachments": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4A_IMPL_REQUEST_v2_20261106.md",
+      "bytes": 34092,
+      "sha256": "d85e9a64ed3bbbbfa1fe49360d5a9c5f2132f61d73e22f51ed386071f300732d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4A_IMPL_REQUEST_SEND_v2_20261106.md",
+      "bytes": 3990,
+      "sha256": "9031a651256f45f72ba60370bfa14fe5a05ebcb7873df18625f9a86c79e6823e"
+    }
+  ],
+  "source_copies": 133,
+  "current_raw_fetches": 3,
+  "prior_ledger_prefix_preserved": true,
+  "prior_request_and_scope_unchanged": true,
+  "production_sources_and_tests_unchanged_in_comparison": true,
+  "comparison_file_count": 262,
+  "comparison_commits": 11,
+  "user_selection_provenance": "Read-only ledger section 129; not independent authentication of original user chat. No new approval inferred.",
+  "prior_review_remote_whole_archive_bytes_revalidated": false,
+  "target_execution": 0,
+  "tests": 0,
+  "pytest_collection": 0,
+  "data_opening": 0,
+  "COMSOL": 0
+}

@@ -1,0 +1,275 @@
+{
+  "kind": "REIL_C4A_IMPL_REQUEST_V2_PREREVIEW_DECISION",
+  "date": "2026-11-08",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "pin": "fa502acb68f6d103a880d9431bb2e3f1c4013588",
+  "prior_pin": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "decision": "REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL",
+  "finding_count": 4,
+  "findings": [
+    {
+      "id": "C4A-IMPL-N1",
+      "priority": "P1",
+      "status": "OPEN_V2_CORRECTION_REQUIRED",
+      "title": "회귀 허용표·계수 범위·호출 전 차단·RED 준비 순서 미완",
+      "request_lines": "114–119,196–218,234–236",
+      "subissues": [
+        {
+          "key": "allowlist",
+          "finding": "0b1*/0b2*에는 K1만 허용하지만 실제 supervise fork가 K5를 호출한다. 0a/c4e 중단 시험은 살아 있는 worker를 terminate/kill하며 K4도 필요하다. K6가 K3의 부분집합으로 같은 상한 안에 드는지도 명시해야 한다.",
+          "required": "실제 nodeid별 K1–K7 종류·상한·환경을 소스와 대조해 RED 전 고정한다. 예시 0b2의 c_8 정상 경로는 두 supervise wave의 K5 두 호출이다. 상한 초과를 본 뒤 값을 올리지 않는다."
+        },
+        {
+          "key": "coverage",
+          "finding": "부모 pytest -p 래퍼만으로 이미 결속된 기본인자/별칭, fork 메모리, 분리된 Python 자식과 손주의 호출을 모두 계수한다고 할 수 없다.",
+          "required": "수집 이전 설치, setup/call/teardown과 수집 단계 귀속, context별 Process.start, fork 공유/회수, 별도 자식·손주 기록의 nodeid 결속 및 누락 실패 처리를 명세한다. T16에 명시된 가짜 함수 계수만으로 이 전체 범위 검증을 주장하지 않는다."
+        },
+        {
+          "key": "before_call",
+          "finding": "원 함수를 먼저 실행하고 세션 끝에 위반을 판정하면 금지 호출·상한 초과·K7 읽기가 이미 발생한다.",
+          "required": "원 함수 호출 전에 권한·잔여 한도를 검사하고 원자적으로 실행 몫을 예약한다. 위반 시 해당 실제 호출을 차단하고 원인·시도/차단/실행 계수를 보존해 중단한다. 사후 집계는 보조 확인이다."
+        },
+        {
+          "key": "bootstrap",
+          "finding": "b0가 새 test_reil_c4a.py를 수집하지만 새 시험·골격·계수기는 다음 b에서 작성한다. RED에서 계수기를 쓰면서 T16까지 모두 골격 실패해야 한다는 기대도 구분이 없다.",
+          "required": "수집 가능한 시험·골격과 동작하는 계수기 준비/봉인 → 수집 1회 및 NODEIDS/ALLOW 고정 → RED → 구현 → GREEN 순서로 정정한다. 계수기 자체 검증과 대상 골격의 기대 RED 실패를 분리하고 수집/RED/GREEN의 기록과 허용 범위를 고정한다."
+        }
+      ],
+      "evidence": [
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4_0b1_fix.py",
+          "lines": "80–83,99–103,142–144,184–187"
+        },
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4_0b1_fix2.py",
+          "lines": "97–102"
+        },
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4_0b2.py",
+          "lines": "770–776"
+        },
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4_0a.py",
+          "lines": "109–122"
+        },
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4e.py",
+          "lines": "323–337,508–535"
+        },
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4e1_launch.py",
+          "lines": "41,60–95"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4e1_launch.py",
+          "lines": "373–385,777,818–819"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_monitor.py",
+          "lines": "242,273–279,344–355"
+        }
+      ]
+    },
+    {
+      "id": "C4A-IMPL-N3",
+      "priority": "P1",
+      "status": "OPEN_V2_CORRECTION_REQUIRED",
+      "title": "경고 잘림과 정확성·저장량 의미 및 stderr 표본 한계",
+      "request_lines": "73–89,191",
+      "subissues": [
+        {
+          "key": "distinct",
+          "finding": "UTF-8 240바이트 접두사가 같은 서로 다른 경고는 한 키로 합쳐지지만 overflow==0이면 exact=true가 된다.",
+          "required": "원문 고유 수라면 잘림도 정확성 상실로 처리하고 lower_bound=len(keys)+int(overflow>0)처럼 별도 의미를 정의한다. 또는 잘린 키 고유 수로 명시한다. 접두사 충돌 사례를 T11에 넣는다."
+        },
+        {
+          "key": "retained_bytes",
+          "finding": "무제한 정확한 정수와 키별 계수를 유지하면서 총 저장량을 20×240 B+정수 다섯으로 고정하는 식은 성립하지 않는다.",
+          "required": "키 payload 4800 B·객체/계수 개수 제한과 총 메모리 바이트 한도를 구분한다. 전체 고정 바이트 상한이 필요하면 유한 계수 표현·초과 처리를 정한다."
+        },
+        {
+          "key": "stderr",
+          "finding": "기존 감시는 기본 5초 간격 디스크 표본이며 마지막 종료 뒤 용량 재측정 없이 반환 가능하다. stderr 1 GiB 실제 저장 한도 및 모든 초과의 wave 중지를 보장하지 않는다.",
+          "required": "표본 중지 임계값으로 한정하고 새 adapter/launcher의 마지막 용량 확인·초과 시 유효성/인계 거부·후속 wave 차단을 명세한다. 실제 쓰기 상한을 원하면 쓰기 단계 제한을 따로 정한다. 감시가 끝난 뒤 기록 구간도 책임자를 둔다."
+        }
+      ],
+      "evidence": [
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_h.py",
+          "lines": "737–748,773–804,836–848,875"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_monitor.py",
+          "lines": "237–238,319–342,357–367"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4e1_launch.py",
+          "lines": "875–877"
+        }
+      ]
+    },
+    {
+      "id": "C4A-IMPL-N4",
+      "priority": "P1",
+      "status": "OPEN_V2_CORRECTION_REQUIRED",
+      "title": "unit 완료·최종 drain·정리 결과를 다음 소비 전에 판정해야 함",
+      "request_lines": "53–60,95–101,158–165,192–194,245–257",
+      "subissues": [
+        {
+          "key": "late_completion",
+          "finding": "unit이 모두 끝나면 닫는 규칙은 899.8초 관측 뒤 900.5초에 완료된 마지막 task의 초과를 놓친다. rule_snapshot에는 완료 timestamp가 없다.",
+          "required": "unit 닫힘 전 완료 시각 근거와 900초 초과 판정을 명세한다. 기존 최종 행의 t_end와 시작 근거 등 실제 가용한 값을 결속하고, 미가용이면 정상 완료를 추정하지 않는다. 관측 사이 늦은 완료를 가짜 시계 사례로 다룬다."
+        },
+        {
+          "key": "late_row_validation",
+          "finding": "기존 stop_rule은 루프 내부에만 있다. 기한/오류로 빠진 뒤 final drain으로 받은 done 행은 추가 비용 형식 검사 없이 COMPLETED가 된다. 최종 무결성은 n_eval=0을 허용하며 wall을 요구하지 않아 잘못된 정상 행이 인계될 수 있다.",
+          "required": "runner_a가 최종 returned states 전체를 사유 유무와 관계없이 재검증한다. converged/budget의 양의 n_eval·유한 비음수 wall을 검사하고 solver_error 예외를 구분한다. 최초 중지 사유를 유지하면서 추가 오류를 보존하고 후속 wave/Parent/C4-B 소비 전에 배제한다."
+        },
+        {
+          "key": "cleanup_gate",
+          "finding": "owned_alive_after>0 또는 drain_ok=false를 최종 유효성 false로만 기록하면 HB는 global_stop=None을 보고 다음 rho를 시작할 수 있다.",
+          "required": "adapter가 cleanup/필수 증거 실패를 HB 반환 전에 지속 전역 중지에 연결한다. global_stop=None + alive=1 및 drain=false의 후속 runner 호출 0을 명세한다."
+        },
+        {
+          "key": "time_boundaries",
+          "finding": "40초는 중지 경로의 명목 join 배분 합이다. 정상 경로는 worker별 grace20초(4개이면80초), 이후 drain이 별도다. 기록 원점 D_meas/stop은 정리 구간과 겹친다.",
+          "required": "정상/중지 cleanup 경로와 drain 포함 범위를 구분하고 40초를 무조건 wall 상한으로 쓰지 않는다. 기록 900초가 정리를 포함하는지, 아니면 정리 뒤 시작하는지와 단계 절대 마감 적용을 고정한다. 28800 및 36000 산술 자체는 맞다."
+        }
+      ],
+      "evidence": [
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_monitor.py",
+          "lines": "193–221,290–292,315–316,336–367"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_h.py",
+          "lines": "876–877"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_hb.py",
+          "lines": "1105–1123,1165–1174"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4e_run.py",
+          "lines": "176–189,227–228"
+        }
+      ]
+    },
+    {
+      "id": "C4A-IMPL-N6",
+      "priority": "P2",
+      "status": "OPEN_V2_CORRECTION_REQUIRED",
+      "title": "존재하는 원장 절과 해당 실행 요청의 긍정 승인 구분",
+      "request_lines": "127–141,194",
+      "subissues": [
+        {
+          "key": "approval_binding",
+          "finding": "요청서/목록 SHA 대조와 승인 절의 존재만으로 그 절이 해당 요청의 긍정적인 C4-A 실행 승인인지 확인되지 않는다.",
+          "required": "승인 절의 종류·범위·긍정 결정 및 승인된 execution_request SHA를 확인한다. 해당 요청서가 결속한 두 소스목록·입력·시간/자원 설정과 실제 소비 인자를 대조한다. 존재하지만 무관/거절/구현 전용인 절과 요청서+인자 동시 교체를 T14에서 거부한다. 모든 값을 승인 절에 중복 저장할 필요는 없으며 승인 요청서 SHA를 통한 전이 결속이면 된다."
+        }
+      ],
+      "evidence": []
+    }
+  ],
+  "closure_map": [
+    {
+      "id": "C4A-IMPL-N1",
+      "status": "OPEN",
+      "note": "선택 (가)의 문서 기록은 수용. 허용표/계측/선차단/순서 정정 필요."
+    },
+    {
+      "id": "C4A-IMPL-N2",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "note": "세 exact-row 기대 dict의 다섯 키 추가, 기존 단언 보존, RED 전 봉인 수용. 실행 검증 아님."
+    },
+    {
+      "id": "C4A-IMPL-N3",
+      "status": "OPEN",
+      "note": "수집 시점 기록기·partial·미집계 표시는 개선. 잘림/저장량/최종 stderr 판정 미완."
+    },
+    {
+      "id": "C4A-IMPL-N4",
+      "status": "OPEN",
+      "note": "공통 절대 마감·규칙/출력/원근거 연결은 개선. 완료/최종 drain/정리 장벽과 시간 경계 미완."
+    },
+    {
+      "id": "C4A-IMPL-N5",
+      "status": "CLOSED_DOCUMENT_DEFINITION",
+      "note": "표본 정의역·0평가 solver_error 제외·통계·문자열 반환 정의 수용. 최종 drain 행까지 적용하는 연결은 N4 잔여 항목."
+    },
+    {
+      "id": "C4A-IMPL-N6",
+      "status": "OPEN",
+      "note": "목록 SHA 선대조·구현 기준/실행 요청 분리 수용. 승인 절의 의미와 요청서 결속 정정 필요."
+    },
+    {
+      "id": "C4A-IMPL-N7",
+      "status": "CLOSED_DOCUMENT_SCOPE_WITH_NONBLOCKING_CLARIFICATION",
+      "note": "계획 task별 신원·집계와 무결성 분리·정당 미완·C4-B 인계 조건 수용. 미완 행의 계획 unit 유도는 C2로 명확화."
+    },
+    {
+      "id": "C4A-IMPL-C1",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "note": "finally 한 번 게시·실패 시 재시도/덮어쓰기 금지·END_RECORD 결속 수용."
+    }
+  ],
+  "nonblocking_clarifications": [
+    {
+      "id": "C4A-IMPL-V2-C2",
+      "request_lines": "155–159",
+      "title": "미완 행의 unit은 계획 매핑에서 유도하되 관측값 불일치를 숨기지 않음",
+      "evidence": [
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_monitor.py",
+          "lines": "203–211"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_hb.py",
+          "lines": "1048–1053"
+        }
+      ],
+      "required": "미완 행의 unit은 계획 task_id→unit 매핑에서 유도한다. 원행에 unit이 있으면 먼저 불일치를 검사하고 계획값으로 덮어써 오류를 숨기지 않는다."
+    }
+  ],
+  "prior_scope_N1_N4": "CLOSED_DOCUMENT_SCOPE_RETAINED",
+  "user_choices": {
+    "N1_direction": "OPTION_A_RECORDED_IN_LEDGER_129",
+    "U1": "SPLIT_IMPLEMENTATION_AND_EXECUTION_RETAINED",
+    "U2": "UNSELECTED_10H_PROPOSAL_ONLY",
+    "U3": "REUSE_PINNED_DATA_RETAINED",
+    "provenance": "Read-only ledger, not independently authenticated original chat; no execution approval inferred."
+  },
+  "timing_arithmetic": {
+    "stage_seconds": 28800,
+    "stage_sum_correct": true,
+    "whole_seconds_proposed": 36000,
+    "whole_sum_correct": true,
+    "values_adopted_by_review": false
+  },
+  "source_copies": 133,
+  "attachments_match_pin": true,
+  "authorizations": {
+    "implementation": false,
+    "tests": false,
+    "actual_C4A_execution": false,
+    "COMSOL": false,
+    "external_send": false
+  },
+  "performed": {
+    "static_document_source_review": true,
+    "received_program_import_or_execution": 0,
+    "tests": 0,
+    "pytest_collection": 0,
+    "data_opening": 0,
+    "optimization": 0,
+    "installation": 0,
+    "OS_probe": 0,
+    "COMSOL": 0,
+    "target_repository_mutation": 0,
+    "external_transmission": 0
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "next_artifact": "Preserved v1/v2 plus separate corrected request v3 and N1/N3/N4/N6 response map; C2 clarification. No execution authorized."
+}
