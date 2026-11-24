@@ -4,7 +4,8 @@
 
 {#  1저자 11-24 — 믹서 원고의 문제 · 공백 · 새로움 문서를 읽기 전용으로 보인다 (app.py `/mixer/story` · 회귀 webapp/test_mixer_story_page.py).
     정본 문서 = app.py _mixstory_doc 이 읽어 redact → markdown 한 HTML 을 그대로 싣는다 (doc.html).
-    증거 표 = _mixstory_evidence — 열 (팔 × 통계 + 덧칸) · 행 (지표) · 칸 글 · 머리 = 자료 키 · 값 그대로 (ev.*).
+    증거 표 = _mixstory_evidence (ev.*) · 증거 표 2 = _mixstory_pair (pair.* · 같은 시드 B2 U ↔ C) — 같은 틀 (매크로 ev_table) ·
+    열 (팔 × 통계 + 덧칸) · 행 (지표) · 칸 글 · 머리 = 자료 키 · 값 그대로.
     그림 = 등록부 (MIXSTORY_FIGS) 둘 · 밑글 = 자료 폴더의 밑글 파일 (있으면).
     ⚠ 여기에 정본 문장 · 자료 숫자 · 지표 이름을 베끼지 않는다 — 정본 · 자료를 고치면 화면이 같이 바뀐다 (규율 ④). #}
 
@@ -73,9 +74,9 @@
   </div>
   <p class="ms-lead">
     믹서 원고의 <b>문제 정의 · 공백 · 새로움</b> 문서를 그대로 읽는다 — 이 화면은 정본 파일을 읽어 보인다 (여기에 베끼지 않는다 ·
-    정본을 고치면 화면이 같이 바뀐다).  아래에 그 문서가 가리키는 개발 판독의 접촉 지표 표와 그림 둘을 붙였다.  읽기 전용 · 계산 없음.
+    정본을 고치면 화면이 같이 바뀐다).  아래에 그 문서가 가리키는 개발 판독의 접촉 지표 표 둘과 그림 둘을 붙였다.  읽기 전용 · 계산 없음.
   </p>
-  <nav class="ms-nav"><a href="#ms-doc">문서</a><a href="#ms-ev">증거 표</a><a href="#ms-figs">그림</a></nav>
+  <nav class="ms-nav"><a href="#ms-doc">문서</a><a href="#ms-ev">증거 표</a><a href="#ms-pair">증거 표 2</a><a href="#ms-figs">그림</a></nav>
 
   <section class="ms-sec" id="ms-doc">
     {% if doc.ok %}
@@ -85,39 +86,50 @@
     {% endif %}
   </section>
 
-  <section class="ms-sec" id="ms-ev">
-    <h2>증거 표 — {% if ev.arms %}{{ ev.arms|join(' ↔ ') }} {% endif %}접촉 지표
-      <span class="ms-pill warn">개발 자료 · 한 시드 · 판정 아님 (Codex 판독 그대로)</span>
-      <small>열 이름 · 지표 이름 · 값 = 자료 그대로</small></h2>
-    {% if ev.notice %}<div class="ms-notice">⚠ {{ ev.notice }}</div>{% endif %}
-    {% if ev.label_notice %}<div class="ms-notice">⚠ 표지 확인 — {{ ev.label_notice }}</div>{% endif %}
-    {% if ev.ok %}
+  {#- 증거 표 한 판 — 두 패널이 같은 틀을 쓴다 (첫 표 = 행 ms-ev-row · data-* / 둘째 표 = 행 ms-pair-row · data-pair-* · 서로 섞이지 않는다) #}
+  {%- macro ev_table(e, rowcls, pre, note) %}
+    {% if e.notice %}<div class="ms-notice">⚠ {{ e.notice }}</div>{% endif %}
+    {% if e.label_notice %}<div class="ms-notice">⚠ 표지 확인 — {{ e.label_notice }}</div>{% endif %}
+    {% if e.ok %}
     <div class="ms-kvs">
-      {% for m in ev.meta %}<span class="ms-kv" data-meta="{{ m.key }}"><b>{{ m.key }}</b> <code>{{ m.text }}</code></span>{% endfor %}
-      {% if ev.redacted %}<span>⟨인용금지 가림 적용⟩</span>{% endif %}
+      {% for m in e.meta %}<span class="ms-kv" data-{{ pre }}meta="{{ m.key }}"><b>{{ m.key }}</b> <code>{{ m.text }}</code></span>{% endfor %}
+      {% if e.redacted %}<span>⟨인용금지 가림 적용⟩</span>{% endif %}
     </div>
     <div class="ms-evwrap">
     <table class="ms-ev">
       <thead>
         <tr><th rowspan="2">지표 <small>(자료 키)</small></th>
-          {%- for arm in ev.arms %}<th colspan="{{ ev.stats|length }}" class="ms-arm">{{ arm }}</th>{% endfor -%}
-          {%- for x in ev.extras %}<th rowspan="2" class="ms-arm">{{ x }}</th>{% endfor %}</tr>
-        <tr>{% for arm in ev.arms %}{% for st in ev.stats %}<th class="ms-stat">{{ st }}</th>{% endfor %}{% endfor %}</tr>
+          {%- for arm in e.arms %}<th colspan="{{ e.stats|length }}" class="ms-arm">{{ arm }}</th>{% endfor -%}
+          {%- for x in e.extras %}<th rowspan="2" class="ms-arm">{{ x }}</th>{% endfor %}</tr>
+        <tr>{% for arm in e.arms %}{% for st in e.stats %}<th class="ms-stat">{{ st }}</th>{% endfor %}{% endfor %}</tr>
       </thead>
       <tbody>
-      {% for r in ev.rows %}
-        <tr class="ms-ev-row" data-metric="{{ r.name }}"><th><code>{{ r.name }}</code></th>
-          {%- for c in r.cols %}{% set col = ev.columns[loop.index0] %}
-          {%- if c %}<td data-col="{{ col.key }}" title="{{ c.raw }}">{{ c.txt }}</td>{% else %}<td data-col="{{ col.key }}" class="ms-na">—</td>{% endif %}
+      {% for r in e.rows %}
+        <tr class="{{ rowcls }}" data-{{ pre }}metric="{{ r.name }}"><th><code>{{ r.name }}</code></th>
+          {%- for c in r.cols %}{% set col = e.columns[loop.index0] %}
+          {%- if c %}<td data-{{ pre }}col="{{ col.key }}" title="{{ c.raw }}">{{ c.txt }}</td>{% else %}<td data-{{ pre }}col="{{ col.key }}" class="ms-na">—</td>{% endif %}
           {%- endfor %}</tr>
       {% endfor %}
       </tbody>
     </table>
     </div>
-    <p class="ms-note">칸 글 = 유효 숫자 넷으로 줄인 값 · 칸에 마우스를 올리면 자료의 전체 값 · '—' = 자료에 없거나 숫자가 아닌 칸.
-      한 시드의 개발 판독이라 산포 · 판정 문장으로 쓰지 않는다 (해석은 위 정본 문서와 자료 폴더의 README).</p>
+    <p class="ms-note">{{ note }}</p>
     {% endif %}
-    <p class="ms-note">자료 = <code>{{ ev.path }}</code> · 판독 설명 = <code>{{ ev.dir }}/README.md</code></p>
+    <p class="ms-note">자료 = <code>{{ e.path }}</code> · 판독 설명 = <code>{{ e.dir }}/README.md</code></p>
+  {%- endmacro %}
+
+  <section class="ms-sec" id="ms-ev">
+    <h2>증거 표 — {% if ev.arms %}{{ ev.arms|join(' ↔ ') }} {% endif %}접촉 지표
+      <span class="ms-pill warn">개발 자료 · 한 시드 · 판정 아님 (Codex 판독 그대로)</span>
+      <small>열 이름 · 지표 이름 · 값 = 자료 그대로</small></h2>
+    {{ ev_table(ev, 'ms-ev-row', '', "칸 글 = 유효 숫자 넷으로 줄인 값 · 칸에 마우스를 올리면 자료의 전체 값 · '—' = 자료에 없거나 숫자가 아닌 칸.  한 시드의 개발 판독이라 산포 · 판정 문장으로 쓰지 않는다 (해석은 위 정본 문서와 자료 폴더의 README).") }}
+  </section>
+
+  <section class="ms-sec" id="ms-pair">
+    <h2>증거 표 2 — {% if pair.arms %}{{ pair.arms|join(' ↔ ') }} {% endif %}접촉 지표 · 같은 시드 짝
+      <span class="ms-pill warn">개발 자료 · 한 시드 · 판정 아님 (Codex 판독 그대로)</span>
+      <small>열 이름 · 지표 이름 · 값 = 자료 그대로</small></h2>
+    {{ ev_table(pair, 'ms-pair-row', 'pair-', "칸 글 = 유효 숫자 넷으로 줄인 값 · 칸에 마우스를 올리면 자료의 전체 값 · 덧칸의 글 · 참거짓 (정확한 분수 · 등록 방향 관측 여부) 은 자료 그대로 · '—' = 자료에 없거나 숫자가 아닌 칸.  같은 초기 배치 한 쌍이라 시드 산포 · 판정 문장으로 쓰지 않는다 (해석 · 한정 = 자료 폴더의 README).") }}
   </section>
 
   <section class="ms-sec" id="ms-figs">
@@ -138,7 +150,7 @@
 
   <footer class="ms-foot">
     정본 = <code>{{ doc_path }}</code> (이 화면은 그 파일을 읽는다 · 문장 · 숫자의 출처는 그 문서) ·
-    증거 표 = <code>{{ ev.path }}</code> · 그림 = 같은 폴더의 등록된 PNG 둘.  읽기 전용 · 이 화면은 계산하지 않는다.
+    증거 표 = <code>{{ ev.path }}</code> · 증거 표 2 = <code>{{ pair.path }}</code> · 그림 = 첫 표 폴더의 등록된 PNG 둘.  읽기 전용 · 이 화면은 계산하지 않는다.
     화면으로 나가는 글은 변환 전에 인용 금지 등록부 (<code>ledger_view.redact</code>) 를 지난다.
   </footer>
 </div>

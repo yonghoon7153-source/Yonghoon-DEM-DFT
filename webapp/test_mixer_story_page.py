@@ -10,6 +10,8 @@
 증거 표 = docs/reviews/mixer_b2_flow_20261124/b1_b2_u_contacts.json (지표 이름 · 값 = 자료 그대로 · 개발 자료 · 한 시드 · 판정 아님 ·
 Codex 판독 그대로) · 자료가 없거나 깨져도 200 + 안내 · 정본은 그대로.  그림 둘 = 등록부 (MIXSTORY_FIGS) 만 · 등록부 밖 이름
 (경로 꼴 포함) = 404 · 밑글 = 같은 폴더 frame_caption.md (있으면 · redact → markdown).
+둘째 패널 (11-24 밤 · 반입 ㊱) = docs/reviews/mixer_b2_pair_return_20261124/b2_u_c_contacts.json (같은 시드 B2 U ↔ C 짝 ·
+같은 읽기 규칙 · 덧칸의 글 · 참거짓만 자료 그대로 보인다 · 팔 칸은 숫자만) · 첫 표와 행 · 속성이 섞이지 않는다 (ms-pair-row · data-pair-*).
 ⚠ 정본은 v1 → v2 로 고쳐지는 중이다 — 이 시험은 문구에 기대지 않는다 (갱신 표지 · '## 2.' 제목 줄 · '## ' 절 수만 정본에서 읽는다).
 ⚠ 금지값 (claims.json quotation_ban) 을 이 파일에 적지 않는다 — redact 실물 검사는 등록부에서 실행 중에 읽는다.
 """
@@ -29,6 +31,9 @@ ROOT = HERE.parent
 DOC = ROOT / 'docs' / 'reviews' / 'mixer_problem_gap_novelty_20261124.md'
 DATA = 'docs/reviews/mixer_b2_flow_20261124'
 EVJ = ROOT / DATA / 'b1_b2_u_contacts.json'
+#: 둘째 패널 (11-24 밤 · 반입 ㊱) — 같은 시드 B2 U ↔ C 짝 판독 · 같은 읽기 규칙 + 덧칸 글 · 참거짓은 자료 그대로
+PDATA = 'docs/reviews/mixer_b2_pair_return_20261124'
+PEVJ = ROOT / PDATA / 'b2_u_c_contacts.json'
 CAP = ROOT / DATA / 'frame_caption.md'
 TPL = HERE / 'templates' / 'mixer_story.html'
 FIGS = ('b2_u_cross_section.png', 'b2_u_second_turn.png')
@@ -106,6 +111,26 @@ def _ev_rows_html(html):
         cells = re.findall(r'<td data-col="([^"]*)"(?: title="([^"]*)")?[^>]*>([^<]*)</td>', seg)
         out.append((m.group(1) if m else None, [(c, t.strip(), ti) for c, ti, t in cells]))
     return out
+
+
+def _pair_rows_html(html):
+    """둘째 표 (B2 짝) 의 행 → [(지표 키, [(열 키, 글, title)])] (화면 순서 · 첫 표 행과 섞이지 않는다)."""
+    out = []
+    for p in html.split('<tr class="ms-pair-row"')[1:]:
+        seg = p.split('</tr>')[0]
+        m = re.search(r'data-pair-metric="([^"]*)"', seg)
+        cells = re.findall(r'<td data-pair-col="([^"]*)"(?: title="([^"]*)")?[^>]*>([^<]*)</td>', seg)
+        out.append((m.group(1) if m else None, [(c, t.strip(), ti) for c, ti, t in cells]))
+    return out
+
+
+def _txt_cell(v):
+    """둘째 표 덧칸 — 글 = 그대로 · 참거짓 = JSON 철자 (true · false) · 그 밖 = 숫자 꼴 (_num_txt)."""
+    if isinstance(v, bool):
+        return 'true' if v else 'false'
+    if isinstance(v, str):
+        return v
+    return _num_txt(v)
 
 
 def _doc_region(html):
@@ -490,6 +515,105 @@ def main():
             ok46 = (dd.get('ok') is True and hh.startswith('<pre>') and '&lt;b>꺾쇠-MS9&lt;/b> &amp; 끝' in hh
                     and '<b>꺾쇠' not in hh and 'MIXSTORY:UPDATED' not in hh)
     chk('㊻ markdown 이 없으면 <pre> 대체 (& < 이스케이프 · 표지 없음) — _emod_doc 과 같은 대체', ok46)
+
+    # ═══ G. 둘째 패널 — 같은 시드 B2 U ↔ C 짝 (11-24 밤 · 반입 ㊱) ═══
+    pev = json.loads(PEVJ.read_text(encoding='utf-8')) if PEVJ.is_file() else {}
+    pmx = pev.get('metrics') if isinstance(pev.get('metrics'), dict) else {}
+    parms, pstats, pextras = _ev_columns(pmx)
+    pair_fn = getattr(webapp, '_mixstory_pair', None)
+    pe = pair_fn() if pair_fn else {}
+    chk('㊼ 짝 자료 전제 — JSON = 객체 · metrics 객체 · 팔 (객체) 둘 이상 · 통계 · 덧칸 있음',
+        bool(pmx) and len(parms) >= 2 and bool(pstats) and bool(pextras))
+    chk('㊽ 짝 읽기 함수 (_mixstory_pair) — ok · 팔 · 통계 · 덧칸 · 행 = 자료 순서 · 안내 없음 (덧칸 글 · 참거짓은 정상 칸)',
+        pe.get('ok') is True and pe.get('arms') == parms and pe.get('stats') == pstats and pe.get('extras') == pextras
+        and [x.get('name') for x in pe.get('rows') or []] == list(pmx) and not pe.get('notice') and not pe.get('label_notice'))
+    prow = _pair_rows_html(html)
+    pwant = [f'{a}.{s}' for a in parms for s in pstats] + list(pextras)
+    bad49 = []
+    for (name, cells), key in zip(prow, list(pmx)):
+        m = pmx.get(key) or {}
+        if name != key or [cc for cc, _t, _ti in cells] != pwant:
+            bad49.append(f'{key} 열')
+            continue
+        for cc, t, ti in cells:
+            a, _, s_ = cc.partition('.')
+            if a in parms and cc not in pextras:
+                v = m.get(a, {}).get(s_)
+                want = _num_txt(v)
+            else:
+                v = m.get(cc)
+                want = _txt_cell(v)
+            if t != _esc(want or '—') or (want is not None and ti != _esc(repr(v))):
+                bad49.append(f'{key} {cc} {t!r} {ti!r}')
+    chk(f'㊾ 짝 표 — 행 = 자료 지표 (순서) · 열 = 팔 × 통계 + 덧칸 · 숫자 칸 = 유효 4 자리 · 덧칸 글 · 참거짓 = 자료 그대로 · title = 전체 값 ({bad49[:3]})',
+        len(prow) == len(pmx) > 0 and not bad49)
+    pmeta = [k for k in pev if k != 'metrics']
+    chk('㊿ 짝 자료 머리 (metrics 밖 키) 가 화면에 그대로 (data-pair-meta · 숫자 · 문자열 값)',
+        bool(pmeta) and all(f'data-pair-meta="{_esc(k)}"' in html for k in pmeta)
+        and all(str(v) in html for k in pmeta for v in _numbers(pev[k]))
+        and all(_esc(x) in html for k in pmeta for x in _strings(pev[k])))
+    chk('51 짝 패널 — 패널 표지 · 제목 = 짝 자료의 팔 이름 (↔) · 자료 경로 · 같은 폴더 README 안내 · 바로가기 #ms-pair',
+        html.count(LABEL) >= 2 and _esc(' ↔ '.join(parms)) in html and f'{PDATA}/b2_u_c_contacts.json' in html
+        and f'{PDATA}/README.md' in html and 'id="ms-pair"' in html and 'href="#ms-pair"' in html)
+    chk('52 첫 표 행 수 = 첫 자료 지표 수 (둘째 표 행이 첫 표 검사에 섞이지 않는다) · 둘째 표 행 = 짝 자료 지표 수',
+        len(_ev_rows_html(html)) == len(mx) and len(prow) == len(pmx))
+    ok53 = ok54 = ok55 = ok56 = ok57 = False
+    if pair_fn:
+        orig_pn = getattr(webapp, '_MIXSTORY_PAIR_NAME', None)
+        try:
+            webapp._MIXSTORY_PAIR_NAME = '__mixstory_pair_missing__.json'
+            rr = c.get('/mixer/story')
+            bb = rr.get_data(as_text=True)
+            ok53 = (orig_pn is not None and rr.status_code == 200 and '자료 파일이 없다' in bb and not _pair_rows_html(bb)
+                    and len(_ev_rows_html(bb)) == len(mx) and re.search(r'<h2[^>]*>\s*2\.', _doc_region(bb)) is not None)
+        finally:
+            if orig_pn is not None:
+                webapp._MIXSTORY_PAIR_NAME = orig_pn
+        with tempfile.TemporaryDirectory(prefix='mixstory_pair_') as td:
+            jp = os.path.join(td, 'pair.json')
+
+            def _pw(obj_or_text):
+                with open(jp, 'w', encoding='utf-8') as f:
+                    f.write(obj_or_text if isinstance(obj_or_text, str) else json.dumps(obj_or_text))
+                return pair_fn(path=jp)
+            pbase = {'label': 'DEVELOPMENT_DATA_ONLY', 'n_independent_seeds': 1,
+                     'metrics': {'m1': {'U': {'mean': 0.5, 'sd': 'x'}, 'C': {'mean': float('nan'), 'sd': 0.25},
+                                        'C_minus_U': -0.125, 'frac': '-1/8', 'seen': True, 'odd': float('inf')}}}
+            p1 = _pw(pbase)
+            rr1 = {x['name']: x for x in p1.get('rows') or []}
+            ok54 = (p1.get('ok') is True and list(rr1) == ['m1']
+                    and [(x or {}).get('txt') for x in rr1['m1'].get('cols', [])]
+                    == ['0.5', None, None, '0.25', '-0.125', '-1/8', 'true', None]
+                    and '3 칸' in (p1.get('notice') or ''))
+            p2 = _pw('{"metrics": {')
+            p3 = _pw(dict(pbase, n_independent_seeds=3))
+            ok55 = (p2.get('ok') is False and bool(p2.get('notice')) and p2.get('rows') == []
+                    and 'n_independent_seeds' in (p3.get('label_notice') or '') and p3.get('ok') is True)
+            _p_orig = webapp._mixstory_pair
+            try:
+                webapp._mixstory_pair = lambda path=None: _p_orig(path=jp)
+                _pw('{"metrics": {"broken": ')
+                rr = c.get('/mixer/story')
+                bb = rr.get_data(as_text=True)
+                ok56 = (rr.status_code == 200 and '자료를 읽지 못했다' in bb and not _pair_rows_html(bb)
+                        and len(_ev_rows_html(bb)) == len(mx) and re.search(r'<h2[^>]*>\s*2\.', _doc_region(bb)) is not None)
+                _pw(dict(pbase, metrics={'m1': dict(pbase['metrics']['m1'], frac='<script>MXPAIR</script>')}))
+                bb = c.get('/mixer/story').get_data(as_text=True)
+                ok57 = '&lt;script&gt;MXPAIR' in bb and '<script>MXPAIR' not in bb
+            finally:
+                webapp._mixstory_pair = _p_orig
+    chk('53 짝 자료 파일이 없으면 200 + 안내 ("자료 파일이 없다") · 짝 표 행 0 · 첫 표 · 정본은 그대로', ok53)
+    chk('54 짝 읽기 — 팔 칸은 숫자만 (글 · NaN = "—") · 덧칸 글 · 참거짓 = 자료 그대로 · 무한대 = "—" · 그 수 안내', ok54)
+    chk('55 짝 — 깨진 JSON = ok False + 안내 · 독립 시드 수 ≠ 1 = 표지 안내', ok55)
+    chk('56 깨진 짝 JSON 을 화면에 끼우면 200 + 안내 · 짝 표 행 0 · 첫 표 · 정본 그대로', ok56)
+    chk('57 짝 덧칸 글도 이스케이프된다 (<script> 가 그대로 나가지 않는다)', ok57)
+    pids = [x for x in list(pmx) + parms + pstats + pextras + pmeta if '_' in x or any(ch.isdigit() for ch in x)]
+    pids += [x for k in pmeta for x in _strings(pev[k]) if len(x) >= 4]
+    pin_tpl = sorted(x for x in set(pids) if x in tpl)
+    pcand = sorted({x for v in _numbers(pmx) for x in (_num_txt(v), repr(v)) if x and len(re.sub(r'\D', '', x)) >= 3})
+    pnum_tpl = [x for x in pcand if x in tpl]
+    chk(f'58 템플릿에 짝 자료 키 · 이름 · 문자열 · 숫자 없음 (발견 {(pin_tpl + pnum_tpl)[:5]})',
+        bool(tpl) and bool(pids) and bool(pcand) and not pin_tpl and not pnum_tpl)
 
     print(f'\ntest_mixer_story_page: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 1 if _fail else 0

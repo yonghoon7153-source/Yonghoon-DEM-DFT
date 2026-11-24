@@ -5864,6 +5864,9 @@ def mixer_literature():
 #   ② 증거 표 = docs/reviews/mixer_b2_flow_20261124/b1_b2_u_contacts.json — 지표 이름 · 팔 · 값 = 자료 그대로 (개발 자료 · 한 시드 ·
 #      판정 아님 · Codex 판독 그대로).  /mixer/lit 의 gap_summary.json 과 같은 처리: 파싱 전 redact · 없거나 깨져도 200 + 안내
 #      (정본은 그대로 보인다).  패널 표지가 자료와 어긋나면 (label · n_independent_seeds) 숨기지 않고 안내한다.
+#   ②′ 둘째 증거 표 (11-24 밤 · 반입 ㊱) = docs/reviews/mixer_b2_pair_return_20261124/b2_u_c_contacts.json — 같은 시드 B2 U ↔ C 짝 ·
+#      ② 와 같은 읽기 함수 (_mixstory_ev_read) · 다른 점 하나 = 덧칸 (지표 바로 밑의 객체 아닌 값) 의 글 · 참거짓을 자료 그대로 보인다
+#      (차이의 정확한 분수 · 등록 방향 관측 여부) · 팔 칸은 ② 와 같이 숫자만.
 #   ③ 그림 둘 = 등록부 (MIXSTORY_FIGS) 의 이름만 · 사용자 입력으로 경로를 잇지 않는다 (등록부 밖 · 경로 꼴 = 404) · 밑글 =
 #      같은 폴더 frame_caption.md (있으면 · redact → markdown · 없으면 아무것도 더 보이지 않는다).
 #  라벨 · 칸 모양은 템플릿 (templates/mixer_story.html) 몫 · 회귀 webapp/test_mixer_story_page.py.
@@ -5871,6 +5874,8 @@ MIXSTORY_MD = Path(__file__).resolve().parent.parent / 'docs' / 'reviews' / 'mix
 _MIXSTORY_UPDATED = re.compile(r'<!-- MIXSTORY:UPDATED (\d{4}-\d{2}-\d{2}) -->')
 _MIXSTORY_DIR = 'docs/reviews/mixer_b2_flow_20261124'
 _MIXSTORY_EV_NAME = 'b1_b2_u_contacts.json'
+_MIXSTORY_PAIR_DIR = 'docs/reviews/mixer_b2_pair_return_20261124'
+_MIXSTORY_PAIR_NAME = 'b2_u_c_contacts.json'
 #: 그림 등록부 — 화면 이름 (주소 끝) → (자료 폴더 안 PNG, 밑글 파일 또는 None).  등록부 밖 이름은 404.
 MIXSTORY_FIGS = {
     'b2_u_cross_section.png': ('b2_u_cross_section.png', 'frame_caption.md'),
@@ -5916,9 +5921,16 @@ def _mixstory_doc(path=None):
     return out
 
 
-def _mixstory_cell(v):
-    """자료 값 → 칸 dict(txt = 화면 글 (실수 유효 4 자리 · 정수 그대로), raw = 자료 전체 값) · 숫자가 아니거나 유한하지 않으면 None."""
+def _mixstory_cell(v, text=False):
+    """자료 값 → 칸 dict(txt = 화면 글 (실수 유효 4 자리 · 정수 그대로), raw = 자료 전체 값) · 숫자가 아니거나 유한하지 않으면 None.
+
+    text=True (둘째 표의 덧칸만) — 글 = 그대로 · 참거짓 = JSON 철자 (true · false) · 숫자는 같은 규칙.
+    """
     import math as _math
+    if text and isinstance(v, bool):
+        return {'txt': 'true' if v else 'false', 'raw': repr(v)}
+    if text and isinstance(v, str):
+        return {'txt': v, 'raw': repr(v)}
     if isinstance(v, bool) or not isinstance(v, (int, float)):
         return None
     try:
@@ -5944,13 +5956,23 @@ def _mixstory_ev_empty(path='', folder=''):
 
 
 def _mixstory_evidence(path=None):
-    """B1-U ↔ B2-U 접촉 지표 JSON → dict(ok, notice, label_notice, meta, arms, stats, extras, columns, rows, redacted, path, dir).
+    """B1-U ↔ B2-U 접촉 지표 JSON → _mixstory_ev_read 의 dict (path = 시험용 절대 경로 · 없으면 _MIXSTORY_DIR/_MIXSTORY_EV_NAME)."""
+    return _mixstory_ev_read(f'{_MIXSTORY_DIR}/{_MIXSTORY_EV_NAME}', path)
 
-    path = 시험용 절대 경로 (없으면 리포 기준 _MIXSTORY_DIR/_MIXSTORY_EV_NAME).  파싱 **전에** redact (/mixer/lit 과 같은 관문).
+
+def _mixstory_pair(path=None):
+    """같은 시드 B2 U ↔ C 짝 JSON → _mixstory_ev_read 의 dict (덧칸 글 · 참거짓 = 자료 그대로 · 팔 칸은 숫자만)."""
+    return _mixstory_ev_read(f'{_MIXSTORY_PAIR_DIR}/{_MIXSTORY_PAIR_NAME}', path, text_extras=True)
+
+
+def _mixstory_ev_read(default_rel, path=None, text_extras=False):
+    """접촉 지표 JSON → dict(ok, notice, label_notice, meta, arms, stats, extras, columns, rows, redacted, path, dir).
+
+    path = 시험용 절대 경로 (없으면 리포 기준 default_rel).  파싱 **전에** redact (/mixer/lit 과 같은 관문).
     열 = 자료 순서 그대로 — 팔 = 지표 안에서 값이 객체인 키 · 통계 = 그 객체의 키 · 덧칸 = 값이 객체가 아닌 키 (첫 출현 순서).
-    행 cols = columns 순서의 칸 (_mixstory_cell · 없거나 숫자가 아니면 None → 화면 '—').
+    행 cols = columns 순서의 칸 (_mixstory_cell · 없거나 숫자가 아니면 None → 화면 '—' · text_extras 면 덧칸의 글 · 참거짓은 그대로).
     """
-    rel = path or f'{_MIXSTORY_DIR}/{_MIXSTORY_EV_NAME}'
+    rel = path or default_rel
     out = _mixstory_ev_empty(rel, os.path.dirname(rel))
     try:
         p = path or _repo_path(rel)
@@ -6000,7 +6022,7 @@ def _mixstory_evidence(path=None):
             else:
                 present = col['stat'] in m
                 v = m.get(col['stat'])
-            cell = _mixstory_cell(v)
+            cell = _mixstory_cell(v, text=text_extras and not col['arm'])
             n_bad += present and cell is None
             cols.append(cell)
         rows.append(dict(name=name, cols=cols))
@@ -6052,20 +6074,22 @@ def _mixstory_figs():
 
 @app.route('/mixer/story')
 def mixer_story():
-    """믹서 문제 · 공백 — 정본 문서 그대로 + 접촉 지표 표 (개발 자료 · 한 시드 · 판정 아님) + 그림 둘 (읽기 전용)."""
+    """믹서 문제 · 공백 — 정본 문서 그대로 + 접촉 지표 표 둘 (B1-U ↔ B2-U · 같은 시드 B2 U ↔ C · 개발 자료 · 한 시드 · 판정 아님) + 그림 둘 (읽기 전용)."""
     doc = _mixstory_doc()
     root = Path(__file__).resolve().parent.parent
     try:
         doc_path = MIXSTORY_MD.resolve().relative_to(root).as_posix()
     except ValueError:
         doc_path = str(MIXSTORY_MD)
-    ev, figs = _mixstory_evidence(), _mixstory_figs()
+    ev, pair, figs = _mixstory_evidence(), _mixstory_pair(), _mixstory_figs()
     try:
-        return render_template('mixer_story.html', active='mixer', doc=doc, doc_path=doc_path, ev=ev, figs=figs)
+        return render_template('mixer_story.html', active='mixer', doc=doc, doc_path=doc_path, ev=ev, pair=pair, figs=figs)
     except Exception as e:                  # noqa: BLE001 — 자료 꼴이 템플릿 기대와 달라도 500 대신 안내 (정본은 그대로)
+        msg = f'자료를 화면에 그리지 못했다 — {type(e).__name__}: {e}'
         return render_template('mixer_story.html', active='mixer', doc=doc, doc_path=doc_path, figs=[],
-                               ev=dict(_mixstory_ev_empty(f'{_MIXSTORY_DIR}/{_MIXSTORY_EV_NAME}', _MIXSTORY_DIR),
-                                       notice=f'자료를 화면에 그리지 못했다 — {type(e).__name__}: {e}'))
+                               ev=dict(_mixstory_ev_empty(f'{_MIXSTORY_DIR}/{_MIXSTORY_EV_NAME}', _MIXSTORY_DIR), notice=msg),
+                               pair=dict(_mixstory_ev_empty(f'{_MIXSTORY_PAIR_DIR}/{_MIXSTORY_PAIR_NAME}', _MIXSTORY_PAIR_DIR),
+                                         notice=msg))
 
 
 @app.route('/mixer/story/fig/<name>')
