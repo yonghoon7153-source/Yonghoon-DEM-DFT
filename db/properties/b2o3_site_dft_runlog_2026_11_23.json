@@ -119,5 +119,24 @@
   "읽는_법": "④ 가 자리 × 가족마다 순위 (* = 고름 · 가족 최저와의 차 eV · 끝 꼴) 와 자리마다 'UMA 최저 O–B − O–P' 를 찍는다 — 고르기용이지 판정이 아니다 (판정은 DFT 이완 뒤) · 끝 꼴이 출발 가족과 다른 고른 후보 수도 찍는다 (기록만)",
   "다음": "⑤ 에서 GPU 가 비면 (우리 잡 없음 · 남의 잡 끝) DFT 메모리 프로브 블록 (probe · disk_io medium · 240 초) → 단일점 12 입력 · 실행기 (만들 것 · 결과 전) · GPU 가 계속 차 있으면 사용자 결정",
   "by": "claude (본 세션) · 2026-11-24"
+ },
+ "kgy_블록_3_결과_2026_11_24": {
+  "근거": "사용자가 붙인 kgy 출력 (2026-11-24 밤)",
+  "①": "uma_ob_anneal.log — 2026-11-24 21:33:49 끝 run_rc=0 · check_results OK 문제 0 건 · 21:33:50 check_rc=0",
+  "②": "worktree ~/wt_bsite_1123 = b5565a13 (origin/claude/friendly-meitner-lldvar · pick_dft 판 6ea0e2cd 포함)",
+  "③": "selftest PASS (57/57)",
+  "④_pick_dft (UMA · 고르기용 · 판정 아님 · 가족 최저와의 차 eV · [끝 꼴] · * = 고름)": {
+   "B-P|O-P": "BMP_04* +0.000 [O-P] · BMP_05* +0.174 [O-P] · BMP_02* +0.214 [O-P] · BMP_01 +0.287 [O-P] · BMP_03 +0.474 [O-P] · BMP_00 +0.579 [O-P]",
+   "B-P|O-B": "BMP_04_OB* +0.000 [O-B] · BMP_00_OB* +0.275 [O-B] · BMP_01_OB* +0.567 [O-B] · BMP_02_OB +0.593 [O-B] · BMP_05_OB +0.827 [O-B] · BMP_03_OB +0.851 [O-B]",
+   "B-Li|O-P": "BMLi_01* +0.000 [O-P] · BMLi_04* +0.510 [O-P] · BMLi_00* +1.881 [O-P] · BMLi_02 +2.120 [O-P] · BMLi_05 +2.146 [O-P] · BMLi_03 +2.875 [O-P]",
+   "B-Li|O-B": "BMLi_01_OB* +0.000 [mixed] · BMLi_04_OB* +0.976 [O-B] · BMLi_03_OB* +1.565 [mixed] · BMLi_00_OB +1.796 [mixed] · BMLi_02_OB +2.630 [mixed] · BMLi_05_OB +3.176 [mixed]",
+   "가족_사이 (자리마다 UMA 최저 O–B − O–P)": "B-P −1.288 eV · B-Li −0.796 eV (셀당 · 같은 조성 안 비교)",
+   "끝_꼴": "고른 12 중 출발 가족과 끝 꼴이 다른 것 2 (BMLi_01_OB · BMLi_03_OB = mixed) · B-Li O–B 가족은 6 중 5 가 mixed (어닐 중 O 결합 상대가 바뀜) · B-P 쪽 12 와 B-Li O–P 6 은 출발 꼴 그대로 — 기록만 (카드 1b · 후보에서 안 뺀다)",
+   "출력": "$R/sp_pick/manifest.json (schema b2o3_site_dft_sp_selected/v1 · purpose b2o3_site_dft/dft_single_point) · sp_selected/*.xyz 12"
+  },
+  "⑤_GPU": "7929 / 24576 MiB · 100 % (남의 잡 · 우리 잡 없음) → DFT 메모리 프로브는 빌 때 (사용자 11-23 결정 그대로)",
+  "읽는_법 (판정 아님)": "UMA 에서는 두 자리 모두 O–B 가족이 O–P 가족보다 낮다 — G3 (O 꼴이 판정을 바꿨는지) 가 실제 질문이 된다 · 판정은 카드 4 대로 DFT 단일점 → 이온 이완 → 압력 어림 · k 탐침 뒤에만 낸다 · 자리 사이 UMA 값으로 D 를 내지 않는다",
+  "다음": "GPU 가 비면 프로브 블록 (B-P 128 원자 · disk_io medium · 240 초) · 그 전에 단일점 12 입력 생성 · kgy 실행기 (결과 전 · 판 고정 b2o3_bo_dft.py 설정 · k 3 3 1 · UMA 구조 · 셀 그대로)",
+  "by": "claude (본 세션) · 2026-11-24"
  }
 }
