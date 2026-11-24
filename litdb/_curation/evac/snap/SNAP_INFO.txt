@@ -1,6 +1,7 @@
-2026-11-23 23:44:49 UTC
+2026-11-24 00:40:47 UTC
 rint_codepkg: 트리 없음
-main: HEAD a53f739c6 · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 0
+main: HEAD 9012b2492 · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 1
+main_unpushed.bundle: 9599 B
 BRIEF_rereview_codepkg.md: 4333 B
 import_list.txt: 656 B
 BRIEF_review_codepkg.md: 4482 B
