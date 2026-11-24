@@ -1,0 +1,113 @@
+IBB='@IBB@'
+IBBP=@PORT@
+(
+set -euo pipefail
+umask 077
+mode=${1:-}
+[[ $# == 1 ]] || exit 2
+case "$mode" in GO_MIXER_LADDER_020_050_ONCE|STATUS|RETURN) ;; *) exit 2;; esac
+base=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+task=mixer-ladder-020-050-1124
+pin='@PIN@'
+pack='@SOURCE@'
+sha='@SHA@'
+ctl=$(mktemp -d)
+ssh() { command ssh -o ControlMaster=auto -o ControlPersist=300 -o ControlPath="$ctl/%C" "$@"; }
+scp() { command scp -o ControlMaster=auto -o ControlPersist=300 -o ControlPath="$ctl/%C" "$@"; }
+finish() {
+  command ssh -o ControlPath="$ctl/%C" -O exit -p "$IBBP" "$IBB" >/dev/null 2>&1 || true
+}
+trap finish EXIT
+if [[ $mode == GO_MIXER_LADDER_020_050_ONCE ]]; then
+  printf '%s  %s\n' "$sha" "$base/$pack" | sha256sum -c --strict -
+  ssh -p "$IBBP" "$IBB" bash -s -- "$task" <<'STAGE'
+set -eu
+umask 077
+cd "$HOME"
+mkdir -- "$1" || { echo 'Existing pair dispatch. Use STATUS; do not repeat GO.'; exit 2; }
+STAGE
+  scp -P "$IBBP" "$base/$pack" "$IBB:$task/source.tar.gz"
+  ssh -p "$IBBP" "$IBB" bash -s -- "$task" "$pin" "$sha" "$mode" <<'START'
+set -euo pipefail
+umask 077
+cd "$HOME/$1"
+printf '%s  source.tar.gz\n' "$3" | sha256sum -c --strict -
+tar -xzf source.tar.gz
+python3 -I -B - "$2" <<'IDENTITY'
+import hashlib,json,sys
+from pathlib import Path
+r=json.loads(Path('release.json').read_bytes())
+if r['pin'] != sys.argv[1] or r['arms'] != {'L020':0.2,'L050':0.5}:
+    raise SystemExit('Wrong release')
+for n,h in r['files'].items():
+    p=Path(n)
+    if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest()!=h:
+        raise SystemExit('Wrong package member: '+n)
+IDENTITY
+nohup bash worker.sh "$4" </dev/null >dispatch.log 2>&1 &
+echo "DETACHED_PAIR_CONTROLLER=$!"
+for i in $(seq 1 75); do
+  if [ -f dispatch.rc ]; then cat dispatch.log; exit "$(cat dispatch.rc)"; fi
+  sleep 2
+done
+cat dispatch.log
+echo 'Dispatch still being checked. Use STATUS; do not repeat GO.'
+START
+  exit
+fi
+response=$(ssh -p "$IBBP" "$IBB" bash -s -- "$task" "$pin" "$mode" <<'READ'
+set -eo pipefail
+cd "$HOME/$1" || { echo NO_DISPATCH; exit 2; }
+[ -f release.json ] || { echo STAGING_INCOMPLETE; exit 2; }
+python3 -I -B - "$2" <<'PIN'
+import json,sys
+if json.load(open('release.json'))['pin']!=sys.argv[1]:raise SystemExit('Wrong installed release')
+PIN
+if [[ -f dispatch.log ]]; then tail -n 6 dispatch.log >&2; fi
+if [[ -f dispatch.rc ]]; then echo "DISPATCH_RC=$(cat dispatch.rc)"; fi
+bash worker.sh "$3"
+READ
+) || { rc=$?; printf '%s\n' "$response"; exit "$rc"; }
+printf '%s\n' "$response"
+[[ $mode == RETURN ]] || exit 0
+downloads=$(wslpath "$(powershell.exe -NoProfile -Command '[Console]::Write((New-Object -ComObject Shell.Application).NameSpace("shell:Downloads").Self.Path)' | tr -d '\r')")
+while read -r marker arm folder; do
+  [[ $marker == COPY ]] || continue
+  [[ $arm == L020 || $arm == L050 ]] && [[ $folder =~ ^collection_[a-zA-Z0-9_]+$ ]] || exit 2
+  path="$task/arms/$arm"
+  ret=$(mktemp -d "$downloads/mixer_ladder_${arm}_result_XXXXXXXX")
+  for n in SHA256SUMS b2_report.tar.gz b2_full_result.tar.gz; do
+    scp -P "$IBBP" "$IBB:$path/$folder/$n" "$ret/$n"
+  done
+  scp -P "$IBBP" "$IBB:$path/return.json" "$ret/return.json"
+  ssh -p "$IBBP" "$IBB" "cat '$path/worker.log' 2>/dev/null || cat '$task/dispatch.log'" >"$ret/remote_screen.txt"
+  if ssh -p "$IBBP" "$IBB" "test -f '$path/worker.log'"; then
+    cp -- "$ret/remote_screen.txt" "$ret/worker_${arm}.log"
+  fi
+  (cd "$ret" && sha256sum -c --strict SHA256SUMS &&
+   python3 -I -B - "$arm" "$pin" "$folder" <<'LOCAL'
+import json,sys,tarfile
+from pathlib import Path
+arm,pin,folder=sys.argv[1:]
+r=json.loads(Path('return.json').read_bytes())
+h={n:v for v,n in (s.split('  ',1) for s in Path('SHA256SUMS').read_text().splitlines())}
+if set(h)!={'b2_report.tar.gz','b2_full_result.tar.gz'} or r['archive_hashes']!=h or r['role']!=arm or r['case']!='MIXER_B2_'+arm or r['release_pin']!=pin or r['directory']!=folder:
+    raise SystemExit('Mismatched local receipt')
+with tarfile.open('b2_report.tar.gz') as t:
+    embedded=json.load(t.extractfile('arms/'+arm+'/evidence/'+folder+'.json'))
+if embedded!={k:v for k,v in r.items() if k not in ('directory','archive_hashes')}:
+    raise SystemExit('Embedded terminal receipt differs')
+if r['job_id']!=r['scheduler']['job_id']:
+    raise SystemExit('Accounting job differs')
+if r['disposition']=='COMPLETE' and not (
+    r['return_ready'] is r['exact_frame_names'] is r['post_runtime_matches'] is True
+    and r['w9']=='LIVE_TERMINAL_MATCH' and r['frame_count']==234
+    and r['job_id']==r['job_end_id'] and type(r['runner_rc']) is int and r['runner_rc']==0
+    and r['scheduler']['state']=='COMPLETED' and r['scheduler']['exit_code']=='0:0'):
+    raise SystemExit('Incomplete normal return')
+print(arm,'JOB_ID='+r['job_id'],'STATE='+r['scheduler']['state'],'W9='+r['w9'],r['disposition'])
+LOCAL
+  )
+  printf 'VERIFIED_RETURN_%s=%s\n' "$arm" "$ret"
+done <<< "$response"
+)
