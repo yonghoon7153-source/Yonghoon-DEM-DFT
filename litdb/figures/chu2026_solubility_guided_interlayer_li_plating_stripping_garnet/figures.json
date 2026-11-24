@@ -632,9 +632,29 @@
    "key": "fS23",
    "kind": "figure",
    "label": "S23",
-   "page": 57,
+   "page": 56,
    "file": "fig_S23.png",
-   "caption": "Fig. S23 Cont’d",
+   "caption": "Fig. S23 Atomic configurations and dynamic analysis of Li-stripped alloy systems. Li atoms were removed from the center of the equilibrated Li-M alloy structures—a) Au and b) Ag—across three crystallographic facets: (111) (left), (110) (center), and (100) (right). A single representative “before” configuration is shown for the (111) facet, illustrating the structure immediately after Li removal. The “after” panels display three independent relaxed configurations for each facet following molecular dynamics (MD) simulation. In the (111) facet snapshots, we highlight the extent to which Li atoms at the interface migrate into the Li-stripped zone to replenish vacancy sites. MSD and void volume analysis (upper and lower panels, respectively): For each configuration, the mean square displacement in the z-direction (MSDz) is shown in the upper panel and the total void volume as a function of time is shown in the lower panel. Each plot includes the maximum (max, dashed line), minimum (min, dashed line), and average (solid line) values, based on three independent simulations. Ag and Au data are color-coded in green and orange, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    545.9,
+    322.5
+   ],
+   "w": 2000,
+   "h": 1069,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool skipped the first page of Fig. S23 (p.56: the caption starts 2.5 pt below the raster, tool output only the 'Cont’d' page p.57) → hand-cut = embedded raster rect [72,72,539.9,321.1] + 6 pt margin, clipped at y=322.5 just above the caption line (y=323.6) · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS23cont",
+   "kind": "figure",
+   "label": "S23",
+   "page": 57,
+   "file": "fig_S23_cont.png",
+   "caption": "Fig. S23 Cont’d (SI p.57 — continuation of Fig. S23; panels as described in the Fig. S23 caption on SI p.56)",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -646,7 +666,8 @@
    "h": 1090,
    "dpi": 300,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.718
+   "blank": 0.718,
+   "recrop": "tool's crop kept as-is but re-keyed/renamed: it is the continuation page (p.57) of Fig. S23; the first page (p.56, with the caption) is the new fig_S23.png (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS24",
@@ -672,9 +693,29 @@
    "key": "fS25",
    "kind": "figure",
    "label": "S25",
-   "page": 62,
+   "page": 61,
    "file": "fig_S25.png",
-   "caption": "Fig. S25 Cont’d",
+   "caption": "Fig. S25 Binary phase diagrams for interlayer metals with Li. The complete binary phase diagrams are used to assess the relative Li affinity of a) strongly lithiophilic, b) moderately lithiophilic, c) weakly lithiophilic, and d) strongly lithiophobic metals. The maximum solubility points of the metals in the Li(rt) phase are highlighted with yellow arrows in the diagrams. The phase diagrams were obtained from the ASM Alloy Phase Diagrams Center, ASM International,58 with diagram numbers Ag (900032),61 Mg (2002119),128 Cd (900587),129 Au (900226),60 Zn (104154),130 Sn (103448),131 Pt (901517),132 Al (103030),133 Bi (102045),134 Pd (980999),135 In (901388),136 Sb (981188),137 Cu (904229),59 Si (981098),138 C (900508),139 Ni (901514),140 Fe (901048),141 and Ti (901529).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    545.7,
+    468.5
+   ],
+   "w": 1999,
+   "h": 1678,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool skipped the first page of Fig. S25 (p.61), output only the 'Cont’d' page p.62 → hand-cut = embedded raster rect [72,72,539.7,468.2] + 6 pt margin, clipped at y=468.5 just above the caption line (y=468.7) · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS25cont",
+   "kind": "figure",
+   "label": "S25",
+   "page": 62,
+   "file": "fig_S25_cont.png",
+   "caption": "Fig. S25 Cont’d (SI p.62 — continuation: c) weakly lithiophilic, d) strongly lithiophobic metals; see the Fig. S25 caption on SI p.61)",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -686,7 +727,8 @@
    "h": 1682,
    "dpi": 300,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.781
+   "blank": 0.781,
+   "recrop": "tool's crop kept as-is but re-keyed/renamed: continuation page (p.62) of Fig. S25; the first page (p.61, with the caption) is the new fig_S25.png (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS26",
@@ -752,9 +794,29 @@
    "key": "tS1",
    "kind": "table",
    "label": "S1",
-   "page": 8,
+   "page": 7,
    "file": "tab_S1.png",
-   "caption": "Table S1 Cont’d",
+   "caption": "Table S1 CCD data for Li|LLZO|Li cells without interlayers. Baseline CCD statistics of pristine Li|LLZO|Li cells without any interlayer additions, providing reference ranges for interface resistances and critical current density performances. In the table, we use acronyms for sintering methods: Cold-Uni (cold uniaxial pressing), Hot-Uni (hot uniaxial pressing), Hot-Iso (hot isostatic pressing), and SPS (spark plasma sintering). Without a dedicated interlayer, researchers used alternative interface modification techniques like Evap. (Li thermal evaporation on LLZO) and Rub. (Li mechanically rubbed on LLZO) to enhance electrolyte wettability. In the testing temperature column, RT indicates room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    31.0,
+    763.8,
+    561.5
+   ],
+   "w": 3001,
+   "h": 2173,
+   "dpi": 295,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool output only p.8 (a 'Cont’d' page) for Table S1; p.7 (first page + caption) hand-cut = table drawings [36,36,756.6,480.7] + caption lines to y=556.5, 5 pt margin, same convention as the tool's table crops (caption included) (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "tS1cont1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1_cont1.png",
+   "caption": "Table S1 Cont’d (SI p.8 — rows: refs 23–33 of the SI list)",
    "rotated_deg": 0,
    "bbox": [
     31.0,
@@ -766,15 +828,56 @@
    "h": 2177,
    "dpi": 295,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.914
+   "blank": 0.914,
+   "recrop": "tool's crop kept as-is but re-keyed/renamed: 2nd of 3 pages of Table S1 (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "tS1cont2",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1_cont2.png",
+   "caption": "Table S1 Cont’d (SI p.9 — last page of Table S1; rows: refs 13 · 34–41 of the SI list)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    31.0,
+    761.6,
+    473.6
+   ],
+   "w": 3001,
+   "h": 1818,
+   "dpi": 296,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool dropped p.9 as '중복(작은 쪽)' of Table S1 → hand-cut = drawings [36,36,756.6,443.4] + 'Table S1 Cont’d' line (to y=468.6), 5 pt margin (2026-11-24, litdb-curator)"
   },
   {
    "key": "tS2",
    "kind": "table",
    "label": "S2",
-   "page": 11,
+   "page": 10,
    "file": "tab_S2.png",
-   "caption": "Table S2 Cont’d 11",
+   "caption": "Table S2 CCD data for cells with Li-alloying metal interlayers. CCD data and relevant metrics for Li|LLZO|Li cells with Li-alloying metal interlayers, highlighting the impact of interface engineering on electrochemical performances. In the table, we use acronyms for sintering methods: Cold-Uni (cold uniaxial pressing), Hot- Uni (hot uniaxial pressing), Hot-Iso (hot isostatic pressing), and SPS (spark plasma sintering). CCD values measured with pre-made alloying anodes are also included for the statistics, but marked separately as “anode” to distinguish them from interlayers prepared using conventional coating processes. In the interfacial resistance column, the E stands for the estimated value derived from the impedance semicircle. In the temperature column, RT represents room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    31.0,
+    763.8,
+    571.4
+   ],
+   "w": 3001,
+   "h": 2214,
+   "dpi": 295,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool output only p.11 (the 'Cont’d' page) for Table S2; p.10 (first page + caption) hand-cut = drawings [36,36,756.6,489.3] + caption lines to y=566.4, 5 pt margin (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "tS2cont",
+   "kind": "table",
+   "label": "S2",
+   "page": 11,
+   "file": "tab_S2_cont.png",
+   "caption": "Table S2 Cont’d (SI p.11 — rows: refs 47–57 of the SI list)",
    "rotated_deg": 0,
    "bbox": [
     31.0,
@@ -786,7 +889,8 @@
    "h": 2358,
    "dpi": 294,
    "src": "chu2026_solubility_interlayer_SI.pdf",
-   "blank": 0.92
+   "blank": 0.92,
+   "recrop": "tool's crop kept as-is but re-keyed/renamed: 2nd of 2 pages of Table S2 (2026-11-24, litdb-curator)"
   }
  ],
  "missing_labels": [],
@@ -803,5 +907,8 @@
    "below_adjacent": 0,
    "caption_below": true
   }
+ ],
+ "hand_notes": [
+  "2026-11-24 litdb-curator: SI multi-page items — tool kept only one page each for Fig. S23 · Fig. S25 · Table S1 · Table S2. Canonical keys (fS23 · fS25 · tS1 · tS2) now point to the FIRST page (with the caption); continuation pages carry keys fS23cont · fS25cont · tS1cont1 · tS1cont2 · tS2cont. Video frames (video_frames/) are outside this manifest and are deleted by --clean — the ffmpeg commands are recorded in the digest §9b."
  ]
 }
