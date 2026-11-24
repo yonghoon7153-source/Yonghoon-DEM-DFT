@@ -763,6 +763,7 @@ raw `/home/...` WSL path because Windows can't resolve it.
   ../litdb-canon origin/claude/friendly-meitner-lldvar -b tmp-litdb` → 카드 추가
   → 그 브랜치로 커밋/푸시 → worktree 제거.  코드/문서 등 litdb 외 파일은 여전히
   이 브랜치에만.
+- ★ **논문 찾는 순서 (1저자 11-24)**: 최근 2 년 발견을 먼저 검색하고, 기본 (고전) 논문은 그 뒤에 찾는다 — 본 세션 · 서브 세션 · 논문 에이전트 · 문헌 조사 조수 모두.
 
 ---
 
