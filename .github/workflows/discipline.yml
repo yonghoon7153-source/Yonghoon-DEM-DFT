@@ -191,6 +191,17 @@ jobs:
         run: |
           for t in docs/reviews/p1_rt_fixture_development_20261118/test_release.py docs/reviews/p1_rt_fixture_readback_20261118/test_readback.py docs/reviews/p1_rt_fixture_readback_20261118/test_reader.py scripts/test_lhs_v13_frame_scope.py scripts/test_mixer_rotation_n0_ibb.py scripts/test_mpm_coverage_c0.py scripts/test_mpm_coverage_seed.py scripts/test_suyoung_u6_first_dev.py scripts/test_suyoung_contact_direction.py docs/reviews/mixer_n0_return_20261120/test_readback.py docs/reviews/suyoung_u6_nodal_return_20261120/test_f16_only.py; do python "$t" || exit 1; done
 
+      # ★ 2026-11-24 (반입 ㉕) — 수영 설정 ② 접촉 후보 시험 셋 (check_all.sh 단계 71 에도 같이)
+      - name: 반입 ㉕ 수영 설정 ② 접촉 후보 시험 셋 (regression)
+        run: |
+          set -e
+          D=docs/reviews/suyoung_setting2_contact_20261124
+          F=docs/reviews/suyoung_floor_contact_20261123/material_floor.py
+          M=scripts/dem_suyoung_sf2d_dev.py
+          for t in $D/test_app.py $D/test_operator.py; do python -B "$t"; done
+          python -B $D/test_carrier_correction.py $F $M --candidate $D/correction.py
+          if out=$(python -B $D/test_carrier_correction.py $F $M 2>&1); then echo "pre-fix path passed"; exit 1; fi
+          printf '%s\n' "$out" | grep -q 'FAILED (failures=1)'
       # ★ 2026-11-24 (반입 ㉔) — B2 흐름 판독 새 시험 둘 (check_all.sh 단계 70 에도 같이)
       - name: 반입 ㉔ B2 흐름 판독 시험 둘 (regression)
         run: |
