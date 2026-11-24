@@ -614,3 +614,134 @@ Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 
 
 ### 13-8. 공저자 자기 인용 수
 - 98 편 저자 줄에서 공저자 14 명의 성 (+ 이니셜) 이 **보이는** 편: refs 5 · 10 · 11 · 15 · 21 · 24 · 25 · 26 · 29 · 31 · 34 · 36 · 37 · 44 · 57 · 59 · 60 · 61 · 66 · 70 · 72 · 74 · 84 · 86 · 88 · 93 · 95 = **27 편** (ref 17 의 'Wang, Y.' 는 Ceder 그룹이라 뺐다 · 57 · 95 의 'Wang, Y.' 는 동명 가능성 · et al. 뒤는 못 셈 → **하한**).
+
+---
+
+## 14. 참고문헌 지도 (본문 98 편 · 이 관점 논문 안의 역할 · litdb 상태)
+
+> ★ = 사용자 5 축에서 무게 있는 1 차 출처 · ★★ = W_ad · DEM 보고서에 바로 걸리는 것. 쪽 · 문장 위치는 §4. 서지는 PDF 참고문헌 목록 그대로 (첫 저자 · 연도 · 저널 권, 쪽).
+> litdb: ✅ digest 있음 · 📥 PDF 가 inbox 에 있음 (2026-11-24 묶음 · 이 시점 digest 미확인) · — 없음.
+
+| # | 1 차 출처 | 이 논문에서의 역할 | litdb |
+|---|---|---|---|
+| 1 | Viswanathan 2022 · *Nature* 601, 519–525 | 서론 — 대형 차량 · 전기 비행 요구 (동기) | — |
+| 2 | Famprikis 2019 · *Nat. Mater.* 18, 1278–1291 | 서론 — SSB 에너지밀도 최대 +50 % | ✅ `famprikis2019_fundamentals_inorganic_sse` |
+| 3 | Manthiram 2017 · *Nat. Rev. Mater.* 2, 16103 | 서론 — 에너지밀도 · 넓은 창 · 안전 | — |
+| 4 | Krauskopf 2020 · *Chem. Rev.* 120, 7745–7794 | 서론 — 에너지밀도 · p. 676 환원 불안정 vs 부동태 분류 | — |
+| 5 | Hatzell 2020 · *ACS Energy Lett.* 5, 922–934 | 서론 — 에너지밀도 | — |
+| 6 | Janek 2016 · *Nat. Energy* 1, 16141 | 서론 — 넓은 창 · 안전 | ✅ `janek2016_solid_future_battery_development` |
+| 7 | Kim 2023 · *Adv. Mater.* 35, 2206625 | 서론 — Li 박 제조 = 비싼 분위기 제어 | — |
+| 8 | Albertus 2018 · *Nat. Energy* 3, 16–21 | 서론 — Li 박 제조 | — |
+| 9 | Duffner 2021 · *Nat. Energy* 6, 123–134 | 서론 — Li 박 제조 | — |
+| 10 | Wang 2020 · *Nat. Commun.* 11, 5201 | ★ 무음극 에너지밀도 · CC 접촉·점착 · LLZO 900 °C 접합 · 전류 → 핵 밀도 · 적층압 범위 · > 1 MPa 크리프 · Cu 위 불균일 석출 | 📥 inbox `wang2020_insitu_plating_*` |
+| 11 | McDowell 2020 · *Chem. Mater.* 32, 8755–8771 | 서론 — 무음극 에너지밀도 | — |
+| 12 | Nanda 2021 · *Adv. Energy Mater.* 11, 2000804 | 서론 — 무음극 에너지밀도 | — |
+| 13 | Qian 2016 · *Adv. Funct. Mater.* 26, 7094–7102 | 서론 — 무음극 에너지밀도 | — |
+| 14 | Kazyak 2022 · *Matter* 5, 3912–3934 | ★ anode-less 용어 · 구속 응력 → Li 소성 · 접촉·점착 · 필라멘트 · 불균일 적층압 · 섬 병합 응력 · 탄성층 · 두꺼운 CC · 점소성 측방 성장 (operando 3D 현미경) | — |
+| 15 | Davis 2021 · *J. Electrochem. Soc.* 168, 070557 | anode-less 용어 · 이질 계면상 (operando) | — |
+| 16 | Neudecker 2000 · *J. Electrochem. Soc.* 147, 517–523 | lithium free 용어 · 얇은 CC 실패 (박막전지 원조) | — |
+| 17 | Richards 2016 · *Chem. Mater.* 28, 266–273 | SSE–Li 계면 안정 · 환원 분류 · CE | ✅ `richards2016_interface_stability_pseudobinary` |
+| 18 | Xiao 2020 · *Nat. Rev. Mater.* 5, 105–126 | SSE–Li 계면 안정 · CE | ✅ `xiao2020_interface_stability_ssb_review` |
+| 19 | Lin 2017 · *Nat. Nanotechnol.* 12, 194–206 | 액체 무음극 = 사이클마다 SEI | — |
+| 20 | Kasemchainan 2019 · *Nat. Mater.* 18, 1105–1111 | ★ Li 과잉 공극 (임계 박리 전류) · 필라멘트 · 적층압 범위 · 크리프 · 공극 회복 | — |
+| 21 | Wang 2019 · *Joule* 3, 2165–2178 | ★ 공극 · 임계 박리 전류 · 점소성 측방 성장 (적층압 · 전류 함수) | 📥 inbox `wang2019_li_se_stack_pressure_*` |
+| 22 | Krauskopf 2019 · *ACS Appl. Mater. Interfaces* 11, 14463–14477 | 필라멘트 · 적층압 범위 · 전류 집중 (LLZO) | — |
+| 23 | Lewis 2023 · *Adv. Energy Mater.* 13, 2204186 | ★★ 무음극 국부 Li 고갈 → 가속 단락 (Fig. 3d 기전) · 시연 적음 · 인터레이어 공극 완화 · 과잉 Li · 방전 제한 | — |
+| 24 | Haslam 2023 · *J. Electrochem. Soc.* 170, 040524 | ★ Au 150 nm 시드 (LLZO) · 무음극 추가 인자 · 인터레이어 부류 · 고체-고체 이점 | — |
+| 25 | Yoon 2024 · *ACS Appl. Mater. Interfaces* 16, 18790–18799 | ★★ Li/Cu(-산화물) 열역학 · 점착 · 젖음 (DFT 친Li vs sessile drop · Cu₂O → Li₂O) | — |
+| 26 | Wolfenstine 2018 · *Ionics* 24, 1271–1276 | "근본 전기-화학-역학" 문장 (⚠ 산화물 SE 역학 리뷰 — 결이 약함) | — |
+| 27 | Krauskopf 2019 · *Joule* 3, 2030–2049 | 첫 석출 — LLZO 위 Li 성장 동역학 | — |
+| 28 | Motoyama 2015 · *J. Electrochem. Soc.* 162, A7067–A7071 | SSE\|CC 상호작용 → 핵생성 (Cu/LiPON 모델) · 얇은 CC 실패 | — |
+| 29 | Sandoval 2023 · *Joule* 7, 2054–2073 | ★ Au · Ag 100 nm 합금층 진화 (Fig. 4b) · 황화물 압착 10–500 MPa · Cu 위 불균일 · 인터레이어 공극 완화 | — |
+| 30 | Lee 2020 · *Nat. Energy* 5, 299–308 | ★ Ag–C 복합 음극 (Fig. 4d) · 압착 10–500 MPa · 1,000 사이클 · CE · 탄소 유지 | — |
+| 31 | Zaman 2022 · *Curr. Opin. Solid State Mater. Sci.* 26, 101003 | 산업 롤 압착 | — |
+| 32 | Fuchs 2023 · *Adv. Energy Mater.* 13, 2203174 | ★ Cu\|LLZO 전류 의존 성장 모드 · 펄스 → 핵 밀도 · 얇은 CC | 📥 inbox `fuchs2023_cu_llzo_growth_*` |
+| 33 | Pei 2017 · *Nano Lett.* 17, 1132–1139 | 과전압↑ → 핵 면밀도↑ (⚠ 액체 전해질) | — |
+| 34 | Yoon 2023 · *J. Mater. Chem. A* 11, 23288–23299 | Li 입계 확산 → 수지상 최소화 (결정립 → 접촉) | — |
+| 35 | Singh 2023 · *Matter* 6, 1463–1483 | 방전 중 Li 금속 음극 불안정 원인 (미세구조 · 석출 조건) | — |
+| 36 | Lee 2022 · *Joule* 6, 2547–2565 | ★ 얇은 in situ Li 공극 · 재젖음 (LLZO) · 적층압 범위 · > 1 MPa 크리프 (⚠ 저자 줄 "Neil, P.") | 📥 inbox `lee2022_thin_li_void_rewetting_*` |
+| 37 | Wang 2021 · *Joule* 5, 1371–1390 | ★ 실험실 → 시장: > 1 MPa 어려움 · CE > 99.95 % (1,000 사이클) · < 1 MPa 레버 · 폐루프 제어 · SI 에너지밀도 계산기 | — |
+| 38 | Lee 2021 · *ACS Energy Lett.* 6, 3261–3269 | 적층압 측정으로 Li\|SSE 계면 진화 | — |
+| 39 | Zhang 2020 · *Cell Rep. Phys. Sci.* 1, 100012 | 압력 구동 계면 진화 · 공극 회복 | — |
+| 40 | Chang 2021 · *Nat. Commun.* 12, 6369 | Li–LLZO 접촉역학 · 미세구조 (고압 + 고온) | — |
+| 41 | Fincher 2020 · *Acta Mater.* 186, 215–222 | Li 기계 물성 나노 → 벌크 (크기 의존 항복) | — |
+| 42 | Xu 2017 · *Proc. Natl Acad. Sci. USA* 114, 57–61 | 작은 크기 Li 강도 · 온도 의존 | — |
+| 43 | Cao 2023 · *Nano Lett.* 23, 9392–9398 | 자기조절 내부 압력 (탄성층) → 박리 효율 | — |
+| 44 | Wang 2019 · *Electrochim. Acta* 296, 842–847 | Li/LLZO 플럭스 균형의 온도 의존 | — |
+| 45 | Luo 2022 · *Int. J. Heat. Mass Transf.* 199, 123450 | Li 전극 열 거동 · 온도 조절 | — |
+| 46 | Kinzer 2021 · *Matter* 4, 1947–1961 | 녹은 Li\|LLZO operando · CCD | — |
+| 47 | Lu 2023 · *Extrem. Mech. Lett.* 61, 102022 | Li 크기 · 온도 의존 기계 물성 | — |
+| 48 | Hull 1959 · *Philos. Mag.* 4, 303–315 | Li · Na · K 저온 변형 (1959) | — |
+| 49 | LePage 2019 · *J. Electrochem. Soc.* 166, A89–A97 | Li 역학: 변형률 속도 · 온도 · 재분배 | — |
+| 50 | Motoyama 2020 · *ACS Appl. Mater. Interfaces* 12, 38045–38053 | Cu/LiPON 핵생성의 온도 효과 | — |
+| 51 | Cheng 2023 · *Nat. Nanotechnol.* 18, 1448–1455 | 자립 LiPON 박막 · 무압 치밀 석출 · 두꺼운 CC | — |
+| 52 | Ning 2023 · *Nature* 618, 287–293 | ★ Li 금속 SSB 수지상 개시 · 전파 · CC 두께 → SSE 균열 · SSE 미세구조 | — |
+| 53 | Seymour 2023 · *ChemSusChem* 16, e202202215 | ★★ 금속 음극 SSB 계면 점착 이해 · 공학 · 저압 사이클 · 계면상 점착 | — |
+| 54 | Zhu 2016 · *J. Mater. Chem. A* 4, 3253–3266 | 계면 안정 1 원리 (환원 분류) | ✅ `zhu2016_first_principles_interface_stability_assb` |
+| 55 | Wenzel 2018 · *Solid State Ion.* 318, 102–112 | argyrodite–Li 계면 반응 · 계면상 성장 | — |
+| 56 | Hao 2023 · *Adv. Energy Mater.* 13, 2301338 | Li 금속–SSE 계면상 반응성 조율 (LPSCl 환원) | — |
+| 57 | Wang 2024 · *Adv. Energy Mater.* 14, 2304530 | ★ LPSCl 기계 밀링 미세구조 → 전기화학 안정 · SSE 결정립 · 젖음–반응성 | — |
+| 58 | Lin 2024 · *ACS Energy Lett.* 9, 2387–2393 | SSE 다공도의 비직관적 역할 (LPSCl 환원 맥락) | — |
+| 59 | Vishnugopi 2022 · *Adv. Energy Mater.* 12, 2102825 | SE 입계 Li 필라멘트 (메조 규모) · 침투 | — |
+| 60 | Yu 2018 · *ACS Appl. Mater. Interfaces* 10, 38151–38158 | 입계 연화 → Li 침투 | — |
+| 61 | Lee 2024 · *Adv. Energy Mater.* 14, 2303571 | ★ 간헐 전류 방전 박리 · 거칠기 → 박리 용량 · CE | — |
+| 62 | Alexander 2023 · *Nat. Mater.* 22, 1136–1143 | 가넷 3D MIEC 골격 · 다공 SSE · CE | — |
+| 63 | Liu 2019 · *Nat. Energy* 4, 180–186 | 실용 고에너지 Li 금속 경로 (CE) | — |
+| 64 | Xiao 2020 · *Nat. Energy* 5, 561–568 | Li 금속 CE 이해 · 적용 | — |
+| 65 | Hobold 2021 · *Nat. Energy* 6, 951–960 | 액체 CE 99.9 % 너머 | — |
+| 66 | Sanchez 2024 · *J. Am. Chem. Soc.* 146, 4282–4300 | 액체 · 고체 Li 금속 기전 리뷰 (CE) | — |
+| 67 | Jagger 2023 · *Joule* 7, 2228–2244 | Li 금속 SEI 리뷰 (CE) | — |
+| 68 | Zhu 2015 · *ACS Appl. Mater. Interfaces* 7, 23685–23693 | SSE 안정성 열역학 (CE) | ✅ `zhu2015_esw_grand_potential_origin` |
+| 69 | Lewis 2021 · *Nat. Mater.* 20, 503–510 | operando X 선 단층 — 공극 · 계면상 진화 | — |
+| 70 | Vishnugopi 2022 · *Adv. Energy Mater.* 13, 2203671 | 석출 vs 박리 비대칭 접촉 상실 | — |
+| 71 | Eckhardt 2022 · *ACS Appl. Mater. Interfaces* 14, 35545–35554 | 동적 수축 · 계면 형태 | — |
+| 72 | Vishnugopi 2021 · *ACS Energy Lett.* 6, 3734–3749 | 고속 충전 과제 (필라멘트) | — |
+| 73 | Heubner 2021 · *Adv. Funct. Mater.* 31, 2106608 | Li 금속 → 무음극 리뷰 (거의 100 % DoD 차이) | — |
+| 74 | Haslam 2022 · *J. Power Sources* 520, 230831 | ★ Li 종횡비 → 기계 거동 · 재분배 · 점착–응력 얽힘 | — |
+| 75 | Shin 2024 · *ACS Energy Lett.* 9, 1035–1042 | 압력 구배 → 공극 영역 우선 석출 · 공극 회복 (⚠ 제목 "tegion") | — |
+| 76 | Swamy 2018 · *J. Electrochem. Soc.* 165, A3648–A3655 | 단결정 LLZTO Li 침투 | — |
+| 77 | Ning 2021 · *Nat. Mater.* 20, 1121–1129 | 석출 유도 균열 가시화 | — |
+| 78 | Hänsel 2021 · *Adv. Mater. Interfaces* 8, 2100206 | LPSCl 적층압 딜레마 (고압 → 침입↑) | — |
+| 79 | Doux 2020 · *Adv. Energy Mater.* 10, 1903253 | 상온 Li 금속 SSB 적층압 고려 (고압 → 침입↑) | ✅ `doux2020_stack_pressure_assb` |
+| 80 | Fincher 2022 · *Joule* 6, 2794–2809 | 공학 응력으로 수지상 전파 제어 | — |
+| 81 | Fuchs 2022 · *Adv. Energy Mater.* 12, 2201125 | ★ CNT 로 무압 박리 용량↑ · MIEC 탄소 · < 1 MPa · 음극 구조 | — |
+| 82 | Kim 2023 · *Nat. Commun.* 14, 782 | ★ 계면층 전략 장수명 준전고체 · Ag–C 1,000 사이클 · 탄소 유지 | — |
+| 83 | Wang 2023 · *ACS Energy Lett.* 8, 5248–5252 | Li 금속 없는 전지 vs Li 금속 전지 에너지밀도 · 조립 시 과잉 Li | — |
+| 84 | Lee 2023 · *Faraday Discuss.* 248, 250–265 | DoD 효과 (in situ Li) · 방전 제한 | — |
+| 85 | Müller 2024 · *ACS Appl. Mater. Interfaces* 16, 695–703 | ★ Au · Pt · C 시드층 → 핵생성 동역학 · 인터레이어 부류 · 과전압↓ | — |
+| 86 | Park 2022 · *J. Mater. Chem. A* 10, 21995–22006 | ★ 다공 인터레이어 Li 석출 거동 · 인터레이어 점착 · 석출 위치 | — |
+| 87 | Martin 2020 · *Joule* 4, 1296–1310 | 흑연 위 Li 금속 (액체 하이브리드) | — |
+| 88 | Liao 2024 · *J. Mater. Chem. A* 12, 5990–6003 | ★ 탄소 인터레이어 계면 동역학 (Fig. 4a) · 석출 동역학 | — |
+| 89 | Wu 2023 · *Nano Lett.* 23, 1132–1139 | Ag–C 화학-역학 기능 (시트형) · conformal 접촉 · 탄소 유지 | — |
+| 90 | Suzuki 2021 · *Adv. Energy Sustain. Res.* 2, 2100066 | 얇은 카본블랙 층 석출형 Li 음극 · 위치 · 순수 탄소 한계 | — |
+| 91 | Kim 2023 · *ACS Energy Lett.* 8, 9–20 | 방향성 Li 성장 하이브리드 SSB · 석출 동역학 | — |
+| 92 | Xie 2024 · *Adv. Energy Mater.* 14, 2302960 | ★ Ag/C 버퍼층 리튬화 · 탈리튬화 미시 기전 · 석출 동역학 | — |
+| 93 | Sandoval 2021 · *J. Electrochem. Soc.* 168, 100517 | 합금막 → Li 금속 거동 (operando 광학) · 과전압↓ | — |
+| 94 | Yan 2016 · *Nat. Energy* 1, 16010 | 이질 시드 성장 선택 석출 · 봉입 · 과전압↓ | — |
+| 95 | Wang 2023 · *Adv. Mater.* 35, 2206762 | ★ Cu₂Te → Li₂Te in situ (Fig. 4c) · 고체-고체 이점 | — |
+| 96 | Wang 2023 · *Nano Res.* 16, 8338–8344 | Li–Mg 합금 인터레이어 | — |
+| 97 | Thenuwara 2023 · *ACS Energy Lett.* 8, 4016–4023 | 금속 인터레이어 · 방전율 · 압력 (LLZO) · 공극 완화 | — |
+| 98 | Ruano 1981 · *Mater. Sci. Eng.* 51, 9–16 | 파이프 확산 → 미세결정 크리프 (미세구조 제어로 크리프↑) | — |
+
+### 14.1 SI 참고문헌 (17 편 · `Table S3` 출처) → 본문 번호
+
+| SI # | 출처 | 본문 ref | litdb |
+|---|---|---|---|
+| 1 | Wang, Kazyak, Dasgupta, Sakamoto 2021 · *Joule* 5, 1371 (에너지밀도 계산기) | 37 | — |
+| 2 | Sandoval 2023 · *Joule* 7, 2054 (Au · Ag 100 nm) | 29 | — |
+| 3 | Haslam & Sakamoto 2023 · *JES* 170 (Au 150 nm · LLZO) | 24 | — |
+| 4 | Wang Y. · *Adv. Mater.* 2206762 (2022 로 표기 · Cu₂Te) | 95 | — |
+| 5 | Liu M. 2020 · *ACS Mater. Lett.* (ZnO ALD · 저과잉 Li) | — | — |
+| 6 | Davis 2020 · *J. Mater. Chem. A* 8, 6291 (Al₂O₃ ALD · LGPS) | — (본문 15 는 같은 저자 2021 *JES*) | — |
+| 7 | Hsueh 2023 · *Electrochem. Commun.* 150, 107478 (스퍼터 Ag · 겔 고분자) | — | — |
+| 8 | Yamamoto 2019 · *Electrochem. Commun.* 105, 106494 (역적층 박막 · LiCoO₂) | — | — |
+| 9 | Müller 2024 · *ACS AMI* 16, 695 (Au · Pt · C 시드) | 85 | — |
+| 10 | Lee Y.-G. 2020 · *Nat. Energy* 5, 299 (Ag–C) | 30 | — |
+| 11 | Suzuki 2021 · *Adv. Energy Sustain. Res.* 2, 2100066 (CB + 금속) | 90 | — |
+| 12 | Spencer-Jolly 2023 · *Joule* 7, 503 (흑연-Ag) | — | ✅ `spencerjolly2023_ag_graphite_interlayer_operando_xrd` |
+| 13 | Kim S. 2023 · *ACS Energy Lett.* 8, 9 (흑연 · CB · LLZO · 제목 'freferred' 오타) | 91 | — |
+| 14 | Futscher 2022 · *J. Mater. Chem. A* 10, 15535 (비정질 탄소 · LiPON) | — | — |
+| 15 | Chen Y. 2020 · *Nature* 578, 251 (Coble creep · ZnO-CNT) | — | — |
+| 16 | Liao 2024 · *J. Mater. Chem. A* 5990 (비정질 탄소 13 µm) | 88 | — (후속 `liao2025_…` ✅) |
+| 17 | Park S. H. 2022 · *J. Mater. Chem. A* 21995 (탄소 5 µm · LPS) | 86 | — |
+
