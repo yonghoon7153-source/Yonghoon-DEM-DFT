@@ -206,6 +206,8 @@ PREP_ALLOW='INCAR|POSCAR|KPOINTS|POTCAR|POTCAR\.species\.sha256|POTCAR\.titel|PO
 ATT_EXTRA='CONTCAR|DOSCAR|EIGENVAL|PCDAT|XDATCAR|REPORT|PROCAR|PROOUT|PARCHG|ELFCAR|WAVEDER|AECCAR0|AECCAR1|AECCAR2|STOPCAR|vaspout\.h5|\.running'      # 시도 폴더에 둘 수 있는 VASP 표준 출력 · 표지 (반송 허용 · 금지 이름 밖) — 그 밖의 이름은 트리 관문이 멈춘다 (Codex EQ P1)
 ATT1_T='{"job": \001, "attempt": \001, "stage": \001, "run_id": \001, "rc": \002, "t_start": \002, "t_end": \002, "elapsed_s": \002, "vasp_version": \001, "kernel_sha256": \001, "perf": \001, "sha256": {"INCAR": \001, "POSCAR": \001, "KPOINTS": \001, "POTCAR": \001, "OUTCAR": \001, "OSZICAR": \001, "WAVECAR.info": \001, "stdout.log": \001, "POTCAR.titel": \001, "POTCAR.species.sha256": \001, "attempt.start": \001}}'            # attempt.json 틀 (run_one5 의 printf 그대로 · \001 문자열 · \002 음 아닌 정수) — 검사기 ATT1_TPL 과 같은 바이트
 W0_T='{"path": \001, "sha256": \001, "size": \001, "head": \001, "expect": {"sha256": \001, "size": \001, "NKPTS": \001, "NBANDS": \001, "ENCUT": \001}, "verified": \002, "why": \001, "checked_utc": \001}'                # w0_check.json 틀 (w0_check 의 printf 그대로) — 검사기 W0_TPL
+SO_RX='^[[:space:]]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:[[:space:]]+[0-9]'    # stdout.log 의 전자 반복행 꼴 — --infra-abort 의 0 스텝 확인 · 기존 반송본 대조가 같은 꼴 (Codex ES P0)
+OI_RX='Iteration +[0-9]+\('                                                        # OUTCAR 의 전자 반복 표지 (같은 두 쓰임)
 
 # ── 한 줄 기록 문법 REC1 (killed.json · infra_abort.json · attempt.start · final.json) — 검사기 rec_parse 와 같은 문법 · 다음 단을 띄우기 전에 전체를 읽는다 (Codex EO P1) ──
 #   파일 = 한 줄 (+ 끝 줄바꿈 하나) · NUL 없음 · { "키": 값 (, "키": 값)* } (빈칸 · 탭은 JSON 처럼 토큰 사이 어디든 — "run_id":"x" 도 받는다) · 키 [a-z][a-z0-9_]* ·
@@ -383,7 +385,8 @@ hist5(){ # run/status.tsv 의 시도 줄 (run_id · 변형) 이 지금 · 보존
       if (NF != 11 || $1 != J) { print "status_row_" i "_form"; x = 1; exit }
       k = $11 "\t" $2
       if (!(k in have)) { print "status_row_" i "_no_attempt"; x = 1; exit }
-      if ($10 != have[k]) { print "status_row_" i "_elapsed"; x = 1; exit }                 # 이력 줄 벽시계 = 그 시도 끝 기록 elapsed_s — 합산 전에 (Codex ER Q-ER-3①)
+      if (($10 "") != (have[k] "")) { print "status_row_" i "_elapsed"; x = 1; exit }       # 이력 줄 벽시계 = 그 시도 끝 기록 elapsed_s — 합산 전에 (Codex ER Q-ER-3①) · 원문 글자로 (끝 기록 쪽은
+                                                                                            #   tpl5 정수 꼴: 10진 · 선행 0 없음 · 16 자리 이하 — awk 숫자 비교는 00 = 0 으로 본다 · 검사기는 글자 비교 · Codex ES P1)
       if (k in seen) { print "status_row_" i "_twice"; x = 1; exit }
       seen[k] = 1 }
     END { if (!x) print "-" }' - "$S"
@@ -564,7 +567,9 @@ w0_rec5(){ # run/w0_check.json → '-' 또는 사유 — UTF-8 · 틀 (w0_check 
 tgz5(){ # 기존 반송본 (a5_return.tgz + .sha256) ↔ 지금 트리 → '-' 또는 사유 — 덮어쓰기 · 이어 돌리기 전에 (Codex EQ P1 Q-EQ-3 · 러너 쪽만):
   #   둘 다 없으면 볼 것 없음 · 하나만 있음 · sha 꼴 · sha 다름 · 못 읽음 → 멈춤 · 반송본의 끝 기록 (run/final.json) = 지금 끝 기록 (바이트) ·
   #   반송본의 시도마다 (attempt.start run_id) 지금 트리에 그 시도가 있고 (진행 폴더 → 그 자리 또는 같은 단의 보존 폴더) · 반송본에 있던 attempt.json · killed.json 은 바이트로 같고 ·
-  #   보존 폴더의 시도는 같은 자리 (영수증은 장부 규칙 · --infra-wall 이 벽시계를 채우므로 바이트는 안 본다) — 지금 트리 ⊇ 반송본 (완료 기록 없는 중간 포장 허용)
+  #   보존 폴더의 시도는 같은 자리 (영수증은 장부 규칙 · --infra-wall 이 벽시계를 채우므로 바이트는 안 본다) — 지금 트리 ⊇ 반송본 (완료 기록 없는 중간 포장 허용) ·
+  #   같은 시도 (run_id) 의 관측 사실은 줄지도 바뀌지도 않는다 (Codex ES P0 — VASP · 러너는 뒤에 붙일 뿐 · 자람은 받는다): OSZICAR 바이트 · OUTCAR 'Iteration' 줄 ·
+  #   stdout.log 전자 반복행 (줄바꿈으로 끝난 줄) 이 지금 파일의 앞부분 · 반송본의 이력 (run/status.tsv) 이 지금 이력의 앞부분
   local T x
   { [ -e a5_return.tgz ] || [ -L a5_return.tgz ] || [ -e a5_return.tgz.sha256 ] || [ -L a5_return.tgz.sha256 ]; } || { echo -; return; }
   { [ -f a5_return.tgz ] && [ ! -L a5_return.tgz ] && [ -f a5_return.tgz.sha256 ] && [ ! -L a5_return.tgz.sha256 ]; } || { echo tgz_pair; return; }
@@ -573,10 +578,21 @@ tgz5(){ # 기존 반송본 (a5_return.tgz + .sha256) ↔ 지금 트리 → '-' �
   T=$(mktemp -d 2>/dev/null) && [ -d "$T" ] || { echo tgz_tmp; return; }
   x=$(tgz5_in "$T"); rm -rf "$T"; echo "${x:-tgz_fail}"
 }
-tgz5_in(){ # $1 임시 폴더 — tgz5 의 대조 (반송본의 기록 파일만 꺼낸다)
+pfx5(){ # $1 반송본에서 꺼낸 것 · $2 지금 파일 → 0 지금 파일이 그 바이트로 시작한다 (같은 시도의 출력 · 이력은 뒤에 붙을 뿐) · 1 아님 (없음 · 짧음 · 바뀜)
+  local n
+  [ -f "$1" ] && n=$(wc -c < "$1" | tr -d ' ') && [ -f "$2" ] && head -c "$n" "$2" | cmp -s - "$1"
+}
+lines5(){ { cat; printf '\001'; } | LC_ALL=C awk 'NR > 1 { print q } { q = $0 }'; }     # 표준 입력의 줄바꿈으로 끝난 줄만 (끝 조각 · 붙인 표지는 뺀다 — 반송본의 끝 조각은 지금 더 길 수 있다)
+ev5in(){ # $1 임시 폴더 · $2 반송본 구성원 · $3 지금 파일 · $4 증거 줄 꼴 (ERE) → 0 반송본에 없거나 그 증거 줄 (줄바꿈으로 끝난 줄) 이 지금 파일 증거 줄의 앞부분 · 1 아님
+  grep -qxF "$2" "$1/m" || return 0                                                              # 구성원을 꺼내지 않고 흘려 읽는다 (stdout.log 는 수백 MB 일 수 있다)
+  tar xzf a5_return.tgz -O "$2" 2>/dev/null | lines5 | grep -aE "$4" > "$1/e1"; [ "${PIPESTATUS[0]}" = 0 ] || return 1
+  cat "$3" 2>/dev/null | lines5 | grep -aE "$4" > "$1/e2"
+  pfx5 "$1/e1" "$1/e2"
+}
+tgz5_in(){ # $1 임시 폴더 — tgz5 의 대조 (반송본의 기록 파일 · OSZICAR · 이력만 꺼낸다 · OUTCAR · stdout.log 는 흘려 읽는다)
   local T=$1 f d b st rid c x e
   tar tzf a5_return.tgz > "$T/m" 2>/dev/null || { echo tgz_list; return; }
-  grep -E "^(run/final\.json|run/${JOB}_(A5|c1|c2)/(attempt\.start|attempt\.json|killed\.json|infra_abort\.json|OSZICAR)|run_aborted/${JOB}_(A5|c1|c2)_[1-9][0-9]*/(attempt\.start|attempt\.json|killed\.json|infra_abort\.json|OSZICAR))$" "$T/m" > "$T/w"
+  grep -E "^(run/final\.json|run/status\.tsv|run/${JOB}_(A5|c1|c2)/(attempt\.start|attempt\.json|killed\.json|infra_abort\.json|OSZICAR)|run_aborted/${JOB}_(A5|c1|c2)_[1-9][0-9]*/(attempt\.start|attempt\.json|killed\.json|infra_abort\.json|OSZICAR))$" "$T/m" > "$T/w"
   mkdir "$T/x" || { echo tgz_tmp; return; }
   if [ -s "$T/w" ]; then tar xzf a5_return.tgz -C "$T/x" -T "$T/w" 2>/dev/null || { echo tgz_extract; return; }; fi
   if [ -f "$T/x/run/final.json" ]; then cmp -s "$T/x/run/final.json" run/final.json || { echo tgz_final_differs; return; }; fi
@@ -598,12 +614,16 @@ tgz5_in(){ # $1 임시 폴더 — tgz5 의 대조 (반송본의 기록 파일만
     if [ -f "$d/OSZICAR" ]; then                                                                      # 반송본이 본 완전한 행은 줄지 않는다 (출력 전 체크포인트로 되돌린 시도 · Codex ER Q-ER-4)
       x=$(row_scan "$d" "$st"); e=$(row_scan "$c" "$st")
       [ "${e%% *}" -ge "${x%% *}" ] 2>/dev/null || { echo "tgz_rows_lost_$b"; return; }
+      pfx5 "$d/OSZICAR" "$c/OSZICAR" || { echo "tgz_osz_changed_$b"; return; }                         # 반송본의 OSZICAR 바이트 = 지금 OSZICAR 의 앞부분 (행 내용 · 손상된 첫 행 · 열 제목 — 7 → 8 행은 받음 · Codex ES P0)
     fi
+    ev5in "$T" "$b/OUTCAR" "$c/OUTCAR" "$OI_RX" || { echo "tgz_iter_lost_$b"; return; }                  # 반송본 OUTCAR 의 Iteration 줄 = 지금 그 줄들의 앞부분 (Codex ES P0)
+    ev5in "$T" "$b/stdout.log" "$c/stdout.log" "$SO_RX" || { echo "tgz_stdout_lost_$b"; return; }        # 반송본 stdout.log 의 전자 반복행 = 지금 그 줄들의 앞부분 (Codex ES P0)
     if [ -f "$d/infra_abort.json" ]; then                                                             # 영수증 벽시계는 UNKNOWN → 확정값으로만 (확정값이 바뀌거나 UNKNOWN 으로 되돌면 멈춤 · Codex ER Q-ER-4)
       x=$(rget "$d/infra_abort.json" wall_s s); e=$(rget "$c/infra_abort.json" wall_s s)
       [ "$x" = UNKNOWN ] || [ "$e" = "$x" ] || { echo "tgz_receipt_wall_$b"; return; }
     fi
   done
+  if [ -f "$T/x/run/status.tsv" ]; then pfx5 "$T/x/run/status.tsv" run/status.tsv || { echo tgz_history_changed; return; }; fi    # 이력은 줄을 더할 뿐 — 반송본 이력 = 지금 이력의 앞부분 (Codex ES P0)
   echo -
 }
 tree5(){ # 트리 관문 — '-' 또는 첫 사유 (검사기 tree_problems + ledger_problems 와 같은 규칙 · 같은 낱말)
@@ -631,7 +651,7 @@ tree_gate(){ # $1 어디서 — 트리 관문이 '-' 가 아니면 아무것도 
 # ── 완전한 전자 반복행 (검사기 row_gate 와 같은 규칙 · selftest 가 같은 탐침으로 대조 · Codex EO P0 · EP P0) ──
 #   행꼴 = 줄 맨 앞 1–4 글자 + ':' · 완전한 행 = 줄바꿈으로 끝난 행꼴 줄 · 머리가 그 단의 허용 머리 그대로 · ':' 뒤 빈칸 · 칸 6 또는 7 (N E dE d eps ncg rms [rms(c)]) ·
 #   숫자로 읽힘 — N 양의 정수 · ncg 정수 · 나머지 실수 (부호 · 소수점 · E 지수 두 자리까지 — NaN · *** · inf · 글자는 아니다) · 칸마다 24 글자 이하 (늘 유한 · Codex EQ P0).
-#   사유: '-' · row_header_<머리> (허용 밖 머리) · incomplete_row (줄바꿈 있는 덜 쓴 행꼴 줄 · 완전한 행 0 인데 행꼴 끝 조각 또는 콜론 앞에서 잘린 머리 — 앞 빈칸 · 탭을 걷고 글자 1–4 · 앞 빈칸 뒤 'N' 만 열 제목) · nul_bytes.
+#   사유: '-' · row_header_<머리> (허용 밖 머리) · incomplete_row (줄바꿈 있는 덜 쓴 행꼴 줄 · 완전한 행 0 인데 행꼴 끝 조각 또는 콜론 앞에서 잘린 머리 — 앞 빈칸 · 탭을 걷고 글자 1–4 · 앞 빈칸 뒤 열 제목의 앞부분은 먼저 0 스텝 · 빈칸 · 탭 같게 · Codex ES P2) · nul_bytes.
 #   완전한 행 ≥ 1 뒤 줄바꿈 없는 끝 조각 (행꼴 · 머리 조각) 은 세지 않고 넘어간다 (스케줄러 끊김의 잘린 꼬리).
 row_scan(){ # $1 시도 폴더 · $2 단 → "완전한행수 사유"
   local f=$1/OSZICAR H nl
@@ -654,7 +674,7 @@ row_scan(){ # $1 시도 폴더 · $2 단 → "완전한행수 사유"
     !/^[ \t]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:/ {                                                # 행꼴이 아닌 줄 — 0 스텝이면 빈 줄 · 열 제목 (끝 조각은 그 앞부분) 만 (Codex ER Q-ER-2)
       v = $0; gsub(/[ \t]+/, " ", v); sub(/^ /, "", v); sub(/ $/, "", v)
       if (v != "" && !($0 ~ /^[ \t]/ && (NR <= NL ? (v == T6 || v == T7) : index(T7, v) == 1))) ux = 1 }
-    NR > NL { u = $0; sub(/^[ \t]+/, "", u); if (u ~ /^[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?$/ && !(u != $0 && u ~ /^N *$/)) tp = 1 }     # 머리 조각 (앞 빈칸 걷고 · 열 제목 'N' 만 0 스텝 · Codex EQ P0)
+    NR > NL { u = $0; sub(/^[ \t]+/, "", u); w = u; gsub(/[ \t]+/, " ", w); sub(/ $/, "", w); if (u ~ /^[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?$/ && !(u != $0 && index(T7, w) == 1)) tp = 1 }     # 머리 조각 (앞 빈칸 걷고 · Codex EQ P0) — 열 제목의 앞부분 (빈칸 · 탭 같게) 을 먼저 0 스텝으로 (Codex ES P2)
     END { if (bad != "") print n + 0, bad; else if (p > 0 || (tp && n == 0)) print n + 0, "incomplete_row"; else if (ux && n == 0) print 0, "unexplained_line"; else print n + 0, "-" }' "$f"
 }
 osz_feed(){ # 판정 계약 입력 — 줄바꿈으로 끝난 줄만 (끝 조각은 뺀다) · 그 단의 허용 머리 → DAV: (검사기 feed5 와 같다 · row_scan 사유가 없을 때만 쓴다)
@@ -747,38 +767,68 @@ watch5(){ # $1 시도 폴더 · $2 꼬리표 · $3 단 — 외주 2차 alarms (1
   done
 }
 
-# ── 잠금 run/.a5.lock (원자적 mkdir) · 주인 = 기계 이름 + PID. 다른 기계의 잠금은 살아 있는지 알 수 없어 '살아 있음' 으로 본다 (리뷰 P2(d)) ──
+# ── 잠금 run/.a5.lock (원자적 mkdir) · 주인 기록 owner = '기계 PID 표지' 한 줄 (표지 = 이 실행의 32 자 16진 · 줄바꿈으로 끝남 — 잘리면 표지 · 줄바꿈이 먼저 사라진다) ──
+#   다른 기계의 잠금은 살아 있는지 알 수 없어 '살아 있음' 으로 본다 (리뷰 P2(d)) · 주인 기록을 읽을 수 없으면 (없음 · 잘림 · 손상 · 쓰는 중) 죽었다고 보지 않고 멈춘다 ·
+#   이 기계의 죽은 잠금은 그 주인 기록을 원자적으로 옮긴 (mv) 한 명령만 넘겨받는다 — 옮긴 것이 판정한 그 기록 (표지까지) 이 아니면 되돌리고 거부 ·
+#   끝날 때는 주인 기록이 이 실행의 것 (표지까지) 일 때만 지운다 (Codex ES P0 — 겹친 두 명령이 같은 옛 잠금을 치워 둘 다 쓰던 경쟁)
 LOCK=run/.a5.lock
-lock_state(){ # → "상태 기계 PID" — none · live (이 기계 · 살아 있음) · stale (이 기계 · 죽음) · foreign (다른 기계 · 주인 기록 없음 포함)
-  local o hh pp
-  [ -d "$LOCK" ] || { echo "none - -"; return; }
-  o=$(cat "$LOCK/owner" 2>/dev/null); hh=$(printf '%s\n' "$o" | awk '{ print $1; exit }'); pp=$(printf '%s\n' "$o" | awk '{ print $2; exit }')
-  [ -n "$hh" ] || hh=-; [ -n "$pp" ] || pp=-
-  if [ "$hh" != "$HOST" ]; then echo "foreign $hh $pp"
-  elif [[ "$pp" =~ ^[0-9]+$ ]] && kill -0 "$pp" 2>/dev/null; then echo "live $hh $pp"
-  else echo "stale $hh $pp"; fi
+LK_MINE=""
+lock_rec(){ # $1 주인 기록 파일 → 온전하면 '기계 PID 표지' · 아니면 출력 없이 1 (한 줄 · 끝 줄바꿈 · NUL 없음 · 칸 셋: 기계 · PID 10진 · 표지 32 자 16진)
+  local o
+  { [ -f "$1" ] && [ ! -L "$1" ]; } || return 1
+  tr -d '\000' < "$1" 2>/dev/null | cmp -s - "$1" 2>/dev/null || return 1
+  { [ "$(tail -c 1 "$1" | od -An -tx1 | tr -d ' \n')" = 0a ] && [ "$(wc -l < "$1" | tr -d ' ')" = 1 ]; } || return 1
+  o=$(cat "$1") && [[ "$o" =~ ^[^[:space:]]+\ [1-9][0-9]{0,9}\ [0-9a-f]{32}$ ]] || return 1
+  printf '%s' "$o"
+}
+lock_state(){ # → "상태 기계 PID 표지" — none · live (이 기계 · 살아 있음) · stale (이 기계 · 죽음) · foreign (다른 기계) · bad (주인 기록을 읽을 수 없음 — 치우지 않고 멈춘다)
+  local o hh pp tk
+  [ -d "$LOCK" ] || { echo "none - - -"; return; }
+  o=$(lock_rec "$LOCK/owner") || { echo "bad - - -"; return; }
+  read -r hh pp tk <<< "$o"
+  if [ "$hh" != "$HOST" ]; then echo "foreign $hh $pp $tk"
+  elif kill -0 "$pp" 2>/dev/null; then echo "live $hh $pp $tk"
+  else echo "stale $hh $pp $tk"; fi
 }
 lock_say(){ # $1 상태 · $2 기계 · $3 PID · $4 거부한 것
   case "$1" in
     live) echo "⛔ run_a5.sh (기계 $2 · PID $3) 가 이 묶음에서 돌고 있다 — $4 는 그 실행이 끝난 뒤에";;
+    bad) echo "⛔ 잠금 주인 기록 (run/.a5.lock/owner) 을 읽을 수 없다 (없음 · 잘림 · 손상) — 살아 있는지 알 수 없어 치우지 않고 멈춘다 ($4 거부). 스케줄러로 이 묶음에서 도는 run_a5.sh 가 없는지 확인한 뒤 'bash run_a5.sh --unlock - -' 로 지우고 다시";;
     *) echo "⛔ 다른 기계의 잠금 (기계 $2 · PID $3) — 여기서는 살아 있는지 알 수 없어 돌고 있는 것으로 본다 ($4 거부). 스케줄러로 그 잡이 끝났는지 확인한 뒤 'bash run_a5.sh --unlock $2 $3' 로 지우고 다시";;
   esac
 }
-read -r LK_S LK_H LK_P <<< "$(lock_state)"
-lock_take(){ # $1 거부한 것 — 배타 잠금 (run/.a5.lock): 계산 · 기록 명령 · 포장이 같은 잠금을 검사부터 쓰기 끝까지 쥔다 (겹친 두 번째는 거부 · 첫 기록 보존 · Codex ER Q-ER-3②)
+read -r LK_S LK_H LK_P LK_T <<< "$(lock_state)"
+lock_put(){ local t="$LOCK/owner.${LK_MINE##* }"; printf '%s\n' "$LK_MINE" > "$t" && mv -f "$t" "$LOCK/owner"; }    # 이 실행의 주인 기록 — 임시 이름에 다 쓴 뒤 mv (읽는 쪽은 온전한 한 줄만 본다)
+lock_grab(){ # $1 판정한 주인 기록 · $2 옮길 이름 → 0 그 기록을 옮겼다 (mv — 같은 기록을 두 명령이 옮기지 못한다) · 1 아니다 (옮긴 것이 판정한 기록이 아니면 되돌린다)
+  mv -T "$LOCK/owner" "$2" 2>/dev/null || return 1
+  [ "$(lock_rec "$2")" = "$1" ] && return 0
+  mv -T "$2" "$LOCK/owner" 2>/dev/null; return 1
+}
+lock_rel(){ # EXIT — 주인 기록이 이 실행의 것 (기계 · PID · 표지) 일 때만 잠금을 지운다 (남이 넘겨받았거나 손상된 잠금은 두고 알린다)
+  [ -n "$LK_MINE" ] && [ -d "$LOCK" ] || return 0
+  if [ "$(lock_rec "$LOCK/owner")" = "$LK_MINE" ]; then rm -rf "$LOCK"; else echo "⚠ 잠금 (run/.a5.lock) 의 주인 기록이 이 실행의 것이 아니다 — 지우지 않는다 (확인 뒤 bash run_a5.sh --unlock …)"; fi
+}
+lock_take(){ # $1 거부한 것 — 배타 잠금 (run/.a5.lock): 계산 · 기록 명령 · 포장이 같은 잠금을 검사부터 쓰기 끝까지 쥔다 (겹친 두 번째는 거부 · 첫 기록 보존 · Codex ER Q-ER-3② · ES P0)
+  local t
+  t=$(od -An -N16 -tx1 /dev/urandom 2>/dev/null | tr -d ' \n'); [[ "$t" =~ ^[0-9a-f]{32}$ ]] || { echo "⛔ 잠금 표지를 만들 수 없다 (/dev/urandom)"; exit 2; }
+  LK_MINE="$HOST $$ $t"
   if ! mkdir "$LOCK" 2>/dev/null; then
-    read -r LK_S LK_H LK_P <<< "$(lock_state)"
+    read -r LK_S LK_H LK_P LK_T <<< "$(lock_state)"
     case "$LK_S" in
-      live|foreign) lock_say "$LK_S" "$LK_H" "$LK_P" "$1"; exit 2;;
-      stale) echo "⚠ 남은 잠금 (기계 $LK_H · PID $LK_P — 이 기계 · 살아 있지 않다) — 치우고 진행"; rm -rf "$LOCK";;
+      live|foreign|bad) lock_say "$LK_S" "$LK_H" "$LK_P" "$1"; exit 2;;
+      stale) lock_grab "$LK_H $LK_P $LK_T" "$LOCK/owner.claim.$t" || { echo "⛔ 남은 잠금 (기계 $LK_H · PID $LK_P) 을 다른 명령이 먼저 넘겨받았다 — $1 거부 (그 명령이 끝난 뒤 다시)"; exit 2; }
+             lock_put || { echo "⛔ 잠금 주인을 적지 못했다 — 잠금은 '읽을 수 없음' 으로 남는다 (--unlock - -)"; exit 2; }
+             rm -f "$LOCK/owner.claim.$t"; echo "⚠ 남은 잠금 (기계 $LK_H · PID $LK_P — 이 기계 · 살아 있지 않다) — 넘겨받고 진행";;
+      *) mkdir "$LOCK" 2>/dev/null || { echo "⛔ 잠금 (run/.a5.lock) 을 만들 수 없다 — 다른 실행이 막 시작했을 수 있다"; exit 2; }
+         lock_put || { rm -f "$LOCK/owner.$t"; rmdir "$LOCK" 2>/dev/null; echo "⛔ 잠금 주인을 적지 못했다"; exit 2; };;
     esac
-    mkdir "$LOCK" 2>/dev/null || { echo "⛔ 잠금 (run/.a5.lock) 을 만들 수 없다 — 다른 실행이 막 시작했을 수 있다"; exit 2; }
+  else
+    lock_put || { rm -f "$LOCK/owner.$t"; rmdir "$LOCK" 2>/dev/null; echo "⛔ 잠금 주인을 적지 못했다"; exit 2; }
   fi
-  printf '%s %s\n' "$HOST" "$$" > "$LOCK/owner" || { rm -rf "$LOCK"; echo "⛔ 잠금 주인을 적지 못했다"; exit 2; }
-  trap 'rm -rf "$LOCK"' EXIT; trap 'exit 143' TERM; trap 'exit 129' HUP; trap 'exit 130' INT
+  trap 'lock_rel' EXIT; trap 'exit 143' TERM; trap 'exit 129' HUP; trap 'exit 130' INT
 }
 if [ "${1:-}" != --unlock ] && { [ $# -gt 0 ] || [ "${PACK_ONLY:-0}" = 1 ]; }; then
-  case "$LK_S" in live|foreign) lock_say "$LK_S" "$LK_H" "$LK_P" "기록 · 포장 명령"; exit 2;; esac
+  case "$LK_S" in live|foreign|bad) lock_say "$LK_S" "$LK_H" "$LK_P" "기록 · 포장 명령"; exit 2;; esac
 fi
 
 # ── 끝난 사다리 (run/final.json) 에는 기록을 더하지 않는다 · 뒤 단이 있으면 앞 단 기록을 고치지 않는다 (리뷰 P1-1 · P0-2(c)) ──
@@ -798,10 +848,12 @@ case "${1:-}" in --infra-abort|--infra-wall|--killed|--reset-w0) lock_take "기�
 
 # ── 잠금 지우기 — 운영자가 스케줄러로 그 잡이 끝났음을 확인한 뒤 (주인을 그대로 적어야 지운다) ──
 if [ "${1:-}" = "--unlock" ]; then
-  [ $# -eq 3 ] || { echo "⛔ 쓰는 법: bash run_a5.sh --unlock <기계> <PID> (잠금 주인을 그대로)"; exit 2; }
+  [ $# -eq 3 ] || { echo "⛔ 쓰는 법: bash run_a5.sh --unlock <기계> <PID> (잠금 주인을 그대로 · 주인 기록을 읽을 수 없으면 - -)"; exit 2; }
   [ "$LK_S" != none ] || { echo "⛔ 잠금이 없다"; exit 2; }
   { [ "$2" = "$LK_H" ] && [ "$3" = "$LK_P" ]; } || { echo "⛔ 잠금 주인은 기계 $LK_H · PID $LK_P 다 — 그대로 적어야 지운다"; exit 2; }
   [ "$LK_S" != live ] || { echo "⛔ 이 기계에서 PID $LK_P 가 살아 있다 — 지우지 않는다"; exit 2; }
+  if [ "$LK_S" = bad ]; then ! lock_rec "$LOCK/owner" > /dev/null || { echo "⛔ 그 사이 잠금 주인 기록이 생겼다 — 지우지 않는다 (다시 확인)"; exit 2; }     # 읽을 수 없는 기록은 지금도 읽을 수 없을 때만
+  else lock_grab "$LK_H $LK_P $LK_T" "$LOCK/owner.unlock.$$" || { echo "⛔ 그 사이 잠금이 바뀌었다 — 지우지 않는다 (다시 확인)"; exit 2; }; fi    # 확인한 그 기록 (표지까지) 을 옮긴 뒤에만 (Codex ES P0)
   rm -rf "$LOCK" || { echo "⛔ 잠금을 지우지 못했다"; exit 2; }
   log "✎ 잠금을 지웠다 (기계 $LK_H · PID $LK_P · $LK_S — 운영자 확인)"; echo "✓ 잠금을 지웠다 — 다시 돌리면 기록에서 이어 간다"; exit 0
 fi
@@ -834,8 +886,8 @@ if [ "${1:-}" = "--infra-abort" ]; then
     g="0 -"; osz=missing
   fi
   [ "$g" = "0 -" ] || { echo "⛔ OSZICAR 완전한 전자 반복행 ${g%% *} · 판독 ${g#* } — 0 스텝 중단이 아니다 (행꼴 조각 · 남의 머리도 0 스텝이 아니다 · 끊긴 시도면 --killed · 실행 실패는 사다리가 다룬다)"; exit 2; }
-  so=$(grep -acE '^[[:space:]]*[A-Za-z][A-Za-z ]?[A-Za-z ]?[A-Za-z ]?:[[:space:]]+[0-9]' "$src/stdout.log" 2>/dev/null); so=${so:-0}
-  oi=$(grep -acE 'Iteration +[0-9]+\(' "$src/OUTCAR" 2>/dev/null); oi=${oi:-0}
+  so=$(grep -acE "$SO_RX" "$src/stdout.log" 2>/dev/null); so=${so:-0}
+  oi=$(grep -acE "$OI_RX" "$src/OUTCAR" 2>/dev/null); oi=${oi:-0}
   [ "$so" = 0 ] && [ "$oi" = 0 ] || { echo "⛔ OSZICAR 는 $osz 인데 stdout.log 전자 반복행 $so · OUTCAR Iteration $oi — 출력 유실이지 0 스텝이 아니다 · 기록하지 않는다"; exit 2; }
   { nbw "$sid" && nbw "$when" && nbw "$why"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다 (빈칸 문자 — 공백 · 탭 · 줄바꿈 · VT · FF · CR — 만인 글도 안 된다 · Codex EQ)"; exit 2; }
   { u8ok "$sid_r" && u8ok "$when_r" && u8ok "$why_r"; } || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유에 UTF-8 이 아닌 바이트가 있다 — 기록하지 않는다 (UTF-8 글로 다시 · Codex EP)"; exit 2; }
@@ -1038,7 +1090,7 @@ w0_check(){
 # ── 한 시도 — 준비는 임시 폴더 run/.prep_<잡>_<단> 에서 하고, 다 되면 시도 폴더로 이름을 바꾼 뒤 띄운다 (준비 실패는 그 단을 소모하지 않는다 — 리뷰 P2(c)) ──
 pfail(){ log "⛔ $2 — 준비 실패 · 그 단은 소모되지 않았다 (임시 폴더를 지웠다 · 원인 — 디스크 · 권한 · 경로 — 을 고친 뒤 다시)"; rm -rf "$1"; }
 run_one5(){ # $1 단 (A5|c1|c2) · $2 변형 (A5c|A5f|c1|c2) · $3 시도 폴더 · $4 시작 WAVECAR (A5c · c1 · c2) · $5 그 기대 sha → 0 돌림 · 3 준비 실패 · 6 띄우기 전 PP 불일치
-  local st=$1 var=$2 d=$3 wsrc=${4:-} wexp=${5:-} inc tp rid t0 t1 u0 u1 el rc j wsha="" wcp="" wend hd istart icharg nr pr hon ver rs x p
+  local st=$1 var=$2 d=$3 wsrc=${4:-} wexp=${5:-} inc tp rid t0 t1 u0 u1 el rc j wsha="" wcp="" wend hd istart icharg nr pr hon ver rs x p psh pz
   inc=$(incar_of "$var"); tp="run/.prep_${JOB}_$st"
   pp_ok "$JOB" || return 6
   [ ! -e "$d" ] || { log "⛔ $d 가 이미 있다 — 덮어쓰지 않는다"; return 3; }
@@ -1051,7 +1103,8 @@ run_one5(){ # $1 단 (A5|c1|c2) · $2 변형 (A5c|A5f|c1|c2) · $3 시도 폴더
     [ -f "$POTCAR_DIR/$p/POTCAR" ] || { pfail "$tp" "POTCAR $p 없음"; return 3; }
     { cat "$POTCAR_DIR/$p/POTCAR" >> "$tp/POTCAR" && printf "%s %s\n" "$p" "$(h "$POTCAR_DIR/$p/POTCAR")" >> "$tp/POTCAR.species.sha256"; } || { pfail "$tp" "POTCAR $p 잇기"; return 3; }
   done < "jobs/$JOB/POTCAR.spec"
-  { grep -aE "TITEL|ZVAL|VRHFIN|LEXCH" "$tp/POTCAR" > "$tp/POTCAR.titel" && h "$tp/POTCAR" > "$tp/POTCAR.sha256"; } || { pfail "$tp" "$st POTCAR 기록"; return 3; }
+  { grep -aE "TITEL|ZVAL|VRHFIN|LEXCH" "$tp/POTCAR" > "$tp/POTCAR.titel" && psh=$(h "$tp/POTCAR") && [[ "$psh" =~ ^[0-9a-f]{64}$ ]] && printf '%s\n' "$psh" > "$tp/POTCAR.sha256"; } \
+    || { pfail "$tp" "$st POTCAR 기록"; return 3; }                 # psh = 준비 때 잰 POTCAR 본문 sha (끝 기록 직전에 다시 재어 대조 · Codex ES P1)
   if [ -n "$wsrc" ]; then
     wsha=$(h "$wsrc")
     { [ -n "$wexp" ] && [ "$wsha" = "$wexp" ]; } || { pfail "$tp" "$st 시작 WAVECAR ($wsrc) sha '$wsha' ≠ 기대 '$wexp'"; return 3; }
@@ -1090,11 +1143,13 @@ run_one5(){ # $1 단 (A5|c1|c2) · $2 변형 (A5c|A5f|c1|c2) · $3 시도 폴더
         "$wsha" "$wcp" "$wend" "${istart:-NA}" "${icharg:-NA}" "$nr" "$pr" "$hon" "$SPH" "$(out_num "$d" NKPTS)" "$(out_num "$d" NBANDS)" "$(out_num "$d" ENCUT)" > "$d/WAVECAR.info.part" && mv -f "$d/WAVECAR.info.part" "$d/WAVECAR.info" || { log "⛔ $d WAVECAR 기록 쓰기 실패 — 더 하지 않는다 (종료 8 · 연락)"; exit 8; };;
   esac
   if [ "$st" != c2 ]; then x=$(hist_max "$d"); case "$x" in ''|*[!0-9]*) ;; *) [ "$x" -gt 45 ] && echo "$(utc) $var info history_max $x" >> "$d/warn.log";; esac; fi
+  pz=$(h "$d/POTCAR")         # 끝 기록 직전 — 아직 남아 있는 POTCAR 본문을 다시 잰다 · 끝 기록에는 이 잰 값 (POTCAR.sha256 파일을 베끼지 않는다 · 파일과 다르면 트리 관문이 멈춘다 · Codex ES P1)
   printf '{"job": "%s", "attempt": "%s", "stage": "a5", "run_id": "%s", "rc": %d, "t_start": %d, "t_end": %d, "elapsed_s": %d, "vasp_version": "%s", "kernel_sha256": "", "perf": "%s", "sha256": {"INCAR": "%s", "POSCAR": "%s", "KPOINTS": "%s", "POTCAR": "%s", "OUTCAR": "%s", "OSZICAR": "%s", "WAVECAR.info": "%s", "stdout.log": "%s", "POTCAR.titel": "%s", "POTCAR.species.sha256": "%s", "attempt.start": "%s"}}\n' \
     "$JOB" "$var" "$rid" "$rc" "$t0" "$t1" "$el" "$ver" "$(printf '%s' "$PERF_LINES" | tr '\n' ';')" \
-    "$(h "$d/INCAR")" "$(h "$d/POSCAR")" "$(h "$d/KPOINTS")" "$(cat "$d/POTCAR.sha256")" "$(h "$d/OUTCAR")" "$(h "$d/OSZICAR")" "$(h "$d/WAVECAR.info")" \
+    "$(h "$d/INCAR")" "$(h "$d/POSCAR")" "$(h "$d/KPOINTS")" "$pz" "$(h "$d/OUTCAR")" "$(h "$d/OSZICAR")" "$(h "$d/WAVECAR.info")" \
     "$(h "$d/stdout.log")" "$(h "$d/POTCAR.titel")" "$(h "$d/POTCAR.species.sha256")" "$(h "$d/attempt.start")" > "$d/attempt.json.part" && mv -f "$d/attempt.json.part" "$d/attempt.json" \
     || { log "⛔ $d 끝 기록 (attempt.json) 쓰기 실패 — 더 하지 않는다 (종료 8 · 남은 .part 는 트리 관문이 멈춘다 · 연락)"; exit 8; }
+  [ "$pz" = "$psh" ] || { log "⛔ $d POTCAR 본문이 준비 뒤 바뀌었다 (준비 ${psh:0:16}… · 끝 ${pz:-없음} ) — 끝 기록에 잰 값을 적고 더 하지 않는다 (종료 8 · POTCAR 는 지우지 않고 둔다 · 연락 · Codex ES P1)"; exit 8; }
   j=$(judge5 "$d" "$st"); set -- $j
   printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$JOB" "$var" "a5" "$rc" "$1" "$2" "$3" "$4" "$5" "$el" "$rid" >> run/status.tsv
   rm -f "$d/POTCAR" "$d/CHGCAR" "$d/CHG" "$d/vasprun.xml" "$d/vdw_kernel.bindat" "$d/LOCPOT"
