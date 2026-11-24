@@ -436,3 +436,12 @@ WE–CE 9 V 에서도 단락이 없다 → WE 분극도, 전위차도 필라멘�
 | [3] | Wang, M., Wolfenstine, J.B., and Sakamoto, J., *Electrochim. Acta* 296, 842–847 (2019) — "Temperature dependent flux balance of the Li/Li7La3Zr2O12 interface" | 같은 플럭스 균형의 온도 축 | 카드 없음 |
 | [25] | Fu, K. et al., *Sci. Adv.* 3, e1601659 (2017) | Li \| 가넷 인터레이어 (높은 전류 · 낮은 압력) | 카드 없음 |
 | [28] | Cannarella, J., and Arnold, C.B., *J. Power Sources* 245, 745–751 (2014) | Li-ion 적층압 0.1–1 MPa 의 출처 | 카드 없음 |
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- 첫 경고 블록의 'LPSCl 쪽 대응 실측은 Kasemchainan 2019 (… litdb 카드 없음)' → 이제 digest `kasemchainan2019_critical_stripping_current_dendrite_on_plating`. LPSCl 판 숫자: 3 MPa 안전 0.2 · 실패 1.0 / 7 MPa 안전 1.0 · 실패 2.0 mA cm⁻² · 도금 쪽 한계 2.0–3.0 (두 압력 같음) · 조건당 셀 하나.
+- ✎ Kasemchainan 의 겉보기 압력 지수 0.8–1.9 는 이 논문 (LLZO) 의 겉보기 ≈1 과 모양이 같고, 둘 다 벌크 Li 크리프 n 6.56 이 주는 의존과 차수가 다르다 — 계면 Li 공급은 명목 적층압 + 벌크 크리프 법칙만으로 정해지지 않는다 (`comparison_vs_ours_DEM.md` §I-25).

@@ -590,3 +590,12 @@ DFT 이완 뒤 (`_cb_relaxed`) 에는 (100) 바깥이 Li 2 (+ S_free 1) 로, (01
 | 8 | Cheng, Merinov, Morozov, Goddard · *ACS Energy Lett.* 2, 1454 (2017) (ref 18) | Li(100)/LPSCl(100) AIMD 분해 — 0 K 분해 서술의 원형 | 없음 |
 
 다음 순번: Gao, Jalem, Tateyama · *ACS Appl. Mater. Interfaces* 12, 16350 (2020) (ref 53 · γ_inter 식 원전) · Wenzel et al. · *Solid State Ionics* 318, 102 (2018) (ref 59 · XPS 계면상 실측) · Camacho-Forero & Balbuena · *J. Power Sources* 396, 782 (2018) (ref 57) · Lepley & Holzwarth · *Phys. Rev. B* 92, 214201 (2015) (ref 58 · 목록에 있음). 참고문헌 목록에는 제목이 없어 1 · 2 · 3 말고는 제목을 적지 않았다.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- Lepley (ref 58) → digest `lepley2015_modeling_interfaces_between_solids_li_battery_materials`. γ-Li₃PS₄ \| Li 의 음의 계면 에너지 −216 meV/Å² (그림 ≈ −226) 는 이 카드 서술과 맞다 — 다만 Li₃PS₄ 는 LPSCl 의 Li 쪽 분해산물이 아니라 산화 쪽 산물이라, 같은 PS₄ 골격의 대리 계로 읽는다.
+- (d) 1 번 Kotakadi 외 ChemRxiv (2025) 는 저널판이 있다 — *Joule* 9, 102175 (2025) · DOI 10.1016/j.joule.2025.102175 (Crossref · 같은 묶음 보고 넷이 확인).

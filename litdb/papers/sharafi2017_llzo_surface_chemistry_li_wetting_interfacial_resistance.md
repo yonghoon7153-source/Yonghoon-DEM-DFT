@@ -361,3 +361,11 @@ LLZO 표면의 **Li₂CO₃ · LiOH 오염층이 Li 를 밀어낸다** — 녹�
 - **전처리 (preconditioning)** — 조립한 Li|LLZO|Li 셀을 175 °C 에 12 h 두어 (Li 녹는점 180.5 °C 바로 아래) Li 가 기어 들어가 접촉을 넓히게 하는 단계.
 - **DP · WP · HT** — 건식 연마 (공기 중 · 연마액 없음) · 습식 연마 (글리콜계 연마액 + 다이아몬드) · Ar 분위기 열처리 (200–500 °C · 3 h).
 - **Cassie 혼합 (✎ 우리 검산에 쓴 것)** — 화학적으로 다른 조각이 섞인 표면의 겉보기 각을 cos θ = Σ fᵢ cos θᵢ (fᵢ = 면적 분율) 로 어림하는 식. 이 논문은 쓰지 않았다.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- Kasemchainan 2019 서론은 'LLZO CCD as low as 0.6 mA cm⁻²' 의 근거로 이 논문 (그 논문 ref 14) 을 든다 — 이 논문의 CCD 는 **0.3 mA cm⁻²** (WP + HT 500 °C · `Fig. 5a`) 다. 0.6 을 이 논문 값으로 옮기지 않는다 (`kasemchainan2019_critical_stripping_current_dendrite_on_plating` §10).

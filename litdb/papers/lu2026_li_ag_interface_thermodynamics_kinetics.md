@@ -428,3 +428,12 @@ Ag(111)·Ag(100) 위에 BCC Li 를 Kurdjumov–Sachs · Nishiyama–Wassermann �
 - `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` — 탄소 인터레이어 G_c (실험 박리 · ⛔ 이 논문의 W_ad 와 같은 줄 금지).
 - `kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode` — Ag–C + CNF 인터레이어 Li 도금 ([우리 그룹] · 인접 축).
 - `liu2022_hbn_lithiophobic_sandwich_li_anode` — 우리 보고서 7 절이 인용한 소Li 흡착 (h-BN) 예 — 이 논문은 반대쪽 끝 (친Li · 합금) 의 예.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- ref [15] Xie 2024 → 이제 digest `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism`: Ag–Li 벌크 CE-MC — 실온 bcc 고용체 (x ≳ 0.47) · AgLi₂₅ 까지 리튬화 전위 > 0 (1.6 · 2.6 mV @ 200 · 300 K · 부호만 견고) · 포논 보정이 γ₃ → BCC 교차를 실험과 더 어긋나게 함 · 계면 계산 0.
+- ref [11] Lee 2020 → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` · Li–Ag 상 순서 실측 (β → γ3 → γ2 → Li₃Ag → γ1 · 가넷 · operando XRD) → `ko2025_metal_interlayer_anode_less_li_plating_stripping_mechanism` · SE 격자 안 Ag⁺ 의 첫 충전 석출 → `choi2025_silver_exsolution_argyrodite_anode_free`.

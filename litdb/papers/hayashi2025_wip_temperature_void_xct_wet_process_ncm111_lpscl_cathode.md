@@ -443,3 +443,11 @@ Kobe Steel 그룹이 자사 CIP 장치에 히터를 단 WIP 로 **슬러리 도�
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- [13] Lee 2020 'over 900 Whl⁻¹ by using WIP' — 900 Wh L⁻¹ 은 10 적층 5.87 Ah 셀 (942 · 0.05 C · 무가압 · 한 사이클) 이고 0.6 Ah 셀은 703 이다 · WIP 효과는 정성 · 조건 · 기공 숫자 없음 → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal`.

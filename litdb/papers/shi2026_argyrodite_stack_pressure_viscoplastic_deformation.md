@@ -636,3 +636,12 @@ Methods 정의 (*"cumulative length of the islands over the total length of the 
 - **Otsu 문턱**: 회색조 히스토그램을 두 무리로 가장 잘 나누는 문턱을 자동으로 고르는 이진화.
 - **Vickers HV**: 136° 사각뿔 압자 · HV = 1.8544 F/d² (d = 대각선) · 깊이 h = d/7. **Berkovich**: 3 각뿔 (65.3°) · 투영 면적 ≈24.5 h². **Tabor 관계**: 완전 소성 압입에서 H ≈ 3Y (금속 경험식).
 - **C3D6 · C3D8 · CPE8R**: Abaqus 요소 — 3 차원 6 절점 쐐기 · 8 절점 육면체 · 평면 변형 8 절점 감차 적분 사각형.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- 영전류 유지가 CCD 를 올린다 (이 논문) ↔ Kasemchainan 2019 `Fig. S4` 에 기록 안 된 반주기 휴지 figure-read ≈0.45 h (Methods 무언급) — CCS · CCD 를 견줄 때 프로토콜 변수다 → `kasemchainan2019_critical_stripping_current_dendrite_on_plating`.
+- Li₆PS₅Cl 안 Li 로 찬 균열 · 공극의 3D 관찰 (operando μCT) → `sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free`.

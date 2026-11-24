@@ -541,3 +541,12 @@ Video S2 (6.6 s · 100 µA cm⁻² · 화면이 `Fig. 5` 에서 **90° 돌아 �
 - **성장 모드 (i) · (ii) · (iii)**: (i) 위스커 — CC 와 SE 가 닿은 자리에서 Li 가 수직 기둥으로 자라 둘을 벌린다 · (ii) 막 — 옆으로 퍼져 계면을 고르게 메운다 (바라는 것) · (iii) 덴드라이트 — Li 가 SE 안 (입계 · 결함) 으로 들어간다.
 - **전류 수축 (current constriction)**: 전극이 SE 와 일부 점에서만 닿으면 전류가 그 점으로 몰려 겉보기 저항이 커진다. 덮임이 낮은 무음극 첫 충전이 그 상태다.
 - **Young–Dupré 와 이 논문**: 우리 W_ad 보고서 §7 ② 는 W(Li\|X) 와 γ_Li 로 젖음각을 낸다. 이 논문은 그 값을 주지 않지만 *젖음이 좋으면 핵이 접점에서 옆으로 퍼진다* 는 그림의 실험 장면 (`Fig. 5`) 을 준다 — 0 K W 로 순서를 견주고, 핵 밀도 · 과전압은 이런 실험과 같이 본다.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- 같은 operando SEM 미세전극 기법 · 같은 사람 (Lerch · Fuchs) 의 금속판 비교 → `chu2026_solubility_guided_interlayer_li_plating_stripping_garnet` (Cu · Au · Ag · Pt · Pd · CCD 화산형). Cu 핵 밀도의 전류 의존은 이 논문과 **반대 방향** (0.1 → 1 mA cm⁻² 에서 1.52 → 0.71 × 10⁷ cm⁻² · 세는 시점 · 합침 효과 섞임) 이지만 차수 (10⁷ cm⁻²) 는 같다.
+- 같은 그룹의 cryo-EBSD · 합금 층 후속 → `becker2026_electrodeposited_li_microstructure_metal_interlayers_anode_free` (Li₆PS₅Cl · Au · Ag · Bi 160 nm · 석출 Li 는 (110) ∥ 계면이 잦음) · `haslam2025_alloying_interlayers_li_morphology_microstructure_anode_free` (LLZO · Au · Ag 100 nm) · 얇은 Cu 막 (200 nm) 아래 Li 기둥이 Cu 를 들어 올림 → `ko2025_metal_interlayer_anode_less_li_plating_stripping_mechanism` (LLZTO).

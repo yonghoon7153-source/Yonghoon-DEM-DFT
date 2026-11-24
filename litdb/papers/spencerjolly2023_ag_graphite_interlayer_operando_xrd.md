@@ -240,3 +240,11 @@ Ag 가 있으면 CC 쪽 층이 **균일한 Li₁₀Ag₃ + Li** 가 되고 방�
 - **Fig. 3 상 막대 (figure-read ≈, 총 ≈35 h)**: Li ≈0–8.5 h 소진 · Li₁₀₋ₓAg₃ ≈0–23 · Li₉₋ₓAg₄ ≈12–31 · LiAg(CsCl) ≈23–32 · LiAg(UPb) ≈27–35 · Ag ≈29.5–35 / LiC₆ ≈0–25 · LiC₁₂ ≈12–25 · … · Li_xC₆ ≈26–35.
 - **Fig. 5 (figure-read ≈)**: 흑연 단독 2.0 mA cm⁻² 는 ≈0.3 mAh cm⁻² 에서 0 V 아래 평탄 (≈흑연 용량 0.28 과 정합), Ag–흑연 2.0 은 ≈0.25 mAh cm⁻² — **고율에서 Ag 의 용량 연장이 사라진다**는 본문 서술과 정합.
 - **Fig. S1 (figure-read ≈)**: 30 µA cm⁻² 에서 흑연 단독은 ≈0.22 mAh cm⁻² 에 0 V, Ag 단독은 ≈0.1 V 에서 0 V 로 2 mAh cm⁻² 에 걸쳐 완만.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- Lee 2020 값 셋 → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` §16: '3.2 mA cm⁻²' → 원문 0.5 C = **3.4** mA cm⁻² · 'PVdF 비는 Lee 2020 과 동일' → Lee 원문은 마른 층 PVDF 비율을 안 적었다 · 'Ag 5.7 vol% (Lee 2020 과 비슷)' → Lee 원문 ≈8 vol% (기준 미기재 · ✎ 고체 기준 ≈5–6).

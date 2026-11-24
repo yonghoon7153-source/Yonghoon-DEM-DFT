@@ -519,3 +519,12 @@ E · G · ν = 7.82 · 2.83 GPa · 0.381 · 항복 0.73–0.81 MPa · 인장 = �
 ## 🗨️ Q&A 로그
 
 (아직 없음)
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- Kasemchainan 2019 는 이 논문의 항복 0.81 MPa 를 같은 쪽에서 ref 36 · ref 38 로 다르게 인용하고, 0.5 MPa (< 항복) 에서는 셀 형성부터 어려웠다고 쓴다 → `kasemchainan2019_critical_stripping_current_dendrite_on_plating`.
+- Lee 2020 *Nat. Energy* 5, 299 의 ref 20 = 이 논문 (그 셀의 운전 적층압 2 MPa 는 항복 ≈0.8 MPa 보다 높다) → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` · Xie 2024 연속체 모델의 Li 부피 탄성률 11 GPa 도 이 논문 K 11.1 GPa 와 같은 값이다 → `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism`.

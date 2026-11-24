@@ -745,3 +745,11 @@ Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 
 | 16 | Liao 2024 · *J. Mater. Chem. A* 5990 (비정질 탄소 13 µm) | 88 | — (후속 `liao2025_…` ✅) |
 | 17 | Park S. H. 2022 · *J. Mater. Chem. A* 21995 (탄소 5 µm · LPS) | 86 | — |
 
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- [30] Lee 2020 *Nat. Energy* 5, 299 → digest `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal`: 제조 WIP 490 MPa (등방) · 운전 2 MPa · 60 °C · 1,000 사이클 89 % 유지 · CE > 99.8 % 평균 · 탄소층은 충 · 방전 내내 SE 쪽에 남음 · WIP 온도 · 유지 · 기공은 원문에 없다.
+- 같은 1 저자의 operando μCT 편 (다른 논문) → `sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free`.

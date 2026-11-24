@@ -512,3 +512,12 @@ Yang 지도의 W 와 W_coh 는 같은 퍼텐셜에서 나왔다. 그러니 **다
 - **Mie 8-6 퍼텐셜**: ε[3(r_m/r)⁸ − 4(r_m/r)⁶] — r_m 에서 바닥 −ε, r⁻⁶ 꼬리가 분산 인력.
 - **TMSD (total mean squared displacement)**: 모든 Li 의 변위 제곱 합. 결함 하나당 확산계수는 TMSD 를 결함 수로 나눠 낸다 (식 S1).
 - **Nernst–Einstein**: 확산 (MSD) 을 전도도로 바꾸는 식. 여기서는 금속 속 중성 Li 의 질량 수송을 비교하려고 쓴 지표다.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- §3g 문헌 W 표 · `Table S1` 행 · §10-④ 의 'Lepley 2015 W' 다섯 값 (Li–Li₂O 1.153 · 1.218 · Li–β-Li₃PO₄ 0.481 · Li–γ-Li₃PO₄ 0.593 · 1.153 J m⁻²) 은 **Lepley 가 계산한 W 가 아니다.** Lepley 2015 표 II 의 진공 표면 에너지 · 정합 극한 계면 에너지에 γ_Li = 30.0 meV/Å² (0.481 J m⁻² · 그 논문 밖 값) 를 넣은 Dupré 값으로 다섯 개가 소수 셋째 자리까지 재현된다 (`lepley2015_modeling_interfaces_between_solids_li_battery_materials` §11b · 판정은 `comparison_vs_ours.md` §I 재귀속 행). 라벨: 'Lepley 2015 표 II 로 Dupré 를 닫은 값 · γ_Li ≈ 0.48 J m⁻² 가정 · LDA · 계면 · 표면 모두 이완'.
+- §10-④ 의 모순 (본문 'SEI 성분 0.1–0.5 J m⁻²' 대 Li–Li₂O 1.15) 은 Li₂O(110) 진공 표면 72 meV/Å² (= 1.153 J m⁻²) 가 Dupré 식에 그대로 들어간 탓이다 — 이 다섯 값을 우리 W 의 문헌 대조로 쓰지 않는다.

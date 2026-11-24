@@ -507,3 +507,11 @@ Z(f, φ) = [R_s + Z_SE + Z_int + Z_int/(1−φ)] × A (박리 쪽 계면만 남�
 Δt = ΔQ / i: [LPSCl] 광대역 10 Hz 0.42 → ≈63 min · 10² Hz 0.37 → ≈55 min · 단일 주파수 20 % 0.245 → ≈37 min · [LLZO] 광대역 10² Hz 0.60 → ≈90 min (ΔQ 는 `figure-read`).
 광대역 한 구간 ≈5 min × 0.4 mA cm⁻² = 0.033 mAh cm⁻² → 1.57 까지 ≈47 구간.
 이용률: 1.60/2 = 80 % · 1.72/2 = 86 % · 1.9/2 = 95 % (`figure-read`).
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- 박리 공극이 다음 도금의 덴드라이트를 부른다는 Li₆PS₅Cl 원전 (3 전극 · in situ XCT · EIS · 3 / 7 MPa) → `kasemchainan2019_critical_stripping_current_dendrite_on_plating` — 공극 분율 → 임피던스 식을 견줄 실험 자료 (정량 공극 분율은 없음).

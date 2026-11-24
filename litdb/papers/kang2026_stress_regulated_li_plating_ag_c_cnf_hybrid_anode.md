@@ -435,3 +435,12 @@
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- 모델 입력 ε_p,interlayer 0.4 (Ref. 39 = Xie 2024) — Xie 원문은 40 % 를 'demonstrative' (보여 주기용) 라 명시했다 · 실측 아님 → `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism` §10. 흔한 Ag/C 층 기공 ≈29 % (Park 2025 *Adv. Energy Mater.*) 와 다르다.
+- [19] Lee 2020 → 이제 digest `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` (Ag : 카본블랙 1 : 3 · 10 µm · SUS · 같은 배합 축).

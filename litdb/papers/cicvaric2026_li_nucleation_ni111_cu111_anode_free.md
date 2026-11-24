@@ -446,3 +446,11 @@ Cu(111) · Ni(111) 단결정 위 Li 초기 석출을 −5…−25 mV (vs Li/Li�
 
 > **같은 배치 (2026-11-24 · `litdb/_curation/batch_2026_11_24/batch.json`) 에서 이 편과 이어 읽을 것** — 이 논문에 없는 §7 ② · ③ 쪽이다 (링크는 그 digest 들이 정본에 들어간 뒤 확인):
 > `seymour2021_void_suppression_interfacial_adhesion_vacancy_transport` (점착 W_adh 와 2γ_metal 비교 — §7 ②) · `yang2021_flat_li_stripping_lithiophilic_interface_design` (친Li 계면 설계 — 점착 기준) · `lu2026_li_ag_interface_thermodynamics_kinetics` (Li–Ag — §7 ③) · `fuchs2023_cu_llzo_anode_free_li_growth_modes` (Cu 집전체 | 고체 전해질 위 Li 성장 모드 — 이 논문의 액체 전해질 Cu 와 대조).
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- Cu 막 실험 쪽: 얇은 Cu 막 아래 Li 기둥이 Cu 를 들어 올린다 (가넷 · operando SEM · 첫 CE ≈20 %) → `ko2025_metal_interlayer_anode_less_li_plating_stripping_mechanism` · 금속 층 친Li 성 화산형에서 Cu 가 가장 낮다 (CCD 0.26 mA cm⁻² · 가넷) → `chu2026_solubility_guided_interlayer_li_plating_stripping_garnet`.

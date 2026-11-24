@@ -481,3 +481,11 @@ Ag 석출은 이온 확산 + 전기화학 환원으로 전자가 닿는 입계�
 
 이미 litdb 에 있거나 이 배치 (2026-11-24b) 에서 먹는 중이라 세지 않은 것: Xie 외 *Adv. Energy Mater.* 14, 2302960 (2024) → `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism` (배치 #11 · 생김) · Kasemchainan 외 *Nat. Mater.* 18, 1105 (2019) (ref 18) → `kasemchainan2019_critical_stripping_current_dendrite_on_plating` (배치 #10 · 생김) · Lee Y.-G. 외 *Nat. Energy* 5, 299 (2020) (ref 35 · Ag–C 원전) → 배치 #9 `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` (진행 중 · 2026-11-24 확인 때 digest 없음) · Ko 외 *Nat. Commun.* 16, 1066 (2025) → 배치 #8 (진행 중).
 다음 순번: Sandoval 외 *Joule* 7, 2054 (2023) (ref 13 · **목록에 있음** 표 2 #6) · Jung Y.-C. *J. Mater. Chem. A* 11, 25275 (2023) (현장 Ag 장식 탄소 · SI ref 5 · 서지 미확인) · Park, Jung, Sohn *Electrochem. Solid-State Lett.* 12, A171 (2009) (나노 Ag 리튬화 · ref 30) · Quirk & Dawson *Adv. Energy Mater.* 13, 2301114 (2023) (입계 설계 · ref 39).
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- 계보 · (d) 에서 '진행 중' 으로 적은 같은 묶음 편이 다 끝났다 → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` (Ag–C 원전 · ref 35) · `ko2025_metal_interlayer_anode_less_li_plating_stripping_mechanism` (가넷 위 Ag 층 · Li–Ag 상 순서).

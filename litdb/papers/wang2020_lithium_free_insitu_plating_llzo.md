@@ -620,3 +620,11 @@ LLZO 펠릿에 Cu·Ni 박을 900–1100 °C 에서 **확산 접합**하고 0.05 
   · `seymour2021_void_suppression_interfacial_adhesion_vacancy_transport` · `kim2026_operando_void_detection_single_frequency_impedance` · `chatterjee2025_diffuse_interface_metal_anode_void_model` — 공극 (점착 · 공공 수송 · operando 검출 · 확산계면 모형) 축.
   · `metzler2025_ag_particle_distribution_carbon_interlayer_anode_free` · `metzler2026_sputtered_ag_carbon_interlayers_anode_free` — Ag–C 인터레이어 (LPSCl 무음극) — 이 논문이 '정량 안 됨' 이라 한 Ag–C 쪽 후속.
   · `yang2021_atomistic_li_stripping_plating_interface_md` · `shi2026_argyrodite_stack_pressure_viscoplastic_deformation` — 원자 규모 탈리/도금 MD · argyrodite 적층압 점소성.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- 같은 그룹 (Sakamoto) 의 LLZO 무음극 합금 층 후속 → `haslam2025_alloying_interlayers_li_morphology_microstructure_anode_free` (Au · Ag 100 nm · Au → Li₁₅Au₄ 입자 · Ag → Li 에 녹음 · 높낮이 ±17.5 → ±3.5 µm · 결정립은 '작아짐' 이 아니라 '분포 확대').

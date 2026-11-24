@@ -345,3 +345,12 @@
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- [7] Kasemchainan 2019 '전용 카드 없음' → 이제 `kasemchainan2019_critical_stripping_current_dendrite_on_plating`.
+- [4] Lee 2020 → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal`: '> 20 µm 분리막 부적합' 이라는 문장은 원문에 없다 (30 µm SE 막 · 3 µm 입자를 썼다) · '평균 < 1 µm' 는 복합 양극 속 SE 입자 얘기다.

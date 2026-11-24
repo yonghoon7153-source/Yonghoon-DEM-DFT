@@ -426,3 +426,13 @@ C1 · DC1 · C10 · DC10 은 figure-read ≈ (눈금 840 px = 250 mAh g⁻¹) ·
 | 8 | Haslam, Sakamoto, "Stable Lithium Plating in 'Lithium Metal-Free' Solid-State Batteries Enabled by Seeded Lithium Nucleation", *J. Electrochem. Soc.* 170, 040524 (2023) (ref 39) | 매끈 · 연속 vs 덩어리 Au 씨앗 — 이 논문의 '거친 Ag 가 낫다' 근거 · Li\|기판 핵생성 | 없음 · 공저자 'Sakamoto, J.' (참고문헌 표기) |
 
 차순위 (8 편 밖): Kwon et al., *Adv. Funct. Mater.* 35, 2420474 (2025) (ref 43 · LPSCl 셀의 Cu 부식 — §10-⑥ 의 S 신호) · Futscher et al., *J. Mater. Chem. A* 10, 15535 (2022) (ref 59 · 비정질 탄소 층과 핵생성) · Sandoval et al., *Joule* 7, 2054 (2023) (ref 32 · 무음극 합금 층의 진화) · Kim J.-S. et al., *Nat. Commun.* 14, 782 (2023) (ref 35 · LLZTO 위 스퍼터 Ag + Ag/C).
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- '첫 효율 86 % 는 Lee 2020 의 89 % (ref 17) 와 비슷' — Lee 2020 원문의 89 % 는 **1,000 사이클 용량 유지율**이고 첫 사이클 효율 명시값은 없다 (figure-read ≈91–92 %) → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` §16.
+- (d) 3 번 Xie 2024 → 이제 digest `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism`. 방전 뒤 Ag 위치는 Xie (CC 위 나노입자 · 방전은 계산 안 함 · 도식의 추론) 와 이 논문 (C 위 · 실험) 이 반대다 — '방전 뒤 Ag 는 탄소 위' 의 근거에 Xie 를 같이 걸지 않는다.
+- 운전 중 처음 벌어지는 C \| CC 계면 — Lee 2020 원전 셀은 Cu 가 황화물과 반응해 **SUS** 집전체를 썼다 (`lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` · `Fig. S4`) → C \| SUS · Li \| SUS 도 후보.

@@ -477,3 +477,11 @@ Al-LLZO 연마면에 Li 전극 두 개를 나란히 증착한 **in-plane operand
 - **fuse effect**: 가는 전도 경로가 큰 전류에 녹아 끊기는 현상 (ref 43).
 - **spalling**: 표면과 거의 나란한 휜 균열이 표면까지 닫히며 조각이 떨어져 나오는 파괴.
 - **Nernst–Einstein**: σ = c F² D / (RT) — 확산계수에서 전도도를 어림한다 (Haven 비 1 가정).
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- Li 로 찬 균열이 열리며 자란다는 관찰의 결정 Li₆PS₅Cl 3D 판 → `sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free` (operando μCT · 균열이 원래 기공을 채우지 않고 그 옆에서 나며 기공을 닫는다 · 박리 뒤 새 균열 부피 ≈20 % 잔류 · ⚠ 셀 하나씩 · 펠릿 밀도 · 온도 미기재).

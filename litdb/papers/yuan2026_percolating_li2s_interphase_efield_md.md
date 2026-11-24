@@ -509,3 +509,11 @@ Li(100) ~50 Å ‖ Li₆PS₅Cl(010) ~50 Å 슬랩 (**2,524 원자** · 진공 1
 
 ## 🗨️ Q&A 로그
 (아직 없음)
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- 서론 refs 40–42 의 Baer 2026 *J. Mater. Chem. A* → 이제 digest `baer2026_li_metal_argyrodite_interface_stability_transport`: 세 종결 모두 0 K 이완에서 이미 반응 · MACE MLMD 300 / 400 K 에서 전해질 판 전체가 antifluorite Li₂S₀.₇₂P₀.₁₄Cl₀.₁₄ (✎ = Li₁₄PS₅Cl) 로 · 결정 SEI 를 지나는 Li 교환은 ns 창에서 드묾 (⚠ 반응물 소진 · 셀 저항 근거 아님).

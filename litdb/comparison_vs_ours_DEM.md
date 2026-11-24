@@ -5854,7 +5854,7 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > ⑤ **점착은 두 자리에서 반대 방향** (논문 서술의 우리 정리 · 정량 0): Li | 기판 마찰 · 점착 → 크리프 공급 ↓ (공극 ↑) · Li | SE 접촉 · 점착 회복 → 공극 ↓. W_ad 보고서 7 절의 W(Li | 표면) 는 어느 계면의 값인지 먼저 적는다.
 >
 > **⛔ 인용 금지 / 한정어**
-> · LLZO 값 → LPSCl 이식 금지 (LPSCl 은 Li 와 반응 · SEI). LPSCl 짝은 `shi2026_argyrodite_stack_pressure_viscoplastic_deformation` · Kasemchainan 2019 (카드 없음).
+> · LLZO 값 → LPSCl 이식 금지 (LPSCl 은 Li 와 반응 · SEI). LPSCl 짝은 `shi2026_argyrodite_stack_pressure_viscoplastic_deformation` · Kasemchainan 2019 (카드 없음 → 2026-11-24b 에 `kasemchainan2019_critical_stripping_current_dendrite_on_plating` · I-25).
 > · σ_crit 은 '0.4 MPa 단 · 정성 판정 · n = 1 · 단방향 5 h 단 · 750 µm Li · 170 °C 열처리 계면' 조건부.
 > · `Fig. 8` '0.4 MPa 에서 모형 일치' 인용 금지 · Ȧ/A₀ 를 면적 손실 속도로 인용 금지 (유도식 없음 · 단위 의문) · R_ECR 을 정량 입력으로 쓰지 않는다.
 > · frame[4]: 대조 표적이지 보정 표적이 아니다.

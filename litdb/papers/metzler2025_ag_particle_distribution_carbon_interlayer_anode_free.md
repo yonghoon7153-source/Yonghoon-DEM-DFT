@@ -558,3 +558,12 @@ P-FIB 단면 (열간 압착 셀 · 2.5 mA cm⁻² × 2 h) 에서 **구조화 = C
 | ICE | 첫 사이클 쿨롱 효율 = 첫 방전 ÷ 첫 충전 — anode-free 에서는 첫 충전 때 잃은 Li 양을 그대로 보여 준다 |
 | CCD | 임계 전류밀도 — 그 위에서 Li 덴드라이트로 단락이 나는 전류 |
 | WIP | 온간 등방 압착 — Lee 2020 이 셀 전체에 쓴 공정 (이 논문은 냉간 일축 압착) |
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- Ag–C 층 원전 → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` (Ag : 카본블랙 1 : 3 · Li 는 SUS \| Ag–C 사이 · Ag 는 Li 에 녹아 집전체 쪽 · 탄소만 층도 같은 자리 (다공) → '자리 = 탄소 · 고르기 = Ag' [카드 해석]).
+- 카본블랙도 충전 중 리튬화된다 (operando Raman · 정성 · Li 양 미정 · LiC₆ 근거 아님) → `hiraoka2025_operando_raman_carbon_structure_anode_free_sulfide` · Ag/C 층 기전의 계산 원전 → `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism` (Li 가 CC 쪽에 쌓이는 두 근거 — ASR · 점착 세기 비대칭 — 는 입력).

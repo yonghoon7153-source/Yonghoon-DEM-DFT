@@ -531,3 +531,12 @@
 | 8 | J. Gao, X. Guo, Y. Li, Z. Ma, X. Guo, H. Li, Y. Zhu, W. Zhou, *Adv. Theory Simul.* **2**, 1900028 (2019) (ref 65) | 비정합 Li/LLZO 에서 Li 공공 형성 에너지가 자리별 **최대 0.55 eV** — "평균 W 로는 부족" 의 독립 DFT 근거 | 없음 |
 
 다음 순번: Kasemchainan et al. *Nat. Mater.* 18, 1105 (2019) (ref 28 — 이 논문에선 ~10 MPa 적층압 · 무압 Li/LLZO 공극의 근거) · Tewari & Mukherjee *J. Phys. Chem. C* 125, 2221 (2021) (ref 46, KMC) · Gao, Jalem, Tateyama *ACS AMI* 12, 16350 (2020) (ref 25, Li/LLZO Zr 배위) · Lowe & Siegel *ACS AMI* 12, 46015 (2020) (ref 70, Li 화학포텐셜에서의 Li₂O 종결) · Kumar et al. *Nat. Commun.* 9 (2018) (ref 66, 결합 끊기 모형의 바탕) · (이 논문 밖 · 2024 후속 계열) Xie/Ceder *Adv. Energy Mater.* 2024 (Li–Ag 클러스터) · Thomas/Behara/Van der Ven *Chem. Mater.* 2024 (Li–Ag 합금상 이동 장벽) — `lu2026_…` digest 가 이미 *"따로 먹여야 한다"* 고 적은 두 편 · (이 논문 밖) Lee et al. *Nat. Energy* 5, 299 (2020) — Ag–C 원전, `spencerjolly2023_…` · `liao2025_…` · `kang2026_…` digest 가 인용하지만 카드 없음.
+
+---
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-24b 묶음)
+
+> 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
+
+- (d) 3 번 Lepley & Holzwarth *Phys. Rev. B* 92, 214201 (2015) → `lepley2015_modeling_interfaces_between_solids_li_battery_materials`. 그 논문은 **W 를 계산하지 않았다** — 식 (2) 로 정의만 하고, 표 II 는 변형을 뺀 정합 극한 계면 에너지 (두 벌크 기준 · LDA) 와 진공 표면 에너지다. '산화물 · 인산염 W 의 선행 보고' 로 읽지 않는다.
+- 이 논문이 ref 28 (Kasemchainan 2019 *Nat. Mater.* 18, 1105) 에 붙인 '~1 mA cm⁻² 에 ~10 MPa' (공급 기전 · 공극 억제 적층압 표) 와 '무압 Li/LLZO 공극' (다음 순번 줄) 은 그 원문과 맞지 않는다 — 원문은 Li \| Li₆PS₅Cl (LLZO 실험 없음) · 3 MPa 에서 0.2 · 7 MPa 에서 1.0 mA cm⁻² 로 100 사이클 (처음 실패 1.0 · 2.0) → `kasemchainan2019_critical_stripping_current_dendrite_on_plating`. '~10 MPa' 는 같은 칸의 refs 29 · 34 쪽 값일 수 있다 (미확인).
