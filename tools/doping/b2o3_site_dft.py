@@ -10,6 +10,8 @@
             출력 = 후보 폴더 (manifest.json · run_uma_kgy.sh 가 그대로 읽는 꼴: files{상대경로: {sha256 …}} · purpose)
   pick_ob   조합의 UMA 이완 결과 (run_anneal.py --time_ps 0 · anneal_results.json) 에서 바탕마다 최저 하나를 골라
             어닐용 후보 폴더를 만든다 (post_relax.xyz 를 바이트 그대로 복사 · sha256 · 둘째와의 차 · 끝 꼴)
+  pick_dft  카드 4 단계_1 — 자리 × O 꼴 (출발 가족: 10월 O–P 후보 · 11월 O–B 짝) 마다 UMA 최저 셋 = DFT 단일점 12 를 고른다
+            (10월 기록은 SHA256SUMS · 셀 · 조성으로 · 11월 어닐은 run_anneal.check_results 로 묶는다 · 끝 꼴은 기록만)
   probe     DFT 메모리 프로브 입력 — 9 단계 판 고정 b2o3_bo_dft.py (sha256 0c3b7f51…) 의 pw_input_text 를 그대로 쓰고
             disk_io 한 줄만 바꾼다 (disk_io 는 숫자에 영향 없음 — QE 설명서: nowf · low 는 파동함수를 메모리에 ·
             medium · high 는 k 점이 둘 이상이면 디스크에)
@@ -51,6 +53,11 @@ D_PS = 2.05     # 옮긴 S 의 P–S 시작 거리 (Å)
 MIN_PAIR = 1.0  # 옮긴 뒤 원자 쌍 최소 거리 (Å) — 이보다 가까우면 멈춘다
 PURPOSE_COMBO = "b2o3_site_dft/ob_combo_relax"
 PURPOSE_ANNEAL = "b2o3_site_dft/ob_anneal"
+PURPOSE_SP = "b2o3_site_dft/dft_single_point"
+OP_RESULTS_REL = "uma_anneal_modelc10.anneal_results.json"   # 10월 O–P 후보 어닐 기록 (op_raw 안 · SHA256SUMS 에 있다)
+ANNEAL_T_K, ANNEAL_TIME_PS, ANNEAL_DT_FS = 500.0, 20.0, 2.0   # 10월과 같은 어닐 (카드 1b)
+RELAX_FMAX = 0.05
+N_PER_FAMILY = 3                                               # 자리 × O 꼴마다 UMA 최저 셋 (카드 4 단계_1)
 DISK_IO = ("nowf", "low", "medium", "high")
 
 
@@ -323,6 +330,199 @@ def cmd_pick_ob(combos: Path, results: Path, out: Path) -> dict:
     return sel
 
 
+# ----------------------------------------------------------------------------- DFT 단일점 고르기
+def _load_run_anneal(repo_root: Path):
+    p = Path(repo_root) / "tools/doping/run_anneal.py"
+    spec = importlib.util.spec_from_file_location("run_anneal_for_pick_dft", p)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def b_disp(a0, a1) -> list:
+    """B 마다 시작 → 끝 변위 (Å · 분수좌표 최소상 · 끝 셀).
+
+    B 원자 번호가 두 구조에서 같아야 한다 — O–B 짝은 O↔S 를 **원소 자리 바꿈**으로 만들어 O · S 열은 바뀌지만
+    B 번호는 그대로다 (11-24 selftest 가 잡았다: 원소 열 전체를 같다고 요구하면 O–B 가족 전부가 멈춘다).
+    """
+    i0 = [i for i, s in enumerate(a0.get_chemical_symbols()) if s == "B"]
+    i1 = [i for i, s in enumerate(a1.get_chemical_symbols()) if s == "B"]
+    if len(a0) != len(a1) or i0 != i1 or not i0:
+        raise SystemExit(f"⛔ 시작 · 끝 구조의 B 번호가 다르다 ({i0} · {i1}) — B 변위를 못 잰다")
+    df = a1.get_scaled_positions(wrap=False)[i1] - a0.get_scaled_positions(wrap=False)[i0]
+    df -= np.round(df)
+    v = df @ np.asarray(a1.cell.array)
+    return [round(float(np.linalg.norm(x)), 3) for x in v]
+
+
+def end_motif(o_parts: list) -> str:
+    """O 끝 꼴 이름: 셋 다 P 만 → 'O-P' · 셋 다 B 만 → 'O-B' · 그 밖 → 'mixed' (B·P 둘 다 · 섞임 · 자유 O)."""
+    if all(x == "P" for x in o_parts):
+        return "O-P"
+    if all(x == "B" for x in o_parts):
+        return "O-B"
+    return "mixed"
+
+
+def cmd_pick_dft(op_raw: Path, op_inputs: Path, ob_sel: Path, ob_results: Path, out: Path, *, repo_root: Path) -> dict:
+    """카드 4_DFT_사다리 단계_1 — 자리 × O 꼴마다 UMA 최저 셋 = DFT 단일점 12 를 고른다 (결과 보기 전에 쓴 도구).
+
+    O 꼴 = **출발 가족**이다 (카드 1b '예산: 자리마다 바탕 6 × O 꼴 2' · G3 'O–P 꼴만으로 낸 D' 가 가족별 고르기를 전제한다):
+      O–P 가족 = 10월 후보 12 (op_raw · 500 K × 20 ps 어닐 + 셀 포함 이완) · O–B 가족 = 11월 짝 12 (ob_sel → 같은 어닐 · ob_results).
+    끝 꼴 (O 결합 상대 · B 배위 · B 가 처음 자리에서 얼마나 움직였나) 은 끝 구조로 매겨 **기록만** 한다 —
+    가족이 바뀐 듯 보여도 후보에서 빼거나 다른 가족으로 옮기지 않는다 (카드 1b 끝_꼴_기록).
+    B 변위의 '처음 자리' = 10월 후보 입력 (치환 자리 · op_inputs) — 두 가족 다 B 배치를 거기서 물려받았다.
+
+    묶는 법 (파일 ↔ 기록):
+      O–P · SHA256SUMS 파일 해시 + 기록 cell_post 와 셀 일치 (1e-6 Å) + 원자 수 · 조성 · 10월 입력은 구조 해시 = 기록 input.
+        (10월 기록의 post_relax 구조 해시는 쓰지 않는다 — 파일로 쓰고 다시 읽은 좌표의 자릿수가 달라 1e-6 반올림에서
+         갈린다 · 11-24 실측 3/3 불일치 · 셀은 일치)
+      O–B · run_anneal.check_results (상태 · 정체성 · time_ps 20 · 500 K · 수렴 · 목적 ob_anneal · 결과 파일 sha256) +
+        어닐 입력 파일 sha256 = pick_ob 가 고른 파일.
+    같은 UMA 처리: 두 실행의 uma_model_name · uma_task_name 이 같아야 한다 (다르면 멈춘다) · 판 (ase · torch) 은 기록.
+
+    ⛔ 못 하는 것: UMA 에너지를 다시 계산하지 않는다 · 끝 꼴 이름은 1.8 Å 문턱 하나로 붙인다 (문턱 근처 결합은 갈릴 수 있다) ·
+       10월 실행의 마찰 · fmax · 셀 필터는 10월 기록에 없어 대조하지 않는다 (11월 쪽만 정체성으로 본다).
+    """
+    from ase.io import read
+    RA = _load_run_anneal(repo_root)
+    op_raw, op_inputs, ob_sel, ob_results, out = map(Path, (op_raw, op_inputs, ob_sel, ob_results, out))
+    if out.exists() and any(out.iterdir()):
+        raise SystemExit(f"⛔ {out} 가 비어 있지 않다 — 덮지 않는다")
+    rows = []
+    # ── O–P 가족 (10월)
+    sums = read_sums(op_raw)
+    rrel = OP_RESULTS_REL
+    if rrel not in sums or sha256_file(op_raw / rrel) != sums[rrel]:
+        raise SystemExit(f"⛔ 10월 결과 {rrel} 가 SHA256SUMS 에 없거나 다르다")
+    R0 = json.loads((op_raw / rrel).read_text())
+    rec0 = {}
+    for r in R0.get("results", []):
+        if r.get("name") in rec0:
+            raise SystemExit(f"⛔ 10월 결과에 같은 이름이 둘: {r.get('name')}")
+        rec0[r.get("name")] = r
+    for site, names in BASES.items():
+        for nm in names:
+            r = rec0.get(nm)
+            if r is None:
+                raise SystemExit(f"⛔ 10월 결과에 {nm} 가 없다")
+            if (float(r.get("temperature_K", -1)), float(r.get("time_ps", -1)), float(r.get("dt_fs", -1))) != (ANNEAL_T_K, ANNEAL_TIME_PS, ANNEAL_DT_FS):
+                raise SystemExit(f"⛔ {nm}: 10월 어닐 조건 {r.get('temperature_K')} K · {r.get('time_ps')} ps · {r.get('dt_fs')} fs ≠ 카드")
+            if r.get("converged") is not True:
+                raise SystemExit(f"⛔ {nm}: 10월 이완 미수렴 기록 — 게이트 G1 (후보 24 개 UMA 수렴) 을 못 넘는다")
+            E = float(r.get("E_post_relax", float("nan")))
+            if not np.isfinite(E):
+                raise SystemExit(f"⛔ {nm}: 10월 에너지가 유한하지 않다")
+            srel = f"structures/{nm}.xyz"
+            if srel not in sums or sha256_file(op_raw / srel) != sums[srel]:
+                raise SystemExit(f"⛔ {srel} 가 SHA256SUMS 에 없거나 다르다")
+            a = read(str(op_raw / srel))
+            if not np.allclose(np.asarray(a.cell.array), np.asarray(r["cell_post"], float), atol=1e-6):
+                raise SystemExit(f"⛔ {nm}: 구조 파일의 셀 ≠ 기록 cell_post — 이완 끝 구조가 아니다")
+            if composition(a) != dict(sorted(MODELS[site].items())) or len(a) != int(r.get("n_atoms", -1)):
+                raise SystemExit(f"⛔ {nm}: 조성 · 원자 수가 모델 · 기록과 다르다")
+            sub = "MP" if site == "B-P" else "MLi"
+            s0 = op_inputs / sub / f"{nm}.xyz"
+            if not s0.is_file():
+                raise SystemExit(f"⛔ 10월 후보 입력 {s0} 가 없다")
+            a0 = read(str(s0))
+            if RA._struct_hash(a0)[:16] != r["struct_sha256"]["input"]:
+                raise SystemExit(f"⛔ {nm}: 10월 후보 입력의 구조 해시 ≠ 기록 input")
+            rows.append({"family": "O-P", "site": site, "base": nm, "name": nm, "E_uma_eV": E, "atoms": a, "start": a0,
+                         "src": op_raw / srel, "src_sha256": sums[srel]})
+    # ── O–B 가족 (11월 어닐)
+    sel = json.loads((ob_sel / "manifest.json").read_text())
+    if sel.get("schema") != "b2o3_site_dft_ob_selected/v1" or sel.get("purpose") != PURPOSE_ANNEAL:
+        raise SystemExit("⛔ pick_ob 의 어닐 후보 manifest 가 아니다 (schema · purpose)")
+    for rel, e in sel["files"].items():
+        if sha256_file(ob_sel / rel) != e["sha256"]:
+            raise SystemExit(f"⛔ 어닐 후보 파일이 manifest 뒤 바뀌었다: {rel}")
+    n_ob = sum(len(v) for v in BASES.values())
+    prob = RA.check_results(ob_results, expect_n=n_ob, expect_time_ps=ANNEAL_TIME_PS, expect_temperature=ANNEAL_T_K,
+                            require_converged=True, expect_purpose=PURPOSE_ANNEAL)
+    if prob:
+        raise SystemExit("⛔ 어닐 결과 검사 (run_anneal.check_results): " + " · ".join(prob[:6]))
+    R1 = json.loads(Path(ob_results).read_text())
+    rec1 = {}
+    for r in R1.get("results", []):
+        if r.get("name") in rec1:
+            raise SystemExit(f"⛔ 어닐 결과에 같은 이름이 둘: {r.get('name')}")
+        rec1[r.get("name")] = r
+    want = {f"{b}_OB" for v in BASES.values() for b in v}
+    if set(rec1) != want:
+        raise SystemExit(f"⛔ 어닐 결과 이름 {sorted(set(rec1) ^ want)[:6]} — 기대 {len(want)} 개와 다르다")
+    for site, names in BASES.items():
+        for base in names:
+            nm = f"{base}_OB"
+            r = rec1[nm]
+            idn = r["identity"]
+            fe = sel["files"].get(f"ob_selected/{nm}.xyz")
+            if fe is None or idn.get("input_file_sha256") != fe["sha256"]:
+                raise SystemExit(f"⛔ {nm}: 어닐 입력이 pick_ob 가 고른 파일이 아니다 (sha256)")
+            if float(idn.get("dt_fs", -1)) != ANNEAL_DT_FS or float(idn.get("relax_fmax", -1)) != RELAX_FMAX or idn.get("cell_relax") is not True:
+                raise SystemExit(f"⛔ {nm}: 어닐 정체성 dt {idn.get('dt_fs')} · fmax {idn.get('relax_fmax')} · 셀 {idn.get('cell_relax')} ≠ 카드")
+            E = float(r.get("E_post_relax", float("nan")))
+            if not np.isfinite(E):
+                raise SystemExit(f"⛔ {nm}: 에너지가 유한하지 않다")
+            p = Path(ob_results).parent / r["outputs"]["post_relax"]["rel"]
+            a = read(str(p))
+            if composition(a) != dict(sorted(MODELS[site].items())):
+                raise SystemExit(f"⛔ {nm}: 조성이 모델과 다르다")
+            a0 = read(str(op_inputs / ("MP" if site == "B-P" else "MLi") / f"{base}.xyz"))
+            rows.append({"family": "O-B", "site": site, "base": base, "name": nm, "E_uma_eV": E, "atoms": a, "start": a0,
+                         "src": p, "src_sha256": r["outputs"]["post_relax"]["sha256"]})
+    # ── 같은 UMA 처리
+    p0, p1 = R0.get("provenance") or {}, R1.get("provenance") or {}
+    for k in ("uma_model_name", "uma_task_name"):
+        if p0.get(k) is None or p0.get(k) != p1.get(k):
+            raise SystemExit(f"⛔ 두 실행의 {k} 가 다르거나 없다: 10월 {p0.get(k)} · 11월 {p1.get(k)}")
+    prov = {k: {"10월": p0.get(k), "11월": p1.get(k)} for k in ("uma_model_name", "uma_task_name", "ase_version", "torch_version", "hostname")}
+    # ── 끝 꼴 · 고르기
+    for x in rows:
+        x["end_o_partners"] = o_partners(x["atoms"])
+        x["end_b_shells"] = b_shells(x["atoms"])
+        x["end_motif"] = end_motif(x["end_o_partners"])
+        x["motif_changed"] = x["end_motif"] != x["family"]
+        x["b_disp_from_site_A"] = b_disp(x["start"], x["atoms"])
+    (out / "sp_selected").mkdir(parents=True, exist_ok=True)
+    files, groups = {}, {}
+    for site in BASES:
+        for fam in ("O-P", "O-B"):
+            g = sorted([x for x in rows if x["site"] == site and x["family"] == fam], key=lambda x: (x["E_uma_eV"], x["name"]))
+            if len(g) < N_PER_FAMILY:
+                raise SystemExit(f"⛔ {site} · {fam}: 후보 {len(g)} 개 < {N_PER_FAMILY}")
+            e0 = g[0]["E_uma_eV"]
+            groups[f"{site}|{fam}"] = [{"rank": i + 1, "name": x["name"], "dE_from_family_min_eV": round(x["E_uma_eV"] - e0, 4),
+                                        "chosen": i < N_PER_FAMILY, "end_motif": x["end_motif"]} for i, x in enumerate(g)]
+            for x in g[:N_PER_FAMILY]:
+                rel = f"sp_selected/{x['name']}.xyz"
+                shutil.copyfile(x["src"], out / rel)
+                h = sha256_file(out / rel)
+                if h != x["src_sha256"]:
+                    raise SystemExit(f"⛔ {x['name']}: 복사본 sha256 ≠ 원본 기록")
+                files[rel] = {"sha256": h, "site": site, "family": fam, "base": x["base"], "E_uma_eV": x["E_uma_eV"],
+                              "end_o_partners": x["end_o_partners"], "end_b_shells": x["end_b_shells"],
+                              "end_motif": x["end_motif"], "motif_changed": x["motif_changed"],
+                              "b_disp_from_site_A": x["b_disp_from_site_A"]}
+    cross = {}
+    for site in BASES:
+        mins = {fam: min(x["E_uma_eV"] for x in rows if x["site"] == site and x["family"] == fam) for fam in ("O-P", "O-B")}
+        cross[site] = {"E_min_O-P_eV": mins["O-P"], "E_min_O-B_eV": mins["O-B"], "O-B_minus_O-P_eV": round(mins["O-B"] - mins["O-P"], 4)}
+    allrows = [{k: v for k, v in x.items() if k not in ("atoms", "start", "src")} | {"src": str(x["src"])} for x in rows]
+    man = {"schema": "b2o3_site_dft_sp_selected/v1", "purpose": PURPOSE_SP, "card": CARD, "decision": DECISION,
+           "tool": {"path": "tools/doping/b2o3_site_dft.py", "sha256": tool_sha()},
+           "rule": {"N_PER_FAMILY": N_PER_FAMILY, "grouping": "출발 가족 (O–P = 10월 후보 · O–B = 11월 짝) · 끝 꼴은 기록만",
+                    "R_XO_A": R_XO, "R_BS_A": R_BS},
+           "inputs": {"op_results_sha256": sums[rrel], "op_SHA256SUMS_sha256": sha256_file(op_raw / "SHA256SUMS"),
+                      "ob_selected_manifest_sha256": sha256_file(ob_sel / "manifest.json"),
+                      "ob_results_sha256": sha256_file(ob_results)},
+           "provenance": prov, "groups": groups, "cross_family_uma": cross,
+           "⚠_읽는_법": "UMA 에너지 차는 고르기용이지 판정이 아니다 (판정은 DFT 이완 뒤 · 카드 4) · 자리 사이 (B-P 대 B-Li) 에너지는 조성이 달라 여기서 비교하지 않는다",
+           "rows": allrows, "files": files}
+    (out / "manifest.json").write_text(json.dumps(man, ensure_ascii=False, indent=1) + "\n")
+    return man
+
+
 # ----------------------------------------------------------------------------- DFT 입력 (프로브)
 def load_pinned(repo_root: Path):
     p = Path(repo_root) / PINNED_DFT_REL
@@ -500,6 +700,114 @@ def selftest() -> int:
         finally:
             MODELS.clear(); MODELS.update(saved)
 
+        print("— pick_dft (가족별 최저 셋 · 묶음 검사 · 끝 꼴은 기록만)")
+        root = Path(__file__).resolve().parents[2]
+        RA = _load_run_anneal(root)
+        saved_m, saved_b = dict(MODELS), {k: list(v) for k, v in BASES.items()}
+        MODELS["B-P"] = composition(toy()); MODELS["B-Li"] = composition(toy())
+        BASES.clear(); BASES.update({"B-P": [f"BMP_{i:02d}" for i in range(4)], "B-Li": [f"BMLi_{i:02d}" for i in range(4)]})
+        E_OP = {0: -100.0, 1: -100.3, 2: -100.1, 3: -100.2}       # 최저 셋 = 1 · 3 · 2 (0 은 빠진다)
+        E_OB = {0: -100.25, 1: -100.05, 2: -100.15, 3: -100.35}   # 최저 셋 = 3 · 0 · 2 (1 은 빠진다)
+
+        def build(D, mut=lambda k, o: o):
+            """가짜 10월 (op_raw · op_inputs) + 11월 (ob_sel · ob_results) 묶음. mut(key, obj) 로 한 곳만 망가뜨린다."""
+            opr, opi, obs, obr = D / "op_raw", D / "op_inputs", D / "ob_sel", D / "ob_res"
+            for p in (opr / "structures", opi / "MP", opi / "MLi", obs / "ob_selected", obr):
+                p.mkdir(parents=True)
+            recs0, recs1, sums = [], [], {}
+            for site, names in BASES.items():
+                for i, nm in enumerate(names):
+                    k = int(nm.split("_")[1])
+                    start = toy(edge=False)
+                    write(str(opi / ("MP" if site == "B-P" else "MLi") / f"{nm}.xyz"), start, format="extxyz")
+                    fin = start.copy(); fin.positions[0] += [0.3, 0, 0]       # B 0.3 Å 이동
+                    if nm == "BMP_01":
+                        fin = ob_combos(start)[0][0]                          # O–P 가족인데 끝 꼴이 O–B (기록만 · 안 뺀다)
+                    fin = mut(("op_fin", nm), fin)
+                    write(str(opr / "structures" / f"{nm}.xyz"), fin, format="extxyz")
+                    sums[f"structures/{nm}.xyz"] = sha256_file(opr / "structures" / f"{nm}.xyz")
+                    recs0.append(mut(("op_rec", nm), {"name": nm, "temperature_K": 500.0, "time_ps": 20.0, "dt_fs": 2.0,
+                                                      "converged": True, "E_post_relax": E_OP[k], "n_atoms": len(fin),
+                                                      "cell_post": fin.cell.array.tolist(),
+                                                      "struct_sha256": {"input": RA._struct_hash(start)[:16]}}))
+                    ob = ob_combos(start)[0][0]
+                    write(str(obs / "ob_selected" / f"{nm}_OB.xyz"), ob, format="extxyz")
+                    (obr / f"{nm}_OB").mkdir()
+                    for kk in ("post_md", "post_relax"):
+                        write(str(obr / f"{nm}_OB" / f"{kk}.xyz"), ob, format="extxyz")
+                    idn = {"n_atoms": len(ob), "time_ps": 20.0, "temperature_K": 500.0, "dt_fs": 2.0, "relax_fmax": 0.05,
+                           "cell_relax": True, "purpose": PURPOSE_ANNEAL,
+                           "input_file_sha256": sha256_file(obs / "ob_selected" / f"{nm}_OB.xyz")}
+                    recs1.append(mut(("ob_rec", nm), {
+                        "name": f"{nm}_OB", "status": "converged", "identity": idn, "E_post_relax": E_OB[k],
+                        "outputs": {kk: {"rel": f"{nm}_OB/{kk}.xyz", "sha256": sha256_file(obr / f"{nm}_OB" / f"{kk}.xyz")}
+                                    for kk in ("post_md", "post_relax")}}))
+            prov = {"uma_model_name": "uma-s-1p1", "uma_task_name": "omat", "ase_version": "3.29.0"}
+            (opr / OP_RESULTS_REL).write_text(json.dumps({"provenance": prov, "results": recs0}))
+            sums[OP_RESULTS_REL] = sha256_file(opr / OP_RESULTS_REL)
+            mut(("op_after", None), opr)
+            (opr / "SHA256SUMS").write_text("".join(f"{h}  ./{r}\n" for r, h in sums.items()))
+            mut(("op_tamper", None), opr)
+            files = {f"ob_selected/{p.name}": {"sha256": sha256_file(p)} for p in sorted((obs / "ob_selected").iterdir())}
+            (obs / "manifest.json").write_text(json.dumps({"schema": "b2o3_site_dft_ob_selected/v1", "purpose": PURPOSE_ANNEAL,
+                                                            "files": files}))
+            (obr / "anneal_results.json").write_text(json.dumps({"provenance": mut(("ob_prov", None), dict(prov)),
+                                                                 "results": recs1}))
+            mut(("ob_after", None), obr)
+            return opr, opi, obs, obr / "anneal_results.json"
+
+        def run(D, mut=lambda k, o: o, out=None):
+            a_ = build(D, mut)
+            return cmd_pick_dft(*a_, out or D / "out", repo_root=root)
+
+        try:
+            m = run(T / "d1")
+            ch = {f["family"] + ":" + f["base"] for f in m["files"].values()}
+            chk(len(m["files"]) == 12, f"[양성] 자리 2 × 가족 2 × 셋 = 12 — {len(m['files'])}")
+            chk({"O-P:BMP_01", "O-P:BMP_03", "O-P:BMP_02"} <= ch and "O-P:BMP_00" not in ch,
+                "[양성] O–P 가족 최저 셋 (1 · 3 · 2) · 넷째 (0) 는 뺀다")
+            chk({"O-B:BMP_03", "O-B:BMP_00", "O-B:BMP_02"} <= ch and "O-B:BMP_01" not in ch,
+                "[양성] O–B 가족은 따로 고른다 (3 · 0 · 2)")
+            f01 = m["files"]["sp_selected/BMP_01.xyz"]
+            chk(f01["family"] == "O-P" and f01["end_motif"] == "O-B" and f01["motif_changed"] is True,
+                "[양성] 끝 꼴이 바뀐 후보는 기록만 하고 출발 가족에 남긴다 (안 뺀다)")
+            f03 = m["files"]["sp_selected/BMP_03.xyz"]
+            chk(f03["b_disp_from_site_A"] == [0.3] and f03["sha256"] == sha256_file(T / "d1" / "out" / "sp_selected" / "BMP_03.xyz"),
+                "[양성] B 변위 (치환 자리 → 끝) 0.3 Å · 복사본 sha256")
+            chk(abs(m["cross_family_uma"]["B-P"]["O-B_minus_O-P_eV"] - (-100.35 + 100.3)) < 1e-9 and m["purpose"] == PURPOSE_SP,
+                "[양성] 가족 사이 UMA 최저 차 기록 · 목적 dft_single_point")
+            a_edge = toy(); b_edge = a_edge.copy(); b_edge.positions[0] = [9.8, 5.0, 5.0]
+            chk(b_disp(a_edge, b_edge) == [0.7], "[양성] B 변위는 최소상 (0.5 → 9.8 Å = 0.7 Å)")
+
+            def neg(tag, mut, msg):
+                chk(refuses(run, T / tag, mut), f"[음성] {msg} → 멈춘다")
+
+            neg("n1", lambda k, o: (o / OP_RESULTS_REL).write_text((o / OP_RESULTS_REL).read_text() + " ") or o
+                if k[0] == "op_tamper" else o, "10월 결과 JSON 이 SHA256SUMS 뒤 바뀜")
+            neg("n2", lambda k, o: dict(o, cell_post=(np.asarray(o["cell_post"]) * 1.01).tolist())
+                if k == ("op_rec", "BMP_02") else o, "10월 구조 셀 ≠ 기록 cell_post")
+            neg("n3", lambda k, o: dict(o, converged=False) if k == ("op_rec", "BMLi_01") else o, "10월 미수렴 기록 (G1)")
+            neg("n4", lambda k, o: dict(o, name="ZZ_99") if k == ("op_rec", "BMLi_03") else o, "10월 결과에 바탕 누락")
+            neg("n5", lambda k, o: dict(o, struct_sha256={"input": "0" * 16}) if k == ("op_rec", "BMP_00") else o,
+                "10월 후보 입력 구조 해시 ≠ 기록")
+            neg("n6", lambda k, o: dict(o, status="unconverged") if k == ("ob_rec", "BMP_02") else o, "어닐 미수렴")
+            neg("n7", lambda k, o: dict(o, identity=dict(o["identity"], purpose="other")) if k == ("ob_rec", "BMLi_00") else o,
+                "어닐 실행 목적이 다름")
+            neg("n8", lambda k, o: dict(o, identity=dict(o["identity"], input_file_sha256="0" * 64)) if k == ("ob_rec", "BMP_03") else o,
+                "어닐 입력이 고른 파일이 아님")
+            neg("n9", lambda k, o: dict(o, name="BMP_09_OB") if k == ("ob_rec", "BMP_01") else o, "어닐 결과 이름이 기대 밖")
+            neg("n10", lambda k, o: dict(o, uma_model_name="uma-m-1p1") if k[0] == "ob_prov" else o, "두 실행의 UMA 모델이 다름")
+            neg("n11", lambda k, o: dict(o, E_post_relax=float("nan")) if k == ("op_rec", "BMLi_02") else o, "에너지가 NaN")
+            neg("n12", lambda k, o: dict(o, identity=dict(o["identity"], relax_fmax=0.1)) if k == ("ob_rec", "BMLi_03") else o,
+                "어닐 이완 fmax 가 카드와 다름")
+            neg("n13", lambda k, o: (o + Atoms("Li", positions=[[9.0, 9.0, 9.0]])) if k == ("op_fin", "BMLi_00") else o,
+                "10월 구조 조성이 모델과 다름")
+            (T / "n14" / "out").mkdir(parents=True); (T / "n14" / "out" / "x").write_text("x")
+            chk(refuses(run, T / "n14"), "[음성] 비어 있지 않은 출력 폴더 → 덮지 않는다")
+        finally:
+            MODELS.clear(); MODELS.update(saved_m)
+            BASES.clear(); BASES.update(saved_b)
+
         print("— probe (판 고정 입력 + disk_io 한 줄)")
         root = Path(__file__).resolve().parents[2]
         try:
@@ -533,6 +841,8 @@ def main(argv=None) -> int:
     a1 = sp.add_parser("ob_pairs"); a1.add_argument("--raw", required=True); a1.add_argument("--out", required=True)
     a2 = sp.add_parser("pick_ob"); a2.add_argument("--combos", required=True); a2.add_argument("--results", required=True)
     a2.add_argument("--out", required=True)
+    a4 = sp.add_parser("pick_dft"); a4.add_argument("--op_raw", required=True); a4.add_argument("--op_inputs", required=True)
+    a4.add_argument("--ob_sel", required=True); a4.add_argument("--ob_results", required=True); a4.add_argument("--out", required=True)
     a3 = sp.add_parser("probe"); a3.add_argument("--xyz", required=True); a3.add_argument("--out", required=True)
     a3.add_argument("--pseudo_dir", required=True); a3.add_argument("--k", type=int, nargs=3, default=[3, 3, 1])
     a3.add_argument("--disk_io", default="medium", choices=DISK_IO)
@@ -551,6 +861,16 @@ def main(argv=None) -> int:
             g = e["gap_to_second_eV"]
             print(f"  {e['parent']:8s} ← {e['from_combo']} · 둘째와 {g if g is None else round(g, 3)} eV · 끝 O {e['end_o_partners']} · B {e['end_b_shells']}")
         print(f"고름 {len(s['files'])} 개 → {a.out}/manifest.json")
+        return 0
+    if a.cmd == "pick_dft":
+        root = Path(__file__).resolve().parents[2]
+        m = cmd_pick_dft(Path(a.op_raw), Path(a.op_inputs), Path(a.ob_sel), Path(a.ob_results), Path(a.out), repo_root=root)
+        for key, g in m["groups"].items():
+            print(f"  {key:10s} " + " · ".join(f"{x['name']}{'*' if x['chosen'] else ''} +{x['dE_from_family_min_eV']:.3f} [{x['end_motif']}]" for x in g))
+        for site, c in m["cross_family_uma"].items():
+            print(f"  {site:5s} UMA 최저 O–B − O–P = {c['O-B_minus_O-P_eV']:+.3f} eV (고르기용 · 판정 아님)")
+        ch = sum(1 for f in m["files"].values() if f["motif_changed"])
+        print(f"단일점 {len(m['files'])} 개 → {a.out}/manifest.json (* = 고름 · 끝 꼴이 출발 가족과 다른 고른 후보 {ch} 개 · 기록만)")
         return 0
     if a.cmd == "probe":
         root = Path(__file__).resolve().parents[2]
