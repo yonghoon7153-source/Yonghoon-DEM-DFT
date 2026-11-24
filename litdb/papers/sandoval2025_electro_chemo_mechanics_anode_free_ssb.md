@@ -619,109 +619,109 @@ Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 
 
 ## 14. 참고문헌 지도 (본문 98 편 · 이 관점 논문 안의 역할 · litdb 상태)
 
-> ★ = 사용자 5 축에서 무게 있는 1 차 출처 · ★★ = W_ad · DEM 보고서에 바로 걸리는 것. 쪽 · 문장 위치는 §4. 서지는 PDF 참고문헌 목록 그대로 (첫 저자 · 연도 · 저널 권, 쪽).
+> ★ = 사용자 5 축에서 무게 있는 1 차 출처 · ★★ = W_ad · DEM 보고서에 바로 걸리는 것. 쪽 · 문장 위치는 §4. 서지 · 제목은 PDF 참고문헌 목록 그대로 (첫 저자 · 연도 · 저널 권, 쪽 — 제목; 오타도 원문대로).
 > litdb: ✅ digest 있음 · '(같은 묶음)' = 2026-11-24 같은 병렬 묶음의 digest (파일 존재만 확인) · — 없음.
 
 | # | 1 차 출처 | 이 논문에서의 역할 | litdb |
 |---|---|---|---|
-| 1 | Viswanathan 2022 · *Nature* 601, 519–525 | 서론 — 대형 차량 · 전기 비행 요구 (동기) | — |
-| 2 | Famprikis 2019 · *Nat. Mater.* 18, 1278–1291 | 서론 — SSB 에너지밀도 최대 +50 % | ✅ `famprikis2019_fundamentals_inorganic_sse` |
-| 3 | Manthiram 2017 · *Nat. Rev. Mater.* 2, 16103 | 서론 — 에너지밀도 · 넓은 창 · 안전 | — |
-| 4 | Krauskopf 2020 · *Chem. Rev.* 120, 7745–7794 | 서론 — 에너지밀도 · p. 676 환원 불안정 vs 부동태 분류 | — |
-| 5 | Hatzell 2020 · *ACS Energy Lett.* 5, 922–934 | 서론 — 에너지밀도 | — |
-| 6 | Janek 2016 · *Nat. Energy* 1, 16141 | 서론 — 넓은 창 · 안전 | ✅ `janek2016_solid_future_battery_development` |
-| 7 | Kim 2023 · *Adv. Mater.* 35, 2206625 | 서론 — Li 박 제조 = 비싼 분위기 제어 | — |
-| 8 | Albertus 2018 · *Nat. Energy* 3, 16–21 | 서론 — Li 박 제조 | — |
-| 9 | Duffner 2021 · *Nat. Energy* 6, 123–134 | 서론 — Li 박 제조 | — |
-| 10 | Wang 2020 · *Nat. Commun.* 11, 5201 | ★ 무음극 에너지밀도 · CC 접촉·점착 · LLZO 900 °C 접합 · 전류 → 핵 밀도 · 적층압 범위 · > 1 MPa 크리프 · Cu 위 불균일 석출 | ✅ `wang2020_lithium_free_insitu_plating_llzo` (같은 묶음) |
-| 11 | McDowell 2020 · *Chem. Mater.* 32, 8755–8771 | 서론 — 무음극 에너지밀도 | — |
-| 12 | Nanda 2021 · *Adv. Energy Mater.* 11, 2000804 | 서론 — 무음극 에너지밀도 | — |
-| 13 | Qian 2016 · *Adv. Funct. Mater.* 26, 7094–7102 | 서론 — 무음극 에너지밀도 | — |
-| 14 | Kazyak 2022 · *Matter* 5, 3912–3934 | ★ anode-less 용어 · 구속 응력 → Li 소성 · 접촉·점착 · 필라멘트 · 불균일 적층압 · 섬 병합 응력 · 탄성층 · 두꺼운 CC · 점소성 측방 성장 (operando 3D 현미경) | — |
-| 15 | Davis 2021 · *J. Electrochem. Soc.* 168, 070557 | anode-less 용어 · 이질 계면상 (operando) | — |
-| 16 | Neudecker 2000 · *J. Electrochem. Soc.* 147, 517–523 | lithium free 용어 · 얇은 CC 실패 (박막전지 원조) | — |
-| 17 | Richards 2016 · *Chem. Mater.* 28, 266–273 | SSE–Li 계면 안정 · 환원 분류 · CE | ✅ `richards2016_interface_stability_pseudobinary` |
-| 18 | Xiao 2020 · *Nat. Rev. Mater.* 5, 105–126 | SSE–Li 계면 안정 · CE | ✅ `xiao2020_interface_stability_ssb_review` |
-| 19 | Lin 2017 · *Nat. Nanotechnol.* 12, 194–206 | 액체 무음극 = 사이클마다 SEI | — |
-| 20 | Kasemchainan 2019 · *Nat. Mater.* 18, 1105–1111 | ★ Li 과잉 공극 (임계 박리 전류) · 필라멘트 · 적층압 범위 · 크리프 · 공극 회복 | — |
-| 21 | Wang 2019 · *Joule* 3, 2165–2178 | ★ 공극 · 임계 박리 전류 · 점소성 측방 성장 (적층압 · 전류 함수) | ✅ `wang2019_li_se_interface_dynamics_stack_pressure_current_density` (같은 묶음) |
-| 22 | Krauskopf 2019 · *ACS Appl. Mater. Interfaces* 11, 14463–14477 | 필라멘트 · 적층압 범위 · 전류 집중 (LLZO) | — |
-| 23 | Lewis 2023 · *Adv. Energy Mater.* 13, 2204186 | ★★ 무음극 국부 Li 고갈 → 가속 단락 (Fig. 3d 기전) · 시연 적음 · 인터레이어 공극 완화 · 과잉 Li · 방전 제한 | — |
-| 24 | Haslam 2023 · *J. Electrochem. Soc.* 170, 040524 | ★ Au 150 nm 시드 (LLZO) · 무음극 추가 인자 · 인터레이어 부류 · 고체-고체 이점 | — |
-| 25 | Yoon 2024 · *ACS Appl. Mater. Interfaces* 16, 18790–18799 | ★★ Li/Cu(-산화물) 열역학 · 점착 · 젖음 (DFT 친Li vs sessile drop · Cu₂O → Li₂O) | — |
-| 26 | Wolfenstine 2018 · *Ionics* 24, 1271–1276 | "근본 전기-화학-역학" 문장 (⚠ 산화물 SE 역학 리뷰 — 결이 약함) | — |
-| 27 | Krauskopf 2019 · *Joule* 3, 2030–2049 | 첫 석출 — LLZO 위 Li 성장 동역학 | — |
-| 28 | Motoyama 2015 · *J. Electrochem. Soc.* 162, A7067–A7071 | SSE\|CC 상호작용 → 핵생성 (Cu/LiPON 모델) · 얇은 CC 실패 | — |
-| 29 | Sandoval 2023 · *Joule* 7, 2054–2073 | ★ Au · Ag 100 nm 합금층 진화 (Fig. 4b) · 황화물 압착 10–500 MPa · Cu 위 불균일 · 인터레이어 공극 완화 | — |
-| 30 | Lee 2020 · *Nat. Energy* 5, 299–308 | ★ Ag–C 복합 음극 (Fig. 4d) · 압착 10–500 MPa · 1,000 사이클 · CE · 탄소 유지 | — |
-| 31 | Zaman 2022 · *Curr. Opin. Solid State Mater. Sci.* 26, 101003 | 산업 롤 압착 | — |
-| 32 | Fuchs 2023 · *Adv. Energy Mater.* 13, 2203174 | ★ Cu\|LLZO 전류 의존 성장 모드 · 펄스 → 핵 밀도 · 얇은 CC | ✅ `fuchs2023_cu_llzo_anode_free_li_growth_modes` (같은 묶음) |
-| 33 | Pei 2017 · *Nano Lett.* 17, 1132–1139 | 과전압↑ → 핵 면밀도↑ (⚠ 액체 전해질) | — |
-| 34 | Yoon 2023 · *J. Mater. Chem. A* 11, 23288–23299 | Li 입계 확산 → 수지상 최소화 (결정립 → 접촉) | — |
-| 35 | Singh 2023 · *Matter* 6, 1463–1483 | 방전 중 Li 금속 음극 불안정 원인 (미세구조 · 석출 조건) | — |
-| 36 | Lee 2022 · *Joule* 6, 2547–2565 | ★ 얇은 in situ Li 공극 · 재젖음 (LLZO) · 적층압 범위 · > 1 MPa 크리프 (⚠ 저자 줄 "Neil, P.") | ✅ `lee2022_thin_insitu_li_void_rewetting_llzo` (같은 묶음) |
-| 37 | Wang 2021 · *Joule* 5, 1371–1390 | ★ 실험실 → 시장: > 1 MPa 어려움 · CE > 99.95 % (1,000 사이클) · < 1 MPa 레버 · 폐루프 제어 · SI 에너지밀도 계산기 | — |
-| 38 | Lee 2021 · *ACS Energy Lett.* 6, 3261–3269 | 적층압 측정으로 Li\|SSE 계면 진화 | — |
-| 39 | Zhang 2020 · *Cell Rep. Phys. Sci.* 1, 100012 | 압력 구동 계면 진화 · 공극 회복 | — |
-| 40 | Chang 2021 · *Nat. Commun.* 12, 6369 | Li–LLZO 접촉역학 · 미세구조 (고압 + 고온) | — |
-| 41 | Fincher 2020 · *Acta Mater.* 186, 215–222 | Li 기계 물성 나노 → 벌크 (크기 의존 항복) | — |
-| 42 | Xu 2017 · *Proc. Natl Acad. Sci. USA* 114, 57–61 | 작은 크기 Li 강도 · 온도 의존 | — |
-| 43 | Cao 2023 · *Nano Lett.* 23, 9392–9398 | 자기조절 내부 압력 (탄성층) → 박리 효율 | — |
-| 44 | Wang 2019 · *Electrochim. Acta* 296, 842–847 | Li/LLZO 플럭스 균형의 온도 의존 | — |
-| 45 | Luo 2022 · *Int. J. Heat. Mass Transf.* 199, 123450 | Li 전극 열 거동 · 온도 조절 | — |
-| 46 | Kinzer 2021 · *Matter* 4, 1947–1961 | 녹은 Li\|LLZO operando · CCD | — |
-| 47 | Lu 2023 · *Extrem. Mech. Lett.* 61, 102022 | Li 크기 · 온도 의존 기계 물성 | — |
-| 48 | Hull 1959 · *Philos. Mag.* 4, 303–315 | Li · Na · K 저온 변형 (1959) | — |
-| 49 | LePage 2019 · *J. Electrochem. Soc.* 166, A89–A97 | Li 역학: 변형률 속도 · 온도 · 재분배 | — |
-| 50 | Motoyama 2020 · *ACS Appl. Mater. Interfaces* 12, 38045–38053 | Cu/LiPON 핵생성의 온도 효과 | — |
-| 51 | Cheng 2023 · *Nat. Nanotechnol.* 18, 1448–1455 | 자립 LiPON 박막 · 무압 치밀 석출 · 두꺼운 CC | — |
-| 52 | Ning 2023 · *Nature* 618, 287–293 | ★ Li 금속 SSB 수지상 개시 · 전파 · CC 두께 → SSE 균열 · SSE 미세구조 | — |
-| 53 | Seymour 2023 · *ChemSusChem* 16, e202202215 | ★★ 금속 음극 SSB 계면 점착 이해 · 공학 · 저압 사이클 · 계면상 점착 | — |
-| 54 | Zhu 2016 · *J. Mater. Chem. A* 4, 3253–3266 | 계면 안정 1 원리 (환원 분류) | ✅ `zhu2016_first_principles_interface_stability_assb` |
-| 55 | Wenzel 2018 · *Solid State Ion.* 318, 102–112 | argyrodite–Li 계면 반응 · 계면상 성장 | — |
-| 56 | Hao 2023 · *Adv. Energy Mater.* 13, 2301338 | Li 금속–SSE 계면상 반응성 조율 (LPSCl 환원) | — |
-| 57 | Wang 2024 · *Adv. Energy Mater.* 14, 2304530 | ★ LPSCl 기계 밀링 미세구조 → 전기화학 안정 · SSE 결정립 · 젖음–반응성 | — |
-| 58 | Lin 2024 · *ACS Energy Lett.* 9, 2387–2393 | SSE 다공도의 비직관적 역할 (LPSCl 환원 맥락) | — |
-| 59 | Vishnugopi 2022 · *Adv. Energy Mater.* 12, 2102825 | SE 입계 Li 필라멘트 (메조 규모) · 침투 | — |
-| 60 | Yu 2018 · *ACS Appl. Mater. Interfaces* 10, 38151–38158 | 입계 연화 → Li 침투 | — |
-| 61 | Lee 2024 · *Adv. Energy Mater.* 14, 2303571 | ★ 간헐 전류 방전 박리 · 거칠기 → 박리 용량 · CE | — |
-| 62 | Alexander 2023 · *Nat. Mater.* 22, 1136–1143 | 가넷 3D MIEC 골격 · 다공 SSE · CE | — |
-| 63 | Liu 2019 · *Nat. Energy* 4, 180–186 | 실용 고에너지 Li 금속 경로 (CE) | — |
-| 64 | Xiao 2020 · *Nat. Energy* 5, 561–568 | Li 금속 CE 이해 · 적용 | — |
-| 65 | Hobold 2021 · *Nat. Energy* 6, 951–960 | 액체 CE 99.9 % 너머 | — |
-| 66 | Sanchez 2024 · *J. Am. Chem. Soc.* 146, 4282–4300 | 액체 · 고체 Li 금속 기전 리뷰 (CE) | — |
-| 67 | Jagger 2023 · *Joule* 7, 2228–2244 | Li 금속 SEI 리뷰 (CE) | — |
-| 68 | Zhu 2015 · *ACS Appl. Mater. Interfaces* 7, 23685–23693 | SSE 안정성 열역학 (CE) | ✅ `zhu2015_esw_grand_potential_origin` |
-| 69 | Lewis 2021 · *Nat. Mater.* 20, 503–510 | operando X 선 단층 — 공극 · 계면상 진화 | — |
-| 70 | Vishnugopi 2022 · *Adv. Energy Mater.* 13, 2203671 | 석출 vs 박리 비대칭 접촉 상실 | — |
-| 71 | Eckhardt 2022 · *ACS Appl. Mater. Interfaces* 14, 35545–35554 | 동적 수축 · 계면 형태 | — |
-| 72 | Vishnugopi 2021 · *ACS Energy Lett.* 6, 3734–3749 | 고속 충전 과제 (필라멘트) | — |
-| 73 | Heubner 2021 · *Adv. Funct. Mater.* 31, 2106608 | Li 금속 → 무음극 리뷰 (거의 100 % DoD 차이) | — |
-| 74 | Haslam 2022 · *J. Power Sources* 520, 230831 | ★ Li 종횡비 → 기계 거동 · 재분배 · 점착–응력 얽힘 | — |
-| 75 | Shin 2024 · *ACS Energy Lett.* 9, 1035–1042 | 압력 구배 → 공극 영역 우선 석출 · 공극 회복 (⚠ 제목 "tegion") | — |
-| 76 | Swamy 2018 · *J. Electrochem. Soc.* 165, A3648–A3655 | 단결정 LLZTO Li 침투 | — |
-| 77 | Ning 2021 · *Nat. Mater.* 20, 1121–1129 | 석출 유도 균열 가시화 | — |
-| 78 | Hänsel 2021 · *Adv. Mater. Interfaces* 8, 2100206 | LPSCl 적층압 딜레마 (고압 → 침입↑) | — |
-| 79 | Doux 2020 · *Adv. Energy Mater.* 10, 1903253 | 상온 Li 금속 SSB 적층압 고려 (고압 → 침입↑) | ✅ `doux2020_stack_pressure_assb` |
-| 80 | Fincher 2022 · *Joule* 6, 2794–2809 | 공학 응력으로 수지상 전파 제어 | — |
-| 81 | Fuchs 2022 · *Adv. Energy Mater.* 12, 2201125 | ★ CNT 로 무압 박리 용량↑ · MIEC 탄소 · < 1 MPa · 음극 구조 | — |
-| 82 | Kim 2023 · *Nat. Commun.* 14, 782 | ★ 계면층 전략 장수명 준전고체 · Ag–C 1,000 사이클 · 탄소 유지 | — |
-| 83 | Wang 2023 · *ACS Energy Lett.* 8, 5248–5252 | Li 금속 없는 전지 vs Li 금속 전지 에너지밀도 · 조립 시 과잉 Li | — |
-| 84 | Lee 2023 · *Faraday Discuss.* 248, 250–265 | DoD 효과 (in situ Li) · 방전 제한 | — |
-| 85 | Müller 2024 · *ACS Appl. Mater. Interfaces* 16, 695–703 | ★ Au · Pt · C 시드층 → 핵생성 동역학 · 인터레이어 부류 · 과전압↓ | — |
-| 86 | Park 2022 · *J. Mater. Chem. A* 10, 21995–22006 | ★ 다공 인터레이어 Li 석출 거동 · 인터레이어 점착 · 석출 위치 | — |
-| 87 | Martin 2020 · *Joule* 4, 1296–1310 | 흑연 위 Li 금속 (액체 하이브리드) | — |
-| 88 | Liao 2024 · *J. Mater. Chem. A* 12, 5990–6003 | ★ 탄소 인터레이어 계면 동역학 (Fig. 4a) · 석출 동역학 | — |
-| 89 | Wu 2023 · *Nano Lett.* 23, 1132–1139 | Ag–C 화학-역학 기능 (시트형) · conformal 접촉 · 탄소 유지 | — |
-| 90 | Suzuki 2021 · *Adv. Energy Sustain. Res.* 2, 2100066 | 얇은 카본블랙 층 석출형 Li 음극 · 위치 · 순수 탄소 한계 | — |
-| 91 | Kim 2023 · *ACS Energy Lett.* 8, 9–20 | 방향성 Li 성장 하이브리드 SSB · 석출 동역학 | — |
-| 92 | Xie 2024 · *Adv. Energy Mater.* 14, 2302960 | ★ Ag/C 버퍼층 리튬화 · 탈리튬화 미시 기전 · 석출 동역학 | — |
-| 93 | Sandoval 2021 · *J. Electrochem. Soc.* 168, 100517 | 합금막 → Li 금속 거동 (operando 광학) · 과전압↓ | — |
-| 94 | Yan 2016 · *Nat. Energy* 1, 16010 | 이질 시드 성장 선택 석출 · 봉입 · 과전압↓ | — |
-| 95 | Wang 2023 · *Adv. Mater.* 35, 2206762 | ★ Cu₂Te → Li₂Te in situ (Fig. 4c) · 고체-고체 이점 | — |
-| 96 | Wang 2023 · *Nano Res.* 16, 8338–8344 | Li–Mg 합금 인터레이어 | — |
-| 97 | Thenuwara 2023 · *ACS Energy Lett.* 8, 4016–4023 | 금속 인터레이어 · 방전율 · 압력 (LLZO) · 공극 완화 | — |
-| 98 | Ruano 1981 · *Mater. Sci. Eng.* 51, 9–16 | 파이프 확산 → 미세결정 크리프 (미세구조 제어로 크리프↑) | — |
+| 1 | Viswanathan 2022 · *Nature* 601, 519–525 — The challenges and opportunities of battery-powered flight | 서론 — 대형 차량 · 전기 비행 요구 (동기) | — |
+| 2 | Famprikis 2019 · *Nat. Mater.* 18, 1278–1291 — Fundamentals of inorganic solid-state electrolytes for batteries | 서론 — SSB 에너지밀도 최대 +50 % | ✅ `famprikis2019_fundamentals_inorganic_sse` |
+| 3 | Manthiram 2017 · *Nat. Rev. Mater.* 2, 16103 — Lithium battery chemistries enabled by solid-state electrolytes | 서론 — 에너지밀도 · 넓은 창 · 안전 | — |
+| 4 | Krauskopf 2020 · *Chem. Rev.* 120, 7745–7794 — Physicochemical concepts of the lithium metal anode in solid-state batteries | 서론 — 에너지밀도 · p. 676 환원 불안정 vs 부동태 분류 | — |
+| 5 | Hatzell 2020 · *ACS Energy Lett.* 5, 922–934 — Challenges in lithium metal anodes for solid-state batteries | 서론 — 에너지밀도 | — |
+| 6 | Janek 2016 · *Nat. Energy* 1, 16141 — A solid future for battery development | 서론 — 넓은 창 · 안전 | ✅ `janek2016_solid_future_battery_development` |
+| 7 | Kim 2023 · *Adv. Mater.* 35, 2206625 — Lithium-metal batteries: from fundamental research to industrialization | 서론 — Li 박 제조 = 비싼 분위기 제어 | — |
+| 8 | Albertus 2018 · *Nat. Energy* 3, 16–21 — Status and challenges in enabling the lithium metal electrode for high-energy and low-cost rechargeable batteries | 서론 — Li 박 제조 | — |
+| 9 | Duffner 2021 · *Nat. Energy* 6, 123–134 — Post-lithium-ion battery cell production and its compatibility with lithium-ion cell production infrastructure | 서론 — Li 박 제조 | — |
+| 10 | Wang 2020 · *Nat. Commun.* 11, 5201 — Enabling “lithium-free” manufacturing of pure lithium metal solid-state batteries through in situ plating | ★ 무음극 에너지밀도 · CC 접촉·점착 · LLZO 900 °C 접합 · 전류 → 핵 밀도 · 적층압 범위 · > 1 MPa 크리프 · Cu 위 불균일 석출 | ✅ `wang2020_lithium_free_insitu_plating_llzo` (같은 묶음) |
+| 11 | McDowell 2020 · *Chem. Mater.* 32, 8755–8771 — Toward high-capacity battery anode materials: chemistry and mechanics intertwined | 서론 — 무음극 에너지밀도 | — |
+| 12 | Nanda 2021 · *Adv. Energy Mater.* 11, 2000804 — Anode-free full cells: a pathway to high-energy density lithium-metal batteries | 서론 — 무음극 에너지밀도 | — |
+| 13 | Qian 2016 · *Adv. Funct. Mater.* 26, 7094–7102 — Anode-free rechargeable lithium metal batteries | 서론 — 무음극 에너지밀도 | — |
+| 14 | Kazyak 2022 · *Matter* 5, 3912–3934 — Understanding the electro-chemo-mechanics of Li plating in anode-free solid-state batteries with operando 3D microscopy | ★ anode-less 용어 · 구속 응력 → Li 소성 · 접촉·점착 · 필라멘트 · 불균일 적층압 · 섬 병합 응력 · 탄성층 · 두꺼운 CC · 점소성 측방 성장 (operando 3D 현미경) | — |
+| 15 | Davis 2021 · *J. Electrochem. Soc.* 168, 070557 — Operando analysis of interphase dynamics in anode-free solid-state batteries with sulfide electrolytes | anode-less 용어 · 이질 계면상 (operando) | — |
+| 16 | Neudecker 2000 · *J. Electrochem. Soc.* 147, 517–523 — “Lithium-free” thin-film battery with in situ plated Li anode | lithium free 용어 · 얇은 CC 실패 (박막전지 원조) | — |
+| 17 | Richards 2016 · *Chem. Mater.* 28, 266–273 — Interface stability in solid-state batteries | SSE–Li 계면 안정 · 환원 분류 · CE | ✅ `richards2016_interface_stability_pseudobinary` |
+| 18 | Xiao 2020 · *Nat. Rev. Mater.* 5, 105–126 — Understanding interface stability in solid-state batteries | SSE–Li 계면 안정 · CE | ✅ `xiao2020_interface_stability_ssb_review` |
+| 19 | Lin 2017 · *Nat. Nanotechnol.* 12, 194–206 — Reviving the lithium metal anode for high-energy batteries | 액체 무음극 = 사이클마다 SEI | — |
+| 20 | Kasemchainan 2019 · *Nat. Mater.* 18, 1105–1111 — Critical stripping current leads to dendrite formation on plating in lithium anode solid electrolyte cells | ★ Li 과잉 공극 (임계 박리 전류) · 필라멘트 · 적층압 범위 · 크리프 · 공극 회복 | — |
+| 21 | Wang 2019 · *Joule* 3, 2165–2178 — Characterizing the Li-solid–electrolyte interface dynamics as a function of stack pressure and current density | ★ 공극 · 임계 박리 전류 · 점소성 측방 성장 (적층압 · 전류 함수) | ✅ `wang2019_li_se_interface_dynamics_stack_pressure_current_density` (같은 묶음) |
+| 22 | Krauskopf 2019 · *ACS Appl. Mater. Interfaces* 11, 14463–14477 — Toward a fundamental understanding of the lithium metal anode in solid-state batteries—an electrochemo-mechanical study on the garnet-type solid electrolyte Li6.25Al0.25La3Zr2O12 | 필라멘트 · 적층압 범위 · 전류 집중 (LLZO) | — |
+| 23 | Lewis 2023 · *Adv. Energy Mater.* 13, 2204186 — Accelerated short circuiting in anode-free solid-state batteries driven by local lithium depletion | ★★ 무음극 국부 Li 고갈 → 가속 단락 (Fig. 3d 기전) · 시연 적음 · 인터레이어 공극 완화 · 과잉 Li · 방전 제한 | — |
+| 24 | Haslam 2023 · *J. Electrochem. Soc.* 170, 040524 — Stable lithium plating in “lithium metal-free” solid-state batteries enabled by seeded lithium nucleation | ★ Au 150 nm 시드 (LLZO) · 무음극 추가 인자 · 인터레이어 부류 · 고체-고체 이점 | — |
+| 25 | Yoon 2024 · *ACS Appl. Mater. Interfaces* 16, 18790–18799 — Thermodynamics, adhesion, and wetting at Li/Cu(-oxide) interfaces: relevance for anode-free lithium-metal batteries | ★★ Li/Cu(-산화물) 열역학 · 점착 · 젖음 (DFT 친Li vs sessile drop · Cu₂O → Li₂O) | — |
+| 26 | Wolfenstine 2018 · *Ionics* 24, 1271–1276 — Mechanical behavior of Li-ion-conducting crystalline oxide-based solid electrolytes: a brief review | "근본 전기-화학-역학" 문장 (⚠ 산화물 SE 역학 리뷰 — 결이 약함) | — |
+| 27 | Krauskopf 2019 · *Joule* 3, 2030–2049 — Lithium-metal growth kinetics on LLZO garnet-type solid electrolytes | 첫 석출 — LLZO 위 Li 성장 동역학 | — |
+| 28 | Motoyama 2015 · *J. Electrochem. Soc.* 162, A7067–A7071 — Modeling the nucleation and growth of Li at metal current collector/LiPON interfaces | SSE\|CC 상호작용 → 핵생성 (Cu/LiPON 모델) · 얇은 CC 실패 | — |
+| 29 | Sandoval 2023 · *Joule* 7, 2054–2073 — Structural and electrochemical evolution of alloy interfacial layers in anode-free solid-state batteries | ★ Au · Ag 100 nm 합금층 진화 (Fig. 4b) · 황화물 압착 10–500 MPa · Cu 위 불균일 · 인터레이어 공극 완화 | — |
+| 30 | Lee 2020 · *Nat. Energy* 5, 299–308 — High-energy long-cycling all-solid-state lithium metal batteries enabled by silver–carbon composite anodes | ★ Ag–C 복합 음극 (Fig. 4d) · 압착 10–500 MPa · 1,000 사이클 · CE · 탄소 유지 | — |
+| 31 | Zaman 2022 · *Curr. Opin. Solid State Mater. Sci.* 26, 101003 — Processing and manufacturing of next generation lithium-based all solid-state batteries | 산업 롤 압착 | — |
+| 32 | Fuchs 2023 · *Adv. Energy Mater.* 13, 2203174 — Current-dependent lithium metal growth modes in “anode-free” solid-state batteries at the Cu\|LLZO interface | ★ Cu\|LLZO 전류 의존 성장 모드 · 펄스 → 핵 밀도 · 얇은 CC | ✅ `fuchs2023_cu_llzo_anode_free_li_growth_modes` (같은 묶음) |
+| 33 | Pei 2017 · *Nano Lett.* 17, 1132–1139 — Nanoscale nucleation and growth of electrodeposited lithium metal | 과전압↑ → 핵 면밀도↑ (⚠ 액체 전해질) | — |
+| 34 | Yoon 2023 · *J. Mater. Chem. A* 11, 23288–23299 — Exploiting grain boundary diffusion to minimize dendrite formation in lithium metal-solid state batteries | Li 입계 확산 → 수지상 최소화 (결정립 → 접촉) | — |
+| 35 | Singh 2023 · *Matter* 6, 1463–1483 — Origin of the lithium metal anode instability in solid-state batteries during discharge | 방전 중 Li 금속 음극 불안정 원인 (미세구조 · 석출 조건) | — |
+| 36 | Lee 2022 · *Joule* 6, 2547–2565 — Analyzing void formation and rewetting of thin in situ-formed Li anodes on LLZO | ★ 얇은 in situ Li 공극 · 재젖음 (LLZO) · 적층압 범위 · > 1 MPa 크리프 (⚠ 저자 줄 "Neil, P.") | ✅ `lee2022_thin_insitu_li_void_rewetting_llzo` (같은 묶음) |
+| 37 | Wang 2021 · *Joule* 5, 1371–1390 — Transitioning solid-state batteries from lab to market: linking electro-chemo-mechanics with practical considerations | ★ 실험실 → 시장: > 1 MPa 어려움 · CE > 99.95 % (1,000 사이클) · < 1 MPa 레버 · 폐루프 제어 · SI 에너지밀도 계산기 | — |
+| 38 | Lee 2021 · *ACS Energy Lett.* 6, 3261–3269 — Stack pressure measurements to probe the evolution of the lithium-solid-state electrolyte interface | 적층압 측정으로 Li\|SSE 계면 진화 | — |
+| 39 | Zhang 2020 · *Cell Rep. Phys. Sci.* 1, 100012 — Pressure-driven interface evolution in solid-state lithium metal batteries | 압력 구동 계면 진화 · 공극 회복 | — |
+| 40 | Chang 2021 · *Nat. Commun.* 12, 6369 — Evolving contact mechanics and microstructure formation dynamics of the lithium metal-Li7La3Zr2O12 interface | Li–LLZO 접촉역학 · 미세구조 (고압 + 고온) | — |
+| 41 | Fincher 2020 · *Acta Mater.* 186, 215–222 — Mechanical properties of metallic lithium: from nano to bulk scales | Li 기계 물성 나노 → 벌크 (크기 의존 항복) | — |
+| 42 | Xu 2017 · *Proc. Natl Acad. Sci. USA* 114, 57–61 — Enhanced strength and temperature dependence of mechanical properties of Li at small scales and its implications for Li metal anodes | 작은 크기 Li 강도 · 온도 의존 | — |
+| 43 | Cao 2023 · *Nano Lett.* 23, 9392–9398 — Enhancing lithium stripping efficiency in anode-free solid-state batteries through self-regulated internal pressure | 자기조절 내부 압력 (탄성층) → 박리 효율 | — |
+| 44 | Wang 2019 · *Electrochim. Acta* 296, 842–847 — Temperature dependent flux balance of the Li/Li7La3Zr2O12 interface | Li/LLZO 플럭스 균형의 온도 의존 | — |
+| 45 | Luo 2022 · *Int. J. Heat. Mass Transf.* 199, 123450 — Thermal behavior of Li electrode in all-solid-state batteries and improved performance by temperature modulation | Li 전극 열 거동 · 온도 조절 | — |
+| 46 | Kinzer 2021 · *Matter* 4, 1947–1961 — Operando analysis of the molten Li\|LLZO interface: understanding how the physical properties of Li affect the critical current density | 녹은 Li\|LLZO operando · CCD | — |
+| 47 | Lu 2023 · *Extrem. Mech. Lett.* 61, 102022 — Size- and temperature-dependent mechanical properties of metallic lithium | Li 크기 · 온도 의존 기계 물성 | — |
+| 48 | Hull 1959 · *Philos. Mag.* 4, 303–315 — The deformation of lithium, sodium and potassium at low temperatures: tensile and resistivity experiments | Li · Na · K 저온 변형 (1959) | — |
+| 49 | LePage 2019 · *J. Electrochem. Soc.* 166, A89–A97 — Lithium mechanics: roles of strain rate and temperature and implications for lithium metal batteries | Li 역학: 변형률 속도 · 온도 · 재분배 | — |
+| 50 | Motoyama 2020 · *ACS Appl. Mater. Interfaces* 12, 38045–38053 — Temperature effects on Li nucleation at Cu/LiPON interfaces | Cu/LiPON 핵생성의 온도 효과 | — |
+| 51 | Cheng 2023 · *Nat. Nanotechnol.* 18, 1448–1455 — A free-standing lithium phosphorus oxynitride thin film electrolyte promotes uniformly dense lithium metal deposition with no external pressure | 자립 LiPON 박막 · 무압 치밀 석출 · 두꺼운 CC | — |
+| 52 | Ning 2023 · *Nature* 618, 287–293 — Dendrite initiation and propagation in lithium metal solid-state batteries | ★ Li 금속 SSB 수지상 개시 · 전파 · CC 두께 → SSE 균열 · SSE 미세구조 | — |
+| 53 | Seymour 2023 · *ChemSusChem* 16, e202202215 — Understanding and engineering interfacial adhesion in solid-state batteries with metallic anodes | ★★ 금속 음극 SSB 계면 점착 이해 · 공학 · 저압 사이클 · 계면상 점착 | — |
+| 54 | Zhu 2016 · *J. Mater. Chem. A* 4, 3253–3266 — First principles study on electrochemical and chemical stability of solid electrolyte–electrode interfaces in all-solid-state Li-ion batteries | 계면 안정 1 원리 (환원 분류) | ✅ `zhu2016_first_principles_interface_stability_assb` |
+| 55 | Wenzel 2018 · *Solid State Ion.* 318, 102–112 — Interfacial reactivity and interphase growth of argyrodite solid electrolytes at lithium metal electrodes | argyrodite–Li 계면 반응 · 계면상 성장 | — |
+| 56 | Hao 2023 · *Adv. Energy Mater.* 13, 2301338 — Tuned reactivity at the lithium metal solid state electrolyte interphase | Li 금속–SSE 계면상 반응성 조율 (LPSCl 환원) | — |
+| 57 | Wang 2024 · *Adv. Energy Mater.* 14, 2304530 — Mechanical milling-induced microstructure changes in argyrodite LPSCl solid-state electrolyte critically affect electrochemical stability | ★ LPSCl 기계 밀링 미세구조 → 전기화학 안정 · SSE 결정립 · 젖음–반응성 | — |
+| 58 | Lin 2024 · *ACS Energy Lett.* 9, 2387–2393 — Nonintuitive role of solid electrolyte porosity on failure | SSE 다공도의 비직관적 역할 (LPSCl 환원 맥락) | — |
+| 59 | Vishnugopi 2022 · *Adv. Energy Mater.* 12, 2102825 — Mesoscale interrogation reveals mechanistic origins of lithium filaments along grain boundaries in inorganic solid electrolytes | SE 입계 Li 필라멘트 (메조 규모) · 침투 | — |
+| 60 | Yu 2018 · *ACS Appl. Mater. Interfaces* 10, 38151–38158 — Grain boundary softening: a potential mechanism for lithium metal penetration through stiff solid electrolytes | 입계 연화 → Li 침투 | — |
+| 61 | Lee 2024 · *Adv. Energy Mater.* 14, 2303571 — Li stripping behavior of anode-free solid-state batteries under intermittent-current discharge conditions | ★ 간헐 전류 방전 박리 · 거칠기 → 박리 용량 · CE | — |
+| 62 | Alexander 2023 · *Nat. Mater.* 22, 1136–1143 — Extreme lithium-metal cycling enabled by a mixed ion- and electron-conducting garnet three-dimensional architecture | 가넷 3D MIEC 골격 · 다공 SSE · CE | — |
+| 63 | Liu 2019 · *Nat. Energy* 4, 180–186 — Pathways for practical high-energy long cycling lithium metal batteries | 실용 고에너지 Li 금속 경로 (CE) | — |
+| 64 | Xiao 2020 · *Nat. Energy* 5, 561–568 — Understanding and applying Coulombic efficiency in lithium metal batteries | Li 금속 CE 이해 · 적용 | — |
+| 65 | Hobold 2021 · *Nat. Energy* 6, 951–960 — Moving beyond 99.9% Coulombic efficiency for lithium anodes in liquid electrolytes | 액체 CE 99.9 % 너머 | — |
+| 66 | Sanchez 2024 · *J. Am. Chem. Soc.* 146, 4282–4300 — Lithium metal anodes: advancing our mechanistic understanding of cycling phenomena in liquid and solid electrolytes | 액체 · 고체 Li 금속 기전 리뷰 (CE) | — |
+| 67 | Jagger 2023 · *Joule* 7, 2228–2244 — Solid electrolyte interphases in lithium metal batteries | Li 금속 SEI 리뷰 (CE) | — |
+| 68 | Zhu 2015 · *ACS Appl. Mater. Interfaces* 7, 23685–23693 — Origin of outstanding stability in the lithium solid electrolyte materials: Insights from thermodynamic analyses based on first-principles calculations | SSE 안정성 열역학 (CE) | ✅ `zhu2015_esw_grand_potential_origin` |
+| 69 | Lewis 2021 · *Nat. Mater.* 20, 503–510 — Linking void and interphase evolution to electrochemistry in solid-state batteries using operando X-ray tomography | operando X 선 단층 — 공극 · 계면상 진화 | — |
+| 70 | Vishnugopi 2022 · *Adv. Energy Mater.* 13, 2203671 — Asymmetric contact loss dynamics during plating and stripping in solid-state batteries | 석출 vs 박리 비대칭 접촉 상실 | — |
+| 71 | Eckhardt 2022 · *ACS Appl. Mater. Interfaces* 14, 35545–35554 — Interplay of dynamic constriction and interface morphology between reversible metal anode and solid electrolyte in solid state batteries | 동적 수축 · 계면 형태 | — |
+| 72 | Vishnugopi 2021 · *ACS Energy Lett.* 6, 3734–3749 — Challenges and opportunities for fast charging of solid-state lithium metal batteries | 고속 충전 과제 (필라멘트) | — |
+| 73 | Heubner 2021 · *Adv. Funct. Mater.* 31, 2106608 — From lithium-metal toward anode-free solid-state batteries: current developments, issues, and challenges | Li 금속 → 무음극 리뷰 (거의 100 % DoD 차이) | — |
+| 74 | Haslam 2022 · *J. Power Sources* 520, 230831 — The effect of aspect ratio on the mechanical behavior of Li metal in solid-state cells | ★ Li 종횡비 → 기계 거동 · 재분배 · 점착–응력 얽힘 | — |
+| 75 | Shin 2024 · *ACS Energy Lett.* 9, 1035–1042 — Preferential lithium plating in the interfacial void tegion in all-solid-state batteries via pressure gradient-driven lithium-ion flux | 압력 구배 → 공극 영역 우선 석출 · 공극 회복 (⚠ 제목 "tegion") | — |
+| 76 | Swamy 2018 · *J. Electrochem. Soc.* 165, A3648–A3655 — Lithium metal penetration induced by electrodeposition through solid electrolytes: example in single-crystal Li6La3ZrTaO12 garnet | 단결정 LLZTO Li 침투 | — |
+| 77 | Ning 2021 · *Nat. Mater.* 20, 1121–1129 — Visualizing plating-induced cracking in lithium- anode solid-electrolyte cells | 석출 유도 균열 가시화 | — |
+| 78 | Hänsel 2021 · *Adv. Mater. Interfaces* 8, 2100206 — The stack pressure dilemma in sulfide electrolyte based Li metal solid-state batteries: a case study with Li6PS5Cl solid electrolyte | LPSCl 적층압 딜레마 (고압 → 침입↑) | — |
+| 79 | Doux 2020 · *Adv. Energy Mater.* 10, 1903253 — Stack pressure considerations for room-temperature all-solid-state lithium metal batteries | 상온 Li 금속 SSB 적층압 고려 (고압 → 침입↑) | ✅ `doux2020_stack_pressure_assb` |
+| 80 | Fincher 2022 · *Joule* 6, 2794–2809 — Controlling dendrite propagation in solid-state batteries with engineered stress | 공학 응력으로 수지상 전파 제어 | — |
+| 81 | Fuchs 2022 · *Adv. Energy Mater.* 12, 2201125 — Increasing the pressure-free stripping capacity of the lithium metal anode in solid-state-batteries by carbon nanotubes | ★ CNT 로 무압 박리 용량↑ · MIEC 탄소 · < 1 MPa · 음극 구조 | — |
+| 82 | Kim 2023 · *Nat. Commun.* 14, 782 — Surface engineering of inorganic solid-state electrolytes via interlayers strategy for developing long-cycling quasi-all-solid-state lithium batteries | ★ 계면층 전략 장수명 준전고체 · Ag–C 1,000 사이클 · 탄소 유지 | — |
+| 83 | Wang 2023 · *ACS Energy Lett.* 8, 5248–5252 — Between promise and practice: a comparative look at the energy density of Li metal-free batteries and Li metal batteries | Li 금속 없는 전지 vs Li 금속 전지 에너지밀도 · 조립 시 과잉 Li | — |
+| 84 | Lee 2023 · *Faraday Discuss.* 248, 250–265 — Effect of depth of discharge (DOD) on cycling in situ formed Li anodes | DoD 효과 (in situ Li) · 방전 제한 | — |
+| 85 | Müller 2024 · *ACS Appl. Mater. Interfaces* 16, 695–703 — Influence of Au, Pt, and C seed layers on lithium nucleation dynamics for anode-free solid-state batteries | ★ Au · Pt · C 시드층 → 핵생성 동역학 · 인터레이어 부류 · 과전압↓ | — |
+| 86 | Park 2022 · *J. Mater. Chem. A* 10, 21995–22006 — Clarification of Li deposition behavior on anodes with a porous interlayer in Li-free all-solid-state batteries | ★ 다공 인터레이어 Li 석출 거동 · 인터레이어 점착 · 석출 위치 | — |
+| 87 | Martin 2020 · *Joule* 4, 1296–1310 — Cycling lithium metal on graphite to form hybrid lithium-ion/ lithium metal cells | 흑연 위 Li 금속 (액체 하이브리드) | — |
+| 88 | Liao 2024 · *J. Mater. Chem. A* 12, 5990–6003 — Interfacial dynamics of carbon interlayers in anode-free solid-state batteries | ★ 탄소 인터레이어 계면 동역학 (Fig. 4a) · 석출 동역학 | — |
+| 89 | Wu 2023 · *Nano Lett.* 23, 1132–1139 — Understanding the chemomechanical function of the silver–carbon interlayer in sheet-type all-solid-state lithium-metal batteries | Ag–C 화학-역학 기능 (시트형) · conformal 접촉 · 탄소 유지 | — |
+| 90 | Suzuki 2021 · *Adv. Energy Sustain. Res.* 2, 2100066 — Highly cyclable all-solid-state battery with deposition-type lithium metal anode based on thin carbon black layer | 얇은 카본블랙 층 석출형 Li 음극 · 위치 · 순수 탄소 한계 | — |
+| 91 | Kim 2023 · *ACS Energy Lett.* 8, 9–20 — High-power hybrid solid-state lithium-metal batteries enabled by preferred directional lithium growth mechanism | 방향성 Li 성장 하이브리드 SSB · 석출 동역학 | — |
+| 92 | Xie 2024 · *Adv. Energy Mater.* 14, 2302960 — The microscopic mechanism of lithiation and delithiation in the Ag/C buffer layer for anode-free solid-state batteries | ★ Ag/C 버퍼층 리튬화 · 탈리튬화 미시 기전 · 석출 동역학 | — |
+| 93 | Sandoval 2021 · *J. Electrochem. Soc.* 168, 100517 — Understanding the effects of alloy films on the electrochemical behavior of lithium metal anodes with operando optical microscopy | 합금막 → Li 금속 거동 (operando 광학) · 과전압↓ | — |
+| 94 | Yan 2016 · *Nat. Energy* 1, 16010 — Selective deposition and stable encapsulation of lithium through heterogeneous seeded growth | 이질 시드 성장 선택 석출 · 봉입 · 과전압↓ | — |
+| 95 | Wang 2023 · *Adv. Mater.* 35, 2206762 — Stable anode-free all-solid-state lithium battery through tuned metal wetting on the copper current collector | ★ Cu₂Te → Li₂Te in situ (Fig. 4c) · 고체-고체 이점 | — |
+| 96 | Wang 2023 · *Nano Res.* 16, 8338–8344 — Regulating Li transport in Li–magnesium alloy for dendrite free Li metal anode | Li–Mg 합금 인터레이어 | — |
+| 97 | Thenuwara 2023 · *ACS Energy Lett.* 8, 4016–4023 — Interplay among metallic interlayers, discharge rate, and pressure in LLZO-based lithium-metal batteries | 금속 인터레이어 · 방전율 · 압력 (LLZO) · 공극 완화 | — |
+| 98 | Ruano 1981 · *Mater. Sci. Eng.* 51, 9–16 — The influence of pipe diffusion on the creep of fine-grained materials | 파이프 확산 → 미세결정 크리프 (미세구조 제어로 크리프↑) | — |
 
 ### 14.1 SI 참고문헌 (17 편 · `Table S3` 출처) → 본문 번호
 

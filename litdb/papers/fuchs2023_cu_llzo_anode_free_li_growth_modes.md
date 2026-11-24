@@ -1,7 +1,7 @@
 <!-- digest 표준 양식 (paper-level STANDALONE). 2026-11-24 첫 작성 — 병렬 큐레이터 배치 (litdb/_curation/batch_2026_11_24).
      ① 크롭 16장 (본문 7 + SI 9) 을 **전부 실제로 보고** figure-read 값을 넣었다.
      ② 동영상 2편은 2 초 간격 프레임 + 마지막 프레임을 뽑아 직접 봤다 (§9 동영상 행).
-     ③ 이 논문은 원자단위 계산을 하지 않는다 (exp 전용) → `> methods: —`.
+     ③ 이 논문은 원자단위 계산을 하지 않는다 (exp 전용) → 기법 태그 줄은 대시 하나로 비운다.
      ④ 우리 점착 (W) 값은 싣지 않는다 — 위치만 (§7). -->
 
 # Current-Dependent Lithium Metal Growth Modes in "Anode-Free" Solid-State Batteries at the Cu|LLZO Interface — Fuchs et al. (*Adv. Energy Mater.* **2023**, 13, 2203174)
