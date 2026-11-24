@@ -2,7 +2,7 @@
 title: "BML 연구세미나 (김시원, 2026-09-02) — 열화 모드 진단 ML 프레임워크"
 source_url: local-upload/2026.09.02 김시원 연구세미나.pdf
 ingested: 2026-09-03
-sha256: a1cc3d4fda037c9bf074777d426a6b3b086832e723765dbd03446da5e2f597c1
+sha256: 10917c4b44f4ffd699422d085d2188b996be3206f0562056ccebdcd9d4673c8e
 ---
 
 # 수집 목적
@@ -26,7 +26,7 @@ ML 의 **라벨**로 쓴다. 그래서 원문을 좌표로 남긴다.
 
 `[인쇄]` Degradation mode analysis for accurate health prediction of
 lithium-ion batteries · September 2, 2026 · Siwon Kim · Division of Materials
-Science & Engineering, Hanyang University · siwonkim@hanyang.ac.kr
+Science & Engineering, Hanyang University · [이메일 — 공개 저장소라 옮기지 않음 · 2026-11-24 가림]
 
 ---
 
