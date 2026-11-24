@@ -209,6 +209,9 @@ jobs:
       # ★ 2026-11-24 (반입 ㊳) — 7:3 탈압 NP6 병렬 단위 시험 여덟 (check_all.sh 단계 77 에도 같이)
       - name: 반입 ㊳ 7:3 탈압 NP6 병렬 단위 시험 (regression)
         run: python -B docs/reviews/ps73_parallel_20261124/test_parallel.py
+      # ★ 2026-11-24 (반입 ㊴) — B2 독립 시드 짝 반복 산술 단위 시험 (check_all.sh 단계 78 에도 같이)
+      - name: 반입 ㊴ B2 독립 시드 짝 반복 산술 단위 시험 (regression)
+        run: python -B docs/reviews/mixer_b2_seed_pairs_20261124/test_repeat.py
       # ★ 2026-11-24 (반입 ㉕) — 수영 설정 ② 접촉 후보 시험 셋 (check_all.sh 단계 71 에도 같이)
       - name: 반입 ㉕ 수영 설정 ② 접촉 후보 시험 셋 (regression)
         run: |
