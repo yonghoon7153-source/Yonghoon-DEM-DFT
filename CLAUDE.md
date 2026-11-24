@@ -63,7 +63,7 @@
   회신 · 편지 차수와 날짜 · 내부 점검 단계 (점검 셋 · 표본 수 · 운영 기준 숫자) · 수렴 실패 · 재시도 사정 · 계산 자원 (GPU · 메모리 한도) 은 원장 · md 에만 둔다.
   보고서에는 값 · 방법 · 쓰는 법 · 한계 · "확인 중 / 확인 끝" 한 줄만 쓴다. ⚠ 값에 붙는 사용 조건 (미검증 예측 · 민감도 시나리오로만 · 방법이 섞인 비) 은 내부 사정이 아니다 — 남긴다.
 - **공유 HTML 을 만들거나 새 판을 내면 웹앱 '공유 보고서' 표에 같은 작업으로 넣고, 답에 "웹앱도 고쳤다 (공유 보고서)" 를 적는다** (사용자 2026-11-24 *'앞으로 html 생성하거나 그럴 때 공유 보고서 이 부분 수정하거나 추가하는 걸 자동으로 진행해줘 · 웹앱도 수정했다고 얘기해주고'*).
-  공유 HTML 은 `docs/collab/` 에 둔다 · 표의 집은 `webapp/data.py` `COLLAB_REPORTS` (slug · rel · title = 문서 `<h1>` · date · track · nav_parent = 사이드바 캠페인 url · 같은 트랙의 옛 판은 earlier).
+  공유 HTML 은 `docs/collab/` 에 둔다 (예외: CEI 페이지 `db/properties/cei_figs/` — 표에 든 보고서의 폴더는 같은 그물에 걸린다 · `data.collab_dirs()`) · 표의 집은 `webapp/data.py` `COLLAB_REPORTS` (slug · rel · title = 문서 `<h1>` · date · track · nav_parent = 사이드바 캠페인 url · 같은 트랙의 옛 판은 earlier).
   이미 걸린 보고서를 고쳐도 웹앱이 그 파일을 그대로 띄우므로 "웹앱 공유 보고서에도 반영" 을 같이 알린다.
   장치 둘: Write/Edit 훅 (`.claude/settings.json` → `tools/collab/check_collab_registry.py --hook`) 이 표에 없으면 바로 알리고,
   `webapp/tests/test_collab_reports.py::test_every_collab_html_is_on_the_reports_page` 가 표 밖 HTML 을 빨간불로 잡는다 (Bash 로 쓴 파일은 훅이 못 본다 — 시험이 그물이다).
@@ -434,6 +434,9 @@
   → ④ stdlib 로 되나 → 그 다음에 새 파일. **기존 도구 확장이 새 파일보다 항상 낫다.**
 - 물리 규약(MSD 창 2–50 ps, 자유절편 D)은 여러 파일에 복사돼 있다 — 수정하면
   `python3 tools/convention_check.py` 로 갈라졌는지 확인 (0 위반 유지, 예외는 EXEMPT 에 **사유 명시**).
+- **전수 변이 시험은 P0 · P1 고침에만 돌린다 — P2 · 문구 · 표기만 고친 묶음은 고친 함수에 닿는 변이 + 새 음성 시험만 돌린다** (사용자 2026-11-24 *'권고대로'* · W_ad a5 Codex ES 반입에서 P2 탭/공백 한 줄에도 전수 변이 ≈ 2.5 h 가 돌았다).
+  P0 · P1 = 다음 단을 잘못 열 수 있는 길 (판정 · 잠금 · 기록 보존 · 채택). 고친 곳이 여러 단이 같이 쓰는 길 (잠금 · 반송본 비교 · 판독 공통 함수) 이면 P2 라도 전수로 간다.
+  범위를 줄였으면 그 이유를 build log (또는 그 묶음의 기록) 에 한 줄 남긴다 — 줄인 판단도 기록이다.
 - **새 도구는 `--selftest` 를 단다 — 음성 경로(틀린 입력을 잡아내는지) 포함.**
   양성만 있는 selftest 는 통과해도 아무것도 보증 못 한다 (vasp 번들 v2 선례).
 - 도구 docstring 에 **"이 도구가 못 하는 것"** 을 적는다 (한계 은폐가 제일 비싼 버그).

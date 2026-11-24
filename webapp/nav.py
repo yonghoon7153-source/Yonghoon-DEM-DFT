@@ -110,7 +110,7 @@ SECTIONS: list[dict] = [
         # 같이 보는 HTML 보고서 + 캠페인 페이지 목록 (표 = data.COLLAB_REPORTS + 통합 보고). 회의록 바탕 문서는 기업 이름 없이 (시험이 본다).
         #   also = 보고서 보기 화면 (/reports/<slug>) 에 있을 때 이 줄이 켜진다 — 그 화면들은 사이드바 줄이 따로 없다.
         {"url": "/reports", "label": "공유 보고서", "icon": "📑", "active": "reports",
-         "also": ["report-agc-crack", "report-lzo", "report-wad-dem"],
+         "also": ["report-agc-crack", "report-lzo", "report-wad-dem", "report-cei", "report-cei-nd"],   # ⚠ 표 (data.COLLAB_REPORTS) 에 넣을 때 같이 — test_nav_has_the_reports_item 이 본다
          "sub": "캠페인 페이지와 같이 보는 HTML 보고서를 한 화면에 — 통합 보고 · 사례 A · LZO 코팅 NCA · 점착 W (DEM)",
          "kw": "reports report 공유 보고서 html collab 캠페인 campaign 사례 a ag-c agc crack 인터레이어 lzo 혁주 hyeokju nca 코팅 "
                "wad w_ad 점착 dem dem-dft 박리"},

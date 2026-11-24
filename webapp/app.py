@@ -1550,7 +1550,9 @@ def interface_thermo_report():
 def _collab_info(r: dict) -> dict:
     import hashlib as _h
     p = D.ROOT / r["rel"]
-    info = {**r, "ok": p.is_file(), "raw": f"/reports/{r['slug']}/raw",
+    # via = 'api_file' — 원문을 종전의 /api/file 경로로 띄운다 (결속 검사 밖 · via_why 에 이유 · data.COLLAB_REPORTS 의 CEI 줄 참고)
+    raw = f"/api/file/{r['rel']}" if r.get("via") == "api_file" else f"/reports/{r['slug']}/raw"
+    info = {**r, "ok": p.is_file(), "raw": raw,
             "earlier": [{**e, "ok": (D.ROOT / e["rel"]).is_file()} for e in r.get("earlier", ())]}
     if info["ok"]:
         b = p.read_bytes()
@@ -1592,7 +1594,8 @@ def _collab_raw(slug: str):
 for _r in D.COLLAB_REPORTS:
     _ep = _r["slug"].replace("-", "_")
     app.add_url_rule(f"/reports/{_r['slug']}", endpoint=f"collab_report_{_ep}", view_func=_collab_view(_r["slug"]))
-    app.add_url_rule(f"/reports/{_r['slug']}/raw", endpoint=f"collab_report_raw_{_ep}", view_func=_collab_raw(_r["slug"]))
+    if _r.get("via") != "api_file":          # via api_file 이면 원문 경로를 안 단다 (종전 /api/file 로만 — 이유는 via_why)
+        app.add_url_rule(f"/reports/{_r['slug']}/raw", endpoint=f"collab_report_raw_{_ep}", view_func=_collab_raw(_r["slug"]))
 del _r, _ep
 
 

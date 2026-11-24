@@ -24,6 +24,7 @@
 <div class="callout cal-danger"><b>⛔ 보고서 파일을 못 읽었다</b> — <span class="mono">{{ it.rel }}</span> 이 없다.
   빈 화면이 아니라 파일이 없는 것이다.</div>
 {% else %}
+{% if it.via_why %}<div class="callout cal-warn" style="margin:0 0 10px">⚠ {{ it.via_why }}</div>{% endif %}
 <p class="sub" style="margin:0 0 10px">원본 <span class="mono">{{ it.rel }}</span> · {{ it.kb }} KB · sha256 <span class="mono">{{ it.sha16 }}</span> ·
   값의 근거는 각 카드와 <a href="/governance">판정 원장</a>이다.</p>
 <div class="dn-host" id="creport-host">
@@ -67,8 +68,9 @@
   function mount(){
     var d = doc();
     if (!d || d === mounted) return;
-    var body = d.querySelector('main');
-    if (!body) { say('⚠ 메모를 못 단다 — 보고서 본문 (main) 을 못 찾았다'); return; }
+    // 본문 칸: <main> → .wrap (CEI 페이지) → <body> 순서로 찾는다 (2026-11-24 · CEI 두 페이지는 <main> 이 없다)
+    var body = d.querySelector('main') || d.querySelector('body > .wrap') || d.body;
+    if (!body) { say('⚠ 메모를 못 단다 — 보고서 본문을 못 찾았다'); return; }
     if (!window.mountDocNotes) { say('⚠ 메모를 못 단다 — docnote.js 가 안 실렸다'); return; }
     mounted = d; say('');
     mountDocNotes(body, REL, host);

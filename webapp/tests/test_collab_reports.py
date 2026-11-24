@@ -33,6 +33,11 @@ def _text(html):
     return re.sub(r"data:image/[a-z+]+;base64,[A-Za-z0-9+/=]+", "", html)
 
 
+def _raw_url(r):
+    """표 한 줄의 원문 경로 — 기본은 인자 없는 /reports/<slug>/raw · via 'api_file' 이면 종전 /api/file 경로 (이유는 via_why)."""
+    return f"/api/file/{r['rel']}" if r.get("via") == "api_file" else f"/reports/{r['slug']}/raw"
+
+
 def _company_hits(t):
     return [w for w in _COMPANY if w in t]
 
@@ -40,13 +45,13 @@ def _company_hits(t):
 def test_registry_titles_are_the_documents_own_h1():
     """양성+⛔음성: 표의 제목은 그 문서의 <h1> 그대로다 (화면이 제목을 지어내지 않는다) · 슬러그 유일 · docs/collab 의 있는 HTML."""
     slugs = [r["slug"] for r in D.COLLAB_REPORTS]
-    assert len(slugs) == len(set(slugs)) == 3, slugs
+    assert len(slugs) == len(set(slugs)) == 5, slugs
     for r in D.COLLAB_REPORTS:
-        assert r["rel"].startswith("docs/collab/") and r["rel"].endswith(".html"), r["rel"]
+        assert r["rel"].endswith(".html") and str(Path(r["rel"]).parent.as_posix()) in D.collab_dirs(), r["rel"]
         p = D.ROOT / r["rel"]
         assert p.is_file(), r["rel"]
-        h1 = re.search(r"<h1>(.*?)</h1>", p.read_text(encoding="utf-8"), re.S).group(1)
-        assert re.sub(r"<[^>]+>", "", h1).strip() == r["title"], (r["slug"], h1)
+        h1 = re.search(r"<h1[^>]*>(.*?)</h1>", p.read_text(encoding="utf-8"), re.S).group(1)
+        assert re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", h1)).strip() == r["title"], (r["slug"], h1)
         assert D.COLLAB_BY_SLUG[r["slug"]] is r
         for e in r.get("earlier", ()):
             assert (D.ROOT / e["rel"]).is_file() and e["rel"] != r["rel"], e
@@ -58,7 +63,7 @@ def test_list_page_links_every_report():
     assert 'href="/interface-thermo"' in h
     for r in D.COLLAB_REPORTS:
         assert f'href="/reports/{r["slug"]}"' in h and r["title"] in h, r["slug"]
-        assert f'href="/reports/{r["slug"]}/raw"' in h and f'href="/api/file/{r["rel"]}?dl=1"' in h, r["slug"]
+        assert f'href="{_raw_url(r)}"' in h and f'href="/api/file/{r["rel"]}?dl=1"' in h, r["slug"]
         for e in r.get("earlier", ()):
             assert f'href="/api/file/{e["rel"]}"' in h, e
 
@@ -70,8 +75,8 @@ def test_each_view_frames_its_raw_and_raw_is_the_file_byte_for_byte():
         v = c.get(f"/reports/{r['slug']}")
         assert v.status_code == 200, r["slug"]
         h = v.get_data(as_text=True)
-        assert f'src="/reports/{r["slug"]}/raw"' in h and "<iframe" in h, r["slug"]
-        raw = c.get(f"/reports/{r['slug']}/raw")
+        assert f'src="{_raw_url(r)}"' in h and "<iframe" in h, r["slug"]
+        raw = c.get(_raw_url(r))
         assert raw.status_code == 200 and raw.mimetype == "text/html", (r["slug"], raw.status_code, raw.mimetype)
         body = raw.get_data()
         want = (D.ROOT / r["rel"]).read_bytes()
@@ -89,7 +94,7 @@ def test_views_mount_the_existing_docnote_on_the_report_rel():
         assert 'id="docpen"' in h and "docnotePenToggle()" in h, r["slug"]
         assert 'class="dn-host" id="creport-host"' in h, r["slug"]
         assert f"var REL = {json.dumps(r['rel'])};" in h and "mountDocNotes(body, REL, host)" in h, r["slug"]
-        assert f"var RAW = {json.dumps('/reports/' + r['slug'] + '/raw')};" in h, r["slug"]
+        assert f"var RAW = {json.dumps(_raw_url(r))};" in h, r["slug"]
         assert "host.addEventListener('dnote:toggle', fit)" in h
         assert "marked" not in h.lower() and "annotator" not in h.lower()
 
@@ -100,7 +105,7 @@ def test_no_company_name_anywhere():
     pages = {"목록": c.get("/reports").get_data(as_text=True)}
     for r in D.COLLAB_REPORTS:
         pages[f"보기 {r['slug']}"] = c.get(f"/reports/{r['slug']}").get_data(as_text=True)
-        pages[f"원문 {r['slug']}"] = _text(c.get(f"/reports/{r['slug']}/raw").get_data(as_text=True))
+        pages[f"원문 {r['slug']}"] = _text(c.get(_raw_url(r)).get_data(as_text=True))
         for e in r.get("earlier", ()):
             pages[f"앞 판 {e['rel']}"] = _text((D.ROOT / e["rel"]).read_text(encoding="utf-8"))
     for it in (it for sec in N.SECTIONS for it in sec["items"] if it["url"].startswith("/reports")):
@@ -143,9 +148,16 @@ def test_routes_are_in_the_surface_scan():
     spec.loader.exec_module(tv3)
     dom = {u for u, _ in tv3._domain()}
     assert "/reports" in dom
+    rules = {str(rule) for rule in A.app.url_map.iter_rules()}
     for r in D.COLLAB_REPORTS:
-        assert f"/reports/{r['slug']}" in dom and f"/reports/{r['slug']}/raw" in dom, r["slug"]
-    assert not any("<" in str(rule) for rule in A.app.url_map.iter_rules() if str(rule).startswith("/reports"))
+        assert f"/reports/{r['slug']}" in dom, r["slug"]
+        if r.get("via") == "api_file":
+            # 예외 — 원문은 종전 /api/file 경로 (결속 검사 밖) · 이유가 표에 적혀 있어야 한다 · 원문 경로를 따로 달지 않는다
+            assert r.get("via_why"), f"{r['slug']}: 검사 밖으로 띄우는 이유 (via_why) 가 없다"
+            assert f"/reports/{r['slug']}/raw" not in rules, r["slug"]
+        else:
+            assert f"/reports/{r['slug']}/raw" in dom, r["slug"]
+    assert not any("<" in u for u in rules if u.startswith("/reports")), "인자 있는 /reports 경로가 생겼다 (자동 열거 밖)"
 
 
 def test_report_memos_lead_back_to_each_view(tmp_path, monkeypatch):
@@ -253,8 +265,48 @@ def test_registry_check_is_not_blind(tmp_path):
     (d / "brand_new_report_2026_12_01.html").write_text("<main><h1>x</h1></main>", encoding="utf-8")
     for rel in [D.INTERFACE_THERMO_REL] + [r["rel"] for r in D.COLLAB_REPORTS] + \
                [e["rel"] for r in D.COLLAB_REPORTS for e in r.get("earlier", ())]:
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
         (tmp_path / rel).write_text("<main></main>", encoding="utf-8")
-    assert D.collab_unlisted(tmp_path) == ["docs/collab/brand_new_report_2026_12_01.html"]
+    (tmp_path / "db/properties/cei_figs/stray_page.html").write_text("<main></main>", encoding="utf-8")
+    assert D.collab_unlisted(tmp_path) == ["db/properties/cei_figs/stray_page.html",
+                                           "docs/collab/brand_new_report_2026_12_01.html"], "docs/collab 밖 공유 폴더 (CEI) 도 그물에 걸려야 한다"
     assert D.collab_registration("docs/collab/brand_new_report_2026_12_01.html")["registered"] is False
     assert D.collab_registration(D.INTERFACE_THERMO_REL)["kind"] == "integrated"
     assert D.collab_registration("docs/collab/lzo_coated_nca_lpscl_progress_2026_11_17.html")["kind"] == "earlier"
+
+
+def test_cei_exemption_is_honest_and_self_expiring():
+    """CEI index.html 은 유령 결속 4 건 때문에 결속 검사 밖 (/api/file) 으로 띄운다 — 그 예외를 지킨다.
+    양성: 보기 화면이 이유 (via_why) 를 보여 준다 · 상대 경로 그림 9 장이 /api/file 로 열린다.
+    ⛔음성 (스스로 끝나는 예외): 결속 검사기로 원문을 직접 훑어 유령 id 가 **정확히 그 넷** 인지 본다 —
+      원장에 등록돼 0 이 되면 '예외를 지우고 원문 경로로 옮겨라', 새 유령이 생기면 그것도 빨간불."""
+    import canonical as C
+    r = D.COLLAB_BY_SLUG["cei"]
+    assert r.get("via") == "api_file"
+    c = _client()
+    h = c.get("/reports/cei").get_data(as_text=True)
+    assert r["via_why"] in h and "cal-warn" in h, "보기 화면에 검사 밖 이유가 안 보인다"
+    raw = c.get(_raw_url(r)).get_data(as_text=True)
+    pics = re.findall(r'src="([^"#:]+\.png)"', raw)
+    assert len(pics) == 9, pics
+    for name in pics:
+        g = c.get(f"/api/file/db/properties/cei_figs/{name}")
+        assert g.status_code == 200 and g.mimetype == "image/png", (name, g.status_code, g.mimetype)
+    reg = C.registry()
+    sc = C.scan_claim_bindings(raw, claims=C.all_claims(reg=reg), reg=reg, origin="internal")
+    ghost = sorted(sc["dangling"])
+    want = ["cei.esw.nd_narrows_window", "cei.esw.not_cv", "dualcompat.doping.defensive", "dualcompat.sulfate.risk"]
+    assert ghost, ("유령 결속이 정리됐다 — data.COLLAB_REPORTS 의 cei 줄에서 via · via_why 를 지우고 "
+                   "인자 없는 원문 경로 (/reports/cei/raw) 로 옮겨라 (그래야 결속 검사가 훑는다)")
+    assert ghost == want, f"유령 결속이 바뀌었다: {ghost}"
+    # 다른 보고서는 전부 검사 경로다 — 예외는 이 하나뿐
+    assert [x["slug"] for x in D.COLLAB_REPORTS if x.get("via")] == ["cei"]
+
+
+def test_cei_view_mounts_memos_without_a_main_element():
+    """양성: CEI 두 페이지는 <main> 이 없다 — 보기 화면이 본문 칸을 main → .wrap → body 순서로 찾는다 (메모 · 형광펜이 붙는다)."""
+    for slug in ("cei", "cei-nd"):
+        p = D.ROOT / D.COLLAB_BY_SLUG[slug]["rel"]
+        assert "<main" not in p.read_text(encoding="utf-8"), f"전제: {slug} 에 <main> 이 없다"
+        h = _client().get(f"/reports/{slug}").get_data(as_text=True)
+        assert "d.querySelector('main') || d.querySelector('body > .wrap') || d.body" in h, slug

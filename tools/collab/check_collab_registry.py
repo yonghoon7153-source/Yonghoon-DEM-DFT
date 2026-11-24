@@ -8,7 +8,7 @@
   python3 tools/collab/check_collab_registry.py [rel ...]   # 손으로 · 인자 없으면 표 밖 HTML 전부 (있으면 종료 1)
   python3 tools/collab/check_collab_registry.py --selftest
 
---hook 은 Write/Edit 된 파일이 docs/collab/<이름>.html 일 때만 말한다 (다른 파일은 조용히 0):
+--hook 은 Write/Edit 된 파일이 공유 HTML 폴더 (data.collab_dirs) 의 .html 일 때만 말한다 (다른 파일은 조용히 0):
   · 표에 없음  → 표에 넣으라는 말 (additionalContext) — slug · rel · title = 문서 <h1> · date · track · nav_parent · 옛 판은 earlier
   · 표에 있음  → 웹앱 공유 보고서가 이 파일을 그대로 띄운다 · 답에 '웹앱에도 반영' 을 적으라는 한 줄
   · 표를 못 읽음 → '못 읽었다' 를 그대로 말한다 (없음과 구분 · 조용히 넘기지 않는다)
@@ -17,7 +17,8 @@
   · Bash (sed · python · cat >) 로 쓴 파일은 훅이 안 걸린다 (Write/Edit 만) — 그 경우의 그물은 webapp 시험
     test_collab_reports::test_every_collab_html_is_on_the_reports_page 다.
   · 표에 넣는 일 자체는 하지 않는다 (트랙 · 부모 캠페인 · 제목은 판단이 필요하다) — 알리기만 한다.
-  · docs/collab 밖의 공유 HTML (예: db/properties/cei_figs/index.html) 은 보지 않는다.
+  · 공유 HTML 폴더 = data.collab_dirs() (docs/collab + 표에 든 보고서의 폴더 · 예: CEI db/properties/cei_figs) 만 본다 —
+    표에 한 번도 안 든 새 폴더에 만든 HTML 은 못 본다 (그런 HTML 은 docs/collab 에 둔다 · CLAUDE.md 규칙).
 """
 import json
 import os
@@ -45,19 +46,44 @@ def _load_data(root: Path):
         sys.path.pop(0)
 
 
+def _find_root(p: Path):
+    """파일 위치에서 거슬러 올라가 webapp/data.py 가 있는 레포 뿌리 (worktree 면 그 worktree) 를 찾는다. 없으면 None."""
+    for d in [p.parent, *p.parents]:
+        if (d / "webapp" / "data.py").is_file():
+            return d
+    return None
+
+
 def message_for(path: str, root=None):
-    """파일 경로 → (rel, 알릴 글) | None (docs/collab HTML 이 아니면)."""
-    m = _PAT.search(path.replace("\\", "/"))
-    if not m:
+    """파일 경로 → (rel, 알릴 글) | None (공유 HTML 폴더의 .html 이 아니면).
+
+    공유 HTML 폴더 = data.collab_dirs() (docs/collab + 표에 든 보고서의 폴더 — 예: CEI db/properties/cei_figs).
+    표를 못 읽으면 docs/collab 꼴의 경로에만 '못 읽었다' 를 말한다 (다른 폴더는 그 폴더가 공유 폴더인지부터 모른다)."""
+    p = Path(path.replace("\\", "/"))
+    if p.suffix.lower() != ".html":
         return None
-    rel = m.group(1)
-    base = Path(root) if root else Path(path.replace("\\", "/")[:m.start(1)] or os.environ.get("CLAUDE_PROJECT_DIR") or ".")
+    base = Path(root) if root else _find_root(p)
+    m = _PAT.search(p.as_posix())
+    if base is None:
+        if not m:
+            return None
+        return m.group(1), (f"⚠ 공유 보고서 표를 못 읽었다 (위 폴더에서 webapp/data.py 를 못 찾음) — {m.group(1)} 이 웹앱 공유 보고서에 "
+                            f"걸려 있는지 손으로 확인한다. '없다' 가 아니라 '못 읽었다' 다.")
+    try:
+        rel = p.resolve().relative_to(Path(base).resolve()).as_posix()
+    except ValueError:
+        return None
     try:
         D = _load_data(base)
+        dirs = D.collab_dirs()
         reg = D.collab_registration(rel)
     except Exception as e:                                        # noqa: BLE001 — 못 읽음을 그대로 말한다
+        if not m:
+            return None
         return rel, (f"⚠ 공유 보고서 표를 못 읽었다 ({type(e).__name__}: {e}) — {rel} 이 웹앱 공유 보고서 (webapp/data.py COLLAB_REPORTS) "
                      f"에 걸려 있는지 손으로 확인한다. '없다' 가 아니라 '못 읽었다' 다.")
+    if Path(rel).parent.as_posix() not in dirs:
+        return None
     if reg["registered"]:
         return rel, (f"공유 보고서: {rel} 은 웹앱 공유 보고서 표에 있다 ({reg['kind']} · {reg['url']}) — 웹앱이 이 파일을 그대로 띄우므로 "
                      f"사용자에게 '웹앱 공유 보고서에도 반영됨' 을 같이 알린다. 새 날짜 판으로 바꿨다면 표의 rel 을 새 파일로 · 옛 판은 earlier 로.")
@@ -97,6 +123,13 @@ def _selftest() -> int:
     ck("양성: 통합 보고 → integrated", r and "integrated" in r[1])
     r = message_for(str(repo / "docs/collab/__no_such_new_report__.html"), root=repo)
     ck("⛔음성: 표 밖 HTML → '표에 없다' + 넣으라는 말", r and "표 (webapp/data.py COLLAB_REPORTS) 에 없다" in r[1] and "웹앱도 고쳤다" in r[1])
+    cei = D.COLLAB_BY_SLUG["cei"]["rel"]
+    r = message_for(str(repo / cei), root=repo)
+    ck("양성: docs/collab 밖 공유 폴더 (CEI) 의 보고서 → '표에 있다' + /reports/cei", r and "표에 있다" in r[1] and "/reports/cei" in r[1])
+    r = message_for(str(repo / "db/properties/cei_figs/__new_cei_page__.html"), root=repo)
+    ck("⛔음성: 공유 폴더 (CEI) 의 표 밖 HTML → '표에 없다'", r and "에 없다" in r[1])
+    ck("⛔음성: 공유 폴더 밖 HTML (db/properties 아래 다른 곳) 은 말하지 않는다",
+       message_for(str(repo / "db/properties/some_other_dir/x.html"), root=repo) is None)
     ck("⛔음성: docs/collab 밖 · HTML 아닌 파일은 말하지 않는다",
        message_for(str(repo / "docs/collab/figs/x.html"), root=repo) is None
        and message_for(str(repo / "docs/collab/sei_reply_2026_08_07.md"), root=repo) is None
@@ -139,7 +172,7 @@ def main() -> int:
     if not args:
         D = _load_data(repo)
         miss = D.collab_unlisted(repo)
-        print("표 밖 docs/collab HTML: " + (", ".join(miss) if miss else "없음"))
+        print("표 밖 공유 HTML (" + ", ".join(D.collab_dirs()) + "): " + (", ".join(miss) if miss else "없음"))
         return 1 if miss else 0
     for a in args:
         out = message_for(str(repo / a) if not os.path.isabs(a) else a, root=repo)
