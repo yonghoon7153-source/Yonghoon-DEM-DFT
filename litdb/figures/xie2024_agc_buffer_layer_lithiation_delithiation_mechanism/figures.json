@@ -452,61 +452,151 @@
    "key": "tS1",
    "kind": "table",
    "label": "S1",
-   "page": 5,
+   "page": 4,
    "file": "tab_S1.png",
    "caption": "TABLE S1: Detailed information of clusters in BCC cluster expansion. The shape of a cluster is expressed as the clus- ter diameter(the longest distance between sites), the second longest distance between sites, and the second longest dis- tance between sites.",
    "rotated_deg": 0,
    "bbox": [
+    118,
+    78,
+    492,
+    650
+   ],
+   "w": 1559,
+   "h": 2859,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.95,
+   "auto_bbox": [
     124.0,
     83.6,
     484.6,
     733.8
    ],
-   "w": 1504,
-   "h": 2710,
-   "dpi": 300,
-   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
-   "blank": 0.95
+   "auto_page": 5,
+   "recrop_regions": [
+    {
+     "page": 4,
+     "bbox": [
+      118,
+      78,
+      492,
+      650
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      150,
+      82,
+      456,
+      190
+     ]
+    }
+   ],
+   "recrop": "2026-11-24 litdb-curator: BCC table rows 0-24 sit on SI p.4 with no caption; caption is at top of p.5. Auto crop (p.5) showed the S1 caption above FCC rows 0-22 (J0 -2.705 = FCC). Recrop = p.4 table + p.5 caption.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet of recropped table)"
   },
   {
    "key": "tS2",
    "kind": "table",
    "label": "S2",
-   "page": 6,
+   "page": 5,
    "file": "tab_S2.png",
    "caption": "TABLE S2: Detailed information of clusters in FCC cluster expansion. The shape of a cluster is expressed as the clus- ter diameter(the longest distance between sites), the second longest distance between sites, and the second longest dis- tance between sites.",
    "rotated_deg": 0,
    "bbox": [
+    118,
+    210,
+    492,
+    734
+   ],
+   "w": 1342,
+   "h": 3000,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.955,
+   "auto_bbox": [
     124.0,
     74.8,
     484.6,
     376.6
    ],
-   "w": 1504,
-   "h": 1259,
-   "dpi": 300,
-   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
-   "blank": 0.955
+   "auto_page": 6,
+   "recrop_regions": [
+    {
+     "page": 5,
+     "bbox": [
+      118,
+      210,
+      492,
+      734
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      118,
+      70,
+      492,
+      376
+     ]
+    }
+   ],
+   "recrop": "2026-11-24 litdb-curator: FCC table spans SI p.5 (rows 0-22) and p.6 (rows 23-31 + caption). Auto crop kept only p.6 rows 23-31. Recrop = p.5 table part + p.6 rows 23-31 + caption.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet of recropped table)"
   },
   {
    "key": "tS3",
    "kind": "table",
    "label": "S3",
-   "page": 7,
+   "page": 6,
    "file": "tab_S3.png",
    "caption": "TABLE S3: Detailed information of clusters in γ cluster ex- pansion. The shape of a cluster is expressed as the clus- ter diameter(the longest distance between sites), the second longest distance between sites, and the second longest dis- tance between sites. Sub-lattice of cluster sites can be either B(OT), or C(OH).",
    "rotated_deg": 0,
    "bbox": [
+    90,
+    400,
+    520,
+    730
+   ],
+   "w": 1308,
+   "h": 3000,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.948,
+   "auto_bbox": [
     93.0,
     74.7,
     507.8,
     723.3
    ],
-   "w": 1730,
-   "h": 2703,
-   "dpi": 300,
-   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
-   "blank": 0.948
+   "auto_page": 7,
+   "recrop_regions": [
+    {
+     "page": 6,
+     "bbox": [
+      90,
+      400,
+      520,
+      730
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      90,
+      70,
+      520,
+      720
+     ]
+    }
+   ],
+   "recrop": "2026-11-24 litdb-curator: Gamma table spans SI p.6 (rows 0-13, below S2 caption) and p.7 (rows 14-37 + caption). Auto crop kept only p.7. Recrop = p.6 rows 0-13 + p.7 rows 14-37 + caption.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet of recropped table)"
   },
   {
    "key": "tS4",

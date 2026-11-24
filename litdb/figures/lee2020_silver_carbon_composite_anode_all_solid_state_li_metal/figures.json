@@ -254,15 +254,22 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
+    311.0,
+    531.8,
+    494.0
+   ],
+   "w": 1941,
+   "h": 764,
+   "dpi": 300,
+   "src": "lee2020_ag_c_composite_anode_SI.pdf",
+   "blank": 0.54,
+   "bbox_auto": [
+    66.0,
     260.1,
     531.8,
     494.0
    ],
-   "w": 1943,
-   "h": 976,
-   "dpi": 300,
-   "src": "lee2020_ag_c_composite_anode_SI.pdf",
-   "blank": 0.54
+   "recrop": "2026-11-24 litdb-curator: auto crop top y 260.1 took in the last body line of SI p.5 ('formation of Ag2S is not significant.' y 262-277); clip top moved to 311 (raster starts y 317.8), other edges unchanged"
   },
   {
    "key": "fS6",
