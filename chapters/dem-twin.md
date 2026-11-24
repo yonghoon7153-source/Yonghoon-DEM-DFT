@@ -1,6 +1,6 @@
 # 디지털 트윈과 최적화
 
-전극 미세구조 · 공정 · 장 `dem-twin` · 논문 8편 · 읽기 카드 8편
+전극 미세구조 · 공정 · 장 `dem-twin` · 논문 9편 · 읽기 카드 9편
 
 > 제조 사슬의 대리모형과 다목적 최적화.
 
@@ -72,7 +72,7 @@ Hollmann 2025는 소규모 표 데이터에서 튜닝 없이 쓰는 학습기를
 4. Galvez-Aranda et al. 2025 (`galvezaranda2025_paml_vgg16_dem_slurry_drying`) — DL이 프레임을 건너뛰고 DEM이 되돌리는 분해와 가속 배수에 대한 검토 측 재계산을 함께 보여 준다.
 5. Wang et al. 2027 (`wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn`) — 단순 조성 기준선이 학습 모형을 앞서는 사례로, 대리모형을 기준선과 견주는 규율을 보여 준다.
 
-## 이 장의 논문 (8편)
+## 이 장의 논문 (9편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -84,3 +84,4 @@ Hollmann 2025는 소규모 표 데이터에서 튜닝 없이 쓰는 학습기를
 | `galvezaranda2025_paml_vgg16_dem_slurry_drying` | Galvez-Aranda et al. 2025 | Physics-Assisted Machine Learning for the Simulation of the Slurry Drying in the Manufacturing Process of Battery Electrodes: A Hybrid Time-Dependent VGG16-DEM Model | 입자별 CNN이 건조 DEM 프레임을 통째로 건너뛰고, 수천 step의 실제 DEM이 겹침을 풀어 구조를 만든다. |
 | `hollmann2025_tabpfn_tabular_foundation_model` | Hollmann 2025 | Hollmann 2025 — TabPFN: 소데이터 표형(tabular) 파운데이션 모델 (Nature) | 합성 데이터셋으로 사전학습한 TabPFN은 경사하강 없이 한 번의 forward pass로 소규모 표 데이터에서 튜닝된 GBDT를 능가한다. |
 | `vijay2025_hybrid_cgmd_dl_slurry_microstructure` | Vijay et al. 2025 | A hybrid modelling approach coupling physics-based simulation and deep learning for battery electrode manufacturing simulations | CGMD 슬러리 앞 10 프레임으로 평형 좌표를 예측하는 Slurry-NN을 넣어도 점도와 압연 공극률은 순수 물리 계산과 비슷했다. |
+| `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` | Wang et al. 2027 | Accelerating NCM811 cathode effective bulk-modulus prediction for lithium-ion batteries: A geometry-reduction-based graph neural network | Mapper-DFS 그래프 GNN은 3D CNN보다 계산 시간을 크게 줄였지만, CBD-기공 분율 하나의 이차식이 GNN보다 K를 더 잘 맞췄다. |

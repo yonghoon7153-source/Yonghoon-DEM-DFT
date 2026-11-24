@@ -1,6 +1,6 @@
 # 아지로다이트 조성 설계
 
-전해질 · 계면 · 장 `se-argy` · 논문 24편 · 읽기 카드 24편
+전해질 · 계면 · 장 `se-argy` · 논문 26편 · 읽기 카드 26편
 
 > 할로젠 조성, 이종 원소 치환, 자리 무질서가 전도도와 안정성을 어떻게 바꾸는가.
 
@@ -70,7 +70,7 @@ Li 금속 쪽에서는 전자전도도가 낮은 조성에서 CCD가 높다는 �
 4. Feng et al. 2020 (`feng2020_li_deficient_argyrodite_cl_disorder`) — 같은 계열을 더 높은 x로 밀고, 무질서 실측값이 측정법마다 갈리는 문제를 드러낸다.
 5. Dual-Functional Ga/F Co-Doped … (`liyaru_gaf3_codoping_argyrodite`) — 단일 도판트 대조군으로 공도핑의 전도도와 계면 맞교환, 자리 배정과 계산 근거의 약점을 한 편에서 보여 준다.
 
-## 이 장의 논문 (24편)
+## 이 장의 논문 (26편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -79,6 +79,7 @@ Li 금속 쪽에서는 전자전도도가 낮은 조성에서 CCD가 높다는 �
 | `deklerk2016_diffusion_site_disorder_argyrodite` | de Klerk et al. 2016 | Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping: The Effect of Li Vacancies, Halogens, and Halogen Disorder | Li₆PS₅X의 거시 전도는 intercage 점프가 율속이고, Cl을 4c에 75 % 두면 제한 점프율이 50 % 대비 약 두 배다. |
 | `kraft2017_lattice_polarizability_argyrodite_Li6PS5X` | Kraft et al. 2017 | Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li₆PS₅X (X = Cl, Br, I) | Li₆PS₅X에서 할라이드가 무거워질수록 격자가 물러져 E_A와 prefactor가 함께 낮아지고, 전도도는 중간 강성인 Li₆PS₅Cl₀.₅Br₀.₅에서 가장 높다. |
 | `adeli2019_halide_substitution_boosting_argyrodite` | Adeli et al. 2019 | Boosting Solid‐State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution | Cl⁻/S²⁻ 비를 x=0.5까지 높이면 정전 약화, Li 공공, 자리 무질서가 겹쳐 전도도가 2.5에서 9.4 mS/cm로 오른다. |
+| `zhou2019_solvent_engineered_argyrodite_li6ps5x_conductivity` | Zhou et al. 2019 | Solvent-Engineered Design of Argyrodite Li₆PS₅X (X = Cl, Br, I) Solid Electrolytes with High Ionic Conductivity | 볼밀 없이 THF와 에탄올로 만든 Li₆PS₅X는 냉간 펠릿에서 1.9–3.9 mS/cm를 보여 고상법과 같은 자릿수다. |
 | `feng2020_li_deficient_argyrodite_cl_disorder` | Feng et al. 2020 | Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6−xPS5−xCl1+x | Li₆₋ₓPS₅₋ₓCl₁₊ₓ를 x = 0.7까지 단상으로 만들자 전도도가 오르고 Ea가 내려갔지만, 기전을 받치는 구조 정량은 측정법마다 갈린다. |
 | `wang2020_br_rich_argyrodite_fast_ion_conduction_origin` | Wang et al. 2020 | Fast Ion Conduction and Its Origin in Li6–xPS5–xBr1+x | Br 과잉은 전도도를 올리고 4d의 Br 분율을 늘리지만, 1S3Br 배치와 24g가 그 원인이라는 주장은 가설 수준이다. |
 | `taklu2021_cucl_dualdoping_air_stability_argyrodite` | Taklu et al. 2021 | Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries | Li₆PS₅Cl에 CuCl을 x=0.1만큼 넣으면 전도도 4.34 mS/cm, CCD 3.0 mA/cm², H₂S 발생 절반을 함께 얻는다. |
@@ -95,6 +96,7 @@ Li 금속 쪽에서는 전자전도도가 낮은 조성에서 CCD가 높다는 �
 | `rao2025_iodide_argyrodite` | Rao et al. 2025 | Iodide substituted halide-rich lithium argyrodite solid electrolytes with improved performance for all solid-state batteries | Cl-rich 아지로다이트에 I를 넣으면 E_hull이 낮아지고, I/Cl 등량에서 계산 전도도가 23.5 mS/cm로 가장 높다. |
 | `yang2025_lao_dualdoping_argyrodite_lacl3` | Yang et al. 2025 | Lanthanum and oxygen co-doping of lithium argyrodite for enhanced humid air stability and lithium metal compatibility | La₂O₃ 공도핑은 σ를 9.58에서 6.23 mS/cm로 낮추지만 습윤공기 안정성과 CCD를 크게 높인다. |
 | `park2026_oxygen_induced_li_intercage_conduction` | Park et al. 2026 | Oxygen-induced lithium inter-cage conduction for enhanced performance in all-solid-state batteries | Li₆PS₅Cl에 Li₂SO₄로 O를 넣으면 σ는 조금만 줄고 NCM811 계면 열화가 줄지만, inter-cage 전도 활성화 기전은 근거가 약하다. |
+| `warren2026_liquid_phase_thiophosphate_lpscl_synthesis` | Warren et al. 2026 | Stable liquid-phase thiophosphate enables rapid reaction time for Li₆PS₅Cl sulfide electrolytes | 2:1 Li₂S–P₄S₁₀ 아세토니트릴 용액은 보관 가능한 전구체가 되고, 수 초 혼합과 550 °C 소결로 Li₆PS₅Cl을 낸다. |
 | `wu2026_ta_argyrodite_selfpassivating` | Wu et al. 2026 | High‐Conductivity Argyrodite Electrolyte with Self‐Passivating Stability for Single‐Electrolyte All‐Solid‐State Lithium Batteries | Cl/Br 혼합과 Ta⁵⁺ 치환으로 σ 12 mS/cm를 얻었고, Ta 계면 산물이 실용 창을 0.1 – 4.3 V로 넓혔다. |
 | `xu2026_ndo_codoping_argyrodite` | Xu et al. 2026 | High-air-stability lithium superionic conductor with excellent Li-metal compatibility for superior all-solid-state Li batteries | Li₅.₃PS₄.₃Cl₁.₇에 Nd–O를 x=0.025만큼 넣으면 전도도, CCD, 공기 안정성이 함께 오르지만 Nd 자리는 추정에 머문다. |
 | `xu2026_offstoich_composite_lpsc_highvoltage` | Xu et al. 2026 | Locally off-stoichiometric composite-phase reconstruction of argyrodite sulfide electrolytes for high-voltage all-solid-state lithium batteries | Li₅.₅PS₄.₅Cl₁.₅ 명목 조성을 480 °C로 구우면 argyrodite 기지, P₂S₆⁴⁻ 2차상, LiCl의 다상이 되고 NCM811 셀 성능이 오른다. |

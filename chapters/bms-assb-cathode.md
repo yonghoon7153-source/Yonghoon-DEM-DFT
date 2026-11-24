@@ -1,6 +1,6 @@
 # 고체전지 복합양극
 
-전지 진단 · BMS · 장 `bms-assb-cathode` · 논문 35편 · 읽기 카드 11편
+전지 진단 · BMS · 장 `bms-assb-cathode` · 논문 35편 · 읽기 카드 15편
 
 > 복합양극 미세구조, 이온 · 전자 수송과 반응 속도, 그 모델과 측정.
 
@@ -13,7 +13,7 @@
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
 | `chen2013_sofc-miec-composite-electrode-percolation-theory` | Chen D. et al. 2013 | Percolation Theory in Solid Oxide Fuel Cell Composite Electrodes with a Mixed Electronic and Ionic Conductor | (카드 없음) |
-| `tian2017_contact_area_loss_assb_simulation` | Tian · Qi 2017 | Simulation of the Effect of Contact Area Loss in All-Solid-State Li-Ion Batteries | (카드 없음) |
+| `tian2017_contact_area_loss_assb_simulation` | Tian · Qi 2017 | Simulation of the Effect of Contact Area Loss in All-Solid-State Li-Ion Batteries | 박막 셀에서 용량 손실은 접촉 손실을 거의 그대로 따르고, 거칠어진 계면은 20에서 60 MPa로 압력을 올리면 접촉 70 %를 되찾는다고 계산했다. |
 | `zhang2017_carbon-additives-lgps-ssb-decomposition` | Zhang W. et al. 2017 | The Detrimental Effects of Carbon Additives in Li10GeP2S12-Based Solid-State Batteries | (카드 없음) |
 | `zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb` | Zhang W. et al. 2017 | Interfacial Processes and Influence of Composite Cathode Microstructure Controlling the Performance of All-Solid-State Lithium Batteries | (카드 없음) |
 | `hlushkou2018_void_space_ion_transport_assb_cathode` | Hlushkou et al. 2018 | The influence of void space on ion transport in a composite cathode for all-solid-state batteries | void 13.2 vol%가 SE 상을 가늘고 굽은 통로로 나눠 τ_diff를 1.27에서 1.74로 올린다. |
@@ -21,18 +21,18 @@
 | `strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation` | Strauss et al. 2018 | Impact of Cathode Material Particle Size on the Capacity of Bulk-Type All-Solid-State Batteries | 탄소 없는 NCM622와 β-Li₃PS₄ 복합 양극에서는 2차 입자가 작을수록 입자 사이 전자 경로가 이어져 비활성 입자가 줄고 용량이 커진다. |
 | `bielefeld2019_microstructural_modeling_composite_cathode` | Bielefeld et al. 2019 | Microstructural Modeling of Composite Cathodes for All-Solid-State Batteries | 작은 AM 입자와 낮은 공극률이 이온·전자 클러스터 연결을 돕고, 두께는 얇은 전극에서만 겉보기 차이를 낸다. |
 | `bielefeld2020_effective_ionic_conductivity_binder` | Bielefeld et al. 2019 | Modeling Effective Ionic Conductivity and Binder Influence in Composite Cathodes for All-Solid-State Batteries | 연속체 전도 계산으로 AM 분율, 입경, 공극, 바인더가 유효 이온전도도와 τ²를 좌우함을 정량했다. |
-| `shi2019_high_am_loading_particle_size_assb` | Shi et al. 2019 | High Active Material Loading in All‐Solid‐State Battery Electrode via Particle Size Optimization | (카드 없음) |
+| `shi2019_high_am_loading_particle_size_assb` | Shi et al. 2019 | High Active Material Loading in All‐Solid‐State Battery Electrode via Particle Size Optimization | 양극 이용률은 CAM 로딩과 입자 크기비 λ에 함께 달리고, 고로딩에서는 SE를 CAM보다 작게 하는 것이 가장 결정적이다. |
 | `li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811` | Li Z. et al. 2020 | Synchrotron Operando Depth Profiling Studies of State-of-Charge Gradients in Thick Li(Ni0.8Mn0.1Co0.1)O2 Cathode Films | (카드 없음) |
 | `neumann2020_interfacial-effects-thiophosphate-assb-model` | Neumann A. et al. 2020 | Analysis of Interfacial Effects in All-Solid-State Batteries with Thiophosphate Solid Electrolytes | (카드 없음) |
 | `ansah2021_assb-fem-parametric-sweep-thickness-diffusivity` | Ansah S. et al. 2021 | A Comprehensive Parametric Study for Solid-state Lithium-ion Battery Through Finite Element Simulation | (카드 없음) |
 | `barai2021_delamination_cathode_llzo_multiscale` | Barai et al. 2021 | Investigation of Delamination-Induced Performance Decay at the Cathode/LLZO Interface | 박리는 양극 SOC 변화에 따른 수축 하나로 생기고, 그 세기는 Li 부분몰부피와 전해질 영률이 정한다. |
-| `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann et al. 2021 | Editors’ Choice—Quantifying the Impact of Charge Transport Bottlenecks in Composite Cathodes of All-Solid-State Batteries | EIS-TLM으로 NCM-622/Li₆PS₅Cl 양극의 부분 전도도와 τ²를 재어, 비용량 최적이 두 병목 사이인 42 vol% CAM 근처임을 보였다 |
+| `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann et al. 2021 | Editors’ Choice—Quantifying the Impact of Charge Transport Bottlenecks in Composite Cathodes of All-Solid-State Batteries | (카드 없음) |
 | `neumann2021_garnet_3d_structure_grain_boundaries_li_transport` | Neumann et al. 2021 | Effect of the 3D Structure and Grain Boundaries on Lithium Transport in Garnet Solid Electrolytes | 입계를 입자 사이 복셀 면의 계면 조건으로 넣어야 다공 garnet의 유효 이온전도도 감소가 실험 자릿수에 다가간다. |
-| `bielefeld2022_li_kinetics_morphology_voids_fem_composite_cathode` | Bielefeld et al. 2022 | Influence of Lithium Ion Kinetics, Particle Morphology and Voids on the Electrochemical Performance of Composite Cathodes for All-Solid-State Batteries | (카드 없음) |
+| `bielefeld2022_li_kinetics_morphology_voids_fem_composite_cathode` | Bielefeld et al. 2022 | Influence of Lithium Ion Kinetics, Particle Morphology and Voids on the Electrochemical Performance of Composite Cathodes for All-Solid-State Batteries | 맞춘 값 없는 3D FEM에서 충전 곡선 모양은 SOC 의존 D̃_Li와 j₀가 정했고, 과전압은 큰 입자와 큰 공극이 키웠다. |
 | `minnmann2022_designing_cathodes_solidstate` | Minnmann et al. 2022 | Designing Cathodes and Cathode Active Materials for Solid‐State Batteries | 고체전지 복합양극은 CAM과 SE의 함량, 입자 크기, 분포, 계면을 함께 맞춰야 한다는 정성 설계 지침을 제시한다. |
 | `miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb` | Miß et al. 2022 | Which Exchange Current Densities Can Be Achieved in Composite Cathodes of Bulk-Type All-Solid-State Batteries? A Comparative Case Study | (카드 없음) |
 | `naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map` | Naik K.G. et al. 2022 | Kinetics or Transport: Whither Goes the Solid-State Battery Cathode? | (카드 없음) |
-| `sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps` | Sakka et al. 2022 | Pressure dependence on the three-dimensional structure of a composite electrode in an all-solid-state battery | (카드 없음) |
+| `sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps` | Sakka et al. 2022 | Pressure dependence on the three-dimensional structure of a composite electrode in an all-solid-state battery | 일축으로 누를수록 기공이 줄고 NCM과 LGPS의 접촉이 늘어 전하 이동 저항이 줄지만, 옆에서 미는 힘이 없어 NCM 옆면의 틈은 남는다. |
 | `asheri2023_data-driven-multiscale-ssb-delamination-surrogate` | Asheri et al. 2023 | Data-driven multiscale simulation of solid-state batteries via machine learning | (카드 없음) |
 | `bielefeld2023_useful-models-ssb-simplicity-perspective` | Bielefeld A. 2023 | How to Develop Useful Models for Solid-State Batteries – A Plea for Simplicity and Interdisciplinary Cooperation | (카드 없음) |
 | `clausnitzer2023_optimizing-composite-cathode-structure-resolved` | Clausnitzer et al. 2023 | Optimizing the Composite Cathode Microstructure in All-Solid-State Batteries by Structure-Resolved Simulations | (카드 없음) |
@@ -46,4 +46,4 @@
 | `schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode` | Schmidt C.P. et al. 2024 | An Electro-Chemo-Mechanic Model Resolving Delamination between Components in Complex Microstructures of Solid-State Batteries | (카드 없음) |
 | `wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb` | Wang Y. et al. 2024 | Fast Kinetics Design for Solid-State Battery Device | (카드 없음) |
 | `yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode` | Yanev et al. 2024 | Quantifying Resistive and Diffusive Kinetic Limitations of Thiophosphate Composite Cathodes in All-Solid-State Batteries | (카드 없음) |
-| `tailored_cathode_microstructure_low_pressure_assb` | Zhou et al. 2025 | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for All-Solid-State Batteries | (카드 없음) |
+| `tailored_cathode_microstructure_low_pressure_assb` | Zhou et al. 2025 | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for All-Solid-State Batteries | LPSC를 ~1 µm로 잘게 만들면 NCM811을 고르게 덮어 2 MPa 작동압에서도 100 사이클 뒤 85.6 %를 유지한다. |

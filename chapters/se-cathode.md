@@ -1,6 +1,6 @@
 # 양극 계면과 코팅
 
-전해질 · 계면 · 장 `se-cathode` · 논문 44편 · 읽기 카드 42편
+전해질 · 계면 · 장 `se-cathode` · 논문 44편 · 읽기 카드 44편
 
 > 양극 활물질과 전해질 사이의 반응, 코팅 물질 선정, 고전압 구동.
 
@@ -92,7 +92,7 @@
 | `du2022_lmro_lpscl_reversible_redox_assb` | Du et al. 2022 | High-Energy and Long-Cycling All-Solid-State Lithium-Ion Batteries with Li- and Mn-Rich Layered Oxide Cathodes and Sulfide Electrolytes | LMRO의 2.0 V 방전하한에서 Li₆PS₅Cl의 폴리설파이드가 환원되고, 전도도를 높인 양극은 1000사이클 83 %를 유지했다. |
 | `hikima2022_operando_band_structure_assb` | Hikima et al. 2022 | Operando analysis of electronic band structure in an all-solid-state thin-film battery | 박막 전고체전지를 반도체 소자로 보고 operando HAXPES로 재면, 충전 중 Li₂₋ₓMnO₃가 n형에서 p형으로 바뀌어 고전압 충전이 막힌다. |
 | `bong2023_linbo3_thickness_uniformity_ncm523` | Bong et al. 2023 | Effect of thickness and uniformity of LiNbO3-coated layer on LiNi0.5Co0.2Mn0.3O2 cathode material on enhancement of cycle performance of full-cell sulfide-based all-solid-state batteries | LiNbO₃ 코팅을 두껍고 고르게 하면 300사이클 유지율이 26.5 %에서 85.1 %로 오르고, 성능은 양극 쪽 열화층 유무가 가른다. |
-| `tron2023_rational_cathode_composite_optimization_lpscl` | Tron et al. 2023 | Rational Optimization of Cathode Composites for Sulfide-Based All-Solid-State Batteries | (카드 없음) |
+| `tron2023_rational_cathode_composite_optimization_lpscl` | Tron et al. 2023 | Rational Optimization of Cathode Composites for Sulfide-Based All-Solid-State Batteries | 한 시험 규약으로 복합양극 변수를 차례로 고정하자 단결정 NMC811, C65, 작은 Li₆PS₅Cl, AM:SE 40:60–60:40 vol이 남았다. |
 | `wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite` | Wei et al. 2023 | Unraveling the LiNbO3 coating layer on battery performances of lithium argyrodite-based all-solid-state batteries under different cut-off voltages | LiNbO₃ 코팅은 3.9 V(vs Li-In)에서 이득이 가장 크고, 4.2 V에서는 LiCoO₂의 비가역 상전이가 열화를 지배해 코팅으로 막지 못한다. |
 | `zuo2022_chlorination_cathode_interface` | Zuo et al. 2023 | Impact of the Chlorination of Lithium Argyrodites on the Electrolyte/Cathode Interface in Solid‐State Batteries | Li₅.₅PS₄.₅Cl₁.₅는 Li₆PS₅Cl보다 더 많이 산화 분해되지만 NCM85 계면에서 고체 phosphate를 덜 만들어 정전압 홀드 중 저항 증가가 느리다. |
 | `cha2024_dualcompatible_halide_ncm_lpscl_interface` | Cha et al. 2024 | Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides | 할라이드 코팅의 성패는 이온전도도가 아니라 NCM과 LPSCl 양쪽과의 화학적 호환성이 가르고, LZC만 이를 만족한다. |
@@ -110,7 +110,7 @@
 | `choi2026_bzox_dry_zro2x_nmc_shell_coating` | Choi et al. 2026 | Dry‐Crafted Charge‐Conductive ZrO₂ − x Cathode Shell Coating for High‐Performance Sulfide‐Based Solid‐State Batteries | 건식 코팅한 black ZrO₂₋ₓ 셸은 NMC811의 전하 수송을 보존하면서 LPSCl 계면 부반응을 억제해 초기 CE를 69.6에서 77.5 %로 올렸다. |
 | `hu2026_interphase_adaptive_yb_chloride_se` | Hu et al. 2026 | Interphase-Adaptive Chloride Solid Electrolyte Enables High-Performance All-Solid-State Lithium Batteries | 약 4 nm 탄화수소층을 입힌 LYZC@CH를 쓰면 전해질 10 wt% 복합양극의 1 C 400회 유지율이 61.92 %에서 90.67 %로 오른다. |
 | `jang2026_halide_se_interfacial_stability_highv_na` | Jang et al. 2026 | Interfacial Stability and Design Strategies for Halide Solid Electrolytes in High‐Voltage All‐Solid‐State Sodium‐Ion Batteries | Na 할라이드 7종은 산화 창이 넓지만 양극과의 상호 분해 구동력이 작지 않고, NaB₃O₅ 같은 코팅이 그 구동력을 크게 낮춘다. |
-| `kawaguchi2026_se_size_soc_dependent_cathode_resistance` | Kawaguchi et al. 2026 | Interface Engineering in Sulfide‐Based All‐Solid‐State Batteries: Insights from Resistance Analysis | (카드 없음) |
+| `kawaguchi2026_se_size_soc_dependent_cathode_resistance` | Kawaguchi et al. 2026 | Interface Engineering in Sulfide‐Based All‐Solid‐State Batteries: Insights from Resistance Analysis | LPSCl 복합양극에서 높은 SOC는 큰 SE가, 낮은 SOC는 작은 SE가 저항이 낮아 최적 입도는 SOC에 따라 다르다. |
 | `kim2026_hts_li3sc2po43_coating_midni_ncm` | Kim et al. 2026 | High-throughput discovery of Li3Sc2(PO4)3 as a protective coating for stabilizing mid-Ni NCM interfaces in all-solid-state batteries | 계면 열역학으로 좁힌 8종 가운데 Li가 실제로 움직인 Li₃Sc₂(PO₄)₃가 mid-Ni NCM523 코팅으로 뽑혔다. |
 | `lee2026_lpscl_coating_thickness_ncm811` | Lee et al. 2026 | Balancing Ionic and Electronic Conductivities in All‐Solid‐State Batteries: The Effect of LPSCl Coating Thickness on Cathode Active Materials | NCM811에 입힌 LPSCl 껍질은 317 nm에서 유효 이온전도도가 가장 높았고, 유효 전자전도도는 두께가 늘수록 계속 줄었다. |
 | `lee2026_mechanical_halogen_argyrodite_drycoating` | Lee et al. 2026 | Beyond Electrochemistry: Tailoring Mechanical Properties of Halogen-Substituted Argyrodites for Conformal Dry Coating and Enhanced Battery Performance | 할로겐-rich argyrodite는 산화 안정성이 나쁜데도 기계 물성과 접착이 커서 NCM 건식 코팅이 잘 되고 셀 성능이 가장 좋다. |

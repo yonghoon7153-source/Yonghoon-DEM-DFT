@@ -1,6 +1,6 @@
 # 그 밖의 문헌
 
-전극 미세구조 · 공정 · 장 `dem-etc` · 논문 21편 · 읽기 카드 9편
+전극 미세구조 · 공정 · 장 `dem-etc` · 논문 15편 · 읽기 카드 11편
 
 > 위 묶음에 들지 않은 DEM 축 문헌. 저장소 인덱스에서도 '기타'로 남아 있다.
 
@@ -72,28 +72,22 @@ Lee et al. 2026은 전해질 계보다 방법이 우리에게 닿는다. 우리 
 4. Eizenhammer et al. 2026 (`eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell`) — 입도분포를 DEM 입자 템플릿으로 바꾸는 층화 역변환 표본 규약의 출처다.
 5. Shenouda & Hoff 2020 (`shenouda2020_dem_metal_powder_am_liggghts_tutorial`) — 우리 LIGGGHTS 입력 스크립트와 명령어 골격이 같아 input을 읽는 입문서로 쓸 수 있다.
 
-## 이 장의 논문 (21편)
+## 이 장의 논문 (15편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
 | `bzox_dry_zro2x_nmc_shell_coating_sulfide_assb` |  | superseded by choi2026_bzox_dry_zro2x_nmc_shell_coating.md | 이 기록은 보조자료(SI)만으로 만든 구판이며, 본문을 확보한 뒤 내용이 통합본으로 모두 옮겨졌다. |
-| `lacey1954_particle_mixing_theory_index` | Lacey 1954 | Developments in the theory of particle mixing | (카드 없음) |
-| `hersey1975_ordered_mixing_concept` | J.A. Hersey 1975 | Ordered Mixing: A New Concept in Powder Mixing Practice | (카드 없음) |
-| `egermann1983_ordered_vs_interactive_mixture_nomenclature` | H. Egermann · N. A. Orr 1983 | Ordered mixtures — Interactive mixtures | (카드 없음) |
-| `nase2001_granular_bond_collision_number_wet_cohesion` | Nase · Vargas · Abatan · McCarthy 2001 | Discrete characterization tools for cohesive granular material | (카드 없음) |
-| `windreich2003_voxel_based_surface_area_estimation` | Windreich et al. 2003 | Voxel-based surface area estimation: from theory to practice | (카드 없음) |
-| `lindblad2005_surface_area_weighted_local_configurations` | Lindblad 2005 | Surface area estimation of digitized 3D objects using weighted local configurations | (카드 없음) |
-| `lawrence2008_single_vgcnf_elastic_modulus_morphology` | Lawrence et al. 2008 | Elastic Properties and Morphology of Individual Carbon Nanofibers | (카드 없음) |
-| `chandratilleke2012_particle_scale_mixing_index` | Chandratilleke et al. 2012 | A particle‐scale index in the quantification of mixing of particles | (카드 없음) |
+| `windreich2003_voxel_based_surface_area_estimation` | Windreich et al. 2003 | Voxel-based surface area estimation: from theory to practice | 노출 면 배치로 가중하는 MV 추정기에 물체·배경 평균을 쓰면 반경 2 voxel 구에서도 넓이 오차가 1 % 아래다. |
+| `coetzee2017_dem_calibration_review` | Coetzee 2017 | Review: Calibration of the discrete element method | DEM 파라미터는 벌크 역보정으로 정하는 일이 가장 흔하다. 다만 해가 유일하지 않아 여러 실험과 별도 검증이 필요하다. |
+| `masias2019_li_metal_elastic_plastic_creep_properties` | Masias et al. 2019 | Elastic, plastic, and creep mechanical properties of lithium metal | (카드 없음) |
+| `kazyak2020_li_penetration_ceramic_se_operando_microscopy` | Kazyak et al. 2020 | Li Penetration in Ceramic Solid Electrolytes: Operando Microscopy Analysis of Morphology, Propagation, and Reversibility | (카드 없음) |
 | `shenouda2020_dem_metal_powder_am_liggghts_tutorial` | Shenouda & Hoff 2020 | Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC | LIGGGHTS-PUBLIC 입문 튜토리얼이다. Hertz와 SJKR 접촉으로 점착이 커질수록 금속 AM 분말의 안식각이 오르고 유량이 떨어짐을 보였다. |
-| `ohashi2021_am_youngs_modulus_ion_transport_voxel_fem_ct` | Ohashi et al. 2021 | Effect of Young's modulus of active materials on ion transport through solid electrolyte in all-solid-state lithium-ion battery | (카드 없음) |
-| `nadeem2023_gnn_mixing_index` | Nadeem et al. 2023 | A particle scale mixing measurement method using a generalized nearest neighbor mixing index | (카드 없음) |
+| `damore2022_lpscl_symmetry_breaking_surface_energy_wulff_pbe0` | D'Amore et al. 2022 | From symmetry breaking in the bulk to phase transitions at the surface: a quantum-mechanical exploration of Li₆PS₅Cl argyrodite superionic conductor | (카드 없음) |
 | `beutl2024_round_robin_coin_cell_sulfide_assb` | Beutl et al. 2024 | Round‐robin test of all‐solid‐state battery with sulfide electrolyte assembly in coin‐type cell configuration | 네 기관이 같은 재료와 지시서로 CR2032 코인셀을 만들자 이온전도도는 모였고, 셀 성능과 수명은 흩어졌다. |
 | `balasubramanian2026_rfb_electrolyte_kmc_lbm_preprint` | Balasubramanian et al. 2026 | Insights into Electrolyte Effects on Interfacial Kinetics and Transport in Porous Redox Flow Battery Electrodes: A Multiparadigm Modelling Study | MV 농도를 높이면 이중층 동역학은 좋아지지만 기공 수송은 나빠지고, 전극 표면적과 투과율은 서로 다른 지표를 좌우한다. |
 | `cho2026_eipc_zn_anode_azib` | Cho et al. 2026 | Electronic-ionic polymer composite with proton-coupled electron transfer reaction: From low N/P ratio to high zinc utilization for aqueous zinc ion batteries | GO와 PAA 복합막을 Zn 음극에 입히면 PCET로 탈용매가 쉬워지고, 002 배향 도금으로 낮은 N/P 파우치셀까지 버틴다. |
 | `choi2026_elastomeric_li_metal_anode` | Choi et al. 2026 | High‐Performance Elastomeric Lithium Metal Anodes Enabled by a Lithiophilic Monolayer‐Assembled Nano‐Crumpled Micro‐Concave Architecture | 부드러운 PDMS 집전체에 이중 주름 구조와 TREN 단분자층을 더하면 Li 핵생성 과전위가 낮아지고 덴드라이트가 억제된다. |
 | `eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell` | Eizenhammer et al. 2026 | Determining the Particle Size Distribution of an LiFePO₄ Electrode for Full-Cell Many-Particle Modeling | 입자 크기마다 다른 스피노달 간극 덕분에 C/50 반쪽셀 곡선에서 LFP 입도분포를 읽고, 그 분포로 풀셀 전압을 재현했다. |
-| `kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review` | Kang et al. 2026 | Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries | (카드 없음) |
 | `lee2026_eecfp_dnn_electrolyte_ce_lmb` | Lee et al. 2026 | Interpretable enhanced-ECFP-guided deep learning for rational electrolyte design and Coulombic efficiency prediction in lithium metal batteries | 농도 가중 분자지문으로 학습한 DNN을 SHAP으로 해석해 얻은 규칙대로 조합한 전해질이 Li–Cu CE 99.72 %를 냈다. |
 | `park2026_ceramic_pp_separator` | Park et al. 2026 | Ultra-thin ceramic-coated dry-biaxially stretched polypropylene separator achieving balanced ionic transport and short-circuit resistance in lithium metal batteries | 건식 이축연신 PP 분리막에 스퍼터 Al₂O₃ 초박막을 입히면 기공구조는 그대로 두고 이온전도와 단락 저항이 함께 오른다. |
-| `zhang2026_polymer_electrolyte_modeling_perspective` | Zhang et al. 2026 | Modeling Approaches for Polymer-Based Electrolytes in Advanced Batteries: Bridging Processing, Structure, and Performance | (카드 없음) |
+| `shi2026_argyrodite_stack_pressure_viscoplastic_deformation` | Shi et al. 2026 | Stack pressure effects and viscoplastic deformation in argyrodite solid-state electrolyte | (카드 없음) |

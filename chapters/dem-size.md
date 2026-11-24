@@ -1,6 +1,6 @@
 # SE 입도 효과
 
-전극 미세구조 · 공정 · 장 `dem-size` · 논문 18편 · 읽기 카드 11편
+전극 미세구조 · 공정 · 장 `dem-size` · 논문 17편 · 읽기 카드 16편
 
 > 전해질 입자 크기와 분포가 충진, 접촉, 전도도에 주는 영향.
 
@@ -72,25 +72,24 @@ DEM의 탄성 입력도 연구마다 다르다. Shi et al. 2019와 Faka et al. 2
 4. Ghanshyam et al. 2021 (`yadav2021_lpscl_sieved_psd_impedance_tortuosity`) — 큰 SE 등급이 이긴다는 반대 방향 결과이며 그 이득이 펠릿 σ에서 넘어온 것이라는 검토가 붙어 있다.
 5. Schneider et al. 2023 (`schneider2023_particle_size_pressure_transport`) — 압력의 두 영역과 입계 저항 해석을 제시해 펠릿 σ와 밀도가 엇갈리는 이유를 읽게 해 준다.
 
-## 이 장의 논문 (18편)
+## 이 장의 논문 (17편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
-| `mcgeary1961_bimodal_sphere_packing` | McGEARY 1961 | Mechanical Packing of Spherical Particles | 진동으로 채운 강체 구의 충전밀도는 재료보다 크기비가 정하고, 직경비가 7을 넘어야 미세 구가 조대 구의 간극을 채운다. |
+| `mcgeary1961_bimodal_sphere_packing` | McGEARY 1961 | Mechanical Packing of Spherical Particles | 진동으로 채운 강체 구의 packing density는 재료보다 크기비가 정하고, 직경비가 7을 넘어야 미세 구가 조대 구의 간극을 채운다. |
 | `sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking` | Sakuda et al. 2016 | Electrode morphology in all-solid-state lithium secondary batteries consisting of LiNi1/3Co1/3Mn1/3O2 and Li2S-P2S5 solid electrolytes | 같은 무게비에서 SE 입경을 NCM 입경보다 작게 하면 짧은 건식 혼합만으로 NCM이 SE 기지에 고르게 흩어지고 균열이 줄며 고율 용량이 커진다. |
-| `shi2019_high_am_loading_particle_size_assb` | Shi et al. 2019 | High Active Material Loading in All‐Solid‐State Battery Electrode via Particle Size Optimization | (카드 없음) |
+| `shi2019_high_am_loading_particle_size_assb` | Shi et al. 2019 | High Active Material Loading in All‐Solid‐State Battery Electrode via Particle Size Optimization | 양극 이용률은 CAM 로딩과 입자 크기비 λ에 함께 달리고, 고로딩에서는 SE를 CAM보다 작게 하는 것이 가장 결정적이다. |
 | `park2020_dimension_controlled_se_percolation_contact_area` | Park et al. 2020 | Dimension-controlled solid oxide electrolytes for all-solid-state electrodes: Percolation pathways, specific contact area, and effective ionic conductivity | 흑연 음극 가상 전극에서 1D 원기둥 LLZO-Ta는 접촉면적을 잃는 대신 유효 이온전도도를 크게 높여 가장 좋은 성능을 낸다. |
-| `ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s` | Ohsaki et al. 2021 | Size control of sulfide-based solid electrolyte particles through liquid-phase synthesis | (카드 없음) |
+| `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann et al. 2021 | Editors’ Choice—Quantifying the Impact of Charge Transport Bottlenecks in Composite Cathodes of All-Solid-State Batteries | (카드 없음) |
+| `ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s` | Ohsaki et al. 2021 | Size control of sulfide-based solid electrolyte particles through liquid-phase synthesis | 액상 진탕 합성에서 원료 Li₂S를 미리 줄이면 LPS가 93 nm까지 작아지고, 이온전도도는 10⁻⁴ S/cm 대에 머문다. |
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | Ghanshyam et al. 2021 | Impact of Sulfide-based Solid Electrolyte Particle Size Distribution on the Electrochemistry of ASSB via Impedance Study | 같은 Li₆PS₅Cl을 체로 나누면 50–150 µm 등급이 순수 SE와 복합양극 모두에서 이온 전도가 높고 굴곡도가 낮았다. |
 | `koenig2023_wet_milling_se_ion_tortuosity_composite_cathode` | König et al. 2023 | Mitigating the Ion Transport Tortuosity in Composite Cathodes of All-Solid-State Batteries by Wet Milling of the Solid Electrolyte Particles | SE를 습식으로 더 갈자 복합 양극의 τ_eff는 35.4에서 8.0으로 내려갔지만 순수 SE 펠릿 σ도 4.43에서 1.09 mS/cm로 떨어졌다. |
 | `schlautmann2023_se_particle_size_composite_transport` | Schlautmann et al. 2023 | Impact of the Solid Electrolyte Particle Size Distribution in Sulfide‐Based Solid‐State Battery Composites | Li₆PS₅Cl 입도를 줄이면 무탄소 NCM811 복합양극의 공극이 줄어 이온전도와 용량이 오르지만, 전자전도는 거의 그대로다. |
 | `schneider2023_particle_size_pressure_transport` | Schneider et al. 2023 | Effect of Particle Size and Pressure on the Transport Properties of the Fast Ion Conductor t ‐Li₇ SiPS₈ | t-Li₇SiPS₈ 펠릿의 σ는 저압에서 입자 재배열과 접촉으로 오르고 고압에서 격자 압축으로 내려가며, 상대밀도보다 입경 분포가 σ를 더 잘 가른다. |
 | `jeong2024_operando_densification_chemomechanics_se_size_composite_cathode` | Jeong et al. 2024 | Operando Investigation on the Role of Densification and Chemo‐Mechanics on Solid‐State Cathodes | 고체전해질 입자를 3–5 µm에서 ≈1 µm로 줄이면 무하중 기공이 줄고 두께 방향 리튬화가 고르며 수명이 늘어난다. |
-| `minnmann2024_microstructure_porosity_visualization` | Minnmann et al. 2024 | Editors’ Choice—Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance | (카드 없음) |
-| `lee2025_heckel_argyrodite_powder_densification_nanoindentation` | Lee et al. 2025 | Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries | (카드 없음) |
 | `lin2025_submicron_lpscl_cathode_li_kinetics` | Lin et al. 2025 | Sub-micrometer Li₆PS₅Cl regulated cathodic Li kinetics in sulfide based all-solid-state batteries | 습식 밀링으로 D50 2.34 µm가 된 Li₆PS₅Cl은 펠릿 전도도가 떨어져도 NCM811 복합양극의 기공, 용량, 수명을 개선했다. |
-| `tailored_cathode_microstructure_low_pressure_assb` | Zhou et al. 2025 | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for All-Solid-State Batteries | (카드 없음) |
-| `cho2026_pore_network_homogeneity_powder_compacted_se_separator` | Cho et al. 2026 | Pore-network homogeneity for mechanically reliable powder-compacted solid-electrolyte separators | (카드 없음) |
+| `tailored_cathode_microstructure_low_pressure_assb` | Zhou et al. 2025 | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for All-Solid-State Batteries | LPSC를 ~1 µm로 잘게 만들면 NCM811을 고르게 덮어 2 MPa 작동압에서도 100 사이클 뒤 85.6 %를 유지한다. |
+| `cho2026_pore_network_homogeneity_powder_compacted_se_separator` | Cho et al. 2026 | Pore-network homogeneity for mechanically reliable powder-compacted solid-electrolyte separators | 넓은 PSD 분말은 펠릿을 더 치밀하게 만들지만 공극을 뭉쳐 남기고, Sn 음극 전셀에서 그 분리막이 깨진다. |
 | `faka2026_particle_size_consolidation_strain_lpscl` | Faka et al. 2026 | How Particle Size Affects Consolidation Behavior, Strain and Properties of Li₆PS₅Cl Fast Ionic Conductors | 같은 Li₆PS₅Cl에서 큰 입자는 약 1 GPa에서 상대밀도 100 %에 닿고, 작은 입자는 1.5 GPa에서도 95 %에 머물며, 변형은 크기 불균일에서 온다. |
 | `lei2026_se_particle_size_effects_review` | Lei et al. 2026 | Review of Particle Size Effects of Solid Electrolytes in All-Solid-State Batteries | 작은 SE는 충진, 접촉, 기계 강도에 유리하고 큰 SE는 이온전도와 화학 안정성에 유리하다. 모든 수치는 2차 인용이다. |
-| `yano2026_se_psd_width_ionic_tortuosity_dem` | Yano et al. 2026 | Effect of size distribution of solid electrolyte on tortuosity of ionic conductive paths: A combined experimental and simulation study | (카드 없음) |
+| `yano2026_se_psd_width_ionic_tortuosity_dem` | Yano et al. 2026 | Effect of size distribution of solid electrolyte on tortuosity of ionic conductive paths: A combined experimental and simulation study | 거친 꼬리가 있는 원 분말 LPSCl은 볼밀 분말보다 복합양극 이온 전도도가 높았다. DEM 기하 τ는 거의 그대로였고 경로당 입자 수만 늘었다. |

@@ -1,6 +1,6 @@
 # 인접 분야와 기초 이론
 
-전해질 · 계면 · 장 `se-adjacent` · 논문 23편 · 읽기 카드 23편
+전해질 · 계면 · 장 `se-adjacent` · 논문 24편 · 읽기 카드 24편
 
 > 표면 · 점착 이론, 전도성 고분자 바인더, 수계 전지 등 축 밖에서 참고하는 문헌.
 
@@ -72,7 +72,7 @@
 4. Maurer et al. 2015 (`maurer2015_mbd_adsorbates_metal_surfaces`) — 같은 Ag–그래핀 셀에서 분산 모델만 바꿔도 결합이 크게 움직인다는 점을 보인다.
 5. Patil et al. 1987 (`patil1987_self_doped_conducting_polymers`) — 술폰산계 바인더 문헌이 기대는 자기도핑 개념의 원전이며 전도도 값의 한계도 함께 보여 준다.
 
-## 이 장의 논문 (23편)
+## 이 장의 논문 (24편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -82,6 +82,7 @@
 | `giovannetti2008_doping_graphene_metal_contacts` | Giovannetti et al. 2008 | Doping Graphene with Metal Contacts | 약하게 붙는 금속도 그래핀을 도핑하며, 교환 반발 전위계단 때문에 n/p 교차가 W_M ≈ 5.4 eV로 밀린다. |
 | `kim2012_lno_lco_surface_energy_morphology_dft` | Kim et al. 2012 | First-principles and experimental investigation of the morphology of layer-structured LiNiO2 and LiCoO2 | 같은 48 원자 슬랩 GGA+U 계산에서 LiNiO₂의 표면 에너지는 모든 면에서 LiCoO₂보다 낮고, 원문은 이를 작은 1차입자의 원인으로 제안한다. |
 | `liu2013_cage_methane_adsorption_hydrate_nucleation` | Liu et al. 2013 | Effects of cage type and adsorption face on the cage–methane adsorption interaction: Implications for hydrate nucleation studies | 물 cage의 면이 클수록 메탄 흡착이 세지고, 7각형 이상 면에서는 흡착 대신 통과가 일어난다. |
+| `baseden2014_dft_by_hand_helium_atom` | Baseden · Tye 2014 | Introduction to Density Functional Theory: Calculations by Hand on the Helium Atom | He 손계산에서 HF와 Xα-DFT는 교환 한 항만 다르다. 그 근사가 자기반발을 남겨 궤도가 부풀고 에너지가 높아진다. |
 | `mohammadijam2014_inverse_gas_chromatography_review` | Mohammadi-Jam · Waters 2014 | Inverse gas chromatography applications: A review | IGC는 탐침 증기의 머무름으로 분말의 분산 성분과 산염기 성분을 재며, 값은 덮임률을 밝혀야 비교할 수 있다. |
 | `maurer2015_mbd_adsorbates_metal_surfaces` | Maurer et al. 2015 | Many-body dispersion effects in the binding of adsorbates on metal surfaces | vdW^surf 위에 MBD를 얹으면 Ag(111) 위 세 흡착계의 결합이 약해지고 높이가 늘어, 실험이 있는 두 계에서 일치가 좋아진다. |
 | `wang2015_graphite_cleavage_energy` | Wang et al. 2015 | Measurement of the cleavage energy of graphite | 자기수축 측정으로 흑연 비정합 벽개에너지 0.37 J/m²를 직접 얻었고, AB 값 0.39는 이론을 더한 합성값이다. |

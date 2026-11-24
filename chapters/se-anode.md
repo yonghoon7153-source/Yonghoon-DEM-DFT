@@ -1,6 +1,6 @@
 # 음극 · 리튬 금속 계면
 
-전해질 · 계면 · 장 `se-anode` · 논문 23편 · 읽기 카드 21편
+전해질 · 계면 · 장 `se-anode` · 논문 24편 · 읽기 카드 22편
 
 > Li 금속과 전해질 사이의 계면층, 덴드라이트, 중간층 설계.
 
@@ -70,7 +70,7 @@ h-BN 중간층 연구 두 편은 Li가 h-BN 위가 아니라 아래 틈에 쌓�
 4. Luo et al. 2022 (`luo2022_cryotem_li_dendrite_sulfide_interphase`) — 계산들이 대조하는 Li₂S 계면상의 두께와 결정성 실험 앵커다.
 5. Zeng et al. 2022 (`zeng2022_cl_rich_licl_nanoshell_li_interface`) — Cl 함량과 CCD가 엇갈리는 실험이라 조성과 도핑 처방 논문들을 읽는 출발점이 된다.
 
-## 이 장의 논문 (23편)
+## 이 장의 논문 (24편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -78,7 +78,7 @@ h-BN 중간층 연구 두 편은 Li가 h-BN 위가 아니라 아래 틈에 쌓�
 | `lai2020_li2s_interfacial_layer_amorphous_sulfide_cse` | Lai et al. 2020 | Stabilizing a Lithium Metal Battery by an In Situ Li₂S-modified Interfacial Layer via Amorphous-Sulfide Composite Solid Electrolyte | PVDF–LiTFSI에 비정질 LPS를 넣으면 Li 표면에 Li₂S 계면층이 생겨 PVDF 분해가 억제되고 도금이 균일해진다. |
 | `liu2022_hbn_lithiophobic_sandwich_li_anode` | Liu et al. 2022 | Uniform Lithium Deposition Induced by Double Lithiophobic Sandwich Structure for Stable Lithium Metal Anode | Li를 약하게 붙드는 h-BN 코팅이 Li를 h-BN과 Cu 사이로 몰아 평평한 샌드위치 증착을 만들고 셀 수명을 늘린다. |
 | `luo2022_cryotem_li_dendrite_sulfide_interphase` | Luo et al. 2022 | Nanostructure of the Interphase Layer between a Single Li Dendrite and Sulfide Electrolyte in All-Solid-State Li Batteries | Li 덴드라이트 위 Li₂S 계면상은 25 °C에서 단결정, 60 °C에서 다결정이 되고 저항도 그에 따라 갈린다. |
-| `wang2022_resistive_decomposing_interfaces_se_alkali_metal` | Wang et al. 2022 | The resistive nature of decomposing interfaces of solid electrolytes with alkali metal electrodes | 분해산물 가운데 Li₃P만 Li을 통과시키고, 다섯 배 많은 Li₂S와 LiCl이 막아 아르지로다이트‖Li 계면은 저항성이다. |
+| `wang2022_resistive_decomposing_interfaces_se_alkali_metal` | Wang et al. 2022 | The resistive nature of decomposing interfaces of solid electrolytes with alkali metal electrodes | (카드 없음) |
 | `wang2022_two_parameter_space_dendrite_constriction` | Wang et al. 2022 | A Two-Parameter Space to Tune Solid Electrolytes for Lithium Dendrite Constriction | Li 금속 계면 분해를 K*와 E_hull로 놓고, K*는 낮게, E_hull은 0이 아닌 적당한 값으로 맞춰야 덴드라이트가 갇힌다고 주장한다. |
 | `zeng2022_cl_rich_licl_nanoshell_li_interface` | Zeng et al. 2022 | Promoting favorable interfacial properties in lithium-based batteries using chlorine-rich sulfide inorganic solid-state electrolytes | Cl이 늘수록 σ와 Li에 대한 화학 안정성은 좋아진다. 덴드라이트 내성은 x = 1.3에서 가장 높고 x = 1.6에서 가장 낮다. |
 | `liu2023_electron_redistribution_redox_resistible_mgf2` | Liu et al. 2023 | Electron Redistribution Enables Redox‐Resistible Li₆PS₅Cl towards High‐Performance All‐Solid‐State Lithium Batteries | Mg를 P 자리에, F를 Cl 자리에 넣은 Li₆PS₅Cl은 Li 금속에 대한 분해가 줄어 CCD와 대칭셀 수명이 크게 는다. |
@@ -90,10 +90,11 @@ h-BN 중간층 연구 두 편은 Li가 h-BN 위가 아니라 아래 틈에 쌓�
 | `lu2025_tailoring_cl_rich_anode_licl` | Lu et al. 2025 | Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode | 4d 자리 Cl이 많은 Cl15는 스스로 분해해 전자 절연성 LiCl 계면층을 만들고 덴드라이트를 억제한다. |
 | `pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament` | Pustorino et al. 2025 | Mechanical and Electronic Properties of Bulk and Surface Li₆PS₅Cl Argyrodite: First-Principles Insights on Li-Filament Resistance | LPSC는 탄성률과 파괴에너지가 낮고 PS₄ 종결 표면이 벌크만큼 절연적이라, Li 필라멘트가 균열을 뒤따르는 dry crack으로 자란다. |
 | `wang2025_electronic_localization_yo_argyrodite` | Wang et al. 2025 | Electronic Localization Enables Long‐Cycling Sulfides‐Based All‐Solid‐State Lithium Batteries | Li₆PS₅Cl에 Y/O를 5% 공치환하면 Li 금속 계면 분해가 줄어 수명이 늘지만, 전자 국재화 기전은 근거가 약하다. |
-| `ahn2026_cej_agno3_pvp_li3n_anodefree` | Kim, Kang, Lee, Shin, An, Lee 2026 | Electrochemical precursor conversion for coupled control of Li nucleation and transport in anode-free all-solid-state batteries | (카드 없음) |
+| `ahn2026_cej_agno3_pvp_li3n_anodefree` | Kim, Kang, Lee, Shin, An, Lee 2026 | Electrochemical precursor conversion for coupled control of Li nucleation and transport in anode-free all-solid-state batteries | PVP로 잘게 분산한 AgNO₃를 첫 충전에 전환하면 고른 Ag–Li 자리와 Li₃N 계면상이 함께 생겨 수명이 늘어난다. |
 | `burov2026_li_llzo_charge_transfer_mlmd` | Burov et al. 2026 | Charge-transfer mechanisms at Li/Ga-doped Li 7 La 3 Zr 2 O 12 (LLZO) interfaces from machine learning assisted molecular dynamics | 계면 횡단만 센 MLMD에서 Li\|Ga-LLZO 전하이동 장벽은 167 ± 18 meV이고, R_ct는 실측보다 훨씬 작은 하한값으로 나왔다. |
-| `kang2026_site_specific_customized_se_dendrite_tolerant_li_metal` | Kang et al. 2026 | Dendrite-tolerant fast-kinetics design for all-solid-state lithium-metal batteries via site-specific customized sulfide electrolytes | (카드 없음) |
+| `kang2026_site_specific_customized_se_dendrite_tolerant_li_metal` | Kang et al. 2026 | Dendrite-tolerant fast-kinetics design for all-solid-state lithium-metal batteries via site-specific customized sulfide electrolytes | 양극, 분리막, Li 계면에 서로 다른 argyrodite를 배정하자 NCM811‖Li 풀셀이 1C 500 사이클을 단락 없이 돌았다. |
 | `kim2026_iccf_molten_salt_sei_lpscl_sheet` | Kim et al. 2026 | Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries | [EMIM][TFSI]에 LiTFSI와 FEC를 더한 충진재를 LPSCl 시트에 떨어뜨리면 전도도가 회복되고 음극에 LiF-rich SEI가 생긴다. |
 | `li2026_functionally_differentiated_interphase` | Li et al. 2026 | Functionally differentiated composite interphase enables stable sulfide-based all-solid-state lithium metal batteries | LiF, LiCl/LiBr, Li₃N을 차례로 습식 코팅한 Li 금속은 CCD와 수명이 크게 늘었지만, 층 분화 자체는 증명되지 않았다. |
 | `li2026_mci_vs_sei_na3ps4_na_mlip_md` | Li et al. 2026 | Distinguishing the mixed conduction interphase: a machine learning molecular dynamics study on the Na₃PS₄ /Na battery interface | MLIP-MD에서 Na₃PS₄‖Na 계면상은 감속하며 계속 자라고 세 표지가 MCI와 부합하지만, 전자 전도는 계산하지 않았다. |
-| `yuan2026_percolating_li2s_interphase_efield_md` | Yuan et al. 2026 | Reversible Ion Transport Through an Irreversibly Percolating Li₂S Interphase at the Li/Li₆PS₅Cl Interface | Li/Li₆PS₅Cl 계면에 건 장을 뒤집으면 Li 흐름은 반전된다. 그러나 Li₂S-like 연결망과 사라진 아르지로다이트 배위는 돌아오지 않는다. |
+| `liu2026_li_in_s_composite_foil_built_in_field_li_lpscl` | Liu et al. 2026 | Li-In-S composite foil with built-in electric fields to stabilize Li/Li6PS5Cl interface for long-life all-solid-state batteries | Li₂S와 LixIn 복합 포일은 LPSC 계면의 환원과 단락을 줄인다. 다만 원문이 내세운 내장 전기장 기전은 입증되지 않았다. |
+| `yuan2026_percolating_li2s_interphase_efield_md` | Yuan et al. 2026 | Reversible Ion Transport Through an Irreversibly Percolating Li₂S Interphase at the Li/Li₆PS₅Cl Interface | (카드 없음) |

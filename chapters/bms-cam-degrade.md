@@ -1,6 +1,6 @@
 # 양극 소재 화학-기계 열화
 
-전지 진단 · BMS · 장 `bms-cam-degrade` · 논문 12편 · 읽기 카드 0편
+전지 진단 · BMS · 장 `bms-cam-degrade` · 논문 12편 · 읽기 카드 1편
 
 > Ni-rich NCM의 격자 변형과 균열, 계면상, 화학-기계 용량 감소.
 
@@ -18,7 +18,7 @@
 | `koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps` | Koerver R. et al. 2017 | Redox-active cathode interphases in solid-state batteries | (카드 없음) |
 | `kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking` | Kondrakov A.O. et al. 2017 | Anisotropic Lattice Strain and Mechanical Degradation of High- and Low-Nickel NCM Cathode Materials for Li-Ion Batteries | (카드 없음) |
 | `kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft` | Kondrakov A.O. et al. 2017 | Charge-Transfer-Induced Lattice Collapse in Ni-Rich NCM Cathode Materials during Delithiation | (카드 없음) |
-| `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` | Koerver et al. 2018 | Chemo-mechanical expansion of lithium electrode materials – on the route to mechanically optimized all-solid-state batteries | (카드 없음) |
+| `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` | Koerver et al. 2018 | Chemo-mechanical expansion of lithium electrode materials – on the route to mechanically optimized all-solid-state batteries | 전극 재료의 부피 변화는 구속된 고체전지에 응력을 만들고, 충전 때 줄어드는 양극과 늘어나는 양극을 섞으면 그 응력 변화가 거의 사라진다. |
 | `ruess2020_ncm-cracking-kinetics-liquid-vs-solid-electrolyte` | Ruess R. et al. 2020 | Influence of NCM Particle Cracking on Kinetics of Lithium-Ion Batteries with Liquid or Solid Electrolyte (J. Electrochem. Soc. 167, 100532) + Supporting Information | (카드 없음) |
 | `shi2020_mechanical-degradation-assb-cathode` | Shi et al. 2020 | Characterization of mechanical degradation in an all-solid-state battery cathode | (카드 없음) |
 | `conforto2021_chemo-mechanical-ncm-active-mass-eis-psd` | Conforto et al. 2021 | Quantification of the Impact of Chemo-Mechanical Degradation on the Performance and Cycling Stability of NCM-Based Cathodes in Solid-State Li-Ion Batteries | (카드 없음) |

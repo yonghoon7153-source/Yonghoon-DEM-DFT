@@ -1,6 +1,6 @@
 # 분야 지도와 리뷰
 
-전해질 · 계면 · 장 `se-review` · 논문 18편 · 읽기 카드 18편
+전해질 · 계면 · 장 `se-review` · 논문 21편 · 읽기 카드 21편
 
 > 분야 전체를 한 번에 잡는 리뷰와 필독 문헌.
 
@@ -72,7 +72,7 @@ MLIP는 계산 규모를 넓히지만, 학습 범함수의 편향과 검증 방�
 4. He et al. 2023 (`he2023_halogen_chemistry_solid_electrolytes`) — argyrodite의 4a/4d 무질서와 Cl 과잉 기전을 가장 자세히 다루고, 본문과 SI가 어긋나는 수치 사례도 보여 준다.
 5. Wu et al. 2026 (`wu2026_ml_driven_electrolyte_interface_design_review`) — MLIP 정확도 대역과 계면 판정의 세 갈래를 정리해 계산 쪽 최근 쟁점으로 이어 준다.
 
-## 이 장의 논문 (18편)
+## 이 장의 논문 (21편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -90,7 +90,10 @@ MLIP는 계산 규모를 넓히지만, 학습 범함수의 편향과 검증 방�
 | `wang2025_ai_ecosystems_electrolyte_interface_ssb` | Wang et al. 2025 | Toward AI ecosystems for electrolyte and interface engineering in solid-state batteries | SSB 전해질·계면 설계의 AI 활용을 세 양식으로 정리했지만, AI 생태계는 제안 단계이고 CEI 조건 대부분에는 측정량이 없다. |
 | `alharbi2026_coupled_design_ultrathin_composite_se_review` | Alharbi 2026 | Coupled Design Principles for Ultrathin Composite Solid Electrolytes: Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries | 초박형 복합 전해질은 수송, 역학, 계면, 제조가 서로 묶여 따로 최적화할 수 없다는 틀을 세운 미심사 리뷰다. |
 | `fan2026_sulfide_assb_stability_review_ECERD2600097` | Fan 2026 | Stability Issues in Sulfide-Based All-Solid-State Batteries: From Material Properties to Electrode Interfaces | 황화물 전고체전지의 안정성 문제는 단일 재료 결함이 아니라 화학, 전기화학, 열, 기계 인자의 결합 효과이고, 해법은 고유 안정성과 동적 계면 조절에 있다. |
+| `kansara2026_experiment_computation_integration_assb_review` | Kansara et al. 2026 | Integration of experimental insights and computational modeling for all-solid-state batteries | 계산과 실험을 닫힌 고리로 묶는 방법 지도이며, 실린 수치는 원 논문으로 거슬러 확인해야 한다. |
 | `liang2026_interface_bottleneck_solid_state_batteries` | Liang et al. 2026 | Overcoming the Interface Bottleneck in Solid‐State Batteries: Electrolyte Design, Interface Engineering, and Computational Discovery | 세 계열 무기 고체전해질을 계면이라는 렌즈로 다시 정리하고, 계산 도구는 소개에 그친 종설이다. |
 | `nosrati2026_anion_engineering_sulfide_se_review` | Nosrati et al. 2026 | Anion Engineering of Sulfide Solid Electrolytes: From Fundamentals to High‐Performance All‐Solid‐State Batteries | 단일 음이온 치환은 한 성질을 올리고 다른 성질에서 손해를 보며, 기능을 나눠 맡기는 공도핑이 그 손해를 피한다고 원문은 정리했다. |
 | `oginni2026_computational_design_review` | Oginni et al. 2026 | Computational design of quantum and functional materials for next generation electronic and energy technologies | DFT, beyond-DFT, MD·MC, ML, 양자컴퓨팅을 정확도와 비용의 계층으로 묶었지만 정량 비교와 방법 파라미터는 없는 개관 리뷰다. |
+| `pandey2026_mxene_ion_conducting_interfaces_ssb_review` | Pandey et al. 2026 | Two‐Dimensional MXenes for Ion‐Conducting Interfaces in Solid‐State Energy Storage Systems | MXene을 고분자 전해질 충전재, 금속 음극 계면층, 다가 이온 숙주로 묶은 리뷰지만 무기 SSE의 1차 근거는 얇다. |
 | `wu2026_ml_driven_electrolyte_interface_design_review` | Wu et al. 2026 | Machine Learning‐Driven Design of Electrolytes and Interfaces for Solid‐State Lithium Batteries: Progress and Outlook | 고체 리튬전지 전해질과 계면의 ML 연구를 정리하며, 정적 계면에너지만으로는 계면 품질을 판정할 수 없다고 주장한 리뷰다. |
+| `zhang2026_ai_cross_scale_simulation_li_battery_review` | Zhang et al. 2026 | AI-Driven Cross-Scale Simulation of Lithium Batteries | AI로 원자에서 셀까지 잇는 사례를 184 편으로 정리했고, 쓸모 있는 것은 사례보다 불확실도와 정의에 관한 규율이다. |

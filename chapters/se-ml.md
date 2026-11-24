@@ -6,7 +6,7 @@
 
 ## 장 서문 — 싼 대리값은 순위를 맞히지만 값과 외삽은 아직 못 믿는다
 
-*읽기 카드 20편을 엮어 쓴 글 · 항목 30개 중 30개 검증 통과 · 2026-11-10*
+*읽기 카드 20편을 엮어 쓴 글 · 항목 30개 중 30개 검증 통과 · 2026-11-10 · 낡음: 그 뒤 이 장의 카드가 바뀌었다 (센서가 자정 뒤 다시 쓴다)*
 
 고속 스크리닝, 기술자 설계, 능동학습 논문들은 비싼 계산이나 실험을 싼 대리값으로 얼마나 대신할 수 있는지를 묻는다. [근거: Sendek et al. 2017 (`sendek2017_ml_screening_12k_conductors`); Kahle et al. 2020 (`kahle2020_ht_aimd_screening`); Hu, Dong, Feng, Hu & Hu 2026 (`hu2026_foundation_model_surrogates_active_learning`)]
 
