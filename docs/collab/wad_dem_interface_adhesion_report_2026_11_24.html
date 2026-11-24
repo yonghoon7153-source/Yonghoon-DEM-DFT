@@ -170,8 +170,8 @@ table.wide { min-width: 38rem; }
 <thead><tr><th>쌍</th><th>W (J/m²)</th><th>방법</th><th>범위 · 비고</th><th>3체 포함 (민감도)</th><th>상태</th></tr></thead>
 <tbody>
 <tr><td>C–C (흑연 기저면끼리)</td><td class="num">0.332</td><td>DFT</td><td>registry 범위 AA 0.298 – AB 0.350 · 실험 0.37 ± 0.01 (정보로만)</td><td class="num">0.257</td><td>확정</td></tr>
-<tr><td>Ag–C · Ag(111) | 흑연 3층</td><td class="num">0.493</td><td>DFT</td><td>registry 넷 [0.4926, 0.4927] · 흑연을 4층으로 늘려도 0.001 변화</td><td class="num">≈ 0.378</td><td>확정</td></tr>
-<tr><td>Ag–C · Ag(111) | 그래핀 1장 (8 차 표 값)</td><td class="num">0.435 (8 Å) · 0.449 (10 Å)</td><td>DFT</td><td>끝점 · k 점 점검 미통과 라벨</td><td class="num">0.366 · 0.373</td><td>참고</td></tr>
+<tr><td>Ag–C · Ag(111) | 흑연 3층</td><td class="num">0.493</td><td>DFT</td><td>registry 넷 [0.4926, 0.4927] · 흑연을 4층으로 늘려도 0.001 변화</td><td class="num">≈ 0.378</td><td>기본 (DEM 9 차 회신)</td></tr>
+<tr><td>Ag–C · Ag(111) | 그래핀 1장 (8 차 표 값)</td><td class="num">0.435 (8 Å) · 0.449 (10 Å)</td><td>DFT</td><td>끝점 · k 점 점검 미통과 라벨</td><td class="num">0.366 · 0.373</td><td>이력 · 민감도 (DEM 9 차 회신)</td></tr>
 <tr><td>LPSCl | Ag(111) · S 바깥</td><td class="num">0.891</td><td>UMA+D3 예측</td><td>registry A·B [0.889, 0.892]</td><td class="num">0.800</td><td>미검증 예측 · 작은 모델 확인 미완료</td></tr>
 <tr><td>LPSCl | Ag(111) · Li·PS₄ 바깥</td><td class="num">0.760</td><td>UMA+D3 예측</td><td>registry A·B [0.749, 0.772]</td><td class="num">0.656</td><td>미검증 예측 · 작은 모델 확인 미완료</td></tr>
 <tr><td>LPSCl | 흑연 · S 바깥</td><td class="num">0.213</td><td>UMA+D3 예측</td><td>registry A·B 차 &lt; 0.001</td><td class="num">0.174</td><td>미검증 예측 · 작은 모델 확인 통과</td></tr>
@@ -179,7 +179,7 @@ table.wide { min-width: 38rem; }
 </tbody>
 </table>
 </div>
-<p class="tnote">끝점은 모두 10 Å 다. Ag–C 행에 그래핀 1장 값과 흑연 3층 값 중 무엇을 쓸지는 DEM 쪽에서 정한다. 두 값의 차를 두께 효과로 읽지 않는다 (셀 높이 · 주기 영상 간격도 함께 달라졌다).</p>
+<p class="tnote">끝점은 모두 10 Å 다. Ag–C 는 흑연 3층 값이 기본이다 (DEM 9 차 회신 · 10-06) — 점검 (k 점 · 두께 · 끝점) 을 통과했고, C–C (두꺼운 흑연끼리) 와 기판 기준 · 끝점 · 방법이 같다. 그래핀 1장 값은 k 점 수렴을 확인하지 않은 옛 값이라 이력 · 민감도로만 남는다. 분산력이 아래층까지 미쳐서 층이 많을수록 W 가 조금 크고, 4층으로 늘려도 거의 같아서 3층이 두꺼운 흑연을 대표한다. 다만 두 값의 차를 순수한 두께 효과로 읽지 않는다 (셀 높이 · 주기 영상 간격도 함께 달라졌다).</p>
 
 <aside class="box">
 <h3>값과 떼지 말아야 할 라벨</h3>
