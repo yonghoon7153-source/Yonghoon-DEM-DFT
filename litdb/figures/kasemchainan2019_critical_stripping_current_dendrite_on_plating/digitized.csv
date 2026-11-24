@@ -1,0 +1,55 @@
+# kasemchainan2019 (Nat. Mater. 18, 1105 (2019)) - figure readings and derived numbers used in litdb/papers/kasemchainan2019_critical_stripping_current_dendrite_on_plating.md
+# kind: text = number printed in the paper (page given) | figure-read = read by eye from the cropped PNG (approx. +-1-2 mV on mV axes, +-0.02 mAh cm-2 on capacity axes) | derived = our arithmetic from paper numbers (formula in note)
+# sign convention: y as plotted (stripping branch positive, plating branch negative). x for stripping in Fig. 1 and Fig. 6 runs 1.0 -> 0 (arrow left); in Fig. 5 c,d it runs 0 -> 2.0.
+figure,panel,condition,series,quantity,x,x_unit,y,y_unit,kind,note
+1,b,3-electrode 3 MPa 1.0 mA cm-2,cycle 1 plating,polarization,0-1.0,mAh cm-2,-12,mV,text,p.1106 'constant polarization of 12 mV'
+1,b,3-electrode 3 MPa 1.0 mA cm-2,cycle 1 stripping,end-of-stripping polarization,0,mAh cm-2,19,mV,text,p.1106 'reaching 19 mV'; figure-read 19-20
+1,b,3-electrode 3 MPa 1.0 mA cm-2,cycles 2-6 stripping,end-of-stripping polarization,0,mAh cm-2,25;31;40;58;102,mV,figure-read,five blue curves; assigned to cycles 2-6 in increasing order (legend gives one colour for 2nd-6th)
+1,b,3-electrode 3 MPa 1.0 mA cm-2,cycle 7 stripping,end-of-stripping polarization,0,mAh cm-2,130,mV,text,p.1106; figure-read about 132
+1,b,3-electrode 3 MPa 1.0 mA cm-2,all cycles plating,polarization,0-1.0,mAh cm-2,-13,mV,text,p.1106 'averaging 13 mV'; figure-read -12 to -17
+1,b,3-electrode 3 MPa 1.0 mA cm-2,cycle 8 plating,short-circuit step,0.43,mAh cm-2,-20 -> -3,mV,figure-read,p.1106 'short-circuited on the eighth cycle'
+1,c,3-electrode 7 MPa 1.0 mA cm-2,100 cycles,polarization,0-1.0,mAh cm-2,+9 / -9,mV,figure-read,stripping 9 -> 8 mV; plating about -9 mV; band of 100 overlapping cycles
+1,d,3-electrode 7 MPa 2.0 mA cm-2,cycles 1;2;3;4;6;9 stripping,end-of-stripping polarization,0,mAh cm-2,22.5;25;29;34;36;38,mV,figure-read,legend: 1st black; 2nd-3rd blue; 4th dark yellow; 6th yellow; 9th green
+1,d,3-electrode 7 MPa 2.0 mA cm-2,cycles 1;4;6;9 plating,polarization start -> end,0 -> 1.0,mAh cm-2,-19.5->-19.5;-25->-15;-33->-9;-30->-9,mV,figure-read,decreasing |V| after cycle 4 = authors' dendrite-area reading (p.1108)
+1,d,3-electrode 7 MPa 2.0 mA cm-2,cycle 10 plating,polarization,0-1.0,mAh cm-2,-10 -> -2 (spikes),mV,figure-read,short circuit (p.1108 'after the 10th cycle')
+5,a,3-electrode 3 MPa single plating,1.0 mA cm-2,polarization x=0 -> x=1.0,0 -> 1.0,mAh cm-2,-13 -> -11,mV,figure-read,
+5,a,3-electrode 3 MPa single plating,2.0 mA cm-2,polarization x=0 -> x=1.0,0 -> 1.0,mAh cm-2,-27 -> -26,mV,figure-read,flat = below CCP
+5,a,3-electrode 3 MPa single plating,3.0 mA cm-2,polarization x=0 -> x=1.0,0 -> 1.0,mAh cm-2,-39 -> -20,mV,figure-read,|V| falls with charge = 'characteristic of dendrite formation' (p.1108)
+5,a,3-electrode 3 MPa single plating,4.0 mA cm-2,short-circuit step,0.47,mAh cm-2,-52 (x=0) ; -12 -> -1 at step,mV,figure-read,trace ends about 0.57 mAh cm-2
+5,b,3-electrode 7 MPa single plating,1.0 mA cm-2,polarization,0-1.0,mAh cm-2,-8.5,mV,figure-read,flat
+5,b,3-electrode 7 MPa single plating,2.0 mA cm-2,polarization,0-1.0,mAh cm-2,-19.5 -> -19,mV,figure-read,flat = below CCP
+5,b,3-electrode 7 MPa single plating,3.0 mA cm-2,polarization x=0 -> x=1.0,0 -> 1.0,mAh cm-2,-33 -> -20,mV,figure-read,|V| falls with charge
+5,b,3-electrode 7 MPa single plating,4.0 mA cm-2,polarization x=0 -> x=1.0,0 -> 1.0,mAh cm-2,-52 -> -9,mV,figure-read,no abrupt step within 1.0 mAh cm-2 (unlike 3 MPa)
+5,c,3-electrode 3 MPa single stripping,0.1 mA cm-2,polarization,0-0.92,mAh cm-2,1.5,mV,figure-read,trace stops at about 0.92 mAh cm-2
+5,c,3-electrode 3 MPa single stripping,0.2 mA cm-2,polarization,0-1.78,mAh cm-2,3,mV,figure-read,trace stops at about 1.78 mAh cm-2
+5,c,3-electrode 3 MPa single stripping,0.5 mA cm-2,polarization x=0 / 1.0 / 2.0,0;1.0;2.0,mAh cm-2,7;8;9,mV,figure-read,rise about +14 % over the first 1 mAh cm-2
+5,c,3-electrode 3 MPa single stripping,1.0 mA cm-2,polarization x=0 / 1.0 / 1.25 / 1.5,0;1.0;1.25;1.5,mAh cm-2,15;22;29;>60,mV,figure-read,'severe' (p.1108); rise about +47 % over the first 1 mAh cm-2 then runaway
+5,d,3-electrode 7 MPa single stripping,0.1 mA cm-2,polarization,0-0.9,mAh cm-2,1.5,mV,figure-read,trace stops at about 0.9 mAh cm-2
+5,d,3-electrode 7 MPa single stripping,0.2 mA cm-2,polarization,0-1.78,mAh cm-2,3,mV,figure-read,trace stops at about 1.78 mAh cm-2
+5,d,3-electrode 7 MPa single stripping,0.5 mA cm-2,polarization x=0 / 2.0,0;2.0,mAh cm-2,5.5;7,mV,figure-read,
+5,d,3-electrode 7 MPa single stripping,1.0 mA cm-2,polarization x=0 / 1.0 / 2.0,0;1.0;2.0,mAh cm-2,11;12;15,mV,figure-read,rise about +9 % over the first 1 mAh cm-2
+5,d,3-electrode 7 MPa single stripping,1.5 mA cm-2,polarization x=0 / 1.0 / 2.0,0;1.0;2.0,mAh cm-2,14.5;19.5;28,mV,figure-read,rise about +34 % over the first 1 mAh cm-2
+5,d,3-electrode 7 MPa single stripping,2.0 mA cm-2,polarization x=0 / 1.0 / 2.0,0;1.0;2.0,mAh cm-2,19;25;52,mV,figure-read,'threshold is higher at 2.0' (p.1108)
+6,a,2-electrode 3 MPa 0.2 mA cm-2,100 cycles,polarization,0-1.0,mAh cm-2,+7 / -7,mV,figure-read,derived ASR 7 mV / 0.2 mA cm-2 = 35 ohm cm2
+6,b,2-electrode 3 MPa 1.0 mA cm-2,cycle 1,polarization upper / lower,0-1.0,mAh cm-2,+35 / -25 -> -38,mV,figure-read,derived ASR about 35 ohm cm2
+6,b,2-electrode 3 MPa 1.0 mA cm-2,cycles 6;7,upper branch at x=0 / lower branch at x=1.0,0;1.0,mAh cm-2,100 / -138 ; 112 / < -160,mV,figure-read,lower branch = WE plating + CE stripping in a 2-electrode cell
+6,b,2-electrode 3 MPa 1.0 mA cm-2,cycle 8,short-circuit step (lower branch),0.34,mAh cm-2,-28 -> -15 (then -8 at x=1.0),mV,figure-read,
+6,c,2-electrode 7 MPa 1.0 mA cm-2,100 cycles,polarization,0-1.0,mAh cm-2,+18 / -18,mV,figure-read,derived ASR 18 ohm cm2
+6,d,2-electrode 7 MPa 2.0 mA cm-2,cycles 1;9,polarization upper / lower,0-1.0,mAh cm-2,+42 / -40 ; +73 / -65,mV,figure-read,
+6,d,2-electrode 7 MPa 2.0 mA cm-2,cycle 10,short-circuit step (lower branch),0.92,mAh cm-2,-54 -> 0,mV,figure-read,
+S2,a,2-electrode EIS at -1 C,Nyquist,high-frequency start / low-frequency minimum / CT tail end,,ohm cm2,13 / 70 / 78,ohm cm2,figure-read,four-element circuit (bulk; GB; SEI; CT); fitted values not tabulated
+S2,b,2-electrode EIS at 25 C,R_SEI+CT vs time,time (h) : R,0;25;50;87;168;262,h,6.1;7.2;7.3;8.4;9.3;9.2,ohm cm2,figure-read,p.1105 'within 10% of the final value after 100 h'; cell total or per interface not stated
+S4,-,3-electrode 3 MPa 1.0 mA cm-2,WE / CE end-of-stripping,polarization,cycles 1-4,-,16-18 / 20-22,mV,figure-read,about 0.45 h segments at 0 mV between half cycles (rest not described in Methods)
+S5,a,3-electrode 0.5 MPa 1.0 mA cm-2,cycles 1;2 stripping,end-of-stripping polarization,0,mAh cm-2,75;95-100,mV,figure-read,caption title says '4 MPa'; legend and main text say 0.5 MPa
+S5,a,3-electrode 0.5 MPa 1.0 mA cm-2,cycle 3,polarization upper / lower,0-1.0,mAh cm-2,+12 -> +25 / -35 -> -15,mV,figure-read,
+S6,a,2-electrode 3 MPa 1.0 mA cm-2,cycles 1;2-5;6;7,low-frequency minimum Z',-,-,27.5;29-37;49;55,ohm cm2,figure-read,high-frequency start 14-17; arc width 13.5 -> 38.5 ohm cm2 (x2.9)
+S6,b,2-electrode 7 MPa 1.0 mA cm-2,before; 50th; 100th,low-frequency minimum Z',-,-,14.5-15,ohm cm2,figure-read,high-frequency start 10.5-11.5; arc width about 4 ohm cm2; curves overlap; caption cites non-existent 'Fig. 7' (= main Fig. 6)
+S7,a,Na 3-electrode 4 MPa single stripping,0.2;0.5;1.0;1.5 mA cm-2,polarization x=0 -> x=2.0,0 -> 2.0,mAh cm-2,8->10;25->32;95->187;105->275,mV,figure-read,Na CCS bracket (0.5 / 1.0] mA cm-2 at 4 MPa
+S7,b,Na 2-electrode 4 MPa 0.1 mA cm-2,100 cycles,polarization,0-0.5,mAh cm-2,+-10,mV,figure-read,0.5 mAh cm-2 per half cycle (not stated in text)
+S7,c,Na 2-electrode 4 MPa 1.5 mA cm-2,cycle 19,polarization start,0,mAh cm-2,>=3000,mV,figure-read,limited to 3 V; drops to about 150 mV at 0.24 mAh cm-2
+-,-,derived,Li thickness per 1 mAh cm-2,thickness,-,-,4.85,um,derived,V_m = 6.941/0.534 = 13.0 cm3 mol-1; paper 'approximately 5 um'
+-,-,derived,stripping recession velocity v = j V_m / F,velocity,0.2;0.5;1.0;1.5;2.0,mA cm-2,0.27;0.67;1.35;2.02;2.69,nm s-1,derived,1.0 mA cm-2 = 4.85 um h-1
+-,-,derived,current strain rate eps_j = v / l0 (l0 = 40 um),strain rate,0.2;1.0;2.0,mA cm-2,6.7e-6;3.4e-5;6.7e-5,s-1,derived,same form as wang2019 eq. 2
+-,-,derived,apparent pressure exponent k in j_CCS ~ P^k (3 -> 7 MPa),k,abstract 0.2->1.0; body 1.0->2.0; widest bracket 0.2->2.0,-,1.90;0.82;2.72,-,derived,bulk power-law creep n = 6.56 would give (7/3)^6.56 = 259
+-,-,derived,bulk creep law at nominal pressure (masias2019 card refit A' = 7.73e-3 s-1 MPa^-n; n = 6.56),strain rate,0.81;3;7,MPa,1.9e-3;10;2.7e3,s-1,derived,extrapolation outside the 0.2-0.6 MPa fit window - shows the nominal pressure is not the local driving stress
+-,-,derived,stress that gives eps_j with the same law,stress,0.2;1.0;2.0,mA cm-2,0.34;0.44;0.49,MPa,derived,1/7 to 1/16 of the stack pressure
