@@ -6,6 +6,12 @@
 #   + 2026-09-30 강성 축 새 단계 (DV · CF · CR — dev-e0 · dev-rot · confirm-first · confirm-rest · 시작 직전 관문 · 디스크 · run_all/resume 가드)
 #   사용: bash dem_scripts/mixer_20260921/test_launcher.sh      (check_all.sh 에 배선)
 set -uo pipefail
+#  ★ 2026-11-24 (SELF-195) — 이 시험은 부른 쪽 환경을 물려받지 않는다: 런처 · 생성기 · 재개기 · 감시가 `${X:-…}` 로 읽는 변수를
+#    전부 비운 뒤 시작한다 (각 경우는 필요한 값을 명령 앞에 직접 붙인다).  J21 게이트를 조각 선택 변수 ONLY=p1 이 든 셸에서 띄웠더니
+#    run_all.sh 가 모든 런을 건너뛰어 126/10 이 났다 · 다른 변수 (FORCE · DRY · MAXJ · NP · BACKEND) 를 섞으면 83/53.
+#    목록 = 그 다섯 스크립트 + start_check.py 가 읽는 이름 전부 (TMPDIR · HOME · PATH · USER 는 남긴다).
+unset ALLOW_LH BACKEND CGF DECKDIFF DEVIATION DRY FORCE LMP MAXJ MPIOK MPIRUN_FLAGS NP NP_RUN N_TOTAL ONLY OUT POLICY_FILE REV \
+      RUNNER SB_ENV SB_PARTITION SB_PATH SB_QOS SB_TIME SEAL_EXTRA SET SMOKE SMOKE_DIR SMOKE_STEPS SMOKE_TIMEOUT STAGEGATE STL TIME_RUN
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
 T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
 pass=0; fail=0
