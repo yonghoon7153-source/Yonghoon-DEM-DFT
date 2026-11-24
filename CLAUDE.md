@@ -389,6 +389,7 @@
 ## litdb (문헌)
 - "논문 에이전트" 요청 = litdb-curator 서브에이전트: litdb/papers/ digest + INDEX.md + comparison_vs_ours.md 갱신.
 - 문헌 수치는 소환값 — 우리 db 절대값과 섞지 않기 (방법 명시 없이 이식 금지).
+- **논문을 찾을 때는 최근 2년 발견 검색이 먼저, 기본 논문은 그 뒤** (사용자 2026-11-24 *'최신논문은 이런 서칭에 안 잡히는거야?'*) — 제목 없이 주제어 + 연도 · 저자의 최근 논문으로 찾는다. 아는 제목을 확인만 하는 검색은 옛 논문만 돌려준다 (그날 사카모토 추천 6 편이 전부 2019–2023 이었다).
 - **litdb 를 볼 때는 `litdb/figures/<slug>/` 의 크로핑 PNG 를 Read 로 같이 본다** (digest 텍스트만
   보고 답하지 않기). 어느 그림인지는 그 폴더의 figures.json caption 으로 찾고, 없으면
   `tools/litdb/extract_figures.py --inbox` 로 먼저 만든다. **본 그림/안 본 그림을 구분해 말한다.**
