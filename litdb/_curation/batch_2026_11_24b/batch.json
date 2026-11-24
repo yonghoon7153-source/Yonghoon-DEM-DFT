@@ -1,0 +1,49 @@
+{
+ "schema": "litdb_batch/v1",
+ "batch": "2026-11-24b (W_ad 추가 논문 · 목록 우선순위 순)",
+ "created": "2026-11-24 밤",
+ "user_originals": "업로드 원래 이름은 papers[].inbox_files[].uploaded_as · inbox 는 git 밖 (sha256 로 대조)",
+ "done_marker": "litdb/_curation/batch_2026_11_24b/<slug>.report.md (맨 마지막에 쓴다)",
+ "agent": {
+  "subagent_type": "litdb-curator",
+  "prompt_rules": [
+   "쓰는 파일: litdb/papers/<slug>.md · litdb/figures/<slug>/ · litdb/_curation/batch_2026_11_24b/<slug>.report.md 셋뿐",
+   "공유 파일 금지: litdb/INDEX.md · INDEX_DEM.md · comparison_vs_ours*.md · pdf_map.tsv · topics.json · _INDEX_proposals.md · litdb/properties/* · litdb/talks/* · CLAUDE.md · litdb 밖",
+   "git add · commit · push · checkout · reset · stash 금지 · build_index.py 는 --check 만",
+   "우리 점착 W 값은 digest 에 싣지 않는다 (위치만)",
+   "저자에 Jeff Sakamoto 가 있으면 저자 줄에 Jeff Sakamoto 로 · INDEX 행 둘째 칸 맨 앞 🏷 **Jeff Sakamoto 공저** · ",
+   "그림: tools/litdb/extract_figures.py --slug <slug> --pdf <본문> <SI…> --clean · 동영상: ffmpeg -vf fps=1/5 로 장면을 뽑아 직접 본다",
+   "임시 파일은 scratchpad/<slug>/ 안에만 쓴다 — 공용 이름 (main.txt · si.txt) 금지 (11-24 앞 묶음에서 서로 덮어썼다)"
+  ],
+  "report_spec": "(a) INDEX 행 + 절 (b) comparison 줄 (c) pdf_map 줄 (d) 추가로 먹일 논문 ≤ 8 (최근 먼저 · litdb 유무) (e) DEM-DFT 보고서에 쓸 거리 (쪽 · 그림 · 표 · 직접 봤는지) (f) 그림 · 동영상 크롭 요약 (g) Jeff Sakamoto 저자 여부"
+ },
+ "papers": [
+  {
+   "n": 1,
+   "slug": "baer2026_li_metal_argyrodite_interface_stability_transport",
+   "citation": "Chantal M. I. Baer, Roman Shantsila, Łukasz Figiel, Bora Karasulu, 'Atomistic insights into the chemical stability and ionic transport at Li-metal/Li-argyrodite interfaces', J. Mater. Chem. A 14, 20245 (2026) · DOI 10.1039/D6TA00922K (목록 extra_papers_2026_11_24.md 표 1 #1)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/baer2026_li_argyrodite_interface_main.pdf",
+     "sha256": "4590934b3d26c2af6ac94cb4676458557cfc1e17b3aae7d2fbb79ad3d97b4f7b",
+     "bytes": 5991050,
+     "uploaded_as": "1._Atomistic_insights_into_the_chemical_stability_and_ionic_transport_at_Li-metalLi-argyrodite_interfaces.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/baer2026_li_argyrodite_interface_SI.pdf",
+     "sha256": "aabb7c91e4c2d49de0c602ee83c3ed0bd0e7858cf0ff25d4cf2e266a086e3a96",
+     "bytes": 11609157,
+     "uploaded_as": "1._Sup_Atomistic_insights_into_the_chemical_stability_and_ionic_transport_at_Li-metalLi-argyrodite_interfaces.pdf"
+    }
+   ],
+   "code_repo": {
+    "url": "https://github.com/bkarasulu/li-argyrodite-interface",
+    "commit": "3f67da9",
+    "local": "/home/user/bkarasulu/li-argyrodite-interface",
+    "reclone": "GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/bkarasulu/li-argyrodite-interface /home/user/bkarasulu/li-argyrodite-interface",
+    "contents": "bulk/ (Li6PS5Cl 정렬 · 무질서 · 이완 전후) · surfaces/ · interfaces/ (100|100 · 100|010 · 011|011 · cb · 이완 전후) · mace_models/ (계면별 3) · test_sets/ (계면별 xyz)"
+   }
+  }
+ ]
+}
