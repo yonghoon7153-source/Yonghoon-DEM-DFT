@@ -870,6 +870,12 @@ DYNAMIC_SYNTHETIC = {
                "않는다(webapp/data.py save_note_image). 실물 인자가 원리적으로 없다.",
         "test": "test_note_image_route_is_exercised_synthetically",
     },
+    # 2026-11-24 — 공유 보고서 그림 경로. 인자가 둘 (슬러그 · 그림 이름) 이라 DYNAMIC_FIXTURES 의 한 값 치환으로는 못 민다.
+    "/reports/<slug>/<path:name>": {
+        "why": "공유 보고서 (docs/collab · CEI 폴더) 가 상대 경로로 부르는 그림. 인자가 둘이라 fixture 한 값 치환이 "
+               "'/reports/v/v' 가 된다 — 실물 그림으로 직접 GET 하는 시험으로 민다 (깊은 시험은 test_collab_reports.py).",
+        "test": "test_collab_report_asset_route_is_exercised",
+    },
 }
 
 #: 기본 요청에서 **일부러 403** 인 라우트 — fail-closed 가 목적이라 200 이면 오히려 버그다.
@@ -934,6 +940,20 @@ def test_dynamic_routes_actually_render():
                 bad.append(f"{u} → {type(ex).__name__}: {ex}")
     assert checked >= 10, f"밟은 동적 라우트가 너무 적다 ({checked}) — fixture 가 비었나"
     assert not bad, "동적 라우트가 렌더 안 된다: " + " · ".join(bad)
+
+
+def test_collab_report_asset_route_is_exercised():
+    """양성+⛔음성: `/reports/<slug>/<path:name>` — 실물 그림은 200 · image/png, HTML 과 표에 없는 슬러그는 404.
+
+    깊은 시험 (CEI 그림 9 장 · 폴더 밖 경로 · 허용 밖 확장자) 은 test_collab_reports.py 에 있다. 여기서는 동적 라우트 점검표의
+    '이 모듈에서 그 라우트를 실제로 GET 하는 시험' 몫만 한다.
+    """
+    c = A.app.test_client()
+    g = c.get("/reports/wad-dem/figs/wad_lpscl_ag_terminations_3d_2026_11_24.png")
+    assert g.status_code == 200 and g.mimetype == "image/png", (g.status_code, g.mimetype)
+    assert c.get("/reports/wad-dem/wad_dem_interface_adhesion_report_2026_11_24.html").status_code == 404, \
+        "⛔ HTML 을 그림 경로로 냈다 — 결속 검사를 피해 간다"
+    assert c.get("/reports/no-such-slug/figs/wad_lpscl_ag_terminations_3d_2026_11_24.png").status_code == 404
 
 
 def test_note_image_route_is_exercised_synthetically():
@@ -4250,6 +4270,28 @@ def test_pi_alias_does_not_match_inside_a_korean_word():
     if f.exists() and "이종원자가" in f.read_text(encoding="utf-8", errors="ignore"):
         assert "jwlee" not in D.paper_pis("li2026_na_sulfide_halide_interface_review"), \
             "⛔ 실물 digest 에서 'jwlee' 오탐이 났다"
+
+
+def test_sakamoto_papers_are_tagged_and_citations_are_not():
+    """사용자 2026-11-24 — 사카모토 박사 (Jeff Sakamoto) 논문은 litdb 화면에 표시된다.
+
+    양성: 저자 줄에 Jeff Sakamoto 가 있는 digest (jeong2024 · 공저) 에 'sakamoto' 가 붙는다.
+    ⛔음성: ① 참고문헌으로만 'J. Sakamoto' 를 인용한 digest 에는 안 붙는다
+            ② 성만 같은 다른 Sakamoto (일본 공저자) 는 안 잡힌다 — 별칭에 성만 넣지 않았다.
+    ⛔ 이 시험이 못 하는 것: 저자 줄을 'J. Sakamoto' 로만 적은 digest 는 놓친다 (동명이인 때문에 일부러).
+    """
+    assert "sakamoto" in D.PI_BY_KEY, "PI_REGISTRY 에 사카모토 박사 항목이 없다"
+    assert "sakamoto" in D.paper_pis("jeong2024_operando_densification_chemomechanics_se_size_composite_cathode"), \
+        "⛔ Jeff Sakamoto 공저 digest (jeong2024) 에 사카모토 표시가 안 붙었다"
+    for slug in ("sharma2023_nmc_single_crystal_anisotropic_nanoindentation",
+                 "dang2019_nmc111_secondary_particle_flat_punch_fracture_strength",
+                 "yano2023_eepa_bimodal_size_plasticity_compression_dem"):
+        assert "sakamoto" not in D.paper_pis(slug), f"⛔ 참고문헌 인용만 있는 {slug} 에 사카모토 표시가 붙었다"
+    aliases = D.PI_BY_KEY["sakamoto"]["alias"]
+    assert not any(D._alias_hit("> **저자**: Kenji Sakamoto · Taro Yamada", a) for a in aliases), \
+        "⛔ 성만 같은 다른 Sakamoto 가 사카모토 박사로 잡혔다"
+    assert any(D._alias_hit("> **저자**: Min-Gi Jeong · Jeff Sakamoto · Kelsey B. Hatzell", a) for a in aliases), \
+        "양성 대조 실패: Jeff Sakamoto 를 놓친다"
 
 
 #: 그림 크로핑을 **못 만드는** digest — 원본 PDF 가 `litdb/inbox/` 에 없다.

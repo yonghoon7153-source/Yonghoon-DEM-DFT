@@ -56,6 +56,7 @@ You are the **litdb-curator** for the Hanyang argyrodite DFT project. Your job: 
 4. **Compare vs our baseline** (`litdb/our_dft_baseline.md`): fill §7 with same/different/why. Be critical — flag method-dependence (functional, ion-relax, disorder, k-mesh) before claiming a real difference. Never invent numbers; if a value isn't in the paper, write "n/a".
 5. **Update**:
    - `INDEX.md`: set the paper's status → ✅ (regenerate is fine, or edit the row).
+   - 저자에 **Jeff Sakamoto** 가 있으면 (교신 · 공저 무관) INDEX 행 둘째 칸 맨 앞에 `🏷 **Jeff Sakamoto 공저** · ` 를 단다 (사용자 2026-11-24). 웹앱 배지는 digest 머리말 저자 줄에서 자동으로 붙는다 (`webapp/data.py` `PI_REGISTRY`) — 저자 줄에 이름을 **Jeff Sakamoto** 로 적는다 ('J. Sakamoto' 는 안 잡힌다).
    - `comparison_vs_ours.md`: add any new lit-vs-ours point under the right axis (A ionic / B oxidation 4-axis / C mechanical / D electronic).
    - `properties/<prop>.md` if it exists.
    - **★ 🎤 talk 역링크 (2026-08-26 신설 — 빠뜨리기 쉬운 단계다).** 이 논문이 `litdb/talks/*.md` 의

@@ -3603,6 +3603,11 @@ PI_REGISTRY = [
      "our": False, "color": "#6b7280", "alias": ["Shyue Ping Ong", "S. P. Ong"]},
     {"key": "zeier",  "ko": "—",     "en": "Wolfgang Zeier", "aff": "Münster",
      "our": False, "color": "#6b7280", "alias": ["Zeier"]},
+    # 2026-11-24 사용자 요청 — 사카모토 박사 논문은 litdb 에서 보이게. ⚠ 성만 쓰지 않는다
+    #   (일본 공저자 Sakamoto 가 흔하다) · 참고문헌의 'J. Sakamoto' 는 머리말 창 밖이라 안 걸린다.
+    {"key": "sakamoto", "ko": "—",     "en": "Jeff Sakamoto",
+     "aff": "Univ. of Michigan → UC Santa Barbara · Li 금속 | 고체전해질 계면", "our": False, "color": "#4338ca",
+     "alias": ["Jeff Sakamoto", "Jeffrey Sakamoto", "Jeff S. Sakamoto", "Jeffrey S. Sakamoto", "J. S. Sakamoto"]},
 ]
 PI_BY_KEY = {p["key"]: p for p in PI_REGISTRY}
 
