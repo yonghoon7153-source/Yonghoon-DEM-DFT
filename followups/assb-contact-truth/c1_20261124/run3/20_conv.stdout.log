@@ -1,0 +1,9 @@
+conv variant std: 20.3s
+conv variant fine: 88.3s
+conv variant v80_t1e-9: 86.1s
+conv variant v40_t1e-10: 23.4s
+conv (판정 짝 표준 ↔ 80·1e-10): worst τ̂ change 1.148e-02 (limit 0.01) · worst z change 2.540e-03 (limit 0.05)
+conv 진단 v80_t1e-9 (판정 아님): τ̂ 1.148e-02 · z 2.541e-03
+conv 진단 v40_t1e-10 (판정 아님): τ̂ 8.585e-07 · z 1.977e-07
+conv Li max 5.54e-11
+STOP rule 5 (격자 수렴)

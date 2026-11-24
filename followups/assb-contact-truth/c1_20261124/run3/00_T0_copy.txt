@@ -1,0 +1,13 @@
+T0_3 2026-11-24T06:41:44Z
+disk_free_T0_3 26188206080
+repo_head_T0_3 17b7e56cfc96f75c78c1b91486dbb99f28fc4f40
+repo_dirty_T0_3 (이 흐름과 무관 · 건드리지 않음):
+   M .claude/agents/paper-curator.md
+   M bms-balancing/docs/ASSB_WANTED_PAPERS.md
+   M webapp/templates/bms.html
+   M webapp/templates/microshort.html
+   M webapp/templates/microshort_summary.html
+   M wiki/raw/figures/2026-09-02-siwon-kim-degradation-mode-ml-seminar/figures.json
+   M wiki/raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md
+copy_base bf61565ba79f3aa66b16fd097da3105752c3248f (같은 사본 · degradation-degeneracy e9b1d29..17b7e56 0 줄)
+scratch_out3 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/out3

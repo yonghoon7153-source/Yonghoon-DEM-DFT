@@ -1,0 +1,23 @@
+S6 x_top=0.261417 x_low=0.999795 x_mid=0.625848 x_end=0.990279 SOC x=[0.407189, 0.625848, 0.844507] Q1C=6.4478Ah tau_ct0=19.069ms geo_ok=True mono=True
+S6 PASS
+S1 term=event: Minimum voltage [V] t_end=35536s Q=6.3647Ah tau_Li=2.569e-08s (≤1e-06) ce_dev=1.269e-03
+S1 PASS
+S2 faradaic_suppressed_k0x1e-4: C_eff=0.296818F hand=0.296732F rel=+0.0290%
+S2 as_is_t0plus: C_eff=0.263549F hand=0.296732F rel=-11.1829%
+S2 PASS
+S3 G05|Wa10.0: build 0.14s bundle(12 pulses) 9.10s
+S3 G2|Wa0.1: build 0.14s bundle(12 pulses) 7.53s
+S3 projection core ≤ 24.4 min (upper) · all_final_time=True
+S3 PASS
+S4 ce max rel dev: S1(C/10) 1.269e-03 · S3 bundles 3.789e-04 (spatial 5.583e-04) · limit 1e-9
+S4 diag c_dl_x1: {'ce_max_rel_dev': 0.00010458276597802296, 'ce_pos_mean_rel_end': 4.769982453467492e-08, 'pred_pos_rel_end_est': 1.7551686282274206e-06}
+S4 diag c_dl_x0.001: {'ce_max_rel_dev': 2.6642333113224836e-05, 'ce_pos_mean_rel_end': -1.3747223887028426e-06, 'pred_pos_rel_end_est': 1.7548219294621013e-09}
+S4 diag decoupling max|ΔV|: {'D_e_x10': 3.174138729633569e-09, 'ce0_x2': 3.1687230617194473e-09}
+S4 FAIL
+S4′ max|ΔV| = 3.398e-08 V (limit 1e-06) · by protocol {'C/10': 2.690628164714326e-08, 'pulse': 3.3984772329631596e-08} · worst pulse SOC0.8 taf- G05 Wa0.1 D_e_x10 t=10.0498 · n=100
+S4′ PASS
+S5′ G05: model/k0·g_reg soc 2.22e-16 dense 5.88e-15 · x_mid vs target 0.00e+00 · |g_reg/g−1| soc {'0.8': 4.2905258407222036e-06, '0.5': 4.559331489462082e-06, '0.2': 1.4497539369551227e-05} window max 2.68e-03 @x=0.990279 · x_top→x0 max 5.518e-01
+S5′ G2: model/k0·g_reg soc 1.11e-15 dense 2.25e-14 · x_mid vs target 0.00e+00 · |g_reg/g−1| soc {'0.8': 8.581106907490366e-06, '0.5': 9.118725341483724e-06, '0.2': 2.8995709287160665e-05} window max 5.38e-03 @x=0.990279 · x_top→x0 max 3.978e+00
+S5′ Li (dl 포함) max 4.96e-11
+S5′ PASS
+SPIKES ALL PASS

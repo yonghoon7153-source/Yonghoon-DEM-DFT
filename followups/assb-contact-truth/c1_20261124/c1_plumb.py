@@ -77,6 +77,9 @@ def main():
     ok.append(call("analyze_c1b", an.analyze_c1b, A))
     ok.append(call("analyze_ad", lambda x: an.analyze_c1a(x, arms=("AD", "K"), tag="ad_c1a", do_mc=False), A))
     ok.append(call("analyze_ad_c1b", lambda x: an.analyze_c1b(x, tag="ad_c1b", mode="on"), A))
+    import json as _j
+    I1 = _j.loads((Path(a.spk) / "s6_registered.json").read_text())["I_1C_A"]
+    ok.append(call("ad_dc_z", lambda: cg.dc_z(out, I1, arm_a="AD", tag_a="ad_dc")))
     print("PLUMB ALL OK" if all(ok) else "PLUMB FAILURES")
     return 0 if all(ok) else 1
 

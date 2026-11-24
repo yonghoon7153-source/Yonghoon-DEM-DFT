@@ -375,3 +375,66 @@ def test_s4p_feedback_pulse_below_threshold_and_negative_control():
     assert ok["max_abs_dv"] <= 1e-6, ok
     bad = tr.feedback_pulse(shape="G05", Wa=0.1, x_mid=0.625854, x0=0.625854, I_A=2.0, kappa_ce_exp=1.0)
     assert bad["max_abs_dv"] > 1e-6, bad
+
+
+# --------------------------------------------------------------------------------------------
+# 3 차 (§8-7 ② · 사전 등록) — DC 영 채널 보정: Faradaic 전하 축 Q_F(t) = I·t − Q_dl(t)
+# --------------------------------------------------------------------------------------------
+def test_dc_qf_faradaic_charge_definition():
+    """Q_dl = area·a·c_dl·L·(Δφ̄(0) − Δφ̄(t)) (이중층이 내놓은 전하 · 방전에서 양) · Q_F = I·t − Q_dl."""
+    t = np.array([0.0, 10.0, 20.0, 30.0])
+    dphi = np.array([4.2, 4.1, 4.0, 3.9])
+    qf = ob.faradaic_charge(t, 2.0, dphi, a=1000.0, c_dl=0.1, L=1e-4, area=0.5)
+    assert np.allclose(qf, 2.0 * t - 5e-3 * np.array([0.0, 0.1, 0.2, 0.3]), rtol=0, atol=1e-15)
+
+
+def test_dc_qf_common_grid_and_monotonic_guard():
+    q1 = np.linspace(0, 100.0, 1001)
+    q2 = np.linspace(0, 87.0, 871)
+    g = ob.qf_common_grid([q1, q2], dq=10.0)
+    assert np.allclose(g, 10.0 * np.arange(1, 8))          # ⌊87/10⌋ − 1 = 7 (한 칸 띄움 · 외삽 없음)
+    v = ob.resample_on_qf(q1, np.sin(q1 / 30), g)
+    assert np.allclose(v, np.interp(g, q1, np.sin(q1 / 30)), rtol=0, atol=0)
+    bad = q1.copy()
+    bad[500] = bad[499]
+    with pytest.raises(ValueError):
+        ob.resample_on_qf(bad, np.sin(q1 / 30), g)
+
+
+def _dc_family(c_dl_charge, extra=None):
+    """합성 DC 묶음: 같은 V(Q_F) 꼴 (동역학 몫 0.01/f 상수) · 팔마다 이중층 전하만 다름 (A: c0·f · K: c0)."""
+    I, T = 1.0, 3000.0
+    t = np.round(np.arange(0, int(T * 10) + 1) * 0.1, 6)     # 0.1 s — 보간 오차가 문턱 (1e-3) 의 1/10 아래가 되게 (RED 뒤 · 구현 전에 정함)
+    out_t, out_q = {}, {}
+    for arm in ("A", "K"):
+        for lv, f in ((0, 1.0), (4, 0.5), (8, 0.25)):
+            c = c_dl_charge * (f if arm == "A" else 1.0)
+            qf = I * t - c * (1 - np.exp(-t / 50.0))
+            V = 4.2 - 1.0 * qf / T - 0.5 * (qf / T) ** 12 - (0.01 / f) * (1 + qf / T)
+            if extra is not None and (arm, lv) == ("K", 8):
+                # 실제 차 = 국소 봉우리 — ΔR0 (상수) · f′ 프로파일이 흡수할 수 없는 꼴 (GREEN 1 회째: 기울기는 상수 동역학 몫과 겹쳐 흡수됐다)
+                V = V + extra * np.exp(-(((qf / T) - 0.5) / 0.05) ** 2)
+            key = ("fresh", 0) if lv == 0 else (arm, lv)
+            out_t[key] = (t, V)
+            out_q[key] = (qf, V)
+    return out_t, out_q, I
+
+
+def test_dc_qf_axis_removes_pure_dl_shift_but_keeps_real_difference():
+    """이중층 전하만 다른 두 팔: 시간 축 z ≥ 2 (가짜 차) · Q_F 축 z ≈ 0. 음성 대조: K(0.25) 에 실제 차 (기울기 2 mV) → Q_F 축 z ≥ 2."""
+    gt, gq, I = _dc_family(c_dl_charge=3.0)
+    zt = ob.dc_z_time(gt, I=I, dt_grid=10.0, sigma=1e-3)
+    zq = ob.dc_z_qf(gq, I=I, dt_equiv=10.0, sigma=1e-3)
+    assert max(r["z"] for r in zt) >= 2.0
+    assert max(r["z"] for r in zq) <= 1e-3
+    gt2, gq2, _ = _dc_family(c_dl_charge=3.0, extra=2e-3)
+    zq2 = ob.dc_z_qf(gq2, I=I, dt_equiv=10.0, sigma=1e-3)
+    for dr in ("none", "free"):
+        assert max(r["z"] for r in zq2 if r["dR0"] == dr) >= 2.0, dr
+
+
+def test_dc_qf_identity_with_model_lithium():
+    """모형 수준: Q_F (X-averaged Δφ 로) = F·ΔN_Li (Average positive particle concentration 로) — 상대 ≤ 1e-6 (같은 실행)."""
+    r = tr.qf_identity_check(shape="G05", Wa=10.0, x_mid=0.625854, x0=0.625854, I_A=2.0, t_end=600.0)
+    assert r["rel"] <= 1e-6, r
+    assert r["Qdl_end_C"] > 0.0                           # 방전: 이중층이 전하를 내놓는다

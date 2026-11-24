@@ -1,0 +1,13 @@
+2026-11-24T06:47:24Z
+b77cc4cd44d8998b503786c405dec5fe6302df39664346d6022d920016569310  HEAD(17b7e56):followups/assb-contact-truth/DESIGN_v1.md (§0–§7 + 8-1–8-6)
+4175d36925aaddf297115f169c54b431159d0e3e0f2d0657dddc45c41b4d0aa0  followups/assb-contact-truth/DESIGN_v1.md (+ 8-7 사전 등록)
+92cf44ca6a03df8118c7dd369710af3675cef11048c5fc454a805a432398d583  followups/assb-contact-truth/c1_20261124/test_c1.py
+bb05638165ddd1a241be91c5b73ed660d07e97ce4581da38979eddf373fc493d  followups/assb-contact-truth/c1_20261124/c1_truth.py
+4020ae899976181b031de66889170bf9fdc7d8da59cd9755d3578a05fdd61bf9  followups/assb-contact-truth/c1_20261124/c1_observe.py
+c24da27e99c41c40a34c454255d0c4647eff74b259e5e0e2bed68d887cfbcf85  followups/assb-contact-truth/c1_20261124/c1_spikes.py
+f9b3b6a37f3046326ea0c867d4cdcdaf4f41145c2a29c9eb9414c84604e492a1  followups/assb-contact-truth/c1_20261124/c1_grid.py
+c7fa8f484b20d8bee5fced737a8b28345ad81e9940fb8ee084c877c599f2343a  followups/assb-contact-truth/c1_20261124/c1_analyze.py
+9b3b54962f502e657aa26b8b61b876e0934c008283cd2966b321d5ef96667291  followups/assb-contact-truth/c1_20261124/c1_plumb.py
+41762e2b21792139e1b9235a8fc4799e529dd7a7cf9a36e1d02b6a4f946c2ecc  followups/assb-contact-truth/c1_20261124/c1_run2.sh
+2b61ca24027f3d3761bff90ab682419e014bb3856192365b3915eb0b7c524777  followups/assb-contact-truth/c1_20261124/run_step.sh
+2c88936a7ac494d60f8a3abc758f9db448814d5da60e308d0996299796e21a68  pip_freeze.txt (같은 venv)

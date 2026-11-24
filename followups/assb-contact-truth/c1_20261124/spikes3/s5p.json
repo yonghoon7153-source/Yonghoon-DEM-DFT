@@ -1,0 +1,41 @@
+{
+ "spike": "S5p",
+ "shapes": {
+  "G05": {
+   "k0": 0.27842811189228395,
+   "rel_model_vs_k0greg_soc": 2.220446049250313e-16,
+   "rel_model_vs_k0greg_dense": 5.88418203051333e-15,
+   "rel_j0_x_mid_vs_target": 0.0,
+   "reg_effect_soc": {
+    "0.8": 4.2905258407222036e-06,
+    "0.5": 4.559331489462082e-06,
+    "0.2": 1.4497539369551227e-05
+   },
+   "reg_effect_window_max": 0.002679721870986307,
+   "reg_effect_window_x_at_max": 0.9902790233737708,
+   "reg_effect_x_top_to_x0_max": 0.5518052730817563,
+   "soc_points_flag_reg_gt_1e-3": []
+  },
+  "G2": {
+   "k0": 2.457150314569273,
+   "rel_model_vs_k0greg_soc": 1.1102230246251565e-15,
+   "rel_model_vs_k0greg_dense": 2.2537527399890678e-14,
+   "rel_j0_x_mid_vs_target": 0.0,
+   "reg_effect_soc": {
+    "0.8": 8.581106907490366e-06,
+    "0.5": 9.118725341483724e-06,
+    "0.2": 2.8995709287160665e-05
+   },
+   "reg_effect_window_max": 0.005381063699907873,
+   "reg_effect_window_x_at_max": 0.9902790233737708,
+   "reg_effect_x_top_to_x0_max": 3.978133220343951,
+   "soc_points_flag_reg_gt_1e-3": []
+  }
+ },
+ "li_rel_with_dl_max": 4.9637085879261784e-11,
+ "physical_area_impl": "없음 (26.8 · spherical a = 3ε/R) → 미확인 · 대수로만 (조건부 8 실행 안 함)",
+ "pass_impl": true,
+ "pass_li": true,
+ "pass": true,
+ "elapsed_s": 5.278720140457153
+}

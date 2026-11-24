@@ -306,7 +306,8 @@ def dc_features(a):
                      "mean_overpotential_V": r.get("mean_overpotential_V"), "dqdv_peak_V": r.get("dqdv_peak_V"),
                      "li_rel": r.get("li_rel")})
     wcsv(csvd / "dc_features.csv", rows)
-    wcsv(csvd / "dc_z.csv", z["z_rows"])
+    wcsv(csvd / "dc_z_qf_decision.csv", z["z_rows_qf_decision"])
+    wcsv(csvd / "dc_z_time_diagnostic.csv", z["z_rows_time_diagnostic"])
     return rows
 
 
@@ -401,6 +402,11 @@ def main(argv=None):
     if a.step == "ad":
         rc = analyze_c1a(a, arms=("AD", "K"), tag="ad_c1a", do_mc=False)
         analyze_c1b(a, tag="ad_c1b", mode="on")
+        import c1_grid as cg
+        rq, rt, pr = cg.dc_z(Path(a.out), reg(a.spk)["I_1C_A"], arm_a="AD", tag_a="ad_dc")
+        wcsv(Path(a.csv) / "ad_dc_z_qf.csv", rq)
+        wcsv(Path(a.csv) / "ad_dc_z_time.csv", rt)
+        jdump({"problems": pr, "z_max_qf": max((r["z"] for r in rq), default=None)}, Path(a.csv) / "ad_dc_z_meta.json")
         return rc
     return 2
 

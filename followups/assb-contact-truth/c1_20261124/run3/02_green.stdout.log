@@ -1,0 +1,21 @@
+..............................F.                                         [100%]
+=================================== FAILURES ===================================
+_______ test_dc_qf_axis_removes_pure_dl_shift_but_keeps_real_difference ________
+
+    def test_dc_qf_axis_removes_pure_dl_shift_but_keeps_real_difference():
+        """이중층 전하만 다른 두 팔: 시간 축 z ≥ 2 (가짜 차) · Q_F 축 z ≈ 0. 음성 대조: K(0.25) 에 실제 차 (기울기 2 mV) → Q_F 축 z ≥ 2."""
+        gt, gq, I = _dc_family(c_dl_charge=3.0)
+        zt = ob.dc_z_time(gt, I=I, dt_grid=10.0, sigma=1e-3)
+        zq = ob.dc_z_qf(gq, I=I, dt_equiv=10.0, sigma=1e-3)
+        assert max(r["z"] for r in zt) >= 2.0
+        assert max(r["z"] for r in zq) <= 1e-3
+        gt2, gq2, _ = _dc_family(c_dl_charge=3.0, extra=2e-3)
+        zq2 = ob.dc_z_qf(gq2, I=I, dt_equiv=10.0, sigma=1e-3)
+>       assert max(r["z"] for r in zq2 if r["dR0"] == "free") >= 2.0
+E       assert 2.2392480344611483e-05 >= 2.0
+E        +  where 2.2392480344611483e-05 = max(<generator object test_dc_qf_axis_removes_pure_dl_shift_but_keeps_real_difference.<locals>.<genexpr> at 0x7fb87c1d6f60>)
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:431: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_dc_qf_axis_removes_pure_dl_shift_but_keeps_real_difference
+1 failed, 31 passed in 11.12s

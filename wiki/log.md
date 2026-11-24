@@ -4029,3 +4029,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   그림을 다시 뽑으면 (`extract_figures.py --clean`) 캡션에 이메일이 되살아나므로 다시 가린다.
 - ASSB: (아)(자) 보류 유지 → C1 결과 뒤 판단 · (고) 는 DEM 세션을 열 때 (누) 전달과 함께 사용자가 넘김 · (메) 조건부 그대로 · (새) 선택 그대로 · Sharafi 2016 요청 안 함 ·
   5호 개념 분할 안 함 — 원장 `bms-balancing/docs/ASSB_WANTED_PAPERS.md` §3-b (아)(자)(고) 꼬리 · §4 2026-11-24 줄. [[assb-contact-loss-vs-lampe]] 본문 변화 0.
+
+## [2026-11-24] update | ASSB 합성 truth C1 3 차 — 새 표준으로 스파이크 · 배관 통과 · 격자 수렴 (§5-8 규칙 5) 에서 다시 중단
+- 승인: 위 decision 항목 (사용자 "다 권고대로 해") — 사전 등록은 `followups/assb-contact-truth/DESIGN_v1.md` §8-7 (새 계산 전에 적음: 새 표준 해상도 · 규칙 5 판정 짝 · 귀속 진단 ·
+  DC 영 채널의 Faradaic 전하 축 보정 · k₀ 의 g_reg 정규화 확인 · C1b '정칙화 영향' 보고 요구) · 결과는 같은 문서 §8-8.
+- 무엇: `followups/assb-contact-truth/c1_20261124/` 3 차 (README 3 차 절 · DC 보정 시험 · Q_F 축 함수 · 새 표준 기본값 · 판정 짝 · 귀속 진단 · `run3/` · `spikes3/` ·
+  `run3_tables/conv.json` · `LARGE_OUTPUTS_SHA256.txt` 3 차 절) · `followups/assb-contact-truth/STATUS.md` (C1 행 · 사용자가 정할 것).
+- 결과 (수치는 옮기지 않는다 — 진단 전용 · 인용 금지 · 정본 아님): 새 시험 RED → GREEN (첫 GREEN 에서 음성 대조의 합성 설정 결함을 찾아 시험만 고침) · 새 표준으로 스파이크 전부 통과 ·
+  배관 점검 통과 · 격자 수렴의 판정 짝이 문턱을 넘어 멈췄다 (Tafel 진폭 펄스에서만 · 귀속 진단은 격자 몫). C1a 검출 지도 · DC (보정) · C1b 판정은 없다 — DC 보정은 쓰이지 않은 사전 등록으로 남는다.
+- 하지 않은 것: RUN_SCOPE 변경 0 · 규칙 변경 0 (이번 차수) · C1a · DC · C1b · AD 실행 0 · 위키 페이지 수정 0 · 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
+- 사용자가 정할 것: (가) 표준 해상도 한 번 더 (규칙 그대로) · (나) 수렴 판정 바꾸기 (사후 규칙 변경) · (다) C1 닫기 — `followups/assb-contact-truth/STATUS.md` · 근거 [[assb-synthetic-truth-contact-loss-requirements]].
+- `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).

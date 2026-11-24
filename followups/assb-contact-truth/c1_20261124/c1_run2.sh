@@ -3,7 +3,7 @@
 # 사용: c1_run2.sh   (환경: C1 · C1_DIR · C1_RUN · C1_COPY · C1_REPO · PY · C1_T0)
 set -u
 : "${C1:?}" "${C1_DIR:?}" "${C1_RUN:?}" "${C1_COPY:?}" "${C1_REPO:?}" "${PY:?}" "${C1_T0:?}"
-OUT=$C1/out2/grid; SPK=$C1/out2/spikes; CSV=$C1_DIR/run2_tables
+OUTROOT=${C1_OUTROOT:-$C1/out2}; OUT=$OUTROOT/grid; SPK=$OUTROOT/spikes; CSV=${C1_CSV:-$C1_DIR/run2_tables}
 mkdir -p "$OUT" "$CSV"
 G="$PY -I $C1_DIR/c1_grid.py"; A="$PY -I $C1_DIR/c1_analyze.py"
 log() { echo "$(date -u +%H:%M:%SZ) $*" | tee -a "$C1_RUN/steps.txt"; }

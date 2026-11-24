@@ -36,8 +36,11 @@ LI_LIMIT = 1e-6                                     # §5-8 규칙 4
 FAIL_FRAC = 0.05                                    # §5-8 규칙 6
 DC_Z_LIMIT = 2.0                                    # §5-8 규칙 3(a)
 CONV_TAU, CONV_Z = 0.01, 0.05                       # §5-8 규칙 5
-VAR_FINE = {"x_s": 40, "x_p": 40, "r_p": 40}         # var_pts × 2 (기본 20)
-TOL_FINE = 1e-9                                     # 허용오차 ÷ 10
+VAR_FINE = {"x_s": 80, "x_p": 80, "r_p": 80}         # 3 차 판정 짝의 정밀판 (표준 40 의 × 2 · §8-7 ①)
+TOL_FINE = 1e-10                                    # 표준 1e-9 ÷ 10
+CONV_DIAG = (("v80_t1e-9", {"var_pts": {"x_s": 80, "x_p": 80, "r_p": 80}, "rtol": 1e-9, "atol": 1e-9}),
+             ("v40_t1e-10", {"var_pts": {"x_s": 40, "x_p": 40, "r_p": 40}, "rtol": 1e-10, "atol": 1e-10}))   # 귀속 진단 (판정에 안 씀)
+DC_DT_OUT = {"C/20": 1.0, "C/3": 0.1, "1C": 0.05}  # §8-7 ② B2 출력 간격
 
 
 def jdump(obj, path):
@@ -143,6 +146,26 @@ def f1_noise_free(V, n_pulse, x, I, dt_obs, w_fit):
     return ob.fit_f1(tp[idx], V[:n_pulse][idx], I=I, V0=tr.ocp(x), dt=dt_obs)
 
 
+def _conv_compare(Va, Vb, R, shape, n_pulse, runs):
+    rows, worst_tau, worst_z = [], 0.0, 0.0
+    for j, (s, amp, sgn) in enumerate(PULSES):
+        x = R["soc_x"][str(s)]
+        I = R["pulse_I_A"][amp + sgn]
+        w = R["W_fit_s"][f"{shape}|SOC{s}"]
+        for name in runs:
+            a = f1_noise_free(Va[name][j], n_pulse, x, I, 1e-4, w)["tau"]
+            b = f1_noise_free(Vb[name][j], n_pulse, x, I, 1e-4, w)["tau"]
+            ch = abs(a / b - 1) if (np.isfinite(a) and np.isfinite(b)) else (0.0 if (np.isnan(a) and np.isnan(b)) else np.inf)
+            worst_tau = max(worst_tau, ch)
+            rows.append({"pulse": f"SOC{s} {amp}{sgn}", "run": name, "tau_std": a, "tau_other": b, "rel_change": ch})
+        zs = np.linalg.norm(Va["A_k8"][j] - Va["K_k8"][j]) / 1e-3
+        zf = np.linalg.norm(Vb["A_k8"][j] - Vb["K_k8"][j]) / 1e-3
+        chz = abs(zs / zf - 1)
+        worst_z = max(worst_z, chz)
+        rows.append({"pulse": f"SOC{s} {amp}{sgn}", "run": "z_A_vs_K_k8_direct", "z_std": zs, "z_other": zf, "rel_change": chz})
+    return rows, worst_tau, worst_z
+
+
 def conv(args):
     R = reg(Path(args.spk))
     out = Path(args.out) / "conv"
@@ -150,35 +173,33 @@ def conv(args):
     shape, Wa = "G05", 0.1
     base = tr.base_inputs(shape=shape, Wa=Wa, x_mid=R["x_mid"])
     runs = {"fresh": base, "A_k8": tr.knob_inputs("A", 0.25, base=base), "K_k8": tr.knob_inputs("K", 0.25, base=base)}
-    Vstd, Vfine, li = {}, {}, {}
-    for lab, kw in (("std", {}), ("fine", {"var_pts": VAR_FINE, "rtol": TOL_FINE, "atol": TOL_FINE})):
+    V, li, el = {}, {}, {}
+    variants = [("std", {}), ("fine", {"var_pts": VAR_FINE, "rtol": TOL_FINE, "atol": TOL_FINE})] + list(CONV_DIAG)
+    n_pulse = None
+    for lab, kw in variants:
+        t0 = time.time()
         model, solver, sim = tr.build_model(shape, **kw)
+        V[lab] = {}
         for name, d in runs.items():
-            V, l_, n_pulse = run_bundle(model, solver, sim, d, R)
-            (Vstd if lab == "std" else Vfine)[name] = V
+            Vb, l_, n_pulse = run_bundle(model, solver, sim, d, R)
+            V[lab][name] = Vb
             li[f"{lab}|{name}"] = float(l_.max())
-    rows = []
-    worst_tau, worst_z = 0.0, 0.0
-    for j, (s, amp, sgn) in enumerate(PULSES):
-        x = R["soc_x"][str(s)]
-        I = R["pulse_I_A"][amp + sgn]
-        w = R["W_fit_s"][f"{shape}|SOC{s}"]
-        for name in runs:
-            a = f1_noise_free(Vstd[name][j], n_pulse, x, I, 1e-4, w)["tau"]
-            b = f1_noise_free(Vfine[name][j], n_pulse, x, I, 1e-4, w)["tau"]
-            ch = abs(a / b - 1) if (np.isfinite(a) and np.isfinite(b)) else (0.0 if (np.isnan(a) and np.isnan(b)) else np.inf)
-            worst_tau = max(worst_tau, ch)
-            rows.append({"pulse": f"SOC{s} {amp}{sgn}", "run": name, "tau_std": a, "tau_fine": b, "rel_change": ch})
-        zs = np.linalg.norm(Vstd["A_k8"][j] - Vstd["K_k8"][j]) / 1e-3
-        zf = np.linalg.norm(Vfine["A_k8"][j] - Vfine["K_k8"][j]) / 1e-3
-        chz = abs(zs / zf - 1)
-        worst_z = max(worst_z, chz)
-        rows.append({"pulse": f"SOC{s} {amp}{sgn}", "run": "z_A_vs_K_k8_direct", "z_std": zs, "z_fine": zf, "rel_change": chz})
+        el[lab] = time.time() - t0
+        print(f"conv variant {lab}: {el[lab]:.1f}s", flush=True)
+    rows, worst_tau, worst_z = _conv_compare(V["std"], V["fine"], R, shape, n_pulse, runs)
+    diag = {}
+    for lab, _ in CONV_DIAG:
+        r2, wt, wz = _conv_compare(V["std"], V[lab], R, shape, n_pulse, runs)
+        diag[lab] = {"worst_tau_rel_change": wt, "worst_z_rel_change": wz, "rows": r2}
     stop = worst_tau > CONV_TAU or worst_z > CONV_Z
-    res = {"rows": rows, "worst_tau_rel_change": worst_tau, "worst_z_rel_change": worst_z, "li": li,
-           "limits": {"tau": CONV_TAU, "z": CONV_Z}, "stop_rule5": bool(stop)}
+    res = {"decision_pair": "std (40 · 1e-9) vs fine (80 · 1e-10)", "rows": rows, "worst_tau_rel_change": worst_tau,
+           "worst_z_rel_change": worst_z, "li": li, "elapsed_s": el, "limits": {"tau": CONV_TAU, "z": CONV_Z},
+           "stop_rule5": bool(stop), "diagnostics_not_for_decision": diag}
     jdump(res, out / "conv.json")
-    print(f"conv: worst τ̂ change {worst_tau:.3e} (limit {CONV_TAU}) · worst z change {worst_z:.3e} (limit {CONV_Z}) · Li {li}")
+    print(f"conv (판정 짝 표준 ↔ 80·1e-10): worst τ̂ change {worst_tau:.3e} (limit {CONV_TAU}) · worst z change {worst_z:.3e} (limit {CONV_Z})")
+    for lab, dd in diag.items():
+        print(f"conv 진단 {lab} (판정 아님): τ̂ {dd['worst_tau_rel_change']:.3e} · z {dd['worst_z_rel_change']:.3e}")
+    print(f"conv Li max {max(li.values()):.2e}")
     if any(v > LI_LIMIT for v in li.values()):
         print("STOP rule 4")
         return 3
@@ -196,24 +217,23 @@ CC_KEEP = ("Voltage [V]", "R-averaged positive particle concentration [mol.m-3]"
            "Positive electrode surface potential difference [V]")
 
 
-def run_b2(model, solver, sim, d, R, rate):
+def run_b2(model, solver, sim, d, R, rate, rname):
     I = rate * R["I_1C_A"]
     try:
-        r = tr.run_cc(model, solver, sim, d, x_start=R["x_top"], I_A=I, t_max=1.6 * 3600 / rate, dt_out=10.0,
-                      V_lo=tr.V_LOW, V_hi=10.0, keep=CC_KEEP)
+        r = tr.run_cc(model, solver, sim, d, x_start=R["x_top"], I_A=I, t_max=1.6 * 3600 / rate, dt_out=DC_DT_OUT[rname],
+                      V_lo=tr.V_LOW, V_hi=10.0, keep=tr.QF_KEEP)
     except Exception as e:
         msg = repr(e)
         if "non-positive at initial conditions" in msg or "initial conditions" in msg:
-            return {"status": "immediate_cutoff", "t": np.array([]), "V": np.array([]), "Q_Ah": 0.0, "error": msg[:200]}
-        return {"status": "solver_fail", "t": np.array([]), "V": np.array([]), "Q_Ah": np.nan, "error": msg[:300]}
+            return {"status": "immediate_cutoff", "t": np.array([]), "V": np.array([]), "QF": np.array([]), "Q_Ah": 0.0,
+                    "error": msg[:200]}
+        return {"status": "solver_fail", "t": np.array([]), "V": np.array([]), "QF": np.array([]), "Q_Ah": np.nan, "error": msg[:300]}
     t, V = r["t"], r["Voltage [V]"]
-    lb = tr.li_balance({"R-averaged positive particle concentration [mol.m-3]": r["R-averaged positive particle concentration [mol.m-3]"],
-                        "Positive electrode surface potential difference [V]": r["Positive electrode surface potential difference [V]"]},
-                       d, I, float(t[-1]))
+    q = tr.qf_and_li(r, d, I)
     xbar = R["x_top"] + I * t / (tr.q_per_x() * d["eps_am"] / tr.EPS_CAM0)
-    eta = np.array([tr.ocp(min(xx, 1 - 1e-9)) for xx in xbar]) - V
-    return {"status": "ok", "t": t, "V": V, "Q_Ah": I * float(t[-1]) / 3600, "termination": str(r["termination"]),
-            "li_rel": lb["rel_with_dl"], "mean_overpotential_V": float(np.mean(eta))}
+    eta = np.array([tr.ocp(min(xx, 1 - 1e-9)) for xx in xbar[:: max(1, int(10.0 / DC_DT_OUT[rname]))]]) - V[:: max(1, int(10.0 / DC_DT_OUT[rname]))]
+    return {"status": "ok", "t": t, "V": V, "QF": q["qf"], "Q_Ah": I * float(t[-1]) / 3600, "termination": str(r["termination"]),
+            "li_rel": q["rel"], "Qdl_end_C": q["Qdl_end_C"], "mean_overpotential_V": float(np.mean(eta)), "n_out": int(t.size)}
 
 
 def dqdv_peak(t, V, I):
@@ -243,84 +263,87 @@ def dc_runs(args, arms=("A", "K"), tag="dc", include_fresh=True):
             name = f"G05_Wa{Wa:g}_{arm}_k{k}"
             store = {}
             for rname, rate in RATES:
-                r = run_b2(model, solver, sim, d, R, rate)
+                r = run_b2(model, solver, sim, d, R, rate, rname)
                 if r["status"] == "solver_fail":
                     n_fail += 1
                 store[f"t_{rname}"] = r["t"]
                 store[f"V_{rname}"] = r["V"]
+                store[f"QF_{rname}"] = r["QF"]
                 summ.append({"run": name, "Wa": Wa, "arm": arm, "k": k, "rate": rname,
-                             **{kk: vv for kk, vv in r.items() if kk not in ("t", "V")},
+                             **{kk: vv for kk, vv in r.items() if kk not in ("t", "V", "QF")},
                              "dqdv_peak_V": dqdv_peak(r["t"], r["V"], rate * R["I_1C_A"]) if rname == "C/20" else None})
             np.savez_compressed(out / f"{name}.npz", **{k_.replace("/", "_"): v for k_, v in store.items()})
     jdump({"runs": summ, "n_fail": n_fail}, out / "dc_runs.json")
     return summ, n_fail
 
 
-def dc_z(out: Path, arm_a="A", arm_b="K", tag="dc"):
-    """z_DC: §4-2 정합 필터를 V–t 곡선 (10 s) 에 — 상대 팔 DC 격자 {1, 0.5, 0.25} 의 log f 이차 보간 · ΔR0 둘 · 대칭 min · σ 1 mV.
-    공통 표본 = 그 (Wa, 율) 묶음의 곡선 다섯이 모두 가진 시각 (t > 0)."""
-    rows = []
-    logf = np.log(np.array([1.0, F_K[4], F_K[8]]))
+def dc_groups(out: Path, arm_a="A", tag_a="dc"):
+    """(Wa, 율) 묶음의 곡선 다섯 — 신품 · arm_a {0.5, 0.25} · K {0.5, 0.25} (§8-7 ②)."""
+    groups = {}
     for Wa in WAS:
         load = {}
-        for arm, k in (("fresh", 0), (arm_a, 4), (arm_a, 8), (arm_b, 4), (arm_b, 8)):
-            p = out / tag / f"G05_Wa{Wa:g}_{arm}_k{k}.npz"
-            if not p.exists():
-                p = out / "dc" / f"G05_Wa{Wa:g}_{arm}_k{k}.npz"
-            load[(arm, k)] = np.load(p)
+        for key, folder in ((("fresh", 0), "dc"), ((arm_a, 4), tag_a), ((arm_a, 8), tag_a), (("K", 4), "dc"), (("K", 8), "dc")):
+            load[key] = np.load(out / folder / f"G05_Wa{Wa:g}_{key[0]}_k{key[1]}.npz")
         for rname, rate in RATES:
-            key = rname.replace("/", "_")
-            ts = [load[c][f"t_{key}"] for c in load]
-            if any(len(t) < 2 for t in ts):
-                rows.append({"Wa": Wa, "rate": rname, "status": "curve_missing (immediate cutoff)"})
-                continue
-            t_end = min(float(t[-2]) for t in ts)       # 사건 끝점 제외 · 공통 10 s 격자
-            grid = np.round(np.arange(1, int(np.floor(t_end / 10.0)) + 1) * 10.0, 6)
-            if grid.size == 0:
-                rows.append({"Wa": Wa, "rate": rname, "status": "no_common_samples"})
-                continue
+            k_ = rname.replace("/", "_")
+            g = {}
+            for key, z in load.items():
+                kk = ("A", key[1]) if key[0] == arm_a else key
+                g[kk] = (z[f"t_{k_}"], z[f"V_{k_}"], z[f"QF_{k_}"])
+            groups[(Wa, rname, rate)] = g
+    return groups
 
-            def samp(c):
-                t = np.round(load[c][f"t_{key}"], 6)
-                v = load[c][f"V_{key}"]
-                _, ia, ib = np.intersect1d(t, grid, return_indices=True)
-                assert ia.size == grid.size, (c, rname, ia.size, grid.size)
-                return v[ia]
-            famA = np.array([samp(("fresh", 0)), samp((arm_a, 4)), samp((arm_a, 8))])
-            famK = np.array([samp(("fresh", 0)), samp((arm_b, 4)), samp((arm_b, 8))])
-            i_t = np.full(grid.size, rate)
-            for idx, f in ((1, F_K[4]), (2, F_K[8])):
-                for dr in ("none", "free"):
-                    z = ob.z_cell(famA, famK, logf, idx=idx, i_t=i_t, sigma=1e-3, dR0=dr)
-                    zd = float(np.linalg.norm(famA[idx] - famK[idx]) / 1e-3)
-                    rows.append({"Wa": Wa, "rate": rname, "f": f, "dR0": dr, "z": z, "z_direct_same_f": zd,
-                                 "n_samples": int(grid.size), "t_end_common_s": float(grid[-1]),
-                                 "max_abs_dV_same_f_V": float(np.max(np.abs(famA[idx] - famK[idx]))),
-                                 "t_at_max_s": float(grid[np.argmax(np.abs(famA[idx] - famK[idx]))])})
-    return rows
+
+def dc_z(out: Path, I_1C: float, arm_a="A", tag_a="dc"):
+    """보정 z_DC (Q_F 축 — 판정) · 시간 축 z_DC (2 차 정의 — 진단). σ_V 1 mV · 상대 팔 격자 {1, 0.5, 0.25}."""
+    rows_q, rows_t, problems = [], [], []
+    for (Wa, rname, rate), g in dc_groups(out, arm_a, tag_a).items():
+        if any(len(v[0]) < 3 for v in g.values()):
+            problems.append({"Wa": Wa, "rate": rname, "status": "curve_missing (immediate cutoff)"})
+            continue
+        I = rate * I_1C                               # 전류 [A] — ΔQ = I·10 s (§8-7 ②)
+        tag = {"Wa": Wa, "rate": rname}
+        try:
+            for r in ob.dc_z_qf({k: (v[2], v[1]) for k, v in g.items()}, I=I, dt_equiv=10.0, sigma=1e-3):
+                rows_q.append({**tag, **r})
+        except ValueError as e:
+            problems.append({**tag, "status": f"QF_not_monotonic: {e}"})
+        for r in ob.dc_z_time({k: (v[0], v[1]) for k, v in g.items()}, I=I, dt_grid=10.0, sigma=1e-3):
+            rows_t.append({**tag, **r})
+    return rows_q, rows_t, problems
 
 
 def dc(args):
     summ, n_fail = dc_runs(args)
-    rows = dc_z(Path(args.out))
-    zmax = max((r["z"] for r in rows if "z" in r), default=np.nan)
+    rows_q, rows_t, problems = dc_z(Path(args.out), reg(Path(args.spk))["I_1C_A"])
+    zmax = max((r["z"] for r in rows_q), default=np.nan)
+    zmax_t = max((r["z"] for r in rows_t), default=np.nan)
+    nonmono = [p for p in problems if str(p.get("status", "")).startswith("QF_not_monotonic")]
     stop = bool(np.isfinite(zmax) and zmax >= DC_Z_LIMIT)
     li_bad = [s for s in summ if s.get("status") == "ok" and s["li_rel"] > LI_LIMIT]
-    res = {"z_rows": rows, "z_max": zmax, "limit": DC_Z_LIMIT, "stop_rule3a": stop, "n_fail": n_fail,
+    res = {"z_rows_qf_decision": rows_q, "z_rows_time_diagnostic": rows_t, "problems": problems, "z_max_qf": zmax,
+           "z_max_time_diag": zmax_t, "limit": DC_Z_LIMIT, "stop_rule3a": stop, "n_fail": n_fail,
            "li_violations": [(s["run"], s["rate"]) for s in li_bad]}
     jdump(res, Path(args.out) / "dc" / "dc_z.json")
-    for r in rows:
-        if "z" in r and r["dR0"] == "none":
-            print(f"DC Wa{r['Wa']:g} {r['rate']} f{r['f']:.3f}: z {r['z']:.3f} (direct {r['z_direct_same_f']:.3f}) "
-                  f"max|ΔV| {r['max_abs_dV_same_f_V']:.2e} V @ {r['t_at_max_s']:.0f}s / end {r['t_end_common_s']:.0f}s n {r['n_samples']}")
-        elif "status" in r:
-            print(f"DC Wa{r['Wa']:g} {r['rate']}: {r['status']}")
-    print(f"DC z_max {zmax:.3f} (limit {DC_Z_LIMIT}) · fail {n_fail} · Li violations {res['li_violations']}")
+    for r in rows_q:
+        if r["dR0"] == "none":
+            print(f"DC(Q_F) Wa{r['Wa']:g} {r['rate']} f{r['f']:.3f}: z {r['z']:.3f} (direct {r['z_direct_same_f']:.3f}) "
+                  f"max|ΔV| {r['max_abs_dV_same_f_V']:.2e} V · n {r['n_samples']}")
+    for r in rows_t:
+        if r["dR0"] == "none":
+            print(f"DC(time · 진단) Wa{r['Wa']:g} {r['rate']} f{r['f']:.3f}: z {r['z']:.3f}")
+    for p_ in problems:
+        print(f"DC problem: {p_}")
+    print(f"DC z_max (Q_F · 판정) {zmax:.3f} (limit {DC_Z_LIMIT}) · z_max (time · 진단) {zmax_t:.3f} · fail {n_fail} · "
+          f"Li violations {res['li_violations']}")
     if li_bad:
         print("STOP rule 4")
         return 3
+    if nonmono:
+        print("STOP — Q_F 가 단조 증가가 아니어서 보정 z 를 계산할 수 없다 (§8-7 ② · 기록)")
+        return 3
     if stop:
-        print("STOP rule 3(a) — DC 영 채널 A ↔ K 의 z ≥ 2 (대수 예측 오류 · 구현 결함을 가르지 않는다)")
+        print("STOP rule 3(a) — DC 영 채널 (Q_F 축) A ↔ K 의 z ≥ 2 (대수 예측 오류 · 구현 결함을 가르지 않는다)")
         return 3
     return 0
 

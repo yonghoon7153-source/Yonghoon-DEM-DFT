@@ -163,7 +163,11 @@ def q_1c_ah() -> float:
 INPUT_NAMES = ("k0", "c_dl", "D_s", "eps_am", "eps_se", "sigma_s", "kappa", "I", "c0", "V_lo", "V_hi")
 
 
-def build_model(shape: str, *, var_pts=None, rtol: float = 1e-8, atol: float = 1e-8, D_e: float = D_E,
+STD_VAR_PTS = {"x_s": 40, "x_p": 40, "r_p": 40}   # 3 차 표준 (§8-7 ① — 2 차 정밀판) · 1 · 2 차 표준은 PyBaMM 기본 20
+STD_TOL = 1e-9
+
+
+def build_model(shape: str, *, var_pts=STD_VAR_PTS, rtol: float = STD_TOL, atol: float = STD_TOL, D_e: float = D_E,
                 ce0: float = CE0, kappa_ce_exp: float = 0.0):
     """g 모양 하나의 truth 모형을 만들어 (model, solver, sim) 를 돌려준다.
     kappa_ce_exp ≠ 0 은 시험의 음성 대조 전용 (κ ∝ (c_e/CE0)^n — truth 는 0)."""
@@ -353,6 +357,32 @@ def feedback_pulse(*, shape: str, Wa: float, x_mid: float, x0: float, I_A: float
         r1 = run_pulse(m1, s1, sim1, b, x_start=x0, I_A=I_A, t_on=t_on, t_off=t_off, keep=("Voltage [V]",))
         per[lab] = common_max_abs_dv(r0["t"], r0["Voltage [V]"], r1["t"], r1["Voltage [V]"])
     return {"max_abs_dv": max(v["max_abs_dv"] for v in per.values()), "per_variant": per}
+
+
+QF_KEEP = ("Voltage [V]", "X-averaged positive electrode surface potential difference [V]",
+           "Average positive particle concentration [mol.m-3]")
+
+
+def qf_and_li(res: dict, d_inputs: dict, I_A: float) -> dict:
+    """§8-7 ②: Q_F(t) = I·t − Q_dl(t) (X-averaged Δφ̄ · 그 팔의 c_dl · a) · F·ΔN_Li (Average 입자 농도) · 상대 차 (규칙 4)."""
+    from c1_observe import faradaic_charge
+    t = np.asarray(res["t"], float)
+    a = 3.0 * d_inputs["eps_am"] / R_P
+    qf = faradaic_charge(t, I_A, res["X-averaged positive electrode surface potential difference [V]"], a=a,
+                         c_dl=d_inputs["c_dl"], L=L_PE, area=AREA)
+    cbar = np.asarray(res["Average positive particle concentration [mol.m-3]"], float)
+    fdn = F * AREA * d_inputs["eps_am"] * L_PE * (cbar - cbar[0])
+    q_cell = abs(I_A) * float(t[-1])
+    return {"qf": qf, "rel": float(abs(fdn[-1] - qf[-1]) / q_cell) if q_cell > 0 else float("nan"),
+            "Qdl_end_C": float(I_A * t[-1] - qf[-1])}
+
+
+def qf_identity_check(*, shape: str, Wa: float, x_mid: float, x0: float, I_A: float, t_end: float) -> dict:
+    model, solver, sim = build_model(shape)
+    b = base_inputs(shape=shape, Wa=Wa, x_mid=x_mid)
+    r = run_cc(model, solver, sim, b, x_start=x0, I_A=I_A, t_max=t_end, dt_out=1.0, V_lo=0.0, V_hi=10.0, keep=QF_KEEP)
+    out = qf_and_li(r, b, I_A)
+    return {"rel": out["rel"], "Qdl_end_C": out["Qdl_end_C"], "t_end": float(r["t"][-1])}
 
 
 def seed_for(key: str, base: int = 101) -> int:

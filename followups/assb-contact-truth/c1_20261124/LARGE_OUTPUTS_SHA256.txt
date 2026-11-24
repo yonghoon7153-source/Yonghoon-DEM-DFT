@@ -21,3 +21,15 @@ bf02d8083f44d3f04f628b2a403405ac96324d46367ec7748656a90ce6eb3c4b  out2/spikes/s6
 1fc889d33063d2e3f310ff837e07e3c0b32d95d8687af6a2fe477ee80136fc1a  out2/spikes/spike_status.json (119 B)
 78a64afd169deaec8312acb29425ca2cf86ad52b8797a2e6271f182f7c5d96f5  out2/grid/conv/conv.json (8396 B)
 # 배관 점검 산출 (out2/plumb) 은 결과 버림 원칙대로 지웠다 (06:23Z)
+
+# 3 차 (T0₃ 2026-11-24T06:41:44Z) — 스크래치패드 out3/ · 새 표준 (40 · 1e-9) · 규칙 5 (격자 수렴) 중단 · 격자 truth 파형은 수렴 묶음만 (저장 안 함 — conv.json 요약만) · DC 자료 없음
+1260e9393d8d99df64170d7447dbe105d7411635fa7cdbc544ac3ba36ee1dd3f  out3/spikes/s1.json (490 B)
+1ba09766aa59a8fc508fc17e52a7bb7b6e23baf887256af9f3377a4796021d97  out3/spikes/s2.json (666 B)
+fa7e2b534603898d027d243f0483a717298b33fc7ced1b0be92154a04ccf506a  out3/spikes/s3.json (11250 B)
+275589cfddb7b49219b97791d760de47d78aa2d9658f6c452f8eccb05dbc1744  out3/spikes/s4.json (989 B)
+12bcf2c0c6fb633949c07be4fc710ad6f4ae557d4fdfa06ac5f232f97e8c2a18  out3/spikes/s4p.json (19252 B)
+2138f8653a2d3eab9ce8aba20d5e6dd238143ef356aaab10d349e5b154e0db52  out3/spikes/s5p.json (1312 B)
+fdd7f3f470ca2cf7c455684e44b7dbd8c5d062c2219c9dad33bb7d904eb3cff1  out3/spikes/s6_registered.json (3096 B)
+1fc889d33063d2e3f310ff837e07e3c0b32d95d8687af6a2fe477ee80136fc1a  out3/spikes/spike_status.json (119 B)
+2ac570cd451dce93520693e53c3e4df29232f9a319f6761058204dcac80f4804  out3/grid/conv/conv.json (26729 B)
+# 배관 점검 산출 (out3/plumb) 은 결과 버림 원칙대로 지웠다 (06:51Z)
