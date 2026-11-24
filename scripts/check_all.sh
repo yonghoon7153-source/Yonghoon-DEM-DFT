@@ -267,6 +267,8 @@ run '반입 ㉛ 수영 공통 변위 판독기 합성 시험' python3 -I -X utf8
 # ★ 2026-11-24 (반입 ㉝ · codex/suyoung-higher-grid-1124 · e1678150e → d376b1d16) — 수영 설정 ② F32 · F48 블록 회귀 시험 다섯 (격자 쌍 · 시드 · 시간 간격 ·
 #   허용 격자 튜플 한 곳만 바꿈 · 새 가압 없음 · git 객체 안 씀).
 run '반입 ㉝ 수영 F32 · F48 블록 회귀 시험' python3 -I -X utf8 -B docs/reviews/suyoung_higher_grid_20261124/test_higher.py
+# ★ 2026-11-24 (반입 ㉞ · codex/lhs-wsl30-freeze-1124 · a1828b865 → 80181cb30) — LHS WSL30 §5 열람 전 동결 판독기 합성 시험 여덟 (임시 폴더 · 값 0).
+run '반입 ㉞ LHS WSL30 §5 동결 판독기 합성 시험' python3 -I -X utf8 -B docs/reviews/lhs_wsl30_source_freeze_20261124/test_synthetic.py
 #  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의
 #    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`
 #    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`

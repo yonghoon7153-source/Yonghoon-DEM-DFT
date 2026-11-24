@@ -200,6 +200,9 @@ jobs:
       # ★ 2026-11-24 (반입 ㉝) — 수영 설정 ② F32 · F48 블록 회귀 시험 다섯 (check_all.sh 단계 74 에도 같이)
       - name: 반입 ㉝ 수영 F32 · F48 블록 회귀 시험 (regression)
         run: python -B docs/reviews/suyoung_higher_grid_20261124/test_higher.py
+      # ★ 2026-11-24 (반입 ㉞) — LHS WSL30 §5 동결 판독기 합성 시험 여덟 (check_all.sh 단계 75 에도 같이)
+      - name: 반입 ㉞ LHS WSL30 §5 동결 판독기 합성 시험 (regression)
+        run: python -B docs/reviews/lhs_wsl30_source_freeze_20261124/test_synthetic.py
       # ★ 2026-11-24 (반입 ㉕) — 수영 설정 ② 접촉 후보 시험 셋 (check_all.sh 단계 71 에도 같이)
       - name: 반입 ㉕ 수영 설정 ② 접촉 후보 시험 셋 (regression)
         run: |
