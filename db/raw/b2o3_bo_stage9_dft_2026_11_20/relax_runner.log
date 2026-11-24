@@ -1,0 +1,20 @@
+[11-16 09:17:51] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[11-16 09:17:51] MPI 를 바이너리에서 읽었다: /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[11-16 09:17:51]   prefix=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[11-16 09:17:51]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[11-16 09:17:51] 코어: 물리 10 · 논리 20 → 랭크 1
+[11-16 09:17:51] 설정 균일성 ✓ (3점 동일 · key e112fb05)
+               occupations = 'smearing'
+               mixing_mode = 'plain'
+               electron_maxstep = 200
+[11-16 09:17:51] 점 3개 · /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun --oversubscribe -np 1 · pw.x=/data/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/data/work/pseudo
+[11-16 09:17:51]   VRAM 여유 48539 MiB (문턱 45000)
+[11-16 09:17:51]   GPU 독점 확인 (다른 compute 프로세스 0)
+[11-17 00:43:50] ✓ rx_FB_cfg0040  925분
+[11-17 00:43:50]   VRAM 여유 48539 MiB (문턱 45000)
+[11-17 00:43:50]   GPU 독점 확인 (다른 compute 프로세스 0)
+[11-18 07:57:53] ✓ rx_Ffree_cfg0039  1874분
+[11-18 07:57:53]   VRAM 여유 48539 MiB (문턱 45000)
+[11-18 07:57:53]   GPU 독점 확인 (다른 compute 프로세스 0)
+[11-20 08:31:03] ✓ rx_FP_cfg0015  2913분
+[11-20 08:31:03] 끝 — 완료 3 · 건너뜀 0 · 실패 0 · 총 5713분

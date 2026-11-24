@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-11-20
-updated: 2026-11-20
+date: 2026-11-23
+updated: 2026-11-23
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-11-20
+verifiedAt: 2026-11-23
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -165,6 +165,12 @@ evidenceScope: multi-source-primary
 | EK | 2026-11-13 | `codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md` | `codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md` | 작성 2026-11-13 · gabia v6 검사 결과 넣음 (HEAD 46e212782 · selftest 185/185 · prepare s9_v6 · 입력 6 = v2–v5 바이트 같음) · 발송 (사용자) → 회신 2026-11-14 조건부 GO (codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md) · 코드 기준 커밋 46e21278 (브랜치 claude/evac-2026-11-12 · 도구 sha256 0c3b7f51 · 실행기 e2d6f728 · 변이 도구 3090ec9f) · 앞 편지 EJ (NO-GO · v5 6302f8a8) | 같은 라벨 · 주제 토큰 일치 ['b2o3', 'dft', 'stage9', 'v6'] |
 | EL | 2026-11-14 | `internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` | `internal_EL_reply_li2s3_endline_ack_2026_11_14.md` | 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전트와 다른 독립 에이전트) · 회신은 `internal_EL_reply_li2s3_endline_ack_2026_11_14.md` · 회신 전에는 개정 4 를 활성하지 않는다 · ✅ 회신 수령 2026-11-15 (조건부 GO · P0 1 · P1 1 · P2 8) → 고친 판 (dbac0855) → 재확인 GO 2026-11-15 → N-P2-1 시험 더한 판 8e1f16a49a2df8a3 | 회신 본문의 `요청:` 역링크 |
 | EM | 2026-11-20 | `internal_EM_prompt_wad_a5_package_2026_11_20.md` | `internal_EM_reply_wad_a5_package_2026_11_20.md` | 발송 · 회신 수령 2026-11-20 | 같은 라벨 · 주제 토큰 일치 ['a5', 'package', 'wad'] |
+| EN | 2026-11-22 | `codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` | `codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` | 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 · 묶음 MANIFEST 8439e129… → 회신 수령 NO-GO (P0 1 · P1 3 · P2 1 · P3 1 — codex_EN_reply_wad_a5_em_fixes_2026_11_22.md) | 같은 라벨 · 주제 토큰 일치 ['a5', 'em', 'fixes', 'wad'] |
+| EO | 2026-11-22 | `codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md` | `codex_EO_reply_wad_a5_en_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (`codex_EO_reply_wad_a5_en_fixes_2026_11_23.md`) · 기준 커밋 68f683462 → 고침 b84907868 (도구) · 8fd051a22 (묶음) · 묶음 MANIFEST b01d0861… · 돌연변이 84/84 | 같은 라벨 · 주제 토큰 일치 ['a5', 'en', 'fixes', 'wad'] |
+| EP | 2026-11-23 | `codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` | `codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md · 재승인 조건 ①–④) · 기준 8fd051a22 (EO 가 본 묶음) → 고침 df5ea438b (도구 · 시험) · 0fbc49760 (묶음 · 빌드 기록 ⑧) · 묶음 MANIFEST f10dedef… · selftest a5 211/211 · 돌연변이 113/113 | 같은 라벨 · 주제 토큰 일치 ['a5', 'eo', 'fixes', 'wad'] |
+| EQ | 2026-11-23 | `codex_EQ_prompt_wad_a5_ep_fixes_2026_11_23.md` | `codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md · 위협 범위 GO · 범위 안 지적 다수) · 기준 0fbc49760 (EP 가 본 묶음 · MANIFEST f10dedef…) → 고침 a97eba79f (도구 · 시험) · 891e106e5 (묶음 · 빌드 기록 ⑩) · 묶음 MANIFEST 679d7050… · selftest a5 236/236 · 돌연변이 140/140 | 같은 라벨 · 주제 토큰 일치 ['a5', 'ep', 'fixes', 'wad'] |
+| ER | 2026-11-23 | `codex_ER_prompt_wad_a5_eq_fixes_2026_11_23.md` | `codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md` | 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026-11-23 (codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md · Q-ER-6 GO · 범위 안 P0 셋 · P1 둘) · 기준 891e106e5 (EQ 가 본 묶음 · MANIFEST 679d7050…) → 고침 c14d52abb (도구 · 시험) · cc3873047 (묶음 · 빌드 기록 ⑬) · 묶음 MANIFEST 8e295bae… · selftest a5 266/266 · 돌연변이 191 (첫 전체 판 186 · 살아남은 5 시험 떼어 5/5) | 같은 라벨 · 주제 토큰 일치 ['a5', 'eq', 'fixes', 'wad'] |
+| ES | 2026-11-23 | `codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` | — | 발송 대기 (사용자) · 기준 cc3873047 (ER 가 본 묶음 · MANIFEST 8e295bae…) → 고침 19ddec83c (도구 · 시험) · a6b34ffa6 (pack 관문 홀로 시험) · 1da64d0be (묶음 · 빌드 기록 ⑮) · 묶음 MANIFEST 50beb026… · selftest a5 279/279 · 돌연변이 210/210 (전체 한 번 209/210 · 남은 m158 은 pack 관문 홀로 시험 더한 뒤 빨강) | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

@@ -213,6 +213,13 @@
    "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf"
   ]
  },
+ "baseden2014_dft_by_hand_helium_atom": {
+  "figures": 3,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "f2ac5e92-Introduction_to_Density_Functional_Theory_Calculations_by_Hand_on_the_Helium_Atom.pdf"
+  ]
+ },
  "basu2026_multifidelity_bandit_dopant_screening_funnel": {
   "figures": 31,
   "generated": "2026-09-09",
@@ -1665,6 +1672,13 @@
    "1dbda7de-Sup_Stress-Regulated_Li_Plating_in_Hybrid_Ag_CarbonCarbon_Nanofiber_Anodes_for_Durable_All-Solid-State_Batteries.pdf"
   ]
  },
+ "kansara2026_experiment_computation_integration_assb_review": {
+  "figures": 18,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "204ad35b-2._Integration_of_experimental_insights_and_computational_modeling_for_all-solid-state_batteries.pdf"
+  ]
+ },
  "kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity": {
   "figures": 59,
   "generated": "2026-11-16",
@@ -2440,6 +2454,13 @@
    "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf"
   ]
  },
+ "liu2026_li_in_s_composite_foil_built_in_field_li_lpscl": {
+  "figures": 5,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "0c6f73d0-Li-In-S_composite_foil_with_built-in_electric_fields_to_stabilize_LiLi6PS5Cl_interface_for_long-life_all-solid-state_batteries.pdf"
+  ]
+ },
  "liyaru_gaf3_codoping_argyrodite": {
   "figures": 35,
   "generated": "2026-08-05",
@@ -3050,6 +3071,13 @@
   "generated": "2026-10-13",
   "pdfs": [
    "1. Engineering Rate Capable, Energy-Dense Lithium-Ion Battery Cathode Composites.pdf"
+  ]
+ },
+ "pandey2026_mxene_ion_conducting_interfaces_ssb_review": {
+  "figures": 23,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "20fa5823-Two_Dimensional_MXenes_for_Ion_Conducting_Interfaces_in_Solid_State_Energy_Storage_Systems.pdf"
   ]
  },
  "papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation": {
@@ -4506,6 +4534,27 @@
   "pdfs": [
    "105. Impact_of_the_Chlorination_of_Lithium_Argyrodites_on_the_ElectrolyteCathode_Interface_in_SolidState_Batteries.pdf",
    "105. Sup) Impact_of_the_Chlorination_of_Lithium_Argyrodites_on_the_ElectrolyteCathode_Interface_in_SolidState_Batteries.pdf"
+  ]
+ },
+ "lin2026_p_doped_compounds_li_s_review": {
+  "figures": 11,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "3e59ba8a-Research_on_the_preparation_and_application_of_multifunctional_P-doped_compounds_in_lithium_sulfur_batteries.pdf"
+  ]
+ },
+ "zhang2026_ai_cross_scale_simulation_li_battery_review": {
+  "figures": 35,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "d158d0d8-AI-Driven_Cross-Scale_Simulation_of_Lithium_Batteries.pdf"
+  ]
+ },
+ "sun2026_ssb_interface_electromechanical_gaps_account": {
+  "figures": 8,
+  "generated": "2026-11-23",
+  "pdfs": [
+   "bcb8e7ad-Critical_Gaps_in_Understanding_Solid-State_Battery_Interfaces_from_an_Electromechanical_Perspective.pdf"
   ]
  }
 }

@@ -1,0 +1,518 @@
+{
+ "kind": "b2o3_bo_dft_plan/v2",
+ "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json#개정_1 9_DFT · 개정_5",
+ "tools": {
+  "dft_tool": {
+   "path": "/data/work/runs/b2o3_bo_2026_11_09/dft_src_v6/tools/doping/b2o3_bo_dft.py",
+   "sha256": "0c3b7f51dbebff7ab9b818e165f0a4cf36a627a93efc878d2db04ff69b08cd0b"
+  },
+  "readout_tool": {
+   "path": "/data/work/runs/b2o3_bo_2026_11_09/src/tools/doping/b2o3_bo_readout.py",
+   "sha256": "872d91f7508ad21c3d67f373bee228bd894994b731a77f69525818db3a8967cf"
+  }
+ },
+ "inputs": {
+  "screen_verdict": {
+   "rel": "../s6_verdict.json",
+   "sha256": "6889935781b9390e5297dac28db635cf1f9fbf9d3eb73ae332b0a68e4e0dc587"
+  },
+  "pilot_receipt": {
+   "rel": "../s7_receipt.json",
+   "sha256": "92d5b76380b9a992c03995280f03a8642f9b13d1503447afb38722338d540a07"
+  },
+  "anneal_results": {
+   "rel": "../s8_anneal/anneal_results.json",
+   "sha256": "338e6015e60fe4df63ca0e7f713bf3e12eeec538bf5b499b449df2c3702fb5f6"
+  },
+  "anneal_readout": {
+   "rel": "../s8_readout.json",
+   "sha256": "168f8e502f634806a4cd1afd36d1c775c244a3a1afd0b73aad2990a7c5f1d7c0"
+  }
+ },
+ "after_kprobe": null,
+ "stage8": {
+  "order": [
+   "F_B",
+   "F_P",
+   "F_free"
+  ],
+  "winner": "F_B",
+  "decision": "승자 F_B (차저 F_P 와 0.518 ≥ 0.2)",
+  "gap_eV": 0.518378976506483
+ },
+ "contract": {
+  "ecutwfc": 52.0,
+  "ecutrho": 520.0,
+  "occupations": "smearing",
+  "smearing": "gaussian",
+  "degauss": 0.01,
+  "nspin": 1,
+  "nosym": true,
+  "tot_charge": 0.0,
+  "conv_thr": 1e-08,
+  "mixing_mode": "plain",
+  "mixing_beta": 0.3,
+  "electron_maxstep": 200,
+  "diagonalization": "david",
+  "disk_io": "nowf",
+  "k_main": [
+   3,
+   2,
+   1
+  ],
+  "k_probe": [
+   4,
+   2,
+   1
+  ],
+  "n_per_family": 2,
+  "margin_dft_eV": 0.1,
+  "kprobe_shift_eV": 0.05,
+  "relax": {
+   "forc_conv_thr": 0.001,
+   "etot_conv_thr": 1e-05,
+   "nstep": 200,
+   "ion_dynamics": "bfgs"
+  },
+  "ref_cell": {
+   "host_sha256": "dc0f8c0c12df6ef6a034e78a9b489b09fd8d472b01f1d9b02e8c860f6410a1e6",
+   "supercell": [
+    1,
+    2,
+    1
+   ],
+   "V0_A3": 2436.33
+  },
+  "B_range_GPa": [
+   21.7,
+   32.5
+  ],
+  "P_max_GPa": 2.0,
+  "composition": {
+   "B": 2,
+   "Cl": 16,
+   "Li": 58,
+   "O": 3,
+   "P": 8,
+   "S": 41
+  },
+  "nat": 128,
+  "n_stability_winner": 3,
+  "qe_version": "7.4.1"
+ },
+ "pseudo": {
+  "dir": "/data/work/pseudo",
+  "files": {
+   "Li": {
+    "file": "li_pbe_v1.4.uspp.F.UPF",
+    "sha256": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+    "md5": "e912e257baa3777c20ea3d68f190483c",
+    "z_valence": 3.0
+   },
+   "B": {
+    "file": "B.pbe-n-kjpaw_psl.1.0.0.UPF",
+    "sha256": "4a41b06dfc361efde113fc033a06b9103e6d09df58f6f167c44b47e5ed082135",
+    "md5": "8c825a5969375aca5c2c6ad5945b3059",
+    "z_valence": 3.0
+   },
+   "O": {
+    "file": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "sha256": "7c4b6ed541f83d0afdf5c1d3a8c611340f073f3e2b11e95b7963bb2ee26929aa",
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "z_valence": 6.0
+   },
+   "P": {
+    "file": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+    "sha256": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+    "md5": "8b930f418f0a4573dca56cd030ffe088",
+    "z_valence": 5.0
+   },
+   "S": {
+    "file": "s_pbe_v1.4.uspp.F.UPF",
+    "sha256": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+    "md5": "88d86576ff6df21479756cfb9bdac1df",
+    "z_valence": 6.0
+   },
+   "Cl": {
+    "file": "cl_pbe_v1.4.uspp.F.UPF",
+    "sha256": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+    "md5": "fc6f6913ecf08c9257cb748ef0700058",
+    "z_valence": 7.0
+   }
+  }
+ },
+ "k_main": [
+  3,
+  2,
+  1
+ ],
+ "jobs_sp": [
+  {
+   "job": "sp_FB_1_cfg0040",
+   "family": "F_B",
+   "i": 1,
+   "name": "cfg0040_E-2252.241_O-bo4",
+   "rank": 40,
+   "E_uma_eV": -544.0193729994543,
+   "structure": {
+    "rel": "../s8_anneal/cfg0040_E-2252.241_O-bo4/post_relax.xyz",
+    "sha256": "3b35bcead8073fc2a17d9c2503e426c018fe296d637d238994c875ad55ccc904"
+   },
+   "input_sha256": "834fbada34cd234c08d0cd013bfa889a3caa84026a7301c24b957f151c944c7d",
+   "uma_record": {
+    "end_motif": "F_B",
+    "B_coordination": [
+     {
+      "S": 2,
+      "O": 1
+     },
+     {
+      "S": 1,
+      "O": 2
+     }
+    ],
+    "P_coordination": [
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     }
+    ],
+    "P_not_4": 0
+   }
+  },
+  {
+   "job": "sp_FB_2_cfg0015",
+   "family": "F_B",
+   "i": 2,
+   "name": "cfg0015_E-2254.436_O-bo4",
+   "rank": 15,
+   "E_uma_eV": -543.97715202278,
+   "structure": {
+    "rel": "../s8_anneal/cfg0015_E-2254.436_O-bo4/post_relax.xyz",
+    "sha256": "d288e7d1d27fe13d7cdd50641b9c21d74aff7a496a55d6000064cd6b52b1183a"
+   },
+   "input_sha256": "f5b7bcd272b69870ff5ce30d7a564d406ec9008962f99dad7c15e3c206c6f538",
+   "uma_record": {
+    "end_motif": "F_B",
+    "B_coordination": [
+     {
+      "S": 0,
+      "O": 3
+     },
+     {
+      "S": 3,
+      "O": 0
+     }
+    ],
+    "P_coordination": [
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     }
+    ],
+    "P_not_4": 0
+   }
+  },
+  {
+   "job": "sp_FP_1_cfg0015",
+   "family": "F_P",
+   "i": 1,
+   "name": "cfg0015_E-2254.436_O-distributed",
+   "rank": 15,
+   "E_uma_eV": -543.5009940229478,
+   "structure": {
+    "rel": "../s8_anneal/cfg0015_E-2254.436_O-distributed/post_relax.xyz",
+    "sha256": "b84492ad7353007927bb4dd128b530f08b2b4231cabfcc53e4fb34db9dc7fad1"
+   },
+   "input_sha256": "93a54b64f68420a2ee2144c8befb43e2ed281cd73f9c6c66c4367a16b627d154",
+   "uma_record": {
+    "end_motif": "F_P",
+    "B_coordination": [
+     {
+      "S": 3,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 0
+     }
+    ],
+    "P_coordination": [
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 1
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 1
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 1
+     },
+     {
+      "S": 4,
+      "O": 0
+     }
+    ],
+    "P_not_4": 0
+   }
+  },
+  {
+   "job": "sp_FP_2_cfg0019",
+   "family": "F_P",
+   "i": 2,
+   "name": "cfg0019_E-2254.209_O-distributed",
+   "rank": 19,
+   "E_uma_eV": -543.4353599044572,
+   "structure": {
+    "rel": "../s8_anneal/cfg0019_E-2254.209_O-distributed/post_relax.xyz",
+    "sha256": "f399c6c024f0f5025eed994e0a73253fe865d1b4bb8e09f8e80e1b7f2f01cbe1"
+   },
+   "input_sha256": "03c0bbdde90cb776e719da06656d1c520094e06652710ae85b35681177e9d18a",
+   "uma_record": {
+    "end_motif": "F_P",
+    "B_coordination": [
+     {
+      "S": 3,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 0
+     }
+    ],
+    "P_coordination": [
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 1
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 1
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 1
+     },
+     {
+      "S": 4,
+      "O": 0
+     }
+    ],
+    "P_not_4": 0
+   }
+  },
+  {
+   "job": "sp_Ffree_1_cfg0039",
+   "family": "F_free",
+   "i": 1,
+   "name": "cfg0039_E-2252.471_O-free_s",
+   "rank": 39,
+   "E_uma_eV": -540.2829263042622,
+   "structure": {
+    "rel": "../s8_anneal/cfg0039_E-2252.471_O-free_s/post_relax.xyz",
+    "sha256": "4214ac5b9c2ab133c2c928d2f1154fef2a9d38d1985eca7484a28d784b936b82"
+   },
+   "input_sha256": "3ee0b4a96db89efbecca01056021760cc7fb3c4e8f92bd2f15eb9cc386a76c5f",
+   "uma_record": {
+    "end_motif": "mixed",
+    "B_coordination": [
+     {
+      "S": 2,
+      "O": 1
+     },
+     {
+      "S": 4,
+      "O": 0
+     }
+    ],
+    "P_coordination": [
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     }
+    ],
+    "P_not_4": 0
+   }
+  },
+  {
+   "job": "sp_Ffree_2_cfg0017",
+   "family": "F_free",
+   "i": 2,
+   "name": "cfg0017_E-2254.242_O-free_s",
+   "rank": 17,
+   "E_uma_eV": -539.8446147927946,
+   "structure": {
+    "rel": "../s8_anneal/cfg0017_E-2254.242_O-free_s/post_relax.xyz",
+    "sha256": "a3fa9967f70e6bb04d094af7bb4e6edf9ea5742b0f24a85e1ef4bb3df58a4168"
+   },
+   "input_sha256": "0836ebf76487842a076cb6560dbd6c67c9ae9984d16c66abc43107da2841e888",
+   "uma_record": {
+    "end_motif": "F_free",
+    "B_coordination": [
+     {
+      "S": 3,
+      "O": 0
+     },
+     {
+      "S": 3,
+      "O": 0
+     }
+    ],
+    "P_coordination": [
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     },
+     {
+      "S": 4,
+      "O": 0
+     }
+    ],
+    "P_not_4": 0
+   }
+  }
+ ],
+ "rel_base": "잡 · 구조 · 입력의 rel 은 이 계획 폴더 기준"
+}

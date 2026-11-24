@@ -27,6 +27,15 @@ b2o3 vs modelc (more P-S loss / Li penetration / B-Li = worse dynamic decomposit
   · 앙상블: 시드 수 = n_seeds · 전부 무결성 통과 · 궤적 sha 가 서로 다름 → 결합마다 사건 있는 시드 ≥ onset_seeds_min 이면 '개시 관측' ·
     1 이면 '시드 하나에서만' · 0 이면 '관측창 안 개시 없음' + 관측창 한 줄 (tools/sei/collect_neb.py observation_window ·
     t = 시드 수 × prod · 반응 기회 n = 두 원소 원자 수 중 작은 쪽 — 가정)
+2026-11-22 — 개정 3 (결과 전 · 카드 ⏩_개정_3_2026_11_22_MD1_결과_전_t0쌍 · 사용자 선택 '새로 생긴 쌍만 판정')
+  · 생산 첫 프레임 (t = 0) 에 이미 문턱 안이던 원자 쌍은 그 쌍의 사건을 전부 판정에서 뺀다 (기록만 — t0_pairs · n_t0_pairs) —
+    그 쌍을 모든 프레임에서 지운 존재 배열로 같은 지속 규칙을 다시 센다 (n_events_new · first_onset_new_ps · {AB}_persist_new 열 ·
+    끊겼다 다시 붙어도 그 쌍은 안 센다)
+  · 앙상블은 개정 3 이 active 면 n_events_new 로 센다 (t = 0 쌍까지 센 개정 2 셈은 record_amend2_* 로 같이 남긴다) ·
+    시드 판독이 지금 카드와 같은 개정 3 규칙으로 만들어지지 않았으면 판정 보류 · 개정 3 이 카드에 있는데 active 가 아니면
+    판독 · 앙상블 둘 다 거부 · 카드에 개정 3 이 없으면 옛 판정 · 옛 출력 그대로
+  ⛔ 개정 3 이 못 하는 것: t = 0 에 문턱 바로 밖에 있다가 들어온 쌍 (담금질 때 가까워진 쌍) 은 '새로 생긴 쌍' 으로 센다 —
+    '새로 생겼다' 는 '생산 중 처음 문턱 안에 들어왔다' 는 뜻이지 '600 K 에서 새로 다가왔다' 는 증명이 아니다
   ⛔ MD-1 판독이 못 하는 것: 반응 속도 · 생성량 · 보호 효과를 내지 않는다 · 거리 문턱 결합이 화학 결합이라는 증명이 아니다
     (지속 시간으로 열진동 접촉을 거를 뿐) · 문턱은 카드에서만 읽는다 (스스로 정하지 않는다) · UMA 힘이 긴 동역학에서 맞는지 모른다
 """
@@ -125,6 +134,7 @@ MD1_AMEND = "⏩_개정_2_2026_11_20_MD1_결과_전"
 MD1_KEYS = ("pairs_judged", "pairs_record", "persist_ps", "save_fs", "prod_ps", "T_K", "T_band_K", "n_seeds",
             "onset_seeds_min", "slab_elements", "block_elements")
 MD1_EVENTS_KEEP = 200          # 판독 JSON 에 싣는 사건 수 상한 (개수 · 첫 시각 · 최장은 전부에서 낸다)
+MD1_AMEND3 = "⏩_개정_3_2026_11_22_MD1_결과_전_t0쌍"
 
 
 def _sha(path):
@@ -144,6 +154,26 @@ def md1_load_card(path=MD1_CARD, amend=MD1_AMEND):
     if miss:
         sys.exit(f"⛔ 기계_판독_값에 {miss} 가 없다 — 숫자를 지어내지 않는다")
     return th
+
+
+def md1_load_amend3(path=MD1_CARD):
+    """카드 개정 3 (t = 0 쌍 빼기) → 규칙 dict · 카드에 없으면 None (개정 2 판정 그대로).
+    있는데 active 가 아니거나 규칙 열쇠가 어긋나면 SystemExit — 반쯤 걸친 규칙으로 판독하지 않는다."""
+    c = json.loads(Path(path).read_text(encoding="utf-8"))
+    if MD1_AMEND3 not in c:
+        return None
+    a = c[MD1_AMEND3]
+    if not str(a.get("상태", "")).startswith("active"):
+        sys.exit(f"⛔ MD-1 개정 3 이 카드에 있는데 active 가 아니다 ({str(a.get('상태'))[:40]!r}) — 판독하지 않는다")
+    rule = a.get("기계_판독_값") or {}
+    if rule.get("judge_excludes_t0_pairs") is not True or rule.get("t0_frame") != 0:
+        sys.exit(f"⛔ 개정 3 기계_판독_값이 'judge_excludes_t0_pairs: true · t0_frame: 0' 이 아니다 ({rule}) — 숫자를 지어내지 않는다")
+    return rule
+
+
+def md1_verdict_word(k, th):
+    """사건 있는 시드 수 → 판정 낱말 (카드 onset_seeds_min)."""
+    return "개시 관측" if k >= th["onset_seeds_min"] else ("시드 하나에서만" if k == 1 else "관측창 안 개시 없음")
 
 
 def md1_persist_frames(th):
@@ -266,6 +296,7 @@ def md1_readout(traj, freeze, label, out_json, out_csv, card=MD1_CARD):
         if os.path.exists(o):
             sys.exit(f"⛔ {o} 가 이미 있다 — 덮지 않는다")
     th = md1_load_card(card)
+    a3 = md1_load_amend3(card)          # None = 카드에 개정 3 없음 (옛 판정) · 있는데 active 아니면 여기서 거부
     L = md1_persist_frames(th)
     j = json.loads(Path(freeze).read_text(encoding="utf-8"))
     slab_idx = j["freeze_idx"] if isinstance(j, dict) else j
@@ -277,6 +308,8 @@ def md1_readout(traj, freeze, label, out_json, out_csv, card=MD1_CARD):
            "traj": {"path": traj, "sha256": _sha(traj), "n_frames": len(frames)},
            "freeze": {"path": freeze, "sha256": _sha(freeze), "n_slab": len(set(int(i) for i in slab_idx))},
            "integrity": {"ok": not prob, "problems": prob, "T_prod_mean_K": Tm}, "pairs": {}}
+    if a3 is not None:
+        rec["amend3"] = {"key": MD1_AMEND3, "rule": a3}
     cols = {"t_ps": np.array([float(f.info.get("t_prod_ps", np.nan)) for f in frames])}
     if not prob:
         dt = th["save_fs"] / 1000.0
@@ -298,6 +331,21 @@ def md1_readout(traj, freeze, label, out_json, out_csv, card=MD1_CARD):
                     "events_truncated": len(ev) > MD1_EVENTS_KEEP}
                 cols[f"{A}{B}_inst"] = inst
                 cols[f"{A}{B}_persist"] = per
+                if a3 is not None:
+                    t0a, t0b = np.where(P[a3["t0_frame"]])
+                    Pn = P.copy()
+                    Pn[:, t0a, t0b] = False      # t = 0 쌍은 모든 프레임에서 지운다 (끊겼다 다시 붙어도 그 쌍은 안 센다)
+                    evn, pern = md1_runs(Pn, L)
+                    rec["pairs"][key].update({
+                        "t0_pairs": [[int(ia[x]), int(ib[y])] for x, y in zip(t0a, t0b)],
+                        "n_t0_pairs": int(len(t0a)),
+                        "n_events_new": len(evn), "n_distinct_new_pairs": len({(x, y) for x, y, _, _ in evn}),
+                        "first_onset_new_ps": (round(min(s for _, _, s, _ in evn) * dt, 6) if evn else None),
+                        "max_run_new_ps": (round(max(n for *_, n in evn) * dt, 6) if evn else None),
+                        "events_new": [{"A_idx": int(ia[x]), "B_idx": int(ib[y]), "start_ps": round(s * dt, 6),
+                                        "dur_ps": round(n * dt, 6)} for x, y, s, n in evn[:MD1_EVENTS_KEEP]],
+                        "events_new_truncated": len(evn) > MD1_EVENTS_KEEP})
+                    cols[f"{A}{B}_persist_new"] = pern
         lin, lout, half = md1_li_crossing(frames, slab_idx)
         rec["li_crossing_record"] = {"block_Li_in_slab_max": int(lin.max()), "slab_Li_out_max": int(lout.max()),
                                      "block_Li_in_slab_last": int(lin[-1]), "slab_Li_out_last": int(lout[-1]),
@@ -318,6 +366,8 @@ def md1_ensemble(seed_jsons, out_json, card=MD1_CARD):
     if os.path.exists(out_json):
         sys.exit(f"⛔ {out_json} 가 이미 있다 — 덮지 않는다")
     th = md1_load_card(card)
+    a3 = md1_load_amend3(card)
+    want_a3 = ({"key": MD1_AMEND3, "rule": a3} if a3 is not None else None)
     rs = [json.loads(Path(p).read_text(encoding="utf-8")) for p in seed_jsons]
     prob = []
     if len(rs) != th["n_seeds"]:
@@ -329,10 +379,12 @@ def md1_ensemble(seed_jsons, out_json, card=MD1_CARD):
             prob.append(f"{p}: 무결성 {r['integrity']['problems']}")
         elif r.get("thresholds") != th:
             prob.append(f"{p}: 판독 때 문턱이 지금 카드와 다르다")
+        elif r.get("amend3") != want_a3:
+            prob.append(f"{p}: 시드 판독의 개정 3 규칙 ({r.get('amend3')}) 이 지금 카드 ({want_a3}) 와 다르다")
     shas = [r.get("traj", {}).get("sha256") for r in rs]
     if len(set(shas)) != len(shas):
         prob.append("같은 궤적이 두 번 들어왔다")
-    out = {"schema": "hyeokju_md1_verdict/v1", "card": card, "amend": MD1_AMEND, "thresholds": th,
+    out = {"schema": "hyeokju_md1_verdict/v1", "card": card, "amend": MD1_AMEND, "thresholds": th, "amend3": want_a3,
            "seeds": [{"json": p, "label": r.get("label"), "traj_sha256": r.get("traj", {}).get("sha256")} for p, r in zip(seed_jsons, rs)],
            "tool": {"path": os.path.relpath(os.path.abspath(__file__)), "sha256": _sha(__file__)}}
     if prob:
@@ -344,15 +396,24 @@ def md1_ensemble(seed_jsons, out_json, card=MD1_CARD):
         out["verdict"] = {}
         for A, B, _cut in th["pairs_judged"]:
             key = f"{A}-{B}"
-            k = sum(1 for r in rs if r["pairs"][key]["n_events"] > 0)
-            v = ("개시 관측" if k >= th["onset_seeds_min"] else ("시드 하나에서만" if k == 1 else "관측창 안 개시 없음"))
+            nk = "n_events_new" if a3 is not None else "n_events"       # 개정 3 active 면 생산 중 새로 든 쌍만 센다
+            k = sum(1 for r in rs if r["pairs"][key][nk] > 0)
+            v = md1_verdict_word(k, th)
             n_sites = min(rs[0]["pairs"][key]["n_A"], rs[0]["pairs"][key]["n_B"])
             ow = observation_window(th["T_K"], th["n_seeds"] * th["prod_ps"] * 1e-12, n_sites=n_sites)
-            out["verdict"][key] = {"seeds_with_event": k, "of": len(rs), "verdict": v,
-                                   "first_onset_ps_per_seed": [r["pairs"][key]["first_onset_ps"] for r in rs],
-                                   "n_events_per_seed": [r["pairs"][key]["n_events"] for r in rs],
-                                   "obs_window": (ow["line"] if (ow and v != "개시 관측") else None),
-                                   "obs_window_n_sites_rule": "min(#A, #B) 원자 수 — 가정"}
+            ent = {"seeds_with_event": k, "of": len(rs), "verdict": v, "counted": nk,
+                   "first_onset_ps_per_seed": [r["pairs"][key]["first_onset_ps"] for r in rs],
+                   "n_events_per_seed": [r["pairs"][key]["n_events"] for r in rs],
+                   "obs_window": (ow["line"] if (ow and v != "개시 관측") else None),
+                   "obs_window_n_sites_rule": "min(#A, #B) 원자 수 — 가정"}
+            if a3 is not None:
+                k2 = sum(1 for r in rs if r["pairs"][key]["n_events"] > 0)
+                ent.update({"first_onset_new_ps_per_seed": [r["pairs"][key]["first_onset_new_ps"] for r in rs],
+                            "n_events_new_per_seed": [r["pairs"][key]["n_events_new"] for r in rs],
+                            "n_t0_pairs_per_seed": [r["pairs"][key]["n_t0_pairs"] for r in rs],
+                            "record_amend2_seeds_with_event": k2, "record_amend2_verdict": md1_verdict_word(k2, th),
+                            "⚠": "개정 3 — 판정은 생산 중 새로 문턱 안에 든 쌍만 센다 · record_amend2_* 는 t = 0 쌍까지 센 개정 2 셈 (기록만 · 판정 아님)"})
+            out["verdict"][key] = ent
     Path(out_json).write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     return out
 
@@ -488,6 +549,73 @@ def md1_selftest():
     chk("⛔음성: 무결성 실패 시드가 섞이면 판정 보류", ei.get("status") == "판정 보류")
     chk("⛔음성: 앙상블 출력이 있으면 덮지 않는다",
         refused(lambda: md1_ensemble([J("g"), J("q1"), J("q0a")], os.path.join(T, "e2.json"), card=card)))
+    # ── 개정 3 (t = 0 쌍 빼기 · 2026-11-22) ──
+    a3rule = {"judge_excludes_t0_pairs": True, "t0_frame": 0}
+
+    def card_with(state, rule):
+        pth = os.path.join(T, f"card3_{len(os.listdir(T))}.json")
+        Path(pth).write_text(json.dumps({MD1_AMEND: {"상태": "active — 시험", "기계_판독_값": th},
+                                         MD1_AMEND3: {"상태": state, "기계_판독_값": rule}}, ensure_ascii=False))
+        return pth
+    card3 = card_with("active — 시험", a3rule)
+    card3p = card_with("proposed", a3rule)
+    card3x = card_with("active — 시험", {"judge_excludes_t0_pairs": False, "t0_frame": 0})
+
+    def t0mut(k, a):
+        p = a.positions
+        if k <= 14 or 30 <= k <= 41:
+            p[7] = [3.6, 5, 5]               # P–O1 1.4 Å — t = 0 부터 15 프레임 (지속) · 끊겼다 30–41 다시 12 프레임 (지속)
+        if 12 <= k <= 25:
+            p[6] = [5, 8.5, 5]               # Zr–S2 주기 경계 너머 2.5 Å · 12–25 (생산 중 새로 · 지속)
+        a.positions = p
+
+    def t0only(k, a):
+        p = a.positions
+        if k <= 14:
+            p[7] = [3.6, 5, 5]               # P–O1 — t = 0 부터만 (새 쌍 없음)
+        a.positions = p
+    t0p = make("t0", events=False, mutate=t0mut)
+    r3 = md1_readout(t0p, freeze, "t3", J("t3"), os.path.join(T, "t3.csv"), card=card3)
+    po3, zs3 = r3["pairs"].get("P-O", {}), r3["pairs"].get("Zr-S", {})
+    chk("양성 (개정 3): t = 0 부터 붙은 P–O1 — 개정 2 셈 사건 2 · 새 쌍 셈 0 (끊겼다 다시 붙어도 그 쌍은 안 센다) · t0 쌍 [P 0 · O 7]",
+        po3.get("n_events") == 2 and po3.get("n_events_new") == 0 and po3.get("n_t0_pairs") == 1 and po3.get("t0_pairs") == [[0, 7]])
+    chk("양성 (개정 3): 생산 중 새로 붙은 Zr–S2 — 새 쌍 사건 1 · 첫 1.2 ps · t0 쌍 0",
+        zs3.get("n_events_new") == 1 and zs3.get("first_onset_new_ps") == 1.2 and zs3.get("n_t0_pairs") == 0)
+    hdr3 = open(os.path.join(T, "t3.csv")).readline().strip().split(",")
+    chk("양성 (개정 3): CSV 에 _persist_new 열 (판정 · 기록 쌍마다) · 시드 판독에 개정 3 규칙",
+        all(f"{x}_persist_new" in hdr3 for x in ("PO", "ZrS", "SO")) and r3.get("amend3") == {"key": MD1_AMEND3, "rule": a3rule})
+    chk("양성: 카드에 개정 3 이 없으면 출력에 개정 3 열쇠가 없다 (옛 판정 · 옛 CSV 그대로)",
+        "amend3" not in r and "n_events_new" not in po and not any(h.endswith("_persist_new") for h in hdr))
+    chk("⛔음성: 개정 3 이 카드에 있는데 active 가 아니면 판독 안 함",
+        refused(lambda: md1_readout(t0p, freeze, "t3p", J("t3p"), os.path.join(T, "t3p.csv"), card=card3p)))
+    chk("⛔음성: 개정 3 규칙 열쇠가 어긋나면 (judge_excludes_t0_pairs ≠ true) 판독 안 함",
+        refused(lambda: md1_readout(t0p, freeze, "t3x", J("t3x"), os.path.join(T, "t3x.csv"), card=card3x)))
+    md1_readout(make("t0b", events=False, Tval=601.0, mutate=t0only), freeze, "t0b3", J("t0b3"), os.path.join(T, "t0b3.csv"), card=card3)
+    md1_readout(os.path.join(T, "q0a.xyz"), freeze, "q0a3", J("q0a3"), os.path.join(T, "q0a3.csv"), card=card3)
+    e3 = md1_ensemble([J("t3"), J("t0b3"), J("q0a3")], os.path.join(T, "e3.json"), card=card3)
+    chk("양성 (개정 3): t = 0 쌍 사건만 있는 시드 2 → P–O '관측창 안 개시 없음' + 관측창 줄 · 기록 (개정 2 셈) 은 '개시 관측' · Zr–S 새 쌍 1 시드 → '시드 하나에서만'",
+        e3.get("status") == "판정" and e3["verdict"]["P-O"]["verdict"] == "관측창 안 개시 없음" and e3["verdict"]["P-O"]["obs_window"]
+        and e3["verdict"]["P-O"]["record_amend2_verdict"] == "개시 관측" and e3["verdict"]["P-O"]["counted"] == "n_events_new"
+        and e3["verdict"]["Zr-S"]["verdict"] == "시드 하나에서만")
+    md1_readout(good, freeze, "g3", J("g3"), os.path.join(T, "g3.csv"), card=card3)
+    md1_readout(os.path.join(T, "q1.xyz"), freeze, "q13", J("q13"), os.path.join(T, "q13.csv"), card=card3)
+    e3p = md1_ensemble([J("g3"), J("q13"), J("q0a3")], os.path.join(T, "e3p.json"), card=card3)
+    chk("양성 (개정 3): 생산 중 새로 든 쌍이 시드 2 에 있으면 '개시 관측' (P–O · Zr–S — good 의 t = 0 Zr–S1 쌍은 빼고도)",
+        e3p.get("status") == "판정" and all(e3p["verdict"][x]["verdict"] == "개시 관측" for x in ("P-O", "Zr-S")))
+    def no_crash(fn):                        # 예외로 죽으면 '보류' 가 아니라 시험 실패로 센다 (KeyError 로 우연히 막히는 것과 가른다)
+        try:
+            return fn()
+        except SystemExit:
+            raise
+        except Exception as e:
+            return {"status": f"예외 {type(e).__name__}"}
+    em = no_crash(lambda: md1_ensemble([J("g"), J("q1"), J("q0a")], os.path.join(T, "em.json"), card=card3))
+    chk("⛔음성: 카드는 개정 3 active 인데 시드 판독이 개정 3 없이 만들어졌으면 판정 보류 (예외 아님)",
+        em.get("status") == "판정 보류" and any("개정 3" in x for x in em.get("problems", [])))
+    er = no_crash(lambda: md1_ensemble([J("t3"), J("t0b3"), J("q0a3")], os.path.join(T, "er.json"), card=card))
+    chk("⛔음성: 시드 판독은 개정 3 인데 카드에 개정 3 이 없으면 판정 보류", er.get("status") == "판정 보류")
+    chk("⛔음성: 카드의 개정 3 이 active 가 아니면 앙상블도 거부",
+        refused(lambda: md1_ensemble([J("t3"), J("t0b3"), J("q0a3")], os.path.join(T, "e3pp.json"), card=card3p)))
     n_bad = len(res) - sum(res)
     print(f"md1 selftest: {sum(res)} 통과 / {n_bad} 실패")
     return 0 if n_bad == 0 else 1
@@ -511,8 +639,13 @@ def main(argv=None):
             out = md1_ensemble(a.md1_ensemble, a.out_json, card=a.card)
             print(f"  앙상블 {out['status']}" + ("" if out["status"] == "판정" else f" — {out['problems']}"))
             for k, v in (out.get("verdict") or {}).items():
-                print(f"  {k}: 사건 시드 {v['seeds_with_event']}/{v['of']} → {v['verdict']} · 첫 사건 (ps) {v['first_onset_ps_per_seed']}"
-                      + (f" · {v['obs_window']}" if v["obs_window"] else ""))
+                if "record_amend2_verdict" in v:          # 개정 3 — 판정은 새 쌍 · t = 0 쌍까지 센 셈은 기록
+                    print(f"  {k}: 새 쌍 사건 시드 {v['seeds_with_event']}/{v['of']} → {v['verdict']} · 새 쌍 첫 사건 (ps) {v['first_onset_new_ps_per_seed']}"
+                          f" · t=0 쌍 {v['n_t0_pairs_per_seed']} · (기록) t=0 쌍 포함 셈 {v['record_amend2_seeds_with_event']}/{v['of']}"
+                          + (f" · {v['obs_window']}" if v["obs_window"] else ""))
+                else:
+                    print(f"  {k}: 사건 시드 {v['seeds_with_event']}/{v['of']} → {v['verdict']} · 첫 사건 (ps) {v['first_onset_ps_per_seed']}"
+                          + (f" · {v['obs_window']}" if v["obs_window"] else ""))
             print(f"→ {a.out_json}")
             return 0 if out["status"] == "판정" else 3
         if not (a.freeze and a.label and a.out_csv):
@@ -520,7 +653,8 @@ def main(argv=None):
         r = md1_readout(a.md1, a.freeze, a.label, a.out_json, a.out_csv, card=a.card)
         print(f"  [{a.label}] 무결성 {'통과' if r['integrity']['ok'] else '실패 ' + str(r['integrity']['problems'])} · 생산 평균 T {r['integrity']['T_prod_mean_K']}")
         for k, v in r["pairs"].items():
-            print(f"  {k} ({'판정' if v['judged'] else '기록'} · < {v['cut_A']} Å): 지속 사건 {v['n_events']} · 첫 {v['first_onset_ps']} ps · 최장 {v['max_run_ps']} ps · 순간 최대 {v['inst_max']}")
+            print(f"  {k} ({'판정' if v['judged'] else '기록'} · < {v['cut_A']} Å): 지속 사건 {v['n_events']} · 첫 {v['first_onset_ps']} ps · 최장 {v['max_run_ps']} ps · 순간 최대 {v['inst_max']}"
+                  + (f" · t=0 쌍 {v['n_t0_pairs']} · 새 쌍 지속 사건 {v['n_events_new']} · 새 쌍 첫 {v['first_onset_new_ps']} ps" if "n_events_new" in v else ""))
         print(f"→ {a.out_json} · {a.out_csv}")
         return 0 if r["integrity"]["ok"] else 3
     return legacy_main(argv)

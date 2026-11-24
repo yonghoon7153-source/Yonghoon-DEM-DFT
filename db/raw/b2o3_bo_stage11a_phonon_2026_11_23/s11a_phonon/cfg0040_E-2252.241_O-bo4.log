@@ -1,0 +1,5 @@
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+n_modes=384  병진 3  비병진 허수: < -30 0 · -30..-5 0
+lowest 12 non-translational cm^-1: [24.452, 26.309, 27.111, 29.561, 31.215, 35.988, 42.463, 45.46, 46.724, 49.157, 49.406, 50.071]
+verdict: STABLE — 비병진 허수 없음 (-5 cm⁻¹ 기준) · Γ 점 국소 최소의 필요조건 (열적 안정 아님)
+-> /data/work/runs/b2o3_bo_2026_11_09/s11a_phonon/cfg0040_E-2252.241_O-bo4_freqs.txt · /data/work/runs/b2o3_bo_2026_11_09/s11a_phonon/cfg0040_E-2252.241_O-bo4_summary.json

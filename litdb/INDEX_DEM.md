@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 377편 · 생성 2026-11-24
+> digest 378편 · 생성 2026-11-24
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -325,7 +325,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_mixing_sequence_shear_speed_ptfe_fibrillation_dry_graphite_anode` | 건식 PTFE 흑연 음극 (인조 흑연 : Super P : PTFE = 95 : 3 : 2 · 15.4 mg/cm² · 90 µm) 에서 PTFE 를 넣는 순서 (TSM = 흑연 + Super P 먼저 → PTFE · OSM = 셋 한꺼번에) 와 고속 전단 rpm (2000 rpm 10 min 예비 혼합 뒤 5000 /  | experiment (dry process 건식 전극 · PTFE binder 섬유화 · 고속 mixer 투 | 2026-11-23 | 🖼 50 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 62 |
 
-## 화학-기계 열화 · 계면 (29편)
+## 화학-기계 열화 · 계면 (30편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -352,6 +352,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `siroma2015_transmission_line_model_porous_electrode_impedance` | 다공 전극 전송선 모델 (TML/TLM) 임피던스 해석해 전집 — Z형 · T형 · E형 · 범용 연결 × 경계조건 변형 + TML-Y 변환 (★ Minnmann 2021 EIS-TLM 식 [1] 의 원전 · de Levie R/3 계열과 관통형의 위상 구분) — Siroma (Electrochim. Acta 2015) | theory (analytic impedance solutions — EIS transmission-line | 2026-10-03 | 🖼 16 |
 | `so2021_dem_fabrication_degradation_ductile_particles` | frame[5] 사이클 열화 DEM — Simulation of Fabrication and Degradation of All-Solid-State Batteries with Ductile Particles — So, Inoue, Hirate, Nunoshita, Ishikawa, Tsuge (J. Electrochem. | DEM (소성 ductile-particle contact model + 2-step fabrication→ | 2026-06-26 | 🖼 10 |
 | `spencerjolly2023_ag_graphite_interlayer_operando_xrd` | Ag–흑연 복합 인터레이어(anodeless Li₆PS₅Cl)의 구조 변화를 operando XRD 로 — 충전: Li 가 흑연에 전기화학적으로 들어간 뒤 Ag 와 화학적으로 합금화 (Li_xAg → LiAg → Li₉Ag₄ → Li₁₀Ag₃) · 방전은 역경로가 아니다 · Ag 는 CCD 를 올리지 않고 CC 쪽 Li/ | exp (operando PXRD — lab Cu Kα reflection + Diamond I12 sync | 2026-09-23 | 🖼 11 |
+| `sun2026_ssb_interface_electromechanical_gaps_account` | Critical Gaps in Understanding Solid-State Battery Interfaces from an Electromechanical Perspective — Sun · Qian · Zhong · Bo (Acc. Chem. Res. 2026, ASAP) | Account (자기 그룹 작업 요약 · 새 자료 0) — exp 재수록 (operando 공초점 Raman | 2026-11-23 | 🖼 8 |
 | `tabakovic2026_mechanical_stress_eis_ica_drt_dfn` | 기계 응력(정수압 σ_h 1–10 MPa)이 LIB 의 EIS · DRT · ICA 를 어떻게 바꾸나 — DFN(PyBaMM) + 2-스케일 선형탄성 역학 완전 결합 시뮬레이션 · "우세 전극" 가설 — Tabaković · Katrašnik · Zelič (SSRN 프리프린트, 동료심사 전) | continuum (DFN/P2D in PyBaMM + 2-scale linear-elastic partic | 2026-09-23 | 🖼 10 |
 | `taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode` | 황화물 전고체전지 복합 양극 (NMC811 + Li₆PS₅Cl) 의 전기화학–화학–역학 완전 결합 2D 평면변형 유한요소 phase-field 파괴 모형 (COMSOL · AT-1 · ℓ₀ 100 nm · ≈3.5 M 자유도 · 선형 탄성 · 소성 없음) — 운전 적층압 0 / 5 / 40 MPa · 공극 15 % ↔ 0 | FEM (2D plane-strain · fully coupled electro-chemo-mechanica | 2026-11-12 | 🖼 89 |
 | `tron2023_lpscl_ccd_ambient_pressure` | 상압 (스택압 0.20–0.28 MPa) Li/Li₆PS₅Cl/Li 대칭셀의 임계 전류 밀도 (CCD) — 셀 지그 · 전해질 두께 · Li 원천이라는 '숨은 변수' 와 galvanodynamic 분극 (Tafel 차용) 판정법: CCD 0.023–0.19 mA cm⁻² · 저항은 Li–SE interface 가 지배 · | experiment (Li/Li₆PS₅Cl/Li 대칭셀 · 단계 정전류 + galvanodynamic 분극  | 2026-10-14 | 🖼 19 |
