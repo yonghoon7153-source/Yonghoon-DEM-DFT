@@ -1,0 +1,17 @@
+$ env 이름만 (값 없음) — PIP_ · 프록시 · CA 관련
+CURL_CA_BUNDLE
+HTTPS_PROXY
+NODE_EXTRA_CA_CERTS
+NO_PROXY
+PIP_CERT
+PIP_CONFIG_FILE
+PYTHONUNBUFFERED
+REQUESTS_CA_BUNDLE
+SSL_CERT_FILE
+https_proxy
+no_proxy
+$ ls pip 설정 파일 후보 (있는지만)
+없음 /etc/pip.conf
+없음 /etc/xdg/pip/pip.conf
+없음 /root/.config/pip/pip.conf
+없음 /root/.pip/pip.conf

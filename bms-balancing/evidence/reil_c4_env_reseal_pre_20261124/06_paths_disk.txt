@@ -1,0 +1,9 @@
+$ 새 경로가 없는지 (있으면 S0 중지)
+없음 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_env18
+없음 bms-balancing/reil_c6_rebuild_20261124
+없음 bms-balancing/evidence/reil_c4_env_20261124
+없음 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env
+$ df -B1 <저장소> <스크래치>
+Filesystem        1B-blocks        Used   Available Use% Mounted on
+/dev/vda       270553174016 15277441024 26006093824  38% /
+/dev/vda       270553174016 15277441024 26006093824  38% /
