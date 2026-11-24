@@ -5855,6 +5855,231 @@ def mixer_literature():
                                       notice=f'자료를 화면에 그리지 못했다 — {type(e).__name__}: {e}'))
 
 
+# ─────────────────────────  믹서 문제 · 공백 (/mixer/story)  ─────────────────────────
+#  1저자 11-24 — 믹서 원고의 문제 · 공백 · 새로움 문서를 웹앱에서 읽는다 (읽기 전용 · 계산 없음).  세 조각:
+#   ① 정본 = docs/reviews/mixer_problem_gap_novelty_20261124.md — /emod (_emod_doc) 와 같은 관문: 갱신 표지
+#      (<!-- MIXSTORY:UPDATED YYYY-MM-DD -->) 가 정확히 하나 · 빈 본문 거부 · markdown 변환 **전에** ledger_view.redact ·
+#      읽지 못하면 무엇이 깨졌는지 적고 옛 문장을 보이지 않는다 (fail-closed).  문장 · 숫자를 코드 · 템플릿에 베끼지 않는다
+#      (정본을 고치면 화면이 같이 바뀐다 · 규율 ④).
+#   ② 증거 표 = docs/reviews/mixer_b2_flow_20261124/b1_b2_u_contacts.json — 지표 이름 · 팔 · 값 = 자료 그대로 (개발 자료 · 한 시드 ·
+#      판정 아님 · Codex 판독 그대로).  /mixer/lit 의 gap_summary.json 과 같은 처리: 파싱 전 redact · 없거나 깨져도 200 + 안내
+#      (정본은 그대로 보인다).  패널 표지가 자료와 어긋나면 (label · n_independent_seeds) 숨기지 않고 안내한다.
+#   ③ 그림 둘 = 등록부 (MIXSTORY_FIGS) 의 이름만 · 사용자 입력으로 경로를 잇지 않는다 (등록부 밖 · 경로 꼴 = 404) · 밑글 =
+#      같은 폴더 frame_caption.md (있으면 · redact → markdown · 없으면 아무것도 더 보이지 않는다).
+#  라벨 · 칸 모양은 템플릿 (templates/mixer_story.html) 몫 · 회귀 webapp/test_mixer_story_page.py.
+MIXSTORY_MD = Path(__file__).resolve().parent.parent / 'docs' / 'reviews' / 'mixer_problem_gap_novelty_20261124.md'
+_MIXSTORY_UPDATED = re.compile(r'<!-- MIXSTORY:UPDATED (\d{4}-\d{2}-\d{2}) -->')
+_MIXSTORY_DIR = 'docs/reviews/mixer_b2_flow_20261124'
+_MIXSTORY_EV_NAME = 'b1_b2_u_contacts.json'
+#: 그림 등록부 — 화면 이름 (주소 끝) → (자료 폴더 안 PNG, 밑글 파일 또는 None).  등록부 밖 이름은 404.
+MIXSTORY_FIGS = {
+    'b2_u_cross_section.png': ('b2_u_cross_section.png', 'frame_caption.md'),
+    'b2_u_second_turn.png': ('b2_u_second_turn.png', None),
+}
+#: 패널 표지 ("개발 자료 · 한 시드 · 판정 아님") 가 기대는 자료 머리 — 다르거나 없으면 화면에 안내한다.
+_MIXSTORY_EV_EXPECT = (('label', 'DEVELOPMENT_DATA_ONLY'), ('n_independent_seeds', 1))
+
+
+def _mixstory_md(body):
+    """redact 를 **이미 지난** 글 → HTML (markdown tables · 없으면 <pre> 이스케이프 — _emod_doc 과 같은 대체)."""
+    try:
+        import markdown
+        return markdown.markdown(body, extensions=['tables'])
+    except ImportError:
+        return '<pre>' + body.replace('&', '&amp;').replace('<', '&lt;') + '</pre>'
+
+
+def _mixstory_doc(path=None):
+    """믹서 문제 · 공백 정본 → {'ok', 'html', 'updated', 'error', 'redacted'} (_emod_doc 과 같은 꼴 · path = 시험용).
+
+    fail-closed — 파일 없음 · 읽기 실패 · 갱신 표지가 정확히 하나가 아님 · 빈 본문이면 `ok=False` 와 **무엇이 깨졌는지**.
+    markdown 변환 **전에** redact.  갱신 표지는 화면에 내지 않는다 (HTML 주석으로도) — 날짜는 `updated` 로만.
+    """
+    out = {'ok': False, 'html': '', 'updated': '', 'error': '', 'redacted': False}
+    p = Path(path) if path is not None else MIXSTORY_MD
+    try:
+        src = p.read_text(encoding='utf-8')
+    except (OSError, ValueError) as e:      # 없음 · 권한 · UTF-8 아님 (UnicodeDecodeError ⊂ ValueError)
+        out['error'] = f'{p.name} 을 읽지 못했다 ({type(e).__name__})'
+        return out
+    hits = _MIXSTORY_UPDATED.findall(src)
+    if len(hits) != 1:
+        out['error'] = (f'갱신 표지가 {len(hits)} 개 — <!-- MIXSTORY:UPDATED YYYY-MM-DD --> 가 정확히 하나여야 한다')
+        return out
+    body = ledger_view.redact(src).strip()
+    out['redacted'] = body != src.strip()
+    body = _MIXSTORY_UPDATED.sub('', body).strip()
+    if not body:
+        out['error'] = '본문이 비어 있다'
+        return out
+    out.update(ok=True, html=_mixstory_md(body), updated=hits[0])
+    return out
+
+
+def _mixstory_cell(v):
+    """자료 값 → 칸 dict(txt = 화면 글 (실수 유효 4 자리 · 정수 그대로), raw = 자료 전체 값) · 숫자가 아니거나 유한하지 않으면 None."""
+    import math as _math
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return None
+    try:
+        if isinstance(v, float) and not _math.isfinite(v):
+            return None
+        return {'txt': str(v) if isinstance(v, int) else '%.4g' % v, 'raw': repr(v)}
+    except (OverflowError, ValueError):     # 아주 큰 정수 등
+        return None
+
+
+def _mixstory_meta_text(v):
+    """머리 값 (metrics 밖) → 한 줄 글 (목록 = ' · ' 로 · 객체 = '키 값' 을 ' · ' 로 · 그 밖 = str)."""
+    if isinstance(v, list):
+        return ' · '.join(_mixstory_meta_text(x) for x in v)
+    if isinstance(v, dict):
+        return ' · '.join(f'{k} {_mixstory_meta_text(x)}' for k, x in v.items())
+    return str(v)
+
+
+def _mixstory_ev_empty(path='', folder=''):
+    return dict(ok=False, notice='', label_notice='', meta=[], arms=[], stats=[], extras=[], columns=[], rows=[],
+                redacted=False, path=path, dir=folder)
+
+
+def _mixstory_evidence(path=None):
+    """B1-U ↔ B2-U 접촉 지표 JSON → dict(ok, notice, label_notice, meta, arms, stats, extras, columns, rows, redacted, path, dir).
+
+    path = 시험용 절대 경로 (없으면 리포 기준 _MIXSTORY_DIR/_MIXSTORY_EV_NAME).  파싱 **전에** redact (/mixer/lit 과 같은 관문).
+    열 = 자료 순서 그대로 — 팔 = 지표 안에서 값이 객체인 키 · 통계 = 그 객체의 키 · 덧칸 = 값이 객체가 아닌 키 (첫 출현 순서).
+    행 cols = columns 순서의 칸 (_mixstory_cell · 없거나 숫자가 아니면 None → 화면 '—').
+    """
+    rel = path or f'{_MIXSTORY_DIR}/{_MIXSTORY_EV_NAME}'
+    out = _mixstory_ev_empty(rel, os.path.dirname(rel))
+    try:
+        p = path or _repo_path(rel)
+        with open(p, encoding='utf-8') as f:
+            raw = f.read()
+        txt = ledger_view.redact(raw)
+        out['redacted'] = txt != raw
+        ev = json.loads(txt)
+    except FileNotFoundError:
+        out['notice'] = f'자료 파일이 없다 — {rel}'
+        return out
+    except (OSError, ValueError) as e:      # 리포 밖 경로 (_repo_path) · 깨진 JSON · 인코딩
+        out['notice'] = f'자료를 읽지 못했다 — {type(e).__name__}: {e}'
+        return out
+    mx = ev.get('metrics') if isinstance(ev, dict) else None
+    if not isinstance(mx, dict):
+        out['notice'] = f'{os.path.basename(rel)} 꼴이 다르다 — 객체이고 metrics (객체) 가 있어야 한다'
+        return out
+    notes = []
+    good = {k: m for k, m in mx.items() if isinstance(m, dict)}
+    if len(good) != len(mx):
+        notes.append(f'객체가 아닌 지표 {len(mx) - len(good)} 개를 뺐다')
+    if not good:
+        out['notice'] = ' · '.join(notes + ['지표가 없다'])
+        return out
+    arms, stats, extras = [], [], []
+    for m in good.values():
+        for k, v in m.items():
+            if isinstance(v, dict):
+                if k not in arms:
+                    arms.append(k)
+                for s in v:
+                    if s not in stats:
+                        stats.append(s)
+            elif k not in extras:
+                extras.append(k)
+    columns = ([dict(key=f'{a}.{s}', arm=a, stat=s) for a in arms for s in stats]
+               + [dict(key=x, arm='', stat=x) for x in extras])
+    rows, n_bad = [], 0
+    for name, m in good.items():
+        cols = []
+        for col in columns:
+            if col['arm']:
+                arm = m.get(col['arm'])
+                present = isinstance(arm, dict) and col['stat'] in arm
+                v = arm.get(col['stat']) if present else None
+            else:
+                present = col['stat'] in m
+                v = m.get(col['stat'])
+            cell = _mixstory_cell(v)
+            n_bad += present and cell is None
+            cols.append(cell)
+        rows.append(dict(name=name, cols=cols))
+    if n_bad:
+        notes.append(f"숫자가 아닌 값 {n_bad} 칸 = '—' (글 · 참거짓 · NaN · 무한대)")
+    lab = []
+    for k, want in _MIXSTORY_EV_EXPECT:
+        if k not in ev:
+            lab.append(f'자료에 {k} 가 없다 — 이 패널 표지를 확인할 수 없다')
+        elif isinstance(ev[k], bool) or ev[k] != want:
+            lab.append(f'자료의 {k} = {ev[k]!r} — 이 패널 표지와 다르다 ({want!r} 을 기대)')
+    out.update(ok=True, notice=' · '.join(notes), label_notice=' · '.join(lab), arms=arms, stats=stats, extras=extras,
+               columns=columns, rows=rows,
+               meta=[dict(key=k, text=_mixstory_meta_text(v)) for k, v in ev.items() if k != 'metrics'])
+    return out
+
+
+def _mixstory_fig_file(fname):
+    """등록부의 파일 이름 → 리포 기준 절대 경로 (자료 폴더 안) · 탈출이면 None."""
+    try:
+        return _repo_path(f'{_MIXSTORY_DIR}/{fname}')
+    except ValueError:
+        return None
+
+
+def _mixstory_figs():
+    """그림 등록부 → [dict(name, url, exists, file, caption_html, caption_redacted, caption_notice)] (등록 순서)."""
+    out = []
+    for name, (fname, cap) in MIXSTORY_FIGS.items():
+        p = _mixstory_fig_file(fname)
+        ent = dict(name=name, url=f'/mixer/story/fig/{name}', exists=bool(p and os.path.isfile(p)),
+                   file=f'{_MIXSTORY_DIR}/{fname}', caption_html='', caption_redacted=False, caption_notice='')
+        cp = _mixstory_fig_file(cap) if cap else None
+        if cp:
+            try:
+                raw = Path(cp).read_text(encoding='utf-8')
+            except FileNotFoundError:
+                raw = None                  # 밑글이 없으면 아무것도 더 보이지 않는다
+            except (OSError, ValueError) as e:
+                raw = None
+                ent['caption_notice'] = f'밑글 ({cap}) 을 읽지 못했다 — {type(e).__name__}'
+            if raw is not None:
+                txt = ledger_view.redact(raw).strip()
+                ent['caption_redacted'] = txt != raw.strip()
+                ent['caption_html'] = _mixstory_md(txt) if txt else ''
+        out.append(ent)
+    return out
+
+
+@app.route('/mixer/story')
+def mixer_story():
+    """믹서 문제 · 공백 — 정본 문서 그대로 + 접촉 지표 표 (개발 자료 · 한 시드 · 판정 아님) + 그림 둘 (읽기 전용)."""
+    doc = _mixstory_doc()
+    root = Path(__file__).resolve().parent.parent
+    try:
+        doc_path = MIXSTORY_MD.resolve().relative_to(root).as_posix()
+    except ValueError:
+        doc_path = str(MIXSTORY_MD)
+    ev, figs = _mixstory_evidence(), _mixstory_figs()
+    try:
+        return render_template('mixer_story.html', active='mixer', doc=doc, doc_path=doc_path, ev=ev, figs=figs)
+    except Exception as e:                  # noqa: BLE001 — 자료 꼴이 템플릿 기대와 달라도 500 대신 안내 (정본은 그대로)
+        return render_template('mixer_story.html', active='mixer', doc=doc, doc_path=doc_path, figs=[],
+                               ev=dict(_mixstory_ev_empty(f'{_MIXSTORY_DIR}/{_MIXSTORY_EV_NAME}', _MIXSTORY_DIR),
+                                       notice=f'자료를 화면에 그리지 못했다 — {type(e).__name__}: {e}'))
+
+
+@app.route('/mixer/story/fig/<name>')
+def mixer_story_fig(name):
+    """/mixer/story 그림 — 등록부 (MIXSTORY_FIGS) 의 이름만 · 그 밖 (경로 꼴 · 같은 폴더의 다른 파일 포함) = 404."""
+    ent = MIXSTORY_FIGS.get(name)
+    if ent is None:
+        abort(404)
+    p = _mixstory_fig_file(ent[0])
+    if not p or not os.path.isfile(p):
+        abort(404)
+    return send_file(p, mimetype='image/png')
+
+
 #  "침대 보기" 탭 (1저자 비준 2026-09-30) — 보기 전용 · 판정은 3D 칸 M 으로만.  경로 · 맹검 잠금 · 덤프 관문은
 #  webapp/mixer_bed.py 한 곳에 있다 (회귀 webapp/test_mixer_bed_view.py).  읽기만 하고 subprocess 는 없다.
 @app.route('/api/mixer/runs')

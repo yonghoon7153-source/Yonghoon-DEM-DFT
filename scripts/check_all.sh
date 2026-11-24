@@ -322,6 +322,7 @@ run 'webapp: gen2_stamp_record' python3 webapp/test_gen2_stamp_record.py  # 10-0
 run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py   # 10-05 이종기술 회의록 — 회의 둘 (09-18 · 10-02) 고르기 · 회의 종합 · 등록부 밖 키 404 · /hetero 논지 정본 비준 블록 (docs/hetero_thesis.md 에서 읽음 · fail-closed)
 run 'webapp: emod'                python3 webapp/test_emod_page.py   # 11-06 유효 영률 · 응력 페이지 — 정본 docs/effective_modulus_stress.md 에서 읽음 · 갱신 표지 하나 · fail-closed · 템플릿에 베끼지 않기
 run 'webapp: mixer_lit'           python3 webapp/test_mixer_lit_page.py   # 11-23 믹서 문헌 지도 (1저자 Q4) — 공백 카드 4 · 행 수 = 자료 · 카드 전 표지 · 자료 없으면 안내 (1저자 11-23 게이트 단계 추가)
+run 'webapp: mixer_story'         python3 webapp/test_mixer_story_page.py   # 11-24 믹서 문제 · 공백 (/mixer/story) — 정본 docs/reviews/mixer_problem_gap_novelty_20261124.md 에서 읽음 · 갱신 표지 하나 · fail-closed · redact 먼저 · B1-U ↔ B2-U 접촉 지표 = 자료 그대로 (개발 자료 · 한 시드) · 그림 둘 등록부 밖 404 · 자료 없으면 안내
 run 'webapp: rint_explainer (Rint 설명 정적 페이지 + 사이드바 링크 · 봉인 app.py 무변경 · 10-21)'   python3 webapp/test_rint_explainer_page.py
 run 'webapp: dem_redesign_plan (DEM 재설계 계획서 정적 페이지 둘 · 생성기 --check 바이트 같음 · 낯선 구성 rc 2 · docx 정본 sha256 · 원문 줄 전수 포함 · 수식 · 그림 고정물 (MathML · OMML · data URI) · 사이드바 · 라우트 없이 정적 (app.py 는 봉인) · 11-10)'   python3 webapp/test_dem_redesign_plan_page.py
 run 'webapp: dem_method_figs (2D DEM 방법 그림 정적 페이지 · 사이드바 · 내려받기 = docs 원본 바이트 · ../ 404 · 봉인 app.py 무변경 · 11-02)'   python3 webapp/test_dem_method_figs_page.py

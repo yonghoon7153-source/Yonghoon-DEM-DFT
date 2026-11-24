@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% set active = "mixer" %}
+{% block title %}믹서 문제 · 공백 — DEM/MPM Analyzer{% endblock %}
+
+{#  1저자 11-24 — 믹서 원고의 문제 · 공백 · 새로움 문서를 읽기 전용으로 보인다 (app.py `/mixer/story` · 회귀 webapp/test_mixer_story_page.py).
+    정본 문서 = app.py _mixstory_doc 이 읽어 redact → markdown 한 HTML 을 그대로 싣는다 (doc.html).
+    증거 표 = _mixstory_evidence — 열 (팔 × 통계 + 덧칸) · 행 (지표) · 칸 글 · 머리 = 자료 키 · 값 그대로 (ev.*).
+    그림 = 등록부 (MIXSTORY_FIGS) 둘 · 밑글 = 자료 폴더의 밑글 파일 (있으면).
+    ⚠ 여기에 정본 문장 · 자료 숫자 · 지표 이름을 베끼지 않는다 — 정본 · 자료를 고치면 화면이 같이 바뀐다 (규율 ④). #}
+
+{% block content %}
+<style>
+  .ms-wrap { max-width:1180px; }
+  .ms-crumb { font-size:12.5px; margin:0 0 6px; display:flex; flex-wrap:wrap; gap:4px 16px; }
+  .ms-head { display:flex; align-items:baseline; gap:6px 14px; flex-wrap:wrap; }
+  .ms-head h1 { margin:0; }
+  .ms-sub { font-size:12.5px; color:var(--dim,#7c8194); }
+  .ms-lead { font-size:14px; line-height:1.65; margin:6px 0 10px; max-width:880px; }
+  .ms-pill { display:inline-block; padding:2px 9px; border-radius:999px; font-size:12px; font-weight:600;
+             border:1px solid var(--border,#2a2d3e); white-space:nowrap; vertical-align:middle; }
+  .ms-pill.warn { border-color:rgba(251,191,36,.55); background:rgba(251,191,36,.12); color:var(--yellow,#fbbf24); }
+  .ms-notice { margin:10px 0; padding:10px 14px; border-radius:10px; border:1px solid rgba(248,113,113,.55);
+               background:rgba(248,113,113,.10); font-size:13.5px; line-height:1.55; overflow-wrap:anywhere; }
+  .ms-nav { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12.5px; margin:4px 0 8px; }
+  .ms-nav a { color:var(--accent,#6c8cff); text-decoration:none; }
+  .ms-note { font-size:12.5px; color:var(--dim,#7c8194); line-height:1.6; max-width:920px; margin:4px 0; overflow-wrap:anywhere; }
+  .ms-note code, .ms-foot code, .ms-kv code { font-family:var(--mono,monospace); overflow-wrap:anywhere; }
+  .ms-sec { margin:26px 0; }
+  .ms-sec > h2 { font-size:17px; margin:0 0 8px; display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; }
+  .ms-sec > h2 small { font-size:12px; font-weight:400; color:var(--dim,#7c8194); }
+  /* 정본 본문 — 앱 테마 그대로 (흰 카드 하드코딩 금지 · emod.html 과 같은 규칙) */
+  .ms-doc { max-width:120ch; line-height:1.7; font-size:14px; }
+  .ms-doc h1 { font-size:18px; margin:4px 0 12px; }
+  .ms-doc h2 { font-size:16px; margin:30px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--border,#2a2d3e); }
+  .ms-doc h3 { font-size:14.5px; margin:18px 0 6px; }
+  .ms-doc table { border-collapse:collapse; display:block; overflow-x:auto; font-size:12.5px; margin:6px 0 12px; }
+  .ms-doc th, .ms-doc td { padding:6px 10px; text-align:left; border-bottom:1px solid var(--border,#2a2d3e); vertical-align:top; }
+  .ms-doc thead th { color:var(--dim,#7c8194); font-weight:600; }
+  .ms-doc blockquote { margin:8px 0; padding:6px 12px; border-left:3px solid var(--accent,#6c8cff); background:rgba(108,140,255,.08);
+                       border-radius:0 8px 8px 0; }
+  .ms-doc code { font-size:.86em; overflow-wrap:anywhere; }
+  .ms-doc li { margin:3px 0; }
+  /* 증거 표 — 넓으면 이 틀 안에서만 가로로 민다 (폰 폭에서 쪽 전체 가로 스크롤 방지 · mixer_literature.html 과 같은 틀) */
+  .ms-kvs { display:flex; flex-wrap:wrap; gap:4px 16px; font-size:12px; color:var(--dim,#7c8194); margin:6px 0 10px; }
+  .ms-kv b { font-weight:600; color:var(--text,#e4e6f0); }
+  .ms-evwrap { overflow-x:auto; contain:inline-size; border:1px solid var(--border,#2a2d3e); border-radius:12px; }
+  .ms-ev { border-collapse:collapse; font-size:12.5px; line-height:1.45; }
+  .ms-ev th, .ms-ev td { border-bottom:1px solid var(--border,#2a2d3e); padding:6px 9px; text-align:right; white-space:nowrap; }
+  .ms-ev thead th { background:rgba(108,140,255,.10); font-weight:600; text-align:center; }
+  .ms-ev thead th.ms-stat { font-weight:400; font-size:11.5px; color:var(--dim,#7c8194); white-space:normal; overflow-wrap:anywhere; min-width:64px; }
+  .ms-ev tbody th { text-align:left; font-weight:400; }
+  .ms-ev tbody th code { font:12px/1.4 var(--mono,monospace); background:rgba(127,127,127,.16); padding:1px 5px; border-radius:4px; }
+  .ms-ev td { font-family:var(--mono,monospace); cursor:help; }
+  .ms-ev td.ms-na { color:var(--dim,#7c8194); cursor:default; }
+  .ms-ev .ms-arm { border-left:1px solid var(--border,#2a2d3e); }
+  .ms-figs { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(440px, 100%), 1fr)); gap:16px; align-items:start; }
+  .ms-fig { margin:0; background:var(--card,#1c1f2e); border:1px solid var(--border,#2a2d3e); border-radius:12px; padding:12px; min-width:0; }
+  .ms-fig img { display:block; width:100%; height:auto; border-radius:8px; background:#fff; }
+  .ms-fig .ms-figname { font:600 12px/1.5 var(--mono,monospace); color:var(--dim,#7c8194); margin:0 0 6px; overflow-wrap:anywhere; }
+  .ms-cap { font-size:12.5px; line-height:1.6; margin-top:10px; color:var(--dim,#7c8194); overflow-wrap:anywhere; }
+  .ms-cap h1 { font-size:13.5px; margin:0 0 6px; color:var(--text,#e4e6f0); }
+  .ms-cap p { margin:6px 0; }
+  .ms-foot { margin:26px 0 8px; padding-top:12px; border-top:1px solid var(--border,#2a2d3e); font-size:12px;
+             color:var(--dim,#7c8194); line-height:1.6; }
+</style>
+
+<div class="ms-wrap">
+  <div class="ms-crumb"><a href="/mixer">← 믹서 (개발 이력 · 침대 보기)</a><a href="/mixer/lit">문헌 지도 →</a></div>
+  <div class="ms-head">
+    <h1>&#x1F9ED; 믹서 — 문제 · 공백</h1>
+    {% if doc.ok %}<span class="ms-sub">갱신 {{ doc.updated }}</span>{% endif %}
+    {% if doc.redacted %}<span class="ms-sub">⟨인용금지 가림 적용⟩</span>{% endif %}
+  </div>
+  <p class="ms-lead">
+    믹서 원고의 <b>문제 정의 · 공백 · 새로움</b> 문서를 그대로 읽는다 — 이 화면은 정본 파일을 읽어 보인다 (여기에 베끼지 않는다 ·
+    정본을 고치면 화면이 같이 바뀐다).  아래에 그 문서가 가리키는 개발 판독의 접촉 지표 표와 그림 둘을 붙였다.  읽기 전용 · 계산 없음.
+  </p>
+  <nav class="ms-nav"><a href="#ms-doc">문서</a><a href="#ms-ev">증거 표</a><a href="#ms-figs">그림</a></nav>
+
+  <section class="ms-sec" id="ms-doc">
+    {% if doc.ok %}
+    <div class="ms-doc"><!--MSDOC-->{{ doc.html|safe }}<!--/MSDOC--></div>
+    {% else %}
+    <div class="ms-notice"><b>⛔ 정본을 읽지 못했다.</b> {{ doc.error }} — 화면은 옛 문장을 대신 보이지 않는다.</div>
+    {% endif %}
+  </section>
+
+  <section class="ms-sec" id="ms-ev">
+    <h2>증거 표 — {% if ev.arms %}{{ ev.arms|join(' ↔ ') }} {% endif %}접촉 지표
+      <span class="ms-pill warn">개발 자료 · 한 시드 · 판정 아님 (Codex 판독 그대로)</span>
+      <small>열 이름 · 지표 이름 · 값 = 자료 그대로</small></h2>
+    {% if ev.notice %}<div class="ms-notice">⚠ {{ ev.notice }}</div>{% endif %}
+    {% if ev.label_notice %}<div class="ms-notice">⚠ 표지 확인 — {{ ev.label_notice }}</div>{% endif %}
+    {% if ev.ok %}
+    <div class="ms-kvs">
+      {% for m in ev.meta %}<span class="ms-kv" data-meta="{{ m.key }}"><b>{{ m.key }}</b> <code>{{ m.text }}</code></span>{% endfor %}
+      {% if ev.redacted %}<span>⟨인용금지 가림 적용⟩</span>{% endif %}
+    </div>
+    <div class="ms-evwrap">
+    <table class="ms-ev">
+      <thead>
+        <tr><th rowspan="2">지표 <small>(자료 키)</small></th>
+          {%- for arm in ev.arms %}<th colspan="{{ ev.stats|length }}" class="ms-arm">{{ arm }}</th>{% endfor -%}
+          {%- for x in ev.extras %}<th rowspan="2" class="ms-arm">{{ x }}</th>{% endfor %}</tr>
+        <tr>{% for arm in ev.arms %}{% for st in ev.stats %}<th class="ms-stat">{{ st }}</th>{% endfor %}{% endfor %}</tr>
+      </thead>
+      <tbody>
+      {% for r in ev.rows %}
+        <tr class="ms-ev-row" data-metric="{{ r.name }}"><th><code>{{ r.name }}</code></th>
+          {%- for c in r.cols %}{% set col = ev.columns[loop.index0] %}
+          {%- if c %}<td data-col="{{ col.key }}" title="{{ c.raw }}">{{ c.txt }}</td>{% else %}<td data-col="{{ col.key }}" class="ms-na">—</td>{% endif %}
+          {%- endfor %}</tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <p class="ms-note">칸 글 = 유효 숫자 넷으로 줄인 값 · 칸에 마우스를 올리면 자료의 전체 값 · '—' = 자료에 없거나 숫자가 아닌 칸.
+      한 시드의 개발 판독이라 산포 · 판정 문장으로 쓰지 않는다 (해석은 위 정본 문서와 자료 폴더의 README).</p>
+    {% endif %}
+    <p class="ms-note">자료 = <code>{{ ev.path }}</code> · 판독 설명 = <code>{{ ev.dir }}/README.md</code></p>
+  </section>
+
+  <section class="ms-sec" id="ms-figs">
+    <h2>그림 <small>자료 폴더의 PNG 그대로 · 등록부 둘만 · 개발 자료</small></h2>
+    <div class="ms-figs">
+    {% for f in figs %}
+      <figure class="ms-fig" data-fig="{{ f.name }}">
+        <p class="ms-figname">{{ f.file }}</p>
+        {% if f.exists %}<a href="{{ f.url }}" target="_blank" rel="noopener"><img src="{{ f.url }}" alt="{{ f.name }}" loading="lazy"></a>
+        {% else %}<div class="ms-notice">⚠ 그림 파일이 없다 — <code>{{ f.file }}</code></div>{% endif %}
+        {% if f.caption_notice %}<div class="ms-notice">⚠ {{ f.caption_notice }}</div>{% endif %}
+        {% if f.caption_html %}<figcaption class="ms-cap">{{ f.caption_html|safe }}{% if f.caption_redacted %}<p>⟨인용금지 가림 적용⟩</p>{% endif %}</figcaption>{% endif %}
+      </figure>
+    {% endfor %}
+    </div>
+    {% if not figs %}<div class="ms-notice">⚠ 보일 그림이 없다 — 등록부가 비었거나 화면을 그리다 멈춰 그림을 뺐다 (위 증거 표 안내)</div>{% endif %}
+  </section>
+
+  <footer class="ms-foot">
+    정본 = <code>{{ doc_path }}</code> (이 화면은 그 파일을 읽는다 · 문장 · 숫자의 출처는 그 문서) ·
+    증거 표 = <code>{{ ev.path }}</code> · 그림 = 같은 폴더의 등록된 PNG 둘.  읽기 전용 · 이 화면은 계산하지 않는다.
+    화면으로 나가는 글은 변환 전에 인용 금지 등록부 (<code>ledger_view.redact</code>) 를 지난다.
+  </footer>
+</div>
+{% endblock %}
