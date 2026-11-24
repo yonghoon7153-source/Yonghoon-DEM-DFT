@@ -98,9 +98,16 @@
       "sha256": "e2875bde17a21b5cf8f9a84c6480e35d58fa9245f7a59639f118b46c02721831",
       "bytes": 20850830,
       "uploaded_as": "d6ee03852b13_suppl.mp4"
+     },
+     {
+      "inbox": "litdb/inbox/chu2026_solubility_interlayer_video_b4.mp4",
+      "sha256": "4796e5b3550a3bd9e86266b3cbac8560d3350c15faa73b3bc01893b70307455b",
+      "bytes": 43176056,
+      "uploaded_as": "d6ee03852b4_part1.bin + d6ee03852b4_part2.bin (사용자 PC 에서 바이트 반으로 자름 · 여기서 cat 으로 붙임 · 조각 21588028 B 둘 · 전체 디코드 오류 0 · 32.3 s · 1920×1080 · 24 fps)"
      }
     ],
-    "not_received": "b4 (= S3 추정 · Ag 0.1 mA cm⁻² 도금) — 사용자 결정 2026-11-24 '안 줄게' (b7 · b10 이 Ag 0.5 · 1 mA cm⁻² · 0.1 은 Fig. 6 · S17 그림으로 대신) · Cu · Au 도금 6 개 (b2 · b3 · b5 · b6 · b8 · b9) 도 안 받음"
+    "not_received": "b2 · b3 · b5 · b6 · b8 · b9 — 사용자 PC 에 없음 (2026-11-24 검색 · 영상들_chu2026_올릴것 폴더의 6 개만 남음) · b4 는 처음엔 '안 줄게' 였다가 박리 영상으로 밝혀져 조각으로 받음",
+    "map_from_agent_2026_11_24": "받은 5 개는 끝 장면 · SEM 데이터바 파일 이름으로 b7 = S3 · b10 = S6 · b11 = S7 · b12 = S8 · b13 = S9 (전부 도금) · 남은 두 가설 (글자 순 b2 = S1 · b3 = S10 · b4 = S11 · b5 = S12 / 되감기 b2–b4 = S10–S12) 어느 쪽이든 b4 는 박리 (S11 Au 또는 S12 Ag) — b4 첫 장면으로 가른다"
    }
   },
   {
