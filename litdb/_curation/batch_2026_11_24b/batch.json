@@ -44,6 +44,31 @@
     "reclone": "GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/bkarasulu/li-argyrodite-interface /home/user/bkarasulu/li-argyrodite-interface",
     "contents": "bulk/ (Li6PS5Cl 정렬 · 무질서 · 이완 전후) · surfaces/ · interfaces/ (100|100 · 100|010 · 011|011 · cb · 이완 전후) · mace_models/ (계면별 3) · test_sets/ (계면별 xyz)"
    }
+  },
+  {
+   "n": 2,
+   "slug": "chu2026_solubility_guided_interlayer_li_plating_stripping_garnet",
+   "citation": "Hyunwon Chu, Christian Lerch, Sanggyu Chong, Lea Schulz, Till Fuchs, Kun Joong Kim, Moran Balaish, Harry L. Tuller, Jürgen Janek, Jennifer L. M. Rupp, 'Solubility-guided interlayer design toward balanced lithium metal plating and stripping in garnet solid-state batteries', Energy Environ. Sci. 19(17), 5836–5856 (2026) · DOI 10.1039/D6EE03852B (목록 표 1 #2)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/chu2026_solubility_interlayer_main.pdf",
+     "sha256": "9462b73492d9769bccd19e24267bda6d4ac040dd70232aa3cb3b9bb538acdf3f",
+     "bytes": 8243501,
+     "uploaded_as": "2._Solubility-guided_interlayer_design_toward_balanced_lithium_metal_plating_and_stripping_in_garnet_solid-state_batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/chu2026_solubility_interlayer_SI.pdf",
+     "sha256": "e34e8b6f69441bad1857867f3906757e8d2577b02f1dce34e1e4696877de904e",
+     "bytes": 5993427,
+     "uploaded_as": "2._Sup_Solubility-guided_interlayer_design_toward_balanced_lithium_metal_plating_and_stripping_in_garnet_solid-state_batteries.pdf"
+    }
+   ],
+   "videos": {
+    "where": "사용자 PC C:\\Users\\Administrator\\Downloads\\영상들\\d6ee03852b{2..13}_suppl.mp4 (12 개 · 아직 안 올림)",
+    "map_assumed": "b1 = SI PDF 로 보고 bN = Video S(N−1) — 영상을 받으면 첫 장면으로 확인",
+    "content_from_SI": "S1–S3 Cu · Au · Ag 0.1 mA cm⁻² 도금 · S4–S6 0.5 · S7–S9 1 mA cm⁻² · S10–S12 박리 (SI p.44 · p.46 · 본문 p.7–8)"
+   }
   }
  ]
 }
