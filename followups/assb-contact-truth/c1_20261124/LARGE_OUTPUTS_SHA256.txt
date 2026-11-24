@@ -33,3 +33,14 @@ fdd7f3f470ca2cf7c455684e44b7dbd8c5d062c2219c9dad33bb7d904eb3cff1  out3/spikes/s6
 1fc889d33063d2e3f310ff837e07e3c0b32d95d8687af6a2fe477ee80136fc1a  out3/spikes/spike_status.json (119 B)
 2ac570cd451dce93520693e53c3e4df29232f9a319f6761058204dcac80f4804  out3/grid/conv/conv.json (26729 B)
 # 배관 점검 산출 (out3/plumb) 은 결과 버림 원칙대로 지웠다 (06:51Z)
+
+# 4 차 (T0₄ 2026-11-24T07:06:51Z) — 스크래치패드 out4/ · 새 표준 (80 · 1e-9) · 격자 수렴 단계가 정밀판 (160 · 1e-10) 실행 중 메모리 부족으로 죽음 (rc 137) · conv.json 없음 · DC 자료 없음
+de27ff374ec82225ac642575e6e357906d0a6b7f7d24edb2533dbdd69b95eedd  out4/spikes/s1.json (489 B)
+38f49d6ede4892ed5a2fc8ee36dbc0cb9e22728f36be355ddc56f251727b784d  out4/spikes/s2.json (669 B)
+8b3c0fb7aa246124c48a4fdca70a5d16e65ca340a36bfc019dd6dda89e2de743  out4/spikes/s3.json (11253 B)
+722416f23b22e7195fbdcb2c7c1a497e6cc6a2982d05ccb4dbe2c75767492dd5  out4/spikes/s4.json (989 B)
+b5ab3d5deca533e04243ed96b685f887691b0a87302369484387ecee0ebca7bc  out4/spikes/s4p.json (19234 B)
+bef081111f2189a88b3675eae9094640d796d106b245d2a03a570abfc7883827  out4/spikes/s5p.json (1329 B)
+0771fcda9bd8ad2005409937f4d13c1c21843fde9da4d8ad17cdc74ba8499697  out4/spikes/s6_registered.json (3094 B)
+1fc889d33063d2e3f310ff837e07e3c0b32d95d8687af6a2fe477ee80136fc1a  out4/spikes/spike_status.json (119 B)
+# 배관 점검 산출 (out4/plumb) 은 결과 버림 원칙대로 지웠다 (07:20Z)

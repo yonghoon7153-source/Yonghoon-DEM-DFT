@@ -1,0 +1,14 @@
+{
+ "spike": "S1",
+ "termination": "event: Minimum voltage [V]",
+ "t_end_s": 35535.9157152948,
+ "Q_dis_Ah": 6.364631948934617,
+ "V_first": 4.297990310288959,
+ "V_last": 2.9999999999929425,
+ "ce_max_rel_dev": 0.0012795494331683255,
+ "tau_Li_s": 2.5692579121493726e-08,
+ "tau_Li_limit_s": 1e-06,
+ "counter_dl_note": "LithiumMetalSurfaceForm: C_dl,Li·dΔφ/dt = i_cc − j_pl (평면 이중층 · 'Negative electrode double-layer capacity')",
+ "pass": true,
+ "elapsed_s": 1.4412577152252197
+}

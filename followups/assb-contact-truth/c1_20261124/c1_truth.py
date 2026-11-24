@@ -163,7 +163,7 @@ def q_1c_ah() -> float:
 INPUT_NAMES = ("k0", "c_dl", "D_s", "eps_am", "eps_se", "sigma_s", "kappa", "I", "c0", "V_lo", "V_hi")
 
 
-STD_VAR_PTS = {"x_s": 40, "x_p": 40, "r_p": 40}   # 3 차 표준 (§8-7 ① — 2 차 정밀판) · 1 · 2 차 표준은 PyBaMM 기본 20
+STD_VAR_PTS = {"x_s": 80, "x_p": 80, "r_p": 80}   # 4 차 표준 (§8-9 ①) · 3 차 40 · 1 · 2 차 PyBaMM 기본 20
 STD_TOL = 1e-9
 
 

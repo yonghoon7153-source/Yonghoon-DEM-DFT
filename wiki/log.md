@@ -4040,3 +4040,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 하지 않은 것: RUN_SCOPE 변경 0 · 규칙 변경 0 (이번 차수) · C1a · DC · C1b · AD 실행 0 · 위키 페이지 수정 0 · 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
 - 사용자가 정할 것: (가) 표준 해상도 한 번 더 (규칙 그대로) · (나) 수렴 판정 바꾸기 (사후 규칙 변경) · (다) C1 닫기 — `followups/assb-contact-truth/STATUS.md` · 근거 [[assb-synthetic-truth-contact-loss-requirements]].
 - `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).
+
+## [2026-11-24] update | ASSB 합성 truth C1 4 차 — 새 표준으로 시험 · 스파이크 · 배관 통과 · 격자 수렴 단계가 메모리 부족으로 죽어 규칙 5 판정 없음
+- 승인: 사용자 원문 "권고대로해" (2026-11-24) — 3 차 보고의 (가). 사전 등록은 `followups/assb-contact-truth/DESIGN_v1.md` §8-9 (새 계산 전: 새 표준 해상도 · 규칙 5 판정 짝 ·
+  격자 축 귀속 진단 둘 · 3 차 사전 등록 이어 감 · DC 정합 필터의 알려진 한계 재진술) · 결과는 같은 문서 §8-10.
+- 무엇: `followups/assb-contact-truth/c1_20261124/` 4 차 (README 4 차 절 · 해상도 상수만 바꿈 · 보고용 요약 스크립트 · `run4/` · `spikes4/` · `LARGE_OUTPUTS_SHA256.txt` 4 차 절) ·
+  `followups/assb-contact-truth/STATUS.md` (C1 행 · 사용자가 정할 것).
+- 결과 (수치는 옮기지 않는다 — 진단 전용 · 인용 금지 · 정본 아님): 시험 · 스파이크 · 배관 모두 통과 · 격자 수렴 단계의 정밀판 실행이 이 기계 메모리를 넘어 커널이 프로세스를 죽였다
+  (규칙의 발동이 아니라 자원 실패 · 단계당 1 회 원칙대로 다시 돌리지 않음). C1a 검출 지도 · DC · C1b 판정은 없다 — DC 보정은 여전히 쓰이지 않은 사전 등록이다.
+- 하지 않은 것: RUN_SCOPE 변경 0 · 규칙 변경 0 · 재실행 0 · 위키 페이지 수정 0 · 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
+- 사용자가 정할 것: (가) 메모리 경로를 고쳐 같은 판정 짝을 다시 · (나) 판정 짝 바꾸기 · (다) C1 닫기 — `followups/assb-contact-truth/STATUS.md` · [[pybamm]] 26.8 의 해 저장 방식은 설계서 §8-10.
+- `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).

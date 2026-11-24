@@ -1,0 +1,7 @@
+T0_4 2026-11-24T07:06:51Z
+disk_free_T0_4 26134847488
+repo_head_T0_4 150e1333f0ab2fcc762f3dcca0df9ec304b3a5c1 (d1d19c4..HEAD = webapp 2 파일 · followups · degradation-degeneracy · wiki 0 줄)
+repo_dirty_T0_4 (이 흐름과 무관 · 건드리지 않음):
+  ?? bms-balancing/docs/REIL_C4A_IMPL_REQUEST_v3_20261124.md
+copy_base bf61565ba79f3aa66b16fd097da3105752c3248f (같은 사본 · dirty 0)
+scratch_out4 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/out4

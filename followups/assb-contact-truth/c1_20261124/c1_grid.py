@@ -36,10 +36,10 @@ LI_LIMIT = 1e-6                                     # §5-8 규칙 4
 FAIL_FRAC = 0.05                                    # §5-8 규칙 6
 DC_Z_LIMIT = 2.0                                    # §5-8 규칙 3(a)
 CONV_TAU, CONV_Z = 0.01, 0.05                       # §5-8 규칙 5
-VAR_FINE = {"x_s": 80, "x_p": 80, "r_p": 80}         # 3 차 판정 짝의 정밀판 (표준 40 의 × 2 · §8-7 ①)
+VAR_FINE = {"x_s": 160, "x_p": 160, "r_p": 160}      # 4 차 판정 짝의 정밀판 (표준 80 의 × 2 · §8-9 ②)
 TOL_FINE = 1e-10                                    # 표준 1e-9 ÷ 10
-CONV_DIAG = (("v80_t1e-9", {"var_pts": {"x_s": 80, "x_p": 80, "r_p": 80}, "rtol": 1e-9, "atol": 1e-9}),
-             ("v40_t1e-10", {"var_pts": {"x_s": 40, "x_p": 40, "r_p": 40}, "rtol": 1e-10, "atol": 1e-10}))   # 귀속 진단 (판정에 안 씀)
+CONV_DIAG = (("r160_x80_t1e-9", {"var_pts": {"x_s": 80, "x_p": 80, "r_p": 160}, "rtol": 1e-9, "atol": 1e-9}),
+             ("x160_r80_t1e-9", {"var_pts": {"x_s": 160, "x_p": 160, "r_p": 80}, "rtol": 1e-9, "atol": 1e-9}))   # 격자 축 귀속 진단 (§8-9 ③ · 판정에 안 씀)
 DC_DT_OUT = {"C/20": 1.0, "C/3": 0.1, "1C": 0.05}  # §8-7 ② B2 출력 간격
 
 
@@ -192,11 +192,11 @@ def conv(args):
         r2, wt, wz = _conv_compare(V["std"], V[lab], R, shape, n_pulse, runs)
         diag[lab] = {"worst_tau_rel_change": wt, "worst_z_rel_change": wz, "rows": r2}
     stop = worst_tau > CONV_TAU or worst_z > CONV_Z
-    res = {"decision_pair": "std (40 · 1e-9) vs fine (80 · 1e-10)", "rows": rows, "worst_tau_rel_change": worst_tau,
+    res = {"decision_pair": "std (80 · 1e-9) vs fine (160 · 1e-10)", "rows": rows, "worst_tau_rel_change": worst_tau,
            "worst_z_rel_change": worst_z, "li": li, "elapsed_s": el, "limits": {"tau": CONV_TAU, "z": CONV_Z},
            "stop_rule5": bool(stop), "diagnostics_not_for_decision": diag}
     jdump(res, out / "conv.json")
-    print(f"conv (판정 짝 표준 ↔ 80·1e-10): worst τ̂ change {worst_tau:.3e} (limit {CONV_TAU}) · worst z change {worst_z:.3e} (limit {CONV_Z})")
+    print(f"conv (판정 짝 표준 80·1e-9 ↔ 160·1e-10): worst τ̂ change {worst_tau:.3e} (limit {CONV_TAU}) · worst z change {worst_z:.3e} (limit {CONV_Z})")
     for lab, dd in diag.items():
         print(f"conv 진단 {lab} (판정 아님): τ̂ {dd['worst_tau_rel_change']:.3e} · z {dd['worst_z_rel_change']:.3e}")
     print(f"conv Li max {max(li.values()):.2e}")
