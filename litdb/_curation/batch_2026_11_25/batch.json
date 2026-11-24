@@ -83,10 +83,34 @@
      "sha256": "eac5760cd74c80d66b589141660a00c6febec4095a06f37a5df947601fe902b4",
      "bytes": 407868,
      "uploaded_as": "2._Sup3_….pdf (Standardized data reporting 2 pp)"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2023_alloy_interlayers_sup2_figure4.xlsx",
+     "sha256": "a5d8174ebb572973ddd773356d78753633ffc31558f9f41a0ba5a4a66a990548",
+     "bytes": 42153,
+     "uploaded_as": "2. Sup2) ….zip → Figure_4.xlsx (사용자가 넷만 꺼내 올림 · 11-25)"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2023_alloy_interlayers_sup2_figure5.xlsx",
+     "sha256": "acc336a037885d0742a0f12d2e6b8e771a42498e67ef3c2c2f5cdf41181337c6",
+     "bytes": 1836852,
+     "uploaded_as": "2. Sup2) ….zip → Figure_5.xlsx (사용자가 넷만 꺼내 올림 · 11-25)"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2023_alloy_interlayers_sup2_figureS2.xlsx",
+     "sha256": "bef5e383ffb6b3bdad1fa027c63fd8eff046e33ac71294d9ed7c7b71e007c1cb",
+     "bytes": 10460,
+     "uploaded_as": "2. Sup2) ….zip → Figure_S2.xlsx (사용자가 넷만 꺼내 올림 · 11-25)"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2023_alloy_interlayers_sup2_figureS8.xlsx",
+     "sha256": "b10f8a7b62dd6c1107e5fc6a1fd12cee19701a7f33584f992a2c8b8369a156bb",
+     "bytes": 39913,
+     "uploaded_as": "2. Sup2) ….zip → Figure_S8.xlsx (사용자가 넷만 꺼내 올림 · 11-25)"
     }
    ],
    "not_received": [
-    "2. Sup2) ….zip (45 MB · 사용자 스크린샷 목록: Fig3_Li deposited on Ag.stl · Fig3_Li deposited on bare Cu.stl · Fig3e-f_heatmap_code.pdf · Figure 1/4/5/6/S2/S3/S7/S8/S9/S10 엑셀) — 작은 엑셀만 따로 받을 수 있음"
+    "2. Sup2) ….zip 의 나머지 (Fig3 STL 둘 · Fig3e-f_heatmap_code.pdf · Figure 1 · 6 · S3 · S7 · S9 · S10 엑셀) — 안 받기로 함 (11-25 · 작은 엑셀 넷만)"
    ]
   },
   {
