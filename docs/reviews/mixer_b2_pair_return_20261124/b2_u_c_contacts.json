@@ -1,0 +1,73 @@
+{
+  "label": "DEVELOPMENT_DATA_ONLY",
+  "arms": [
+    "PRECAL_R1_B2_U",
+    "PRECAL_R1_B2_C"
+  ],
+  "jobs": [
+    "368758",
+    "369734"
+  ],
+  "generator_seed": 32452843,
+  "nominal_SE_Bo": [
+    21.244,
+    21.244
+  ],
+  "gamma_AM_over_gamma_SE": [
+    0.1,
+    1.0
+  ],
+  "bins": "index 134..233 inclusive (100 native frames)",
+  "n_independent_seeds": 1,
+  "sources_sha256": [
+    "128d0c0dc67ead931dbc4a68ccf5c1508e7d02bcacc1db3f921010ba72dee2c2",
+    "339a1f05e418f63d069c01c2a0f756db3b7fb29f6dc34baf4cc2bb62f67c2673"
+  ],
+  "E0": {
+    "step": 1121000,
+    "sha256": "e30390648d2f2d6add0d972e0efe6d880d1341cd807ba99af0b506149c4d3cea"
+  },
+  "metrics": {
+    "se_frac_in_clusters": {
+      "B2_U": {
+        "mean": 0.7407567720204119,
+        "frame_sd": 0.024052046739142883,
+        "coordinate_precision_lo_mean": 0.7405453922023437,
+        "coordinate_precision_hi_mean": 0.7409600839064926
+      },
+      "B2_C": {
+        "mean": 0.722610883640251,
+        "frame_sd": 0.02381511421320515,
+        "coordinate_precision_lo_mean": 0.722398091934085,
+        "coordinate_precision_hi_mean": 0.7228118759958855
+      },
+      "B2_C_minus_U_mean": -0.018145888380160954,
+      "exact_fraction_delta": "-179931/9915800",
+      "B2_C_minus_U_frame_sd": 0.011511836334058185,
+      "B2_C_minus_U_coordinate_precision_lo": -0.0185619919724076,
+      "B2_C_minus_U_coordinate_precision_hi": -0.017733516206458244,
+      "predicted_direction_observed": true
+    },
+    "se_attached_any_frac": {
+      "B2_U": {
+        "mean": 0.10993384295770386,
+        "frame_sd": 0.010579041915480326,
+        "coordinate_precision_lo_mean": 0.10915468242602713,
+        "coordinate_precision_hi_mean": 0.11054347606849671
+      },
+      "B2_C": {
+        "mean": 0.14997045119909638,
+        "frame_sd": 0.01056524823639264,
+        "coordinate_precision_lo_mean": 0.14966225619718027,
+        "coordinate_precision_hi_mean": 0.15023417172593234
+      },
+      "B2_C_minus_U_mean": 0.040036608241392525,
+      "exact_fraction_delta": "79399/1983160",
+      "B2_C_minus_U_frame_sd": 0.009519486506016332,
+      "B2_C_minus_U_coordinate_precision_lo": 0.039118780128683556,
+      "B2_C_minus_U_coordinate_precision_hi": 0.04107948929990521,
+      "predicted_direction_observed": true
+    }
+  },
+  "both_directions_observed": true
+}
