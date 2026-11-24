@@ -19,6 +19,13 @@ panel <- function(y, label, color) {
     if (any(!valid)) rug(series$turns[!valid], ticksize = .035, col = "#a94615")
 }
 panel(series$theta_abs_deg, "Surface angle (degrees)", "#136b73")
+if (length(args) >= 3) {
+    secondary <- read.csv(args[3], na.strings = "")
+    lines(secondary$turns, abs(secondary$dense_signed_deg), col = "#a25c15", lwd = 1.4)
+    legend("topright", c("Upper particle envelope", "Occupied bed edge"),
+           col = c("#136b73", "#a25c15"), lty = 1, lwd = 2, bty = "n",
+           horiz = TRUE, cex = .83)
+}
 panel(series$delta_over_R, "Layer thickness / drum radius", "#61427a")
 mtext("Completed drum turns", side = 1, line = 2.35)
 mtext("B2-U   |   Free surface and flowing layer", side = 3, outer = TRUE, line = 1.75,

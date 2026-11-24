@@ -1,0 +1,148 @@
+{
+  "label": "DEVELOPMENT_DATA_ONLY",
+  "arms": [
+    "PRECAL_R1_B1_U",
+    "PRECAL_R1_B2_U"
+  ],
+  "jobs": [
+    "368139",
+    "368758"
+  ],
+  "nominal_SE_Bo": [
+    0.21244,
+    21.244
+  ],
+  "generator_seed": 32452843,
+  "bins": "index 134..233 inclusive (100 native frames)",
+  "n_independent_seeds": 1,
+  "sources_sha256": [
+    "88c4f1fa56a2c77a11669a4240df0c2677bac16f29cc2e11289b002db00d7b94",
+    "128d0c0dc67ead931dbc4a68ccf5c1508e7d02bcacc1db3f921010ba72dee2c2"
+  ],
+  "E0": {
+    "step": 1121000,
+    "sha256": "e30390648d2f2d6add0d972e0efe6d880d1341cd807ba99af0b506149c4d3cea"
+  },
+  "metrics": {
+    "se_frac_in_clusters": {
+      "B1_U": {
+        "mean": 0.43147582645878285,
+        "frame_sd": 0.06668721964604148,
+        "coordinate_precision_lo_mean": 0.4290746082010529,
+        "coordinate_precision_hi_mean": 0.4336287541096028
+      },
+      "B2_U": {
+        "mean": 0.7407567720204119,
+        "frame_sd": 0.024052046739142886,
+        "coordinate_precision_lo_mean": 0.7405453922023437,
+        "coordinate_precision_hi_mean": 0.7409600839064926
+      },
+      "B2_minus_B1_mean": 0.30928094556162905
+    },
+    "largest_frac": {
+      "B1_U": {
+        "mean": 0.255889186954154,
+        "frame_sd": 0.11375649105172037,
+        "coordinate_precision_lo_mean": 0.25480939510679923,
+        "coordinate_precision_hi_mean": 0.25730924383307446
+      },
+      "B2_U": {
+        "mean": 0.4736671776356925,
+        "frame_sd": 0.07125569745265331,
+        "coordinate_precision_lo_mean": 0.47292694487585474,
+        "coordinate_precision_hi_mean": 0.4740081486113072
+      },
+      "B2_minus_B1_mean": 0.21777799068153847
+    },
+    "mean_size_number": {
+      "B1_U": {
+        "mean": 1.6582105895818977,
+        "frame_sd": 0.19982548156750324,
+        "coordinate_precision_lo_mean": 1.652767215675952,
+        "coordinate_precision_hi_mean": 1.6632179347005387
+      },
+      "B2_U": {
+        "mean": 3.0243497538945094,
+        "frame_sd": 0.31021126432807283,
+        "coordinate_precision_lo_mean": 3.0218998355444824,
+        "coordinate_precision_hi_mean": 3.0267493162017742
+      },
+      "B2_minus_B1_mean": 1.3661391643126117
+    },
+    "se_attached_any_frac": {
+      "B1_U": {
+        "mean": 0.08297293208818247,
+        "frame_sd": 0.015287515524772779,
+        "coordinate_precision_lo_mean": 0.07958591339075012,
+        "coordinate_precision_hi_mean": 0.0847686520502632
+      },
+      "B2_U": {
+        "mean": 0.10993384295770388,
+        "frame_sd": 0.010579041915480326,
+        "coordinate_precision_lo_mean": 0.10915468242602713,
+        "coordinate_precision_hi_mean": 0.11054347606849671
+      },
+      "B2_minus_B1_mean": 0.026960910869521404
+    },
+    "se_attached_frac_AM_P": {
+      "B1_U": {
+        "mean": 0.04125889993747353,
+        "frame_sd": 0.007644566653600404,
+        "coordinate_precision_lo_mean": 0.039285988019121,
+        "coordinate_precision_hi_mean": 0.04219679703100104
+      },
+      "B2_U": {
+        "mean": 0.05313963573287077,
+        "frame_sd": 0.005222664576814479,
+        "coordinate_precision_lo_mean": 0.05278051191028459,
+        "coordinate_precision_hi_mean": 0.05341717259323502
+      },
+      "B2_minus_B1_mean": 0.011880735795397238
+    },
+    "se_attached_frac_AM_S": {
+      "B1_U": {
+        "mean": 0.045069081667641536,
+        "frame_sd": 0.008202919399456152,
+        "coordinate_precision_lo_mean": 0.04363339317049557,
+        "coordinate_precision_hi_mean": 0.04594193105952117
+      },
+      "B2_U": {
+        "mean": 0.06012303596280684,
+        "frame_sd": 0.006509119553537763,
+        "coordinate_precision_lo_mean": 0.05969009056253656,
+        "coordinate_precision_hi_mean": 0.06046521712821961
+      },
+      "B2_minus_B1_mean": 0.015053954295165303
+    },
+    "se_per_am_AM_P": {
+      "B1_U": {
+        "mean": 31.37171641791045,
+        "frame_sd": 5.634165832639147,
+        "coordinate_precision_lo_mean": 29.9076119402985,
+        "coordinate_precision_hi_mean": 32.0689552238806
+      },
+      "B2_U": {
+        "mean": 40.08298507462687,
+        "frame_sd": 3.877194445848313,
+        "coordinate_precision_lo_mean": 39.81567164179105,
+        "coordinate_precision_hi_mean": 40.29022388059701
+      },
+      "B2_minus_B1_mean": 8.71126865671642
+    },
+    "se_per_am_AM_S": {
+      "B1_U": {
+        "mean": 6.69587570621469,
+        "frame_sd": 1.2033820586722723,
+        "coordinate_precision_lo_mean": 6.492217514124294,
+        "coordinate_precision_hi_mean": 6.8199576271186455
+      },
+      "B2_U": {
+        "mean": 8.790056497175142,
+        "frame_sd": 0.9332975754235705,
+        "coordinate_precision_lo_mean": 8.728036723163841,
+        "coordinate_precision_hi_mean": 8.83906779661017
+      },
+      "B2_minus_B1_mean": 2.0941807909604515
+    }
+  }
+}
