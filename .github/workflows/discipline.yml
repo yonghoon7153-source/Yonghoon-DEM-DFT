@@ -194,6 +194,9 @@ jobs:
       # ★ 2026-11-24 (반입 ㉖) — B2 결과 전 짝 판독기 시험 (check_all.sh 단계 72 에도 같이)
       - name: 반입 ㉖ B2 결과 전 짝 판독기 시험 (regression)
         run: python -B docs/reviews/mixer_b2_prereg_20261124/test_preregistered_pair.py
+      # ★ 2026-11-24 (반입 ㉛) — 수영 공통 변위 판독기 합성 시험 (check_all.sh 단계 73 에도 같이 · 후보 핀 객체 = fetch-depth 0 의 codex 가지)
+      - name: 반입 ㉛ 수영 공통 변위 판독기 합성 시험 (regression)
+        run: python -B docs/reviews/suyoung_grid_diagnosis_20261124/test_common_support.py
       # ★ 2026-11-24 (반입 ㉕) — 수영 설정 ② 접촉 후보 시험 셋 (check_all.sh 단계 71 에도 같이)
       - name: 반입 ㉕ 수영 설정 ② 접촉 후보 시험 셋 (regression)
         run: |

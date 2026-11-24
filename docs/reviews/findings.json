@@ -18075,6 +18075,206 @@
    "opened_in": "docs/reviews/mixer_problem_gap_novelty_review1_20261124.md",
    "title": "인계 11-24 §3-3 표의 'li2003 (N-112-1)' 행이 '원문에서' 칸에 결합 규칙별 문턱 0.556 · 0.309 · 0.111 을 적었다 — 카드 L55 · §7-2 = 원문에 없는 우리 산술 (원문 = min 규칙 하나 · 액체 다리) · 믹서 공백 문서 v0 가 그대로 물려받아 '[카드]' 로 표기",
    "note": "고침 적용 (문서 · 시험 없음 → open 유지) · 영향 = 표지 (값은 맞음 · 귀속만 틀림) · 고침 = 인계 문서 그 행에 정정 표지 · 공백 문서 v1 = '[우리 산술 · Li 2003 카드 §7-2]' · §5 금지 문장에 'Li 2003 의 문턱' 추가 · 규율 ⑥ (원문을 보지 않은 서지 · 값을 원문 것으로 적지 않는다) 와 같은 부류 · 닫는 조건 = Codex 반박 리뷰 (공백 문서 v1 요청서 MGN-Q7) 에서 같은 귀속 오류가 더 없음"
+  },
+  {
+   "id": "MGN-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 믹서 공백 · 새로움 v1 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 지정 표 · 정본 카드 c32e89830 범위 · 새 연구 계산 · B2-C 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "v1 §3 ① (b) 의 '잰 힘 비 0.316' 은 내부 리뷰 R05 의 접착일 비를 힘 비로 바꿨다 — 같은 탐침이어도 기판별 R* 가 다르고 등록 자체가 반경 계수를 쓴다",
+   "note": "고친 꼴 = '예시의 0.316 은 가정한 접착일 비다. 측정 힘 비에서 γ 비를 유일하게 환산할 수 없다.' (공백 문서 v2 §3 ① (b) · §5) · 내 잘못 = SELF-189 · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "MGN-02",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 믹서 공백 · 새로움 v1 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 지정 표 · 정본 카드 c32e89830 범위 · 새 연구 계산 · B2-C 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "v1 §4 P-a · 판정 지표가 피복 면적을 주지표로 승격 — 등록 초안은 이 열이 미측정이어도 두 주지표 (군집 · 순간 AM 접촉) 를 판독한다",
+   "note": "고친 꼴 = '공동 판정은 군집과 순간 AM 접촉으로 한다. 자유 표면 피복 면적은 별도 보조 결과다.' (v2 §4) · Codex 실무 쪽지 a5af8ffe8 이 사다리 문구를 같게 기록 · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "MGN-03",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 믹서 공백 · 새로움 v1 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 지정 표 · 정본 카드 c32e89830 범위 · 새 연구 계산 · B2-C 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "v1 §4 P-b 가 거시 혼합 상의 부재와 국소 지표의 비 민감성을 동일시 — 군집을 유지하면서 국소 접촉만 늘어도 된다",
+   "note": "고친 꼴 = '해당 이론의 혼합 상과 두 국소 지표의 비 의존성을 별도로 시험한다.' (v2 §4 P-b · §5 금지 문장) · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "MGN-04",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 믹서 공백 · 새로움 v1 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 지정 표 · 정본 카드 c32e89830 범위 · 새 연구 계산 · B2-C 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "v1 의 '처음' · '보이고' · '시험된 적 없는' · '잇는다' 가 검색 범위 · 측정 수준 · 실행 상태를 넘어 읽힌다 ('0.5 아래 시험된 적 없음' 의 주어 = 이 자료군의 Figueroa 건식 상태도)",
+   "note": "고친 꼴 = '이 자료군에서 해당 조합을 확인하지 못했다. 지정 모델에서 시험할 계획이다.' (v2 §1-3 · §2 · §5) · 외부 확인용 검색어 넷 = v2 §1-3 (아직 안 찾음) · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "MGN-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 믹서 공백 · 새로움 v1 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 지정 표 · 정본 카드 c32e89830 범위 · 새 연구 계산 · B2-C 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "v1 의 동일 양식 세 rpm 벽 체류 차이가 자동으로 내부 최적이나 실험적 손실량을 주는 것처럼 읽힌다",
+   "note": "고친 꼴 = 목표 지표 · 벽 체류 제약 · 두 사전 대조 · 시드 불확실성을 먼저 고정 · 없으면 맞교환만 보고 (v2 §3 ③ (e) · §4 P-c · §5) · Codex 실무 쪽지 a5af8ffe8 = 연속 세 프레임 부착 = 체류 지표 · 회수 손실 질량 별도 · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "MGN-06",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 믹서 공백 · 새로움 v1 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 지정 표 · 정본 카드 c32e89830 범위 · 새 연구 계산 · B2-C 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "v1 의 혼합 지표 → 실크기 전도 · 청정 면에너지 → 실제 덮임이 추가 가정에 의존한다는 표지가 없다",
+   "note": "고친 꼴 = '재구성군에 대한 조건부 예측' · '청정 계면 모형의 경향' (v2 §3 ④ · §6-2 · §5) · 고리 ④ = 중심 새로움에서 내림 (후속 가설) · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "MGN-07",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 믹서 공백 · 새로움 v1 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 지정 표 · 정본 카드 c32e89830 범위 · 새 연구 계산 · B2-C 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "v1 G1 · G2 가 Yeokyung Lee 2026 을 'W_ad 가 건식 코팅 품질을 정함' 으로 요약 — 다섯 조성에서 접착일 · 탄성 · 항복이 함께 변했고 관찰 종점은 잔류 SE 라 독립 인과효과를 식별할 수 없다",
+   "note": "고친 꼴 = '다섯 조성에서 실리콘 탐침–SE 접착일을 포함한 역학 특성이 잔류 SE 분율과 함께 변했다. 저자들은 부착의 역할을 제안했다.' (v2 §2 · §5) · 내 잘못 = SELF-190 · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "SBD-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 SBE · DBE 전자전도도 차이 · 미세구조 가설 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 별첨 원고 그림 넷 · 원 .mpr 재판독 · 새 계산 · 봉인 R 중간 값 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "P · c 가 단 하나의 병목 경로를 바꿀 수 있다 — 과거 closure 스윕 (≈1.34 · σ_SDCP ×100 의 +3.5 %) 과 중심선 점유율로 '2.86 에 크게 미달' 상한을 세울 수 없다 (그 스윕의 민감도일 뿐)",
+   "note": "고친 꼴 = '현 표현에서 미달할 수 있다' 를 결과 전 가설로 표시 · ① 과 원 DBE 만 같은 기하 · SBE · DBE · ② 는 각각의 성형 상태 (부록 등록 개정 1 §7 · 요청서 정정 배너) · 미달 정도 = 봉인 판정 (12-05) 몫 · 내 잘못 = SELF-192 · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "SBD-02",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 SBE · DBE 전자전도도 차이 · 미세구조 가설 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 별첨 원고 그림 넷 · 원 .mpr 재판독 · 새 계산 · 봉인 R 중간 값 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "원고 그림 1 의 틈 후보와 2 의 F 편차는 직접 보이지만 단면 · 정합 · 계수 · 표시 조건이 없어 DBE 의 밀도 · 분산 개선 증거로 부족하다",
+   "note": "고친 꼴 = 시야별 관찰로 줄이고 기전은 반복 시야 · 원계수 · 단면으로 확인할 가설 (요청서 정정 배너 · 다음 세대 등록 초안에 표본 권고 반영 예정) · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "SBD-03",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 SBE · DBE 전자전도도 차이 · 미세구조 가설 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 별첨 원고 그림 넷 · 원 .mpr 재판독 · 새 계산 · 봉인 R 중간 값 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "공통 양의 직렬 저항을 빼면 DBE/SBE 비는 증가한다 — 요청서 S3 (b) 의 '고정 저항 몫이 큼' 은 과대 설명의 근거가 아니다 · SBE = C05 · DBE = C06 만이라 시료별 접촉 · 채널 효과가 분리되지 않는다",
+   "note": "고친 꼴 = '시료별 접촉과 측정 조건이 비를 바꿀 수 있다.' 공통 지그와 시편별 접촉을 따로 다룬다 (요청서 정정 배너 · 영진 측정 권고 = 채널 교차) · 내 잘못 = SELF-193 · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "SBD-04",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 SBE · DBE 전자전도도 차이 · 미세구조 가설 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 별첨 원고 그림 넷 · 원 .mpr 재판독 · 새 계산 · 봉인 R 중간 값 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "X 가 양 끝 사이인 결과는 상반된 효과 · 제조 편차 · 비선형 상호작용과도 양립 — 실험의 세 갈래 원인 판정 ('4.7 = PTFE · 1.6 = SDCP · 사이 = 둘 다') 기각",
+   "note": "고친 꼴 = 두 조성 대비 (X − SBE · DBE − X) 를 독립 반복 · 불확실성과 보고 · 동등 · 미결 칸 · 중간값을 두 기전 각각의 기여 증거로 세지 않음 (부록 등록 개정 1 §4) · 내 잘못 = SELF-191 · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "SBD-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 SBE · DBE 전자전도도 차이 · 미세구조 가설 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 별첨 원고 그림 넷 · 원 .mpr 재판독 · 새 계산 · 봉인 R 중간 값 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "① 은 c=0 에서 σ 만 바꾸지만 ② 는 침대 · 분모 · 배치도 바꾼다 — 한쪽 증서만 보면 작은 수치 역전의 판정이 달라질 수 있다",
+   "note": "고친 꼴 = 단조 검사 = 양쪽 증서 (위반 = σ_lo(①) > σ_hi(DBE) · 겹침 = MONO_UNDETERMINED) · PATH_CUT · SOLVE_FAILED · NOT_COMPUTED 구분 · '순수' → '고정 기하 벌크 전도 대조' (부록 등록 개정 1 §4 · 실행기 시험 = 커밋 2) · v2 고침 적용 (문서 · 시험 없음 → open 유지) · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분 · 11-16 규칙 = P2 · P3 는 알려진 한계로 적고 계속"
+  },
+  {
+   "id": "SBD-06",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 SBE · DBE 전자전도도 차이 · 미세구조 가설 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 별첨 원고 그림 넷 · 원 .mpr 재판독 · 새 계산 · 봉인 R 중간 값 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "알려진 4.68 을 보고 다음 세대 구조를 고르면 같은 4.68 에 대한 일치를 독립 검증으로 셀 수 없다",
+   "note": "고칠 곳 = 다음 세대 등록 문서 (아직 없음 · R 판정 뒤 초안) — 개발 앵커와 미열람 확인 전극을 사전에 지정 · 그 세대의 DBE 일치 = 개발 자료와의 일치 · 원래 봉인 R 에서 DBE 의 지위는 소급 변경하지 않음 · 닫는 조건 = 그 등록 문서에 반영"
+  },
+  {
+   "id": "SBD-07",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex 반박 리뷰 창 11-24 SBE · DBE 전자전도도 차이 · 미세구조 가설 독립 반박 (검토 핀 = 요청 ZIP MANIFEST 64264fcd… · ZIP 3155d670… · 대응 커밋 a3c58a739 · 별첨 원고 그림 넷 · 원 .mpr 재판독 · 새 계산 · 봉인 R 중간 값 열람 0 건)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "같은 2D 분포를 만드는 3D 고립 섬과 연결층의 두께 방향 전도는 다를 수 있다",
+   "note": "고칠 곳 = 다음 세대 등록 문서 (아직 없음) — 3D 구조군 · 방향별 단면 · 배치 반복을 등록한 뒤 예측 범위 보고 · 표본 시작안 = 판정문 S5 (조성당 독립 제조 배치 3 · 두 단면 · 면마다 겹치지 않는 시야 3 이상 · 예비 설계 · 수용선 아님) · 닫는 조건 = 그 등록 문서에 반영"
+  },
+  {
+   "id": "SELF-189",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 창 11-24 (MGN-01)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "믹서 공백 문서 v1 §3 ① (b) 에 '잰 힘 비 0.316' 이라 적었다 — 내부 리뷰 R05 의 0.316 은 가정한 접착일 비였다 (힘 비 아님) · 힘 비 → γ 비 환산도 R* 가 같다는 숨은 가정",
+   "note": "v2 고침 (MGN-01 문구) · 규율 ⑥ 과 같은 부류 (출처 양의 뜻을 바꿔 적음) · 문서 고침 (시험 없음) → open 유지 · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분"
+  },
+  {
+   "id": "SELF-190",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 창 11-24 (MGN-07)",
+   "opened_in": "docs/reviews/codex_review_mixer_gap_novelty_20261124.md",
+   "title": "믹서 공백 문서 v1 §2 G1 이 Yeokyung Lee 2026 을 'W_ad 가 건식 코팅 품질을 정함' 으로 요약했다 — 카드 503–507 행은 다섯 조성에서 역학 특성이 함께 변했고 저자가 부착의 역할을 '제안' 했다고 적는다 (인과 식별 아님) · 두 Lee 2026 (Yeokyung · Jongjun) 을 이름 없이 'Lee 2026' 으로 섞어 썼다",
+   "note": "v2 고침 (MGN-07 문구 · 이름 붙임 · §5 금지 문장) · 문서 고침 → open 유지 · 닫는 조건 = Codex 짧은 재확인 또는 1저자 처분"
+  },
+  {
+   "id": "SELF-191",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 창 11-24 (SBD-04)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "PTFE 0.5 · SDCP 0 실험의 결과 전 기대를 세 갈래 원인 판정 ('4.7 근처 = PTFE 쪽 · 1.6 근처 = SDCP 쪽 · 사이 = 둘 다 · 값의 위치로 몫을 나눈다') 으로 1저자 · 영진께 드리는 한 줄과 부록 등록 §4 에 썼다 — 중간값은 상반 효과 · 제조 편차 · 비선형과도 양립하고 '1.6 근처' 는 직접 전도와 분산을 못 가른다",
+   "note": "고침 = 부록 등록 개정 1 §4 (두 조성 대비 + 결과 칸) · 1저자에게 고칠 한 줄 드림 (11-24 채팅 · 영진 님께 보냈다면 바로잡기) · 개정 전 문장 = 등록 §9 · 문서 고침 → open 유지 · 닫는 조건 = 실험 결과 보고가 두 조성 대비 꼴로 나감"
+  },
+  {
+   "id": "SELF-192",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 창 11-24 (SBD-01 · S1)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "SBE · DBE 요청서 §1 에 '두 전극 = 같은 압밀 침대' 라 적었고 (실제 = 같은 골격 · 같은 방식으로 따로 다진 두 침대 · 1저자 11-24 지적과 같음) · 채팅에서 '비가 약 1.3 에 묶인다 · 크게 오르지 못한다' 를 상한처럼 말했다 (근거 = 옛 closure 스윕 민감도 · P · c 는 그래프를 바꾼다)",
+   "note": "고침 = 요청서 정정 배너 · 부록 등록 개정 1 §7 · 미달 여부 = 결과 전 가설 · 봉인 판정 몫 · 시뮬레이션 '1.4–1.5 배' 는 중간 어림이라 판정 전 숫자로 쓰지 않음 · 문서 고침 → open 유지"
+  },
+  {
+   "id": "SELF-193",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 창 11-24 (SBD-03)",
+   "opened_in": "docs/reviews/codex_review_sbe_dbe_microstructure_20261124.md",
+   "title": "SBE · DBE 요청서 S3 (b) 에 'DBE R 2.18 Ω 라 고정 저항 몫이 큼' 을 측정 쪽 대안으로 적어 관측비 과대를 시사했다 — 공통 지그 저항 R0 (0 < R0 < R_D) 를 빼면 비 = (L_D/L_S)(R_S − R0)/(R_D − R0) 로 오히려 커진다 · 양방향 편향은 시편별 접촉 · 채널",
+   "note": "고침 = 요청서 정정 배너 · 영진 측정 권고 = 공통 지그 교정 · 시편–채널 교차 · 문서 고침 → open 유지"
+  },
+  {
+   "id": "SELF-194",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 11-24 (\"믹서 웹 페이지 관련해서는 오늘 아침부터 얘기했었는데 이제야 하는건 또 뭐야\")",
+   "opened_in": "docs/session_20260923_progress.md",
+   "title": "1저자가 아침부터 말한 /mixer/story 페이지를 'v1 리포 반영 → 그다음 페이지' 순서로 혼자 묶어 반입 · 게이트 뒤로 저녁까지 미뤘다 — 페이지는 게이트 결과와 무관해 아침에 조수로 나란히 시작할 수 있었다",
+   "note": "고침 = 11-24 저녁 조수로 시작 (J21 에 넣음) · 교훈 = 1저자가 말한 결과물은 게이트 · 반입 뒤로 미루지 않고 바로 따로 시작한다 · 닫는 조건 = 페이지 push"
   }
  ]
 }
