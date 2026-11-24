@@ -383,3 +383,110 @@
 **6.2-4 `Fig. 4`** — 네 단면 모두 원 논문 재수록. 방향 주의: **a–c 는 CC 가 위 · d 는 SSE 가 위**. 층 순서 (위 → 아래): a CC / Li / Carbon / LPSCl · b CC / Au 입자 / Li / 밝은 입자 띠 / SSE · c CC / Li₂Te–Cu / Li / SSE · d SSE / Ag–C / 밝은 선 / Li deposits / SUS. ⇒ **탄소 계열 (a · d) 은 인터레이어가 SE 에 붙어 남고 Li 가 CC 쪽에** · **금속 · 화합물 계열 (b · c) 은 시드가 CC 쪽에 남고 Li 가 그 아래 SE 쪽에** 선다 (b 는 SE 쪽에도 입자 띠). 이 대비는 본문이 명시적으로 정리하지 않았다 (우리 판독). 두께 판독 §3.6.
 
 **6.2-5 `Fig. S1` · `Fig. S2`** — 단순 막대 (Origin 풍 · 무늬 채움). 값은 `Table S1` 과 같다 (figure-read ≈ 눈금 대조). `Fig. S2` 는 LPSCl 경우만이라는 것을 그림이 말하지 않는다.
+
+---
+
+## 6b. Post-processing ★
+
+- **무엇**: 없음 (NEB · Bader · COHP · DOS · grand-potential · ELF … 0). 관점 논문.
+- **도구**: SI 에너지밀도 = 문헌 계산기 (SI ref 1). `Fig. 4` 는 원 논문 그림 재수록 (CC BY 3.0 · Elsevier · Wiley · Springer Nature 허락).
+- **수치화 · 기록**: `Table S1` (5 행) · `Table S2` (입력) · `Table S3` (16 행 목록). 오차 · 불확도 없음.
+- **우리가 한 것**: `Table S2` → `Table S1` 손 재현 (§13-1) · `Fig. 4` 픽셀 단면 판독 (§3.6).
+
+---
+
+## 7. 우리 대비 ★ — 수치 비교는 거의 없고, **출처 · 틀 · 입력표**를 준다
+
+> ⛔ 우리 점착 (W) 값은 이 digest 에 싣지 않는다 — **위치만**. 문헌 수치는 소환값이고 우리 db 절대값과 섞지 않는다.
+
+### 7-1. 우리 DFT 기준선 (comp1 / modelc · `../our_dft_baseline.md`) 대비
+
+| 항목 | 이 논문 | 우리 | 차이 / 이유 |
+|---|---|---|---|
+| 이온전도도 σ · Ea | n/a | MLIP-MD (상대차 정책) | 비교 대상 없음 |
+| 산화 onset / ESW (양극 쪽) | n/a (양극 쪽 서술 없음) | grand-potential (`our_dft_baseline.md` ESW 표) | 비교 대상 없음 |
+| **환원 (Li 쪽)** | LPSCl 은 Li 와 (전기)화학 반응해 **환원 분해**되고 Li · SE 미세구조를 바꾸며 SE 수축이 공극을 낼 수 있다 (refs 56–58) · LGPS · Li₃InCl₆ = 운동학적으로 불안정 vs LLZO = 부동태 (refs 4 · 17 · 54 · 55) | grand-potential 환원 가장자리 (`our_dft_baseline.md` ESW 표 · ⚠ 창 폭 · 라벨은 `HZ-esw-reduction-limit-label` CONDITIONAL — 폭 인용 금지) | **같은 방향 (정성)** — Li 금속 전위의 LPSCl 은 열역학적으로 환원된다. 이 논문은 수치 · 생성물 · 부동태 여부를 말하지 않는다 → 정성까지만 |
+| 기계 (E · B · G · C_ij) | n/a — `Fig. 2a` 에 σ_SSE · K_c,SSE **기호만** | DFT 탄성 (`our_dft_baseline.md` E_VRH · B₀ 행) | 수치 비교 대상 없음. K_c 는 우리 DFT 가 내지 않는 양 (실측 = `song2025_…`) |
+| 전자구조 (gap) | n/a | fixed-occ nscf gap (canonical) | 비교 대상 없음 |
+| 점착 W | 'DFT 가 Cu · Cu₂O 둘 다 친Li 로 예측' (ref 25 요약) 한 문장 · 값 없음 | W_ad 보고서 §2 (값 — 여기 안 싣는다) · §7 (Li 친화성 제안) | 같은 양을 비교할 값이 이 논문엔 없다 → ref 25 를 먹이면 Li\|Cu · Li\|Cu₂O · Li\|Li₂O 의 문헌 W 가 들어온다 (§8 ①) |
+
+### 7-2. ★ W_ad 보고서 §7 (Li 친화성 · 점착과 공극 · 인터레이어) 에 쓸 점 — **위치만**
+
+보고서 = `docs/collab/wad_dem_interface_adhesion_report_2026_11_24.html` (§2 쌍별 값 · §7 Li 친화성 정량화 제안 · §7-1 대상 표면).
+
+| 보고서 자리 | 이 논문이 주는 것 | 쪽 · 그림 (봤나) | 1 차 출처 |
+|---|---|---|---|
+| §7 서두 — 친Li / 소Li 정의 | 같은 어휘 · 'Li 가 쉽게 적시는가' 를 sessile drop 젖음과 **핵생성 과전압**으로 판정하는 실험 쪽 쓰임 | p. 676 · 678 | 25 · 85 · 93–95 |
+| §7 방법 1 · 2 (Li 원자 흡착 · Li 금속\|재료 W → Young–Dupré θ) | ★ **명목 표면으로 계산한 친Li 판정이 실험과 어긋난 실례**: Cu₂O 는 DFT 로 친Li 인데 Li 와 닿는 순간 Li₂O 로 전환 → 소Li. ⇒ W 를 **반응 뒤 표면**에서도 내야 한다 (보고서 §7-1 의 'LiC₆ · Li–Ag 합금 면' 칸과 같은 원칙의 문헌 근거) | p. 676 · `Fig. 2f` (✅) | 25 |
+| §7 방법 3 (합금 · 반응 구동력) | Li₃Au · LiₓAg · Li₂Te 가 **핵생성 과전압을 낮춰 순간 대신 연속 핵생성** → 균일층 · Au 막은 충전 중 입자로 쪼개짐 (동적) · Li₂Te 는 유지 → '합금이 생기는 재료' 와 '화합물로 남는 재료' 를 같은 W 잣대로 견주면 안 된다는 보고서 서술과 맞다 | p. 678 · `Fig. 4b,c` (✅) | 85 · 93–95 · 24 · 29 |
+| §7 '할 수 없는 것' (산화막 · SEI 가 덮인 실제 표면) | 그 한계가 **Cu 에서 실제로 결론을 뒤집는다**는 근거 · 계면상이 핵생성 불균일에 주는 영향은 아직 모른다 (p. 676) | p. 676 | 25 · (서술) |
+| §7 '쓰는 곳' (Ag/C 층 안에서 Li 가 어디에 먼저 붙나) | 석출 위치 (CC\|탄소 vs 탄소\|SSE) 가 **계면에너지 · 기공 크기 · 탄소 종류**로 바뀐다 · Ag–C 에선 Ag 가 CC 쪽 치밀 Li · 탄소가 SE 접촉 유지 · 단면 실례 둘 (탄소 · Ag–C 모두 **Li 가 CC 쪽**) | p. 678 · `Fig. 4a,d` (✅) | 86 · 90 · 30 · 82 · 88 |
+| §7-1 대상 표면 표 | **CC 면 (Cu · SUS + 그 산화막) 이 표에 없다** — Ag–C 무음극 셀에서 Li 가 서는 곳이 CC 쪽 (`Fig. 4d`) 이고 Cu 산화막이 소Li 로 바뀌는 사례 (`Fig. 2f`) 가 있으므로 후보에 넣을 근거 | p. 676 · `Fig. 2f` · `Fig. 4d` (✅) | 25 · 30 |
+| (새 절 후보) **점착과 공극** | 점착 · 젖음 조절 = **저압 안정 사이클의 핵심** · **점착과 Li 내부 응력은 얽혀 있다** · Li 와 계면상 · 이질 CC 사이 점착이 접촉 상실 동역학을 바꾼다 · 방전 끝 접촉 면적 축소 기전 | p. 676 · 677 · 678 · `Fig. 3d` (✅) | 53 · 74 · 23 |
+| (새 절 후보) **인터레이어** | 인터레이어 = **새 계면 둘 (CC\|IL · IL\|SSE)** · IL 의 SSE · CC 점착이 강해야 · 결론의 'SE 와 Li 양쪽에 붙는 인터레이어' → W 쌍 목록에 **Li\|IL · CC\|IL** 이 있어야 석출 위치 질문에 답한다 (보고서 §2 쌍은 C–C · Ag–C · LPSCl\|Ag · LPSCl\|흑연) | p. 677 · 678 | 86 · (결론 · 인용 없음) |
+
+### 7-3. ★ 연속체 · DEM 모델에 바로 쓸 점
+
+| 우리 모델 자리 | 이 논문이 주는 것 | 쪽 · 그림 (봤나) | 비고 |
+|---|---|---|---|
+| 입력 체크리스트 | `Fig. 2a` 의 11 개: t_CC · σ_Li · σ_CC · σ_SSE · γ_SSE/Li · γ_Li/CC · K_c,SSE/CC · K_c,SSE · d_SSE · V_LiΔG_V · 계면상 | `Fig. 2a` (✅) | 우리가 채울 수 있는 칸 = γ (DFT, Dupré) · d_SSE (DEM 입도) · K_c,SSE/CC 의 **하한** (W ≤ G_c) — K_c 자체는 실측 (`liao2025_…` 류) 이 필요 |
+| 압력 단계 등록 | 제조 **10–500 MPa** (황화물 CC 접촉) · 실험실 운전 **1 – 수백 MPa** · 실용 **< 1 MPa** · **> 1 MPa 크리프** | p. 674–675 · 678 · `Fig. 2c` (✅) | DEM 압밀 단계와 운전 스택 단계를 다른 압력으로 (`doux2020_stack_pressure_assb` 와 같은 결) |
+| CC 경계조건 | 얇은 CC = 파단 · Li 분출 · 두꺼운 CC = 균일 · CC 는 남은 Li 를 따라 휜다 | p. 676 · `Fig. 2e` · `Fig. 3c,d` (✅) | CC 를 강체 벽이 아니라 **휘고 찢어지는 판**으로 · 두께 5 µm (`Table S2`) |
+| 석출 성장 = 계면 균열 | 석출 가장자리에 K_c,SSE/CC — Li 섬이 커지려면 CC 를 SE 에서 벗겨야 한다 | `Fig. 2a` (✅) | 블리스터 (박막 들뜸) 문제로 놓을 자리 · 구동력 = 적층압 대 V_LiΔG_V |
+| 방전 끝 접촉 분율 | 고립 Li 섬 → 기하 접촉 면적↓ → **낮은 전체 전류에서도 국부 고전류** | p. 676–677 · `Fig. 3d` (✅) | DEM 의 SE 표면 지형 (d_SSE · 거칠기 `Fig. 2g`) → 접촉 분포 → 전류 분포 모델로 넘길 자리 (제안 · 아직 안 함) |
+| 석출 Li 형상 | 치밀 Li **4.89 µm per mAh cm⁻²** (✎) · `Fig. 4` 로 0.8–1.0 배 (figure-read) | §3.6 · §13-2 | 석출층 두께를 석출량에서 바로 놓아도 자릿수는 맞다 |
+| 셀 형상 | SE 20 µm · 복합양극 ≈75.9 µm (✎) · CC 5 µm · Li 0 / 20 µm | `Table S2` (✗ 이미지 · 텍스트로) | 셀 단위 모델 기본값 후보 (출처 = 이 SI) |
+| 적층압 상충 | 고압 = 공극↓ · 침입↑ | p. 677 | 압력 스윕을 하면 두 지표를 같이 낸다 |
+| Li 역학 | 크기 의존 항복 (refs 41 · 42) · 크리프 (> 1 MPa) · 결정립 · 온도 | p. 675 | Li 를 단일 항복응력 탄소성체로 두면 섬 크기 효과를 놓친다 |
+
+### 7-4. litdb 이웃 카드와의 관계
+
+- `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` ✅ — 이 논문 ref 88 (Liao 2024) 의 후속 · `Fig. 4a` 와 같은 탄소 인터레이어 계열. 이 논문이 '계면에너지 · 기공 · 탄소 종류' 로만 말한 **석출 위치**를 **점착 Γ 문턱**으로 정량한 편 (Liao 는 이 논문 공저자). 실용 G_c 부류 — W_ad 와 같은 줄 금지 (그 카드 규율 그대로).
+- `spencerjolly2023_ag_graphite_interlayer_operando_xrd` ✅ — SI ref 12 · `Table S3` 11 행 · Ag–C 운전 중 상 변화 (흑연이 먼저 Li 를 받고 Li–Ag 합금으로). ⚠ `Table S3` 의 CC 'Cu' vs 그 카드의 분무 기판 '스테인리스'.
+- `doux2020_stack_pressure_assb` ✅ — ref 79 · 적층압 딜레마 (공극↓ · 침입↑) 의 한 축 · 제조 / 운전 압력 구분.
+- `song2025_porous_argyrodite_modulus_fracture_toughness` ✅ — `Fig. 2a` K_c,SSE 칸의 LPSCl 실측 출처 (값은 그 카드에서).
+- `pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament` ✅ — SE 쪽 DFT 이상 벽개 · 필라멘트 (`comparison_vs_ours_DEM.md` §I-6).
+- `zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector` ✅ — 무음극 · 변형되는 Na CC · 저압 0/1/4 MPa 운전 실측 — 이 논문의 'CC 공학 · 저압' 과제의 사례.
+- `kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode` ✅ — Ag–C + 다공 CNF · operando 하중 셀 ΔP — 이 논문의 '탄성층 · 내부 압력 조절' (refs 14 · 43) 과 같은 질문.
+- `ahn2026_cej_agno3_pvp_li3n_anodefree` ✅ (자체 · 미출판 투고본) — 무음극 · 전구체 전환으로 핵생성 + 수송을 함께 조절 — 이 논문 §4.4 '합금 · 화합물 인터레이어 · 핵생성 과전압' 틀 안에 놓이는 원고.
+- 서론 · 계면 안정 인용 중 litdb 에 있는 것: `famprikis2019_…` (ref 2) · `janek2016_…` (6) · `richards2016_…` (17) · `xiao2020_…` (18) · `zhu2016_…` (54) · `zhu2015_…` (68).
+
+---
+
+## 8. 적용 인사이트 (우리 연구에 어떻게)
+
+### ① ★★★ W_ad 보고서 §7 의 '반응 뒤 표면' 원칙에 문헌 근거 한 줄 — Cu₂O → Li₂O (p. 676 · ref 25 · `Fig. 2f`)
+명목 표면 (Cu₂O) 의 DFT 는 친Li 인데 실측은 소Li 다 — Li 와 닿아 Li₂O 로 바뀌기 때문이다. 보고서 §7-1 의 'LiC₆ · Li–Ag 합금 면' 칸은 이 원칙과 같고, **CC 면 (Cu · SUS + 산화막 → Li₂O) 을 후보에 더할 근거**가 된다. 정량 비교에는 ref 25 (Yoon 2024 *ACS AMI*) 원문이 필요하다 — (d) 추천 1 순위.
+
+### ② ★★ '어디에 Li 가 서나' 는 W 쌍 목록을 바꾼다 (`Fig. 4a,d` · p. 677–678)
+탄소 · Ag–C 단면 모두 Li 가 **CC 쪽 (인터레이어 아래)** 에 섰다. 석출 위치를 묻는 계산이라면 보고서 §2 의 쌍 (C–C · Ag–C · LPSCl\|Ag · LPSCl\|흑연) 만으로는 부족하고 **Li\|Ag (또는 Li–Ag 합금) · Li\|흑연 (LiC₆) · CC\|인터레이어** 가 같은 잣대로 있어야 한다 (이 논문의 '새 계면 둘').
+
+### ③ ★★ `Fig. 2a` = 연속체 · DEM 입력표
+11 개 중 우리가 채울 수 있는 칸: γ (DFT) · d_SSE (DEM) · K_c,SSE/CC 의 하한 (W ≤ G_c). 석출 가장자리의 K_c,SSE/CC 는 '석출 성장 = CC\|SE 계면 균열' 이라는 그림 — DEM 박리 시험 (`comparison_vs_ours_DEM.md` §I) 이 재려는 G_c 와 같은 양 부류다.
+
+### ④ ★★ 압력 층위 셋을 등록 칸으로
+제조 10–500 MPa · 실험실 1 – 수백 MPa · 실용 < 1 MPa. DEM 압밀과 운전 스택 단계를 다른 압력으로 등록하는 근거 (doux2020 카드와 같은 결) — 'stack pressure' 한 단어로 묶지 않는다.
+
+### ⑤ ★ 방전 끝 접촉 면적 축소 (`Fig. 3d` · ref 23) — 우리 모델이 아직 안 하는 것
+임계 박리 전류 (Li 과잉 셀 개념) 만으로는 무음극 고장을 못 잡는다. DEM 이 주는 실접촉 면적 분포를 전류 분포 모델의 입력으로 쓰면 '낮은 전체 전류에서도 국부 고전류' 를 정량화할 자리가 생긴다 (제안).
+
+### ⑥ ★ LPSCl 환원의 '수축' (p. 676 · refs 56–58) — 우리 DFT 로 가를 수 있는 질문
+반응 부피 (LPSCl + Li → Li₂S + Li₃P + LiCl) 를 **같은 방법의 부피**로 계산하면 '수축' 이 SE 부피 기준인지 (SE + 소모 Li) 기준인지 가를 수 있다 (제안 · 값 없음 · 이 논문은 계산하지 않았다).
+
+### ⑦ `Table S2` 의 LPSCl 1.64 g cm⁻³ — 1.64 출처 묶음의 또 한 자리 (메인 세션 판단)
+Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 90 % 와 함께). 결정 밀도 ≈1.86 이면 중량 에너지밀도 −2.4 % (✎ §13-6).
+
+### ⑧ 석출 Li 두께 환산 4.89 µm per mAh cm⁻² (✎ §13-2)
+`Fig. 4b,d` 단면과 맞고 (0.99) a · c 는 0.80 · 0.85 (기울기 보정 미상). 모델에서 석출층을 치밀 Li 로 놓는 가정의 자릿수 근거.
+
+---
+
+## 9. 인용 가능 문장 (deck / paper 용 · 영어 · 랩 출처 표기)
+
+- "In anode-free solid-state batteries, the first Li nuclei can form only where the current collector contacts the solid electrolyte, so contact formation and interfacial adhesion govern initial plating (*Nat. Mater.*, 24, 673 (2025))."
+- "Without a Li reservoir, anode-free cells require average Coulombic efficiencies above 99.95% to reach 1,000 cycles (*Joule*, 5, 1371 (2021))."
+- "Near the end of stripping, non-uniform Li removal leaves isolated Li domains, and the shrinking contact area concentrates current even at low global current densities, which accelerates voiding and subsequent filament growth (*Adv. Energy Mater.*, 13, 2204186 (2023))."
+- "First-principles calculations predict both Cu and Cu₂O surfaces to be lithiophilic, whereas sessile-drop measurements show facile wetting only on pristine Cu, because Cu₂O converts to poorly wetted Li₂O on contact with Li (*ACS Appl. Mater. Interfaces*, 16, 18790 (2024))."
+- "Contact between sulfide electrolytes and current collectors is typically formed by pressing at about 10–500 MPa, whereas stack pressures above about 1 MPa are difficult to apply in practical cells (*Nat. Mater.*, 24, 673 (2025))."
+- "Composite Ag–C interlayers have enabled stable cycling beyond 1,000 cycles in anode-free cells, with Ag promoting dense Li deposition at the current collector and carbon maintaining contact with the electrolyte (*Nat. Energy*, 5, 299 (2020); *Nat. Commun.*, 14, 782 (2023))."
+- ⚠ 숫자 문장은 1 차 출처를 같이 단다 — 이 관점 논문만 달면 2 차 인용이다.
