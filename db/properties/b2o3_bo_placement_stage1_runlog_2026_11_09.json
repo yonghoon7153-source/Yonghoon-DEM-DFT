@@ -884,5 +884,12 @@
   "이어_띄우기_블록 (큐가 선 뒤 · 사용자가 붙여넣는다)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; S=$R/src; Q=$R/s11b_src; D=$S/tools/modelc_v3/disorder_ensemble_diffusion.py\necho \"== ① 큐가 섰는지 (tmux 없음 · 큐 로그 끝 줄)\" && ! tmux has-session -t b2o3_s11b 2>/dev/null && tail -3 $R/s11b_md/queue.log | cut -c1-140 && echo \"== ② 실행기 새 판 (이어 돌리기 RESUME) · 계획 · 드라이버 해시 — 돌던 판 run_b2o3_11b_md.sh 는 안 덮는다\" && git -C /data/work/repo fetch -q origin claude/evac-2026-11-20 && git -C /data/work/repo show FETCH_HEAD:tools/doping/run_b2o3_11b_md.sh > $Q/run_b2o3_11b_md_v2.sh && (cd $Q && printf '%s\\n' \"90ef801ab67195e7bbea3a2afd589eb382c2b968b4d26f1e0c2da53bcf421292  run_b2o3_11b_md_v2.sh\" \"4a33eb414261a752686cfacbb5754e67b1abb348d59bce00f5fcb1c83e58f586  plan.json\" | sha256sum -c -) && echo \"c3e2d358ee53cefab7c0c4a05ff6eea7ec322d2a75993643c302ada725f155a9  $D\" | sha256sum -c - && echo \"== ③ 새 판 자가시험 (가짜 드라이버 · 1–2 분)\" && bash $Q/run_b2o3_11b_md_v2.sh --selftest > $Q/selftest_v2.log 2>&1 && tail -1 $Q/selftest_v2.log && echo \"== ④ 이어 띄우기 $(date '+%F %T')\" && tmux new -d -s b2o3_s11b \"R=$R PY=$PY DRV=$D PLAN=$Q/plan.json RESUME=1 bash $Q/run_b2o3_11b_md_v2.sh\" && sleep 30 && tail -12 $R/s11b_md/queue.log | cut -c1-160",
   "블록_설명": "① tmux 없음 (큐가 섰다) · 큐 로그 끝 줄 ② 새 판을 다른 이름으로 꺼내 해시 대조 (실행기 · 계획 · 드라이버) ③ 새 판 자가시험 ④ RESUME=1 로 tmux b2o3_s11b 다시 → 30 초 뒤 큐 로그 (↷ 건너뜀 · ↻ 이어 돌림 · ▶ 새 단위) · 감시는 감시 v2 그대로 · 블록 bash -n 통과 (세션 안)",
   "by": "agent · 2026-11-23"
+ },
+ "11b_진행_2026_11_24_1306": {
+  "근거": "사용자가 붙인 gabia 감시 화면 (2026-11-24 13:06:35)",
+  "상태": "tmux b2o3_s11b 도는 중 · 대조 modelc_1x2x5_124 s1 · s2 끝 (ctrl_s1 DONE 26.342 h · T300/600/800/1000 프레임 각 4000) · 12:21 에 cfg0040 s1 · s2 시작 (줄 1 · 2) · 13:06 에 둘 다 T300 약 77 / 405 ps · 프레임 723 · 724 / 4000 · GPU 3583 MiB · 87 %",
+  "어림(판정_아님)": "지금 속도면 cfg0040 은 11-25 새벽 무렵 (온도 단계마다 속도가 다를 수 있다)",
+  "다음": "감시 그대로 · 큐가 상한 150 h 에서 서면 11b_이어돌리기_규칙_2026_11_23 의 이어 띄우기 블록",
+  "by": "claude (본 세션) · 2026-11-24"
  }
 }

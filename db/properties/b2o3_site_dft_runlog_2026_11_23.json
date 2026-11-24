@@ -50,5 +50,18 @@
   "22:51:23": "끝난 구조 1 / 239 · 진행 BMLi_00__c01 FIRE 0 걸음 (E −499.088 eV · 힘 최대 13.2 eV/Å — 옮긴 원자 6 개 주변이라 시작 힘이 큰 것은 예상대로)",
   "GPU": "9701 / 24576 MiB · 100 % (남의 python3 7.4 GB 와 나눠 씀 · 사용자 선택)",
   "어림": "구조당 ≈ 1 분이면 239 개 ≈ 4 h (나눠 쓰는 속도라 바뀔 수 있다) → 끝나면 pick_ob → 12 개 어닐"
+ },
+ "조합_UMA_이완_끝_2026_11_24": {
+  "근거": "사용자가 붙인 감시 화면 (kgy 2026-11-24 13:06:55)",
+  "상태": "tmux bsite_ob0 없음 · 이완까지 끝난 구조 239 / 239 · 시작 2026-11-23 22:50:20 (입력 · 소스 해시 재대조 통과) · GPU 3675 / 24576 MiB · 54 % (남의 잡)",
+  "다음": "블록 2 (pick_ob → 어닐 12)",
+  "by": "claude (본 세션) · 2026-11-24"
+ },
+ "kgy_블록_2_2026_11_24 (pick_ob → 어닐 12 · 사용자가 붙여넣는다)": {
+  "블록": "B=claude/friendly-meitner-lldvar; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python\n( echo \"== ① 조합 이완 끝 확인 (tmux 없음 · 결과 JSON · 로그 꼬리)\" && ! tmux has-session -t bsite_ob0 2>/dev/null && git -C $W log --oneline -1 && [ -s $R/uma_ob_combos/anneal_results.json ] && tail -3 $R/uma_ob_combos.log \\\n && echo \"== ② pick_ob — 바탕마다 최저 하나 (12 개 기대)\" && [ ! -e $R/ob_picked ] && $PY $W/tools/doping/b2o3_site_dft.py pick_ob --combos $R/ob_combos --results $R/uma_ob_combos/anneal_results.json --out $R/ob_picked \\\n && [ \"$(ls $R/ob_picked/*.xyz 2>/dev/null | wc -l)\" = 12 ] \\\n && echo \"== GPU (참고 · 남과 나눠 씀 · 실행기가 여유 ≥ 4000 MiB 를 다시 본다)\" && nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader \\\n && echo \"== ③ 어닐 12 발사 (10월과 같은 500 K × 20 ps · SEED 20261014 · 이완 fmax 0.05 · tmux bsite_ob1)\" \\\n && { R=$R SRC=$W PY=$PY CAND=$R/ob_picked N_EXPECT=12 SESSION=bsite_ob1 OUTNAME=uma_ob_anneal TIME_PS=20 TEMP=500 SEED=20261014 RELAX_FMAX=0.05 bash $W/db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh > $R/launch_ob1.log 2>&1; rc=$?; tail -8 $R/launch_ob1.log; [ $rc = 0 ]; } \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "감시": "watch -n 30 'bash $HOME/w_bsite_ob0.sh' 는 bsite_ob0 용 — 어닐은 같은 꼴로 SESSION/OUTNAME 만 바꿔 본다 (tmux bsite_ob1 · 출력 uma_ob_anneal)",
+  "근거": "카드 b2o3_site_dft_estimand_2026_11_23 '바탕마다 최저 하나 → 10월과 같은 어닐 (500 K × 20 ps) + 이완 → B-P 6 · B-Li 6' · 복귀 카드 ■6 · worktree ee2a5ea4 의 도구 · 실행기는 friendly 끝과 같음 (diff 없음)",
+  "다음": "어닐 끝 → 자리 × O 꼴 UMA 최저 셋 → DFT 메모리 프로브 (GPU 가 빈 뒤) → 단일점 12 + 기준상 넷 vc-relax",
+  "by": "claude (본 세션) · 2026-11-24"
  }
 }
