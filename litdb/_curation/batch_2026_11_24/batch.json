@@ -1,0 +1,459 @@
+{
+ "schema": "litdb_batch/v1",
+ "batch": "2026-11-24 · 18편 (W_ad Li 친화성 · 공극 · Ag–C 층 · Sakamoto 그룹 · 최근 2년)",
+ "created": "2026-11-24",
+ "user_originals": "사용자 PC C:\\Users\\Administrator\\Desktop\\읽어야되는 논문\\DFT-DEM-COMSOL\\261124 논문 추가\\ (번호 붙은 이름 그대로 · 아래 uploaded_as)",
+ "done_marker": "litdb/_curation/batch_2026_11_24/<slug>.report.md 가 있으면 그 편은 끝났다 (에이전트가 digest 뒤 맨 마지막에 쓴다)",
+ "agent": {
+  "subagent_type": "litdb-curator",
+  "prompt_rules": [
+   "쓰는 파일: litdb/papers/<slug>.md · litdb/figures/<slug>/ · litdb/_curation/batch_2026_11_24/<slug>.report.md 셋뿐",
+   "공유 파일 금지: litdb/INDEX.md · INDEX_DEM.md · comparison_vs_ours*.md · pdf_map.tsv · topics.json · _INDEX_proposals.md · litdb/properties/* · litdb/talks/* · CLAUDE.md · litdb 밖",
+   "git add · commit · push · checkout · reset · stash 금지 · build_index.py 는 --check 만",
+   "우리 점착 W 값은 digest 에 싣지 않는다 (위치만)",
+   "저자에 Jeff Sakamoto 가 있으면 저자 줄에 Jeff Sakamoto 로 · INDEX 행 둘째 칸 맨 앞 🏷 **Jeff Sakamoto 공저** · ",
+   "그림: tools/litdb/extract_figures.py --slug <slug> --pdf <본문> <SI…> --clean · 동영상: ffmpeg -vf fps=1/5 로 장면을 뽑아 직접 본다"
+  ],
+  "report_spec": "(a) INDEX 행 + 절 (b) comparison 줄 (c) pdf_map 줄 (d) 추가로 먹일 논문 ≤ 8 (최근 먼저 · litdb 유무) (e) DEM-DFT 보고서에 쓸 거리 (쪽 · 그림 · 표 · 직접 봤는지) (f) 그림 · 동영상 크롭 요약 (g) Jeff Sakamoto 저자 여부"
+ },
+ "papers": [
+  {
+   "n": 1,
+   "slug": "seymour2021_void_suppression_interfacial_adhesion_vacancy_transport",
+   "citation": "Seymour & Aguadero, J. Mater. Chem. A 9, 19901 (2021)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/seymour2021_void_adhesion_SI1.pdf",
+     "sha256": "517dd6a6173432ef4cf06c7a8b412cb4932797addaab6965e21691ef9995c719",
+     "bytes": 4910261,
+     "uploaded_as": "1._Sup1_Suppressing_void_formation_in_all-solid-state_batteries_the_role_of_interfacial_adhesion_on_alkali_metal_vacancy_transport.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/seymour2021_void_adhesion_SI2.pdf",
+     "sha256": "a87290f297cfc9702b0cb4c873ff00318ec8494e9ee60de969b818b2e9eca263",
+     "bytes": 4252885,
+     "uploaded_as": "1._Sup2_Suppressing_void_formation_in_all-solid-state_batteries_the_role_of_interfacial_adhesion_on_alkali_metal_vacancy_transport.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/seymour2021_void_adhesion_main.pdf",
+     "sha256": "6a459e34dd1e77008e1babafec3cbb623b8d2fb3a89f253aa4ea97e6a734408b",
+     "bytes": 1411949,
+     "uploaded_as": "1._Suppressing_void_formation_in_all-solid-state_batteries_the_role_of_interfacial_adhesion_on_alkali_metal_vacancy_transport.pdf"
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "slug": "yang2021_flat_li_stripping_lithiophilic_interface_design",
+   "citation": "Yang & Qi (확인), Chem. Mater. 33, 2814 (2021)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/yang2021_flat_li_stripping_SI.pdf",
+     "sha256": "fe6e7e6f6e82c6fc52cffceaf3d673f86578f0ff9458212d147592348856c412",
+     "bytes": 1338075,
+     "uploaded_as": "2._sup_Maintaining_a_flat_Li_surface_during_the_Li_stripping_process_via_interface_design.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/yang2021_flat_li_stripping_main.pdf",
+     "sha256": "3c3dc1611b0cc89a6f78d389d8ba758a04dee5e47bdd2bfc8273058d6f9a7ae9",
+     "bytes": 6527685,
+     "uploaded_as": "2._Maintaining_a_flat_Li_surface_during_the_Li_stripping_process_via_interface_design.pdf"
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "slug": "yang2021_atomistic_li_stripping_plating_interface_md",
+   "citation": "Yang, Liu, Nolan, Mo, Adv. Mater. 33, 2008081 (2021)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/yang2021mo_li_strip_plate_md_SI1.pdf",
+     "sha256": "cc71b5602b98a1e1a90e740bbaf8b891f5187935bfd98a310e477b4e52ae16da",
+     "bytes": 895296,
+     "uploaded_as": "3._Sup1_Interfacial_Atomistic_Mechanisms_of_Lithium_Metal_Stripping_and_Plating_in_Solid-State_Batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/yang2021mo_li_strip_plate_md_main.pdf",
+     "sha256": "204fd8761e56c2d17777774e9d2488321ece0943b501dbcf8634876dbaad58d1",
+     "bytes": 5131834,
+     "uploaded_as": "3._Interfacial_Atomistic_Mechanisms_of_Lithium_Metal_Stripping_and_Plating_in_Solid-State_Batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/yang2021mo_li_strip_plate_md_movie1.mov",
+     "sha256": "876572ce59c96f3dfcb8192908fc3b48a3a77b8adae879cd8af4c13ccf61971b",
+     "bytes": 14628211,
+     "uploaded_as": "3._Sup2_Interfacial_Atomistic_Mechanisms_of_Lithium_Metal_Stripping_and_Plating_in_Solid-State_Batteries.mov"
+    },
+    {
+     "inbox": "litdb/inbox/yang2021mo_li_strip_plate_md_movie2.mov",
+     "sha256": "8d042e3fc3370f1f3050c0ce6f9699fb491e74bd3640c1868fb55a8e6d304f8e",
+     "bytes": 12721797,
+     "uploaded_as": "3._Sup3_Interfacial_Atomistic_Mechanisms_of_Lithium_Metal_Stripping_and_Plating_in_Solid-State_Batteries.mov"
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "slug": "sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance",
+   "citation": "Sharafi 외 (Sakamoto), Chem. Mater. 29, 7961 (2017)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/sharafi2017_llzo_wetting_SI1.pdf",
+     "sha256": "cea08b2f9b86bf86e393bbd1df7e9975e07fdef5c972f80e04418ebea5271d4b",
+     "bytes": 666879,
+     "uploaded_as": "4._Sup1_Surface_Chemistry_Mechanism_of_Ultra-Low_Interfacial_Resistance_in_the_Solid-State_Electrolyte_Li7La3Zr2O12.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/sharafi2017_llzo_wetting_main.pdf",
+     "sha256": "a984ad3e49b45e1ab5e31152e99ccbdc3cc78f5a9934ff0d37affc88516e25c8",
+     "bytes": 3222406,
+     "uploaded_as": "4._Surface_Chemistry_Mechanism_of_Ultra-Low_Interfacial_Resistance_in_the_Solid-State_Electrolyte_Li7La3Zr2O12.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/sharafi2017_llzo_wetting_movie1.avi",
+     "sha256": "9c7fba81f219b34e0fc0f24ceb39d983796b410c812708c36f75902ed2fbce4b",
+     "bytes": 5299078,
+     "uploaded_as": "4._Sup2_Surface_Chemistry_Mechanism_of_Ultra-Low_Interfacial_Resistance_in_the_Solid-State_Electrolyte_Li7La3Zr2O12.avi"
+    },
+    {
+     "inbox": "litdb/inbox/sharafi2017_llzo_wetting_movie2.avi",
+     "sha256": "6e316c7eddd6b445096f4a5913ab5aba40fa8b85bf361962f9959d0c9b479099",
+     "bytes": 7285754,
+     "uploaded_as": "4._Sup3_Surface_Chemistry_Mechanism_of_Ultra-Low_Interfacial_Resistance_in_the_Solid-State_Electrolyte_Li7La3Zr2O12.avi"
+    },
+    {
+     "inbox": "litdb/inbox/sharafi2017_llzo_wetting_movie3.avi",
+     "sha256": "803a2cb19ce55f9645900715054edeaa94a247a35949434f911a8afff0fddd81",
+     "bytes": 10571140,
+     "uploaded_as": "4._Sup4_Surface_Chemistry_Mechanism_of_Ultra-Low_Interfacial_Resistance_in_the_Solid-State_Electrolyte_Li7La3Zr2O12.avi"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "slug": "wang2019_li_se_interface_dynamics_stack_pressure_current_density",
+   "citation": "Wang, Choudhury, Sakamoto, Joule 3, 2165 (2019)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/wang2019_li_se_stack_pressure_SI.pdf",
+     "sha256": "2bc2b284f4f2ad3015f512d698c9f32b1e30acbec77481f418bf511947fe969a",
+     "bytes": 135961,
+     "uploaded_as": "5._Sup_Characterizing_the_Li-solid-electrolyte_interface_dynamics_as_a_function_of_stack_pressure_and_current_density.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/wang2019_li_se_stack_pressure_main.pdf",
+     "sha256": "54fb73eb14b03a45de6112eb805fa2c64f3869378e933fb78978ac774e4d9a50",
+     "bytes": 2272018,
+     "uploaded_as": "5._Characterizing_the_Li-solid-electrolyte_interface_dynamics_as_a_function_of_stack_pressure_and_current_density.pdf"
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "slug": "masias2019_li_metal_elastic_plastic_creep_properties",
+   "citation": "Masias 외 (Sakamoto), J. Mater. Sci. 54, 2585 (2019)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/masias2019_li_creep_SI.pdf",
+     "sha256": "c0d35c1f8092d962a3bd58cb1db262d0049fd83de678339618f946c3cfc26974",
+     "bytes": 106296,
+     "uploaded_as": "6._Sup_Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/masias2019_li_creep_main.pdf",
+     "sha256": "125ec6ace593f9ec10eb4d538c49489ba8fa33efc7889d66565bb7286126e869",
+     "bytes": 2294778,
+     "uploaded_as": "6._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf"
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "slug": "kazyak2020_li_penetration_ceramic_se_operando_microscopy",
+   "citation": "Kazyak 외 (Sakamoto · Dasgupta), Matter 2, 1025 (2020)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/kazyak2020_li_penetration_SI.pdf",
+     "sha256": "c19e29d6ddd7de35e45478e8f008112e8e6a5d41dcb1859d653bfbb10993a876",
+     "bytes": 4481568,
+     "uploaded_as": "7._Sup_Li_penetration_in_ceramic_solid_electrolytes_operando_microscopy_analysis_of_morphology_propagation_and_reversibility.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/kazyak2020_li_penetration_main.pdf",
+     "sha256": "5712caa3194ca949e563c53e755c2c8778d365a11f45348a3956ff63168b9a7c",
+     "bytes": 8557387,
+     "uploaded_as": "7._Li_penetration_in_ceramic_solid_electrolytes_operando_microscopy_analysis_of_morphology_propagation_and_reversibility.pdf"
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "slug": "lee2022_thin_insitu_li_void_rewetting_llzo",
+   "citation": "Lee 외 (Sakamoto), Joule 6, 2547 (2022)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/lee2022_thin_li_void_rewetting_SI.pdf",
+     "sha256": "3393efaf8c9a2820583846e9eb3e0e12989eefcc96ce280cfd0373da0e3a5649",
+     "bytes": 2182722,
+     "uploaded_as": "8._Sup_Analyzing_void_formation_and_rewetting_of_thin_in_situ-formed_Li_anodes_on_LLZO.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/lee2022_thin_li_void_rewetting_main.pdf",
+     "sha256": "9effc6131a4deb08cefcde30b93ee297649fcc9c05113e4f10c02a3ca244b38a",
+     "bytes": 2960555,
+     "uploaded_as": "8._Analyzing_void_formation_and_rewetting_of_thin_in_situ-formed_Li_anodes_on_LLZO.pdf"
+    }
+   ]
+  },
+  {
+   "n": 9,
+   "slug": "wang2020_lithium_free_insitu_plating_llzo",
+   "citation": "Wang 외 (Sakamoto), Nat. Commun. 11, 5201 (2020)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/wang2020_insitu_plating_SI.pdf",
+     "sha256": "1950c9f8ca5a8615dc93d68fd3c35809e1bb0b2cbc495641c8232eeebb846ce0",
+     "bytes": 855042,
+     "uploaded_as": "9._Sup_Enabling__lithium-free__manufacturing_of_pure_lithium_metal_solid-state_batteries_through_in_situ_plating.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/wang2020_insitu_plating_main.pdf",
+     "sha256": "05348aebc6a244feb62e39bde25f1826c7c509eb2733f877ab74175c532baf60",
+     "bytes": 3035587,
+     "uploaded_as": "9._Enabling__lithium-free__manufacturing_of_pure_lithium_metal_solid-state_batteries_through_in_situ_plating.pdf"
+    }
+   ]
+  },
+  {
+   "n": 10,
+   "slug": "fuchs2023_cu_llzo_anode_free_li_growth_modes",
+   "citation": "Fuchs 외 (Sakamoto · Janek), Adv. Energy Mater. 13, 2203174 (2023)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/fuchs2023_cu_llzo_growth_SI1.pdf",
+     "sha256": "1c2531fb8602eb71228104bcaeaec5d4b7a93d581afbc1ee577ec44d66d6ef8d",
+     "bytes": 1587404,
+     "uploaded_as": "10._Sup1_Current_dependent_lithium_metal_growth_modes_in__Anode_Free__solid_state_batteries_at_the_Cu_LLZO_interface.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/fuchs2023_cu_llzo_growth_main.pdf",
+     "sha256": "11aac33ef9a452316eccabc13c76aeada96ecd53677fe40528291775e7a303b2",
+     "bytes": 1788495,
+     "uploaded_as": "10._Current_dependent_lithium_metal_growth_modes_in__Anode_Free__solid_state_batteries_at_the_Cu_LLZO_interface.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/fuchs2023_cu_llzo_growth_movie1.mp4",
+     "sha256": "698f794c1c033f3fcdd88c82f98ae9f521f2939d4d8a252b396ab01ae624093e",
+     "bytes": 5953682,
+     "uploaded_as": "10._Sup2_Current_dependent_lithium_metal_growth_modes_in__Anode_Free__solid_state_batteries_at_the_Cu_LLZO_interface.mp4"
+    },
+    {
+     "inbox": "litdb/inbox/fuchs2023_cu_llzo_growth_movie2.mp4",
+     "sha256": "e9b06da6606b6960cb1b9f9713eb38af94311905860831d22d546b896d492351",
+     "bytes": 1317122,
+     "uploaded_as": "10._Sup3_Current_dependent_lithium_metal_growth_modes_in__Anode_Free__solid_state_batteries_at_the_Cu_LLZO_interface.mp4"
+    }
+   ]
+  },
+  {
+   "n": 11,
+   "slug": "kim2026_operando_void_detection_single_frequency_impedance",
+   "citation": "Kim 외 (Sakamoto · Dasgupta), ACS Electrochem. (2026)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/kim2026_void_impedance_SI.pdf",
+     "sha256": "6a0a6b0121f140a9e4c13126c7f9e631b1acef282de08d25cdaa16a8d0f4780f",
+     "bytes": 2417428,
+     "uploaded_as": "11._Sup_Operando_Detection_of_Void_Formation_during_Lithium_Stripping_in_Solid-State_Batteries_Using_Single-Frequency_Impedance_Analysis.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/kim2026_void_impedance_main.pdf",
+     "sha256": "200d1eac36d3e7461be7ed31ce867625a99d0dd60f8c26e870f2fcca5574ed5d",
+     "bytes": 5211645,
+     "uploaded_as": "11._Operando_Detection_of_Void_Formation_during_Lithium_Stripping_in_Solid-State_Batteries_Using_Single-Frequency_Impedance_Analysis.pdf"
+    }
+   ]
+  },
+  {
+   "n": 12,
+   "slug": "lu2026_li_ag_interface_thermodynamics_kinetics",
+   "citation": "Lu & Trinkle, arXiv 2602.11430 (2026)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/agli2026_li_ag_interface_thermo_kinetics_main.pdf",
+     "sha256": "02a10714d6cb93c8b0766238a0d8ae9b828f19402d11fe253ac2ccdce0ca9da3",
+     "bytes": 2964780,
+     "uploaded_as": "12._Thermodynamics_and_kinetics_of_lithium_at_the_silver-lithium_battery_interface.pdf"
+    }
+   ]
+  },
+  {
+   "n": 13,
+   "slug": "sandoval2025_electro_chemo_mechanics_anode_free_ssb",
+   "citation": "Sandoval 외, Nat. Mater. Perspective (2025) — Sakamoto 공저 확인 중",
+   "jeff_sakamoto": null,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/afssb2024_electro_chemo_mechanics_SI.pdf",
+     "sha256": "6e5a5c851dc4639bc4dc22bc25a866c6e3dda6296006509ce8e1c869b53ee029",
+     "bytes": 851540,
+     "uploaded_as": "13._Sup_Electro-chemo-mechanics_of_anode-free_solid-state_batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/afssb2024_electro_chemo_mechanics_main.pdf",
+     "sha256": "f1f8673be8860a43eacbb3298b3b3524499a0c930e355e2d4b515ef315a656f2",
+     "bytes": 5133337,
+     "uploaded_as": "13._Electro-chemo-mechanics_of_anode-free_solid-state_batteries.pdf"
+    }
+   ]
+  },
+  {
+   "n": 14,
+   "slug": "metzler2025_ag_particle_distribution_carbon_interlayer_anode_free",
+   "citation": "Metzler 외 (Grant), ACS Appl. Mater. Interfaces 17, 39089 (2025)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/agdist2025_ag_c_interlayer_SI.pdf",
+     "sha256": "ba650424cfad53dd6b3485cd69d66d02f2cef88b45158b9d4d0a439c464a1ba7",
+     "bytes": 10711427,
+     "uploaded_as": "14._Sup_Effect_of_Silver_Particle_Distribution_in_a_Carbon_Nanocomposite_Interlayer_on_Lithium_Plating_in_Anode-Free_All-Solid-State_Batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/agdist2025_ag_c_interlayer_main.pdf",
+     "sha256": "802600e9858d84db501bd4592b0e483a98aed36e03791ad4ce931de4324ad212",
+     "bytes": 6304845,
+     "uploaded_as": "14._Effect_of_Silver_Particle_Distribution_in_a_Carbon_Nanocomposite_Interlayer_on_Lithium_Plating_in_Anode-Free_All-Solid-State_Batteries.pdf"
+    }
+   ]
+  },
+  {
+   "n": 15,
+   "slug": "metzler2026_sputtered_ag_carbon_interlayers_anode_free",
+   "citation": "Metzler 외 (Grant), ACS Appl. Energy Mater. 9, 9817 (2026)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/sputag2026_ag_c_sputtered_SI.pdf",
+     "sha256": "4c5b5f14e1b90dee0727b853f296d7ef91f6e4910709c8787a5b1bde3f8a20d3",
+     "bytes": 7432282,
+     "uploaded_as": "15._Sup_Lithium_Plating_and_Stripping_Facilitated_by_Thin_Sputtered_Silver_and_Carbon_Interlayers_in_Anode-Free_All-Solid-State_Batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/sputag2026_ag_c_sputtered_main.pdf",
+     "sha256": "f5c74cdef0c9dab8ffb43d8979ad4e93181dbf8f300d770adb02ea7d44a1cda3",
+     "bytes": 6310081,
+     "uploaded_as": "15._Lithium_Plating_and_Stripping_Facilitated_by_Thin_Sputtered_Silver_and_Carbon_Interlayers_in_Anode-Free_All-Solid-State_Batteries.pdf"
+    }
+   ]
+  },
+  {
+   "n": 16,
+   "slug": "shi2026_argyrodite_stack_pressure_viscoplastic_deformation",
+   "citation": "Shi 외 (Mitlin · Sheldon), Matter? (2026)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+     "sha256": "6415862a561f070dab28be39518599fc0bd8da7c20ad33bd4c5f5e20ad4fd392",
+     "bytes": 2979558,
+     "uploaded_as": "16._Sup1_Stack_pressure_effects_and_viscoplastic_deformation_in_argyrodite_solid-state_electrolyte.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/viscoplastic2026_argyrodite_stack_pressure_SI2.pdf",
+     "sha256": "de4969d12bf464e360dbca4254f5cdce99339d7622393f83d2dc4baac7203563",
+     "bytes": 419847,
+     "uploaded_as": "16._Sup2_Stack_pressure_effects_and_viscoplastic_deformation_in_argyrodite_solid-state_electrolyte.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+     "sha256": "a3a5d0c3f4f56a2087ed977194c4d2344175f3b2b95424751cdcfd2b2d974092",
+     "bytes": 8029664,
+     "uploaded_as": "16._Stack_pressure_effects_and_viscoplastic_deformation_in_argyrodite_solid-state_electrolyte.pdf"
+    }
+   ]
+  },
+  {
+   "n": 17,
+   "slug": "cicvaric2026_li_nucleation_ni111_cu111_anode_free",
+   "citation": "Cicvarić 외, J. Mater. Chem. A 14, 16784 (2026)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/nicu2026_li_nucleation_ni111_cu111_SI.pdf",
+     "sha256": "4ff100e35814f91fb2c22804f52e95095a473bc5e01244d033e9e9683d9e0bf2",
+     "bytes": 294147,
+     "uploaded_as": "17._Sup_Electrochemical_and_computational_insights_into_lithium_nucleation_at_Ni_111_and_Cu_111_surfaces_for_anode-free_Li-metal_batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/nicu2026_li_nucleation_ni111_cu111_main.pdf",
+     "sha256": "7b5a3a7c39eeaaf835fb949c4eff43353540ae83c091e8792e8557c6d185a10a",
+     "bytes": 1216685,
+     "uploaded_as": "17._Electrochemical_and_computational_insights_into_lithium_nucleation_at_Ni_111_and_Cu_111_surfaces_for_anode-free_Li-metal_batteries.pdf"
+    }
+   ]
+  },
+  {
+   "n": 18,
+   "slug": "chatterjee<연도>_diffuse_interface_li_anode_void_model (에이전트가 연도를 정함)",
+   "citation": "Chatterjee, Tonks 외, J. Electrochem. Soc. (MOOSE 코드)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/difint2025_void_diffuse_interface_SI.pdf",
+     "sha256": "4c52e11da306c95c7315fbd78c1c8e2152e5119eeb33f85e708b926aa91b79b1",
+     "bytes": 6547043,
+     "uploaded_as": "18SUP1.PDF"
+    },
+    {
+     "inbox": "litdb/inbox/difint2025_void_diffuse_interface_main.pdf",
+     "sha256": "e4b5ec1975b220f42756c62afc8afcf8e43a6fa4203246df194aa83b30a9263c",
+     "bytes": 8702174,
+     "uploaded_as": "18ADIF1.PDF"
+    }
+   ]
+  }
+ ],
+ "extra": {
+  "16_sup3": [
+   {
+    "inbox": "litdb/inbox/shi2026_sup3/codes/script_2D_void_fraction.m",
+    "sha256": "f0a5bdfb1d223e5169bea3131734b1b9dc0702907849138b5d02fd11af129ec6",
+    "bytes": 2074
+   },
+   {
+    "inbox": "litdb/inbox/shi2026_sup3/codes/script_for_pore.m",
+    "sha256": "396d6067df655e4095fd229da5941c777b86c59bd90a3bca741633fd0019be4f",
+    "bytes": 9370
+   },
+   {
+    "inbox": "litdb/inbox/shi2026_sup3/codes/script_sparse.m",
+    "sha256": "52ff1d2964088a83e73906e443f33b130d400fad1a240e722f126f1a15255631",
+    "bytes": 1047
+   }
+  ],
+  "16_sup3_zips_uploaded_sha256": {
+   "16_Sup3_code.zip": "1C1516C90432591F731E5C1BE928C4572CC381507AFD0409CB54C48600F25699",
+   "16_Sup3_data_part1.zip": "958E0538F748D0832DE8DFF81E388A0136958F53BF34C1E49777BB890B8B6571",
+   "16_Sup3_data_part2.zip": "87AF7D1968B94D6B96667D1EF5EDFE6510FD6E76328571D34A92731321BCE531"
+  },
+  "18_code_repo": {
+   "url": "https://github.com/souravmat-git/moose-batmodelling",
+   "commit": "3e44674",
+   "path": "/home/user/souravmat-git/moose-batmodelling",
+   "reclone": "GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/souravmat-git/moose-batmodelling /home/user/souravmat-git/moose-batmodelling"
+  }
+ }
+}

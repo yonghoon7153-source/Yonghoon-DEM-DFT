@@ -267,6 +267,94 @@
    "dpi": 300,
    "src": "wang2020_insitu_plating_SI.pdf",
    "blank": 0.947
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 4,
+   "file": "eq_01_interface_opening_work.png",
+   "caption": "Equation (1), main p.4: W_CC·Li·LLZO = W_adh,CC·LLZO − W_adh,Li·CC − W_adh,Li·LLZO — work (J m^-2) to open the CC/LLZO interface and replace it by Li–CC and Li–LLZO interfaces; assumes the new interfaces completely fill the opened CC/LLZO interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    665.5,
+    555.0,
+    741.5
+   ],
+   "w": 1063,
+   "h": 318,
+   "dpi": 300,
+   "src": "wang2020_insitu_plating_main.pdf",
+   "manual_crop": "equation region rendered by hand from the vector text layer (tool has no equation crops) — 2026-11-24",
+   "viewed": true,
+   "note_ko": "계면 여는 일 = 옛 계면 점착 − 새 계면 둘의 점착. 우리 DFT 가 낼 수 있는 항은 W_adh,Li·CC · W_adh,Li·SE (열역학 W) — 논문은 이 둘을 0 으로 둔다. W_adh,CC·LLZO 는 박리 (G_c 부류) 값이라 같은 식에 종류가 다른 양이 섞인다 (digest §10)."
+  },
+  {
+   "key": "e02_03",
+   "kind": "equation",
+   "label": "eq2-3",
+   "page": 6,
+   "file": "eq_02_03_nucleus_free_energy_critical_radius.png",
+   "caption": "Equations (2)–(3), main p.6: ΔG_total = −(4/3)πr³ΔG_Li + 4πr²W_CC·Li·LLZO (2), ΔG_Li = −Fη_nuc for Li+ + e− → Li; critical radius r0 = −2 W_CC·Li·LLZO V̄_Li /(F η_nuc) (3).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    449.0,
+    295.0,
+    568.0
+   ],
+   "w": 1064,
+   "h": 497,
+   "dpi": 300,
+   "src": "wang2020_insitu_plating_main.pdf",
+   "manual_crop": "equation region rendered by hand from the vector text layer (tool has no equation crops) — 2026-11-24",
+   "viewed": true,
+   "note_ko": "구형 핵의 고전 핵생성. ⚠ 식 (2) 의 부피항은 V̄_Li 로 나눠야 단위가 맞는다 (식 (3) 에는 들어 있다). η_nuc 는 음(환원)이라 r0 > 0. 장벽 ΔG* 는 논문이 내지 않았다 — digest §6-3 우리 산술."
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 6,
+   "file": "eq_04_opening_overpotential_pressure_term.png",
+   "caption": "Equation (4), main p.6: η_CC·Li·LLZO = (W_CC·Li·LLZO dA/dt)/I — overpotential to keep opening the CC/LLZO interface during growth; plus the pressure term η ≈ (V̄_Li/F) p (4 MPa → ≈0.5 mV).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    436.0,
+    555.0,
+    625.5
+   ],
+   "w": 1063,
+   "h": 791,
+   "dpi": 300,
+   "src": "wang2020_insitu_plating_main.pdf",
+   "manual_crop": "equation region rendered by hand from the vector text layer (tool has no equation crops) — 2026-11-24",
+   "viewed": true,
+   "note_ko": "성장 단계의 계면 여는 과전압 = W × (열리는 면적 속도) ÷ 전류. dA/dt 를 Fig. 4 피복률에서 넣으면 W 를 과전압에서 역산할 수 있다 (digest §6-4 우리 산술 · 논문은 안 했다)."
+  },
+  {
+   "key": "eS1_S2",
+   "kind": "equation",
+   "label": "eqS1-S2",
+   "page": 9,
+   "file": "eq_S1_S2_peel_energy_balance.png",
+   "caption": "Supplementary Equations 1–2, SI p.9: peel energy balance Γ = P(1 − cos φ) − Q (S1); plastic work of the peel arm Q = (σ_Y² t / 2E)[2√(6EP(1−cos φ′)/(σ_Y² t)) − 5 + 10/(3√(6EP(1−cos φ′)/(σ_Y² t)))] (S2); measured peel angles 45° (Ni) and 81° (Cu); φ′ assumed = φ.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    272.0,
+    548.0,
+    712.0
+   ],
+   "w": 2009,
+   "h": 1834,
+   "dpi": 300,
+   "src": "wang2020_insitu_plating_SI.pdf",
+   "manual_crop": "equation region rendered by hand from the vector text layer (tool has no equation crops) — 2026-11-24",
+   "viewed": true,
+   "note_ko": "★ 1–10 J m^-2 의 출처. σ_Y · t · E 입력값이 논문 어디에도 없다 → 재현 불가. 상한 P(1−cos φ) 만 그림 S4 에서 다시 낼 수 있다 (Cu ≈69 · Ni ≈32 J m^-2, digest §6-2)."
   }
  ],
  "missing_labels": [
@@ -461,5 +549,6 @@
    "below_adjacent": 0,
    "caption_below": false
   }
- ]
+ ],
+ "missing_labels_note": "fS8–fS36 are false positives: main text p.7 reads \"Supplementary Fig. S6\" followed by superscript reference numbers 31–36 (rendered inline as \"S631–36\"); the SI has only Supplementary Figures 1–7. No figure is missing. (2026-11-24)"
 }

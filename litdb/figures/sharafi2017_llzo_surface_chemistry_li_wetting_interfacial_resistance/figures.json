@@ -14,7 +14,7 @@
    "label": "1",
    "page": 2,
    "file": "fig_1.png",
-   "caption": "Figure 1. XPS analysis of LLZO before and after heat treatment at 400 and 500 °C. (a) C:(La+Zr) atomic ratio as a function of heat treatment temperature; (b) O 1s and (c) C 1s core levels; (d) percentage of total composition of diﬀerent oxygen species on the LLZO surface as a function of heat treatment temperature after wet polishing (WP). an attempt to reduce the interfacial resistance, and their impact on LLZO surface chemistry was evaluated (details regarding the dry and wet polishing conditions are explained in the Experimental Section). Heat treatment between 200 and 500 °C in an inert atmosphere was conducted after dry and wet polishing. In this study, we provide a mechanistic understanding of the interplay between interfacial chemistry and electrochemical performance at solid−solid interfaces in SSBs. This under- standing provides design rules for engineering low-resistance interf",
+   "caption": "Figure 1. XPS analysis of LLZO before and after heat treatment at 400 and 500 °C. (a) C:(La+Zr) atomic ratio as a function of heat treatment temperature; (b) O 1s and (c) C 1s core levels; (d) percentage of total composition of diﬀerent oxygen species on the LLZO surface as a function of heat treatment temperature after wet polishing (WP).",
    "rotated_deg": 0,
    "bbox": [
     54.5,
@@ -26,7 +26,11 @@
    "h": 951,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_main.pdf",
-   "blank": 0.86
+   "blank": 0.86,
+   "caption_auto": "Figure 1. XPS analysis of LLZO before and after heat treatment at 400 and 500 °C. (a) C:(La+Zr) atomic ratio as a function of heat treatment temperature; (b) O 1s and (c) C 1s core levels; (d) percentage of total composition of diﬀerent oxygen species on the LLZO surface as a function of heat treatment temperature after wet polishing (WP). an attempt to reduce the interfacial resistance, and their impact on LLZO surface chemistry was evaluated (details regarding the dry and wet polishing conditions are explained in the Experimental Section). Heat treatment between 200 and 500 °C in an inert atmosphere was conducted after dry and wet polishing. In this study, we provide a mechanistic understanding of the interplay between interfacial chemistry and electrochemical performance at solid−solid interfaces in SSBs. This under- standing provides design rules for engineering low-resistance interf",
+   "caption_fix": "2026-11-24 litdb-curator: tool caption carried trailing body text / page footer - trimmed to the printed caption (auto text kept in caption_auto)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + 500 dpi zoom of panel d (scratch render) for figure-read values"
   },
   {
    "key": "f2",
@@ -46,7 +50,9 @@
    "h": 894,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_main.pdf",
-   "blank": 0.616
+   "blank": 0.616,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG)"
   },
   {
    "key": "f3",
@@ -66,7 +72,9 @@
    "h": 768,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_main.pdf",
-   "blank": 0.485
+   "blank": 0.485,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG)"
   },
   {
    "key": "f4",
@@ -74,7 +82,7 @@
    "label": "4",
    "page": 4,
    "file": "fig_4.png",
-   "caption": "Figure 4. (a) Schematic of the all solid-state Li−LLZO−Li cell, (b) equivalent circuit used for modeling the EIS data, (c) representative Nyquist plot of the Li−LLZO−Li cell (for LLZO heat-treated at 500 °C), as-assembled (○) and after preconditioning at 175 °C (●). Markers indicate experimental data and dotted lines represent from the equivalent circuit model simulation using the circuit shown in panel b, (d) the Li−LLZO interfacial resistance after preconditioning at 175 °C versus the heat-treatment temperature. N = 3 for each HT condition. Error bars represent standard deviations. Chem. Mater. 2017, 29, 7961−7968 7964 DOI: 10.1021/acs.chemmater.7b03002",
+   "caption": "Figure 4. (a) Schematic of the all solid-state Li−LLZO−Li cell, (b) equivalent circuit used for modeling the EIS data, (c) representative Nyquist plot of the Li−LLZO−Li cell (for LLZO heat-treated at 500 °C), as-assembled (○) and after preconditioning at 175 °C (●). Markers indicate experimental data and dotted lines represent from the equivalent circuit model simulation using the circuit shown in panel b, (d) the Li−LLZO interfacial resistance after preconditioning at 175 °C versus the heat-treatment temperature. N = 3 for each HT condition. Error bars represent standard deviations.",
    "rotated_deg": 0,
    "bbox": [
     54.5,
@@ -86,7 +94,11 @@
    "h": 1055,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_main.pdf",
-   "blank": 0.919
+   "blank": 0.919,
+   "caption_auto": "Figure 4. (a) Schematic of the all solid-state Li−LLZO−Li cell, (b) equivalent circuit used for modeling the EIS data, (c) representative Nyquist plot of the Li−LLZO−Li cell (for LLZO heat-treated at 500 °C), as-assembled (○) and after preconditioning at 175 °C (●). Markers indicate experimental data and dotted lines represent from the equivalent circuit model simulation using the circuit shown in panel b, (d) the Li−LLZO interfacial resistance after preconditioning at 175 °C versus the heat-treatment temperature. N = 3 for each HT condition. Error bars represent standard deviations. Chem. Mater. 2017, 29, 7961−7968 7964 DOI: 10.1021/acs.chemmater.7b03002",
+   "caption_fix": "2026-11-24 litdb-curator: tool caption carried trailing body text / page footer - trimmed to the printed caption (auto text kept in caption_auto)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + 500 dpi zoom of panel c (scratch render) for the arc widths"
   },
   {
    "key": "f5",
@@ -94,7 +106,7 @@
    "label": "5",
    "page": 5,
    "file": "fig_5.png",
-   "caption": "Figure 5. (a) DC cycling of Li−LLZO−Li cells (LLZO HT to 500 °C after WP) at room temperature, stepping the current density from 0.01 to 1 mA cm−2, (b) the critical current density versus Li−LLZO interfacial resistance comparing the results of this study with other studies available in the literature, (c) Nyquist plots of a Li−LLZO−Li cell after each 20 cycles for cell cycled 100 times, (d) galvanostatic cycling of Li−LLZO−Li at 0.2 mA cm−2 for 100 cycles at 0.4 mAh cm−2. The blue dotted line shows the times at which EIS was collected and is shown in panel c. characterization suggests WP+HT could enable the use of metallic Li anodes and LLZO in SSBs. ■CONCLUSIONS In closing, this study reveals the mechanism by which surface chemistry controls the resistance of the Li−LLZO interface. By exploiting this mechanism, very low interfacial resistances, 2 Ω cm−2, comparable to solid−liquid inter",
+   "caption": "Figure 5. (a) DC cycling of Li−LLZO−Li cells (LLZO HT to 500 °C after WP) at room temperature, stepping the current density from 0.01 to 1 mA cm−2, (b) the critical current density versus Li−LLZO interfacial resistance comparing the results of this study with other studies available in the literature, (c) Nyquist plots of a Li−LLZO−Li cell after each 20 cycles for cell cycled 100 times, (d) galvanostatic cycling of Li−LLZO−Li at 0.2 mA cm−2 for 100 cycles at 0.4 mAh cm−2. The blue dotted line shows the times at which EIS was collected and is shown in panel c.",
    "rotated_deg": 0,
    "bbox": [
     54.5,
@@ -106,7 +118,34 @@
    "h": 1061,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_main.pdf",
-   "blank": 0.767
+   "blank": 0.767,
+   "caption_auto": "Figure 5. (a) DC cycling of Li−LLZO−Li cells (LLZO HT to 500 °C after WP) at room temperature, stepping the current density from 0.01 to 1 mA cm−2, (b) the critical current density versus Li−LLZO interfacial resistance comparing the results of this study with other studies available in the literature, (c) Nyquist plots of a Li−LLZO−Li cell after each 20 cycles for cell cycled 100 times, (d) galvanostatic cycling of Li−LLZO−Li at 0.2 mA cm−2 for 100 cycles at 0.4 mAh cm−2. The blue dotted line shows the times at which EIS was collected and is shown in panel c. characterization suggests WP+HT could enable the use of metallic Li anodes and LLZO in SSBs. ■CONCLUSIONS In closing, this study reveals the mechanism by which surface chemistry controls the resistance of the Li−LLZO interface. By exploiting this mechanism, very low interfacial resistances, 2 Ω cm−2, comparable to solid−liquid inter",
+   "caption_fix": "2026-11-24 litdb-curator: tool caption carried trailing body text / page footer - trimmed to the printed caption (auto text kept in caption_auto)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + 600 dpi zoom of panel a (scratch render) for the short-circuit step"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. XPS analysis of LLZO showing the O 1s core level of sample after dry polishing (DP-Control) and after dry polishing and heat treatment at 400°C (DP-400°C).",
+   "rotated_deg": 0,
+   "bbox": [
+    163.4,
+    274.1,
+    448.0,
+    696.7
+   ],
+   "w": 1187,
+   "h": 1761,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_SI1.pdf",
+   "blank": 0.878,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported fS1 as a number gap ('p2 그래픽 없음(img0/draw0)') - the graphic is 8 raster strips on SI p.1 (x 169.4-442.0, y 280.1-690.7 pt) while its caption sits at the top of SI p.2; clip = raster union + 6 pt, 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) - complete, both spectra and the binding-energy axis inside, no neighbouring text"
   },
   {
    "key": "fS2",
@@ -114,7 +153,7 @@
    "label": "S2",
    "page": 2,
    "file": "fig_S2.png",
-   "caption": "Figure S2. Optimization of the translation state within the interfacial plane and the interfacial distance for the Li-LLZO interface: a) contour plot of \u0002\u0003\u0004 as a function of translation state for the Li slab relative to the LLZO slab using a 5×5 grid with a constant interfacial distance of 2 Å. b) \u0002\u0003\u0004 as a function of interfacial distance between slabs fitted by the UBER for the five lowest \u0002\u0003\u0004 interfaces identified in the contour plot of panel (a).",
+   "caption": "Figure S2. Optimization of the translation state within the interfacial plane and the interfacial distance for the Li-LLZO interface: a) contour plot of W_ad as a function of translation state for the Li slab relative to the LLZO slab using a 5×5 grid with a constant interfacial distance of 2 Å. b) W_ad as a function of interfacial distance between slabs fitted by the UBER for the five lowest W_ad interfaces identified in the contour plot of panel (a).",
    "rotated_deg": 0,
    "bbox": [
     65.9,
@@ -126,7 +165,11 @@
    "h": 877,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_SI1.pdf",
-   "blank": 0.716
+   "blank": 0.716,
+   "caption_auto": "Figure S2. Optimization of the translation state within the interfacial plane and the interfacial distance for the Li-LLZO interface: a) contour plot of \u0002\u0003\u0004 as a function of translation state for the Li slab relative to the LLZO slab using a 5×5 grid with a constant interfacial distance of 2 Å. b) \u0002\u0003\u0004 as a function of interfacial distance between slabs fitted by the UBER for the five lowest \u0002\u0003\u0004 interfaces identified in the contour plot of panel (a).",
+   "caption_fix": "2026-11-24 litdb-curator: PDF text layer renders the italic W_ad as three control glyphs - replaced with 'W_ad' (auto text kept in caption_auto)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + SI p.2 page render"
   },
   {
    "key": "fS3",
@@ -134,7 +177,7 @@
    "label": "S3",
    "page": 3,
    "file": "fig_S3.png",
-   "caption": "Figure S3. Optimization of the translation state within the interfacial plane and the interfacial distance for the Li-Li2CO3 interface. a) contour plot of the total energy as a function of translation state for the Li slab relative to Li2CO3 slab with a constant interfacial distance of 3 Å. Due to the symmetry of Li atoms in the Li slab, the translation state was restricted to the red box using a 4x4 grid. b) \u0002\u0003\u0004 as a function of interfacial distance fit to the UBER for the lowest total energy interface (translation Li slab to x=0 and y=0.25) identified in panel (a).",
+   "caption": "Figure S3. Optimization of the translation state within the interfacial plane and the interfacial distance for the Li-Li2CO3 interface. a) contour plot of the total energy as a function of translation state for the Li slab relative to Li2CO3 slab with a constant interfacial distance of 3 Å. Due to the symmetry of Li atoms in the Li slab, the translation state was restricted to the red box using a 4x4 grid. b) W_ad as a function of interfacial distance fit to the UBER for the lowest total energy interface (translation Li slab to x=0 and y=0.25) identified in panel (a).",
    "rotated_deg": 0,
    "bbox": [
     65.9,
@@ -146,7 +189,11 @@
    "h": 1255,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_SI1.pdf",
-   "blank": 0.827
+   "blank": 0.827,
+   "caption_auto": "Figure S3. Optimization of the translation state within the interfacial plane and the interfacial distance for the Li-Li2CO3 interface. a) contour plot of the total energy as a function of translation state for the Li slab relative to Li2CO3 slab with a constant interfacial distance of 3 Å. Due to the symmetry of Li atoms in the Li slab, the translation state was restricted to the red box using a 4x4 grid. b) \u0002\u0003\u0004 as a function of interfacial distance fit to the UBER for the lowest total energy interface (translation Li slab to x=0 and y=0.25) identified in panel (a).",
+   "caption_fix": "2026-11-24 litdb-curator: PDF text layer renders the italic W_ad as three control glyphs - replaced with 'W_ad' (auto text kept in caption_auto)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + SI p.3 page render"
   },
   {
    "key": "fS4",
@@ -154,7 +201,7 @@
    "label": "S4",
    "page": 4,
    "file": "fig_S4.png",
-   "caption": "Figure S4. Calculated \u0002\u0003\u0004 as a function of interfacial distance for the Li-LiOH interface.",
+   "caption": "Figure S4. Calculated W_ad as a function of interfacial distance for the Li-LiOH interface.",
    "rotated_deg": 0,
    "bbox": [
     66.1,
@@ -166,7 +213,34 @@
    "h": 1023,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_SI1.pdf",
-   "blank": 0.969
+   "blank": 0.969,
+   "caption_auto": "Figure S4. Calculated \u0002\u0003\u0004 as a function of interfacial distance for the Li-LiOH interface.",
+   "caption_fix": "2026-11-24 litdb-curator: PDF text layer renders the italic W_ad as three control glyphs - replaced with 'W_ad' (auto text kept in caption_auto)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) + SI p.4 page render"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Calculated lattice constants for bulk Li, LLZO, Li2CO3, and LiOH.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.3,
+    111.7,
+    508.0,
+    211.7
+   ],
+   "w": 1683,
+   "h": 418,
+   "dpi": 300,
+   "src": "sharafi2017_llzo_wetting_SI1.pdf",
+   "blank": 0.915,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported tS1 as a number gap - its caption shares one text block with the Figure S1 caption at the top of SI p.2; the table is a vector grid at x 110.3-502.0, y 117.7-205.7 pt; clip = grid union + 6 pt, 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full PNG) to confirm the hand crop is complete (values also taken from PDF text)"
   },
   {
    "key": "tS2",
@@ -174,7 +248,7 @@
    "label": "S2",
    "page": 2,
    "file": "tab_S2.png",
-   "caption": "Table S2. Number of atoms in the supercell, lattice parameters in the interfacial plane, the in-plane strain of Li, the calculated \u0002\u0003\u0004, and the contact angle for the Li-LLZO, Li-Li2CO3, and Li-LiOH interfaces.",
+   "caption": "Table S2. Number of atoms in the supercell, lattice parameters in the interfacial plane, the in-plane strain of Li, the calculated W_ad, and the contact angle for the Li-LLZO, Li-Li2CO3, and Li-LiOH interfaces.",
    "rotated_deg": 0,
    "bbox": [
     65.7,
@@ -186,7 +260,11 @@
    "h": 607,
    "dpi": 300,
    "src": "sharafi2017_llzo_wetting_SI1.pdf",
-   "blank": 0.912
+   "blank": 0.912,
+   "caption_auto": "Table S2. Number of atoms in the supercell, lattice parameters in the interfacial plane, the in-plane strain of Li, the calculated \u0002\u0003\u0004, and the contact angle for the Li-LLZO, Li-Li2CO3, and Li-LiOH interfaces.",
+   "caption_fix": "2026-11-24 litdb-curator: PDF text layer renders the italic W_ad as three control glyphs - replaced with 'W_ad' (auto text kept in caption_auto)",
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as PNG - read from SI p.2 page render + PDF text (tables: text is exact)"
   }
  ],
  "missing_labels": [
@@ -200,7 +278,8 @@
    "refs": [
     "p3",
     "p2"
-   ]
+   ],
+   "resolved": "manual_crop fig_S1.png (2026-11-24 litdb-curator) - see figures[fS1].manual_crop"
   },
   {
    "key": "tS1",
@@ -210,7 +289,8 @@
    "refs": [
     "p6",
     "p2"
-   ]
+   ],
+   "resolved": "manual_crop tab_S1.png (2026-11-24 litdb-curator) - see figures[tS1].manual_crop"
   }
  ],
  "table_caption_vote": [
@@ -226,5 +306,153 @@
    "below_adjacent": 1,
    "caption_below": false
   }
- ]
+ ],
+ "movies": {
+  "note": "SI videos are not figures - frames kept here for the digest Figure set rows (Video I/II/III, Roman numerals so the webapp does not attach them to Fig. 1-3). Regenerate: ffmpeg -v error -i litdb/inbox/sharafi2017_llzo_wetting_movieN.avi -vf fps=1/5 -q:v 4 litdb/figures/sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance/movieN_%03d.jpg . Frame k sits at video time ~ (k-0.5)*5 s (2.5, 7.5, 12.5 ... s), NOT (k-1)*5 s - checked 2026-11-24 by PSNR: movie1_010.jpg = 47.5 s (54 dB) vs 45.0 / 47.0 / 50.0 s (6 / 6 / 17 dB). Frames carry no time stamp, scale bar, or temperature read-out. All three videos open with the same title card (working title 'Enabling stable and low resistance Li-Li7La3Zr2O12 interfaces through controlled surface chemistry'). The 5-s sampling missed the roll-off moments of Videos 1 and 2 - two 1-fps tail sheets (absolute time labels) were added: movie1_tail_1fps_sheet.jpg (36-51 s) and movie2_tail_1fps_sheet.jpg (44-61 s); regenerate with ffmpeg -ss <start> -i <avi> -t <len> -vf \"fps=1,scale=384:-1,drawtext=text='t=%{pts\\:hms\\:<start>}':...,tile=6x3\" -frames:v 1 <out>.",
+  "Video1": {
+   "src": "sharafi2017_llzo_wetting_movie1.avi",
+   "duration_s": 52.0,
+   "size": "1440x1080 h264 23.976 fps",
+   "caption_main": "Supporting Information: Li wettability on lithium carbonate (AVI)",
+   "frames": [
+    "movie1_001.jpg",
+    "movie1_002.jpg",
+    "movie1_003.jpg",
+    "movie1_004.jpg",
+    "movie1_005.jpg",
+    "movie1_006.jpg",
+    "movie1_007.jpg",
+    "movie1_008.jpg",
+    "movie1_009.jpg",
+    "movie1_010.jpg"
+   ],
+   "viewed_full": [
+    "movie1_001.jpg",
+    "movie1_004.jpg",
+    "movie1_009.jpg",
+    "movie1_010.jpg"
+   ],
+   "viewed_contact_sheet": [
+    "movie1_001.jpg",
+    "movie1_002.jpg",
+    "movie1_003.jpg",
+    "movie1_004.jpg",
+    "movie1_005.jpg",
+    "movie1_006.jpg",
+    "movie1_007.jpg",
+    "movie1_008.jpg",
+    "movie1_009.jpg",
+    "movie1_010.jpg"
+   ],
+   "seen": "001 (2.5 s) title card; 002 label 'Lithium Carbonate', syringe above a cold-pressed Li2CO3 disc on a hot plate; 003-008 a mirror-like molten Li bulb hangs from the syringe and touches the disc at a small spot (near-spherical, no spreading); 009 (42.5 s) tweezers reach the nozzle; 1-fps sheet: at 43 s the drop is gone and the disc is bare; 44-46 s 'Slow-Motion Replay' card; 47-51 s replay - the tweezers knock the drop off the nozzle, it hits the disc and rolls off at once (blurred ball 49 s), disc bare at 50-51 s; 010 (47.5 s) = replay start.",
+   "viewed_extra": [
+    "movie1_tail_1fps_sheet.jpg"
+   ]
+  },
+  "Video2": {
+   "src": "sharafi2017_llzo_wetting_movie2.avi",
+   "duration_s": 61.9,
+   "size": "1920x1080 h264 10 fps",
+   "caption_main": "Supporting Information: Li wettability on dry-polished LLZO (AVI)",
+   "frames": [
+    "movie2_001.jpg",
+    "movie2_002.jpg",
+    "movie2_003.jpg",
+    "movie2_004.jpg",
+    "movie2_005.jpg",
+    "movie2_006.jpg",
+    "movie2_007.jpg",
+    "movie2_008.jpg",
+    "movie2_009.jpg",
+    "movie2_010.jpg",
+    "movie2_011.jpg",
+    "movie2_012.jpg"
+   ],
+   "viewed_full": [
+    "movie2_003.jpg",
+    "movie2_010.jpg",
+    "movie2_012.jpg"
+   ],
+   "viewed_contact_sheet": [
+    "movie2_001.jpg",
+    "movie2_002.jpg",
+    "movie2_003.jpg",
+    "movie2_004.jpg",
+    "movie2_005.jpg",
+    "movie2_006.jpg",
+    "movie2_007.jpg",
+    "movie2_008.jpg",
+    "movie2_009.jpg",
+    "movie2_010.jpg",
+    "movie2_011.jpg",
+    "movie2_012.jpg"
+   ],
+   "seen": "001-002 title card; 003 (12.5 s) label 'Dry Polished LLZO', Li bulb on the syringe touches the disc; 004-008 tweezers, the drop separates from the nozzle; 009-012 a free spherical Li ball sits on the disc ('(Tilting for roll-off)' from ~46 s); 1-fps sheet: the ball wanders on the tilting disc 44-60 s and at 61 s the disc is bare (rolled off, no visible residue); a second Li ball lies blurred in the background.",
+   "viewed_extra": [
+    "movie2_tail_1fps_sheet.jpg"
+   ]
+  },
+  "Video3": {
+   "src": "sharafi2017_llzo_wetting_movie3.avi",
+   "duration_s": 105.8,
+   "size": "1440x1080 h264 23.976 fps (portrait content, pillar-boxed)",
+   "caption_main": "Supporting Information: Li wettability on wet-polished and heat-treated LLZO (AVI)",
+   "frames": [
+    "movie3_001.jpg",
+    "movie3_002.jpg",
+    "movie3_003.jpg",
+    "movie3_004.jpg",
+    "movie3_005.jpg",
+    "movie3_006.jpg",
+    "movie3_007.jpg",
+    "movie3_008.jpg",
+    "movie3_009.jpg",
+    "movie3_010.jpg",
+    "movie3_011.jpg",
+    "movie3_012.jpg",
+    "movie3_013.jpg",
+    "movie3_014.jpg",
+    "movie3_015.jpg",
+    "movie3_016.jpg",
+    "movie3_017.jpg",
+    "movie3_018.jpg",
+    "movie3_019.jpg",
+    "movie3_020.jpg",
+    "movie3_021.jpg"
+   ],
+   "viewed_full": [
+    "movie3_002.jpg",
+    "movie3_007.jpg",
+    "movie3_011.jpg",
+    "movie3_015.jpg",
+    "movie3_019.jpg",
+    "movie3_020.jpg",
+    "movie3_021.jpg"
+   ],
+   "viewed_contact_sheet": [
+    "movie3_001.jpg",
+    "movie3_002.jpg",
+    "movie3_003.jpg",
+    "movie3_004.jpg",
+    "movie3_005.jpg",
+    "movie3_006.jpg",
+    "movie3_007.jpg",
+    "movie3_008.jpg",
+    "movie3_009.jpg",
+    "movie3_010.jpg",
+    "movie3_011.jpg",
+    "movie3_012.jpg",
+    "movie3_013.jpg",
+    "movie3_014.jpg",
+    "movie3_015.jpg",
+    "movie3_016.jpg",
+    "movie3_017.jpg",
+    "movie3_018.jpg",
+    "movie3_019.jpg",
+    "movie3_020.jpg",
+    "movie3_021.jpg"
+   ],
+   "seen": "002 (7.5 s) label 'Wet Polished and Heat Treated LLZO', drop above a glossy disc; 003-007 the drop touches the disc and, as the syringe rises, stretches into a necked bowling-pin bridge with a wide base (007 = 32.5 s); 008-011 it pinches off the nozzle and stays on the disc as a dome (011 = 52.5 s); 012 '(Tilting for roll-off)' - 013-015 the drop stays on the tilted disc; 016-019 the disc is lifted with tweezers and turned; 020 (97.5 s) disc upside down with the Li drop hanging under it (adheres when inverted); 021 (102.5 s) back on the stage, drop with a creased skin near its base."
+  }
+ }
 }

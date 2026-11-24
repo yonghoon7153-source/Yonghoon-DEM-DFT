@@ -9,6 +9,29 @@
  ],
  "figures": [
   {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Structure of SSBs. a,b, Schematics of a lithium-excess SSB (a) and an anode-free SSB (b). See Supplementary Information for details on energy calculations.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.0,
+    41.0,
+    298.0,
+    148.0
+   ],
+   "w": 1084,
+   "h": 447,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_main.pdf",
+   "blank": 0.498,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f1 as a number gap ('p2 영역 없음') - Fig. 1 is a schematic built from ~1,140 tiny raster particle images + vector boxes in the top-left column of p.2; clip = panel-label text 'a'/'b' (y 45) and labels 'Lithium excess 1,208 Wh l-1' / 'Anode free 1,435 Wh l-1' (y 128-145) above the caption (y 150) + margin, x 38-298 (left column)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop)"
+  },
+  {
    "key": "f2",
    "kind": "figure",
    "label": "2",
@@ -18,15 +41,18 @@
    "rotated_deg": 0,
    "bbox": [
     33.7,
-    61.6,
-    539.0,
+    39.5,
+    541.0,
     398.4
    ],
-   "w": 2106,
-   "h": 1405,
+   "w": 2115,
+   "h": 1496,
    "dpi": 300,
    "src": "afssb2024_electro_chemo_mechanics_main.pdf",
-   "blank": 0.582
+   "blank": 0.609,
+   "recrop": "2026-11-24 litdb-curator: tool crop started at y 61.6 and cut the panel label 'a' (y 43.7) and the 'F_stack pressure' label (y 41.8); y0 -> 39.5",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (after recrop)"
   },
   {
    "key": "f3",
@@ -37,16 +63,19 @@
    "caption": "Fig. 3 | Factors affecting the charge/discharge cycling behaviour of anode-free SSBs. a, An anode-free SSB after initial plating with a lithium layer of constant thickness. b, Spatially uniform stripping across the interface at relatively low current densities will lead to homogeneous lithium removal and can enable long cycle life. c, Stripping at relatively high current densities can cause voids to form at the interface (similar to lithium-excess cells), which can concentrate current to cause filament growth during the subsequent plating",
    "rotated_deg": 0,
    "bbox": [
-    33.7,
-    89.0,
-    300.0,
-    273.8
+    38.0,
+    50.0,
+    563.5,
+    326.5
    ],
-   "w": 1110,
-   "h": 771,
+   "w": 2190,
+   "h": 1153,
    "dpi": 300,
    "src": "afssb2024_electro_chemo_mechanics_main.pdf",
-   "blank": 0.716
+   "blank": 0.663,
+   "recrop": "2026-11-24 litdb-curator: tool crop was the left column only (x 33.7-300, y 89-274) - panels b, c, d and both filament insets were cut off; re-clipped to full width from panel label 'b' (y 50.9) to 'Heterogeneous stripping' (y 324.1), above the caption (y 329.4)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (after recrop)"
   },
   {
    "key": "f4",
@@ -58,15 +87,18 @@
    "rotated_deg": 0,
    "bbox": [
     33.7,
-    60.9,
+    43.0,
     567.3,
-    166.2
+    166.6
    ],
    "w": 2224,
-   "h": 440,
+   "h": 516,
    "dpi": 300,
    "src": "afssb2024_electro_chemo_mechanics_main.pdf",
-   "blank": 0.216
+   "blank": 0.302,
+   "recrop": "2026-11-24 litdb-curator: tool crop started at y 60.9 and cut the panel titles 'a Carbon interlayer | 2 mAh cm-2' ... 'd Ag-C interlayer | 5 mAh cm-2' (y 45.2-58.9) and the top of the SEM rasters (y 46.5); y0 -> 43.0",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (after recrop)"
   },
   {
    "key": "fS1",
@@ -86,7 +118,9 @@
    "h": 741,
    "dpi": 300,
    "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
-   "blank": 0.828
+   "blank": 0.828,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop as-is)"
   },
   {
    "key": "fS2",
@@ -106,7 +140,9 @@
    "h": 766,
    "dpi": 300,
    "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
-   "blank": 0.822
+   "blank": 0.822,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop as-is)"
   },
   {
    "key": "tS1",
@@ -126,7 +162,9 @@
    "h": 630,
    "dpi": 300,
    "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
-   "blank": 0.91
+   "blank": 0.91,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not viewed as image - values taken from PDF text (S3 cells via pymupdf find_tables)"
   },
   {
    "key": "tS2",
@@ -146,7 +184,9 @@
    "h": 2692,
    "dpi": 300,
    "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
-   "blank": 0.922
+   "blank": 0.922,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not viewed as image - values taken from PDF text (S3 cells via pymupdf find_tables)"
   },
   {
    "key": "tS3",
@@ -166,7 +206,9 @@
    "h": 2600,
    "dpi": 300,
    "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
-   "blank": 0.944
+   "blank": 0.944,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not viewed as image - values taken from PDF text (S3 cells via pymupdf find_tables)"
   }
  ],
  "missing_labels": [
@@ -180,7 +222,8 @@
    "refs": [
     "p1",
     "p2"
-   ]
+   ],
+   "resolved": "manual_crop fig_1.png (2026-11-24, litdb-curator) - see figures[f1].manual_crop"
   }
  ],
  "table_caption_vote": [

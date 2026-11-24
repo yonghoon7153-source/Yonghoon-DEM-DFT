@@ -234,13 +234,15 @@
    "key": "fS3",
    "why": "끝 번호 — 본문이 Fig. S8 까지 가리키는데 추출 최대는 2 (남의 논문 그림 참조일 수도 있다 · 확인)",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "오탐 — SI 3 쪽에는 Fig. S1 · S2 · Table S1 만 있다. 도구가 SI 글의 본문 그림 참조 ('… in Figure 5' = Fig. S2 캡션 · '… strain rates in Figure 8' = Table S1 제목) 를 S5 · S8 로 읽고 끝 번호를 S8 로 잡았다. 본문은 SI 를 'Table S1' 과 'Supplemental Information' 으로만 부른다 (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS4",
    "why": "끝 번호 — 본문이 Fig. S8 까지 가리키는데 추출 최대는 2 (남의 논문 그림 참조일 수도 있다 · 확인)",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "오탐 — SI 3 쪽에는 Fig. S1 · S2 · Table S1 만 있다. 도구가 SI 글의 본문 그림 참조 ('… in Figure 5' = Fig. S2 캡션 · '… strain rates in Figure 8' = Table S1 제목) 를 S5 · S8 로 읽고 끝 번호를 S8 로 잡았다. 본문은 SI 를 'Table S1' 과 'Supplemental Information' 으로만 부른다 (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS5",
@@ -249,19 +251,22 @@
    "near_miss": [],
    "refs": [
     "p2"
-   ]
+   ],
+   "not_cropped": "오탐 — SI 3 쪽에는 Fig. S1 · S2 · Table S1 만 있다. 도구가 SI 글의 본문 그림 참조 ('… in Figure 5' = Fig. S2 캡션 · '… strain rates in Figure 8' = Table S1 제목) 를 S5 · S8 로 읽고 끝 번호를 S8 로 잡았다. 본문은 SI 를 'Table S1' 과 'Supplemental Information' 으로만 부른다 (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS6",
    "why": "끝 번호 — 본문이 Fig. S8 까지 가리키는데 추출 최대는 2 (남의 논문 그림 참조일 수도 있다 · 확인)",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "오탐 — SI 3 쪽에는 Fig. S1 · S2 · Table S1 만 있다. 도구가 SI 글의 본문 그림 참조 ('… in Figure 5' = Fig. S2 캡션 · '… strain rates in Figure 8' = Table S1 제목) 를 S5 · S8 로 읽고 끝 번호를 S8 로 잡았다. 본문은 SI 를 'Table S1' 과 'Supplemental Information' 으로만 부른다 (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS7",
    "why": "끝 번호 — 본문이 Fig. S8 까지 가리키는데 추출 최대는 2 (남의 논문 그림 참조일 수도 있다 · 확인)",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "오탐 — SI 3 쪽에는 Fig. S1 · S2 · Table S1 만 있다. 도구가 SI 글의 본문 그림 참조 ('… in Figure 5' = Fig. S2 캡션 · '… strain rates in Figure 8' = Table S1 제목) 를 S5 · S8 로 읽고 끝 번호를 S8 로 잡았다. 본문은 SI 를 'Table S1' 과 'Supplemental Information' 으로만 부른다 (2026-11-24, litdb-curator)"
   },
   {
    "key": "fS8",
@@ -270,7 +275,8 @@
    "near_miss": [],
    "refs": [
     "p3"
-   ]
+   ],
+   "not_cropped": "오탐 — SI 3 쪽에는 Fig. S1 · S2 · Table S1 만 있다. 도구가 SI 글의 본문 그림 참조 ('… in Figure 5' = Fig. S2 캡션 · '… strain rates in Figure 8' = Table S1 제목) 를 S5 · S8 로 읽고 끝 번호를 S8 로 잡았다. 본문은 SI 를 'Table S1' 과 'Supplemental Information' 으로만 부른다 (2026-11-24, litdb-curator)"
   }
  ],
  "table_caption_vote": [
