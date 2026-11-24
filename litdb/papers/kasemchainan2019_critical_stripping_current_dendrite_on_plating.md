@@ -1,5 +1,5 @@
 <!-- digest 표준 양식 (paper-level STANDALONE) — 2026-11-24 litdb-curator (배치 2026-11-24b #10 · 병렬 실행 · 공유 파일 (INDEX · comparison · pdf_map) 은 메인 세션이 합친다).
-     그림 크롭 13 장 (본문 그림 6 + SI 그림 7): 도구 그대로 7 장 · 손작업 6 장 = Fig. 4 손 크롭 (도구 '영역 없음' — 벡터 도식) + 다시 자름 5 장
+     그림 크롭 13 장 (본문 그림 6 + SI 그림 7): 도구 그대로 6 장 (Fig. 3 · S2 · S4 · S5 · S6 · S7) · 손작업 7 장 = Fig. 4 손 크롭 (도구 '영역 없음' — 벡터 도식) + 다시 자름 6 장
      (Fig. 1 · Fig. 2 · Fig. 5 = 위쪽 판 라벨 · 눈금 잘림 / Fig. 6 = c·d 아래 띠만 / Fig. S3 = e·f 한 줄만 / Fig. S1 = 위 글자 섞임). 사유는 figures.json `recrop` · `manual_crop`.
      13 장 중 12 장을 크롭으로 열어 봤다 · Fig. S1 (XRD) 만 SI 쪽 렌더로 봤다. 판독값 49 행 = litdb/figures/<slug>/digitized.csv.
      값 표지: 본문 숫자 = 쪽 병기 · 그림에서만 읽은 값 = 'figure-read ≈' · 논문 숫자로 우리가 계산한 값 = '✎ 우리 산수' · 해석 = '[우리 해석]'.
