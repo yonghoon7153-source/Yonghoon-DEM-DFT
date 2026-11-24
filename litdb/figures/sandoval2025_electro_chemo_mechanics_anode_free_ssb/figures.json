@@ -1,0 +1,200 @@
+{
+ "slug": "sandoval2025_electro_chemo_mechanics_anode_free_ssb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "afssb2024_electro_chemo_mechanics_main.pdf",
+  "afssb2024_electro_chemo_mechanics_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Factors influencing initial deposition of lithium in anode-free SSBs. a, Schematic representation of a single lithium deposit in an anode-free SSB under an applied stack pressure (Fstack pressure) showing factors influencing the deposition of lithium, including the current collector (CC) thickness (tCC), the stress in the lithium (σLi), current collector (σcc) and SSE (σSSE), the interfacial energy between the SSE and lithium (γSSE/Li) and between the lithium and CC (γLi/CC), the fracture toughness of the SSE/CC interface (Kc,SSE/CC) and SSE itself",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    61.6,
+    539.0,
+    398.4
+   ],
+   "w": 2106,
+   "h": 1405,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_main.pdf",
+   "blank": 0.582
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Factors affecting the charge/discharge cycling behaviour of anode-free SSBs. a, An anode-free SSB after initial plating with a lithium layer of constant thickness. b, Spatially uniform stripping across the interface at relatively low current densities will lead to homogeneous lithium removal and can enable long cycle life. c, Stripping at relatively high current densities can cause voids to form at the interface (similar to lithium-excess cells), which can concentrate current to cause filament growth during the subsequent plating",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    89.0,
+    300.0,
+    273.8
+   ],
+   "w": 1110,
+   "h": 771,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_main.pdf",
+   "blank": 0.716
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Characterization of deposited lithium in anode-free SSBs. a, Cross- sectional plasma focused-ion beam-scanning electron microscopy (FIB-SEM) image of a carbon interlayer after 2 mAh cm−2 of lithium deposition. LPSCl, Li6PS5Cl. b, Cryo-FIB-SEM image of 1 mAh cm−2 of deposited lithium on a copper current collector coated with 100 nm of gold. c, Cross-sectional cryo-FIB-SEM",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    60.9,
+    567.3,
+    166.2
+   ],
+   "w": 2224,
+   "h": 440,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_main.pdf",
+   "blank": 0.216
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Projected energy density of a Li-ion battery with liquid electrolyte, an excess-lithium SSB, and an anode-free SSB. These calculations take into consideration the volume and mass of the electrodes and other cell components outlined in SI Table S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.4,
+    215.3,
+    544.1,
+    392.9
+   ],
+   "w": 1961,
+   "h": 741,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Projected gravimetric energy density (specific energy) of a Li-ion battery with liquid electrolyte, an excess-lithium SSB, and an anode-free SSB. These calculations take into consideration the volume and mass of the electrodes and other cell components outlined in SI Table S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    446.9,
+    532.9,
+    630.5
+   ],
+   "w": 1946,
+   "h": 766,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Calculations of energy metrics. Gravimetric Energy Density (Wh/kg) - Li-ion 784 290 LPSCl Excess Li metal 1208 464 LPSCl Anode-Free 1436 479 LLZO Excess Li metal 1208 329 LLZO Anode-Free 1436 337 SSE Type Battery Configuration Volumetric Energy Density (Wh/L)",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    544.6,
+    218.3
+   ],
+   "w": 1990,
+   "h": 630,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Variables for Energy Density Calculations Cathode capacity (mAh/cm2) 4 Cathode specific capacity (mAh/g) 200 Cathode density (g/cm3) 3.7 Copper current collector thickness (µm) 5 Copper density (g/cm3) 8.9 Aluminum density (g/cm3) 2.7 Aluminum current collector thickness (µm) 5 Li-ion Battery Cathode relative density (%) 70 N:P ratio 1.2 Graphite relative density (%) 70 Graphite specific capacity (mAh/g) 372 Graphite density (g/cm3) 2.26 Average cell voltage (V) 3.7 Separator thickness (µm) 20 Separator relative density (%) 45 Separator density (g/cm3) 0.71 Electrolyte density (g/cm3) 1.26 Solid State Battery Cathode relative density (%) 95 Volume fraction of solid electrolyte in cathode (%) 25 Lithium thickness (µm) 0 / 20 Lithium specific capacity (mAh/g) 3860 Lithium density (g/cm3) 0.53 Average cell voltage (V) 3.8 Solid electrolyte thickness (µm) 20 Solid electrolyte densi",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    544.8,
+    713.2
+   ],
+   "w": 1991,
+   "h": 2692,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 5,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Selection of interlayers previously reported in anode-free SSBs. Interlayer Interlayer",
+   "rotated_deg": 0,
+   "bbox": [
+    67.2,
+    67.6,
+    545.3,
+    691.4
+   ],
+   "w": 1992,
+   "h": 2600,
+   "dpi": 300,
+   "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
+   "blank": 0.944
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p2 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p1",
+    "p2"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "afssb2024_electro_chemo_mechanics_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "afssb2024_electro_chemo_mechanics_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 3,
+   "caption_below": false
+  }
+ ]
+}

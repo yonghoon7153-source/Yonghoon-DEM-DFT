@@ -289,6 +289,27 @@
    "blank": 0.925
   },
   {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Stripping of thin Li prepared by thermal evaporation. (A) Stripping 10 µm-thick thermally evaporated Li at different current densities. (0.1, 0.2, 0.4, and 0.6  mA/cm2) (B) Stripping 10 and 20 µm-thick thermally evaporated Li at 0.4 mA/cm2. (C) EIS spectra before  and after stripping 10 µm-thick thermally evaporated Li at 0.1 mA/cm2. (D) EIS spectra before and after  stripping 10 µm-thick thermally evaporated Li at 0.4 mA/cm2. (E) Digital photograph of the LLZO surface  after stripping 10 µm-thick thermally evaporated Li at 0.1 mA/cm2. (F) Digital photograph of the LLZO  surface after stripping 10 µm-thick thermally evaporated Li at 0.4 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    70.0,
+    542.0,
+    663.7
+   ],
+   "w": 1968,
+   "h": 2475,
+   "dpi": 300,
+   "src": "lee2022_thin_li_void_rewetting_SI.pdf",
+   "blank": 0.822,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported fS8 as a number gap ('p13 그래픽 없음(img0/draw0)') - the Fig. S8 graphic is a single raster image (xref 43, 1429x1800 px) alone on SI p.12 at bbox (72,72,540,661.7); its caption sits at the top of SI p.13. clip = image bbox + 2 pt margin, rendered at 300 dpi like the tool (maxpx 3000)"
+  },
+  {
    "key": "fS9",
    "kind": "figure",
    "label": "S9",
@@ -621,7 +642,8 @@
     "p8",
     "p10",
     "p13"
-   ]
+   ],
+   "resolved": "manual_crop fig_S8.png (2026-11-24, litdb-curator) - see figures[fS8].manual_crop"
   }
  ],
  "table_caption_vote": [

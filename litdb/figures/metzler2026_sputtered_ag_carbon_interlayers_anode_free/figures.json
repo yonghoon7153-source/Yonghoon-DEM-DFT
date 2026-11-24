@@ -1,0 +1,387 @@
+{
+ "slug": "metzler2026_sputtered_ag_carbon_interlayers_anode_free",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "sputag2026_ag_c_sputtered_main.pdf",
+  "sputag2026_ag_c_sputtered_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Summary of cell production. (a) Illustration of Ag deposi- tion via sputtering; (b) illustration of the SSB full-cell arrangement; (c) illustration of the three-electrode arrangement; (d) BSE cross- section images of the sputtered C-Cu current collector after compres- sion at 500 MPa; and (e–g) corresponding EDS maps for Cu, C, and Ag, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    60.3,
+    297.9,
+    198.5
+   ],
+   "w": 1052,
+   "h": 577,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_main.pdf",
+   "blank": 0.319
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Cycling of full cells with C-Cu, Ag Cu, and Ag C-Cu interlayers at 60 °C, 4 MPa stack pressure, and 1 mA/cm2 charge/discharge current. Voltage/capacity of (a) C-Cu and (b) Ag Cu during ﬁrst, second, ﬁfth, and tenth cycles; (c) voltage/capacity during the ﬁrst charge/discharge cycle of C-Cu and Ag C-Cu interlayers; (d) voltage/capacity of Ag C-Cu during ﬁrst, second, ﬁfth, and tenth cycles; (e) charge capacity of Ag C-Cu inter- layers over 100 cycles; and (f) Coulombic eﬃciency of Ag C-Cu interlayers over 100 cycles. The insets show the (a) C-Cu, (b) Ag Cu, and (d) Ag C- Cu (100 nm) current collectors.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    60.3,
+    561.9,
+    460.9
+   ],
+   "w": 2152,
+   "h": 1670,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_main.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Single charge of three-electrode cells using diﬀerent current collectors and cross-section of an Ag C-Cu (100 nm) current collector, a deposited layer, and LPS separator region after a single charge at 2 mA/cm2. (a) Single charge of stainless steel, Cu, C-Cu, and Ag C-Cu at 1 mA/cm2 for 1 h; (b) single charge of C-Cu and Ag C-Cu at 2 mA/cm2 for 2.5 h; (c) SEM image of Ag C-Cu after a single charge at 2 mA/cm2; (d–g) EDS maps of Cu, S, C, and Ag, respectively; (h) SEM low magniﬁcation image of Ag C-Cu; (i) EDS line scan spectrum obtained from the line marked in (j); (j) magniﬁed SEM image of Ag C-Cu.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    60.3,
+    561.8,
+    558.7
+   ],
+   "w": 2151,
+   "h": 2077,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_main.pdf",
+   "blank": 0.648
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Charging response of three-electrode cells with an Ag C-Cu (100 nm) interlayer at 2 mA/cm2 for 2.5 h and discharge at 1 mA/cm2 and a cross-section of the Ag C-Cu current collector, stripped layer, and LPS separator region after charge/discharge. (a) Voltage window between 0 and 5 V vs Li+/Li; (b) magniﬁed voltage window of (a), between –50 and 50 mV vs Li+/Li (OCV = open-circuit voltage); (c) SEM image of Ag C-Cu after discharge; (d–g) EDS maps of Cu, S, C, and Ag, respectively; (h) EDS line scan spectrum obtained from the line marked in (i); (i) SEM image of Ag C-Cu after discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    60.3,
+    561.9,
+    535.2
+   ],
+   "w": 2152,
+   "h": 1980,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_main.pdf",
+   "blank": 0.66
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Schematic and idealized illustration of the preparation of the Ag C-Cu interlayer and suggested preferential Li plating and stripping upon charging and discharging.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    60.3,
+    561.9,
+    205.7
+   ],
+   "w": 2152,
+   "h": 607,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_main.pdf",
+   "blank": 0.691
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: SE images and photographs of (a) C-Cu, (b) Ag C-Cu (100 nm), and (c) Ag C-Cu (500 nm).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.1,
+    364.3
+   ],
+   "w": 2001,
+   "h": 1243,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.403
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: (a) Secondary electron and (b) backscattered electron (BSE) cross-section images of the sputtered C-Cu current collector; (c) corresponding superimposed Ag, C, and Cu EDS maps of the sputtered C-Cu current collector; (d) to (f) corresponding EDS maps for Ag, C, and Cu, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    313.4
+   ],
+   "w": 2001,
+   "h": 1031,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.356
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Cross-sectional SE micrographs and corresponding porosity thresholded maps of Ag C-Cu (a)/(b) before and (c)/(d) after compression at 500 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.1,
+    203.6
+   ],
+   "w": 2001,
+   "h": 575,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.668
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Raman spectrum of the C-coating on the C-Cu current collector.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.7,
+    66.0,
+    507.3,
+    315.7
+   ],
+   "w": 1678,
+   "h": 1041,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Nyquist plots of (a) C-Cu and (b) Ag C-Cu full-cells after 1, 5, and 10 cycles at 60 °C, 4 MPa stack pressure, and 1 mA/cm2 charge/discharge current; (c) equivalent circuit best-fit to Ag C-Cu after 1 cycle. R1 = 123.9 Ω, R2 = 175.5 Ω, Q2 = 0.4896 × 10-3 F.s(α-1).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    249.9
+   ],
+   "w": 2001,
+   "h": 768,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Voltage/capacity of a full-cell with a sputtered Ag interlayer thickness of 500 nm at 60 °C and 4 MPa stack pressure at 1 mA/cm2 charge/discharge current. The inset shows a schematic diagram of the Ag C-Cu (500 nm) current collector.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    303.2,
+    546.1,
+    542.4
+   ],
+   "w": 2001,
+   "h": 998,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Voltage/capacity rate capability tests of full-cells at at 60 °C, 4 MPa stack pressure, and 1, 2 and 3 mA/cm2 charge/discharge currents of (a) C-Cu and (b) Ag C-Cu.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    115.2,
+    546.1,
+    361.4
+   ],
+   "w": 2001,
+   "h": 1026,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Voltage/capacity of a full-cell with a sputtered Ag interlayer thickness of 100 nm at 60 °C and 4 MPa stack pressure with an activation cycle at 0.1 mA/cm2 and subsequent cycling at 1 mA/cm2 charge/discharge current.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.1,
+    314.7
+   ],
+   "w": 2001,
+   "h": 1037,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Charge/discharge capacities and error limits of full-cells with different interlayer configurations cycled at 1 mA/cm2 charge/discharge current at 60 °C and 4 MPa stack pressure: C-Cu, Ag Cu, Ag C-Cu (100 nm), Ag C-Cu (500 nm), and Ag C-Cu (100 nm) with an activation cycle at 0.1 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    364.0,
+    546.0,
+    633.3
+   ],
+   "w": 2001,
+   "h": 1123,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Cross-section Li SIMS maps of (a) a model Li/LPS reference bilayer, and (b) the anodic current collector region of a cell with an Ag C-Cu (100 nm) interlayer after one plating cycle at 2 mA/cm2. In each case the Li SIMS intensity from the LPS region was set to 100 and the Li SIMS intensity from other regions scaled accordingly. The green dotted line indicates the intensity in (a) the Li foil and (b) the nominal Li plated layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    370.0,
+    546.1,
+    558.4
+   ],
+   "w": 2001,
+   "h": 786,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.773
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 15,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: A cross-section of the C-Cu current collector, deposited layer, and LPS separator region for a single charge at 2 mA/cm2. (a) SEM image of C-Cu; (b) to (d) EDS maps of Cu, C, and S, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    305.3
+   ],
+   "w": 2001,
+   "h": 997,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.412
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: A cross-section of the Ag C-Cu (100 nm) current collector, stripped layer, and LPS separator region after charging at 2 mA/cm2 and discharging at 1 mA/cm2. (a) SEM image of Ag C-Cu after discharge; (b) to (e) EDS maps of Cu, C, Ag, and S, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    354.5,
+    546.0,
+    645.0
+   ],
+   "w": 2001,
+   "h": 1211,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.477
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Sa and Sq for current collectors stainless steel, Cu, Cu after sputtering of 100 Ag, C-Cu, C-Cu after compression at 500 MPa, Ag C-Cu (100 and 500 nm Ag) and Ag C-Cu (100 and 500 nm Ag) after compression at 500 MPa. All numbers are in µm. Current collector material Average Sa Std dev Std err Average Sq Std dev Std err Stainless steel 0.047 0.007 0.004 0.060 0.009 0.005 Cu 0.167 0.019 0.011 0.217 0.026 0.015 Ag-Cu 0.272 0.110 0.064 0.340 0.137 0.079 Ag-Cu (compressed at 500 MPa) 0.029 0.005 0.003 0.046 0.002 0.001",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.8,
+    551.9,
+    394.9
+   ],
+   "w": 2021,
+   "h": 1364,
+   "dpi": 300,
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "blank": 0.901
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "sputag2026_ag_c_sputtered_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "sputag2026_ag_c_sputtered_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  }
+ ]
+}

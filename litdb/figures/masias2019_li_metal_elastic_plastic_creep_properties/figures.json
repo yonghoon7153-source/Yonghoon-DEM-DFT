@@ -27,7 +27,9 @@
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
    "blank": 0.869,
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f1 as a number gap ('p5 그래픽 없음(img0/draw1)') - Springer side caption (caption block 110x33 pt at x51-161 y77-110; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im27 (1524x795 px) at (178.7,78.0)-(544.5,268.8) + 4 pt margin"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f1 as a number gap ('p5 그래픽 없음(img0/draw1)') - Springer side caption (caption block 110x33 pt at x51-161 y77-110; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im27 (1524x795 px) at (178.7,78.0)-(544.5,268.8) + 4 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) - schematic of constant-strain-rate ramp then constant-force hold, tension vs compression"
   },
   {
    "key": "f2",
@@ -48,7 +50,9 @@
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
    "blank": 0.757,
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f2 as a number gap ('p7 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x105 pt at x51-162 y77-182; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im28 (1418x1017 px) at (204.1,78.0)-(544.5,321.9) + 4 pt margin"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f2 as a number gap ('p7 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x105 pt at x51-162 y77-182; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im28 (1418x1017 px) at (204.1,78.0)-(544.5,321.9) + 4 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) + inset enlarged 2x (scratch) to read the 0.2%-offset intersections"
   },
   {
    "key": "f3",
@@ -69,7 +73,9 @@
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
    "blank": 0.847,
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f3 as a number gap ('p8 그래픽 없음(img0/draw1)') - Springer side caption (caption block 105x45 pt at x51-156 y77-122; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im29 (1418x1003 px) at (204.1,78.0)-(544.5,318.7) + 4 pt margin"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f3 as a number gap ('p8 그래픽 없음(img0/draw1)') - Springer side caption (caption block 105x45 pt at x51-156 y77-122; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im29 (1418x1003 px) at (204.1,78.0)-(544.5,318.7) + 4 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) - both curves read; end points checked against Eqs. 5-6"
   },
   {
    "key": "f4",
@@ -77,7 +83,7 @@
    "label": "4",
    "page": 9,
    "file": "fig_4.png",
-   "caption": "Figure 4 Schematic diagram depicting the evolution of a highly ductile sample geometry (barreling) during compression. The cross-hatched regions indicate where limited deformation occurs adjacent to the platens due to friction. a original sample geometry,",
+   "caption": "Figure 4 Schematic diagram depicting the evolution of a highly ductile sample geometry (barreling) during compression. The cross-hatched regions indicate where limited deformation occurs adjacent to the platens due to friction. a original sample geometry, b reduction in sample aspect ratio, and c further reduction in aspect ratio to the extent that cross-hatched regions overlap. Adapted from [28].",
    "rotated_deg": 0,
    "bbox": [
     45.0,
@@ -89,7 +95,10 @@
    "h": 438,
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
-   "blank": 0.765
+   "blank": 0.765,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop) - schematic only",
+   "caption_fix": "auto caption stopped at the end of the left caption column; right-column continuation (p.9 x306-544 y179-212) appended (2026-11-24, litdb-curator)"
   },
   {
    "key": "f5",
@@ -110,7 +119,9 @@
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
    "blank": 0.789,
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f5 as a number gap ('p10 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x33 pt at x51-162 y80-113; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im31 (1418x1018 px) at (204.1,80.8)-(544.5,325.1) + 4 pt margin"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f5 as a number gap ('p10 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x33 pt at x51-162 y80-113; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im31 (1418x1018 px) at (204.1,80.8)-(544.5,325.1) + 4 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) - both axes read (left strain %, right log strain rate)"
   },
   {
    "key": "f6",
@@ -131,7 +142,9 @@
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
    "blank": 0.809,
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f6 as a number gap ('p10 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x33 pt at x51-162 y346-379; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im32 (1418x1030 px) at (204.1,346.7)-(544.5,593.9) + 4 pt margin"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f6 as a number gap ('p10 그래픽 없음(img0/draw1)') - Springer side caption (caption block 111x33 pt at x51-162 y346-379; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im32 (1418x1030 px) at (204.1,346.7)-(544.5,593.9) + 4 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) - markers cross-checked against Table S1 (OLS refit reproduces n = 6.56)"
   },
   {
    "key": "f7",
@@ -152,7 +165,9 @@
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
    "blank": 0.377,
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f7 as a number gap ('p12 그래픽 없음(img0/draw1)') - Springer side caption (caption block 107x69 pt at x51-158 y77-146; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im33 (1418x1018 px) at (204.1,78.0)-(544.5,322.2) + 4 pt margin"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f7 as a number gap ('p12 그래픽 없음(img0/draw1)') - Springer side caption (caption block 107x69 pt at x51-158 y77-146; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im33 (1418x1018 px) at (204.1,78.0)-(544.5,322.2) + 4 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) - marker positions read; implied D back-calculated from Li [This Work] points"
   },
   {
    "key": "f8",
@@ -173,7 +188,9 @@
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
    "blank": 0.832,
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f8 as a number gap ('p12 그래픽 없음(img0/draw1)') - Springer side caption (caption block 105x45 pt at x51-156 y347-392; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im34 (1418x1011 px) at (204.1,348.0)-(544.5,590.5) + 4 pt margin"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f8 as a number gap ('p12 그래픽 없음(img0/draw1)') - Springer side caption (caption block 105x45 pt at x51-156 y347-392; height < 0.6 x width so _beside_rect's tall-caption test rejects it); the figure sits to the right of the caption; clip = embedded raster Im34 (1418x1011 px) at (204.1,348.0)-(544.5,590.5) + 4 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) + column digitization (scratch) at 720/1000/1200/3600/7200 s against Table S2"
   },
   {
    "key": "f9",
@@ -193,7 +210,9 @@
    "h": 1093,
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
-   "blank": 0.883
+   "blank": 0.883,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop) - markers cross-checked against Table S2"
   },
   {
    "key": "f10",
@@ -213,7 +232,9 @@
    "h": 1324,
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
-   "blank": 0.744
+   "blank": 0.744,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop) - schematic only"
   },
   {
    "key": "t1",
@@ -274,7 +295,9 @@
    "dpi": 300,
    "src": "masias2019_li_creep_main.pdf",
    "blank": 0.916,
-   "manual_crop": "2026-11-24 litdb-curator: tool cropped the blank strip below the side caption ('p7 거의 백지(1.000)') - Springer side caption (caption block 111x33 pt at x51-162 y339-372); the table sits to the right of the caption; clip = text table: top rule y343.0, header 344-359, body 369-462, bottom rule y463, footnotes to y493.3, x 178.6-544.3 + 4 pt margin"
+   "manual_crop": "2026-11-24 litdb-curator: tool cropped the blank strip below the side caption ('p7 거의 백지(1.000)') - Springer side caption (caption block 111x33 pt at x51-162 y339-372); the table sits to the right of the caption; clip = text table: top rule y343.0, header 344-359, body 369-462, bottom rule y463, footnotes to y493.3, x 178.6-544.3 + 4 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) - crop completeness check only; values taken from PDF text"
   },
   {
    "key": "tS1",

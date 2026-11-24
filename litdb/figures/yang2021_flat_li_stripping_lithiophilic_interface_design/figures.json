@@ -26,7 +26,9 @@
    "h": 1050,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_main.pdf",
-   "blank": 0.875
+   "blank": 0.875,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "f2",
@@ -46,7 +48,9 @@
    "h": 1366,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_main.pdf",
-   "blank": 0.593
+   "blank": 0.593,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "f3",
@@ -66,7 +70,9 @@
    "h": 1316,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_main.pdf",
-   "blank": 0.571
+   "blank": 0.571,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "f4",
@@ -86,7 +92,9 @@
    "h": 781,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_main.pdf",
-   "blank": 0.821
+   "blank": 0.821,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "f5",
@@ -106,7 +114,9 @@
    "h": 748,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_main.pdf",
-   "blank": 0.48
+   "blank": 0.48,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "fS1",
@@ -126,7 +136,9 @@
    "h": 922,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.839
+   "blank": 0.839,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as crop — seen only in the SI page render (p1) during the PDF read"
   },
   {
    "key": "fS2",
@@ -148,7 +160,8 @@
    "src": "yang2021_flat_li_stripping_SI.pdf",
    "blank": 0.874,
    "manual_crop": "tool skipped SI p2 as 'no graphics (img0/draw0)' but Figure S2 is a vector-only 4-panel bar chart (28 drawings, union x 85.9-540.0 / y 263.9-537.9) with text labels a-d at y 253.5 and axis titles to y 546.2; clip = that union + labels, stopped above caption line y 554.6 (SI p.2) (2026-11-24, litdb-curator)",
-   "viewed": true
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "fS3",
@@ -168,7 +181,9 @@
    "h": 1122,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.801
+   "blank": 0.801,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "fS4",
@@ -188,7 +203,9 @@
    "h": 1215,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.811
+   "blank": 0.811,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "fS5",
@@ -208,7 +225,9 @@
    "h": 854,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.95
+   "blank": 0.95,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete) + 2x zoom of both panels near x=0 (fit vs DFT points)"
   },
   {
    "key": "fS6",
@@ -222,13 +241,22 @@
     66.1,
     102.9,
     549.7,
-    349.2
+    358.0
    ],
    "w": 2016,
-   "h": 1027,
+   "h": 1064,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.943
+   "blank": 0.943,
+   "auto_bbox": [
+    66.1,
+    102.9,
+    549.7,
+    349.2
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop bottom y 349.2 clipped the x-axis title 'KMC steps' (text block y 345.4-355.7) -> bottom extended to y 358.0, still above the caption line y 363.9",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete) (first view showed the clipped axis title -> recropped)"
   },
   {
    "key": "fS7",
@@ -256,7 +284,8 @@
     436.9
    ],
    "recrop": "2026-11-24 litdb-curator: auto crop kept only a 53-pt strip (y 383.8-436.9) above the caption; the figure is 6 embedded rasters (xref 106-111, y 167.1-430.9) + panel labels a-f from y 153.6 -> clip y 148-437, full text width",
-   "viewed": true
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete) (after recrop)"
   },
   {
    "key": "fS8",
@@ -276,7 +305,9 @@
    "h": 1243,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.591
+   "blank": 0.591,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "fS9",
@@ -296,7 +327,9 @@
    "h": 700,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.419
+   "blank": 0.419,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (crop PNG opened at full size and checked — axes, legends, panel labels complete)"
   },
   {
    "key": "t1",
@@ -316,7 +349,9 @@
    "h": 545,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_main.pdf",
-   "blank": 0.718
+   "blank": 0.718,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: table — values taken from the PDF text layer, not from the PNG"
   },
   {
    "key": "tS1",
@@ -336,7 +371,9 @@
    "h": 521,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.907
+   "blank": 0.907,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: table — values taken from the PDF text layer, not from the PNG"
   },
   {
    "key": "tS2",
@@ -356,7 +393,9 @@
    "h": 580,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.925
+   "blank": 0.925,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: table — values taken from the PDF text layer, not from the PNG"
   },
   {
    "key": "tS3",
@@ -378,7 +417,8 @@
    "src": "yang2021_flat_li_stripping_SI.pdf",
    "blank": 0.868,
    "manual_crop": "tool never emitted Table S3 (title shares the text block with the Fig. S6 caption on SI p6); clip = title line y 469.8 through table rule end y 695.9, full text width (2026-11-24, litdb-curator)",
-   "viewed": false
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: table — values taken from the PDF text layer, not from the PNG"
   },
   {
    "key": "tS4",
@@ -398,7 +438,9 @@
    "h": 655,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.891
+   "blank": 0.891,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: table — values taken from the PDF text layer, not from the PNG"
   },
   {
    "key": "tS5",
@@ -418,7 +460,9 @@
    "h": 1591,
    "dpi": 300,
    "src": "yang2021_flat_li_stripping_SI.pdf",
-   "blank": 0.895
+   "blank": 0.895,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: table — values taken from the PDF text layer, not from the PNG"
   }
  ],
  "missing_labels": [

@@ -26,7 +26,8 @@
    "h": 1337,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.499
+   "blank": 0.499,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +47,8 @@
    "h": 1613,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.619
+   "blank": 0.619,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +68,8 @@
    "h": 2601,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.227
+   "blank": 0.227,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -86,7 +89,8 @@
    "h": 1143,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.295
+   "blank": 0.295,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -106,7 +110,8 @@
    "h": 1219,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.261
+   "blank": 0.261,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -126,7 +131,8 @@
    "h": 1878,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.501
+   "blank": 0.501,
+   "viewed": true
   },
   {
    "key": "f7",
@@ -146,7 +152,8 @@
    "h": 1657,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.347
+   "blank": 0.347,
+   "viewed": true
   },
   {
    "key": "f8",
@@ -166,7 +173,8 @@
    "h": 1269,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.65
+   "blank": 0.65,
+   "viewed": true
   },
   {
    "key": "f9",
@@ -186,7 +194,8 @@
    "h": 1515,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.246
+   "blank": 0.246,
+   "viewed": true
   },
   {
    "key": "f10",
@@ -206,7 +215,8 @@
    "h": 2620,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.605
+   "blank": 0.605,
+   "viewed": true
   },
   {
    "key": "f11",
@@ -226,7 +236,8 @@
    "h": 1570,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.232
+   "blank": 0.232,
+   "viewed": true
   },
   {
    "key": "f12",
@@ -246,7 +257,8 @@
    "h": 1297,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_main.pdf",
-   "blank": 0.65
+   "blank": 0.65,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -266,7 +278,8 @@
    "h": 2151,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.794
+   "blank": 0.794,
+   "viewed": true
   },
   {
    "key": "fS2",
@@ -286,7 +299,8 @@
    "h": 2217,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.491
+   "blank": 0.491,
+   "viewed": true
   },
   {
    "key": "fS3",
@@ -306,7 +320,8 @@
    "h": 2294,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.733
+   "blank": 0.733,
+   "viewed": true
   },
   {
    "key": "fS4",
@@ -346,7 +361,8 @@
    "h": 1122,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.864
+   "blank": 0.864,
+   "viewed": true
   },
   {
    "key": "fS6",
@@ -366,7 +382,8 @@
    "h": 1127,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.965
+   "blank": 0.965,
+   "viewed": true
   },
   {
    "key": "fS7",
@@ -386,7 +403,8 @@
    "h": 1412,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.563
+   "blank": 0.563,
+   "viewed": true
   },
   {
    "key": "fS8",
@@ -426,7 +444,8 @@
    "h": 1199,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.97
+   "blank": 0.97,
+   "viewed": true
   },
   {
    "key": "fS10",
@@ -466,7 +485,8 @@
    "h": 1467,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.662
+   "blank": 0.662,
+   "viewed": true
   },
   {
    "key": "fS12",
@@ -486,21 +506,33 @@
    "h": 1447,
    "dpi": 300,
    "src": "kazyak2020_li_penetration_SI.pdf",
-   "blank": 0.464
-  }
- ],
- "missing_labels": [
+   "blank": 0.464,
+   "viewed": true
+  },
   {
    "key": "tS1",
-   "why": "이 종류가 한 장도 추출되지 않았는데 본문이 Table S1 까지 가리킨다 (남의 논문 참조일 수도 있다 · 확인)",
-   "skipped": [],
-   "near_miss": [],
-   "refs": [
-    "p2",
-    "p5"
-   ]
+   "kind": "table",
+   "label": "S1",
+   "page": 5,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Table of parameters used for the COMSOL® model along with source of value. (Parameter | Value | Units | Description | Source) D_Li+ 2.8*10^-13 m2/s diffusivity of Li ions in LLZO (NMR, Hayamizu et al.); D_n 2*10^-15 m2/s diffusivity of negative ions in LLZO (extrapolated from high-temperature data, Kubicek et al.); C_Li+ 0.019675 mol/cm3 concentration of mobile Li ions (assuming half of Li sites are mobile); k_d 1.771*10^-4 s-1 dissociation rate constant (assumed from LiPON model); k_r 9*10^-9 m3/(mol-s) recombination reaction rate (assumed from LiPON model); j0 0.2 mA/cm2 exchange current density (data for Al-doped LLZO, Buschmann et al.); alpha 0.5 charge transfer coefficient (assumed).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    427.4,
+    542.0,
+    591.3
+   ],
+   "w": 1968,
+   "h": 684,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.755,
+   "manual_crop": "Table S1 is an embedded raster image (xref 31) with the caption as a separate one-line text block glued to the body paragraph above; the tool found no table candidate and listed tS1 under missing_labels (refs p2 p5). clip = caption line + embedded raster bbox on SI p.5 (printed p.4) + 2 pt, 300 dpi, tool _shrink (2026-11-24). Caption text here = curator transcription of the raster (no text layer) - checked against this 300-dpi crop (D_n = 2*10^-15, not 10^-16 as first misread from the page render).",
+   "viewed": true
   }
  ],
+ "missing_labels": [],
  "table_caption_vote": [
   {
    "src": "kazyak2020_li_penetration_main.pdf",

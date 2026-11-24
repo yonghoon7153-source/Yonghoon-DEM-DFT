@@ -1,0 +1,347 @@
+{
+ "slug": "fuchs2023_cu_llzo_anode_free_li_growth_modes",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "fuchs2023_cu_llzo_growth_main.pdf",
+  "fuchs2023_cu_llzo_growth_SI1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Schematic of the operando SEM setup used to characterize lithium plating in a Liid|LLZO|Cufilm cell stack. b) SEM overview of the investi- gated microscopic current collector patches as prepared via FIB patterning. c) Voltage profile when plating lithium with this setup. Note that the strong oscillations in this profile occur because of the SEM electron beam scanning, thus interfering with the measurement at very low currents. d) Magnified image of the same contacted copper current collector patch before and after lithium plating. Note that the frayed edge is an effect induced by the FIB cutting. Additionally, the material on the needle sides is thought to be dust particulates that do not influence the measurement. investigated herein.[23] Figure 2a–d, therefore, shows SEM images of 16 µAh cm−2 lithium plated with 50, 100, 500, and 1000 µA cm−2. The micrographs in Figure 2a–",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    63.9,
+    555.4,
+    335.4
+   ],
+   "w": 2128,
+   "h": 1132,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_main.pdf",
+   "blank": 0.573
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. SEM micrographs of lithium plated at the Cu|LLZO interface with a) 50, b) 100, c) 500, and d) 1000 µA cm−2. In each case, the amount of lithium or charge plated was 16 µAh cm−2, corresponding to a thickness of 77 nm, if plated homogeneously. The projected size ALi-Particle of each lithium particle and the particle density nLi-Particle are depicted in (e). The distribution of lithium particle sizes is presented as a box plot, comprising 11 (50 µA cm−2), 32 (100 µA cm−2), 79 (500 µA cm−2), and 92 (1000 µA cm−2) particles, respectively. The average ALi-Particle is shown as a square inside each box plot. nLi-Particle is represented as the orange data points.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    516.3,
+    555.1,
+    666.5
+   ],
+   "w": 2127,
+   "h": 627,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_main.pdf",
+   "blank": 0.628
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a–c) SEM micrographs at different stages during lithium plating with 100 µA cm−2. The corresponding voltage and current profiles are depicted in the top part of (d). The bottom part of (d) shows the voltage and current profiles during plating with 100 µA cm−2 and interrupting cur- rent pulses of 2000 µA cm−2. Note that the oscillations of the voltage profiles are induced by the scanning of the electron beam. The respective SEM micrographs during different stages of the plating are visible in (e–g). Videos of both experiments can be found in Video S1, Supporting Information.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    555.1,
+    439.8
+   ],
+   "w": 2126,
+   "h": 1563,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_main.pdf",
+   "blank": 0.544
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Evolution of lithium particle density and projected area as a function of the plating time for the pulsed measurement and the control experiment with a constant current density as depicted in Figure 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    565.0,
+    300.0,
+    687.7
+   ],
+   "w": 1063,
+   "h": 512,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_main.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Schematic setup used to observe lithium plating with 100 µA cm−2 at the interface at Cufoil|LLZO. Due to the high electronic conductivity of both tungsten and copper, the point contact between the micromanipulator and copper foil is not relevant to the experiment. A low-magnification SEM image of the setup is shown in (b). The voltage profile during plating is depicted in (c). Several screenshots of the video during plating were taken at different stages, which are shown in (d–g). Note that some of the remaining lines and pillars are due to “curtaining” and “rippling”, which frequently occurs during the FIB-cutting process.[42–45] ited film is used, conformity of the CC|SE interface and applied pressure. In the case of vapor-deposited films onto LLZO, we found that 5 µm of copper is sufficiently mechanically stable to suppress whisker penetration through itself as depicted i",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    555.4,
+    425.5
+   ],
+   "w": 2128,
+   "h": 1503,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_main.pdf",
+   "blank": 0.325
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Voltage profile during plating with 500 µA cm−2. Screenshots of a video recorded during the plating and lithium growth process are depicted in (b–e) with their respective time indicated by a marking in the voltage profile.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.3,
+    297.1
+   ],
+   "w": 2127,
+   "h": 968,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_main.pdf",
+   "blank": 0.586
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Schematic explaining the occurrence of different lithium growth modes when using thin current collector films (top) or thick current col- lector foils (bottom) when different current densities are applied. Note that in the herein analyzed experiments, usually a combination of growth modes was observed.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    452.7,
+    297.2,
+    668.6
+   ],
+   "w": 1064,
+   "h": 900,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_main.pdf",
+   "blank": 0.115
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The lithium morphology after plating with 50 µA cm-2 is shown on the left in a). During stripping, a fast contact loss and increase in overvoltage is reached due to the low areal coverage of lithium. This is visible in the particles collapsing upon stripping, herein marked with orange circles. This resulted in a low coulombic efficiency of 13%.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    343.8,
+    547.6,
+    644.0
+   ],
+   "w": 2071,
+   "h": 1252,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.425
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. a) SEM micrographs depicting the lithium morphology after plating with 50 µA cm-2 at Cu|LLZOsc interfaces. The single-crystalline LLZO surface was achieved by controlling the LLZO grain size to be larger than the copper current collector patch. Morphologies after plating with 100 µA cm-2, 500 µA cm-2 and 1000 µA cm-2 are depicted in b), c) and d), respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    50.7,
+    550.7,
+    333.7
+   ],
+   "w": 2084,
+   "h": 1180,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.325
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Magnified plot of the current pulses during the plating experiment. The overvoltage shows that lithium nucleates at new spots despite growth happening already at other areas within the sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    425.3,
+    547.5,
+    666.7
+   ],
+   "w": 2071,
+   "h": 1006,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.439
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Histogram of the particle size distribution after plating continuously with 100 µA cm-2 (left) and after using a pulsed “advanced charging” (right). A clear increase in the number of smaller particles is evident.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    50.7,
+    547.7,
+    233.6
+   ],
+   "w": 2071,
+   "h": 763,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. a) Voltage profile of lithium deposition observed at a Cufoil|LLZO cross-section with 50 µA cm-2 applied. Respective SEM images during the process are depicted in b) – e). Note that e) shows a different image area than the other SEM images. Grain boundaries are visible after prolonged observation times due to electron beam induced lithium plating. Similar to the growth process with 100 µA cm-2, a mix between whisker (mode (1)) and layer growth (mode (2)) is observed without any indication of lithium filament/dendrite growth. Additionally, the thickness of grown lithium is not perfectly homogeneous over the whole cross-section.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    326.9,
+    547.6,
+    598.9
+   ],
+   "w": 2071,
+   "h": 1134,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.536
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Low-magnification images of the cross-sections used for plating with 50 µA cm-2 (a), 100 µA cm-2 (b) and 500 µA cm-2 (c). Note that due to the tilted sample geometry, the error bar is not scaled perfectly.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    50.7,
+    547.6,
+    212.6
+   ],
+   "w": 2071,
+   "h": 675,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.269
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. a) Cross-sectional overview over the herein investigated LLZO|Cufilm,400nm electrode system. A film thickness of 400 nm was chosen to obtain a better cross-sectional visibility for the SEM experiment. We believe that the gained qualitative insight can be transferred to thinner films. At the beginning of the plating, sub-surface growth is visible in b), which then breaks through the copper layer as magnified at different stages in c), d) and e).",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    315.9,
+    547.7,
+    572.0
+   ],
+   "w": 2071,
+   "h": 1068,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.331
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 6,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: SEM micrograph of lithium being plated at thick Cu5µm films deposited on LLZO. Only at the edges of the prepared Cu patch, lithium is visibly growing, which only occurs due to the small size of the electrode. While this setup is unsuitable for characterizing the lithium growth as a function of the current density, it shows that the thicker Cu film is mechanically more stable and suppresses the penetration of growing lithium whiskers and particles through the current collector when compared to thin films used as shown in Figure 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    50.7,
+    547.6,
+    237.2
+   ],
+   "w": 2071,
+   "h": 778,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 6,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. a) Impedance evolution when plating lithium at a Cufilm|LLZO interface with 100 µA cm– 2 and 2 MPa of pressure applied. A clear transition between blocking and non-blocking impedance is observed once lithium has been deposited. Also, the good resolution and well separated 5",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    356.0,
+    547.7,
+    722.4
+   ],
+   "w": 2071,
+   "h": 1527,
+   "dpi": 300,
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "blank": 0.656
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "fuchs2023_cu_llzo_growth_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "fuchs2023_cu_llzo_growth_SI1.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

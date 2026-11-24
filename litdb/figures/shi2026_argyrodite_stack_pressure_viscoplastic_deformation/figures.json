@@ -1,0 +1,550 @@
+{
+ "slug": "shi2026_argyrodite_stack_pressure_viscoplastic_deformation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+  "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+  "viscoplastic2026_argyrodite_stack_pressure_SI2.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Electrochemical performance of Li-Li symmetric cells with Li6PS5Cl (A) Schematics of cycling protocols that employ current-holding approaches to investigate the impact of rate-dependent deformation: zero-current (type 1) and quasi-sinusoidal approach (type 2). (B) Type 1 cycling performance with a stack pressure of 8 MPa, with and without current holds (top and bottom, respectively). The 5-h current hold started after the cells tested at 1.5 mA/cm2. (C) CCD summary for different holding times and stack pressures. (D) Comparison of average overpotential between type 1 cycling and conventional cycling protocol at a stack pressure of 8 MPa. (E) Type 2 CCD test, where 10-min-long current steps of 0.1, 0.3, and 0.5 mA/cm2 were used instead of the type 1 zero current holds. The peak current density for each cycle was then set to the same value as the corresponding type 1 experiment (",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    70.1,
+    551.2,
+    542.4
+   ],
+   "w": 2101,
+   "h": 1969,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "blank": 0.69
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. FIB-SEM imaging of Li6PS5Cl and Li metal interfaces after cycling at 1.5 mA/ cm2 (capacity of 0.5 mAh/cm2 for each cy­ cle) and subsequent current holding steps at a stack pressure of 8 MPa The scale bar is 3 μm. (A and B) Representative images at the Li6PS5Cl and Li metal interface, which correspond respec­ tively to the side where the last stripping and plating cycle was run. The figures from left to right show the interfaces after holding times of 0 min, 12 min, 1 h, and 5 h, respectively. (C) Average length, width, and density of voids at the Li-metal and Li6PS5Cl interface. (D) Average void fraction along the interface. (E) Electrochemical impedance spectroscopy (EIS) measurements during the initial current holding step. The impedance plot is fit by an equivalent circuit composed of a bulk resistance Rb and an interfacial resistance RSEI+RCT in series with a parallel const",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    95.7,
+    382.3,
+    617.0
+   ],
+   "w": 1397,
+   "h": 2173,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "blank": 0.701
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Impact of viscoplastic deformation on solid-state batteries (A) Schematic diagrams of different deformation processes. (B) Schematic of strain energy concentrations in three representative regions: (i) SE and Li-metal interface and (ii) Li dendrite tip region. (C) Schematic diagrams of the impact of viscoplasticity.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    43.1,
+    555.9,
+    500.2
+   ],
+   "w": 2094,
+   "h": 1906,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Characterization of viscoplasticity in Li6PS5Cl (heat-treated at 60◦C) (A and B) Nanoindentation loading and unloading for a fused quartz glass standard and Li6PS5Cl, respectively. (C) Multiple step fitting for the nanoindentation data with an initial holding time of 40 s (D and E) Vickers indentation with 29.4 N load. The diagonal length and indentation depth increase with holding time. (F) The FEM of the Vickers test using the plasticity model obtained from the nanoindentation results (Equation 1) predicts indentation depths that are much shallower than those observed in the experiments. (G) Areal specific resistance (ASR) with blocking electrodes tested at different stack pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    70.1,
+    551.2,
+    533.0
+   ],
+   "w": 2101,
+   "h": 1929,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Elastic stress distribution in the interfacial void region, due to stack pressure of 8 MPa (A) Interfacial void directly after cycling. The dashed ellipsoid shows an interfacial void that is ∼3 μm long and 0.5 μm wide. (B) Elastic FEM for an interfacial void with these dimensions, where the upper region represents Li metal and the lower region represents Li6PS5Cl. A stack pressure of 10 MPa is applied in the simulation. (C) A magnified view of a 0.2-μm-wide region from the FEM results in (B). The maximum von Mises stress of 116 MPa is localized at the edge of the void on the Li6PS5Cl side. (D) The void volume fraction (for 3.6-μm-wide strips across each interface, based on image analysis of the results in Figure 3), plotted versus the square root of the hold time. (E) Plastic FEM illustrating two contact scenarios between lithium (with equivalent yield strengths of 8 and 16 MPa",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    70.1,
+    551.2,
+    526.0
+   ],
+   "w": 2101,
+   "h": 1900,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "blank": 0.668
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Driving force for dendritic cracking Finite element modeling (FEM) was used to compare charging protocols with (A) and without (B) current holds. For each case, the pressure buildup rate (ṗ) is assumed to be proportional to the charging current density (shown schematically for both cases), and the energy driving force (Gnet) is then the strain energy release rate obtained from the FEM (see Methods). The zero-current steps here correspond to fixing the pressure for a few hours, and this leads to significant relaxation of the driving force for dendritic cracking.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    95.7,
+    388.9,
+    407.6
+   ],
+   "w": 1398,
+   "h": 1301,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a). EIS data of Li6PS5Cl after heat-treated at different temperatures. (b). The ionic conductivity obtained from EIS data in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    243.7,
+    511.6,
+    415.4
+   ],
+   "w": 1781,
+   "h": 716,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.733
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The XRD pattern of Li6PS5Cl without heat treatment and after being heat treated at 60℃, 100℃ and 250℃. Note that the star-marked peak came from the Kapton tape,1,2 which was used to seal the samples to prevent them from moisture contamination during XRD measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    69.0,
+    514.6,
+    293.8
+   ],
+   "w": 1794,
+   "h": 938,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Raman Spectroscopy data of Li6PS5Cl without heat treatment and after being heat treated at 60℃, 100℃ and 250℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    135.4,
+    511.6,
+    352.1
+   ],
+   "w": 1781,
+   "h": 904,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The top-view SEM images of LPSC without heat treatment and after being heat treated at 60℃, 100℃ and 250℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    507.9,
+    514.5,
+    666.3
+   ],
+   "w": 1793,
+   "h": 661,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.217
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. The cross-section SEM images of LPSC without heat treatment and after being heat treated at 60℃, 100℃ and 250℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    70.8,
+    511.6,
+    229.4
+   ],
+   "w": 1781,
+   "h": 661,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.207
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. EIS data of Li-Li symmetric cells before cycling at room temperature, using Li6PS5Cl as solid electrolyte without heat treatment and after being heat treated at 60℃, 100℃ and 250℃. The Li6PS5Cl/Li-metal interfacial ASR for all the cases is 23 ohm- cm2 (without heat treatment), 11 ohm-cm2 (post heat-treated at 60℃), 12 ohm-cm2 (post heat-treated at 100℃), and 37 ohm-cm2 (post heat-treated at 250℃).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    67.6,
+    514.6,
+    325.3
+   ],
+   "w": 1794,
+   "h": 1075,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. (a). A summary of the representative electrochemical performance on Li-Li symmetric cells using Li6PS5Cl as solid electrolyte without heat treatment and after Li6PS5Cl heat-treated at different temperatures, tested under different stack pressure at room temperature. (b). A representative cycling data of Li-Li symmetric cells using Li6PS5Cl post-heat-treated at different temperatures, tested under a stack pressure of 8 MPa at room temperature. (c). A representative cycling data of Li-Li symmetric cells using Li6PS5Cl post-heat-treated at 60℃ under different stack pressures at room temperature. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    67.7,
+    514.6,
+    590.5
+   ],
+   "w": 1794,
+   "h": 2179,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. (a). and (b). are Li-Li symmetric cell cycling performance that shows the highest CCD value of 3.0 mA/cm2 and 1.3 mA/cm2 with a current holding time of 5 hours per half cycle with the sample post-heat-treated at 60 ℃ under a stack pressure of 5 MPa and 3 MPa, respectively, at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    72.9,
+    514.6,
+    414.9
+   ],
+   "w": 1794,
+   "h": 1426,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Single-sided plating of Li-Li symmetric cells using Li6PS5Cl. (a). The electrochemical performance of the Li-Li symmetric cells without current holding time (black) in direct comparison with cells that had a 5-hour current hold (red). (b). The electrochemical performance of the Li-Li symmetric cells with a current holding time of 5 hours, respectively, with the current holding time after Li is plated at 1.6 mA/cm2. (c) Summarized CCD data for (a) and (b) with relevant errors.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    66.8,
+    514.6,
+    621.7
+   ],
+   "w": 1794,
+   "h": 2313,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Extracting viscoplastic properties from the Berkovich indentation data using finite element modeling. A new fitting scheme was developed to accommodate the surface roughness of the Li6PS5Cl pellet. This scheme utilized the relative change of indentation depth during the holding and unloading stages, rather than the absolute values. The modeling data (marked in red) matched the experimentally measured relative indentation depths well (marked in blue).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    71.2,
+    514.6,
+    307.4
+   ],
+   "w": 1794,
+   "h": 985,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Li-Li symmetric cell using LLZTO as a solid electrolyte tested under a stack pressure of 8 MPa. The results showed that the CCD is quite the same with and without the 5-hour hold time.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    70.3,
+    514.6,
+    230.3
+   ],
+   "w": 1794,
+   "h": 667,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Geometry of the simulation and model setting in Video S1–S3. The rate-dependent plasticity model can capture plastic strain rate 𝜖̅̇# , and accumulated plastic strain 𝜖̅#. In this case, the time history of plastic deformation can be calculated as 4!\"#$% 𝑡#./0123 = o 𝜖̅(Ω)/𝜖̅̇#(Ω) 4&'! Take the lower bond of plastic strain rate in the domain field and the total accumulated plastic strain, an approximation can be considered as 𝑡̂#./0123 = 𝜖̅(Ω526/.)/max [𝜖̅̇#(Ω526/.)] which indicates the shortest possible time to finish the plastic deformation. For different cases of equivalent yield strength of lithium metal: a. 𝑌) = 16𝑀𝑃𝑎, the results are 𝜖̅̇# = 127/𝑠, 𝜖̅# = 0.42, 𝑡̂#./0123 = 0.003𝑠. b. 𝑌) = 8𝑀𝑃𝑎, the results are 𝜖̅̇# = 3617/𝑠, 𝜖̅# = 2.5, 𝑡̂#./0123 = 0.0007𝑠. a. 𝑌) = 4𝑀𝑃𝑎, the results are 𝜖̅̇# = 5.6 × 10(/𝑠, 𝜖̅# = 7.8 , 𝑡̂#./0123 = 1.4 × 10*(𝑠.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    151.5,
+    514.6,
+    415.0
+   ],
+   "w": 1794,
+   "h": 1099,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 19,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Geometry of the simulation and model setting of Video S4. The perfectly elastic-plastic model employed in this video assumes that plastic deformation occurs instantly upon yielding irrespective of deformation speed or strain rate. This is a valid assumption according to rate-dependent plastic FEM simulation of higher yield strength cases (4, 8, and 16 MPa) shown in Video S1–S3. As a result, this model does not explicitly capture the kinetics or rate effects of lithium’s plastic deformation, but reveals the full closure of the interfacial void for lithium-SE contact. Analysis of pressure build-up rate corresponding to applied current Lithium deposition is treated as a purely eigen strain expansion in a constrained volume (i.e. dendritic crack), and the rate of the eigen strain, 𝜖)̇ is related to applied current density, 𝑖, as: 𝜖)̇ = 𝑖 𝐹𝑉!𝑙 where 𝐹 is Faraday constant, 𝑉! is th",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    82.7,
+    514.6,
+    337.0
+   ],
+   "w": 1794,
+   "h": 1061,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.068
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 21,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. The relative density information of Li6PS5Cl post-heat-treated at different temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    73.9,
+    514.6,
+    278.5
+   ],
+   "w": 1794,
+   "h": 854,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.704
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. CCD comparisons with published results Cycling protocola Temp. (◦C) Stack pressure (MPa) CCD (mA/cm2) Li capacity (mAh/cm2) Reference Conventional protocol 25 1 0.4 0.4 Wan et al.25 Conventional protocol 25 1 0.6 0.6 Wan et al.25 Conventional protocol ∼24 3 ∼0.9 0.63 Zeng et al.26 Conventional protocol 25 N/A 0.4 0.2 Chen et al.27 5-h hold cycling protocol 25 3 1.3 0.5 this work 5-h hold cycling protocol 25 5 3.0 0.5 this work 5-h hold cycling protocol 25 8 4.8 0.5 this work Sinusoidal-like cycling protocol 25 8 1.2 4.8 this work aThese prior results are comparable to our work, in that interfacial modifications were not employed (in contrast to other recent work where high CCDs have been achieved by modifying the interfacial chemistry).",
+   "rotated_deg": 0,
+   "bbox": [
+    54.8,
+    100.0,
+    557.0,
+    251.7
+   ],
+   "w": 2093,
+   "h": 633,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "blank": 0.59
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 9,
+   "file": "tab_2.png",
+   "caption": "Table 2. Li6PS5Cl mechanical properties E (GPa) ν YSE (GPa) _ε0 n 22.1 0.30 0.35 0.00001 4",
+   "rotated_deg": 0,
+   "bbox": [
+    54.8,
+    100.0,
+    291.9,
+    143.3
+   ],
+   "w": 989,
+   "h": 182,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "blank": 0.563
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 13,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Creep Mechanisms and Characteristic Time Model Temp. Mechanism t! [s]@ σ = 8MPa, d = 100µm Dislocation glide Low dislocation udergo glide motion 10-5 High diffusional creep 2.446 × 1015 Nabarro-Herring model Coble model High diffusional creep 2.099 × 104 (5 hours) Lattice-diffusion controlled GBS High Grain boundary sliding 2.552 × 102 (4.3 mins) Pipe-diffusion controlled GBS High Grain boundary sliding 5.885 × 105 (163 hours) High Grain boundary sliding 1.336 × 109 Grain-boundary- diffusion controlled GBS Dislocation slip creep 1.721 × 10-3 Harper-Dorn model High, near melting High Dislocation slip creep 1.516 × 10-5 Pipe-diffusion controlled DCC Lattice-diffusion controlled DCC High Dislocation slip creep 1.588 × 10-8 GBS: Grain Boundary Sliding DCC: Dislocation Climb Creep The characteristic time of creep deformation is the inverse of strain rate with particular equivalent t",
+   "rotated_deg": 0,
+   "bbox": [
+    85.3,
+    72.7,
+    516.6,
+    716.9
+   ],
+   "w": 1798,
+   "h": 2686,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 14,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Eight Different Models Predicting the Relation Between Strain Rate and Applied Equivalent Tensile Stress. (+ 'Material Constants and Atomic Diffusivity for Pure Li' list that follows the table, continued on SI p15)",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    272.0,
+    515.0,
+    766.0
+   ],
+   "w": 1792,
+   "h": 2273,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.938,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported tS2 as a number gap (refs p11 p14 p15). Table S2 is a text-only table (no image/table border; drawings 3 = short rules) on SI p14 under its caption (y 276-305), three sub-tables (diffusional creep / GBS / dislocation slip creep) to y 683, then the 'Material Constants' bullet list that continues on SI p15 (y 73-118). Crop = p14 clip (85,272,515,766) stacked over p15 clip (85,70,515,121), 300 dpi; boundaries verified by clipped text extraction (first line = caption, last line = DxxDp constant).",
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: table - values taken from PDF text, image not read (tool convention for tab_*)"
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 16,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Sinusoidal CCD Cycling Protocol with a Current Density of 1.6 mA/cm2 as an Example sinusoidal cycling protocols time (min) current density (CD, mA/cm2) total Li capacity per step (mAh/cm2) total Li capacity per half cycle (mAh/cm2)",
+   "rotated_deg": 0,
+   "bbox": [
+    85.3,
+    72.2,
+    511.9,
+    529.7
+   ],
+   "w": 1779,
+   "h": 1907,
+   "dpi": 300,
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "blank": 0.944
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "tS2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p11",
+    "p14",
+    "p15"
+   ],
+   "resolved": "manual_crop tab_S2.png (2026-11-24, litdb-curator) - see figures[tS2].manual_crop"
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  },
+  {
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  },
+  {
+   "src": "viscoplastic2026_argyrodite_stack_pressure_SI2.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}
