@@ -4777,3 +4777,54 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   - D1–D5 결정 · 구현 · fixture · 시험 · OS 관측 · native 실행은 각각 별도 승인이다.
   - 이 절은 어느 것의 승인도 아니다.
 - **유지:** §98 과 같다 — 계약 미채택 · 세 기한 null · `JOB_CURRENT_COMMIT=OPEN` · `native_ready / approved / usable = false` · 전체 · 정상 gate INCOMPLETE.
+
+## 100. S1 receiver-bound ACK 통합 R3 — 12 시나리오 한정 기능 결과 수용 · 문서 보충 수용 (송신 측 검토 2026-11-09) · 2026-11-24 인계 반입 · **사용자 보류** (실행 0)
+
+- **이 원장이 본 경로:** §99 (2026-10-30) 뒤의 경과 — 문서 정정 · receiver-bound ACK 통합 R1 · R2 · R3 의 준비와 실행 — 는 이 원장에 기록이 없다.
+  - 아래의 근거는 2026-11-24 사용자가 올린 인계 묶음 `REIL_COMSOL_CLAUDE_HANDOFF_20261124.zip` (1,971,276 B · `573cef34…`) 안의 두 검토 회신 (둘 다 2026-11-09) 뿐이다.
+  - 그 사이의 실행 · 결정을 이 원장이 독립적으로 확인한 것이 아니다. 인계문도 "새 기능 검증이나 과거 실행의 독립 감사가 아님" 이라고 적는다.
+- **보존 (커밋 `24d07c6` 보존 규칙 `-text` · `9d5d0e2` 바이트 · blob = 디스크 bytes · 비밀 검사 hits 0):**
+  - R3 결과 검토: `reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_review_20261109/`
+    - ZIP 560,393 B · `d7444e52…` + originals 175 (manifest 174 / 174) + `outside_zip/` 3 (영수증 · 포장 반환 · 포장 뒤 선택 기록).
+    - 안쪽 결과 묶음 `originals/input/COMSOL_S1_EVENT_RECEIVER_BOUND_INTEGRATION_R3_RESULT_AND_DELIVERY_STOP_20261108.zip` (252,451 B · `f0b118bd…`) 은 풀지 않았다.
+  - R3 문서 보충 검토: `reviews/r14_repros/codex63/comsol_s1_event_receiver_bound_integration_r3_document_supplement_review_20261109/`
+    - ZIP 124,498 B · `ec9a6adb…` + originals 36 (35 / 35) + `outside_zip/` 3. 안쪽 보충 ZIP (31,567 B · `2ca5367d…`) 은 풀지 않았다.
+  - 인계 최상위 5 파일 + 이 저장소의 반입 기록 `INTAKE_BY_THIS_REPO_20261124.json`: `reviews/handoff_reil_comsol_20261124/`.
+  - 묶음의 코드 · 도구는 실행 · import 하지 않았다.
+- **R3 결과 판정 (검토자 · 2026-11-09):** `LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED` · 한정 결과 수용을 막는 지적 0.
+  - 범위: 오프라인 파일 / 생명주기 시나리오 10 + 직접 소유한 수신자 하나를 공유하는 순차 실제 연결 시나리오 2 = 총 12 · fixture clock / binding 만.
+  - 결과: 12 / 12 기대와 일치 (실패 0 · 미실행 0).
+    - 정상 실제 전달 완료 **1 회** (L01).
+    - 부모 / 수신자 각 1 세션 rc 0 · 요청 / ACK 각 2 건 · terminate 0 · 대상 재시도 0.
+  - L02 = 기대 거부 사례: 수신자가 v1 을 소비했어도 합성 C5 = 100 = 경계 B 에서 부모가 거부했다 (`DEADLINE_NOT_BEFORE` · owner `DELIVERY_EXCEPTION`).
+    - 검증된 전달 head 는 v0 에 남았다.
+    - 정상 자식 종료는 실패를 해제하지 않는다.
+  - 전달 오류 (보존): 검증 뒤 정상 전달 보고서 / 포장을 쓰려던 JavaScript orchestration 구문 해석 단계의 `SyntaxError: Unexpected identifier 'r'`.
+    - process rc = null 이다 (정상 실행기 rc 0 과 구분한다).
+    - 자동 수정 · 재포장 0 · 앞 결과 취소 없음 · 독립 재현 없음.
+    - 한정 기능 결과 수용 ≠ **전체 절차 PASS** — 전체 절차 PASS 는 인정되지 않았다.
+  - 문서 지적 둘 (한정 결과에는 비차단):
+    - `RBI_R3_C1_COUNT_WORDING`: 전달문 첫 줄의 "2 시나리오" → "총 12 시나리오 · 실제 연결 2 · 정상 실제 전달 완료 1 회".
+    - `RBI_R1_READY_01` 부분 해소: 양쪽 bootstrap 이 봉인 63 개 · engine 을 해시 확인용으로 읽는데, 일부 역할표가 한쪽 loader 만 적었다.
+- **R3 문서 보충 판정 (검토자 · 2026-11-09):** `DOCUMENT_SUPPLEMENT_ACCEPTED_RBI_R1_READY_01_CLOSED` · 차단 0 · 새 정정 요구 0.
+  - 두 지적 모두 문서 범위에서 종결됐다.
+    - 12 = 오프라인 10 + 실제 2 · 정상 완료 1.
+    - 봉인 63 행의 양쪽 bootstrap 해시 읽기 ↔ 부모 13 · 자식 7 load_target 모듈 구분.
+  - R3 결과 검토 당시의 `RBI_R1_READY_01` OPEN 은 이 보충 수용으로 종결된 상태다. 과거 문서를 고치지 않고, 다시 OPEN 으로 취급하지 않는다 (인계문).
+  - 기존 ZIP · 봉인 · 소스 · 결과의 수정이나 재시험은 필요 없다.
+- **검토자 수행 (두 회신):** 대상 import · 실행 · 재시험 · 수신자 기동 · OS / Job / CIM / COMSOL · 원 소스 / 봉인 변경 · 외부 발송 0.
+  - 검토자 자신의 확인 도구 정정 기록은 originals 에 있다.
+- **유지:**
+  - 전체 절차 PASS 불인정.
+  - `contract_adopted / native_ready / approved / usable = false` · 전체 · 정상 gate INCOMPLETE.
+  - 네 운영 기한 / reserve = null (검토자 표기 · §98–§99 의 "세 기한" 과 세는 방식이 다르다 — 이 원장은 그 차이를 판정하지 않았다).
+  - `JOB_CURRENT_COMMIT=OPEN` · 기존 OPEN · 앞 중지 기록 (재분류하지 않음).
+  - 미검증 (별개): 운영 clock / boot / domain / role / freshness 결속 · 동시 파일 교체와 프로세스 동시성 · 재시작 복구와 내구성 · 막힌 callback 취소와 잔류 Q 소유 ·
+    C4 / C5 관측 뒤 물리 완료 기한 · ResourceSession / Parent 통합 · OS Job 보호와 COMSOL.
+- **사용자 보류 (2026-11-24 · 원문):** "현재 제가 COMSOL을 사용할 수 없어 당분간 COMSOL 관련 후속 작업은 보류해 주세요. 기존 상태와 자료를 보존하고, 제가 다시
+  사용할 수 있다고 알리면 그때 이 상태부터 이어갑시다. 지금 추가 구현·시험·OS/Job·COMSOL 실행이나 자동 재개는 하지 않습니다."
+  - 재개 조건: 사용자가 COMSOL 을 다시 쓸 수 있다고 알릴 때. 재개 일정은 없다.
+    - 자동 재개도 없다 — `CURRENT_DIRECTION.json`: `automatic_resume=false` · `new_execution_authorization=false`.
+  - 보류는 이전 검증 결과의 취소가 아니다 (인계문).
+  - 재개하면 이 절의 상태와 위 미검증 범위를 기준으로 다음 작업을 구체화한다. 그때도 각 단계는 별도 승인이다.
+- 이 절은 어느 것의 승인도 아니다.
