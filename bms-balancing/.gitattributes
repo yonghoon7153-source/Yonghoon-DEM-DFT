@@ -296,3 +296,10 @@ reviews/handoff_reil_comsol_20261124/** -text
 reviews/review_reil_c4a_impl_v3_prereview_20261124/** -text
 # 2026-11-24 반입: REIL C4-A 구현 요청서 v4 재검토 회신 (DOCUMENT_REVISION_ACCEPTED_V3_N1_CLOSED_NOT_IMPLEMENTATION_AUTHORIZED · 새 차단 0 · 제출 커밋 c2703f1 · 구현 · 시험 · 실행 승인 아님 · 검토자 도구 check_preservation.py · intake_review.py · package_review.py = 실행하지 않음 · outside_zip/ = 사용자가 준 DELIVERY_RECORDS.json 원본 + 그 안 raw_base64 셋을 푼 파일) — bytes 그대로
 reviews/review_reil_c4a_impl_v4_prereview_20261124/** -text
+# 2026-11-24: REIL C4-ENV 새 세대 (3.11.18) 재봉인 요청의 근거 — 읽기만 한 관측 · 새 대조기 (scripts/reil_c4_env_reseal_check.py) 의 자체 시험 · 변이 증명 기록 (합성 자료 · 커밋된 10월 봉인과 원문 · 지금 ensurepip 묶음 읽기만 · 설치 0) — bytes 그대로
+evidence/reil_c4_env_reseal_pre_20261124/** -text
+evidence/reil_c4_env_reseal_selftest_20261124/** -text
+# 2026-11-24: 위 요청 (docs/REIL_C4_ENV_RESEAL_REQUEST_20261124.md) 이 승인되면 생길 새 봉인 · 실행 기록 · 커밋 뒤 관측 — 미리 두는 보존 규칙 (지금 폴더 없음 · 요청서 §1-3) — bytes 그대로
+reil_c6_rebuild_20261124/** -text
+evidence/reil_c4_env_20261124/** -text
+evidence/reil_c4_env_20261124_after/** -text
