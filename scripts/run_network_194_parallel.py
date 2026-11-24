@@ -247,6 +247,7 @@ DEP_LAZY_OFFPATH = {
     ('webapp/app.py', 'coating_presets'): _ROUTE + ' — STEP5 코팅 프리셋',
     ('webapp/app.py', 'mech_reaction_correlation'): _ROUTE + ' — MPM lab 상관',
     ('webapp/app.py', 'litdb_sync'): _ROUTE + ' — litdb (importlib.import_module)',
+    ('webapp/app.py', 'video_library'): _ROUTE + ' — /videos 영상 섹션 (AVI 편 재생 · 받기 · 꾸러미 등록 · 11-24)',
 }
 #: 인계 단계 코드 (워커가 돌리지 않는다 — 봉인 판정 밖) — 발사 때 지문을 기록해 후속 명령이 "인계는 발사 때 생성기 · 다시 읽기 도구로" 를 대조한다.
 HANDOVER_FILES = ('scripts/lhs_design_dataset.py', 'scripts/g2_network_reread.py')

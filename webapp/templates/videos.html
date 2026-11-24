@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+{% set active = "videos" %}
+{% block title %}영상 (AVI) — DEM/MPM Analyzer{% endblock %}
+
+{#  1저자 11-24 — AVI 편을 저장 · 재생 · 받기 + 세부 내용 토글 + 재생목록 판 (app.py `/videos` · 회귀 webapp/test_video_page.py).
+    꼴 = 유튜브 재생목록을 참고만 (왼쪽 재생기 · 오른쪽 목록 판 · 폰 폭에서 판이 아래) — 로고 · 이름 · 상표 · 색은 흉내 내지 않는다.
+    화면 모델 = webapp/video_library.page (p.*) — 제목 · 챕터 · 장면 · 참고 문헌 · QC · 기준표 · 해시 = 등록된 꾸러미 파일에서 읽은 것.
+    ⚠ 여기에 자료 값 · 문장을 베끼지 않는다 (꾸러미를 바꾸면 화면이 같이 바뀐다 · 규율 ④).  글은 자동 이스케이프 · md 는 video_library.md_html 이
+    허용 태그만 남긴 HTML.  이벤트는 아래 스크립트에서만 붙인다 (태그 속성 on… 을 쓰지 않는다). #}
+
+{% block content %}
+<style>
+  .vd-wrap { max-width:1180px; }
+  .vd-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 14px; margin:0 0 10px; }
+  .vd-top h1 { font-size:1.45rem; margin:0; }
+  .vd-top small { font-size:12.5px; color:var(--dim,#7c8194); font-weight:400; }
+  .vd-note { font-size:12.5px; color:var(--dim,#7c8194); line-height:1.6; overflow-wrap:anywhere; }
+  .vd-note code, .vd-mono { font-family:var(--mono,monospace); font-size:12px; overflow-wrap:anywhere; }
+  .vd-notice { margin:10px 0; padding:10px 14px; border-radius:10px; border:1px solid rgba(251,191,36,.55);
+               background:rgba(251,191,36,.10); font-size:13.5px; line-height:1.55; overflow-wrap:anywhere; }
+  .vd-notice.bad { border-color:rgba(248,113,113,.6); background:rgba(248,113,113,.10); }
+  .vd-problems { margin:6px 0 0 18px; }
+  .vd-problem { margin:3px 0; }
+  /* 재생기 + 재생목록 판 (넓으면 나란히 · 좁으면 판이 아래) */
+  .vd-grid { display:grid; grid-template-columns:minmax(0, 1fr) 340px; gap:20px; align-items:start; }
+  @media (max-width: 1080px) { .vd-grid { grid-template-columns:minmax(0, 1fr); } }
+  .vd-main { min-width:0; }
+  .vd-player { background:#000; border-radius:12px; overflow:hidden; }
+  .vd-player video { display:block; width:100%; aspect-ratio:16 / 9; background:#000; }
+  .vd-title { font-size:1.25rem; line-height:1.4; margin:12px 0 2px; overflow-wrap:anywhere; }
+  .vd-subtitle { font-size:13.5px; color:var(--dim,#7c8194); margin:0 0 4px; overflow-wrap:anywhere; }
+  .vd-meta { display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; font-size:13px; color:var(--dim,#7c8194); margin:6px 0 10px; }
+  .vd-badge { display:inline-block; padding:2px 9px; border-radius:999px; font-size:12px; font-weight:600; white-space:nowrap;
+              border:1px solid var(--border,#2a2d3e); }
+  .vd-badge-internal { color:#fecaca; background:rgba(220,38,38,.28); border-color:rgba(248,113,113,.85); }
+  .vd-badge-public { color:var(--green,#34d399); background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.55); }
+  .vd-badge-warn { color:var(--yellow,#fbbf24); background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.55); }
+  .vd-mini { font-size:10.5px; padding:0 6px; margin-left:4px; }
+  .vd-local { font-size:12px; color:#fca5a5; }
+  .vd-actions { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px; }
+  .vd-btn { display:inline-flex; align-items:baseline; gap:6px; padding:7px 14px; border-radius:999px; font-size:13px; font-weight:600;
+            background:var(--card,#1c1f2e); border:1px solid var(--border,#2a2d3e); color:var(--text,#e4e6f0); }
+  .vd-btn:hover { border-color:var(--accent,#6c8cff); color:var(--text,#e4e6f0); }
+  .vd-btn small { font-weight:400; color:var(--dim,#7c8194); font-size:11.5px; }
+  /* 세부 토글 */
+  .vd-main details { border:1px solid var(--border,#2a2d3e); border-radius:10px; margin:8px 0; background:var(--bg2,#161922); }
+  .vd-main details > summary { cursor:pointer; padding:9px 14px; font-weight:600; font-size:13.5px; list-style-position:inside; }
+  .vd-main details > summary small { font-weight:400; color:var(--dim,#7c8194); font-size:12px; margin-left:6px; }
+  .vd-body { padding:2px 14px 12px; font-size:13.5px; line-height:1.65; overflow-wrap:anywhere; min-width:0; }
+  .vd-md h1 { font-size:16px; margin:8px 0; } .vd-md h2 { font-size:15px; margin:16px 0 6px; } .vd-md h3 { font-size:14px; margin:12px 0 4px; }
+  .vd-md ul, .vd-md ol { margin:4px 0 8px 20px; } .vd-md li { margin:2px 0; } .vd-md p { margin:6px 0; }
+  .vd-md blockquote { margin:8px 0; padding:4px 12px; border-left:3px solid var(--accent,#6c8cff); background:rgba(108,140,255,.08); }
+  .vd-md code { font-family:var(--mono,monospace); font-size:.88em; }
+  .vd-md pre { overflow-x:auto; padding:8px; background:rgba(127,127,127,.12); border-radius:6px; }
+  .vd-tablewrap { overflow-x:auto; contain:inline-size; }
+  .vd-md table, .vd-tab { border-collapse:collapse; font-size:12.5px; margin:6px 0; }
+  .vd-md th, .vd-md td, .vd-tab th, .vd-tab td { border-bottom:1px solid var(--border,#2a2d3e); padding:5px 8px; text-align:left; vertical-align:top;
+                                                 overflow-wrap:break-word; word-break:normal; }
+  .vd-tab td.vd-nowrap { white-space:nowrap; }
+  .vd-md thead th, .vd-tab thead th { color:var(--dim,#7c8194); font-weight:600; }
+  .vd-md { display:block; overflow-x:auto; contain:inline-size; }
+  .vd-chs { display:grid; gap:4px; }
+  .vd-ch { display:flex; gap:10px; align-items:baseline; width:100%; text-align:left; padding:6px 8px; border-radius:8px; cursor:pointer;
+           background:transparent; border:1px solid transparent; color:var(--text,#e4e6f0); font:inherit; }
+  .vd-ch:hover { background:rgba(108,140,255,.08); }
+  .vd-ch.is-on { border-color:rgba(108,140,255,.55); background:rgba(108,140,255,.12); }
+  .vd-ch-t { font-family:var(--mono,monospace); color:var(--accent,#6c8cff); min-width:44px; }
+  .vd-hash, .vd-tab td.vd-hash { font-family:var(--mono,monospace); font-size:11.5px; overflow-wrap:anywhere; word-break:break-all; }
+  .vd-hash-ok { color:var(--green,#34d399); white-space:nowrap; }
+  .vd-qc-match { color:var(--green,#34d399); } .vd-qc-mismatch { color:var(--red,#f87171); }
+  /* 재생목록 판 */
+  .vd-list { border:1px solid var(--border,#2a2d3e); border-radius:12px; background:var(--bg2,#161922); overflow:hidden; min-width:0; }
+  .vd-list-head { padding:12px 14px 10px; border-bottom:1px solid var(--border,#2a2d3e); }
+  .vd-list-series { font-weight:700; font-size:14.5px; line-height:1.35; overflow-wrap:anywhere; }
+  .vd-list-pos { font-size:12px; color:var(--dim,#7c8194); margin-top:2px; }
+  .vd-items { list-style:none; margin:0; padding:6px 0; max-height:62vh; overflow-y:auto; }
+  @media (max-width: 1080px) { .vd-items { max-height:none; } }
+  .vd-item { display:grid; grid-template-columns:22px 120px minmax(0, 1fr); gap:8px; align-items:start; padding:7px 12px 7px 8px;
+             color:var(--text,#e4e6f0); }
+  .vd-item:hover { background:rgba(108,140,255,.06); color:var(--text,#e4e6f0); }
+  .vd-item.is-current { background:rgba(108,140,255,.14); }
+  .vd-idx { font-size:11.5px; color:var(--dim,#7c8194); text-align:center; padding-top:22px; }
+  .vd-item.is-current .vd-idx { color:var(--accent,#6c8cff); }
+  .vd-thumb { position:relative; display:block; width:120px; aspect-ratio:16 / 9; border-radius:6px; overflow:hidden; background:#0b0c10; }
+  .vd-thumb img { display:block; width:100%; height:100%; object-fit:cover; }
+  .vd-nothumb { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--dim,#7c8194); }
+  .vd-dur { position:absolute; right:4px; bottom:4px; padding:0 4px; border-radius:4px; font-size:11px; font-weight:600;
+            background:rgba(0,0,0,.78); color:#fff; font-family:var(--mono,monospace); }
+  .vd-item-title { font-size:13px; line-height:1.38; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+                   overflow-wrap:anywhere; }
+  .vd-other { border-top:1px solid var(--border,#2a2d3e); padding:10px 14px 12px; font-size:13px; display:grid; gap:6px; }
+  .vd-other-head { font-size:12px; color:var(--dim,#7c8194); font-weight:600; }
+  .vd-other a { overflow-wrap:anywhere; }
+  .vd-empty { margin:16px 0; padding:22px; border:1px dashed var(--border,#2a2d3e); border-radius:12px; }
+  .vd-empty h2 { font-size:1.15rem; margin:0 0 8px; }
+  .vd-empty pre, .vd-upload pre { font-family:var(--mono,monospace); font-size:12px; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere;
+                                   background:rgba(127,127,127,.12); padding:10px; border-radius:8px; margin-top:8px; }
+  .vd-upload { margin:20px 0 8px; border:1px solid var(--border,#2a2d3e); border-radius:10px; background:var(--bg2,#161922); }
+  .vd-upload > summary { cursor:pointer; padding:9px 14px; font-weight:600; font-size:13.5px; }
+  .vd-upload form { display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; padding:4px 14px 14px; font-size:13px; }
+  .vd-upload input[type=file] { max-width:100%; }
+  .vd-upload button { padding:7px 16px; border-radius:8px; border:0; background:var(--accent,#6c8cff); color:#fff; font-weight:600; cursor:pointer; }
+</style>
+
+<div class="vd-wrap">
+  <div class="vd-top">
+    <h1>영상</h1>
+    <small>AVI 편 · 재생 · 받기 · 세부 내용 (저장 자리 <code>{{ folder_note }}</code> · git 밖)</small>
+  </div>
+
+  {% if upload_error %}<div class="vd-notice bad" role="alert">{{ upload_error }}</div>{% endif %}
+
+  {% if p.problems %}
+  <div class="vd-notice bad">
+    <b>등록부에서 뺀 편 {{ p.problems|length }} 개</b> — 읽은 것과 기록이 맞지 않아 보이지 않는다 (fail-closed · 파일은 그대로 둔다):
+    <ul class="vd-problems">
+      {% for q in p.problems %}<li class="vd-problem" data-ep="{{ q.ep }}"><code>{{ q.ep }}</code> — {{ q.why }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if not p.current %}
+    {% if p.not_found %}
+    <div class="vd-empty">
+      <h2>그 편은 없습니다</h2>
+      <p class="vd-note">등록부에 없거나, 기록과 파일이 맞지 않아 뺀 편입니다 (위 안내).  <a href="/videos">영상 첫 화면</a></p>
+    </div>
+    {% else %}
+    <div class="vd-empty">
+      <h2>등록된 편이 없습니다</h2>
+      <p class="vd-note">AVI 편 폴더를 꾸러미 (zip) 로 만든 뒤 아래 "꾸러미 올리기" 로 넣거나, 명령으로 등록합니다.  공개판 · 내부판 규칙은
+        AVI 스킬 (<code>.claude/skills/avi-generate/SKILL.md</code> 의 "웹앱 영상 섹션") 에 있습니다.</p>
+      <pre>python3 -I scripts/avi_package_episode.py &lt;편 폴더&gt; --id &lt;편 id&gt; -o &lt;편 id&gt;.zip   (내부판이면 --internal)
+python3 -I scripts/avi_register_episode.py &lt;편 id&gt;.zip   (이미 있는 편을 바꾸려면 --replace)</pre>
+    </div>
+    {% endif %}
+  {% else %}
+  {% set e = p.current %}
+  <div class="vd-grid">
+    <section class="vd-main">
+      <div class="vd-player">
+        <video id="vd-video" controls preload="metadata" playsinline{% if e.poster_url %} poster="{{ e.poster_url }}"{% endif %}>
+          <source src="{{ e.video_url }}" type="video/mp4">
+          {# 자막은 화면에 이미 구워져 있다 (AVI 렌더) — track 을 기본으로 켜면 같은 글이 두 번 보인다 (11-24 실제 화면) → CC 단추로 켠다 #}
+          {% if e.vtt_url %}<track kind="subtitles" srclang="ko" label="한국어 자막 (화면 자막과 같은 글)" src="{{ e.vtt_url }}">{% endif %}
+          이 브라우저는 mp4 재생을 지원하지 않습니다 — 아래 "mp4 받기" 로 받습니다.
+        </video>
+      </div>
+      <h2 class="vd-title">{{ e.title }}</h2>
+      {% if e.subtitle %}<div class="vd-subtitle">{{ e.subtitle }}</div>{% endif %}
+      <div class="vd-meta">
+        <span title="길이">{{ e.duration_txt }}</span><span>·</span>
+        <span>갱신 {{ e.updated }}</span><span>·</span>
+        {% if e.visibility == 'internal' %}
+          <span class="vd-badge vd-badge-internal" data-badge="internal" title="내부판 — 랩 밖으로 보내지 않는다 (받기는 되지만 공개 · 업로드 금지)">내부용 · 공개 금지</span>
+          <span class="vd-local" title="다른 컴퓨터의 요청에는 이 편이 목록 · 화면 · 파일 주소 어디에도 없다 (루프백 · 프록시를 거치지 않은 요청만)">이 컴퓨터에서만 보임</span>
+        {% elif e.public_ok %}
+          <span class="vd-badge vd-badge-public" data-badge="public" title="꾸러미 · 등록 때와 지금 화면에서 같은 검사 — 규칙 {{ e.public_rules }} 종 · 글 파일 {{ e.public_files }} 개{% if e.deny_n %} · 내부 숫자 목록 {{ e.deny_n }} 개 (꾸러미 때){% else %} · 내부 숫자 목록 없이{% endif %}">공개판 · 공개 안전 검사 통과</span>
+        {% else %}
+          <span class="vd-badge vd-badge-warn" data-badge="public-warn" title="지금 화면에서 다시 잰 검사 — 철회값 등록부가 바뀌었을 수 있다 (가린 자리는 ⟨인용금지⟩)">공개판 · 공개 안전 검사 걸림 {{ e.public_hits }} 건</span>
+        {% endif %}
+        {% if e.number is not none %}<span>·</span><span>{{ e.number }} 편</span>{% endif %}
+      </div>
+      <div class="vd-actions">
+        {% for d in e.downloads %}<a class="vd-btn" href="{{ d.url }}" download>{{ labels[d.role] }} <small>{{ d.size_txt }}</small></a>{% endfor %}
+      </div>
+
+      {% if e.readme_html %}
+      <details data-vd="readme" open>
+        <summary>편 설명 (README)</summary>
+        <div class="vd-body vd-md">{{ e.readme_html|safe }}</div>
+      </details>
+      {% endif %}
+
+      <details data-vd="chapters" open>
+        <summary>챕터 <small>{{ e.chapters|length }} 개 · 누르면 그 시각으로</small></summary>
+        <div class="vd-body">
+          {% if e.chapters %}
+          <div class="vd-chs">
+            {% for ch in e.chapters %}<button type="button" class="vd-ch" data-t="{{ ch.t_attr }}"><span class="vd-ch-t">{{ ch.t_txt }}</span><span>{{ ch.title }}</span></button>{% endfor %}
+          </div>
+          {% else %}<p class="vd-note">챕터 자료 (scenes.json · timeline.json) 가 없습니다.</p>{% endif %}
+        </div>
+      </details>
+
+      <details data-vd="script">
+        <summary>대본 <small>script.md</small></summary>
+        <div class="vd-body vd-md">{% if e.script_html %}{{ e.script_html|safe }}{% else %}<p class="vd-note">이 편에는 대본 파일이 없습니다.</p>{% endif %}</div>
+      </details>
+
+      <details data-vd="scenes">
+        <summary>장면 목록 <small>{{ e.scenes|length }} 장면</small></summary>
+        <div class="vd-body">
+          {% if e.scenes %}
+          <div class="vd-tablewrap"><table class="vd-tab">
+            <thead><tr><th>장면</th><th>제목</th><th>시각</th><th>문장</th><th>샷</th></tr></thead>
+            <tbody>
+            {% for s in e.scenes %}<tr class="vd-scene-row"><td class="vd-mono vd-nowrap">{{ s.id }}</td><td>{{ s.title }}</td><td class="vd-mono vd-nowrap">{{ s.span }}</td><td>{{ s.n_lines }}</td><td>{{ s.n_shots }}</td></tr>{% endfor %}
+            </tbody>
+          </table></div>
+          {% else %}<p class="vd-note">장면 자료 (scenes.json) 가 없습니다.</p>{% endif %}
+        </div>
+      </details>
+
+      <details data-vd="refs">
+        <summary>참고 문헌 <small>대본의 "참고 문헌" 절</small></summary>
+        <div class="vd-body vd-md">{% if e.refs_html %}{{ e.refs_html|safe }}{% else %}<p class="vd-note">대본에 참고 문헌 절이 없습니다.</p>{% endif %}</div>
+      </details>
+
+      <details data-vd="qc">
+        <summary>QC 요약 <small>점검 기록 · qc 문서</small></summary>
+        <div class="vd-body">
+          {% if e.qc %}
+          <p>QC 가 본 영상 <code class="vd-mono">{{ e.qc.video }}</code> —
+            {% if e.qc.match is sameas true %}<span class="vd-qc-match">sha256 이 이 영상과 같다</span>
+            {% elif e.qc.match is sameas false %}<span class="vd-qc-mismatch">sha256 이 이 영상과 다르다 (다른 판을 본 QC)</span>
+            {% else %}<span class="vd-note">QC 기록에 sha256 이 없다</span>{% endif %}
+            {% if e.qc.version %}· 판 {{ e.qc.version }}{% endif %} · 길이 {{ e.qc.duration_txt }}</p>
+          {% if e.qc.checks %}
+          <div class="vd-tablewrap"><table class="vd-tab">
+            <thead><tr><th>점검</th><th>뽑은 장</th><th>본 장</th><th>같은 그림 5 s 넘음</th><th>깜빡임</th><th>가장자리 띠</th></tr></thead>
+            <tbody>{% for c in e.qc.checks %}<tr><td>{{ c.what }}</td><td>{{ c.frames }}</td><td>{{ c.viewed }}</td><td>{{ c.static }}</td><td>{{ c.flicker }}</td><td>{{ c.edge }}</td></tr>{% endfor %}</tbody>
+          </table></div>
+          {% endif %}
+          {% if e.qc.found %}
+          <div class="vd-tablewrap"><table class="vd-tab">
+            <thead><tr><th>시각</th><th>장면</th><th>찾은 것</th><th>고친 판</th></tr></thead>
+            <tbody>{% for f in e.qc.found %}<tr><td class="vd-mono">{{ f.t }}</td><td class="vd-mono">{{ f.scene }}</td><td>{{ f.what }}</td><td>{{ f.fixed or '그대로' }}</td></tr>{% endfor %}</tbody>
+          </table></div>
+          {% endif %}
+          {% for x in e.qc.extra %}<p class="vd-note"><b>{{ x.key }}</b> {{ x.text }}</p>{% endfor %}
+          {% endif %}
+          {% if e.qc_html %}<div class="vd-md">{{ e.qc_html|safe }}</div>{% endif %}
+          {% if not e.qc and not e.qc_html %}<p class="vd-note">이 편에는 QC 파일이 없습니다.</p>{% endif %}
+        </div>
+      </details>
+
+      <details data-vd="rubric">
+        <summary>10 점 기준표 <small>자기 점수 · 1저자 점수가 앞선다</small></summary>
+        <div class="vd-body vd-md">{% if e.rubric_html %}{{ e.rubric_html|safe }}{% else %}<p class="vd-note">이 편에는 기준표 파일이 없습니다.</p>{% endif %}</div>
+      </details>
+
+      <details data-vd="hashes">
+        <summary>파일 해시 <small>{{ e.files|length }} 파일 · 보일 때마다 대조</small></summary>
+        <div class="vd-body">
+          <div class="vd-tablewrap"><table class="vd-tab">
+            <thead><tr><th>파일</th><th>역할</th><th>크기</th><th>sha256</th><th>대조</th></tr></thead>
+            <tbody>{% for f in e.files %}<tr><td class="vd-mono">{{ f.name }}</td><td class="vd-nowrap">{{ f.role }}</td><td class="vd-nowrap">{{ f.size_txt }}</td><td class="vd-hash">{{ f.sha256 }}</td><td>{% if f.verified %}<span class="vd-hash-ok">✓ 같음</span>{% endif %}</td></tr>{% endfor %}</tbody>
+          </table></div>
+          <p class="vd-note">SHA256SUMS sha256 <span class="vd-hash">{{ e.sums_sha }}</span></p>
+          {% for d in e.derived %}<p class="vd-note">꾸러미가 만든 사본 <code>{{ d.name }}</code> ← <code>{{ d.src }}</code> (뺀 칸: {{ d.dropped }} · 원본 sha256 <span class="vd-hash">{{ d.src_sha }}</span>)</p>{% endfor %}
+          {% if e.reg.at %}<p class="vd-note">등록 {{ e.reg.at }} · {{ 'web 올리기' if e.reg.via == 'web' else '명령' }}{% if e.reg.replaced %} · 옛 판을 바꿈 (보관){% endif %} · 꾸러미 sha256 <span class="vd-hash">{{ e.reg.bundle_sha }}</span></p>{% endif %}
+          {% if e.reg_note %}<p class="vd-note">{{ e.reg_note }}</p>{% endif %}
+          <p class="vd-note">꾸러미 만든 때 {{ e.packaged_at }}</p>
+        </div>
+      </details>
+    </section>
+
+    <aside class="vd-list" aria-label="재생목록">
+      <div class="vd-list-head">
+        <div class="vd-list-series">{{ p.playlist.series }}</div>
+        <div class="vd-list-pos">{{ p.playlist.pos }} / {{ p.playlist.total }}</div>
+      </div>
+      <ol class="vd-items">
+        {% for it in p.playlist['items'] %}
+        <li><a class="vd-item{% if it.current %} is-current{% endif %}" href="{{ it.url }}"{% if it.current %} aria-current="true"{% endif %}>
+          <span class="vd-idx">{% if it.current %}▶{% else %}{{ loop.index }}{% endif %}</span>
+          <span class="vd-thumb">{% if it.thumb_url %}<img src="{{ it.thumb_url }}" alt="" loading="lazy">{% else %}<span class="vd-nothumb">썸네일 없음</span>{% endif %}<span class="vd-dur">{{ it.duration_txt }}</span></span>
+          <span class="vd-item-title">{{ it.title }}{% if it.visibility == 'internal' %}<span class="vd-badge vd-badge-internal vd-mini">내부</span>{% endif %}</span>
+        </a></li>
+        {% endfor %}
+      </ol>
+      {% if p.other_series %}
+      <div class="vd-other">
+        <div class="vd-other-head">다른 시리즈</div>
+        {% for s in p.other_series %}<a href="{{ s.url }}">{{ s.series }} <small>· {{ s.n }} 편</small>{% if s.internal %}<span class="vd-badge vd-badge-internal vd-mini">내부</span>{% endif %}</a>{% endfor %}
+      </div>
+      {% endif %}
+    </aside>
+  </div>
+  {% endif %}
+
+  <details class="vd-upload"{% if not p.current %} open{% endif %}>
+    <summary>꾸러미 올리기 <small class="vd-note">이 컴퓨터에서만 · 같은 등록 함수 (명령과 같은 검사)</small></summary>
+    <form method="post" action="/videos/upload" enctype="multipart/form-data">
+      <input type="file" name="bundle" accept=".zip,application/zip" required>
+      <label><input type="checkbox" name="replace" value="1"> 같은 편이 있으면 바꾸기 (옛 판은 보관)</label>
+      <button type="submit">올리기</button>
+    </form>
+  </details>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var v = document.getElementById('vd-video');
+  if (!v) return;
+  var chs = Array.prototype.slice.call(document.querySelectorAll('.vd-ch[data-t]'));
+  function seek(t) {
+    if (!isFinite(t)) return;
+    try { v.currentTime = t; } catch (err) { return; }
+    var pr = v.play();
+    if (pr && pr.catch) pr.catch(function () {});
+  }
+  chs.forEach(function (b) {
+    b.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      seek(parseFloat(b.getAttribute('data-t')));
+      v.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    });
+  });
+  v.addEventListener('timeupdate', function () {
+    var on = -1;
+    for (var i = 0; i < chs.length; i++) { if (parseFloat(chs[i].getAttribute('data-t')) <= v.currentTime + 0.05) on = i; }
+    chs.forEach(function (b, i) { b.classList.toggle('is-on', i === on); });
+  });
+  var m = /^#t=(\d+(?:\.\d+)?)$/.exec(location.hash || '');
+  if (m) { v.addEventListener('loadedmetadata', function () { v.currentTime = parseFloat(m[1]); }, {once: true}); }
+})();
+</script>
+{% endblock %}

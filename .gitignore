@@ -8,6 +8,22 @@ webapp/uploads/
 webapp/results/
 webapp/archive/
 webapp/mpm_lab/
+# 영상 섹션 (/videos · 11-24) — 등록된 AVI 꾸러미 (mp4 · 내부판 = 리포에 넣지 않는다 · WEBAPP_VIDEO_FOLDER 기본 자리)
+webapp/videos/
+# AVI 리포 판 (docs/avi · 11-24) — 렌더 · 음성 · 점검 그림 · 글꼴 · 내부판 · 앞 판은 리포에 넣지 않는다 (리포 밖 작업 폴더에서 돌린다)
+docs/avi/**/*.mp4
+docs/avi/**/*.wav
+docs/avi/**/*.m4a
+docs/avi/**/qa/
+docs/avi/**/audio/
+docs/avi/**/audio_in/
+docs/avi/**/internal/
+docs/avi/**/v1/
+docs/avi/**/assets/
+docs/avi/fonts/
+docs/avi/selftest/
+# 내부 숫자 목록 (AVI 편 폴더 internal/ · 1저자 11-24 Q2) — 어디에 복사돼도 리포에 넣지 않는다 (값 자체가 내부판 숫자)
+public_deny_list*.txt
 
 # Generated schematic figures (source = scripts/make_network_schematic.py)
 docs/figures/network_solver_schematic*.png

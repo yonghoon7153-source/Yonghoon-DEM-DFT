@@ -321,6 +321,9 @@ app.config['ARCHIVE_FOLDER'] = os.environ.get('WEBAPP_ARCHIVE_FOLDER') or os.pat
 # standalone MPM/도전재 payload viewer — independent of the DEM case list (upload mpm_payload.json,
 # view in 3D, keep an accumulating saved list).  Each saved payload = a subfolder with payload.json + meta.json.
 app.config['MPM_LAB_FOLDER'] = os.environ.get('WEBAPP_MPM_LAB_FOLDER') or os.path.join(_here, 'mpm_lab')
+# 영상 섹션 (/videos · 1저자 11-24) — AVI 편 꾸러미를 등록하는 자리 (git 밖 · .gitignore webapp/videos/).  만들지 않는다 (첫 등록이 만든다) ·
+# 같은 규칙 = webapp/video_library.default_folder (명령 scripts/avi_register_episode.py 가 쓴다).
+app.config['VIDEO_FOLDER'] = os.environ.get('WEBAPP_VIDEO_FOLDER') or os.path.join(_here, 'videos')
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['RESULTS_FOLDER'], exist_ok=True)
@@ -6102,6 +6105,127 @@ def mixer_story_fig(name):
     if not p or not os.path.isfile(p):
         abort(404)
     return send_file(p, mimetype='image/png')
+
+
+# ─────────────────────────  영상 (/videos)  ─────────────────────────
+#  1저자 11-24 — AVI 편을 웹앱에 저장 · 재생 · 받기 + 세부 내용 토글 + 재생목록 판 (유튜브 재생목록 꼴을 참고만 · 로고 · 이름 · 색 흉내 없음).
+#  일은 전부 webapp/video_library.py (꾸러미 · 등록 · 읽기 · 검사) — 여기는 얇은 라우트뿐이고, 그 모듈은 **라우트 안에서만** import 한다
+#  (모듈 수준 import 없음 → 망 정지 경로 밖 · 194 실행기 DEP_LAZY_OFFPATH 에 분류).  자료 값 · 문장은 꾸러미 파일에서 읽는다 (템플릿
+#  templates/videos.html 에 베끼지 않는다).  파일 주소 = 등록된 편 · 등록된 역할만 (그 밖 = 404) · 재생 = Range (send_file conditional) ·
+#  받기 = attachment · 자막 = srt → WebVTT.  올리기 = 같은 등록 함수 · 이 컴퓨터 (루프백 · 프록시 머리 없음) · 같은 출처만.
+#  내부판 (visibility internal) = 이 컴퓨터에서만 (1저자 11-24 Q1) — 다른 컴퓨터의 요청에는 목록 · 재생목록 · 다른 시리즈 · 첫 편 · 편 화면 ·
+#  재생 · 받기 · 자막 어디에도 없다 (등록 안 된 편과 같은 404 · 있다는 사실도 흘리지 않는다).
+#  회귀 webapp/test_video_page.py.
+_VIDEOS_DL_LABELS = {'video': 'mp4 받기', 'subtitles': '자막 srt', 'script': '대본 md'}
+
+
+def _videos_local_request():
+    """올리기 · 내부판은 이 컴퓨터에서만 — 루프백 주소 · 프록시 머리 (X-Forwarded-For 등) 없음."""
+    if (request.remote_addr or '') not in ('127.0.0.1', '::1', '::ffff:127.0.0.1'):
+        return False
+    return not any(request.headers.get(h) for h in ('X-Forwarded-For', 'Forwarded', 'X-Real-IP', 'X-Forwarded-Host'))
+
+
+def _videos_folder_note():
+    """화면에 보일 저장 자리 — 리포 안이면 리포 기준 경로 · 밖이면 환경 변수 이름만 (절대 경로를 화면에 내지 않는다)."""
+    folder = Path(app.config['VIDEO_FOLDER']).resolve()
+    root = Path(__file__).resolve().parent.parent
+    try:
+        return folder.relative_to(root).as_posix() + '/'
+    except ValueError:
+        return 'WEBAPP_VIDEO_FOLDER (리포 밖)'
+
+
+def _videos_render(ep_id=None, status=200, upload_error=''):
+    import video_library
+    local = _videos_local_request()
+    try:
+        p = video_library.page(app.config['VIDEO_FOLDER'], ep_id, include_internal=local)
+    except Exception as e:                  # noqa: BLE001 — 폴더 · 자료 꼴이 예상과 달라도 500 대신 안내
+        p = dict(state='unreadable', problems=[dict(ep='(영상 폴더)', why=f'영상 목록을 읽지 못했다 — {type(e).__name__}')],
+                 current=None, playlist=None, other_series=[], not_found=ep_id is not None, n_episodes=0)
+    if ep_id is not None and p.get('current') is None and status == 200:
+        status = 404
+    try:
+        return render_template('videos.html', active='videos', p=p, labels=_VIDEOS_DL_LABELS, upload_error=upload_error,
+                               folder_note=_videos_folder_note(), local=local), status
+    except Exception as e:                  # noqa: BLE001 — 자료 꼴이 템플릿 기대와 달라도 500 대신 안내 (편 id 를 되풀이하지 않는다)
+        p = dict(state='unreadable', problems=[dict(ep='(화면)', why=f'화면을 그리지 못했다 — {type(e).__name__}')],
+                 current=None, playlist=None, other_series=[], not_found=False, n_episodes=0)
+        return render_template('videos.html', active='videos', p=p, labels=_VIDEOS_DL_LABELS, upload_error=upload_error,
+                               folder_note=_videos_folder_note(), local=local), (status if status != 200 else 500)
+
+
+@app.route('/videos')
+def videos_index():
+    """영상 — 첫 편 (시리즈 · 편 번호 순) + 재생목록 판 · 편이 없으면 안내와 올리기 칸."""
+    return _videos_render(None)
+
+
+@app.route('/videos/<ep_id>')
+def videos_episode(ep_id):
+    """영상 — 그 편 (등록부에 없거나 깨졌으면 404 + 안내)."""
+    return _videos_render(ep_id)
+
+
+@app.route('/videos/<ep_id>/media/<role>')
+def videos_media(ep_id, role):
+    """재생 · poster — 영상 (Range · 206) · 썸네일만.  등록 밖 편 · 역할 · 경로 꼴 = 404."""
+    import video_library
+    hit = video_library.resolve_file(app.config['VIDEO_FOLDER'], ep_id, role, 'inline', include_internal=_videos_local_request())
+    if hit is None:
+        abort(404)
+    path, _ent, mime = hit
+    return send_file(path, mimetype=mime, conditional=True, max_age=0)
+
+
+@app.route('/videos/<ep_id>/download/<role>')
+def videos_download(ep_id, role):
+    """받기 — 영상 mp4 · 자막 srt · 대본 md (attachment · 이름 = 등록 이름).  그 밖 = 404."""
+    import video_library
+    hit = video_library.resolve_file(app.config['VIDEO_FOLDER'], ep_id, role, 'download', include_internal=_videos_local_request())
+    if hit is None:
+        abort(404)
+    path, ent, mime = hit
+    return send_file(path, mimetype=mime, as_attachment=True, download_name=ent['name'], conditional=True, max_age=0)
+
+
+@app.route('/videos/<ep_id>/subtitles.vtt')
+def videos_vtt(ep_id):
+    """자막 track — 등록된 srt 를 WebVTT 로 바꿔 보낸다 (파일을 쓰지 않는다)."""
+    import video_library
+    hit = video_library.resolve_file(app.config['VIDEO_FOLDER'], ep_id, 'subtitles', 'vtt', include_internal=_videos_local_request())
+    if hit is None:
+        abort(404)
+    try:
+        text = Path(hit[0]).read_bytes().decode('utf-8-sig')
+    except (OSError, ValueError):
+        abort(404)
+    return Response(video_library.srt_to_vtt(text), mimetype='text/vtt', headers={'Cache-Control': 'no-cache'})
+
+
+@app.route('/videos/upload', methods=['POST'])
+def videos_upload():
+    """꾸러미 (zip) 올리기 → 같은 등록 함수 (video_library.register_bundle · via web) → 303 그 편.  이 컴퓨터 · 같은 출처만."""
+    import video_library
+    if not _videos_local_request():
+        return _videos_render(None, 403, '올리기는 이 컴퓨터 (루프백 · 프록시를 거치지 않은 요청) 에서만 된다 — 명령 '
+                                        'scripts/avi_register_episode.py 를 쓴다')
+    if not _sec._same_origin(request):
+        return _videos_render(None, 403, '다른 출처에서 온 올리기 요청은 받지 않는다 (CSRF 막음)')
+    cl = request.content_length
+    if cl is not None and cl > video_library.MAX_BUNDLE_BYTES + 64 * 1024:
+        return _videos_render(None, 413, f'꾸러미가 상한 ({video_library.fmt_size(video_library.MAX_BUNDLE_BYTES)}) 을 넘는다')
+    f = request.files.get('bundle')
+    if f is None or not f.filename:
+        return _videos_render(None, 400, '꾸러미 파일 (zip) 을 고르지 않았다')
+    replace = (request.form.get('replace') or '').strip().lower() in ('1', 'on', 'true', 'yes')
+    try:
+        res = video_library.register_bundle(f.stream, app.config['VIDEO_FOLDER'], replace=replace, via='web',
+                                            caps=dict(max_bundle=video_library.MAX_BUNDLE_BYTES))
+    except video_library.BundleError as e:
+        return _videos_render(None, e.status, f'등록하지 않았다 — {e}')
+    return redirect(f"/videos/{res['id']}", code=303)
 
 
 #  "침대 보기" 탭 (1저자 비준 2026-09-30) — 보기 전용 · 판정은 3D 칸 M 으로만.  경로 · 맹검 잠금 · 덤프 관문은

@@ -310,6 +310,8 @@ jobs:
         run: python webapp/test_mixer_bed_view.py
       - name: 웹앱 — 믹서 문제 · 공백 (/mixer/story · 정본 읽기 fail-closed · 그림 등록부 밖 404)
         run: python webapp/test_mixer_story_page.py
+      - name: 웹앱 — 영상 섹션 (/videos · AVI 꾸러미 등록 검사 · Range 206 · 받기 · srt → vtt · fail-closed · 내부 배지)
+        run: python webapp/test_video_page.py
 
       - name: 웹앱 — 런처 포트 선점 (거짓 초록 회귀)
         run: python scripts/test_webapp_launcher.py

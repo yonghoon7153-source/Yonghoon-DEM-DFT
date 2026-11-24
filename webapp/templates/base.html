@@ -55,6 +55,12 @@
       <li><a href="/mixer" class="{% if active == 'mixer' %}active{% endif %}">
         <span class="icon">&#x1F300;</span> 믹서 (이력 · 침대)
       </a></li>
+      {# 11-24: 영상 (AVI 편 · 재생 · 받기 · 세부 토글 · 재생목록) — 1저자 *"webapp에 영상 섹션을 추가해서 거기에 저장을 해서 실행하고
+         다운도 가능하게"* · app.py `/videos` (자료 = 등록된 꾸러미 · git 밖) · 시험 webapp/test_video_page.py #}
+      <li><a href="/videos" class="{% if active == 'videos' %}active{% endif %}"
+             title="AVI 편 — 재생 · mp4 · 자막 · 대본 받기 · 챕터 · 장면 · 참고 문헌 · QC · 기준표 · 파일 해시 (공개판 · 내부판 표지)">
+        <span class="icon">&#x1F3AC;</span> 영상 (AVI)
+      </a></li>
       {# 10-21: Rint 설명 (1저자 *"이것도 dem webapp에 추가해줭"*).  app.py 는 봉인 32 라 라우트를 못 만든다 →
          정적 페이지 (webapp/static/explain/) 를 링크한다 · 시험 webapp/test_rint_explainer_page.py #}
       <li><a href="/static/explain/rint_overview_20261021.html"
