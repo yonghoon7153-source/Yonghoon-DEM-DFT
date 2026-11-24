@@ -66,12 +66,14 @@ OUT_ROOT = ROOT / "litdb" / "figures"
 SI_PRE = r"(?:Supplementary|Supplemental|Supporting|Extended\s+Data|Extended|Online)\s+"
 #   ⚠ 키워드 **뒤**에 콜론을 붙이는 SI 양식이 있다 — 실측(Barai 2021 Chem. Mater. SI):
 #     `Table: S-I.` / `Figure: S1.` 형식이라 25쪽 SI 에서 **0 개**가 나왔다.
-#     키워드 뒤 `[.:]?` 로 받는다. 번호 앞의 하이픈(`S-I`)은 로마숫자라 여전히 탈락 —
-#     이건 의도한 한계다(이 도구는 아라비아 숫자 라벨만 다룬다, §"못 하는 것").
+#     키워드 뒤 `[.:]?` 로 받는다.
+#   ⛔⛔ 2026-11-24 실측 (lepley2015 Phys. Rev. B · APS 꼴) — `TABLE I.` · `TABLE II.` 를 표로 못 찾아 손으로 잘랐다
+#     (`table_caption_vote` 0/0). **표만** 로마 숫자 라벨 (I–XXXIX · `S-I` · `SII`) 을 받아 아라비아 키 (t1 · tS2) 로 바꾼다 —
+#     그림 · 도식은 여전히 아라비아 숫자만 받는다 (is_caption 이 로마 숫자 그림을 버린다 · --selftest 음성).
 CAP_RE = re.compile(
     r"^\s*(?P<si>" + SI_PRE + r")?"
     r"(?P<kind>F[i1l][gq9](?:ure|s)?[.:]?|Tab[l1]e[.:]?|Sche[mn]e[.:]?)\s*"
-    r"(?P<label>(?:ST|S)?\d+)(?![a-z0-9])\s*(?P<sep>[.|:,–—]|\s)\s*(?P<rest>.*)",
+    r"(?P<label>(?:ST|S)?\d+|(?:S-?)?[IVX]{1,6})(?![a-z0-9])\s*(?P<sep>[.|:,–—]|\s)\s*(?P<rest>.*)",
     re.S | re.I)
 #   ⚠ `Table ST1:` 양식 (2026-09-24 schlautmann2023 SI 실측) — 라벨이 `S?\d+` 뿐이라 **SI 표 4장이
 #     통째로** 안 나왔다.  ST 를 받고 is_caption 에서 S 로 정규화한다 (파일명은 여전히 tab_S1).
@@ -101,6 +103,38 @@ PANEL_RE = re.compile(r"^[a-z][).]?\s+[A-Z0-9(]")
 ELEMENT_IN = re.compile(r"In\b")                # 대소문자 구분 (re.I 아님) — 'In 3d' · 'In-doped' · 'In situ'
 
 
+def _roman_int(s):
+    """정식 꼴 로마 숫자 (I–XXXIX) → 정수 · 아니면 None ('IIII' · 'VX' 는 None)."""
+    s = (s or "").upper()
+    if not s or set(s) - set("IVX"):
+        return None
+    val = {"I": 1, "V": 5, "X": 10}
+    tot = prev = 0
+    for ch in reversed(s):
+        v = val[ch]
+        tot = tot - v if v < prev else tot + v
+        prev = max(prev, v)
+    out, n = "", tot
+    for v, sym in ((10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")):
+        while n >= v:
+            out, n = out + sym, n - v
+    return tot if out == s else None
+
+
+def _norm_label(raw, kind):
+    """CAP_RE 의 label → 파일 키에 쓰는 라벨 · 버릴 것이면 None.
+    ST1 → S1 · 아라비아 숫자는 그대로 · **표만** 로마 숫자 (IV → 4 · S-II / SII → S2) · 로마 숫자 그림 · 도식 → None."""
+    if raw[:2].upper() == "ST" and raw[2:].isdigit():
+        return "S" + raw[2:]
+    if any(ch.isdigit() for ch in raw):
+        return raw
+    if kind != "table":
+        return None
+    m = re.fullmatch(r"(S-?)?([IVX]+)", raw.upper())
+    n = _roman_int(m.group(2)) if m else None
+    return None if n is None else ("S" if m.group(1) else "") + str(n)
+
+
 def is_caption(text):
     """캡션이면 (kind, label, si) 아니면 None. si=True 면 SI 번호(S를 붙인다)."""
     t = " ".join(text.split())
@@ -119,9 +153,9 @@ def is_caption(text):
         return None                            # "Figure 3 shows ..." → 본문 ('In 3d' · 'In situ' 는 캡션 · 위 ELEMENT_IN 주석)
     if len(t) < 12:                            # "Figure 1" 만 있는 상호참조 조각
         return None
-    label = m.group("label")
-    if label[:2].upper() == "ST":              # "Table ST1" → S1 (위 CAP_RE 주석)
-        label = "S" + label[2:]
+    label = _norm_label(m.group("label"), kind)   # "Table ST1" → S1 · "TABLE II." → 2 (위 CAP_RE 주석)
+    if label is None:                          # 로마 숫자 그림 · 정식 꼴이 아닌 로마 숫자
+        return None
     return kind, label, bool(m.group("si"))
 
 
@@ -746,9 +780,9 @@ def _near_key(text, si_file):
         return None
     kw = m.group("kind").lower()
     kind = "table" if kw.startswith("tab") else ("scheme" if kw.startswith("sch") else "figure")
-    label = m.group("label")
-    if label[:2].upper() == "ST":
-        label = "S" + label[2:]
+    label = _norm_label(m.group("label"), kind)
+    if label is None:
+        return None
     if (si_file or m.group("si")) and not label.upper().startswith("S"):
         label = "S" + label
     return f"{kind[0]}{label.upper()}"
@@ -965,6 +999,20 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                 rot = caption_rotation(page, tuple(cr)) if kind == "table" else 0
                 pix = page.get_pixmap(clip=rect, dpi=d_eff)
                 br = blank_ratio(pix)
+                fallback = None
+                if br > keep_blank and kind == "table" and not cap_below:
+                    # ⛔ 2026-11-24 실측 (choi2025 Nat. Commun. SI Table S1–S3) — 표를 표로 못 찾은 문서는 다수결이
+                    #   '캡션 위' 로 남아 캡션 **아래** 빈칸을 자르고 '거의 백지' 로 버렸다. 이 표만 캡션이 표 아래인 꼴로 보고
+                    #   캡션 **위**를 한 번 더 본다 (같은 쪽 · 위 경계 = 가장 가까운 본문 · 캡션). 거기도 백지면 종전대로 버린다.
+                    r2 = table_rect_above(page, tuple(cr), tabs, start_y)
+                    if r2 is None or r2.height < 36:
+                        r2 = _side_rect(page, tuple(cr), blocks, up=True)[0]
+                    if r2 is not None and r2.height >= 36:
+                        d2 = dpi if not maxpx else min(dpi, max(72, int(maxpx * 72.0 / max(r2.width, r2.height))))
+                        pix2 = page.get_pixmap(clip=r2, dpi=d2)
+                        if blank_ratio(pix2) <= keep_blank:
+                            rect, pix, d_eff, br = r2, pix2, d2, blank_ratio(pix2)
+                            fallback = "아래가 거의 백지라 캡션 위를 잘랐다 (이 표만 캡션이 표 아래인 꼴로 추정 · 눈으로 확인)"
                 if br > keep_blank:
                     skipped.append((key, pno + 1, f"거의 백지({br:.3f})"))
                     continue
@@ -979,6 +1027,8 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                        "bbox": [round(v, 1) for v in rect],
                        "w": pix.width, "h": pix.height, "px": pix.width * pix.height, "dpi": d_eff,
                        "src": Path(pdf_path).name, "blank": round(br, 3)}
+                if fallback:
+                    rec["auto_fallback"] = fallback
                 seen[key] = rec
                 found.append(rec)
                 if not dry:
@@ -1911,7 +1961,9 @@ def selftest():
         ("Figure: S1. Demonstration of the cathode computational domain",
          True, "★키워드 뒤 콜론 SI 캡션 (barai2021 실측)"),
         ("Table: S-II. List of parameters used in the continuum model",
-         False, "⛔음성: 로마숫자 라벨(S-II)은 안 받는다 — 문서화된 한계"),
+         True, "★로마숫자 표 라벨(S-II)도 받는다 — 2026-11-24 부터 표만 (lepley2015 · barai2021 꼴)"),
+        ("Figure: S-II. List of parameters used in the continuum model",
+         False, "⛔음성: 로마숫자 **그림** 라벨은 여전히 안 받는다"),
         ("Figure: 3. Comparison between the performance curves",
          True, "키워드 뒤 콜론 + 본문 번호"),
         ("Figure: 3 shows the trajectory of Li ions in the cell",
@@ -2326,6 +2378,41 @@ def selftest():
         chk("⛔음성: 위 캡션 문서는 다수결 False · 종전처럼 캡션 아래 격자를 자른다 (tS1–S3)",
             m["table_caption_vote"][0]["caption_below"] is False
             and all(k in got and got[k]["bbox"][1] < 105 and got[k]["bbox"][3] > 275 for k in ("tS1", "tS2", "tS3")))
+
+        # 로마 숫자 표 캡션 (2026-11-24 lepley2015 · APS 꼴 `TABLE I.`) — 표만 받고 아라비아 키로
+        for txt, want in (("TABLE I. Computed lattice constants of the phases", ("table", "1", False)),
+                          ("TABLE IV: Energies of the interface models", ("table", "4", False)),
+                          ("Table S-II. Fitted parameters of the strain model", ("table", "S2", False)),
+                          ("Table SII. Fitted values of the strain energy", ("table", "S2", False))):
+            chk(f"★로마 숫자 표 캡션 {txt[:16]!r} → {want}", is_caption(txt) == want)
+        for txt in ("Figure II. Something big happened in the cell", "TABLE IIII. Wrong numeral form in this text",
+                    "Table I shows the data in the main text here", "Table It is clear that the values agree"):
+            chk(f"⛔음성: {txt[:22]!r} 는 캡션이 아니다", is_caption(txt) is None)
+        chk("★_near_key 도 같은 키 (TABLE III. → t3 · 번호 공백 대조가 같은 키를 쓴다)",
+            _near_key("TABLE III. Interface energies of the models", False) == "t3")
+
+        # 표 캡션 아래가 거의 백지 (2026-11-24 choi2025 SI — 표를 못 찾은 문서의 아래 캡션 표)
+        def _rows(p, y0):
+            rows = (("Metal", "CCD", "R_int"), ("Cu", "0.26", "7.78"), ("Au", "1.13", "4.38"),
+                    ("Ag", "0.65", "17.06"), ("Pt", "1.16", "1.27"))
+            for j, row in enumerate(rows):
+                for i, w in enumerate(row):
+                    p.insert_text((110 + 130 * i, y0 + 18 * j), w, fontsize=9)
+
+        fdoc = _mdoc("blankbelow.pdf", [
+            lambda p: (p.insert_textbox(fitz.Rect(100, 80, 500, 140), PROSE, fontsize=9), _rows(p, 170), _cap(p, 272, "S1")),
+            lambda p: (_cap(p, 100, "S2"), _rows(p, 150)),
+            lambda p: (p.insert_textbox(fitz.Rect(100, 80, 500, 140), PROSE, fontsize=9), _cap(p, 300, "S3")),
+        ])
+        m, sk = extract([fdoc], "blankbelow_test", dry=True)
+        got = {f["key"]: f for f in m["figures"]}
+        chk("★표 캡션 아래가 거의 백지 → 캡션 위 (표 글자 ≈160–242) 를 잡고 auto_fallback 을 단다 (tS1)",
+            "tS1" in got and got["tS1"]["bbox"][1] < 165 and 272 < got["tS1"]["bbox"][3] < 300   # 캡션 272–284 까지 · 그 아래 빈칸은 안 든다
+            and "auto_fallback" in got["tS1"])
+        chk("⛔음성: 보통 위 캡션 표 (tS2) 는 종전대로 아래 표를 자르고 표시가 없다",
+            "tS2" in got and got["tS2"]["bbox"][3] > 215 and "auto_fallback" not in got["tS2"])
+        chk("⛔음성: 위 · 아래 다 비면 (tS3) 종전대로 '거의 백지' 로 뺀다",
+            "tS3" not in got and any(s[0] == "tS3" and "백지" in s[2] for s in sk))
 
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0
