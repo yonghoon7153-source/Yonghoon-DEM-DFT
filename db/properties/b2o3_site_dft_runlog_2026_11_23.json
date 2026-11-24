@@ -63,5 +63,31 @@
   "근거": "카드 b2o3_site_dft_estimand_2026_11_23 '바탕마다 최저 하나 → 10월과 같은 어닐 (500 K × 20 ps) + 이완 → B-P 6 · B-Li 6' · 복귀 카드 ■6 · worktree ee2a5ea4 의 도구 · 실행기는 friendly 끝과 같음 (diff 없음)",
   "다음": "어닐 끝 → 자리 × O 꼴 UMA 최저 셋 → DFT 메모리 프로브 (GPU 가 빈 뒤) → 단일점 12 + 기준상 넷 vc-relax",
   "by": "claude (본 세션) · 2026-11-24"
+ },
+ "kgy_블록_2_결과_2026_11_24": {
+  "근거": "사용자가 붙인 kgy 출력 (11-24 오후)",
+  "①": "tmux 없음 · worktree ee2a5ea4 · uma_ob_combos.log '2026-11-24 01:52:36 끝 run_rc=0' · check_results OK 문제 0 건 · check_rc=0",
+  "②_pick_ob": {
+   "BMLi_00": "c05 · 둘째와 0.071 eV · 끝 O [BP, B, B] · B [O1S2, O2S0]",
+   "BMLi_01": "c01 · 0.071 · [BP, BP, BP] · [O2S1, O1S2]",
+   "BMLi_02": "c01 · 0.548 · [BP, B, BP] · [O2S0, O1S2]",
+   "BMLi_03": "c02 · 0.232 · [B, BP, B] · [O1S1, O2S1]",
+   "BMLi_04": "c06 · 0.004 · [B, B, B] · [O2S0, O1S2]",
+   "BMLi_05": "c03 · 0.019 · [BP, BP, BP] · [O2S0, O1S1]",
+   "BMP_00": "c00 · 0.076 · [B, B, B] · [O1S2, O2S1]",
+   "BMP_01": "c17 · 0.06 · [B, B, B] · [O1S2, O2S1]",
+   "BMP_02": "c11 · 0.108 · [B, B, B] · [O2S1, O1S2]",
+   "BMP_03": "c09 · 0.315 · [B, B, B] · [O2S1, O1S2]",
+   "BMP_04": "c02 · 0.032 · [B, B, B] · [O2S1, O1S2]",
+   "BMP_05": "c25 · 0.072 · [B, B, B] · [O1S2, O2S1]"
+  },
+  "멈춤": "② 뒤 '12 개 xyz' 검사에서 멈춤 — 블록 결함 (본 세션): pick_ob 는 ob_picked/ob_selected/<바탕>_OB.xyz 에 쓰는데 블록이 ob_picked/*.xyz 를 셌다 · 고르기는 정상 (manifest 씀 · 목적 b2o3_site_dft/ob_anneal) · 어닐은 안 띄움",
+  "정보": "둘째와의 차가 작은 바탕 (BMLi_04 0.004 · BMLi_05 0.019 · BMP_04 0.032 eV) 은 이완만 기준의 고르기다 — 카드대로 끝 꼴 이름은 어닐 뒤 끝 구조로 붙인다 (바뀌면 기록 · 후보에서 빼지 않는다)",
+  "by": "claude (본 세션) · 2026-11-24"
+ },
+ "kgy_블록_2b_2026_11_24 (③ 부터 · 검사 경로 고침 · 사용자가 붙여넣는다)": {
+  "블록": "B=claude/friendly-meitner-lldvar; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python\n( echo \"== ②′ 고른 12 개 확인 (ob_selected · manifest · 어닐 출력 폴더 없음)\" && [ \"$(ls $R/ob_picked/ob_selected/*_OB.xyz 2>/dev/null | wc -l)\" = 12 ] \\\n && [ \"$($PY -c \"import json;print(len(json.load(open('$R/ob_picked/manifest.json'))['files']))\")\" = 12 ] && [ ! -e $R/uma_ob_anneal ] \\\n && echo \"== GPU (참고 · 남과 나눠 씀 · 실행기가 여유 ≥ 4000 MiB 를 다시 본다)\" && nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader \\\n && echo \"== ③ 어닐 12 발사 (10월과 같은 500 K × 20 ps · SEED 20261014 · 이완 fmax 0.05 · tmux bsite_ob1)\" \\\n && { R=$R SRC=$W PY=$PY CAND=$R/ob_picked N_EXPECT=12 SESSION=bsite_ob1 OUTNAME=uma_ob_anneal TIME_PS=20 TEMP=500 SEED=20261014 RELAX_FMAX=0.05 bash $W/db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh > $R/launch_ob1.log 2>&1; rc=$?; tail -8 $R/launch_ob1.log; [ $rc = 0 ]; } \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "감시": "watch -n 30 'bash $HOME/w_bsite_ob1.sh' (실행기가 ~/w_<SESSION>.sh 를 쓴다)",
+  "by": "claude (본 세션) · 2026-11-24"
  }
 }
