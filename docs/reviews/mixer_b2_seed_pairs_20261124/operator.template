@@ -1,0 +1,82 @@
+(
+set -euo pipefail
+umask 077
+mode=${1:-}
+[[ $# == 1 ]]
+case "$mode" in GO_MIXER_B2_SEEDS_ONCE|STATUS|RETURN) ;; *) echo 'GO_MIXER_B2_SEEDS_ONCE | STATUS | RETURN'; exit 2;; esac
+base=$(cd -- "$(dirname -- "$0")" && pwd)
+pack='@PACK@'
+pin='@PIN@'
+sha='@SHA@'
+task=mixer-b2-seed-pairs-1124
+ctl=$(mktemp -d)
+ssh() { command ssh -o ControlMaster=auto -o ControlPersist=120 -o ControlPath="$ctl/%C" "$@"; }
+scp() { command scp -o ControlMaster=auto -o ControlPersist=120 -o ControlPath="$ctl/%C" "$@"; }
+trap 'command ssh -o ControlPath="$ctl/%C" -O exit -p "$IBBP" "$IBB" >/dev/null 2>&1 || true' EXIT
+if [[ $mode == GO_MIXER_B2_SEEDS_ONCE ]]; then
+  printf '%s  %s\n' "$sha" "$base/$pack" | sha256sum -c --strict -
+  ssh -p "$IBBP" "$IBB" "set -eu; umask 077; test \"\$(hostname -s)\" = ibb-master; cd \"\$HOME\"; mkdir '$task' || { echo EXISTING_DISPATCH_USE_STATUS; exit 2; }"
+  scp -P "$IBBP" "$base/$pack" "$IBB:$task/source.tar.gz"
+  ssh -p "$IBBP" "$IBB" bash -s -- "$task" "$sha" "$mode" <<'START'
+set -euo pipefail
+umask 077
+cd "$HOME/$1"
+printf '%s  source.tar.gz\n' "$2" | sha256sum -c --strict -
+tar -xzf source.tar.gz
+nohup bash -c 'bash worker.sh "$1"; rc=$?; echo "$rc" > dispatch.rc; exit "$rc"' seed-pair "$3" </dev/null >dispatch.log 2>&1 &
+echo "$!" > dispatch.pid
+echo "COORDINATOR_PID=$!"
+for i in $(seq 1 12); do
+  if [[ -s dispatch.rc ]]; then cat dispatch.log; exit "$(cat dispatch.rc)"; fi
+  if [[ -s progress.json ]]; then cat progress.json; exit 0; fi
+  sleep 2
+done
+tail -n 6 dispatch.log
+echo 'Use STATUS for acknowledged jobs.'
+START
+  exit
+fi
+response=$(ssh -p "$IBBP" "$IBB" bash -s -- "$task" "$pin" "$mode" <<'READ'
+set -eo pipefail
+cd "$HOME/$1" || { echo NO_DISPATCH; exit 2; }
+python3 -I -B - "$2" <<'PIN'
+import json,sys
+if json.load(open('campaign.json'))['pin']!=sys.argv[1]:raise SystemExit("unknown release")
+PIN
+if [[ -f dispatch.rc ]]; then echo "COORDINATOR_RC=$(cat dispatch.rc)"
+elif [[ -f dispatch.pid ]] && kill -0 "$(cat dispatch.pid)" 2>/dev/null; then echo COORDINATOR_LIVE
+else echo COORDINATOR_STATUS_UNKNOWN; fi
+tail -n 6 dispatch.log >&2
+bash worker.sh "$3"
+READ
+) || { code=$?; printf '%s\n' "$response"; exit "$code"; }
+printf '%s\n' "$response"
+[[ $mode == RETURN ]] || exit 0
+downloads=$(wslpath "$(powershell.exe -NoProfile -Command '[Console]::Write((New-Object -ComObject Shell.Application).NameSpace("shell:Downloads").Self.Path)' | tr -d '\r')")
+dest="$downloads/mixer_b2_seed_pairs_${pin:0:12}"
+mkdir -p "$dest"
+exec 9>"$dest/.return.lock"
+flock -n 9 || { echo ANOTHER_LOCAL_RETURN_ACTIVE; exit 2; }
+printf '%s  %s\n' "$sha" "$base/$pack" | sha256sum -c --strict -
+pkg=$(mktemp -d)
+tar -xzf "$base/$pack" -C "$pkg"
+while read -r marker arm folder; do
+  [[ $marker == COPY ]] || continue
+  [[ "$arm" =~ ^S[23][UC]$ && "$folder" =~ ^collection_[a-zA-Z0-9_]+$ ]]
+  [[ ! -d "$dest/$arm" ]] || continue
+  stage=$(mktemp -d "$dest/receiving_${arm}_XXXXXXXX")
+  p="$task/${arm:0:2}/arms/$arm"
+  for n in SHA256SUMS b2_report.tar.gz b2_full_result.tar.gz; do
+    scp -P "$IBBP" "$IBB:$p/$folder/$n" "$stage/$n"
+  done
+  scp -P "$IBBP" "$IBB:$p/return.json" "$stage/return.json"
+  (cd "$stage" && sha256sum -c --strict SHA256SUMS)
+  mv -T -- "$stage" "$dest/$arm"
+done <<< "$response"
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+"$py" -I -B -c 'import numpy,scipy'
+report=$(mktemp -d "$dest/readback_XXXXXXXX")
+"$py" -I -B "$pkg/readback.py" "$dest" "$report/paired_seeds.json"
+(cd "$report" && sha256sum paired_seeds.json >SHA256SUMS)
+printf 'RETURN_DIR=%s\nPAIRED_READBACK=%s/paired_seeds.json\n' "$dest" "$report"
+)
