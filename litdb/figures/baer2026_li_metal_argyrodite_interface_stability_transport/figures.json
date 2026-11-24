@@ -14,7 +14,7 @@
    "label": "1",
    "page": 3,
    "file": "fig_1.png",
-   "caption": "Fig. 1 Workﬂow of the active learning algorithm.",
+   "caption": "Fig. 1 Workflow of the active learning algorithm.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -26,7 +26,10 @@
    "h": 779,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.836
+   "blank": 0.836,
+   "caption_raw": "Fig. 1 Workﬂow of the active learning algorithm.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "f2",
@@ -46,7 +49,9 @@
    "h": 567,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.833
+   "blank": 0.833,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "f3",
@@ -66,7 +71,9 @@
    "h": 520,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.626
+   "blank": 0.626,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "f4",
@@ -74,7 +81,7 @@
    "label": "4",
    "page": 5,
    "file": "fig_4.png",
-   "caption": "Fig. 4 Li-ion trajectory lines of the (a) ordered and (b) disordered Li- argyrodite structures after 40 ps of AIMD simulation, with the starting positions of all the atoms in the system overlayed.",
+   "caption": "Fig. 4 Li-ion trajectory lines of the (a) ordered and (b) disordered Li-argyrodite structures after 40 ps of AIMD simulation, with the starting positions of all the atoms in the system overlayed.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -86,7 +93,10 @@
    "h": 481,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.684
+   "blank": 0.684,
+   "caption_raw": "Fig. 4 Li-ion trajectory lines of the (a) ordered and (b) disordered Li- argyrodite structures after 40 ps of AIMD simulation, with the starting positions of all the atoms in the system overlayed.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "f5",
@@ -94,7 +104,7 @@
    "label": "5",
    "page": 5,
    "file": "fig_5.png",
-   "caption": "Fig. 5 Arrhenius plot of s vs. 1/T (orange) and D vs. 1/T (blue) of the bulk Li-argyrodite disordered structure, including the respective acti- vation energies. Diﬀusion coeﬃcients and conductivities were calcu- lated at 400 K, 600 K, 800 K, and 1000 K.",
+   "caption": "Fig. 5 Arrhenius plot of σ vs. 1/T (orange) and D vs. 1/T (blue) of the bulk Li-argyrodite disordered structure, including the respective activation energies. Diffusion coefficients and conductivities were calculated at 400 K, 600 K, 800 K, and 1000 K.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -106,7 +116,10 @@
    "h": 734,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.914
+   "blank": 0.914,
+   "caption_raw": "Fig. 5 Arrhenius plot of s vs. 1/T (orange) and D vs. 1/T (blue) of the bulk Li-argyrodite disordered structure, including the respective acti- vation energies. Diﬀusion coeﬃcients and conductivities were calcu- lated at 400 K, 600 K, 800 K, and 1000 K.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "f6",
@@ -114,7 +127,7 @@
    "label": "6",
    "page": 8,
    "file": "fig_6.png",
-   "caption": "Fig. 6 (a) (100)/(100), (b) (100)/(010), and (c) (011)/(011) Li-metal/Li-argyrodite interfaces before (top) and after (bottom) geometry optimisation with DFT after charge-balancing. The Miller plane for Li-metal was chosen so that the interface would have minimal lattice mismatch. The interface formation energies (ginter) are given for each structure in eV nm2.",
+   "caption": "Fig. 6 (a) (100)/(100), (b) (100)/(010), and (c) (011)/(011) Li-metal/Li-argyrodite interfaces before (top) and after (bottom) geometry optimisation with DFT after charge-balancing. The Miller plane for Li-metal was chosen so that the interface would have minimal lattice mismatch. The interface formation energies (γinter) are given for each structure in eV nm−2.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -126,7 +139,10 @@
    "h": 717,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.784
+   "blank": 0.784,
+   "caption_raw": "Fig. 6 (a) (100)/(100), (b) (100)/(010), and (c) (011)/(011) Li-metal/Li-argyrodite interfaces before (top) and after (bottom) geometry optimisation with DFT after charge-balancing. The Miller plane for Li-metal was chosen so that the interface would have minimal lattice mismatch. The interface formation energies (ginter) are given for each structure in eV nm2.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "f7",
@@ -134,7 +150,7 @@
    "label": "7",
    "page": 8,
    "file": "fig_7.png",
-   "caption": "Fig. 7 (a) Radial distribution functions of the P–S (top) and P–Li (bottom) bond lengths of the (100)/(100) interface before and after the geometry optimisation. (b) DDEC6 charge partitioning of the opti- mised (100)/(100) interface.",
+   "caption": "Fig. 7 (a) Radial distribution functions of the P–S (top) and P–Li (bottom) bond lengths of the (100)/(100) interface before and after the geometry optimisation. (b) DDEC6 charge partitioning of the optimised (100)/(100) interface.",
    "rotated_deg": 0,
    "bbox": [
     297.3,
@@ -146,7 +162,10 @@
    "h": 1472,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.816
+   "blank": 0.816,
+   "caption_raw": "Fig. 7 (a) Radial distribution functions of the P–S (top) and P–Li (bottom) bond lengths of the (100)/(100) interface before and after the geometry optimisation. (b) DDEC6 charge partitioning of the opti- mised (100)/(100) interface.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "f8",
@@ -154,7 +173,7 @@
    "label": "8",
    "page": 9,
    "file": "fig_8.png",
-   "caption": "Fig. 8 Snapshots of the 5 ns MD trajectory of the (100)/(100) interface at 400 K, taken every nanosecond. The vertical thick dashed lines indicate the position of the interface, determined by the non-Li atom that diﬀused furthest into the Li-metal. The thin lines show the crystalline regime which grows throughout the simulation. The red dotted lines at t = 0 ns indicate the position of the membrane used to calculate the Flux in the regions (1) interface, (2) electrode, and (3) electrolyte. The membrane position at the interface is placed at the actual interface position at time 0.",
+   "caption": "Fig. 8 Snapshots of the 5 ns MD trajectory of the (100)/(100) interface at 400 K, taken every nanosecond. The vertical thick dashed lines indicate the position of the interface, determined by the non-Li atom that diffused furthest into the Li-metal. The thin lines show the crystalline regime which grows throughout the simulation. The red dotted lines at t = 0 ns indicate the position of the membrane used to calculate the Flux in the regions (1) interface, (2) electrode, and (3) electrolyte. The membrane position at the interface is placed at the actual interface position at time 0.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -166,7 +185,10 @@
    "h": 860,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.805
+   "blank": 0.805,
+   "caption_raw": "Fig. 8 Snapshots of the 5 ns MD trajectory of the (100)/(100) interface at 400 K, taken every nanosecond. The vertical thick dashed lines indicate the position of the interface, determined by the non-Li atom that diﬀused furthest into the Li-metal. The thin lines show the crystalline regime which grows throughout the simulation. The red dotted lines at t = 0 ns indicate the position of the membrane used to calculate the Flux in the regions (1) interface, (2) electrode, and (3) electrolyte. The membrane position at the interface is placed at the actual interface position at time 0.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "f9",
@@ -186,7 +208,9 @@
    "h": 1406,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.916
+   "blank": 0.916,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "f10",
@@ -194,7 +218,7 @@
    "label": "10",
    "page": 10,
    "file": "fig_10.png",
-   "caption": "Fig. 10 Crystal structure of the (a) (100)/(100), (b) (100)/(010), and (c) (011)/(011) interfaces at 5 ns. Note that due to the change in perspective to capture the antiﬂuorite structure, the edges of (011)/ (011) SEI regions overlap, which does however not represent a full penetration of the Li-metal region by the SEI.",
+   "caption": "Fig. 10 Crystal structure of the (a) (100)/(100), (b) (100)/(010), and (c) (011)/(011) interfaces at 5 ns. Note that due to the change in perspective to capture the antifluorite structure, the edges of (011)/(011) SEI regions overlap, which does however not represent a full penetration of the Li-metal region by the SEI.",
    "rotated_deg": 0,
    "bbox": [
     297.3,
@@ -206,7 +230,10 @@
    "h": 1305,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.735
+   "blank": 0.735,
+   "caption_raw": "Fig. 10 Crystal structure of the (a) (100)/(100), (b) (100)/(010), and (c) (011)/(011) interfaces at 5 ns. Note that due to the change in perspective to capture the antiﬂuorite structure, the edges of (011)/ (011) SEI regions overlap, which does however not represent a full penetration of the Li-metal region by the SEI.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "f11",
@@ -214,7 +241,7 @@
    "label": "11",
    "page": 11,
    "file": "fig_11.png",
-   "caption": "Fig. 11 (a) Evolution of the SEI thickness (in Å) of the (100)/(100) interface, calculated using the distance between the most outer atom of Li- argyrodite with intact PS4 polyhedra, and the atom that diﬀused furthest into Li-metal. (b) Evolution of the degree of crystallisation of the SEI in % in the (100)/(100) interface, calculated by determining the number of S with 8 bonds to Li, as in Li2S, and dividing it by the total number of S atoms in the system.",
+   "caption": "Fig. 11 (a) Evolution of the SEI thickness (in Å) of the (100)/(100) interface, calculated using the distance between the most outer atom of Li-argyrodite with intact PS4 polyhedra, and the atom that diffused furthest into Li-metal. (b) Evolution of the degree of crystallisation of the SEI in % in the (100)/(100) interface, calculated by determining the number of S with 8 bonds to Li, as in Li2S, and dividing it by the total number of S atoms in the system.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -226,7 +253,10 @@
    "h": 1265,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.904
+   "blank": 0.904,
+   "caption_raw": "Fig. 11 (a) Evolution of the SEI thickness (in Å) of the (100)/(100) interface, calculated using the distance between the most outer atom of Li- argyrodite with intact PS4 polyhedra, and the atom that diﬀused furthest into Li-metal. (b) Evolution of the degree of crystallisation of the SEI in % in the (100)/(100) interface, calculated by determining the number of S with 8 bonds to Li, as in Li2S, and dividing it by the total number of S atoms in the system.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "f12",
@@ -234,7 +264,7 @@
    "label": "12",
    "page": 12,
    "file": "fig_12.png",
-   "caption": "Fig. 12 Flux from left to right (L / R) and right to left (R / L) at the centre of the interface, electrode and electrolyte of the (100)/(100) interface at 300 K and 400 K, calculated by counting the number of atoms moving across a 3 Å-thick membrane.",
+   "caption": "Fig. 12 Flux from left to right (L → R) and right to left (R → L) at the centre of the interface, electrode and electrolyte of the (100)/(100) interface at 300 K and 400 K, calculated by counting the number of atoms moving across a 3 Å-thick membrane.",
    "rotated_deg": 0,
    "bbox": [
     36.5,
@@ -246,7 +276,10 @@
    "h": 1264,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.935
+   "blank": 0.935,
+   "caption_raw": "Fig. 12 Flux from left to right (L / R) and right to left (R / L) at the centre of the interface, electrode and electrolyte of the (100)/(100) interface at 300 K and 400 K, calculated by counting the number of atoms moving across a 3 Å-thick membrane.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "f13",
@@ -254,7 +287,7 @@
    "label": "13",
    "page": 13,
    "file": "fig_13.png",
-   "caption": "Fig. 13 Total ﬂux in atoms per nm2 per ns of bulk Li-argyrodite along with the amorphous and crystalline SEI for the (100)/(100) interface, tracked for 1 ns.",
+   "caption": "Fig. 13 Total flux in atoms per nm2 per ns of bulk Li-argyrodite along with the amorphous and crystalline SEI for the (100)/(100) interface, tracked for 1 ns.",
    "rotated_deg": 0,
    "bbox": [
     297.3,
@@ -266,7 +299,10 @@
    "h": 857,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.928
+   "blank": 0.928,
+   "caption_raw": "Fig. 13 Total ﬂux in atoms per nm2 per ns of bulk Li-argyrodite along with the amorphous and crystalline SEI for the (100)/(100) interface, tracked for 1 ns.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS1",
@@ -286,7 +322,9 @@
    "h": 1142,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.939
+   "blank": 0.939,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS2",
@@ -294,7 +332,7 @@
    "label": "S2",
    "page": 2,
    "file": "fig_S2.png",
-   "caption": "Figure S2: RMSEs of the energies and forces of the three MACE models trained on bulk Li- metal and Li-Argyrodite bulk structures each, and the respective structures of the (100)/(100), (100)/(010), and (011)/(011) interfaces.",
+   "caption": "Figure S2: RMSEs of the energies and forces of the three MACE models trained on bulk Li-metal and Li-Argyrodite bulk structures each, and the respective structures of the (100)/(100), (100)/(010), and (011)/(011) interfaces.",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -306,7 +344,10 @@
    "h": 1142,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.901
+   "blank": 0.901,
+   "caption_raw": "Figure S2: RMSEs of the energies and forces of the three MACE models trained on bulk Li- metal and Li-Argyrodite bulk structures each, and the respective structures of the (100)/(100), (100)/(010), and (011)/(011) interfaces.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS3",
@@ -326,7 +367,9 @@
    "h": 1141,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.812
+   "blank": 0.812,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS4",
@@ -346,7 +389,9 @@
    "h": 1133,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.84
+   "blank": 0.84,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS5",
@@ -366,7 +411,9 @@
    "h": 1141,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.904
+   "blank": 0.904,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS6",
@@ -386,7 +433,9 @@
    "h": 1299,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.916
+   "blank": 0.916,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS7",
@@ -406,7 +455,9 @@
    "h": 1299,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.876
+   "blank": 0.876,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS8",
@@ -426,7 +477,9 @@
    "h": 835,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.824
+   "blank": 0.824,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS9",
@@ -446,7 +499,9 @@
    "h": 1148,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.763
+   "blank": 0.763,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS10",
@@ -454,7 +509,7 @@
    "label": "S10",
    "page": 8,
    "file": "fig_S10.png",
-   "caption": "Figure S10: The resulting γsurf for the Miller indices (110), (101), and (011). Each bar rep- resents a unique surface slab and the colour indicates the atoms on the outer layer, i.e. the surface termination. The height of the bars gives the γsurf in eV/nm2.",
+   "caption": "Figure S10: The resulting γsurf for the Miller indices (110), (101), and (011). Each bar represents a unique surface slab and the colour indicates the atoms on the outer layer, i.e. the surface termination. The height of the bars gives the γsurf in eV/nm2.",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -466,7 +521,10 @@
    "h": 1148,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.679
+   "blank": 0.679,
+   "caption_raw": "Figure S10: The resulting γsurf for the Miller indices (110), (101), and (011). Each bar rep- resents a unique surface slab and the colour indicates the atoms on the outer layer, i.e. the surface termination. The height of the bars gives the γsurf in eV/nm2.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS11",
@@ -474,7 +532,7 @@
    "label": "S11",
    "page": 9,
    "file": "fig_S11.png",
-   "caption": "Figure S11: Charge-balancing the symmetric and non-stoichiometric Li-Argyrodite (100) Sur- face with a charge of +10 by deleting the 2 energetically most favourable P atoms from the surface layers.",
+   "caption": "Figure S11: Charge-balancing the symmetric and non-stoichiometric Li-Argyrodite (100) Surface with a charge of +10 by deleting the 2 energetically most favourable P atoms from the surface layers.",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -486,7 +544,10 @@
    "h": 740,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.863
+   "blank": 0.863,
+   "caption_raw": "Figure S11: Charge-balancing the symmetric and non-stoichiometric Li-Argyrodite (100) Sur- face with a charge of +10 by deleting the 2 energetically most favourable P atoms from the surface layers.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS12",
@@ -494,7 +555,7 @@
    "label": "S12",
    "page": 9,
    "file": "fig_S12.png",
-   "caption": "Figure S12: Li-metal/Li-Argyrodite (100)/(100), (100)/(010), and (011)/(011) interfaces be- fore (top) and after (bottom) geometry optimisation with DFT before charge-balancing. The miller plane for Li-metal was chosen so that the interface would have minimal lattice mismatch, reducing the strain in the model, which is introduced when fitting two surfaces with different lattice parameters into one supercell. The interface formation energy (γinter), calculated using equation 9 in the main text, is given for each structure in eV/nm2.",
+   "caption": "Figure S12: Li-metal/Li-Argyrodite (100)/(100), (100)/(010), and (011)/(011) interfaces before (top) and after (bottom) geometry optimisation with DFT before charge-balancing. The miller plane for Li-metal was chosen so that the interface would have minimal lattice mismatch, reducing the strain in the model, which is introduced when fitting two surfaces with different lattice parameters into one supercell. The interface formation energy (γinter), calculated using equation 9 in the main text, is given for each structure in eV/nm2.",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -506,7 +567,10 @@
    "h": 678,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.736
+   "blank": 0.736,
+   "caption_raw": "Figure S12: Li-metal/Li-Argyrodite (100)/(100), (100)/(010), and (011)/(011) interfaces be- fore (top) and after (bottom) geometry optimisation with DFT before charge-balancing. The miller plane for Li-metal was chosen so that the interface would have minimal lattice mismatch, reducing the strain in the model, which is introduced when fitting two surfaces with different lattice parameters into one supercell. The interface formation energy (γinter), calculated using equation 9 in the main text, is given for each structure in eV/nm2.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS13",
@@ -526,7 +590,9 @@
    "h": 834,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.741
+   "blank": 0.741,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS14",
@@ -546,7 +612,9 @@
    "h": 949,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.807
+   "blank": 0.807,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS15",
@@ -566,7 +634,9 @@
    "h": 803,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.748
+   "blank": 0.748,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS16",
@@ -586,7 +656,9 @@
    "h": 803,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.745
+   "blank": 0.745,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS17",
@@ -606,7 +678,9 @@
    "h": 803,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.749
+   "blank": 0.749,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS18",
@@ -614,7 +688,7 @@
    "label": "S18",
    "page": 12,
    "file": "fig_S18.png",
-   "caption": "Figure S18: Snapshots of the 10 ns MD trajectory of the (011)/(011) interface at 400 K, taken every ns (excluding 9 ns). The vertical thick lines indicate the position of the interface, deter- mined by the non-Li atom that diffused furthest into the Li-metal. The thin lines show the crystalline regime which grows throughout the simulation.",
+   "caption": "Figure S18: Snapshots of the 10 ns MD trajectory of the (011)/(011) interface at 400 K, taken every ns (excluding 9 ns). The vertical thick lines indicate the position of the interface, determined by the non-Li atom that diffused furthest into the Li-metal. The thin lines show the crystalline regime which grows throughout the simulation.",
    "rotated_deg": 0,
    "bbox": [
     66.0,
@@ -626,7 +700,10 @@
    "h": 1555,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.721
+   "blank": 0.721,
+   "caption_raw": "Figure S18: Snapshots of the 10 ns MD trajectory of the (011)/(011) interface at 400 K, taken every ns (excluding 9 ns). The vertical thick lines indicate the position of the interface, deter- mined by the non-Li atom that diffused furthest into the Li-metal. The thin lines show the crystalline regime which grows throughout the simulation.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS19",
@@ -646,7 +723,9 @@
    "h": 860,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.689
+   "blank": 0.689,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS20",
@@ -666,7 +745,9 @@
    "h": 1231,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.906
+   "blank": 0.906,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS21",
@@ -686,7 +767,9 @@
    "h": 993,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.914
+   "blank": 0.914,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS22",
@@ -706,7 +789,9 @@
    "h": 1164,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.92
+   "blank": 0.92,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS23",
@@ -726,7 +811,9 @@
    "h": 1165,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.903
+   "blank": 0.903,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS24",
@@ -746,7 +833,9 @@
    "h": 754,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.911
+   "blank": 0.911,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS25",
@@ -766,7 +855,9 @@
    "h": 674,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.91
+   "blank": 0.91,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS26",
@@ -786,7 +877,9 @@
    "h": 1044,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.798
+   "blank": 0.798,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: this PNG on a reduced-size contact sheet (700-760 px tile width) — read for layout and labels, not for pixel-level values"
   },
   {
    "key": "fS27",
@@ -806,7 +899,9 @@
    "h": 1141,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.909
+   "blank": 0.909,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS28",
@@ -826,7 +921,9 @@
    "h": 1146,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.913
+   "blank": 0.913,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "fS29",
@@ -846,7 +943,9 @@
    "h": 843,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.939
+   "blank": 0.939,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution"
   },
   {
    "key": "t1",
@@ -854,7 +953,7 @@
    "label": "1",
    "page": 4,
    "file": "tab_1.png",
-   "caption": "Table 1 Comparison of lattice constants of relaxed structures Source a (Å) b (Å) c (Å) a (°) b (°) g (°)",
+   "caption": "Table 1 Comparison of lattice constants of relaxed structures",
    "rotated_deg": 0,
    "bbox": [
     298.3,
@@ -866,7 +965,11 @@
    "h": 316,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.905
+   "blank": 0.905,
+   "caption_note": "2026-11-24 litdb-curator: table body text that the extractor appended to the caption was removed (column order was scrambled, e.g. Table 6 headers swapped); values are transcribed in the digest §3 from the PDF text layer and checked against the table image where viewed",
+   "caption_raw": "Table 1 Comparison of lattice constants of relaxed structures Source a (Å) b (Å) c (Å) a (°) b (°) g (°)",
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not read as an image — table values taken from the PDF text layer (tables are text; per litdb rule)"
   },
   {
    "key": "t2",
@@ -874,7 +977,7 @@
    "label": "2",
    "page": 6,
    "file": "tab_2.png",
-   "caption": "Table 2 Surface formation energies (gsurf) in eV nm−2, chemical composition and charge of all surface models. The rows in bold indicate the three surfaces with the lowest surface formation energies Miller index Surface termination gsurf (eV nm−2) Composition Charge (e) 100 S(Li–Cl) 5.011 Li8PS7Cl1.5 −10 100 Li–Cl 2.203 Li8PS5Cl1.5 6 100 Li–P–S–Cl 1.006 Li10P2S8Cl1.5 10 100 S(Li–S) 5.691 Li8PS7.5Cl −12 100 Li–S 3.033 Li8PS5.5Cl 4 100 Li–P–S–Cl 1.576 Li10P2S7.5Cl2 12 010 S(Li–S/Cl) 5.196 Li11P1.5S9.5Cl2 −10 010 Li–S/Cl 2.808 Li11P1.5S7.5Cl2 6 010 S(Li–P–Cl) 2.413 Li7P1.5S7Cl1.5 4 010 Li–P–Cl 1.225 Li7P1.5S5Cl1.5 12 010 S(Li–S/Cl) 5.632 Li11P1.5S10Cl1.5 −12 010 Li–S/Cl 2.795 Li11P1.5S8Cl1.5 4 010 S(Li–P–S) 3.208 Li7P1.5S7.5Cl −6 010 Li–P–S 2.057 Li7P1.5S5.5Cl 10 001 S(Li–S/Cl) 5.448 Li8PS7.25Cl1.25 −11 001 Li–S/Cl 3.208 Li8PS5.25Cl1.25 5 001 Li–P–S–Cl 1.471 Li7P1.5S5.25Cl1.25 11 001 S(Li–P–",
+   "caption": "Table 2 Surface formation energies (γsurf) in eV nm−2, chemical composition and charge of all surface models. The rows in bold indicate the three surfaces with the lowest surface formation energies",
    "rotated_deg": 0,
    "bbox": [
     37.5,
@@ -886,7 +989,11 @@
    "h": 1414,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.947
+   "blank": 0.947,
+   "caption_note": "2026-11-24 litdb-curator: table body text that the extractor appended to the caption was removed (column order was scrambled, e.g. Table 6 headers swapped); values are transcribed in the digest §3 from the PDF text layer and checked against the table image where viewed",
+   "caption_raw": "Table 2 Surface formation energies (gsurf) in eV nm−2, chemical composition and charge of all surface models. The rows in bold indicate the three surfaces with the lowest surface formation energies Miller index Surface termination gsurf (eV nm−2) Composition Charge (e) 100 S(Li–Cl) 5.011 Li8PS7Cl1.5 −10 100 Li–Cl 2.203 Li8PS5Cl1.5 6 100 Li–P–S–Cl 1.006 Li10P2S8Cl1.5 10 100 S(Li–S) 5.691 Li8PS7.5Cl −12 100 Li–S 3.033 Li8PS5.5Cl 4 100 Li–P–S–Cl 1.576 Li10P2S7.5Cl2 12 010 S(Li–S/Cl) 5.196 Li11P1.5S9.5Cl2 −10 010 Li–S/Cl 2.808 Li11P1.5S7.5Cl2 6 010 S(Li–P–Cl) 2.413 Li7P1.5S7Cl1.5 4 010 Li–P–Cl 1.225 Li7P1.5S5Cl1.5 12 010 S(Li–S/Cl) 5.632 Li11P1.5S10Cl1.5 −12 010 Li–S/Cl 2.795 Li11P1.5S8Cl1.5 4 010 S(Li–P–S) 3.208 Li7P1.5S7.5Cl −6 010 Li–P–S 2.057 Li7P1.5S5.5Cl 10 001 S(Li–S/Cl) 5.448 Li8PS7.25Cl1.25 −11 001 Li–S/Cl 3.208 Li8PS5.25Cl1.25 5 001 Li–P–S–Cl 1.471 Li7P1.5S5.25Cl1.25 11 001 S(Li–P–",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution (table image cross-checked against the PDF text layer)"
   },
   {
    "key": "t3",
@@ -894,7 +1001,7 @@
    "label": "3",
    "page": 7,
    "file": "tab_3.png",
-   "caption": "Table 3 Estr in eV nm−2 for the diﬀerent Li-argyrodite and Li-metal surfaces",
+   "caption": "Table 3 Estr in eV nm−2 for the different Li-argyrodite and Li-metal surfaces",
    "rotated_deg": 0,
    "bbox": [
     37.5,
@@ -906,7 +1013,10 @@
    "h": 505,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.939
+   "blank": 0.939,
+   "caption_raw": "Table 3 Estr in eV nm−2 for the diﬀerent Li-argyrodite and Li-metal surfaces",
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not read as an image — table values taken from the PDF text layer (tables are text; per litdb rule)"
   },
   {
    "key": "t4",
@@ -914,7 +1024,7 @@
    "label": "4",
    "page": 8,
    "file": "tab_4.png",
-   "caption": "Table 4 Surface formation energy (gsurf) and interface formation energy (ginter) of charged and neutral surface and interface models in eV nm−2 gsurf (eV nm−2) (100) (010) (011) Charged 1.006 1.225 1.168 Neutral 3.039 2.834 1.261 ginter (eV nm−2) (100)/(100) (100)/(010) (011)/(011) Charged −12.903 −11.835 −8.410 Neutral −7.807 −8.584 −12.947",
+   "caption": "Table 4 Surface formation energy (γsurf) and interface formation energy (γinter) of charged and neutral surface and interface models in eV nm−2",
    "rotated_deg": 0,
    "bbox": [
     37.5,
@@ -926,7 +1036,11 @@
    "h": 568,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.924
+   "blank": 0.924,
+   "caption_note": "2026-11-24 litdb-curator: table body text that the extractor appended to the caption was removed (column order was scrambled, e.g. Table 6 headers swapped); values are transcribed in the digest §3 from the PDF text layer and checked against the table image where viewed",
+   "caption_raw": "Table 4 Surface formation energy (gsurf) and interface formation energy (ginter) of charged and neutral surface and interface models in eV nm−2 gsurf (eV nm−2) (100) (010) (011) Charged 1.006 1.225 1.168 Neutral 3.039 2.834 1.261 ginter (eV nm−2) (100)/(100) (100)/(010) (011)/(011) Charged −12.903 −11.835 −8.410 Neutral −7.807 −8.584 −12.947",
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not read as an image — table values taken from the PDF text layer (tables are text; per litdb rule)"
   },
   {
    "key": "t5",
@@ -934,7 +1048,7 @@
    "label": "5",
    "page": 9,
    "file": "tab_5.png",
-   "caption": "Table 5 End time of the decomposition (D), as well as start and end time of crystallisation (C) for the (100)/(100), (100)/(010), and (011)/ (011) interface at 300 K and 400 K End D (ns) Start C (ns) End C (ns) Interface T (K) (100)/(100) 300 1.93 — — 400 0.39 0.24 2.43 (100)/(100) sym 400 0.35 4.73 >5 (100)/(010) 300 >5 1.76 >5 400 0.57 0.87 1.9 (011)/(011) 300 2.11 — — 400 0.37 0.43 4.80",
+   "caption": "Table 5 End time of the decomposition (D), as well as start and end time of crystallisation (C) for the (100)/(100), (100)/(010), and (011)/(011) interface at 300 K and 400 K",
    "rotated_deg": 0,
    "bbox": [
     298.3,
@@ -946,7 +1060,11 @@
    "h": 616,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.925
+   "blank": 0.925,
+   "caption_note": "2026-11-24 litdb-curator: table body text that the extractor appended to the caption was removed (column order was scrambled, e.g. Table 6 headers swapped); values are transcribed in the digest §3 from the PDF text layer and checked against the table image where viewed",
+   "caption_raw": "Table 5 End time of the decomposition (D), as well as start and end time of crystallisation (C) for the (100)/(100), (100)/(010), and (011)/ (011) interface at 300 K and 400 K End D (ns) Start C (ns) End C (ns) Interface T (K) (100)/(100) 300 1.93 — — 400 0.39 0.24 2.43 (100)/(100) sym 400 0.35 4.73 >5 (100)/(010) 300 >5 1.76 >5 400 0.57 0.87 1.9 (011)/(011) 300 2.11 — — 400 0.37 0.43 4.80",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution (table image cross-checked against the PDF text layer)"
   },
   {
    "key": "t6",
@@ -954,7 +1072,7 @@
    "label": "6",
    "page": 13,
    "file": "tab_6.png",
-   "caption": "Table 6 Average ﬂux at each interface and the center of the amorphous and crystalline SEI for one ns of the trajectory of the (100)/(100), (100)/ (010), and (011)/(011) interfaces at 400 K Flux R / L (atoms/nm2 ns) Flux L / R (atoms/nm2 ns) Interface Position (100)/(100) Interface 65.25 64.12 Amorphous SEI 12.94 12.26 Crystalline SEI 0.23 0.23 (100)/(010) Interface 79.57 78.92 Amorphous SEI 10.41 18.22 Crystalline SEI 0.0 0.0 (011)/(011) Interface 67.88 66.96 Amorphous SEI 6.82 13.79 Crystalline SEI 0.93 0.46",
+   "caption": "Table 6 Average flux at each interface and the center of the amorphous and crystalline SEI for one ns of the trajectory of the (100)/(100), (100)/(010), and (011)/(011) interfaces at 400 K",
    "rotated_deg": 0,
    "bbox": [
     37.5,
@@ -966,7 +1084,11 @@
    "h": 657,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_main.pdf",
-   "blank": 0.951
+   "blank": 0.951,
+   "caption_note": "2026-11-24 litdb-curator: table body text that the extractor appended to the caption was removed (column order was scrambled, e.g. Table 6 headers swapped); values are transcribed in the digest §3 from the PDF text layer and checked against the table image where viewed",
+   "caption_raw": "Table 6 Average ﬂux at each interface and the center of the amorphous and crystalline SEI for one ns of the trajectory of the (100)/(100), (100)/ (010), and (011)/(011) interfaces at 400 K Flux R / L (atoms/nm2 ns) Flux L / R (atoms/nm2 ns) Interface Position (100)/(100) Interface 65.25 64.12 Amorphous SEI 12.94 12.26 Crystalline SEI 0.23 0.23 (100)/(010) Interface 79.57 78.92 Amorphous SEI 10.41 18.22 Crystalline SEI 0.0 0.0 (011)/(011) Interface 67.88 66.96 Amorphous SEI 6.82 13.79 Crystalline SEI 0.93 0.46",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read of this PNG at full crop resolution (table image cross-checked against the PDF text layer)"
   },
   {
    "key": "tS1",
@@ -986,7 +1108,9 @@
    "h": 439,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.933
+   "blank": 0.933,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not read as an image — table values taken from the PDF text layer (tables are text; per litdb rule)"
   },
   {
    "key": "tS2",
@@ -1006,7 +1130,9 @@
    "h": 1344,
    "dpi": 300,
    "src": "baer2026_li_argyrodite_interface_SI.pdf",
-   "blank": 0.947
+   "blank": 0.947,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not read as an image — table values taken from the PDF text layer (tables are text; per litdb rule)"
   }
  ],
  "missing_labels": [],
