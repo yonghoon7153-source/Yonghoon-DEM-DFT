@@ -57,7 +57,7 @@ Cu\|LLZO (다결정 LLZO:Al · 0 MPa · 25 °C) 에서 16 µAh cm⁻² 를 도�
 | 항목 | 내용 |
 |---|---|
 | 계 | **Li_id \| LLZO \| Cu** — Li_id = 380 MPa 등방 가압으로 만든 *저항 없는 이상 상대극* (임피던스 기여 0 → 측정 저항 변화는 **전부 Cu/LLZO 계면의 전류 수축**이라고 저자가 둔다, p.2) |
-| SE 둘 | 얇은 Cu 실험 = **LLZO:Al** (Li₆.₂₅Al₀.₂₅La₃Zr₂O₁₂ · Giessen 소결 · 평균 입경 ≈4 µm) / 두꺼운 Cu 박 실험 = **LLZO:Ta** (Li₆.₅Ta₀.₅La₃Zr₁.₅O₁₂ · Michigan hot-press · 상대밀도 > 96 %) |
+| SE 둘 | 얇은 Cu 실험 = **LLZO:Al** (Li₆.₂₅Al₀.₂₅La₃Zr₂O₁₂ · 이 연구에서 합성 · 소결 · 평균 입경 ≈4 µm) / 두꺼운 Cu 박 실험 = **LLZO:Ta** (Li₆.₅Ta₀.₅La₃Zr₁.₅O₁₂ · 고속 유도 hot-press [47] · 상대밀도 > 96 % — 어디서 만들었는지는 본문에 없다 · hot-press 법 [47] 과 Cu 박 접합법 [15, 25] 이 Michigan 쪽 방법이다) |
 | 집전체 | Cu — *"low lithium solubility at room temperature"* 라서 합금이 성장을 흐리지 않도록 골랐다 (p.2). 두께 **100 nm / 400 nm / 5 µm (증착막) / 10 µm (박)** |
 | 던지는 질문 | 무음극 첫 충전에서 **전류 밀도**와 **집전체 두께**가 Li 형태를 어떻게 바꾸나. 특히 핵생성 직후 |
 | 문헌 갭 | Cu\|LIPON · Cu\|액체 전해질에서는 *고과전압 → 핵이 많고 작다* 가 알려져 있다 ([22–24]) · 하지만 LIPON 은 *비정질 · 결함 없는* SE 이고 LLZO 는 입계 · 핀홀 · 전위 · 결정면이 있는 다결정 → 결과가 옮겨지는지 모른다 (p.2) |
@@ -445,7 +445,7 @@ Video S2 (6.6 s · 100 µA cm⁻² · 화면이 `Fig. 5` 에서 **90° 돌아 �
 
 ⑥ **비교군이 둘 이상을 같이 바꾼다.**
 - 다결정 대 단결정: **P1000 연마면 대 갓 깬 파단면** — 결함 밀도뿐 아니라 표면 화학 (Li₂CO₃ 등 오염층) 도 다르다. 단결정 여부도 확인하지 않았다 (EBSD 없음 · 방위 모름).
-- 얇은 막 대 두꺼운 박 (`Fig. 7` 위 · 아래): **LLZO:Al (Giessen · 소결 · P1000) 대 LLZO:Ta (Michigan · hot-press > 96 % · 0.1 µm 연마)** · 증착 대 hot-press 접합 · 위에서 보기 대 FIB 단면. *"CC 두께 효과"* 가 SE · 공정 · 관찰 기하와 교락돼 있다.
+- 얇은 막 대 두꺼운 박 (`Fig. 7` 위 · 아래): **LLZO:Al (이 연구 합성 · 소결 · P1000) 대 LLZO:Ta (hot-press [47] · > 96 % · 0.1 µm 연마)** · 증착 대 hot-press 접합 · 위에서 보기 대 FIB 단면. *"CC 두께 효과"* 가 SE · 공정 · 관찰 기하와 교락돼 있다.
 
 ⑦ **단면 창은 자유 표면 옆이다.** 저자는 500 µA cm⁻² 의 큰 돌기에 대해서만 *"may not be representative … due to more space"* 라 단다. 그런데 100 µA cm⁻² 런도 관찰 가장자리의 Li 가 **≈1.3–2 µm** 로 균일 환산 **0.47 µm 의 3–4 배**다 (`우리 산수` · `Fig. 5g` · Video S2) — 이 창에 Li 가 몰렸다. `Fig. S8` 캡션도 *"only at the edges … due to the small size of the electrode"* 로 가장자리 효과를 인정한다. 500 µA cm⁻² 의 'SE 안 Li' 는 FIB 단면 *표면*에 나온 덩어리라, 입계 · 균열을 따라 자유 면으로 나온 Li 이거나 빔 유도 석출 (⑤) 일 수도 있다. *"the majority of plated lithium is deposited as filaments and dendrites in the bulk"* 는 부피로 잰 것이 아니다 (단면 하나).
 
