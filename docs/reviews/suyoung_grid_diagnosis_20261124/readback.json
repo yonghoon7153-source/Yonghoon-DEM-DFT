@@ -1,0 +1,209 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "diagnostic_pin": "867c603da43cba4f1b9dcf2320cdaa733d949d99",
+  "registered_reader_files": {
+    "suyoung_u6c_force_rule_20261122/force_rule.py": "145b5fe6f456e8b66c2a8cc422ff88648c82d07c4420482f06bc6da7a5b1b6db",
+    "suyoung_floor_full_20261123/full_compare.py": "f3eb1aa342e97e5accd9619230b695e523d9113035937daf676b29c88b498d3a",
+    "suyoung_u6c_doubling_readback_20261122/doubling.py": "9d664ed38a70295b9bd04ecbf5dae4ffda663c5efbc348c30a77bf6b99fa1bda",
+    "suyoung_u6c_force_rule_20261122/rule.json": "1736322b4b2f4cef384becd97099998668137c19272e504edd951b698502a8f4"
+  },
+  "archive_sha256": {
+    "old": "882c078ba22efab1699773b1c657996933aa2b87b34c8058c62a6a5860f8a0af",
+    "new": "fc8e3d67a775eef6c67f171b64e382aba589949d5c8ece82e6a32c6d6546e669"
+  },
+  "arms": {
+    "F8": {
+      "old_trace_sha256": "0b8912adf24e6fca836210563bbfc3fee961d74b3b7b898f0bbbcc36d2b679ec",
+      "new_trace_sha256": "5cebc3f7815900cc2ba94669ae85289648c4a3de415ac5df35525d7bded31f77",
+      "old_rows": 2737,
+      "new_rows": 2746
+    },
+    "F16": {
+      "old_trace_sha256": "7508fe658e67414781ed2304e123d31c8bb53623095fe3071b072aa05d0a716c",
+      "new_trace_sha256": "e4ea8348019b8d5519e84d804f348c1191dabd41d7f52e3926ea11891fd5fa6d",
+      "old_rows": 6672,
+      "new_rows": 6723
+    },
+    "F12": {
+      "old_trace_sha256": "627a488910a3c1b260f30211624b2b5dd6949dcb012b7f72f56036a75aeaa43c",
+      "new_trace_sha256": "3ccccbf7989aa23724a56b743bf1cd83919b41b151cda8425814e35b32ccb566",
+      "old_rows": 5081,
+      "new_rows": 5120
+    },
+    "F24": {
+      "old_trace_sha256": "18470cdfd6464462b54bfe3e60c7f821c8a02eb3f2863a6585877d6ab1eeff24",
+      "new_trace_sha256": "3520ffebfdd6a26168d328e108ebd754cc16de0399c00b8c877a27a81b2ef412",
+      "old_rows": 10498,
+      "new_rows": 10598
+    }
+  },
+  "pairs": {
+    "F8_F16": {
+      "original_intervals": {
+        "old": {
+          "common_start_u": 0.0,
+          "common_end_u": 0.12270908701625816,
+          "coarse_end_u": 0.12270908701625816,
+          "fine_end_u": 0.1495965496135706,
+          "coarse_samples": 2737,
+          "fine_samples": 6672,
+          "coarse_samples_in_common": 2737,
+          "fine_samples_in_common": 5473,
+          "union_knots": 5473,
+          "fine_peak_MPa": 0.6697935989719649,
+          "u_at_first_fine_peak": 0.1226642372037523,
+          "max_abs_difference_MPa": 0.5308417087682225,
+          "coarse_minus_fine_at_first_max_MPa": 0.5308417087682225,
+          "u_at_first_max_abs": 0.12270908701625816,
+          "comparison": "EXCEEDS",
+          "exceeding_knots": 3880,
+          "first_exceedance_u": 0.015450760408297182,
+          "ratio": 0.7925452103199953
+        },
+        "new": {
+          "common_start_u": 0.0,
+          "common_end_u": 0.12311273532881173,
+          "coarse_end_u": 0.12311273532881173,
+          "fine_end_u": 0.1507402198324721,
+          "coarse_samples": 2746,
+          "fine_samples": 6723,
+          "coarse_samples_in_common": 2746,
+          "fine_samples_in_common": 5491,
+          "union_knots": 5491,
+          "fine_peak_MPa": 0.6666396546037676,
+          "u_at_first_fine_peak": 0.12311273532881173,
+          "max_abs_difference_MPa": 0.5334168520521676,
+          "coarse_minus_fine_at_first_max_MPa": 0.5334168520521676,
+          "u_at_first_max_abs": 0.12311273532881173,
+          "comparison": "EXCEEDS",
+          "exceeding_knots": 4051,
+          "first_exceedance_u": 0.015405910595791217,
+          "ratio": 0.800157698943391
+        }
+      },
+      "common_end_u": 0.12270908701625816,
+      "common_knots": 5473,
+      "common_old": {
+        "N_MPa": 0.5308417087682225,
+        "D_MPa": 0.6697935989719649,
+        "first_u_N": 0.12270908701625816,
+        "first_u_D": 0.1226642372037523
+      },
+      "common_new": {
+        "N_MPa": 0.5142563971359496,
+        "D_MPa": 0.6648942860778017,
+        "first_u_N": 0.12270908701625816,
+        "first_u_D": 0.12264181229749926
+      },
+      "A": -0.024761824624375123,
+      "B": 0.005657457313481335,
+      "C": 0.026716855934289407,
+      "delta_ratio": 0.007612488623395697,
+      "closure_residual": -7.632783294297951e-17,
+      "matched_extrema": [
+        {
+          "u": 0.12270908701625816,
+          "old_peak": true,
+          "new_peak": true,
+          "old_coarse_MPa": 1.2005880621846263,
+          "old_fine_MPa": 0.6697463534164039,
+          "new_coarse_MPa": 1.1788034989769522,
+          "new_fine_MPa": 0.6645471018410026,
+          "delta_coarse_MPa": -0.02178456320767408,
+          "delta_fine_MPa": -0.0051992515754012425,
+          "delta_signed_gap_MPa": -0.016585311632272837
+        }
+      ]
+    },
+    "F12_F24": {
+      "original_intervals": {
+        "old": {
+          "common_start_u": 0.0,
+          "common_end_u": 0.15189136502012468,
+          "coarse_end_u": 0.15189136502012468,
+          "fine_end_u": 0.15692949395829225,
+          "coarse_samples": 5081,
+          "fine_samples": 10498,
+          "coarse_samples_in_common": 5081,
+          "fine_samples_in_common": 10161,
+          "union_knots": 10161,
+          "fine_peak_MPa": 1.0072848238006886,
+          "u_at_first_fine_peak": 0.15189136502012468,
+          "max_abs_difference_MPa": 0.1939165094755293,
+          "coarse_minus_fine_at_first_max_MPa": 0.1939165094755293,
+          "u_at_first_max_abs": 0.15189136502012468,
+          "comparison": "EXCEEDS",
+          "exceeding_knots": 1549,
+          "first_exceedance_u": 0.016908379314740207,
+          "ratio": 0.19251407833570175
+        },
+        "new": {
+          "common_start_u": 0.0,
+          "common_end_u": 0.1530574601452792,
+          "coarse_end_u": 0.1530574601452792,
+          "fine_end_u": 0.15842448770849027,
+          "coarse_samples": 5120,
+          "fine_samples": 10598,
+          "coarse_samples_in_common": 5120,
+          "fine_samples_in_common": 10239,
+          "union_knots": 10239,
+          "fine_peak_MPa": 1.0256040312703005,
+          "u_at_first_fine_peak": 0.1530574601452792,
+          "max_abs_difference_MPa": 0.1750240948817332,
+          "coarse_minus_fine_at_first_max_MPa": 0.1750240948817332,
+          "u_at_first_max_abs": 0.1530574601452792,
+          "comparison": "EXCEEDS",
+          "exceeding_knots": 891,
+          "first_exceedance_u": 0.016878479439736305,
+          "ratio": 0.1706546479394689
+        }
+      },
+      "common_end_u": 0.15189136502012468,
+      "common_knots": 10161,
+      "common_old": {
+        "N_MPa": 0.1939165094755293,
+        "D_MPa": 1.0072848238006886,
+        "first_u_N": 0.15189136502012468,
+        "first_u_D": 0.15189136502012468
+      },
+      "common_new": {
+        "N_MPa": 0.15125945280881073,
+        "D_MPa": 1.0011426308513145,
+        "first_u_N": 0.01867247193997401,
+        "first_u_D": 0.15189136502012468
+      },
+      "A": -0.04234855490601446,
+      "B": 0.0009212929215336594,
+      "C": 0.019567831588247986,
+      "delta_ratio": -0.021859430396232837,
+      "closure_residual": 2.0816681711721685e-17,
+      "matched_extrema": [
+        {
+          "u": 0.01867247193997401,
+          "old_peak": false,
+          "new_peak": true,
+          "old_coarse_MPa": 0.21426729906985803,
+          "old_fine_MPa": 0.06727109526346706,
+          "new_coarse_MPa": 0.21683232936225935,
+          "new_fine_MPa": 0.06557287655344862,
+          "delta_coarse_MPa": 0.0025650302924013213,
+          "delta_fine_MPa": -0.0016982187100184343,
+          "delta_signed_gap_MPa": 0.004263249002419756
+        },
+        {
+          "u": 0.15189136502012468,
+          "old_peak": true,
+          "new_peak": false,
+          "old_coarse_MPa": 1.201201333276218,
+          "old_fine_MPa": 1.0072848238006886,
+          "new_coarse_MPa": 1.1426945558852262,
+          "new_fine_MPa": 1.0011426308513145,
+          "delta_coarse_MPa": -0.05850677739099175,
+          "delta_fine_MPa": -0.006142192949374126,
+          "delta_signed_gap_MPa": -0.05236458444161762
+        }
+      ]
+    }
+  },
+  "new_loading_runs": 0
+}
