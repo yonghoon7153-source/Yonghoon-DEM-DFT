@@ -40,10 +40,10 @@
 
 {# 2026-11-24 — 흐름별 지금 상태. **정적 사본**이다 (요청마다 세지 않는다) — 날짜를 붙여 두고,
    원장이 바뀌면 이 표가 먼저 낡는다. 정본은 각 행의 원장 · 상태판이다:
-   게이트 = degradation-degeneracy/docs/08_REVIEW_RESPONSE.md §151 · REIL = bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md §130 ·
+   게이트 = degradation-degeneracy/docs/08_REVIEW_RESPONSE.md §151 · REIL = bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md §137 ·
    COMSOL = bms-balancing/docs/COMSOL_REBUILD_SPEC.md §100 · Phantom pOCV = followups/phantom-pocv/STATUS.md ·
    ASSB = bms-balancing/docs/ASSB_TRANSFER_NOTE.md §6-3-k + followups/assb-contact-truth/STATUS.md (커밋 17b7e56)
-   + bms-balancing/docs/ASSB_WANTED_PAPERS.md §4 2026-11-24 줄 (커밋 0f0522b — C1 3 차 승인) + DESIGN_v1.md §8-8 (커밋 d1d19c4 — 3 차 결과) · §8-10 (커밋 6e2668d — 4 차 결과) · §8-12 (커밋 287d310 — 5 차 결과).
+   + bms-balancing/docs/ASSB_WANTED_PAPERS.md §4 2026-11-24 줄 (커밋 0f0522b — C1 3 차 승인) + DESIGN_v1.md §8-8 (커밋 d1d19c4 — 3 차 결과) · §8-10 (커밋 6e2668d — 4 차 결과) · §8-12 (커밋 287d310 — 5 차 결과) · §8-14 (커밋 ad8f6bc — 6 차 결과).
    위키 행만 사본을 두지 않고 아래 "최근 활동" (wiki/log.md 를 요청마다 읽는다) 으로 보낸다. #}
 <section class="panel">
   <h2 class="panel-h">흐름별 지금 상태 <code class="src-of">2026-11-24 사본 · 정본은 각 원장</code></h2>
@@ -59,7 +59,9 @@
             <td>C4-A 구현 요청서 v2 재검토 (2026-11-08 검토 · 2026-11-24 반입 · 원장 §130) =
               <code class="mono">REVISION_<wbr>REQUIRED_<wbr>BEFORE_<wbr>IMPLEMENTATION_<wbr>AND_<wbr>TEST_<wbr>APPROVAL</code> — N1 · N3 · N4 · N6 남음 → 요청서 v3 (원장 §131) → 같은 날 재검토
               (원장 §132) = 세부 12 중 11 + C2 종결 · N1 bootstrap 하나 OPEN → 요청서 v4 (원장 §133) → <b>v4 수용</b> (원장 §134 · 새 차단 0).
-              → 구현 · 무자료 시험 승인 (원장 §135) → 시작 전 환경 확인에서 봉인 환경 불일치로 멈춤 (구현 0). 다음 = C4-ENV 재봉인 요청 여부. U2 · U4 · U5 미선택</td>
+              → 구현 · 무자료 시험 승인 (원장 §135) → 시작 전 환경 확인에서 봉인 환경 불일치로 멈춤 (구현 0). 다음 = C4-ENV 재봉인 요청 여부. U2 · U4 · U5 미선택
+              → 재봉인 요청서 (원장 §136) → 사전 검토 회신 (원장 §137) = 정정 필요 (N1 CA 선택 · N2 S10 종료 기록 · 실행기 사전 고정). 다음 = 요청서 v2 + 실행기 고정
+              (사용자 결정)</td>
             <td><a href="/bms#reil">지금까지 이룬 것</a> §4·8</td></tr>
         <tr><td><b>COMSOL</b> <span class="tw-mini">(보류)</span></td>
             <td><b>사용자 보류 (2026-11-24)</b> — 재개 일정 없음 · 자동 재개 없음. 직전: R3 12 시나리오 한정 기능 결과 수용 (전체 절차 PASS
@@ -72,7 +74,9 @@
         <tr><td><b>ASSB</b><br><span class="tw-mini">문헌 → 합성 truth</span></td>
             <td>문헌 흡수 117호에서 멈춤 → 합성 truth (2026-11-24 사용자 결정). C1 은 다섯 번 시도해 다섯 번 판정 없이 멈췄다 — 1 차는 스파이크에서
               (격자 0), 2 · 3 차는 격자 수렴 (규칙 5), 4 차는 메모리 부족, 5 차 (메모리 수정) 는 정밀판까지 끝났지만 수렴 변화가 다시 문턱을 넘었다 (균일 격자를
-              두 배로 해도 줄지 않음). 입자 표면 쪽 격자를 조일지는 사용자 결정 대기. 진단 전용 · 인용 금지 · 정본 아님</td>
+              두 배로 해도 줄지 않음). 입자 표면 쪽 격자를 조일지는 사용자 결정 대기 → (사용자 "권고대로 해용") <b>6 차 (표면 쪽 비균일 반경 격자) 에서 S9 · 규칙 5 통과 · 격자 전체
+              완주</b> — C1a 는 Δt 0.1 ms 관측에서만 면적 ↔ <code class="mono">j₀</code> 를 가른다 (R5 · 1D 균질 조건) · C1b 는 65호 모양 재현 불가. 다음 = C1 을 닫고
+              C2 로 갈지 사용자 결정. 진단 전용 · 인용 금지 · 정본 아님</td>
             <td><a href="/bms#assb">지금까지 이룬 것</a> §4·7</td></tr>
         <tr><td><b>위키</b></td>
             <td>이 표에 사본을 두지 않는다 — 아래 "최근 활동" 이 <code class="mono">wiki/log.md</code> 를 요청마다 다시 읽는다</td>
