@@ -38,6 +38,51 @@
   <div class="stat is-static"><b>{{ total }}</b><span>전체 위키 페이지</span></div>
 </div>
 
+{# 2026-11-24 — 흐름별 지금 상태. **정적 사본**이다 (요청마다 세지 않는다) — 날짜를 붙여 두고,
+   원장이 바뀌면 이 표가 먼저 낡는다. 정본은 각 행의 원장 · 상태판이다:
+   게이트 = degradation-degeneracy/docs/08_REVIEW_RESPONSE.md §151 · REIL = bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md §130 ·
+   COMSOL = bms-balancing/docs/COMSOL_REBUILD_SPEC.md §100 · Phantom pOCV = followups/phantom-pocv/STATUS.md ·
+   ASSB = bms-balancing/docs/ASSB_TRANSFER_NOTE.md §6-3-k + followups/assb-contact-truth/STATUS.md (커밋 17b7e56)
+   + bms-balancing/docs/ASSB_WANTED_PAPERS.md §4 2026-11-24 줄 (커밋 0f0522b — C1 3 차 승인).
+   위키 행만 사본을 두지 않고 아래 "최근 활동" (wiki/log.md 를 요청마다 읽는다) 으로 보낸다. #}
+<section class="panel">
+  <h2 class="panel-h">흐름별 지금 상태 <code class="src-of">2026-11-24 사본 · 정본은 각 원장</code></h2>
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>흐름</th><th>지금 (원장 문구의 사본)</th><th>읽을 곳</th></tr></thead>
+      <tbody>
+        <tr><td><b>게이트 루프</b><br><span class="tw-mini">degradation-degeneracy</span></td>
+            <td>마지막 회신 <b>94차</b> (2026-10-07 · 원장 §151) — G93-N1 · G93-N2 한정 범위 종결 수용. <b>실행 GO 아님</b> · 다음 구현 범위는
+              별도 요청 · 사용자 승인 뒤에만</td>
+            <td><a href="/trust">검증층</a> 6절 · <a href="/gate">게이트 원장</a></td></tr>
+        <tr><td><b>REIL 외부 검증</b></td>
+            <td>C4-A 구현 요청서 v2 재검토 (2026-11-08 검토 · 2026-11-24 반입 · 원장 §130) =
+              <code class="mono">REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL</code> — N1 · N3 · N4 · N6 남음. 다음 = 요청서 v3
+              (문서만 · 작성 중) → Codex 재검토. U2 (전체 예산 · 10 h 배분안) 미선택</td>
+            <td><a href="/bms#reil">지금까지 이룬 것</a> §4·8</td></tr>
+        <tr><td><b>COMSOL</b> <span class="tw-mini">(보류)</span></td>
+            <td><b>사용자 보류 (2026-11-24)</b> — 재개 일정 없음 · 자동 재개 없음. 직전: R3 12 시나리오 한정 기능 결과 수용 (전체 절차 PASS
+              아님) · 문서 보충 수용 · <code class="mono">native_ready=false</code> · gate INCOMPLETE (원장 §100)</td>
+            <td><a href="/microshort">마이크로 쇼츠</a></td></tr>
+        <tr><td><b>논문 후속</b><br><span class="tw-mini">Phantom pOCV</span></td>
+            <td>P1 완료 · P2 닫힘 (2026-10-07 · 결론 없음) · P3 닫힘 (2026-11-06 · 세 번 실행 · 세 번 중단) · P4 · P5 대기 —
+              진단 전용 (인용 금지)</td>
+            <td><a href="/pipeline#phantom">연구 파이프라인</a> 6절</td></tr>
+        <tr><td><b>ASSB</b><br><span class="tw-mini">문헌 → 합성 truth</span></td>
+            <td>문헌 흡수 117호에서 멈춤 → 합성 truth (2026-11-24 사용자 결정). C1 2 차 (⚠ 결과를 본 뒤의 규칙 변경 S4′ · S5′): 스파이크 전부
+              통과 · 격자 수렴 (규칙 5) 에서 중단 · 격자 3 / 165. 그 뒤 사용자 "다 권고대로 해" → <b>C1 3 차 승인</b> (해상도 올림 + DC 영 채널 판정 사전
+              등록 · 원장 §4 2026-11-24 줄) — 3 차 결과는 아직 이 표에 없다. 진단 전용 · 인용 금지 · 정본 아님</td>
+            <td><a href="/bms#assb">지금까지 이룬 것</a> §4·7</td></tr>
+        <tr><td><b>위키</b></td>
+            <td>이 표에 사본을 두지 않는다 — 아래 "최근 활동" 이 <code class="mono">wiki/log.md</code> 를 요청마다 다시 읽는다</td>
+            <td><a href="#recent">최근 활동</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="pipe-caveat">"수용" 은 검토자의 판정이고 실행 승인이 아니다. 하네스 (R17 종결 뒤 새 라운드 없음) 와 ③ 정량화는
+    <a href="/bms">지금까지 이룬 것</a> 1절.</p>
+</section>
+
 <section class="panel primer">
   <div class="panel-h">이 위키를 읽는 법 — 색이 뜻하는 것</div>
   <div class="primer-body">
@@ -97,7 +142,7 @@
     <div class="prose prose-tight">{{ index_html|safe }}</div>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="recent">
     <h2 class="panel-h">최근 활동 <code class="src-of">wiki/log.md</code></h2>
     <ol class="tl tl-log">
       {% for e in log %}

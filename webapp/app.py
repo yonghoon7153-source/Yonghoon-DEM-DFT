@@ -396,6 +396,10 @@ def microshort():
     수치 회수와 1198 발동 시험이 각각 **한정 수용**됐다. 지금 제일 먼저 전달돼야 하는 것은
     "수용 ≠ 실행 승인" 이고, 다음 걸음인 fresh 0→30 s 는 미승인 · 미실행이다 (§30-6).
 
+    (2026-11-24 갱신) 화면은 원문 §100 까지 간다 (§10–§16 새 절). 지금 맨 먼저 전달돼야 하는 것은
+    **사용자 보류** (COMSOL 을 쓸 수 없어 후속 0 · 재개 일정 · 자동 재개 없음) 와, R3 가 12 시나리오
+    한정 기능 결과 수용이지 전체 절차 PASS 가 아니라는 것이다.
+
     `/alphabeta` 와 같은 뼈대다: §0 에서 용어를 정의하고, 절마다
     `<div class="plain">` "쉬운 말로" 칸을 단다.
 
@@ -414,8 +418,9 @@ def microshort():
 @app.route("/microshort/summary")
 def microshort_summary():
     """마이크로 쇼츠 — 처음부터 B-min 150 s 종결 (원문 §69) 까지 **한 페이지 요약**. (2026-10-06)
+    (2026-11-24 갱신) 원문 §100 (R3 · 사용자 보류) 까지 — PDF 8 쪽 유지.
 
-    `/microshort` (인계용 · §30 까지) 를 대신하지 않는다. 같은 규율: 숫자는 원문
+    `/microshort` (인계용 · 2026-11-24 판은 §100 까지) 를 대신하지 않는다. 같은 규율: 숫자는 원문
     `bms-balancing/docs/COMSOL_REBUILD_SPEC.md` 와 보존 묶음의 사본 · 경고를 떼지 않는다 · 비유 없음.
     PDF 는 `/microshort/summary.pdf` (이 화면의 headless Chromium 인쇄 사본 — `make_microshort_pdf.sh`).
     """

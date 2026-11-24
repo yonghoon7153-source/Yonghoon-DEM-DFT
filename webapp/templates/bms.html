@@ -10,15 +10,26 @@
    2. **경고를 떼지 않는다.** "충족" 옆의 "그러나 전체 수렴은 미완" 을 떼면
       그 순간 다른 주장이 된다. §5 가 그 자리다.
    3. **이룬 것과 안 이룬 것을 같은 크기로 적는다.** 성과만 모아 놓은 화면은
-      이 저장소의 규율과 반대 방향이다. #}
+      이 저장소의 규율과 반대 방향이다.
+
+   2026-11-24 갱신 — 덧붙이기만 했다 (지난 판의 문장은 지우지 않고 "지난 상태" 로 둔다).
+   원천: REIL 원장 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §0–§130 (§4·8 신설) ·
+   ASSB 원장 `docs/ASSB_WANTED_PAPERS.md` (머리 갱신 줄 · §3-b · §4) · `docs/ASSB_TRANSFER_NOTE.md` §6-3-j · §6-3-k ·
+   `followups/assb-contact-truth/STATUS.md` · `DESIGN_v1.md` §8 (커밋 17b7e56 의 C1 2 차까지) · 원장 §4 2026-11-24 줄
+   (커밋 0f0522b — C1 3 차 승인 · (아)(자)(고) 처리 · 3 차의 결과는 옮기지 않았다) (§4·7) ·
+   COMSOL 원장 `docs/COMSOL_REBUILD_SPEC.md` §100 (짧은 안내만 — 세부는 /microshort) ·
+   게이트 원장 `degradation-degeneracy/docs/08_REVIEW_RESPONSE.md` §151 (번호 줄만). #}
 <header class="phead phead-pipe">
-  <p class="eyebrow">2026-09-16 작성 · 2026-09-29 갱신 · bms-balancing</p>
+  <p class="eyebrow">2026-09-16 작성 · 2026-09-29 갱신 · 2026-11-24 갱신 · bms-balancing</p>
   <h1>지금까지 이룬 것</h1>
   <p class="lead">BMS 쪽 작업은 <b>세 갈래로 독립</b>해 있다 — 규진팀 마이크로쇼츠
     COMSOL 모델, α·β 산출을 서명·검증하는 하네스, 그리고 α·β 열화 정량화 자체.
     셋은 서로 다른 속도로 움직였고 <b>닫힌 정도도 다르다.</b> 이 화면은 그 셋을
     나란히 놓고, 각 갈래에서 <b>실측으로 닫힌 것</b>과 <b>아직 아닌 것</b>을
-    같은 크기로 적는다.</p>
+    같은 크기로 적는다.
+    <b>(2026-11-24 갱신)</b> 그 뒤 이 화면에 흐름이 둘 더 붙었다 — <b>REIL 외부 검증</b>(§4·8)과
+    <b>ASSB 문헌 → 합성 truth</b>(§4·7). 흐름마다 원장이 따로이고 서로 섞지 않는다.
+    ① COMSOL 은 <b>2026-11-24 사용자 보류</b>다.</p>
 </header>
 
 <div class="pipe-cite">
@@ -31,7 +42,46 @@
 
 <!-- ══ 1 ══════════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">1</span> 세 갈래 — 어디까지 왔나 (2026-09-29 갱신)</h2>
+  <h2 class="pipe-h"><span class="pipe-n">1</span> 세 갈래 — 어디까지 왔나 (2026-09-29 갱신 · 2026-11-24 갱신)</h2>
+
+  <h3 class="tw-h3">2026-11-24 — 흐름별 지금 (원장 문구의 사본)</h3>
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>흐름</th><th>지금 (사본)</th><th>근거</th><th>다음 / 사용자 결정</th></tr></thead>
+      <tbody>
+        <tr><td><b>① COMSOL</b></td>
+            <td><b>사용자 보류 (2026-11-24)</b> — 재개 일정 없음 · 자동 재개 없음. 보류 직전 판정: S1 receiver-bound ACK 통합 R3 의
+              12 시나리오 <b>한정 기능 결과 수용</b> (전체 절차 PASS 는 인정되지 않았다) · 문서 보충 수용 (두 지적 문서 범위 종결).
+              <code class="mono">native_ready=false</code> · 전체 · 정상 gate INCOMPLETE</td>
+            <td><code class="mono">COMSOL_REBUILD_SPEC.md</code> §100 · <a href="/microshort">마이크로 쇼츠</a></td>
+            <td>사용자가 COMSOL 을 다시 쓸 수 있다고 알릴 때 이 상태부터 — 그때도 단계마다 별도 승인</td></tr>
+        <tr><td><b>② 하네스</b></td>
+            <td>R17 후속 3 차 종결 (2026-09-24) 뒤 <b>새 라운드 없음</b></td>
+            <td><code class="mono">WORKING_STATE.md</code> "지금 상태" · <code class="mono">reviews/R17_*</code></td>
+            <td>실데이터 A/B (사용자 승인 뒤 · 사용자 기계) · package 독립 실행 · <code class="mono">UNKNOWN_BLOCKERS</code>
+              기계 정본화 — 09-29 판 그대로</td></tr>
+        <tr><td><b>③ 정량화</b></td>
+            <td>09-29 판 그대로 — 폭 측정 원장 · FINDINGS · 새 모델 설계 요구서에 그 뒤 날짜가 붙은 기록이 없다</td>
+            <td><code class="mono">reviews/BML_R1_RESPONSE.md</code> · <code class="mono">docs/NEW_MODEL_REQUIREMENTS.md</code></td>
+            <td>§4·5 의 "남은 일" 표</td></tr>
+        <tr><td><b>REIL 외부 검증</b></td>
+            <td>C4-A 구현 요청서 v2 재검토 = <code class="mono">REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL</code> —
+              N2 · N5 · N7 · C1 문서 범위 종결 · <b>N1 · N3 · N4 · N6 남음</b> · 비차단 C2 (검토 2026-11-08 · 2026-11-24 반입)</td>
+            <td><code class="mono">REIL_PREREQUISITES_STATUS_20261004.md</code> §130 · <a href="#reil">§4·8</a></td>
+            <td>구현 요청서 v3 (문서만 · ⚠ 지금 작성 중 — 원장에 아직 절이 없다) → Codex 재검토. REIL 의 U2 (전체 예산 · 10 h 배분안) 는 미선택</td></tr>
+        <tr><td><b>ASSB</b></td>
+            <td>문헌 흡수 <b>117호에서 멈춤</b> → 합성 truth (2026-11-24 사용자 결정). C1 1 차: 스파이크 S4 · S5 실패로 격자 전 중단
+              (격자 0 / 165). C1 2 차 (⚠ 결과를 본 뒤의 규칙 변경 S4′ · S5′ — 사용자 승인 (가)): 스파이크 전부 통과 ·
+              <b>격자 수렴 (설계서 §5-8 규칙 5) 에서 중단</b> — 격자 3 / 165 · 검출 지도 (C1a) · 바인더 판정 (C1b) 없음.
+              진단 전용 · 인용 금지 · 정본 아님</td>
+            <td><code class="mono">ASSB_TRANSFER_NOTE.md</code> §6-3-k 결정 3 · <code class="mono">followups/assb-contact-truth/STATUS.md</code> · 원장 §4 2026-11-24 줄 · <a href="#assb">§4·7</a></td>
+            <td>2 차 뒤 사용자 "다 권고대로 해" (2026-11-24) → <b>C1 3 차 승인</b> (해상도 올림 + DC 영 채널 판정을 DC 결과 전에 사전 등록 · 설계서 §8-7).
+              ⚠ 3 차의 사전 등록 · 결과는 이 화면에 아직 없다 — 상태판 · 설계서가 정본</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="pipe-note"><b>읽는 법.</b> "수용" 은 검토자의 판정이고 <b>실행 승인이 아니다.</b> 아래 세 카드는 2026-09-29 판이고,
+    카드마다 끝에 2026-11-24 한 줄만 덧붙였다.</p>
 
   <div class="pipe-phases">
     <div class="ph">
@@ -52,6 +102,10 @@
         전부 <b>짧은 시간 진단</b>이다 — <b>30 s native 는 미승인·미실행</b>, 장시간 ·
         후보 C 는 보류, 정상 전체 gate 는 INCOMPLETE, C2(TTY) 미완도 그대로(§26-2).
         <b>전체 수렴은 미완이고 본 실행은 보류</b>, 모델 검증 완료가 아니다.</p>
+      <p class="ph-more"><b>(2026-11-24 갱신)</b> 그 뒤 원장 §31–§100 은 이 화면에 옮기지 않는다 — 세부는
+        <a href="/microshort">마이크로 쇼츠</a>. 위의 "30 s native 는 미승인·미실행" 같은 문장은 2026-09-29 상태다.
+        최신 §100: R3 12 시나리오 <b>한정 기능 결과 수용</b>(전체 절차 PASS 아님) · 문서 보충 수용 ·
+        <code class="mono">native_ready=false</code> · gate INCOMPLETE, 그리고 <b>사용자 보류</b>(재개 일정 없음 · 자동 재개 없음).</p>
     </div>
     <div class="ph">
       <span class="ph-n">② 하네스</span>
@@ -66,6 +120,8 @@
         <b>(2026-09-29 갱신)</b> 그 뒤 <b>새 라운드는 없다.</b> 남은 것은 실데이터
         A/B(사용자 승인 뒤, 사용자 기계) · package 독립 실행 ·
         <code class="mono">UNKNOWN_BLOCKERS</code> 기계 정본화다.</p>
+      <p class="ph-more"><b>(2026-11-24 갱신)</b> 여전히 새 라운드는 없다 — <code class="mono">bms-balancing/reviews/</code> 에
+        R17 뒤의 요청 · 회신이 없고, <code class="mono">WORKING_STATE.md</code> 의 "지금 상태" 도 R17 후속 3 차 종결 그대로다.</p>
     </div>
     <div class="ph">
       <span class="ph-n">③ 정량화</span>
@@ -78,6 +134,8 @@
         <b>(2026-09-29 갱신)</b> 09-23 뒤 이 갈래 문서에서 바뀐 것은 새 모델 설계
         요구서 §4-3 의 <b>P6 문장 정정</b>(2026-09-28, §4·6) 하나다 — 폭 측정 원장과
         FINDINGS 는 09-22 뒤 그대로다.</p>
+      <p class="ph-more"><b>(2026-11-24 갱신)</b> 그 뒤에도 이 갈래 문서 (폭 측정 원장 · FINDINGS · 요구서) 에 새 날짜가 붙은
+        기록은 없다.</p>
     </div>
   </div>
 </section>
@@ -470,7 +528,8 @@
         <tr><td><b>실행 비용</b></td><td>사이클당 초~분</td><td>본 실행 <b>~10 시간</b> · 재생성 28 분</td></tr>
         <tr><td><b>리뷰가 보는 것</b></td><td>하네스 자체 (계약·서명·validator)</td><td>RUN_SCOPE 계산 코드</td></tr>
         <tr><td><b>리뷰가 왜 있나</b></td><td>산출을 정본으로 올릴 자격</td><td><b>비싼 실행 전 GO</b> — 이게 존재 이유</td></tr>
-        <tr><td><b>번호</b> (2026-09-29 갱신)</td><td><code class="mono">R2</code>~<code class="mono">R14</code> · <code class="mono">R17</code> — <b>R17 → 후속 3 차까지 종결</b>(2026-09-24), 그 뒤 새 라운드 없음</td><td>14차 · 55~82차 — <b>82차 요청 발송 · 회신 대기</b>, 실행 GO 아님</td></tr>
+        <tr><td><b>번호</b> (2026-11-24 갱신)</td><td><code class="mono">R2</code>~<code class="mono">R14</code> · <code class="mono">R17</code> — <b>R17 → 후속 3 차까지 종결</b>(2026-09-24), 그 뒤 새 라운드 없음 (2026-11-24 에도)</td><td>14차 · 55~94차 — 마지막 회신 <b>94차</b>(2026-10-07, 원장 §151): G93-N1 · G93-N2 한정 범위 종결 수용 · <b>실행 GO 아님</b> · 다음 구현 범위는 별도 요청 · 사용자 승인 뒤</td></tr>
+        <tr><td>번호 — 지난 상태 (2026-09-29 판)</td><td><code class="mono">R2</code>~<code class="mono">R14</code> · <code class="mono">R17</code> — <b>R17 → 후속 3 차까지 종결</b>(2026-09-24), 그 뒤 새 라운드 없음</td><td>14차 · 55~82차 — <b>82차 요청 발송 · 회신 대기</b>, 실행 GO 아님</td></tr>
         <tr><td>번호 — 지난 상태 (2026-09-16 판)</td><td><code class="mono">R2</code>~<code class="mono">R14</code> · <b>R14 = GO</b>, 다음 요청문 미작성</td><td>14차 · 55~64차 · <b>64차 = NO-GO</b>(발견 셋은 코드로 닫음), 다음 요청문 미작성</td></tr>
       </tbody>
     </table>
@@ -547,7 +606,27 @@
 
 <!-- ══ 4 ══════════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">4</span> ① COMSOL — 아홉 축 전부 우리 재계산까지 (2026-09-29 갱신)</h2>
+  <h2 class="pipe-h"><span class="pipe-n">4</span> ① COMSOL — 아홉 축 전부 우리 재계산까지 (2026-09-29 갱신 · 2026-11-24 사용자 보류)</h2>
+
+  {# 2026-11-24 — 짧은 안내만 둔다. 세부 (§31–§100) 와 쉬운 말 풀이는 /microshort 가 맡는다.
+     원천: docs/COMSOL_REBUILD_SPEC.md §100. 판정 문자열은 글자 그대로. #}
+  <div class="pipe-quote pipe-quote-bad">
+    <p><b>(2026-11-24 갱신) 지금 이 갈래는 사용자 보류다 — 재개 일정 없음 · 자동 재개 없음.</b>
+      사용자 원문 (원장 §100): "현재 제가 COMSOL을 사용할 수 없어 당분간 COMSOL 관련 후속 작업은 보류해 주세요. …
+      지금 추가 구현·시험·OS/Job·COMSOL 실행이나 자동 재개는 하지 않습니다." 재개 조건은 사용자가 COMSOL 을 다시 쓸 수 있다고
+      알릴 때이고 (<code class="mono">automatic_resume=false</code> · <code class="mono">new_execution_authorization=false</code>),
+      보류는 이전 검증 결과의 취소가 아니다. 재개해도 단계마다 별도 승인이다.</p>
+    <p><b>보류 직전의 판정</b> (§100 · 송신 측 검토 2026-11-09 · 2026-11-24 인계 반입 · 이 저장소 실행 0): S1 receiver-bound ACK
+      통합 R3 — 12 시나리오 (오프라인 10 + 실제 연결 2) 의 <b>한정 기능 결과 수용</b>
+      (<code class="mono">LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_DELIVERY_STOP_PRESERVED</code>). 한정 기능 결과 수용은
+      <b>전체 절차 PASS 가 아니다</b> — 전체 절차 PASS 는 인정되지 않았다. 문서 보충은 수용 · 종결
+      (<code class="mono">DOCUMENT_SUPPLEMENT_ACCEPTED_RBI_R1_READY_01_CLOSED</code>). 유지:
+      <code class="mono">contract_adopted / native_ready / approved / usable = false</code> · 전체 · 정상 gate INCOMPLETE.
+      ⚠ §99 (2026-10-30) 와 §100 사이의 경과는 원장에 기록이 없다 — §100 의 근거는 인계 묶음 안의 두 검토 회신뿐이다.</p>
+    <p>그 사이의 §31–§99 (정상 fresh native 한정 진단 · B-min · 미세단락 물리 탐구 S0 · S1 계열 — 원장 절 제목) 와 쉬운 말 풀이는
+      <a href="/microshort">마이크로 쇼츠 인계 화면</a>에 있다. <b>이 절의 아래는 2026-09-29 판 (§30 까지) 그대로</b>이고,
+      그 안의 "30 s native 미승인·미실행" 같은 문장은 그때의 상태다.</p>
+  </div>
 
   <p class="pipe-p">이 갈래는 계산이 <b>다른 기계</b>에서 돌고 결과가 ZIP 으로
     건너온다. 그래서 규율이 하나 더 붙는다 — <b>받은 요약을 그대로 옮기지 않고</b>
@@ -693,13 +772,19 @@
 
 <!-- ══ 4.5 ═══════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">4·5</span> 다음 무엇을 하나 — 파이프라인 (2026-09-29 갱신)</h2>
+  <h2 class="pipe-h"><span class="pipe-n">4·5</span> 다음 무엇을 하나 — 파이프라인 (2026-09-29 갱신 · 2026-11-24 갱신)</h2>
 
   <p class="pipe-p">세 갈래가 각자 어디까지 왔는지는 위에 있다. 이 절은 <b>그래서
     다음에 무엇을 하는가</b>다. 핵심은 하나 — <b>남은 일이 codex 를 기다리는 것뿐이
     아니다.</b> 기다려야 하는 것과 지금 되는 것을 갈라 적는다.</p>
 
   <h3 class="tw-h3">방금 닫은 것</h3>
+
+  <p class="pipe-p"><b>(2026-11-24 갱신) 그 뒤 — 닫히거나 정해진 것.</b> ① REIL: E1-2 · E1-3 결과 수용 (원장 §122 — 수치 경고
+    유지 · 실행 승인 아님) · C4-A 범위안 v2 수용 (§125 — 구현 요청서의 기준). ② ASSB: 원장 §3-b 155 건 일괄 처리 (2026-11-17
+    "권고대로") · 문헌 흡수를 117호에서 멈추고 합성 truth 로 (2026-11-24 사용자 결정) · 남은 §3-b 항목과 C1 3 차 승인 (2026-11-24 "다 권고대로 해").
+    ③ COMSOL: R3 한정 기능 결과 · 문서 보충
+    수용 (§100) 뒤 사용자 보류. 하네스와 ③ 정량화 문서는 09-29 판 그대로다. 바로 아래 문단들은 그때의 기록이다.</p>
 
   <p class="pipe-p"><b>(2026-09-29 갱신) 그 뒤 닫힌 것 둘.</b> ① 하네스 <b>R17 후속 3 차 종결</b>
     (2026-09-24 — 그 종결이 무엇이 <b>아닌지</b>는 §5 ②). ② 새 모델 설계 요구서 §4-3 의
@@ -760,6 +845,44 @@
 
   <h3 class="tw-h3">남은 일 — 세 줄로 나뉜다</h3>
 
+  <p class="pipe-p"><b>(2026-11-24 갱신)</b> 사용자가 정할 것이 늘어서 "사용자 결정" 줄을 따로 뒀다. 2026-09-29 판 표는 아래에 접어
+    그대로 둔다. 각 칸은 원장 · 상태판 문구의 사본이다.</p>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>줄</th><th>무엇</th><th>무엇이 막나</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3"><b>지금 되는 것</b><br>(합성·문서)</td>
+            <td><b>도금 칸이 어디로 새는가</b> — 09-29 판 그대로 (그 뒤 진행 기록을 이 화면의 원천에서 찾지 못했다)</td>
+            <td><b>아무것도.</b> 합성이라 실셀도 남의 기계도 필요 없다</td></tr>
+        <tr><td><b>ASSB 합성 truth C1 3 차</b> — 2026-11-24 사용자 "다 권고대로 해" 로 승인: (가) 표준 해상도 올림 + DC 영 채널 판정을 DC 결과 전에
+              사전 등록 (원장 §4 2026-11-24 줄) · 사전 등록 · 실행 기록 자리 = 설계서 §8-7 · ⚠ 그 결과는 이 화면에 아직 없다</td>
+            <td>버리는 사본 · RUN_SCOPE 밖 (P3 선례). 결과 수치는 진단 전용 · 인용 금지 · 정본 아님</td></tr>
+        <tr><td><b>REIL C4-A 구현 요청서 v3</b> — v2 재검토가 남긴 N1 · N3 · N4 · N6 의 정정 대응표 (변경 위치 · 해결 방식 · 유지 제한) +
+              비차단 C2 반영 위치 (원장 §130 의 "다음") · ⚠ 지금 작성 중</td>
+            <td><b>안 막힌다</b> — 문서 정정 범위다. 구현 · pytest 수집 · 시험 · 최적화 · 실행 승인 · U2 채택이 아니다 (§130)</td></tr>
+        <tr><td><b>실데이터 기계</b></td>
+            <td>폭이 넓어진 게 축퇴인가 탐색 실패인가 · U2 닫기 (하네스의 열린 항목 — pOCV 가 원자료인지 필터본인지 · REIL 의 U2 와 다른 것) ·
+              실데이터 A/B — 09-29 판 그대로</td>
+            <td>원자료가 있는 기계 · A/B 는 사용자 승인 뒤</td></tr>
+        <tr><td rowspan="2"><b>사용자 결정</b></td>
+            <td><b>ASSB 원장 §3-b 의 남은 것</b> (2026-11-24 "다 권고대로 해" 뒤 · 원장 §4 2026-11-24 줄) — (아)(자) 는 보류 유지 → <b>C1 결과를 본 뒤
+              판단</b> ((자) 원자료 받는 길도 그때) · (메) 조건부 · (새) 25호 원문 재업로드 (선택) 는 그대로. (고) 는 DEM 세션을 열 때 사용자가 (누) 전달과
+              함께 넘긴다 · Sharafi 2016 요청 안 함 · 5호 개념 분할 안 함</td>
+            <td>C1 결과 · 사용자. (고) 는 DEM 브랜치 몫 — 이 브랜치는 기록만</td></tr>
+        <tr><td><b>게이트 (degradation-degeneracy)</b> — 94차 (2026-10-07, 원장 §151) 뒤 다음 구현 범위</td>
+            <td>"다음 구현 범위는 별도 요청 · 사용자 승인 뒤에만" (§151)</td></tr>
+        <tr><td rowspan="2"><b>밖을 기다리는 것</b></td>
+            <td><b>REIL</b> — 요청서 v3 의 Codex 재검토 → (수용되면) 사용자의 구현 승인 · REIL 의 U2 (전체 예산 · 10 h 배분안) 선택</td>
+            <td>외부 리뷰 · 사용자. U2 의 10 h 는 미채택 제안 그대로다</td></tr>
+        <tr><td><b>① COMSOL</b> — 사용자 보류</td>
+            <td>사용자가 COMSOL 을 다시 쓸 수 있다고 알릴 때 (재개 일정 없음 · 자동 재개 없음)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <details class="disc">
+    <summary>지난 상태 — 2026-09-29 판의 이 표와 그 머리 문단 (그대로)</summary>
   <p class="pipe-p"><b>(2026-09-29 갱신)</b> 요청문 줄은 "밖을 기다리는 것" 으로 옮겼고
     (하네스는 보낼 것이 없고 게이트는 회신 대기다), 실데이터 A/B 를 실데이터 줄에 더했다.
     바꾸기 전 표는 아래에 접어 그대로 둔다.</p>
@@ -786,6 +909,7 @@
       </tbody>
     </table>
   </div>
+  </details>
 
   <details class="disc">
     <summary>지난 상태 — 2026-09-23 판의 이 표 (그대로)</summary>
@@ -825,7 +949,8 @@
     <b>직렬로 보이는 것은 ① COMSOL 뿐이다</b> (A 가 보완돼야 재검토가 있고, 재검토가
     있어야 B 승인 얘기가 나온다).
     <b>(2026-09-29 갱신)</b> 지금 그 사슬은 §30 보완 → 변경부 한정 검증 → 수용 → 30 s 별도
-    승인 → 그 결과를 보고 다음 연장을 따로 정하는 순서다 — 괄호 안의 A · B 순서는 지난 상태다.</p>
+    승인 → 그 결과를 보고 다음 연장을 따로 정하는 순서다 — 괄호 안의 A · B 순서는 지난 상태다.
+    <b>(2026-11-24 갱신)</b> 그 사슬은 지금 §100 뒤 <b>사용자 보류</b>로 멈춰 있다 (§4 머리 · 재개 일정 없음).</p>
 
   <p class="pipe-note"><b>그 뒤의 긴 꼬리.</b> 요구서가 미실행 실험을 일곱 적어 뒀다 —
     조건수 측정(이 계보에 없는 수치) · γ 직접 적합이 표현력 문제인지 축퇴인지 ·
@@ -923,8 +1048,116 @@
 </section>
 
 <!-- ══ 4.7 ═══════════════════════════════════════════════════════════ -->
-<section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">4·7</span> ASSB 열화 정량 — 코드 전에 <b>문헌 원장</b>부터 (2026-09-29 갱신)</h2>
+<section class="pipe-sec" id="assb">
+  <h2 class="pipe-h"><span class="pipe-n">4·7</span> ASSB 열화 정량 — 코드 전에 <b>문헌 원장</b>부터 (2026-09-29 갱신 · 2026-11-24 갱신 — 117호에서 멈춤 → 합성 truth)</h2>
+
+  {# 2026-11-24 갱신 — 새 판을 위에 쓰고 2026-09-29 판 (80호까지) 은 아래에 그대로 둔다.
+     원천: 원장 머리 "갱신:" 줄 (2026-11-17) · §3-b 머리 "2026-11-17 일괄 결과" 문단과 행 꼬리 · §4 행 ·
+     ASSB_TRANSFER_NOTE.md §6-3-j · §6-3-k (결정 1–4) · followups/assb-contact-truth/STATUS.md · DESIGN_v1.md §8-3 · §8-4 · §8-6
+     (커밋 17b7e56) · 원장 §3-b (아)(자)(고) 꼬리 · §4 2026-11-24 줄 (커밋 0f0522b — C1 3 차 승인).
+     합성 truth 수치는 중단 판정에 쓰인 값만 옮긴다. 3 차 (설계서 §8-7 · run3/) 는 작성 · 실행 중일 수 있어 읽지 않았다. #}
+  <div class="pipe-cite">
+    <b>이 절의 수와 판정은 사본이다.</b> 원장은 <code class="mono">bms-balancing/docs/ASSB_WANTED_PAPERS.md</code>
+    (머리 "갱신:" 줄 · §3-b · §4), 큐와 결정은 <code class="mono">bms-balancing/docs/ASSB_TRANSFER_NOTE.md</code> §6-3-j · §6-3-k,
+    합성 truth 는 상태판 <code class="mono">followups/assb-contact-truth/STATUS.md</code> · 설계서 <code class="mono">DESIGN_v1.md</code> 다.
+    합성 truth 의 결과 수치는 <b>진단 전용 · 인용 금지 · 정본 아님</b>이고 본 연구 수치와 섞지 않는다 (code · env identity 가 다르다) —
+    이 절은 중단 판정에 쓰인 값만 옮긴다.
+  </div>
+
+  <h3 class="tw-h3">2026-11-24 갱신 — 117호에서 문헌 흡수를 멈췄다</h3>
+
+  <p class="pipe-p">80호 뒤로 3차 묶음의 남은 아홉 편 (파일 43~50 · 49-2) 이 81~89호로 들어와 3차 묶음이 끝났고 (2026-09-30), 90호는
+    원장 밖 사용자 공급이며, 4차 묶음 (파일 51–64 · 원장 §1 요청 14 편) 이 91~104호다 (원장 §4 행 · 전달 노트 §6-3-j).
+    2026-11-17 사용자 결정으로 <b>5차 묶음 13 편</b> (원장 §1 미수령 중 ★★★★ 1 + ★★★ · 지목 3 회 이상 12) 만 받아 105~117호로 흡수했고,
+    <b>이 묶음 뒤 문헌 흡수는 멈춘다</b> (전달 노트 §6-3-k 결정 1 · 2). 멈추는 이유로 적힌 것: 원장 §1 행이 38호 판 116 → 104호 판 466 으로
+    늘어 "전부 받기는 수렴하지 않는다" · 핵심 측정량 <code class="mono">θ(N)</code> 은 104 편 동안 0 (원장 §2 의 '목록에 없는 종류' 공백).</p>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>무엇</th><th>지금 — 117호까지 (2026-11-24 판 · 사본)</th><th>원천</th></tr></thead>
+      <tbody>
+        <tr><td>흡수 호</td><td>117호 — 5차 묶음 #1–#13 = 105–117호 · 4차 묶음 파일 51–64 = 91–104호 · 여기서 흡수 멈춤</td><td>원장 머리 "갱신:" 줄 · §4 행</td></tr>
+        <tr><td>원장 §1 행 수</td><td>104호 판 466 (38호 판 116 에서 +350) · 미수령 400 = ★★★★ 1 · ★★★ 62 · ★★ 162 · ★ 175 —
+          117호 판의 행 수는 이 화면이 다시 세지 않았다 (원장이 정본)</td><td>전달 노트 §6-3-k "고른 규칙" (2026-11-17 기계 집계 · ✅ 흡수 표시 문자열 기준)</td></tr>
+        <tr><td>원장 §3-b 보류 판단 거리</td><td><b>155 건 (가)–(규) — 2026-11-17 일괄로 전부 처리</b> · A 117 · B 5 · C 1 · D 28 · 결정 유지 4 · 보류 유지 0</td>
+          <td>원장 §3-b 머리 "2026-11-17 일괄 결과" 문단 — 행 꼬리 표지 155 를 이 화면이 다시 세어 같은 분포 (결정·반영 117 · 실행 권고 5 · 사용자 행동 권고 1 · 종결 28 · 결정 유지 4)</td></tr>
+        <tr><td>카드 채움표 누적</td><td>≈20.0 → ≈20.5 — §3-b 일괄의 108호 Q5 반 칸 하나 (<code class="mono">θ(N)</code> 과 무관)</td><td>원장 §3-b 머리 · 전달 노트 §6-3-k 결정 3</td></tr>
+        <tr><td><code class="mono">θ(N)</code></td><td>0/117 — 105–117호 13 편 모두 0 · 흡수 때 새 칸 0/13</td><td>전달 노트 §6-3-k 결정 3 "신호 성립"</td></tr>
+        <tr><td>원장 §4 갱신 기록</td><td>117호 행 + "§3-b 일괄 (5차 묶음 뒤)" 행 (2026-11-17) + 2026-11-24 줄 ("사용자 승인 대기" 처리 두 차례) 까지</td><td>원장 §4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="tw-h3">2026-11-17 사용자 결정 — §3-b 155 건을 "권고대로" 한 번에 (원장 §3-b 머리의 사본)</h3>
+
+  <ul class="pg-list">
+    <li><b>결정:</b> "ㅇㅇ 먹이고 이거 한다음에 … 미뤄둔 결정등에 대해서 권고대로 진행하자" (104호 뒤 · 5차 묶음 요청 때) — 5차 묶음 13 편을
+      흡수한 뒤 이 절의 보류 판단 전부 (155 건 · 결정·반영 표시 4 건 제외) 를 권고대로 한 번에 처리한다. 2026-09-28 의 "더 나중에 한 번에
+      판단" 의 시점이 이것으로 정해졌다.</li>
+    <li><b>결과 — 각 행 끝 꼬리가 결정이다:</b> <b>A 117</b> (문서 결정 — 원장 · 전달 노트는 같은 날 반영) · <b>B 5</b> ((아)(자)(차)(처)(고) —
+      실행 권고 · 사용자 승인 대기 · (고) 는 DEM 브랜치 몫) · <b>C 1</b> ((새) — 25호 원문 재업로드 · 선택) · <b>D 28</b> (종결 — 요청 · 연락 · 판독
+      행은 문헌 흡수 멈춤) · <b>결정 유지 4</b> ((라)(마)(바)(사)) · 보류 유지 0.</li>
+    <li><b>채움표 반 칸:</b> (가) 29호 Q4 · (나) 38호 Q2 <b>+0.5 유지</b> · 5차 묶음 판단 대기 여덟 가운데 <b>108호 Q5 +0.5 만</b> → 누적
+      ≈20.0 → ≈20.5 · <code class="mono">θ(N)</code> 0/117 그대로. 5차 묶음 digest 의 새 판단 거리 45 건 (§3-b 행 없음) 도 같은 날 닫았다 —
+      독립 격상 0 · A 19 · D 26.</li>
+    <li><b>그날 원장이 적은 "사용자가 정할 것":</b> B 다섯 (+ (메) 조건부) 의 실행 여부 · (새) · 합성 truth R8 '두 형태를 다 돌릴지' · 5호 개념
+      분할 제안 · ASSB 다음 방향. → 2026-11-24 에 두 차례로 처리됐다 (원장 §4 2026-11-24 줄): ① "권고대로 진행하고 백그라운드 에이전트로 진행" —
+      다음 방향 · R8 (두 형태) · (차)(처) (첫 실행 C1) (바로 아래) ② "다 권고대로 해" — C1 3 차 승인 · (아)(자) 보류 유지 → C1 결과 뒤 판단 ·
+      (고) DEM 세션을 열 때 사용자가 넘김 · (메) 조건부 · (새) 선택 그대로 · Sharafi 2016 요청 안 함 · 5호 개념 분할 안 함.</li>
+  </ul>
+
+  <h3 class="tw-h3">2026-11-24 사용자 결정 — 문헌을 접고 합성 truth 로 (전달 노트 §6-3-k 결정 3 의 사본)</h3>
+
+  <ul class="pg-list">
+    <li><b>미리 정한 신호:</b> 13 편 동안 <code class="mono">θ(N)</code> 칸이 한 번도 안 움직이면 문헌 쪽을 접는 신호로 본다 — <b>성립</b>
+      (2026-11-17 사실: 0/104 → 0/117 · 흡수 때 새 칸 0/13).</li>
+    <li><b>결정 원문:</b> "권고대로 진행하고 백그라운드 에이전트로 진행" — 문헌 쪽을 접고 합성 truth 로 간다 · 첫 단계 = 설계서 (문서만) ·
+      첫 실행 후보 = 원장 §3-b (차)(처) (면적 노브 ↔ <code class="mono">j₀</code> 노브 분리 forward) · R8 = 계단 · 점진 두 형태.</li>
+    <li><b>실행 경계:</b> (차)(처) forward 쓸기는 RUN_SCOPE 밖 버리는 사본에서 (P3 선례 — 설계서 · 승인 문서의 사전 등록 규칙 뒤) ·
+      <code class="mono">degradation-degeneracy</code> 코드로 옮기는 단계만 게이트 루프 — 리뷰어 사용 불가 중에는 그 단계가 대기다. 문헌은
+      결정 4 대로 특정 판단이 그 수치를 요구할 때만 받는다.</li>
+  </ul>
+
+  <h3 class="tw-h3">합성 truth — C1 은 두 번 시도했고 두 번 판정 없이 멈췄다 · 3 차 승인 (상태판 진행표 · 설계서 §8 · 원장 §4 의 사본)</h3>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>단계</th><th>상태 (사본)</th><th>근거</th><th>다음 / 사용자 결정</th></tr></thead>
+      <tbody>
+        <tr><td>D0 다음 방향</td><td>완료 — 2026-11-24 사용자 결정 (권고대로)</td><td>전달 노트 §6-3-k 결정 3</td><td>—</td></tr>
+        <tr><td>D1 설계서 v1</td><td>승인 (위임) — 사용자 "권고대로 진행하고 백그라운드 에이전트로 진행" → 설계서 §7-3 D1–D8 '권고' 칸 그대로</td><td>설계서 §8-1</td><td>—</td></tr>
+        <tr><td>C1 1 차 — 구현 스파이크</td><td>S0–S3 통과 · <b>S4 · S5 실패 → §5-8 규칙 1 로 격자 전에 중단</b> (T0 05:17:32Z → 05:41:04Z) · 격자 0 / 165 ·
+          판정 표 없음 · 규칙을 고치지 않았다</td><td>설계서 §8-3 · 커밋 <code class="mono">0856bc3b</code></td><td>사용자 선택 (가) 승인 → 2 차</td></tr>
+        <tr><td>C1 2 차 — ⚠ 사후 규칙 변경</td><td>사용자 승인 (가) 의 S4′ (전해질 농도의 전압 되먹임 ≤ 1e-6 V) · S5′ (PyBaMM 이 실제로 쓰는 정칙화 g 기준의
+          <code class="mono">j₀</code> 동치) — <b>결과를 본 뒤의 변경</b>으로 표기 (P3 3 차 선례 · 1 차 실패 기록은 그대로) · 새 시계 원점 T0₂ 06:04:42Z ·
+          스파이크 S0–S3 · S4′ · S5′ <b>전부 통과</b> (S7 EIS 보류) · 격자 전 배관 점검이 코드 결함 둘을 잡아 고쳤다</td>
+          <td>설계서 §8-4 · §8-5 · §8-6 · 커밋 <code class="mono">17b7e56</code></td><td>—</td></tr>
+        <tr><td>C1 격자 수렴 (§5-8 규칙 5)</td><td><b>중단</b> (06:22:17Z) — τ̂ 최대 변화 2.95 % &gt; 1 % (Tafel 진폭 펄스 18 개 전부) · z 0.50 % ≤ 5 % ·
+          격자 3 / 165. 정밀판이 격자와 허용오차를 함께 바꿨으므로 어느 쪽 몫인지는 미확인 (규칙대로 가르지 않았다)</td>
+          <td>설계서 §8-6 · <code class="mono">c1_20261124/run2_tables/conv.json</code></td><td>선택지 (가)(나)(다) → 사용자는 (가) 를 골랐다 (다음 줄)</td></tr>
+        <tr><td>C1 3 차 — 승인</td><td>2026-11-24 사용자 "다 권고대로 해" — (가) 표준 해상도 올림 + DC 영 채널 판정을 DC 결과 전에 사전 등록 (원장 §4 2026-11-24 줄).
+          위키 log 의 같은 날 decision 항목은 k₀ 의 g_reg 재정규화 확인 · C1b 문장의 '정칙화 영향' 조건을 함께 적었다. 사전 등록 · 실행 기록 자리 = 설계서 §8-7
+          (실행 에이전트가 계산 전에 적는다). <b>⚠ 이 화면은 3 차의 사전 등록 · 결과를 아직 옮기지 않았다.</b></td>
+          <td>원장 §4 2026-11-24 줄 · <code class="mono">wiki/log.md</code> 2026-11-24 decision</td><td>3 차 결과 · 그 뒤 (아)(자) 판단</td></tr>
+        <tr><td>C1a (차) 검출 지도 · C1b (처) 바인더 판정</td><td>없음 — 격자 0 (C1a 0 / 72 · C1b 0 / 80) · 판정 표 · '가른다' 문장 없음</td><td>상태판 진행표</td><td>새 승인 · 새 시계 원점</td></tr>
+        <tr><td>C2 역문제 · 식별성 · C3 동역학 truth</td><td>미착수</td><td>설계서 §6</td><td>—</td></tr>
+        <tr><td>게이트 (본 연구 코드로 이식)</td><td>대기 — 리뷰어 사용 불가</td><td>설계서 §6-5</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pipe-quote pipe-quote-bad">
+    <p><b>여기서 읽으면 안 되는 것.</b> C1 의 두 시도는 "면적 ↔ <code class="mono">j₀</code> 를 가른다 / 못 가른다" 의 답이 <b>아니다</b> —
+      검출 지도도 바인더 판정도 없다. 2 차는 1 차 결과를 본 뒤 통과 조건을 바꾼 실행이고, 그 사실을 표지로 단다. 위의 2.95 % · 0.50 % 는 중단
+      판정에 쓰인 값일 뿐 <b>진단 전용 · 인용 금지 · 정본 아님</b>이며, 같은 실행 묶음 안에서만 비교한다. 결론 문장이 생기면 그 문장에는 그것을 만든
+      R 가정 (특히 R5) 과 truth 꼴 (1D 균질) 을 단다 (상태판 규칙).</p>
+    <p><b>2 차 뒤의 선택지 (설계서 §8-6 — 어느 것이든 새 승인 · 새 시계 원점 · §5-8-8):</b> (가) 표준 해상도를 올린다 — 규칙은 그대로 두고 해상도만
+      바꾸는 설계 변경 · (나) 수렴 판정을 바꾼다 — 결과를 본 뒤의 규칙 변경 · (다) C1 을 닫는다 — 스파이크 · 수렴 사실만 진단으로 남긴다.
+      → 2026-11-24 사용자 "다 권고대로 해" 로 (가) 에 DC 영 채널 판정의 사전 등록을 더한 <b>3 차가 승인</b>됐다 (원장 §4 2026-11-24 줄). 3 차도 같은
+      규율이다 — 판정 규칙은 계산 전에 설계서 §8-7 에 고정하고, 결과를 본 뒤 바꾸지 않는다.</p>
+  </div>
+
+  <h3 class="tw-h3">지난 상태 — 2026-09-29 판 (80호까지 · 그대로)</h3>
 
   <p class="pipe-note"><b>2026-09-29 기준 · 80호까지 — 이후는 원장이 정본이다.</b> 흡수가 지금도
     이어지고 있어 아래 수는 곧 낡는다. 원장은
@@ -946,7 +1179,7 @@
 
   <div class="pg-tablewrap">
     <table class="pg-table">
-      <thead><tr><th>무엇 (원장 표를 직접 센 값 · 카드 원문)</th><th>지금 — 80호까지</th><th>지난 상태 — 58호까지 (2026-09-23 판)</th></tr></thead>
+      <thead><tr><th>무엇 (원장 표를 직접 센 값 · 카드 원문)</th><th>80호까지 (2026-09-29 판 — 그때의 "지금")</th><th>지난 상태 — 58호까지 (2026-09-23 판)</th></tr></thead>
       <tbody>
         <tr><td>원장 §1 큐 밖 후보 — 행 수</td><td><b>267</b></td><td>173</td></tr>
         <tr><td>원장 §1 — ★★★★ · ★★★ · ★★ · ★</td><td>7 · 68 · 94 · 98</td><td>7 · 47 · 62 · 57</td></tr>
@@ -972,9 +1205,11 @@
     <li>전달 노트 §2 운전 압력 값 → <b>가정 표시</b> · 60호 미열람 그림 · Movie · peer review
       file → <b>보지 않음</b> · 파일 36 · 42 의 빠진 보충자료 → 추가 요청 없이 진행
       ("42 36은 통과하자").</li>
+    <li><b>(2026-11-24 갱신)</b> 첫 항목의 "더 나중에 한 번에" 의 시점은 2026-11-17 로 정해졌고 그날 처리됐다 — 이 절 위의
+      "2026-11-17 사용자 결정".</li>
   </ul>
 
-  <h3 class="tw-h3">보류 판단 거리 전체 — §3-b 72 건 (가 ~ 니) 을 종류로 묶어</h3>
+  <h3 class="tw-h3">보류 판단 거리 전체 — §3-b 72 건 (가 ~ 니) 을 종류로 묶어 <span class="tw-mini">(2026-09-29 판 · 2026-11-24 에 줄마다 11-17 꼬리 표지 추가)</span></h3>
 
   <p class="pipe-p">원장 §3-b 는 "추가 논문을 흡수한 뒤 사용자와 최종 확인" 할 판단 거리를 모은
     표다(2026-09-23 사용자 지시). 72 건 중 <b>결정 · 반영 4</b>(라 · 마 · 바 · 사) · <b>사실상
@@ -982,31 +1217,38 @@
     판단을 더하지 않았다 — 편마다 붙은 근거 · 약한 근거 메모는 원문에만 있다. 종류로 묶은 것은
     이 화면이다.</p>
 
+  <p class="pipe-note"><b>(2026-11-24 갱신) 이 72 건은 2026-11-17 일괄로 전부 처리됐다.</b> 위 문단의 "나머지 67 건은 결정 전" 은
+    2026-09-29 상태다. 카드의 각 줄 끝 "→ 11-17 일괄" 이 원장 행 꼬리 표지의 사본이고, 결정 내용은 원장 행 꼬리가 정본이다. 이 72 건 안의
+    분포는 결정·반영 38 · 종결 25 · 결정 유지 4 · 실행 권고 · 사용자 승인 대기 5 ((아)(자)(차)(처)(고)) 이다 (이 화면이 표지를 센 값). 그 다섯은
+    2026-11-24 에 다시 처리됐다 (원장 행 꼬리 · §4 2026-11-24 줄) — (차)(처) 는 합성 truth 첫 실행 후보로 승인 · (아)(자) 는 보류 유지 (C1 결과 뒤 판단) ·
+    (고) 는 DEM 세션을 열 때 사용자가 넘긴다. 72 → 155 로 늘어난 83 건 ((디) ~ (규)) 은 카드로 옮기지 않았다 — 원장이 정본이다.
+    카드 색 (초록 · 주황) 은 2026-09-29 판의 구분 그대로다.</p>
+
   <div class="pipe-two">
     <div class="pipe-card pc-a">
       <span class="pc-tag">결정 · 반영 — 4 건</span>
       <h3>2026-09-23 사용자 결정으로 처리했다</h3>
       <dl class="kv">
-        <dt>라</dt><dd>32호 양극성 스택 → 전달 노트 §2 제약으로 — ✅ §2 A4</dd>
-        <dt>마</dt><dd>37호 "ASSB truth 5조건" 개념 페이지 분리 — ✅ R1–R8</dd>
-        <dt>바</dt><dd>33호 상대극 압력 진동 → 압력 되돌림 분리 시험 설계 조건 — ✅ D1–D5</dd>
-        <dt>사</dt><dd>21호 P12 조립 방향 메타데이터 → 입력 요구 — ✅ §2-1 M1–M3</dd>
+        <dt>라</dt><dd>32호 양극성 스택 → 전달 노트 §2 제약으로 — ✅ §2 A4 <span class="tw-mini">→ 11-17 일괄: 결정 유지</span></dd>
+        <dt>마</dt><dd>37호 "ASSB truth 5조건" 개념 페이지 분리 — ✅ R1–R8 <span class="tw-mini">→ 11-17 일괄: 결정 유지</span></dd>
+        <dt>바</dt><dd>33호 상대극 압력 진동 → 압력 되돌림 분리 시험 설계 조건 — ✅ D1–D5 <span class="tw-mini">→ 11-17 일괄: 결정 유지</span></dd>
+        <dt>사</dt><dd>21호 P12 조립 방향 메타데이터 → 입력 요구 — ✅ §2-1 M1–M3 <span class="tw-mini">→ 11-17 일괄: 결정 유지</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-a">
       <span class="pc-tag">해소 — 1 건</span>
       <h3>결정 없이 풀렸다 (2026-09-28)</h3>
       <dl class="kv">
-        <dt>서</dt><dd>Minnmann 2021 을 번호 순서보다 앞당길지 — ✅ 사실상 해소: 번호 순서로 흡수됨(73호) · 결정 불필요</dd>
+        <dt>서</dt><dd>Minnmann 2021 을 번호 순서보다 앞당길지 — ✅ 사실상 해소: 번호 순서로 흡수됨(73호) · 결정 불필요 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">판정 유지 여부 — 3 건</span>
       <h3>카드 채움표의 반 칸 · 분모</h3>
       <dl class="kv">
-        <dt>가</dt><dd>29호 Q4 +0.5 유지 여부 (축이 LAM↔접촉이 아니라 정적↔동적) — 근거 도착 · 결정 대기</dd>
-        <dt>나</dt><dd>38호 Q2 +0.5 유지 여부 (두 채널이 설계상 결합) — 근거 도착 · 결정 대기</dd>
-        <dt>다</dt><dd>28호 Bizeray(액체셀 도구)를 ASSB Q4 분모에 넣을지</dd>
+        <dt>가</dt><dd>29호 Q4 +0.5 유지 여부 (축이 LAM↔접촉이 아니라 정적↔동적) — 근거 도착 · 결정 대기 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>나</dt><dd>38호 Q2 +0.5 유지 여부 (두 채널이 설계상 결합) — 근거 도착 · 결정 대기 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>다</dt><dd>28호 Bizeray(액체셀 도구)를 ASSB Q4 분모에 넣을지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
@@ -1015,118 +1257,118 @@
       <p>원문이 이 여섯에만 "설계 결정만 기록 — 코드로 옮기면 degradation-degeneracy
         RUN_SCOPE 가 움직이므로 별도 승인 · 게이트 대상" 을 붙였다.</p>
       <dl class="kv">
-        <dt>무</dt><dd>(차) forward · 합성 truth 에 j₀(x) 모양 선택지를 둘지</dd>
-        <dt>투</dt><dd>(차) forward 설계에 "Wa 영역 선결" 을 붙일지</dd>
-        <dt>그</dt><dd>합성 truth 의 신품 θ₀ 를 세 출처의 폭으로 둘지</dd>
-        <dt>브</dt><dd>실측 LLI 의 정의 표기 (A 용량 유효 · B 양극 결손 · C 재고 손실) 를 정식 규약으로 올릴지</dd>
-        <dt>츠</dt><dd>쿨롱 효율 결손 → LLI 배정 전 구조 채널 대조를 (브) 에 붙일지</dd>
-        <dt>프</dt><dd>합성 truth 의 측면 (반경) 축 선택지 — 측면 균일 (1D) 모형으로 적합하면 측면 η(r) 이 LAM · 저항 파라미터로 흡수될 수 있다 (80호 [해석])</dd>
+        <dt>무</dt><dd>(차) forward · 합성 truth 에 j₀(x) 모양 선택지를 둘지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>투</dt><dd>(차) forward 설계에 "Wa 영역 선결" 을 붙일지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>그</dt><dd>합성 truth 의 신품 θ₀ 를 세 출처의 폭으로 둘지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>브</dt><dd>실측 LLI 의 정의 표기 (A 용량 유효 · B 양극 결손 · C 재고 손실) 를 정식 규약으로 올릴지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>츠</dt><dd>쿨롱 효율 결손 → LLI 배정 전 구조 채널 대조를 (브) 에 붙일지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>프</dt><dd>합성 truth 의 측면 (반경) 축 선택지 — 측면 균일 (1D) 모형으로 적합하면 측면 η(r) 이 LAM · 저항 파라미터로 흡수될 수 있다 (80호 [해석]) <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">설계 선택 — 4 건</span>
       <h3>forward · 합성 truth 에 무엇을 넣나</h3>
       <dl class="kv">
-        <dt>차</dt><dd>23호 PyBaMM 면적 노브 / j₀ 노브 분리 forward 여부</dd>
-        <dt>처</dt><dd>(차) forward 에 바인더를 면적 + j₀ 두 노브 짝으로 넣을지</dd>
-        <dt>러</dt><dd>합성 truth 에 θ → LAM_PE 결합 항을 선택지로 둘지</dd>
-        <dt>노</dt><dd>양극 부피 변화의 층위 — 격자(−5.1 %) · 입자(−7.8 %) · 둘을 폭으로 — 근거 도착 · 결정 대기</dd>
+        <dt>차</dt><dd>23호 PyBaMM 면적 노브 / j₀ 노브 분리 forward 여부 <span class="tw-mini">→ 11-17 일괄: <b>실행 권고 · 사용자 승인 대기</b> · 2026-11-24 합성 truth 첫 실행 후보로 승인 (사전 등록 규칙 뒤 · RUN_SCOPE 밖)</span></dd>
+        <dt>처</dt><dd>(차) forward 에 바인더를 면적 + j₀ 두 노브 짝으로 넣을지 <span class="tw-mini">→ 11-17 일괄: <b>실행 권고 · 사용자 승인 대기</b> · 2026-11-24 합성 truth 첫 실행 후보로 승인 (사전 등록 규칙 뒤 · RUN_SCOPE 밖)</span></dd>
+        <dt>러</dt><dd>합성 truth 에 θ → LAM_PE 결합 항을 선택지로 둘지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>노</dt><dd>양극 부피 변화의 층위 — 격자(−5.1 %) · 입자(−7.8 %) · 둘을 폭으로 — 근거 도착 · 결정 대기 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">개념 · 처방 표 · 인수인계 — 11 건</span>
       <h3>정식 줄로 올릴지 · 유지할지</h3>
       <dl class="kv">
-        <dt>하</dt><dd>압력 되돌림 시험 설계 조건(바 · D1–D5) 보강 셋 — D4 운전 중 구속 형식 · D6 압력을 건 시각 · 회복 시간 곡선 · D1 원시 압력 신고</dd>
-        <dt>커</dt><dd>전달 노트 §2-1 M1 에 "분말 상대극이면 분말 제조 · 균질도 · 압착 시간" 을 붙일지 (사 의 후속)</dd>
-        <dt>터</dt><dd>교정 개념 페이지 유지 여부 (결정 전까지 유지) — 근거 도착 · 결정 대기</dd>
-        <dt>저</dt><dd>65호 "첫 충전 상한" 검사를 곱 축퇴 처방 표의 정식 줄로</dd>
-        <dt>구</dt><dd>처방 표 후보 줄 "두 차단 셀 교차 대입" 을 정식 줄로 — 근거는 우리 [재현] 하나</dd>
-        <dt>루</dt><dd>처방 표 후보 줄 "SOC 축 신품 j₀(x) 기준선" 을 정식 줄로</dd>
-        <dt>두</dt><dd>θ 판정의 시간 궤적 조건(급랭 제외)을 개념 · 처방의 정식 조건으로</dd>
-        <dt>므</dt><dd>교정 개념 정의표에 "읽기 쪽 기준 (LLI 영점)" 줄 — (터) 와 함께</dd>
-        <dt>으</dt><dd>두 상(이봉) 조각의 평균 순서 규칙을 교정 개념 · 처방의 정식 줄로 — (터) 와 함께</dd>
-        <dt>초</dt><dd>Li-In 기준극 전위 창 개념의 평탄 조건에 "(12) 상대극 영점 ↔ SE 환원 개시 전위" 를 올릴지</dd>
-        <dt>흐</dt><dd>휴지 연산자의 재료 조건 줄 — "고용체 창에서만 θ 판정 근거 · 다상 평탄 창에서는 아님" 을 (두) 조건 목록에 붙일지 — (두) 와 함께</dd>
+        <dt>하</dt><dd>압력 되돌림 시험 설계 조건(바 · D1–D5) 보강 셋 — D4 운전 중 구속 형식 · D6 압력을 건 시각 · 회복 시간 곡선 · D1 원시 압력 신고 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>커</dt><dd>전달 노트 §2-1 M1 에 "분말 상대극이면 분말 제조 · 균질도 · 압착 시간" 을 붙일지 (사 의 후속) <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>터</dt><dd>교정 개념 페이지 유지 여부 (결정 전까지 유지) — 근거 도착 · 결정 대기 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>저</dt><dd>65호 "첫 충전 상한" 검사를 곱 축퇴 처방 표의 정식 줄로 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>구</dt><dd>처방 표 후보 줄 "두 차단 셀 교차 대입" 을 정식 줄로 — 근거는 우리 [재현] 하나 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>루</dt><dd>처방 표 후보 줄 "SOC 축 신품 j₀(x) 기준선" 을 정식 줄로 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>두</dt><dd>θ 판정의 시간 궤적 조건(급랭 제외)을 개념 · 처방의 정식 조건으로 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>므</dt><dd>교정 개념 정의표에 "읽기 쪽 기준 (LLI 영점)" 줄 — (터) 와 함께 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>으</dt><dd>두 상(이봉) 조각의 평균 순서 규칙을 교정 개념 · 처방의 정식 줄로 — (터) 와 함께 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>초</dt><dd>Li-In 기준극 전위 창 개념의 평탄 조건에 "(12) 상대극 영점 ↔ SE 환원 개시 전위" 를 올릴지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>흐</dt><dd>휴지 연산자의 재료 조건 줄 — "고용체 창에서만 θ 판정 근거 · 다상 평탄 창에서는 아님" 을 (두) 조건 목록에 붙일지 — (두) 와 함께 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">카드 지침 · 규약 · 등록 — 3 건</span>
       <h3>카드 · 규약에 올릴지</h3>
       <dl class="kv">
-        <dt>주</dt><dd>"X-limited" 명제의 판정 기준 표기 ①–⑤ (순위 · 문턱 · 시간 기준 · 조건 · 저항 정의 가중 · 동역학 손잡이) 를 카드 수집 지침(Q1–Q8)으로</dd>
-        <dt>수</dt><dd>무탄소 복합체의 "전자 접촉 옴 자촉매" 를 22호 비활성 분율의 넷째 후보로 카드에 정식 등록할지 (지금은 [해석] 으로만)</dd>
-        <dt>트</dt><dd>측면 축 표기 규약 — 깊이 분해 · 한 기둥 operando 값 옆에 측면 위치 · 윤곽 · 게이지 대표성을 적게 할지 (자리 후보: 카드 수집 지침 (Q1–Q8) 또는 인수인계 노트 규약)</dd>
+        <dt>주</dt><dd>"X-limited" 명제의 판정 기준 표기 ①–⑤ (순위 · 문턱 · 시간 기준 · 조건 · 저항 정의 가중 · 동역학 손잡이) 를 카드 수집 지침(Q1–Q8)으로 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>수</dt><dd>무탄소 복합체의 "전자 접촉 옴 자촉매" 를 22호 비활성 분율의 넷째 후보로 카드에 정식 등록할지 (지금은 [해석] 으로만) <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>트</dt><dd>측면 축 표기 규약 — 깊이 분해 · 한 기둥 operando 값 옆에 측면 위치 · 윤곽 · 게이지 대표성을 적게 할지 (자리 후보: 카드 수집 지침 (Q1–Q8) 또는 인수인계 노트 규약) <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">표시 · 표기 · 주석 — 12 건</span>
       <h3>어떻게 적을지만 정한다</h3>
       <dl class="kv">
-        <dt>버</dt><dd>채움표 29호 · 38호 행에 "(→ SI 보강)" 표시 — 판정은 안 바뀌고 표 문구만</dd>
-        <dt>너</dt><dd>22호 G5(셀 면적)에 62호 재현값 0.785 cm² (∅10 mm) 를 조건부 값으로 적을지</dd>
-        <dt>보</dt><dd>64호 [25] 판정을 "내용 없는 인용 (맞는 원전 미상)" 으로 닫을지 ("닫음" 표기 여부) — 결정 대기</dd>
-        <dt>소</dt><dd>R-LTO 영점 표기 — "1.55 V" 그대로 / "≈1.5 ± 0.05 V (부하 · 60–80 °C · SPE · 2전극)" (카드 층에서만)</dd>
-        <dt>오</dt><dd>In 영점 표기 — "0.62 V" 단일 / "0.62 (재인용 인쇄) / 0.600 (옮긴 그림 이중 축 관례)" 병기</dd>
-        <dt>포</dt><dd>(선택) 23 · 67호가 Ishidzu 2016 에 매단 서술 옆 "원전은 전기 고립을 부정" 주석</dd>
-        <dt>우</dt><dd>24호 "not under kinetic limitation (Naik 2022 와 일치)" 인용 자리 주석</dd>
-        <dt>후</dt><dd>77호 설계 지도를 부피 분율로 인용할 때 Fig. 7b 대신 Fig. 3c + 두 상 ψ</dd>
-        <dt>느</dt><dd>25호가 77호를 "DEM 이용률의 방법 원전" 으로 매단 자리 주석</dd>
-        <dt>르</dt><dd>24호 교정 인용 자리 주석 (교정 셀 = Li/NMC111 반쪽 · x = 전하 계수)</dd>
-        <dt>즈</dt><dd>24호 이봉 해석 자리 주석 ("기울기 · 깊이 혼합으로도 생긴다")</dd>
-        <dt>기</dt><dd>24호 G8 · G9 자리 주석 ("곡률이 정렬 오차의 주항 · 중앙 기둥 ↔ 면적 평균 +5–9 % · 측면 방향은 설계 의존")</dd>
+        <dt>버</dt><dd>채움표 29호 · 38호 행에 "(→ SI 보강)" 표시 — 판정은 안 바뀌고 표 문구만 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>너</dt><dd>22호 G5(셀 면적)에 62호 재현값 0.785 cm² (∅10 mm) 를 조건부 값으로 적을지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>보</dt><dd>64호 [25] 판정을 "내용 없는 인용 (맞는 원전 미상)" 으로 닫을지 ("닫음" 표기 여부) — 결정 대기 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>소</dt><dd>R-LTO 영점 표기 — "1.55 V" 그대로 / "≈1.5 ± 0.05 V (부하 · 60–80 °C · SPE · 2전극)" (카드 층에서만) <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>오</dt><dd>In 영점 표기 — "0.62 V" 단일 / "0.62 (재인용 인쇄) / 0.600 (옮긴 그림 이중 축 관례)" 병기 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>포</dt><dd>(선택) 23 · 67호가 Ishidzu 2016 에 매단 서술 옆 "원전은 전기 고립을 부정" 주석 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>우</dt><dd>24호 "not under kinetic limitation (Naik 2022 와 일치)" 인용 자리 주석 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>후</dt><dd>77호 설계 지도를 부피 분율로 인용할 때 Fig. 7b 대신 Fig. 3c + 두 상 ψ <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>느</dt><dd>25호가 77호를 "DEM 이용률의 방법 원전" 으로 매단 자리 주석 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>르</dt><dd>24호 교정 인용 자리 주석 (교정 셀 = Li/NMC111 반쪽 · x = 전하 계수) <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>즈</dt><dd>24호 이봉 해석 자리 주석 ("기울기 · 깊이 혼합으로도 생긴다") <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>기</dt><dd>24호 G8 · G9 자리 주석 ("곡률이 정렬 오차의 주항 · 중앙 기둥 ↔ 면적 평균 +5–9 % · 측면 방향은 설계 의존") <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">요청 여부 — 18 건</span>
       <h3>논문 · SI 를 받을지 (우선순위 포함)</h3>
       <dl class="kv">
-        <dt>카</dt><dd>요청 우선순위 (Ikezawa 2020 1순위? Sakka 2022 당김?) — 원문: "업로드 순서가 곧 답"</dd>
-        <dt>거</dt><dd>61호 후속 — Sharafi 2016 · Wang·Sakamoto 2018</dd>
-        <dt>더</dt><dd>63호 후속 — Otoyama 2016 (Raman SOC 지도)</dd>
-        <dt>머</dt><dd>64호 후속 — Hakari 2017 · Oh 2016</dd>
-        <dt>어</dt><dd>65호 후속 — Park 2016 · Kim 2017 (GITT 피복률 방법의 원전)</dd>
-        <dt>퍼</dt><dd>68호 후속 — Bertei·Nicolella 2011 (퍼콜레이션 확률 P(Z) 원전)</dd>
-        <dt>도</dt><dd>69호 후속 — Kasnatscheew 2016 · Gent 2016</dd>
-        <dt>모</dt><dd>70호 후속 — Ohzuku·Ueda·Yamamoto 1995 · Colbow·Dahn·Haering 1989</dd>
-        <dt>조</dt><dd>71호 후속 — Takada 1996 · Jung 2008 · Shin 2014 · (선택) Sakuda 2010</dd>
-        <dt>코</dt><dd>72호 후속 — Schmidt 2011 · Watanabe 2014 · Woodford 2014</dd>
-        <dt>호</dt><dd>Minnmann 2021 SI (오픈액세스) — 73호 판정 보류 둘을 닫는 자리</dd>
-        <dt>부</dt><dd>74호 후속 — Tsai 2018 · Grenier 2017 · Grenier 2020</dd>
-        <dt>추</dt><dd>75호 후속 — Hao · Mukherjee 2018 · (선택) Mistry 2018</dd>
-        <dt>쿠</dt><dd>76호 후속 — Liu H. 2019 · Otoyama 2020 · Yamagishi 2021 · (선택) Levi 2003 · Chen K. 2021, 함께 Yamamoto M. 2020 을 원장 행으로 등록할지</dd>
-        <dt>드</dt><dd>77호 후속 — McGrogan 2017 · Choi 2018 · de Vasconcelos 2016 · Lagadec 2018</dd>
-        <dt>스</dt><dd>78호 후속 — Dubarry 2011 · Yabuuchi 2007 · Kang 2008 두 편 · 화학 앵커 교정 넷</dd>
-        <dt>크</dt><dd>79호 후속 — Liu H. 2020 · Liu H. 2016 · Li W. 2019, 파일 42 (Okasinski 2020) 를 측면 교락 대조 재료로 함께 볼지 — 80호: 파일 42 대조 수행 (측면 교락은 형태만 · 크기는 안 줌)</dd>
-        <dt>니</dt><dd>80호 후속 — Yao 2019 EES · Yao 2019 AEM · Cannarella·Arnold 2015 · Shkrob 2019 — 지원 표 PDF 는 사용자 결정으로 요청하지 않는다 (기록만)</dd>
+        <dt>카</dt><dd>요청 우선순위 (Ikezawa 2020 1순위? Sakka 2022 당김?) — 원문: "업로드 순서가 곧 답" <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>거</dt><dd>61호 후속 — Sharafi 2016 · Wang·Sakamoto 2018 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>더</dt><dd>63호 후속 — Otoyama 2016 (Raman SOC 지도) <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>머</dt><dd>64호 후속 — Hakari 2017 · Oh 2016 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>어</dt><dd>65호 후속 — Park 2016 · Kim 2017 (GITT 피복률 방법의 원전) <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>퍼</dt><dd>68호 후속 — Bertei·Nicolella 2011 (퍼콜레이션 확률 P(Z) 원전) <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>도</dt><dd>69호 후속 — Kasnatscheew 2016 · Gent 2016 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>모</dt><dd>70호 후속 — Ohzuku·Ueda·Yamamoto 1995 · Colbow·Dahn·Haering 1989 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>조</dt><dd>71호 후속 — Takada 1996 · Jung 2008 · Shin 2014 · (선택) Sakuda 2010 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>코</dt><dd>72호 후속 — Schmidt 2011 · Watanabe 2014 · Woodford 2014 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>호</dt><dd>Minnmann 2021 SI (오픈액세스) — 73호 판정 보류 둘을 닫는 자리 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>부</dt><dd>74호 후속 — Tsai 2018 · Grenier 2017 · Grenier 2020 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>추</dt><dd>75호 후속 — Hao · Mukherjee 2018 · (선택) Mistry 2018 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>쿠</dt><dd>76호 후속 — Liu H. 2019 · Otoyama 2020 · Yamagishi 2021 · (선택) Levi 2003 · Chen K. 2021, 함께 Yamamoto M. 2020 을 원장 행으로 등록할지 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>드</dt><dd>77호 후속 — McGrogan 2017 · Choi 2018 · de Vasconcelos 2016 · Lagadec 2018 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>스</dt><dd>78호 후속 — Dubarry 2011 · Yabuuchi 2007 · Kang 2008 두 편 · 화학 앵커 교정 넷 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>크</dt><dd>79호 후속 — Liu H. 2020 · Liu H. 2016 · Li W. 2019, 파일 42 (Okasinski 2020) 를 측면 교락 대조 재료로 함께 볼지 — 80호: 파일 42 대조 수행 (측면 교락은 형태만 · 크기는 안 줌) <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>니</dt><dd>80호 후속 — Yao 2019 EES · Yao 2019 AEM · Cannarella·Arnold 2015 · Shkrob 2019 — 지원 표 PDF 는 사용자 결정으로 요청하지 않는다 (기록만) <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">원자료 · 입력 자료 — 4 건</span>
       <h3>저자에게 요청하거나 찾을지</h3>
       <dl class="kv">
-        <dt>파</dt><dd>Li Q. 2025 Source Data Fig. 5 — 공개본은 59호 파일과 같은 바이트 · 쿨롱 효율 값 0 → 교신저자에게 요청할지</dd>
-        <dt>로</dt><dd>(선택) 3286 광학 원자료(선형 배경 포함)를 저자에게 요청할지</dd>
-        <dt>토</dt><dd>Ishidzu 2016 표 2 의 Q2 · Q3 (CPE) 적합값을 저자에게 요청할지</dd>
-        <dt>허</dt><dd>22호 SE 입도 (또는 같은 연구망의 β-Li₃PS₄ 입도 자료) 를 찾을지 — 68호 정량 대조의 빠진 입력</dd>
+        <dt>파</dt><dd>Li Q. 2025 Source Data Fig. 5 — 공개본은 59호 파일과 같은 바이트 · 쿨롱 효율 값 0 → 교신저자에게 요청할지 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>로</dt><dd>(선택) 3286 광학 원자료(선형 배경 포함)를 저자에게 요청할지 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>토</dt><dd>Ishidzu 2016 표 2 의 Q2 · Q3 (CPE) 적합값을 저자에게 요청할지 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
+        <dt>허</dt><dd>22호 SE 입도 (또는 같은 연구망의 β-Li₃PS₄ 입도 자료) 를 찾을지 — 68호 정량 대조의 빠진 입력 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">검사 · 판독 — 4 건</span>
       <h3>돌려 보거나 다시 볼지</h3>
       <dl class="kv">
-        <dt>아</dt><dd>35호 합성 쌍(PyBaMM) → Roman 특징 30개 재계산 여부</dd>
-        <dt>자</dt><dd>31호 ICI zenodo R/k 면적 소거 검사 여부</dd>
-        <dt>타</dt><dd>Navidi 2024 digest 재점검 여부</dd>
-        <dt>푸</dt><dd>76호 영상(Video S1–S4) 판독 — 이 환경에 디코더가 없어 설치 또는 사용자 쪽 캡처가 필요</dd>
+        <dt>아</dt><dd>35호 합성 쌍(PyBaMM) → Roman 특징 30개 재계산 여부 <span class="tw-mini">→ 11-17 일괄: <b>실행 권고 · 사용자 승인 대기</b> · 2026-11-24 "다 권고대로 해": 보류 유지 — 합성 truth C1 결과를 본 뒤 판단</span></dd>
+        <dt>자</dt><dd>31호 ICI zenodo R/k 면적 소거 검사 여부 <span class="tw-mini">→ 11-17 일괄: <b>실행 권고 · 사용자 승인 대기</b> · 2026-11-24 "다 권고대로 해": 보류 유지 — 합성 truth C1 결과를 본 뒤 판단 (원자료 받는 길도 그때)</span></dd>
+        <dt>타</dt><dd>Navidi 2024 digest 재점검 여부 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
+        <dt>푸</dt><dd>76호 영상(Video S1–S4) 판독 — 이 환경에 디코더가 없어 설치 또는 사용자 쪽 캡처가 필요 <span class="tw-mini">→ 11-17 일괄: 종결</span></dd>
       </dl>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">기록만 — 2 건</span>
       <h3>DEM/MPM 은 다른 브랜치 소유</h3>
       <dl class="kv">
-        <dt>고</dt><dd>01호 p_c(d) 의 크기 의존이 복셀 이산화 때문인지 DEM 해상도를 바꿔 시험할지</dd>
-        <dt>누</dt><dd>다른 브랜치(DEM) 앵커의 소유 브랜치에 73호 결과 셋을 알릴지</dd>
+        <dt>고</dt><dd>01호 p_c(d) 의 크기 의존이 복셀 이산화 때문인지 DEM 해상도를 바꿔 시험할지 <span class="tw-mini">→ 11-17 일괄: <b>실행 권고 · 사용자 승인 대기</b> (DEM 브랜치 몫 — 이 브랜치에서 실행하지 않는다) · 2026-11-24 "다 권고대로 해": DEM 세션을 열 때 사용자가 (누) 전달과 함께 넘긴다 — 이 브랜치는 기록만</span></dd>
+        <dt>누</dt><dd>다른 브랜치(DEM) 앵커의 소유 브랜치에 73호 결과 셋을 알릴지 <span class="tw-mini">→ 11-17 일괄: 결정·반영</span></dd>
       </dl>
     </div>
   </div>
@@ -1154,6 +1396,8 @@
 
   <p class="pipe-note"><b>지난 상태 (2026-09-23):</b> <b>남은 결정 (가)(나)(다)(아)(자)(차)(타)</b> 는 3 차 묶음(큐 60~)을 먹인 뒤에
     닫는다. — <b>(2026-09-29 갱신)</b> 2026-09-28 사용자 결정으로 "더 나중에 한 번에 판단" 이 됐다(위).
+    — <b>(2026-11-24 갱신)</b> 2026-11-17 일괄로 처리됐다: (가)(나)(다)(타) 결정·반영 · (아)(자)(차) 실행 권고 · 사용자 승인 대기
+    — 그 뒤 2026-11-24 에 (차) 는 합성 truth 첫 실행 후보로 승인, (아)(자) 는 보류 유지 (C1 결과 뒤 판단).
     문헌 인용 제목은 원장 행마다 정확히 적었고, 틀린 인용(예: Ikezawa "110 Ω cm²", Hertle
     "134/215 mV")은 지우지 않고 정정 표시를 남겼다. 원문 PDF 는 저장소에 넣지 않는다.</p>
 
@@ -1172,12 +1416,157 @@
   </details>
 </section>
 
+<!-- ══ 4.8 ═══════════════════════════════════════════════════════════ -->
+{# 2026-11-24 신설. 원천은 REIL 원장 하나 — bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md §0–§130
+   (+ 단계 정의는 REIL_C4_APPROVAL_REQUEST_v2_20261013.md §0 표 · 프로토콜 v2). 판정 문자열은 원장에 적힌
+   검토자 판정을 글자 그대로 옮긴다 (줄이지 않는다). "수용" 은 검토자 판정이고 실행 승인이 아니다.
+   REIL 맞춤 결과 (J 값 · 증인) 는 원장이 요약하지 않으므로 (§31) 여기에도 없다. #}
+<section class="pipe-sec" id="reil">
+  <h2 class="pipe-h"><span class="pipe-n">4·8</span> REIL 외부 검증 — 남의 공개 자료에 확인적 맞춤을 <b>사전 등록</b>하고 한 칸씩 (2026-11-24 신설)</h2>
+
+  <div class="pipe-cite">
+    <b>이 절의 판정 · 수는 전부 원장의 사본이다.</b> 정본은
+    <code class="mono">bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md</code> (§ 번호를 붙였다) 와 그 절들이 가리키는 회신 보존
+    (<code class="mono">bms-balancing/reviews/prereview_reil_*</code> · <code class="mono">review_reil_*</code>) · 증거 폴더다.
+    <b>"수용" 은 검토자 (Codex) 의 판정이고 실행 승인이 아니다</b> — 원장의 절 대부분이 "이 기록은 어느 단계의 승인도 아니다" 로 끝난다.
+    REIL 쪽 맞춤 결과 (J 값 · 증인 순위 등) 는 원장이 요약하지 않으므로 (§31) 이 화면도 옮기지 않는다.
+  </div>
+
+  <p class="pipe-p"><b>무엇인가.</b> REIL-UConn 이 공개한 LFP/흑연 모사 열화 자료 ("ISU-UConn LFP/Graphite Emulated Degradation Dataset" ·
+    CC BY 4.0) 와 T. Li 외 2026 (<i>eTransportation</i> 29, 100593) 의 반쪽전지 모델 fitting 비교를 놓고, 우리 쪽 규칙 (사전 등록 프로토콜
+    v2 + 부속 A–D) 을 실행 전에 못 박은 뒤 그 규칙대로 다시 맞춰 보는 <b>외부 검증</b>이다 (원장 머리 · §6). 게이트 차수 밖이고 RUN_SCOPE 와
+    무관하다 (원장 §4). 순서는 선행 조건 — C1-core (논문의 핵심 실험 정의) · C6 (판 · 환경 고정) · C3 = P0 (자료를 처음 여는 단계) · C5 (비용
+    측정) — 다음 C4 실행이고, C4 는 다시 C4-0 (무자료 구현 · 합성 시험) → C4-E (E3a — 그들 노트북 코드 경로를 우리 환경에서 끝까지 돌리는
+    66 호출) → C4-A (H Phase A) → C4-B (H Phase B) 로 나뉘며 칸마다 별도 승인이다 (C4 요청 v2 §0 표). 2026-10-04 에 시작해 이 화면에는 처음 올린다.</p>
+
+  <h3 class="tw-h3">한 칸씩 — 검토자 판정 (원장 절 머리 · 판정 줄의 사본)</h3>
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>칸</th><th>무엇</th><th>검토자 판정 — 글자 그대로</th><th>범위 · 한계 (원장)</th><th>원장</th></tr></thead>
+      <tbody>
+        <tr><td>C1-core · 부속 C</td><td>논문 본문 · 보충 자료 (사용자가 올림) 에서 핵심 실험 정의 셋을 기록</td>
+            <td><code class="mono">ANNEX_C_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_DOCUMENT_CORRECTIONS</code> — C1-core 논문 쪽 수용 (<code class="mono">PAPER_SIDE_ACCEPTED</code>)</td>
+            <td>실물 시트 · 셀 열 · step 대응은 P0 로 넘김 · 실행 · P0 · C6 · 비용 측정 · 구현 · 맞춤 승인 아님</td><td>§7 · §9</td></tr>
+        <tr><td>C6</td><td>판 · 환경 고정 (이 컨테이너)</td>
+            <td><code class="mono">C6_PREREQUISITE_REVIEW_ACCEPTED_N1_N2_CLOSED_WITH_EVIDENCE_LIMITS</code></td>
+            <td>옵션은 정적 구조까지만 수용 · "전체 549 개 clean 재실행 통과" 는 확인된 사실이 아니다</td><td>§15</td></tr>
+        <tr><td>C3 = P0</td><td>자료를 처음 여는 단계 — 1 회 · rc 0 · 중단 조건 0</td>
+            <td><code class="mono">C3_OUTPUTS_ACCEPTED_WITH_EXECUTION_RECORD_GAPS</code> · 실행 준수 = <code class="mono">INCOMPLETE_UNVERIFIED_NOT_A_NUMERICAL_FAILURE</code></td>
+            <td>고정 제출에 한정 수용 · 자원 상한 준수 UNVERIFIED (§22 정정) · 실행 기록 누락 신고 (P0-N1) · 13 입력의 cycle · 방향은 자료 메타데이터로 확인 불가</td><td>§20 · §22</td></tr>
+        <tr><td>C5</td><td>비용 파일럿 — 1 회 · 비용용 (판정 아님)</td>
+            <td>C5 비용 근거 <code class="mono">ACCEPTED_WITH_DOCUMENTED_LIMITS</code> · C5 재실행 불필요</td>
+            <td>한 셀 · A0 · J_V · Phase A 만 쟀다 · 결과는 요약하지 않고 확인적 분석에 쓰지 않는다</td><td>§31 · §35</td></tr>
+        <tr><td>C4 요청 · C4-ENV</td><td>C4 단계 구조 사전 검토 · 새 환경 세대 준비 (C5 의 실행 환경이 컨테이너 교체로 사라져서)</td>
+            <td><code class="mono">MODIFICATION_CONDITIONAL_SUITABILITY_NO_EXECUTION_GO</code> · <code class="mono">C4_ENV_ACCEPTED_WITH_DOCUMENTED_SCOPE</code></td>
+            <td>새 환경 세대로 수용한 것이고 옛 설치물 전체 바이트가 재현됐다는 증명은 아니다</td><td>§34 · §35 · §38</td></tr>
+        <tr><td>C4-0a</td><td>감시 보완 · 고정 배열 봉인 · E3a 실행기 · 무자료 건조</td>
+            <td><code class="mono">EVIDENCE_ACCEPTED_WITH_SCOPE_IMPLEMENTATION_CLOSURE_HELD</code> → 한정 보완 → <code class="mono">C4_0A_LIMITED_IMPLEMENTATION_CLOSED_WITH_DOCUMENTED_SCOPE</code></td>
+            <td>실행 HEAD 가 같다는 것을 clean tree 라 부르지 않는다 · N3 은 세 위치 각각의 독립 동적 증거나 OS hard limit 까지 검증한 것이 아니다</td><td>§42 · §45</td></tr>
+        <tr><td>C4-0b1</td><td>배열 · 규칙 봉인 + H 핵심</td>
+            <td><code class="mono">C4_0B1_IMPLEMENTATION_CLOSURE_HELD</code> → <code class="mono">C4_0B1_IMPLEMENTATION_CLOSURE_HELD_N1_REMAINDER</code> → <code class="mono">C4_0B1_LIMITED_IMPLEMENTATION_CLOSED</code></td>
+            <td>과거 이탈은 <code class="mono">PRESERVED_NOT_RETROACTIVELY_AUTHORIZED</code> · 새 승인 없음 (0b2 구현 · C4-E / A / B · 자료 개봉 · 맞춤 · 배열 재봉인 · 설치 / 환경 재구축 · COMSOL 모두 false)</td><td>§48 · §51 · §54</td></tr>
+        <tr><td>C4-0b2</td><td>Phase B · H4 대조 · 표지 (ray 는 유보 — 완료로 세지 않음)</td>
+            <td><code class="mono">C4_0B2_REVIEWED_CHANGES_REQUIRED</code> → <code class="mono">C4_0B2_CLOSED_WITH_RECORDED_SCOPE_AND_LIMITATIONS</code></td>
+            <td>종결 범위 = 제한 오프라인 구현과 제출된 합성 검증 기록 (실자료 실행 준비 · 연구 결과 수용 아님)</td><td>§55 · §57 · §60</td></tr>
+        <tr><td>C4-E · E0</td><td>E3a 실행기의 무자료 시험 · 건조 (plan-e 1 회)</td>
+            <td>사전 검토 <code class="mono">REQUEST_REVISION_BEFORE_E0_APPROVAL</code> 두 번 → <code class="mono">PREREVIEW_ACCEPTED_READY_FOR_EXPLICIT_E0_APPROVAL</code> →
+              결과 <code class="mono">E0_EVIDENCE_LIMITED_ACCEPTANCE_E1_BLOCKED_SOURCE_IDENTITY</code> → 정정 뒤 <code class="mono">E0_N1_SCOPED_CLOSED_E1_APPROVAL_REQUEST_ALLOWED_NOT_EXECUTION</code></td>
+            <td>E1 승인 요청서 작성 허용 — E1 실행 승인이 아니다</td><td>§62–§72</td></tr>
+        <tr><td>C4-E · E1-0</td><td>launcher · 외곽 실행기 고정본의 시험 (RED-L · RED-R · GREEN)</td>
+            <td>사전 검토 <code class="mono">CHANGES_REQUIRED_NO_EXECUTION</code> 네 번 → <code class="mono">STATIC_ACCEPTED_E1_0_USER_APPROVAL_RECOMMENDED_NO_EXECUTION</code> →
+              결과 <code class="mono">E1_0_RESULTS_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION</code></td>
+            <td>승인 절차의 완전 준수 false · 당시 계속 진행의 소급 승인도 false (지적 E1_0_N1) · 범위는 이 바이트 · 이 환경의 기록 결과</td><td>§74–§86</td></tr>
+        <tr><td>C4-E · E1-0b</td><td>그다음 시험 단계 — 1 차는 RED 에서 멈춤 (원인이 표와 다름), 정정판 a2 로 다시</td>
+            <td><code class="mono">STOP_HANDLING_ACCEPTED_E1_0B_INCOMPLETE_TEST_CORRECTION_REQUIRED</code> → a2 결과 <code class="mono">E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION</code></td>
+            <td>차단 지적 0 · 비차단 절차 이탈 A2_PROC_01 (기록 유지 · 재시험 없음) · 한정 기능 결과</td><td>§87–§101</td></tr>
+        <tr><td>C4-E · E1-1–3</td><td>E1-1 identity · E1-2 fetch (자료 두 파일) · E1-3 run (E3a 66 호출) — 첫 실행은 E1-1 뒤 멈췄고 (원인 = d1 <code class="mono">add_repo</code> 의 승인 대기, §117 정정) 재개로 끝냈다</td>
+            <td>요청서 v3 <code class="mono">APPROVAL_REQUEST_V3_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED</code> → 재개 요청 v2
+              <code class="mono">RESUME_REQUEST_V2_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED</code> → 결과 <code class="mono">E1_2_E1_3_RESULTS_ACCEPTED_C4A_GATE_CONDITIONS_MET_NO_EXECUTION_APPROVAL</code></td>
+            <td>새 지적 0 · <b>수치 경고 유지</b> — 아래 상자 · 실제 실행일 2026-11-05 UTC (폴더 이름 <code class="mono">reil_c4e1_20261106</code> 은 증거 이름표)</td><td>§102–§122</td></tr>
+        <tr><td>C4-A 범위안</td><td>사용자 "권고대로" 로 C4-A 문 개방 (§123 — 실행 승인 아님) → 범위안 v1 · v2 (문서만)</td>
+            <td><code class="mono">DIRECTION_ACCEPTABLE_SCOPE_REVISION_REQUIRED_BEFORE_IMPLEMENTATION_REQUEST</code> → v2 <code class="mono">SCOPE_V2_ACCEPTED_N1_N4_CLOSED_FOR_IMPLEMENTATION_REQUEST_BASELINE</code></td>
+            <td>후속 구현 요청서의 기준으로 쓸 수 있다 · 구현 · 시험 · 설치 · 자료 개봉 · 맞춤 · C4-A / B 실행 승인 아님 · 사용자 선택 U1 · U3 는 권고대로, U2 는 미선택 (§126)</td><td>§123–§126</td></tr>
+        <tr><td>C4-A 구현 요청서</td><td>v1 → v2 (문서만 · 실행 0)</td>
+            <td>v1 <code class="mono">REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL</code> (C4A-IMPL-N1–N7 · 문구 C1) → v2 같은 판정 — 아래</td>
+            <td>구현 · 시험 · 실행 승인 아님</td><td>§127–§130</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pipe-quote pipe-quote-bad">
+    <p><b>E1-3 의 "오류 0" 과 COMPLETE 를 넓게 읽지 않는다 (§122 검토자 한계 그대로).</b> "오류 0" 은 반환 행의 오류 집계일 뿐이다 —
+      66 행 모두 수치 경고가 있고 stderr 로그는 비어 있지 않다. COMPLETE 는 승인된 실행 · 기록 조건의 충족이고
+      <b>무경고 · 수렴 · 과학적 fitting 합격을 뜻하지 않는다.</b> 경고가 목적값에 닿지 않는다는 정적 확인 (§123) 도 수렴 · 적합성의 증거는 아니다.</p>
+    <p><b>"C4-A 문 개방" 은 실행 승인이 아니다.</b> §123 의 사용자 "권고대로" 는 요청서를 써도 된다는 뜻이고, C4-A 의 구현 · 시험 · 실행과
+      C4-B 는 하나도 승인되지 않았다. 절차 이탈 두 건 (E1_0_N1 · A2_PROC_01) 은 기록으로 남았고 소급 승인되지 않았다.</p>
+  </div>
+
+  <h3 class="tw-h3">지금 — C4-A 구현 요청서 v2 재검토 (원장 §130)</h3>
+
+  <p class="pipe-p"><b>경로.</b> 검토는 2026-11-08 (송신 측 Codex · 고정 HEAD <code class="mono">fa502acb</code> = §129 의 커밋) 이고, 회신은
+    2026-11-24 사용자가 올린 인계 묶음 안에 왔다 (반입 기록 <code class="mono">reviews/handoff_reil_comsol_20261124/INTAKE_BY_THIS_REPO_20261124.json</code>).
+    ⚠ <b>11-08 과 11-24 사이의 기록은 이 원장에 없다.</b> 이 저장소는 안전 풀기 · 대조 · 비밀 검사 · 커밋만 했고 묶음의 코드는 실행 ·
+    import · 수집하지 않았다.</p>
+
+  <p class="pipe-p"><b>판정 (검토자):</b> <code class="mono">REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL</code> — 구현 · 시험 승인 전
+    정정 필요 · 남은 지적 4 묶음 (P1 3 · P2 1) + 비차단 문구 C2. 범위안 v2 수용 · C4A-SCOPE-N1–N4 종결 유지. 종결된 것: N2 · C1 = 문서 범위 ·
+    N5 = 문서 정의 (최종 drain 행에 적용하는 연결은 N4 에 남김) · N7 = 문서 범위 (미완 행의 계획 unit 유도는 C2 로 명확화).
+    <b>종결은 구현 · 기능 시험 · 예산 채택 · 실행 승인이 아니다.</b></p>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>ID</th><th>등급</th><th>남은 것 (검토자 요지 — 줄인 사본)</th><th>요청서 v3 에서 할 것 (줄인 사본)</th></tr></thead>
+      <tbody>
+        <tr><td>C4A-IMPL-N1</td><td>P1</td>
+            <td>합성 실제 호출의 허용표에 fork 시작 (K5) · 중단 신호 (K4) 가 빠졌고, 부모 쪽 래퍼만으로는 별칭 · fork · 별도 자식 / 손주 계수를 주장할 수
+              없으며, 원 함수 실행 뒤의 사후 판정은 금지 호출이 이미 일어난 뒤다 · 수집이 새 시험 · 계수기 작성보다 앞선다</td>
+            <td>nodeid 별 종류 · 상한 · 환경을 소스와 대조해 RED 전 고정 (상한 초과를 본 뒤 값을 올리지 않음) · 원 함수 호출 <b>전</b> 권한 · 잔여 한도 검사 ·
+              순서 = 시험 · 골격 · 계수기 준비 / 봉인 → 수집 1 회 → RED → 구현 → GREEN</td></tr>
+        <tr><td>C4A-IMPL-N3</td><td>P1</td>
+            <td>240 B 접두사가 같은 서로 다른 경고가 한 키로 합쳐져도 overflow 0 이면 exact=true · 무제한 정수 계수를 두고 총 저장량을 고정할 수 없음 ·
+              stderr 1 GiB 는 감시의 표본 임계값이다</td>
+            <td>잘림도 정확성 상실로 처리 · 접두사 충돌 사례를 T11 에 · 개수 제한 ↔ 메모리 바이트 한도 구분 · stderr 1 GiB 는 표본 중지 임계값으로 한정 +
+              마지막 용량 확인 · 초과 시 유효성 / 인계 거부</td></tr>
+        <tr><td>C4A-IMPL-N4</td><td>P1</td>
+            <td>관측 사이에 늦게 끝난 task 의 900 s 초과를 놓침 · 기한 / 오류 뒤 최종 drain 으로 받은 행이 비용 형식 검사 없이 COMPLETED · 정리 실패를
+              유효성 false 로만 적으면 다음 rho 가 시작됨 · 40 s 는 중지 경로의 명목 join 합</td>
+            <td>unit 닫힘 전 완료 시각 근거 · 최종 returned states 전체 재검증 · 정리 / 필수 증거 실패 → 지속 전역 중지 · 정상 / 중지 정리 경로와 drain 범위
+              구분 · 기록 900 s 와 단계 절대 마감의 관계 고정</td></tr>
+        <tr><td>C4A-IMPL-N6</td><td>P2</td>
+            <td>요청서 / 목록 SHA 대조와 승인 절의 <b>존재</b> 만으로는 그 절이 그 요청의 긍정적 C4-A 실행 승인인지 확인되지 않음</td>
+            <td>승인 절의 종류 · 범위 · 긍정 결정 · 승인된 execution_request SHA 확인 · 실제 소비 인자 대조 · 무관 / 거절 / 구현 전용 절을 T14 에서 거부</td></tr>
+        <tr><td>C4A-IMPL-V2-C2</td><td>비차단</td>
+            <td>미완 행의 unit</td>
+            <td>계획 task_id → unit 매핑에서 유도 · 원행에 unit 이 있으면 먼저 불일치를 검사 (계획값으로 덮어써 숨기지 않음)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="pipe-note"><b>수치와 남은 선택.</b> 단계 28,800 s 합 · 전체 36,000 s 합의 산술은 맞다 — <b>검토는 값을 채택하지 않았다.</b>
+    REIL 의 U2 (전체 예산 · 10 h 배분안) 는 미선택 제안 그대로이고 U1 (구현 / 실행 분리) · U3 (고정 자료 재사용) 는 유지다 (검토자 표기: 원장을
+    읽은 것이며 원 대화를 독립 인증한 것이 아님). 검토자 수행은 정적 문서 · 소스 검토뿐이다 — 대상 코드 import · 실행 · 시험 · pytest 수집 · 자료
+    개봉 · 최적화 · 설치 · COMSOL 0.
+    <b>다음 (2026-11-24 인계문의 지시):</b> 구현 요청서 v3 (v1 · v2 보존 · 새 경로) + N1 / N3 / N4 / N6 정정 대응표 (변경 위치 · 해결 방식 · 유지
+    제한) + C2 반영 위치 → Codex 재검토. 문서 정정 범위다 — 구현 · pytest 수집 · 시험 · 최적화 · 실행 승인 · U2 채택이 아니다.
+    ⚠ v3 는 지금 작성 중이고 원장에는 아직 그 절이 없다 (2026-11-24).</p>
+
+  <div class="plain">
+    <p class="plain-t">쉬운 말로 — 지금 어디까지 왔나</p>
+    <p>남이 공개한 자료와 코드에 우리 쪽 규칙을 <b>실행 전에</b> 못 박아 두고, 그 규칙대로 한 칸씩 승인을 받으며 나아가는 흐름이다.
+      실제로 돈 것은 자료를 처음 여는 단계 (P0) 한 번 · 비용 측정 한 번 · 그들 노트북 경로를 우리 환경에서 끝까지 돌린 재현 (E3a 66 호출) 이고,
+      그 재현은 "승인된 실행 · 기록 조건을 채웠다" 까지만 수용됐다 — 수렴이나 fitting 합격이라는 뜻이 아니다 (66 행 모두 수치 경고).</p>
+    <p>다음 칸 C4-A (H Phase A — 등록 시작점 9,856 · 실제 호출 수는 따로 판정, §124 N2) 는 그 실행 경로를 만들어도 되는지 묻는
+      <b>구현 요청서</b>를 고치는 단계다. 요청서가 두 번 "구현 · 시험 승인 전 정정 필요" 로 돌아왔고, 세 번째 판 (v3) 을 쓰는 중이다.
+      C4-A 의 구현 · 시험 · 실행은 아직 하나도 승인되지 않았다.</p>
+  </div>
+</section>
+
 <!-- ══ 5 ══════════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
   <h2 class="pipe-h"><span class="pipe-n">5</span> 아직 아닌 것 — 경고를 떼지 않는다</h2>
 
   <p class="pipe-p">위 넷을 읽고 나갈 때 <b>같이 가져가야 하는 문장들</b>이다.
-    떼면 다른 주장이 된다.</p>
+    떼면 다른 주장이 된다. <b>(2026-11-24 갱신)</b> REIL · ASSB 합성 truth 카드 둘을 더했다.</p>
 
   <div class="pipe-two">
     <div class="pipe-card pc-b">
@@ -1189,6 +1578,9 @@
       <p><b>(2026-09-29 갱신)</b> 1198 발동 시험의 한정 수용도 짧은 시간 진단이다 — 검증한
         것은 step 뒤 발동과 중단이고 연속 양수성은 미입증이며, <b>30 s native 는
         미승인·미실행</b>이다.</p>
+      <p><b>(2026-11-24 갱신)</b> 바로 위 문장은 2026-09-29 상태다 — 그 뒤 경과는 <a href="/microshort">마이크로 쇼츠</a>.
+        지금은 <b>사용자 보류</b>이고, §100 의 유지 목록 그대로다 — 전체 절차 PASS 불인정 ·
+        <code class="mono">contract_adopted / native_ready / approved / usable = false</code> · 전체 · 정상 gate INCOMPLETE.</p>
     </div>
     <div class="pipe-card pc-b">
       <span class="pc-tag">② 하네스</span>
@@ -1214,6 +1606,21 @@
       <p>규진팀 원자료(xlsx) · <code class="mono">.mph</code> · MATLAB 원본은
         <b>공개 저장소에 커밋하지 않는다.</b> 화면과 문서에는 <b>결론만</b> 있고,
         재현하려면 원자료를 가진 기계가 필요하다.</p>
+    </div>
+    <div class="pipe-card pc-b">
+      <span class="pc-tag">REIL 외부 검증 · 2026-11-24 추가</span>
+      <h3>"수용" 은 <b>실행 승인이 아니다</b></h3>
+      <p>원장의 수용은 전부 검토자의 범위 한정 판정이다. E1-3 의 E3a COMPLETE 는 무경고 · 수렴 · 과학적 fitting 합격이
+        아니다 (66 행 모두 수치 경고 · §122). C4-A 는 구현 요청서 v2 가 <b>구현 · 시험 승인 전 정정 필요</b>로 돌아왔고 (§130),
+        C4-A 의 구현 · 시험 · 실행과 C4-B 승인은 0 이다. REIL 의 U2 (전체 예산) 는 미선택이다.</p>
+    </div>
+    <div class="pipe-card pc-b">
+      <span class="pc-tag">ASSB 합성 truth · 2026-11-24 추가</span>
+      <h3>C1 은 <b>판정 없이</b> 멈춰 있다</h3>
+      <p>1 차는 스파이크에서, 2 차 (⚠ 결과를 본 뒤의 규칙 변경 S4′ · S5′) 는 격자 수렴에서 중단됐다 — 격자 3 / 165 · 검출 지도 (C1a) ·
+        바인더 판정 (C1b) 없음. 3 차는 2026-11-24 에 승인됐고 그 결과는 아직 이 화면에 없다.
+        수치는 <b>진단 전용 · 인용 금지 · 정본 아님</b>이고 본 연구 수치와 섞지 않는다.
+        <code class="mono">degradation-degeneracy</code> 코드로 옮기는 단계는 게이트 루프 대상이고 지금 대기다 (리뷰어 사용 불가).</p>
     </div>
   </div>
 </section>
@@ -1244,7 +1651,15 @@
         <tr><td>ASSB 문헌 원장 — §1 후보 · §3-b 보류 판단 거리 · §4 갱신 기록 (§4·7)</td><td><code class="mono">bms-balancing/docs/ASSB_WANTED_PAPERS.md</code></td></tr>
         <tr><td>ASSB 큐 — 3차 묶음 흡수 §6-3-h · 도착 기록 §6-3-i (§4·7)</td><td><code class="mono">bms-balancing/docs/ASSB_TRANSFER_NOTE.md</code></td></tr>
         <tr><td>ASSB 카드 채움표 (§4·7)</td><td><code class="mono">wiki/questions/assb-contact-loss-vs-lampe.md</code></td></tr>
-        <tr><td>degradation-degeneracy 게이트 원장 (§3·5 · §4·5 의 82 차 — §115)</td><td><code class="mono">degradation-degeneracy/docs/08_REVIEW_RESPONSE.md</code></td></tr>
+        <tr><td>ASSB 큐 — 4차 묶음 도착 §6-3-j · 5차 묶음 · 결정 1–4 §6-3-k (§4·7 — 2026-11-24 갱신)</td><td><code class="mono">bms-balancing/docs/ASSB_TRANSFER_NOTE.md</code></td></tr>
+        <tr><td>ASSB 합성 truth — 상태판 · 설계서 v1 (§8 = 실행 전 고정값 · 1 차 · 2 차 기록) (§4·7 — 2026-11-24 갱신)</td><td><code class="mono">followups/assb-contact-truth/STATUS.md</code> · <code class="mono">followups/assb-contact-truth/DESIGN_v1.md</code></td></tr>
+        <tr><td>ASSB 합성 truth C1 실행 기록 (진단 전용 · 인용 금지 · 정본 아님)</td><td><code class="mono">followups/assb-contact-truth/c1_20261124/README.md</code></td></tr>
+        <tr><td>REIL 외부 검증 원장 §0–§130 (§4·8 — 2026-11-24 신설)</td><td><code class="mono">bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md</code></td></tr>
+        <tr><td>REIL 프로토콜 v2 + 부속 A–D · C4 요청 v2 (단계 정의)</td><td><code class="mono">bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md</code> · <code class="mono">…_v2_ANNEX_A.md</code> ~ <code class="mono">…_v2_ANNEX_D.md</code> · <code class="mono">REIL_C4_APPROVAL_REQUEST_v2_20261013.md</code></td></tr>
+        <tr><td>REIL C4-A 범위안 v2 · 구현 요청서 v2</td><td><code class="mono">bms-balancing/docs/REIL_C4A_SCOPE_v2_20261106.md</code> · <code class="mono">REIL_C4A_IMPL_REQUEST_v2_20261106.md</code></td></tr>
+        <tr><td>REIL 검토 회신 보존 · 2026-11-24 인계 반입 기록</td><td><code class="mono">bms-balancing/reviews/prereview_reil_*/</code> · <code class="mono">review_reil_*/</code> · <code class="mono">handoff_reil_comsol_20261124/</code></td></tr>
+        <tr><td>① COMSOL — §31–§100 (2026-11-24 갱신: §100 = R3 한정 기능 결과 · 문서 보충 수용 · 사용자 보류 — 세부 화면은 <a href="/microshort">마이크로 쇼츠</a>)</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
+        <tr><td>degradation-degeneracy 게이트 원장 (§3·5 · §4·5 의 82 차 — §115 · 2026-11-24 갱신: 마지막 회신 94 차 — §151)</td><td><code class="mono">degradation-degeneracy/docs/08_REVIEW_RESPONSE.md</code></td></tr>
         <tr><td>② 승격 예외·legacy 이관의 <b>기록된 결정</b></td><td><code class="mono">bms-balancing/reviews/PROMOTION_DECISIONS.json</code></td></tr>
         <tr><td>① 우리 재계산 산출 (§18·§19·§20)</td><td><code class="mono">…/codex63/*/RECHECK_*.json</code></td></tr>
         <tr><td>산출 자체 (정본 수치)</td><td>산출 <code class="mono">.csv</code> + 나란한 <code class="mono">.meta.json</code></td></tr>

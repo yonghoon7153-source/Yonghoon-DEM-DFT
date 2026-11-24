@@ -11,7 +11,12 @@
       (조건 수·행 수·라운드·SHA)은 원장 §의 사본이고 절 번호를 붙인다.
    2. **그림은 전부 인라인 SVG** 다. CSP 가 `default-src 'self'` 라 mermaid 같은
       라이브러리를 못 쓰고, 애초에 이 앱은 바깥 자원을 하나도 안 쓴다.
-      SVG 는 `currentColor` 와 CSS 변수로 색을 받으므로 다크 모드도 따라온다. #}
+      SVG 는 `currentColor` 와 CSS 변수로 색을 받으므로 다크 모드도 따라온다.
+
+   (2026-11-24 갱신) 4절의 값을 RESULTS_PAIRED_FIXED5.md 와 다시 대조했다 — 같다.
+   RESULTS*.md 에는 2026-09-29 뒤 날짜가 붙은 기록이 없다 (마지막 = grid_fit_v5 의 2026-09-26).
+   6절에 게이트 원장 §116~§151 (82차 회신 ~ 94차 회신) 의 상태와, 독립 흐름 "논문 후속 (Phantom pOCV)"
+   상태판 (followups/phantom-pocv/STATUS.md) 의 사본을 덧붙였다 — 그 흐름의 결과 수치는 진단 전용이라 옮기지 않는다. #}
 <header class="phead phead-pipe">
   <p class="eyebrow">처음 온 사람을 위한 한 장</p>
   <h1>full-cell 곡선 하나로 두 전극을 가를 수 있는가</h1>
@@ -316,7 +321,7 @@
 
 <!-- ══ 4. 지금까지 답한 것 ══════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">4</span> 지금까지 답한 것 <span class="tw-mini">(2026-09-29 갱신)</span></h2>
+  <h2 class="pipe-h"><span class="pipe-n">4</span> 지금까지 답한 것 <span class="tw-mini">(2026-09-29 갱신 · 2026-11-24 정본과 다시 대조 — 값 그대로)</span></h2>
 
   <div class="pipe-cite">
     <b>이 칸의 숫자는 사본이다 — 인용 근거가 아니다.</b> 정본은 artifact 와
@@ -438,7 +443,7 @@
 
 <!-- ══ 6. 다음 ══════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">6</span> 다음 — 같은 시작점에서 다시 재기 · 관측을 늘리면 갈리는가 <span class="tw-mini">(2026-09-29 갱신)</span></h2>
+  <h2 class="pipe-h"><span class="pipe-n">6</span> 다음 — 같은 시작점에서 다시 재기 · 관측을 늘리면 갈리는가 <span class="tw-mini">(2026-09-29 갱신 · 2026-11-24 갱신)</span></h2>
 
   {# 2026-09-29 갱신 — 이 저장소 본 프로젝트의 "다음"(단계 3)을 위에 새로 쓰고,
      satellite(mode-observability) 서술은 아래 소제목 밑에 그대로 둔다.
@@ -459,8 +464,30 @@
     warm 은 앞 목적함수의 해를 뒤 목적함수의 시작점으로 넘기는 것이다.
     base 는 난수가 아닌 결정론적 첫 시작점이다.</p>
 
+  {# 2026-11-24 갱신 — 원장 §116~§151 의 절 머리 · 판정 줄의 사본. 아래 2026-09-29 상자는 그대로 둔다. #}
   <div class="pipe-note">
-    <b>지금 어디인가 — 실행 GO 는 없다.</b> 설계를 코드로 옮기는 일은 여섯 칸의 순서로
+    <b>(2026-11-24 갱신) 지금 어디인가 — 여전히 실행 GO 는 없다.</b> 82차 회신부터 94차 회신까지 원장 §116~§151 이 이어졌다.
+    <ul class="pg-list">
+      <li><b>단계 3 라운드 1</b> — 82차 “부분 수용 · 라운드 1 종결 보류” (§116) → 83차 “G82-N1 · N2 · N3 종결 수용 · 승인된 단계 3 라운드 1
+        종결 · 새 차단 0” — 원장은 같은 줄에 “단계 3 전체 완료 아님” 을 적었다 (§118).</li>
+      <li><b>단계 3 라운드 2</b> — 84차가 2a / 2b 분리를 받아들였다 (§120). 2a 는 86차
+        <code class="mono">ACCEPTED_ROUND2A_CLOSED_NO_EXECUTION_GO</code> (§125), 2b 는 87 · 88차의
+        <code class="mono">REQUEST_CHANGES_ROUND2B_NOT_CLOSED</code> 뒤 89차 <code class="mono">ACCEPT_G88_N1_AND_CLOSE_STAGE3_ROUND2B</code>
+        로 종결됐다 (§134). 그래도 “단계 3 전체 완료” 판정 문장은 없다 (§141).</li>
+      <li><b>PyBaMM 환경 고정 라운드</b> — 90차 <code class="mono">CONDITIONAL_ACCEPTANCE</code> (§137) → 91차
+        <code class="mono">ACCEPTED</code> · 환경 프로필 C 기록 대조 라운드 종결 (§140).</li>
+      <li><b>단계 4 (묶음 6)</b> — 92차 <code class="mono">CONDITIONALLY_SUITABLE_SCOPE_AFTER_N1_N2_N3</code> (§143) → 제한 오프라인 구현
+        (사용자 승인 §145) → 93차 “수정 후 재검토” (§148) → 94차 “G93-N1 · G93-N2 한정 범위 종결 수용” (2026-10-07, §151).
+        원장 문장 그대로: “묶음 6 종결 · 실행 GO · 새 leg · COMSOL · 복원 · class · 투영 게시 승인 아님.”</li>
+      <li><b>다음</b> — “다음 구현 범위는 별도 요청 · 사용자 승인 뒤에만” (§151). 남는 것: 39 위치 변이 · C8 재개 · C7 원장 결속 ·
+        제외 세 객체 (이월). 원장의 마지막 절은 지금도 §151 이다 (2026-11-24 확인).</li>
+    </ul>
+    82차~94차 어느 회신도 실행 GO 를 주지 않았고, 새 연구 leg 도 승인되지 않았다. 그러므로 이 절에는 여전히 새 수치가 없다.
+    라운드별 표는 <a href="/trust">검증층</a> 6절에 있다.
+  </div>
+
+  <div class="pipe-note">
+    <b>(2026-09-29 판 · 그대로) 지금 어디인가 — 실행 GO 는 없다.</b> 설계를 코드로 옮기는 일은 여섯 칸의 순서로
     나뉘어 있다 (<code class="mono">docs/22p_gap/GATE78_REQUEST.md</code> §3.2). 원장은 이
     칸도 “단계” 라 부르고, 계약 이름의 “단계 3” 과는 다른 번호다.
     <ul class="pg-list">
@@ -475,6 +502,42 @@
     적혀 있다. 그러므로 이 절에는 아직 새 수치가 없다. 검증층 쪽 기록은
     <a href="/trust">검증층</a> 6절에 있다.
   </div>
+
+  {# 2026-11-24 신설 — 독립 흐름 "논문 후속 (Phantom pOCV)". 원천: followups/phantom-pocv/STATUS.md (진행표 · 규칙 ·
+     게이트 후보). 그 흐름의 결과 수치는 진단 전용 (인용 금지) 이고 위키에도 옮기지 않는 값이라 여기에도 옮기지 않는다 —
+     상태와 절차 사실 (실행 횟수 · 중단 · 날짜) 만 적는다. #}
+  <h3 class="pipe-sub" id="phantom">논문 후속 — Phantom pOCV (독립 흐름 · 2026-10-06 시작)</h3>
+  <p class="pipe-p">Asheruddin 외 (arXiv 2512.19773v1 · 사전인쇄) 는 저율 pOCV 에 남는 <b>옴 강하 · 가지 이력 · 창 경계</b>가
+    전극 밸런싱 적합에서 LLI · LAM 매개변수로 사영된다고 보였다 — 열화가 아닌데 열화로 읽힌 양, 이른바 phantom 모드다 (개념 페이지
+    <a href="/concept/pocv-nonequilibrium-mode-bias">pOCV 의 비평형 성분이 모드로 새는 경로</a>). 이 흐름은 그 주장을 이 저장소의 22쪽 격차
+    다리 (<code class="mono">docs/09_22P_GAP.md</code> §7.10) 에 대어 본다. 게이트 루프 · REIL · COMSOL 과 <b>섞지 않고</b>, RUN_SCOPE 를
+    바꾸지 않으며, 실행은 저장소 밖 사본 (git archive) · 스크래치패드에서만 한다.</p>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>#</th><th>무엇</th><th>상태 (상태판의 사본 · 수치 제외)</th><th>다음</th></tr></thead>
+      <tbody>
+        <tr><td>P1</td><td>§7.10 격차 bias 부호 대조 (재집계 · 실행 0)</td>
+            <td><b>완료</b> — 결과는 개념 페이지 "P1 결과" · 성분별 부호는 원 fit 부재로 미확인</td><td>—</td></tr>
+        <tr><td>P2</td><td>꼭대기 무거운 SOC 의존 PE 오프셋 다리 (같은 평균의 균일 다리와 비교)</td>
+            <td><b>닫힘 (2026-10-07 · 결론 없음)</b> — 실행 1 회 · 미리 고정한 규칙 (§5) 대로 중단 · tilt 해석 안 함 · 규칙 사후 변경 안 함</td>
+            <td>다시 묻는다면 새 설계 · 새 승인 (자동 재개 없음)</td></tr>
+        <tr><td>P3</td><td><code class="mono">φ_Si</code> 자유 5 매개 적합 — Gr ↔ Si 재배분 truth (LAM_Si ≠ LAM_Gr)</td>
+            <td><b>닫힘 (2026-11-06 · 사용자 “다 권고대로” = A)</b> — 세 번 실행 · 세 번 §5 중단 (Q1–Q4 판정 결과 없음) · 3 차는 원점 재현성
+              규칙의 사후 변경을 기록하고 돌렸다. 자기 일관성 시험 SC = V1 (truth = 적합 모형 자신) 로 구현 결함 가설은 기각 — 3 차의 γ 이동은
+              DFN ↔ OCP 기준 차이가 γ 로 흡수된 쪽 (진단 전용)</td>
+            <td>다시 묻는다면 새 설계 · 새 승인 (자동 재개 없음) — 남은 후보 Q1 · W · S</td></tr>
+        <tr><td>P4</td><td>충전 가지 + 탈리튬화 기준 (가지 불일치) 적합</td><td>대기</td><td>REIL 해석 제한과 연결</td></tr>
+        <tr><td>P5</td><td>적합 R 오프셋 열의 각도 (PyDMA · ampworks 방식)</td><td>대기</td><td>REIL §24 의 PyDMA 비교와 연결</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="pipe-note"><b>이 흐름의 수치는 이 화면에 없다.</b> 결과는 진단 전용 (인용 금지) 이고, 정본은 그 흐름의 결과 파일
+    (<code class="mono">followups/phantom-pocv/p2_20261006/README.md</code> · <code class="mono">p3_20261106/README.md</code>) 이다. 옛 §7.10
+    수치와는 code identity 가 달라 같은 실행 묶음 안에서만 비교한다. 이 흐름이 찾은 게이트 후보 하나 —
+    <code class="mono">tools/diagnose_pini_transition.py</code> 의 <code class="mono">gap_stats</code> 창 경계가 부동소수 오차로 행을 뺀다 — 는
+    RUN_SCOPE 라 여기서 고치지 않고 게이트 루프 후보로 넘겼다 (상태판 "게이트 후보로 넘길 것").</p>
 
   <h3 class="pipe-sub">satellite 의 다음 — 관측을 늘리면 갈리는가</h3>
   <p class="pipe-p">위 질문이 "곡선 <b>하나</b>로 되는가" 였다면, 다음 질문은

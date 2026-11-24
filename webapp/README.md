@@ -9,7 +9,7 @@
 
 | 화면 | 소스 | 내용 |
 |---|---|---|
-| `/` | `wiki/index.md` · `wiki/log.md` | 위키 카탈로그 + 최근 활동 (log 의 `## [date] action \| subject` 블록을 최신순으로) |
+| `/` | `wiki/index.md` · `wiki/log.md` (+ 템플릿 안 정적 사본) | 위키 카탈로그 + 최근 활동 (log 의 `## [date] action \| subject` 블록을 최신순으로). 2026-11-24 부터 **흐름별 지금 상태** 패널 — 게이트 루프 · REIL · COMSOL (보류) · 논문 후속 (Phantom pOCV) · ASSB 문헌 → 합성 truth · 위키 한 줄씩. 날짜를 붙인 **정적 사본**이라 원장이 바뀌면 먼저 낡는다 (정본 경로는 템플릿 주석). 위키 행은 사본 없이 아래 "최근 활동" 으로 보낸다 |
 | `/papers` | `wiki/raw/papers/*.md` | 논문 digest 카드 — 제목 · 출처 · ingested · **sha256 앞 12자** · 그림 장수 |
 | `/paper/<slug>` | 같은 파일 + `wiki/raw/figures/<slug>/` | digest 전문. 본문의 `Fig. N`·`Table N` 을 **자동 링크**해 크로핑 PNG 를 옆에 띄운다 (`figures.json` 의 원문 캡션 동반) |
 | `/questions` `/question/<slug>` | `wiki/questions/*.md` | 질문 카드. **Evidence For / Against / Gap / Status Log / 설계 / 가설** 을 절 단위로 갈라 서로 다른 색·라벨로 렌더 |
@@ -18,12 +18,12 @@
 | `/doc/<kind>/<slug>` | `wiki/guides/` `queries/` `syntheses/` `comparisons/` `raw/transcripts/` `raw/articles/` `raw/repositories/` | 나머지 위키 문서 (wikilink 가 닿는 곳을 비우지 않기 위해) |
 | `/results` | `mode-observability/docs/*.md` + `results/**/*.csv` | Phase 노트 + CSV. 200행 이하는 표 전체, 넘으면 **앞 15행 + 전체 기준 요약 통계**(n·min·median·mean·max) |
 | `/gate` | `degradation-degeneracy/docs/08_REVIEW_RESPONSE.md` | 게이트 라운드 색인 + **최근 절만** 렌더 (`?n=1..10`) |
-| `/pipeline` | (템플릿 안에 서술) | 연구 파이프라인 대표 화면 — 처음 온 사람용. 결과 수치는 `docs/RESULTS_PAIRED_FIXED5.md` 의 **사본**이고 화면에도 그렇게 적는다 |
-| `/trust` | 실물 계수 (`content.trust_numbers()`) | 검증층 대표 화면. 숫자를 상수로 적지 않고 **세어서** 만든다 |
-| `/bms` | (템플릿 안에 서술) | BMS α·β 트랙 — **지금까지 이룬 것**. 세 갈래(COMSOL 재구축 · 검증 하네스 · α·β 열화 정량화)에서 닫힌 것과 **아직 아닌 것**을 같은 크기로 적는다. 수치는 `bms-balancing/` 원문과 artifact 의 사본이며 **모집단·범위 경고를 붙인 채로만** 옮긴다. 2026-09-14 에 `/handover`(BMS 협업 **방향**)를 대신했다 — 옛 화면은 git 이력에 |
+| `/pipeline` | (템플릿 안에 서술) | 연구 파이프라인 대표 화면 — 처음 온 사람용. 결과 수치는 `docs/RESULTS_PAIRED_FIXED5.md` 의 **사본**이고 화면에도 그렇게 적는다. 2026-11-24 갱신: 4절 값을 정본과 다시 대조 (같음 — RESULTS*.md 에 09-29 뒤 기록 없음) · 6절에 게이트 원장 §116~§151 (82차 회신 ~ 94차 회신 · 실행 GO 없음) 과 독립 흐름 **논문 후속 (Phantom pOCV)** 상태판 (`followups/phantom-pocv/STATUS.md`) 의 사본 — 그 흐름의 결과 수치는 진단 전용이라 옮기지 않는다 |
+| `/trust` | 실물 계수 (`content.trust_numbers()`) + 템플릿 안 서술 | 검증층 대표 화면. 숫자판은 상수로 적지 않고 **세어서** 만든다. 2026-11-24 갱신: 6절 "지금 상태" 를 94차 (원장 §151) 로 덧붙이고 82~94차 표를 더함 — 82차 발송 시점 (2026-09-29 판) 은 "지난 상태" 로 그대로 |
+| `/bms` | (템플릿 안에 서술) | BMS α·β 트랙 — **지금까지 이룬 것**. 세 갈래(COMSOL 재구축 · 검증 하네스 · α·β 열화 정량화)에서 닫힌 것과 **아직 아닌 것**을 같은 크기로 적는다. 수치는 `bms-balancing/` 원문과 artifact 의 사본이며 **모집단·범위 경고를 붙인 채로만** 옮긴다. 2026-09-14 에 `/handover`(BMS 협업 **방향**)를 대신했다 — 옛 화면은 git 이력에. 2026-11-24 갱신 (덧붙이기만): **REIL 외부 검증** 절 신설 (§4·8 — 원장 `docs/REIL_PREREQUISITES_STATUS_20261004.md` §0–§130 의 판정 문자열을 글자 그대로) · ASSB 절 (§4·7) 을 117호 멈춤 · §3-b 155 건 일괄 (2026-11-17) · 합성 truth C1 1 · 2 차 (진단 전용) · 3 차 승인 (결과는 아직 미반영) 으로 갱신하고 72 건 카드에 줄마다 11-17 꼬리 표지 · COMSOL 은 §100 짧은 안내 (사용자 보류) 만 · 흐름별 지금 표 (§1) |
 | `/alphabeta` | (템플릿 안에 서술) | **α·β 가 맞는가** — 옛 `/handover` 본문을 **한 글자도 안 고치고** 되살리고, §0 용어 여덟 개 + 절마다 `.plain` "쉬운 말로" 칸을 덧붙였다. BMS 를 모르는 사람이 읽을 수 있게 하는 것이 목적이고 **비유는 쓰지 않는다** (비유는 이해한 느낌만 주고 틀린 그림을 남긴다). 쉬운 말 칸도 원문의 숫자만 다시 말하며, §7 의 경고를 같이 옮긴다 |
-| `/microshort` | (템플릿 안에 서술) | 마이크로 쇼츠 COMSOL 갈래 하나만 — **인계용** (2026-09-15 신설, 2026-09-29 원문 §30 까지 갱신). `/alphabeta` 와 같은 뼈대(§0 용어 + 절마다 "쉬운 말로"). 수치와 판정은 `bms-balancing/docs/COMSOL_REBUILD_SPEC.md` 와 보존 묶음의 **사본**이다. 화면의 "수용"은 수신 측 판정을 옮긴 것이고 **실행 승인이 아니다**. 원장에서 닫힘 근거를 찾지 못한 항목은 ⚠ 로 두고 닫힌 것으로 적지 않는다 |
-| `/microshort/summary` · `/microshort/summary.pdf` | (템플릿 안에 서술) | 마이크로 쇼츠 **한 페이지 요약** (2026-10-06 신설) — 처음부터 B-min 150 s 종결 (원문 §69) 까지: 지금 위치 · 연대표 · 확보한 결과 (범위 문장과 함께) · 말할 수 없는 것 · 다음 (실험 대응) · 용어. `/microshort` 와 같은 규율 (원문의 사본 · 경고 유지 · 비유 없음). `.pdf` 는 이 화면을 headless Chromium 으로 인쇄한 파일 (`webapp/make_microshort_pdf.sh` 로 다시 만든다) |
+| `/microshort` | (템플릿 안에 서술) | 마이크로 쇼츠 COMSOL 갈래 하나만 — **인계용** (2026-09-15 신설, 2026-09-29 원문 §30 까지, **2026-11-24 원문 §100 까지 갱신 — 머리에 사용자 보류 상자**). `/alphabeta` 와 같은 뼈대(§0 용어 + 절마다 "쉬운 말로"). §10 ~ §15 는 원문 §31 – §100 (정상 30 → 480 s · 저장 분석 · rtol · B-min · 미세단락 S0 → S1 · R3), §16 은 지금 열린 것 (§8 은 2026-09-29 지난 상태로 남김). 수치와 판정은 `bms-balancing/docs/COMSOL_REBUILD_SPEC.md` 와 보존 묶음의 **사본**이다 (§26 이후는 수신 검토자 재계산의 사본 — 원시 CSV 는 이 저장소에 없다). 화면의 "수용"은 수신 측 판정을 옮긴 것이고 **실행 승인이 아니다**. 원장에서 닫힘 근거를 찾지 못한 항목과 원장에 기록이 없는 경로는 ⚠ 로 두고 닫힌 것으로 적지 않는다 |
+| `/microshort/summary` · `/microshort/summary.pdf` | (템플릿 안에 서술) | 마이크로 쇼츠 **한 페이지 요약** (2026-10-06 신설, 2026-11-24 원문 §100 까지 갱신) — 처음부터 R3 · 사용자 보류 (원문 §100) 까지: 지금 위치 · 보류 상자 · 연대표 · 확보한 결과 (범위 문장과 함께) · 말할 수 없는 것 · 다음 (보류) · 용어. `/microshort` 와 같은 규율 (원문의 사본 · 경고 유지 · 비유 없음). `.pdf` 는 이 화면을 headless Chromium 으로 인쇄한 파일 (`webapp/make_microshort_pdf.sh` 로 다시 만든다 · 2026-11-24 판 8 쪽) |
 | `/notes` | (서버는 메모를 모른다) | 브라우저 localStorage 의 메모·하이라이트 모아보기. 서버는 slug → 제목 이름표만 준다 |
 | `/search?q=` | 위 전부 | 단순 부분 문자열 전문 검색 (파일별 히트 수 + 스니펫 3개) |
 | `/api/figures/<slug>.json` | `figures.json` | 그림 색인 (figref.js 가 쓴다) |
