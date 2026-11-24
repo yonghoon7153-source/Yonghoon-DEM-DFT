@@ -3736,3 +3736,44 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   2. 사용자 승인 (요청서 §6 문안) → 실행기 작성 (10월 실행기의 diff · §2-1) → precheck 1 회 → 재봉인 1 회.
   3. 결과 검토 → 수용되면 C4 환경 연결 + C4-A v4 결속 두 자리 (§4-3 의 C6 봉인 · §6-2 의 봉인 venv) 정정 확인 (요청서 §7 Q1).
   4. C4-A 구현 (§135 승인 · v4 §7 의 a 부터).
+
+## §137 C4-ENV 새 세대 재봉인 요청 사전 검토 회신 (REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL · ENV18-N1 · N2 · 실행기 · 바깥 하네스 사전 고정 · 비차단 C1 · C2) — 반입 (2026-11-24 KST · 덧붙임 — 위 §0–§136 은 그대로)
+
+- **사용자 전달 (2026-11-24):** "사전 검토 완료했습니다. 새 세대 요청 방향은 맞지만, 실행 승인 전 문서 2곳 정정과 실행기 고정이 필요합니다." + 다섯 답의 요약 + 묶음 4
+  파일 (`CODEX_REPLY_KO.txt` · `REIL_C4_ENV_RESEAL_PREREVIEW_20261124.zip` · `DELIVERY_RECORDS.json` · `DELIVERY_TRANSPORT_TOOL_RETURN.json`).
+- **받은 바이트:** `reviews/review_reil_c4_env_reseal_prereview_20261124/`
+  - zip 1,941,163 B · sha256 `ead9e3a4cd057002f81765420faac1247a4520b93534ca8f4f02fc0a300db3b6` (DELIVERY_RECORDS 의 archive sha 와 같음).
+  - `originals/` 117 파일 (위험 경로 0 · `PACKAGE_MANIFEST.json` 116 항목 전부 일치 · `source/` 75 파일 = `781f357` 원문 바이트).
+  - `outside_zip/` 6 파일 = 받은 원본 셋 + DELIVERY_RECORDS 안 raw_base64 셋을 푼 파일 (크기 · sha 일치). 바깥 `CODEX_REPLY_KO.txt` 는 zip 안 사본과 같다.
+  - 보존 규칙 `32ea127` · 보존 `394a058` (커밋 blob = 디스크 바이트 124 / 124) · 비밀정보 0 · 검토자 도구 (`review_tools/*.py`) 실행 0 · import 0.
+- **판정 (`REVIEW_DECISION.json`):** `REVISION_REQUIRED_BEFORE_RESEAL_EXECUTION_APPROVAL`. 새 환경 채택 0 · 재봉인 실행 승인 0 · C4-A 구현 승인 0 · 실자료 0. 10월 한정
+  수용은 그대로 (취소 · 수정 0).
+  - Q1 수용: 새 세대 구분 · 복원 규칙 6 항 대응. 제안으로서의 수용이고, 동일 복원 충족이나 실행 승인이 아니다.
+  - Q2 A 안 조건부 수용: N1 을 정정하고, 잔여 위험 (pip wheel 을 바꾼 주체 · 원래 출처 미확인) 을 사용자 선택에 남긴다. B 안은 강제가 아니고, 고르면 따로 고정한다.
+    "선언 1 행" 은 cacert payload 1 행이다 — wheel 의 RECORD 도 바뀌므로 "구성원 하나만 달랐다" 로 넓히지 않는다.
+  - Q3 원래 네 약점은 보완됐다 (정적 코드 · 제출 증거 범위). "이 세대 전용" 표기는 적절하다. 52 / 52 · 13 / 13 · run1 11 / 12 의 연결을 확인했다 (재시험 아님).
+    seal 모드는 S9a 성공 뒤에만 이어야 하고, seal 단독 통과를 RECORD 수용으로 쓰지 않는다.
+  - Q4 실행기와 바깥 호출 하네스를 **실행 승인 전에** 고정 (사본 · 10월 대비 diff · SHA256 · argv · cwd) 해 정적 검토받는다. 작성은 따로 승인받는다. 승인 뒤 precheck 1
+    회 설계는 유지할 수 있다 (정적 검토에는 precheck 불요).
+  - Q5 v4 결속 정정 2 줄은 가능하다 — v4 sha · 정확 좌표 (§4-3 의 C6 봉인 318 행 · §6-2 의 환경 458 행) · old→new · 새 MANIFEST / lock / PROFILE · venv / `pytest_t` ·
+    interpreter 식별 · 효력 조건을 담은 별도 정정 기록. C4-E 결과 미이월은 맞다. RECORD 밖 파일은 한정 관측으로 두되, 전체 목록 · 크기 · 해시를 남긴다. 실행 경로에 영향을
+    주는 미확인 항목 (`.pth` · `sitecustomize.py` · 로드될 모듈 / 확장) 이 나오면 채택을 보류하고 판단한다.
+- **정정 요구 (OPEN):**
+  - **ENV18-N1 [P2]** `PIP_CERT` 만으로 유효 CA 가 고정되지 않는다. pip 24.0 의 vendored requests (`merge_environment_settings`) 는 `REQUESTS_CA_BUNDLE` → `CURL_CA_BUNDLE`
+    을 `session.verify` (= `PIP_CERT`) 보다 앞에 둔다. 두 이름은 `05_env_names.txt` 에 있다. → pip 자식에서 두 이름을 지워 `PIP_CERT` 하나로 고정하거나 우선순위 · 허용
+    파일을 고정한다. 실제 선택된 CA 파일의 크기 · sha (값 비공개) 와 이름의 제거 / 설정 여부를 기록한다. `SSL_CERT_FILE` · 프록시 값을 남기는 범위와 한계를 적는다. TLS
+    검증을 끄는 해결은 허용하지 않는다. 정정 뒤에도 wheel 출처 미확인은 남는다.
+  - **ENV18-N2 [P2]** 커밋 전에 쓰는 `10_end.json` 에 S10 최종 결과를 넣을 수 없다. → `10_end.json` = PRE_COMMIT snapshot · S10 PENDING. 커밋 시도 · 원 rc · timeout ·
+    확보한 SHA · S10 시작 / 끝 · 한도 판정 · 파일 식별은 커밋 밖 `11_after_commit.json` 에, 바깥 실행기 반환은 따로 연결한다. 못 얻은 값은 null / 미확인으로 두고, 실패 뒤
+    정상 완료를 다시 선언하지 않는다.
+  - **실행 전 조건:** 실행기 · 바깥 하네스 고정 → 정적 검토. 이 회신은 그 작성 · 시험 · 실행을 지시하지 않는다.
+- **비차단:** **ENV18-C1** — `Downloading` 줄의 이름 꼴은 pip 이 처리한 Link 의 호스트다 (redirect 뒤 최종 호스트 · 실제 접속이 아님) → 요청서 문장을 이 뜻으로 좁힌다.
+  **ENV18-C2** — `records` 모드의 배포판 dict (`new_sci`) 가 같은 Name+Version 을 내는 두 dist-info 를 덮을 수 있다 (전체 흐름에는 env_profile 의 shadowed 기록 · lock 정확
+  대조가 추가 방어) → dict 를 만들기 전에 중복을 거부하고 그 사례를 더한다.
+- **검토 본문의 덧붙인 지적:** precheck 의 시간 한도 · 실행기 폴더 / 출력의 디스크 집계 포함 여부를 명시한다 (지금 §1-9 의 `du` 합은 R · N · E 만). subprocess timeout 과
+  전체 작업의 절대 반환 보장을 구분한다. 순수 Python 작업의 초과 탐지 · 실패 뒤 첫 원인 보존 · 출력 / 경로 부재 확인을 실행기 검토에서 본다. 요청 §6 의 괄호가 두 결속
+  자리를 모두 §4-3 으로 보이게 하므로 좌표를 명시한다.
+- **이전 발견의 상태:** ENV-P2-01 = OPEN (N2 · 실행기 검토 대기) · ENV-P2-02 = 원래 네 약점 보완 (정적 · 제출 증거 범위) · ENV-P2-03 = 결속 제안됨 (미실행 · 미수용) ·
+  ENV-P2-04 = 개선 (N1 필요 · 독립 네트워크 감사 아님).
+- **다음 (사용자 결정):** 요청서 v2 (N1 · N2 · C1 · Q5 좌표 · RECORD 밖 전체 목록 · 덧붙인 지적) + 대조기 C2 보강 (재현 시험 먼저) + 실행기 · 바깥 하네스 작성 · 고정
+  (정적 검토용 · 실행 0 · precheck 0) → Codex 정적 검토 → 사용자 실행 승인 (요청서 §6). v1 · 대조기 `8cf10f3c…` · run1 기록은 그대로 둔다.
