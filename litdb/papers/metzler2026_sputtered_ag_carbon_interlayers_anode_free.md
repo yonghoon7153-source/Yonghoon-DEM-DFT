@@ -344,3 +344,81 @@ C1 · DC1 · C10 · DC10 은 figure-read ≈ (눈금 840 px = 250 mAh g⁻¹) ·
 | (곁) 같은 Ag–C 계열 · 우리 그룹 실험 | 층 < 1 µm · Ag 0.105 mg cm⁻² · 4 MPa · 60 °C · Ø 5 mm | `kang2026_…`: Ag–C 7.8 µm · Ag ≈0.22 mg cm⁻² [카드 산술] · 20 MPa · 45 °C · Ø 13 mm | 조건이 다 달라 값을 같은 줄에 두지 않는다 — Ag 양 기준 차이는 ≈2 배뿐이라는 것만 |
 
 ⚠ 이 논문은 DFT 를 하지 않았으므로 **'방법 의존성 (functional · 이온 이완 · k-점) 때문에 다르다' 라는 판정이 없다** — 대신 실험 쪽 방법 의존성 (유지율 정의 · η 정의 · iR · 2D 기공률 · EDS 분해능) 을 §10 에 적었다.
+
+---
+
+## 8. 적용 인사이트 (우리 연구에 어떻게)
+
+- ① **W 쌍 목록에 C\|Cu · Li\|Cu · Li\|C (리튬화) 가 빠져 있다** — 이 구조에서 Li 는 Cu \| C 사이로 들어가 C 를 SE 쪽으로 밀어낸다 (`Fig. 3c–j` · `Fig. S11` · `Fig. 5`).  즉 **운전 중 처음 벌어지는 계면은 C\|Cu** 이고, 그 뒤 Li 가 만나는 면은 Cu (아래) 와 C (위) 다.  W_ad 보고서 §2 의 네 쌍 (C–C · Ag–C · LPSCl\|Ag(111) · LPSCl\|흑연) 만으로는 이 구조의 '어디가 먼저 갈라지나' 를 못 묻는다.  `liao2025_…` 의 구도 (탄소/SE 점착이 크면 Li 가 집전체 쪽으로) 와 같은 그림이지만, 이 논문은 점착을 **재지 않았다** — 순서 관찰이지 G_c 나 W 의 대조 값이 아니다.
+- ② **LPSCl\|Ag(111) 쌍의 쓰임새는 '첫 충전 전' 으로 한정된다** — 조립 (500 MPa) 직후 SE 와 닿는 면은 Ag 지만, 첫 충전 뒤 Ag 는 Li 속으로 흩어지고 SE 쪽 면은 **LPSCl\|C** 가 된다 (+ 방전 뒤 C 위 Ag 덩어리).  DEM 박리 입력을 '운전 중' 계면에 쓰려면 LPSCl\|C (보고서 §2-4) 쪽이 대표다 [카드 해석].
+- ③ **탄소 모형은 '결함 많은 탄소' 행** — Raman I_D/I_G figure-read ≈1.3–1.4 (532 nm) 는 결함 없는 흑연 기저면과 거리가 멀다 (`kang2026_…` 의 고결정 CNF 0.19 · 저결정 CNF 0.99 보다도 크다 [다른 카드]).  W_ad 보고서 §7-1 표로는 **빈자리 결함이 있는 기저면** + **흑연 기저면 LiC₆** (2D 띠가 있어 쌓인 영역도 있다) 가 후보이고, CNF 헤링본 가장자리 행은 아니다.  작용기 (O · N) 는 XPS 가 없어 정할 수 없다 — 결함 · 작용기 밀도는 계산 입력이 아니라 실험값을 받아야 한다 (보고서 §7-1 의 단서 그대로).
+- ④ **'합금 구동력' 의 끝 상태는 희박 Li(Ag)** — 100 nm Ag 가 5 mAh cm⁻² Li 에 다 녹으면 ≈0.5 at% [카드 산술] 이라, 이 구조에서 계산할 것은 LiAg · Li₉Ag₄ · Li₁₀Ag₃ (`spencerjolly2023_…` 경로) 만이 아니라 **bcc Li 속 Ag 치환 용해 에너지**와 **Ag 의 Li 표면 · 계면 편석 경향**이다.  ⚠ 방전 뒤 Ag 가 C 위에 남는 것을 'Ag\|C 친화성 > Ag\|Cu' 의 증거로 쓰지 않는다 — 탈리가 C 쪽 (SE 쪽) 에서 시작해 Ag 가 거기 남는 **기하** 로도 설명되고, 원문은 둘을 가르지 않는다 [카드 해석].
+- ⑤ **핵생성 과전압은 '순서' 앵커로만** — steel > Cu > C-Cu ≳ Ag C-Cu (1 mA cm⁻² · 1 셀씩 · figure-read) · C-Cu 16.1 > Ag C-Cu 3.9 mV (2 mA cm⁻² · n 5).  DFT 친화성 순서와 맞대 보되 **크기는 견주지 않는다** — 복합 층 전체의 경로 값이고 (Ag 는 SE 쪽 · 핵은 Cu 쪽), 평탄 전압에는 iR 이 섞여 있다 (§3-4).  보고서 §7 '할 수 없는 것' 에 적힌 '핵이 생길 때의 과전압' 을 실험 쪽에서 채우는 값이지, 계산 결과의 검증 표적은 아니다.
+- ⑥ **연속체 · DEM 에 바로 쓸 형상** — 층 < 1 µm (figure-read ≈0.5–0.75 µm) · Ag 89–100 nm · 조도 Sa (`Table S1`) · 조립 500 MPa · 운전 4 MPa · Li ≈20 µm (자리마다 4–28 µm) 가 **1 µm 탄소 '껍질'** 을 밀어낸다 · 탈리 뒤 Cu \| C 사이 공극 (하중 해제로 넓어졌을 수 있다 — 저자).  ⇒ DEM 에서 이 탄소 층은 '두꺼운 다공 호스트' 가 아니라 **SE 에 붙은 얇은 막 + Cu 와의 약한 계면**으로 두는 것이 이 관찰과 맞다 [카드 해석].  2D 기공률 18.5 % 는 입력 · 보정 표적으로 쓰지 않는다 (§10-②).
+- ⑦ **호스트 몫 ≲ 3 %** [카드 산술 §3-7] — Ag (Li₁₀Ag₃ 까지 1.7 %) + C (LiC₆ 0.5–1 %) 가 담는 Li 는 충전량의 몇 % 뿐이라, 이 층은 Li 를 '담는' 층이 아니라 **핵생성 · 수송을 거드는 층**이다.  `kang2026_…` 의 CNF 층 (Li 를 기공에 담아 압력 요동을 줄이는 설계) 과 역할이 다르다.
+
+---
+
+## 9. 인용 가능 문장 (deck/paper 용 — 조건을 떼지 않는다)
+
+- "A ≈100 nm sputtered Ag film on a commercial ≈1 µm carbon-coated Cu foil reduced the Li nucleation overpotential in Li₆PS₅Cl three-electrode cells from 16.1 ± 1.1 mV (carbon only) to 3.9 ± 1.1 mV (2 mA cm⁻², 60 °C, 4 MPa; mean ± standard error, n = 5)." — *ACS Appl. Energy Mater.*, 9, 9817 (2026).
+- "In this bilayer, Li plated between the Cu current collector and the carbon layer, which was displaced toward the separator; Ag was dispersed in the plated Li after charge and was found on the carbon after discharge (PFIB-SEM/EDS)." — 같은 출처.
+- "Anode-free NMC83 | Li₆PS₅Cl cells with the sputtered Ag/C bilayer delivered 203 mAh g⁻¹ initial discharge capacity and 86 % initial Coulombic efficiency at 1 mA cm⁻², versus 163 mAh g⁻¹ and 71 % without Ag (n = 3, 60 °C, 4 MPa)." — 같은 출처.
+- "Stripping left large voids between the Cu current collector and the carbon layer and residual Li filaments." — 같은 출처.
+- ⛔ 쓰지 말 것: 'Ag is catalytic' (속도론 측정 없음) · 'comparable to 10–20 µm Ag/C layers' (저자 스스로 조건이 달라 *"definitive comparisons difficult"*) · '10-cycle retention 59 %' 를 방전 기준 유지율처럼 (정의 = C10/C1 충전) · 'σ = 1.6 mS cm⁻¹' 를 LPSCl 물성값으로.
+
+---
+
+## 10. 주의 / 한계 (over-claim 방지)
+
+- ① **C 층 두께** — "∼1 µm" 는 공급사 값이다.  스퍼터 직후 (압축 전) 단면 `Fig. S2a` 는 figure-read ≈2.1–3.2 µm (1 µm 막대 70 px 로 자리마다 잼) · 500 MPa 압축 뒤 `Fig. 1d` 는 ≈0.5–0.75 µm.  본문의 '1 µm' 는 압축 전 실측과 맞지 않고, 셀 안의 층은 '<1 µm' 가 맞다.
+- ② **기공률** — 26.7 → 18.5 % (ImageJ 2D 문턱 · 저자도 *"challenging to reliably quantify"*).  압축 전후 두께가 2–3 배 줄었는데 기공률은 8 %p 만 줄었다 — 질량 보존으로 풀면 압축 전 ≈70–90 % [카드 산술] 이어야 한다.  두 그림은 다른 시료 · 다른 자리이고 가로 흐름도 있을 수 있어 결론은 아니지만, **18.5 % 를 DEM 입력 · 보정 표적으로 쓰지 않는다**.  또 std err 은 n ≈5 로 계산된 값이다 ((sd/se)² = 5.1 · 5.4) — 본문은 '세 단면'.
+- ③ **Li 두께 · 균일성** — 같은 셀 안에서 저배율 (`Fig. 3h`) figure-read ≈25–28 µm vs 확대 · 선 스캔 (`Fig. 3i,j`) ≈4–5.5 µm · 다른 셀 `Fig. 3c` ≈14 µm (그림 축척 그대로) · 본문 "∼20 µm" · 결론 "20–25 μm".  *"reasonably uniform"* 은 정성 판정이다.  SI 이론 두께 27 µm 는 Li 용량 **3482 mAh g⁻¹** 를 썼다 (서론은 3860 · 맞는 값은 24.3 µm [카드 산술]) · SI 산식에 *"2.5 mA/cm² for 2 hours"* · *"Ag/CB working electrode"* 같은 전작 (ref S16) 표현이 남아 있다 (곱 5 mAh cm⁻² 는 같다).
+- ④ **유지율 정의 · 대표 셀** — '유지율' 은 C10/C1 (충전) 이다 (`Fig. S9` 역산 · 본문 정의 없음) — 첫 사이클 비가역 (71 vs 87 %) 이 섞여 Ag 효과가 커 보인다 (방전 기준이면 우위 21 → 15 %p).  `Fig. 2d` 는 세 셀 중 가장 좋은 셀로 보이고 (10 번째 충전 ≈168 vs 평균 139 ± 11.5), 100 사이클은 **2 셀** · 그중 셀 2 는 첫 CE ≈75 % (본문 평균 86 % 보다 낮다 — 같은 세 셀인지 [미확인]).
+- ⑤ **EIS 의 σ ≈1.6 mS cm⁻¹** — R1 + R2 (299.4 Ω) 로 식 (1) 을 풀면 1.70 이 나와 본문과 맞고, R1 만이면 4.11 · 고주파 첫 점이면 ≈2.6 [카드 산술].  Q2 ≈0.5 mF 급이라 R2 는 계면형일 가능성이 크고 10 kHz 상한으로는 SE 벌크가 안 보인다 → **σ 로 인용하지 않는다**.  '두 구성의 임피던스 차이 없음' 도 고주파 첫 점이 ≈240 vs ≈200 Ω 으로 셀마다 다른 흩어짐 안에서의 판정이다.
+- ⑥ **Cu 쪽 S 신호 (그림 판독 · 저자 언급 없음)** — `Fig. S11d` (C-Cu 충전 뒤 · Cu\|Li 경계의 가는 S 줄 + Li 자리 섬유의 S) · `Fig. 4e,h` (Ag C-Cu 방전 뒤 · Cu 아래 경계 S 줄 · 선 스캔 4.3 µm 의 S 혹) · `Fig. S12e` (방전 뒤 'non-stripped Li' 층이 LPSCl 만큼 밝다).  충전 뒤 Ag C-Cu (`Fig. 3e`) 에는 Cu 쪽 S 가 안 보인다.  가능성: Cu–S 부식 생성물 · Li₂S 를 품은 SEI · SE 파편 · Xe⁺ 밀링 재증착 — **그림만으로 못 가른다**.  저자가 p.4–5 에서 걱정한 Cu–LPS 부반응을 직접 확인할 수 있었던 자료이고, '남은 Li' 의 정체와 다음 사이클 핵생성 면 (Cu 냐 Cu 위 황화물 막이냐) 에 걸린다.
+- ⑦ **Li–Ag 상 · LiC₆ · SEI 를 재지 않았다** (XRD · XPS · 사후 Raman 없음) — 'Ag 가 Li 에 녹았다' 는 희미한 EDS (≈0.5 at% 면 검출 한계 근처) + 선 스캔 한 줄 (Ag 는 Li 의 C 쪽 절반에만) 에서 나온 해석이다.  SIMS 는 Li 를 가진 상 전부를 보고, 42 vs 38 의 일치는 matrix 효과에 기댄 약한 '금속 Li' 판정이다.
+- ⑧ **핵생성 과전압** — 정의 · iR 처리 미기재 · 그림은 5 셀 중 3 셀 · C-Cu 는 꼭지 뒤 2.5 h 내내 풀려 '평탄' 을 언제 읽느냐에 값이 걸린다 · 1 mA cm⁻² 비교는 셀 1 개씩 · *"stainless steel and Cu required the highest overpotential"* 은 꼭지 − 평탄 정의에서만 성립한다 (꼭지 절대값은 Cu · C-Cu · Ag C-Cu 모두 ≈ −18 mV) · 본문은 축을 *"voltage versus Li⁺/Li at the counter electrode"* 라 적었다 (3 전극 목적상 WE 로 읽어야 한다).
+- ⑨ **조도 비교의 기준이 섞였다** — *"Ag Cu 0.029 (압축 뒤) < 맨 Cu 0.167"* 은 압축 뒤 대 압축 전 (steel · Cu 는 압축 뒤 값이 없다) · *"100 nm Ag 가 거칠기를 거의 안 바꿨다"* 는 압축 뒤에만 맞다 (압축 전은 0.370 → 0.790 으로 2 배) · *"500 nm 가 거칠기를 줄였다"* 는 100 nm (0.790) 대비이고 원래 C-Cu (0.370) 보다는 거칠다 (0.427).
+- ⑩ **"Cycling at up to 2 mA/cm²"** (p.4) — 2 mA cm⁻² 자료는 풀 셀 첫 사이클 (`Fig. S7`) 과 3 전극 한 번 충전뿐이다 · 그 첫 방전 ≈95 mAh g⁻¹ 은 1 mA cm⁻² 의 ≈절반.
+- ⑪ **'catalytic'** (초록 · 결론) — 교환 전류 · 속도 상수를 재지 않았다 · 근거는 핵생성 꼭지 하나와 첫 용량 · 효율이다.
+- ⑫ **`Fig. S8` SOC 표기** — SI 의 *"10 % SOC (4.16 V)"* · *"90 % SOC (3.53 V)"* 는 높낮이가 뒤바뀐 꼴이고, 그림의 활성화 곡선은 3.53–3.78 V 다 (서술의 '3.78–4.16 V' 와 다르다).
+- ⑬ **서술 · 서지 불일치** — p.3 *"The use of pouch cells for the FIB microscopy post-cycle studies"* ↔ 셀은 PEEK 몰드 펠릿이다 (Li 박을 파우치 안에서 민 것을 가리키는지 [미확인]) · ref 27 의 제목 (*"… Thin Carbon Black Layer"*) ↔ 본문 *"an Ag-containing Ag/C interlayer"* [미확인] · ref 48 *"ACS Appl. Mater. Interfaces 2007, 16"* (16 권은 2024) · ref 58 *"Nat Mater. 2022, 9"* (권 표기 오기로 보임) · SI ref S14 *"Heliyon 2019, 9"* (9 권은 2023) · 본문 p.5 *"Li6+"* (⁷Li⁺ 의 오기).
+- ⑭ **표본 · 오차** — 셀 3 · 5 · 2 · 2 개 · 오차는 std err 이라 sd 로 바꾸면 √n 배 (n 3 → 1.7 배 · n 5 → 2.2 배) 커진다.
+- ⑮ **조건 한정** — 60 °C · 4 MPa · Ø 5 mm 펠릿 · 양극 4 mg · Li₆PS₅Cl ≈1 mm.  저자 스스로 두꺼운 Ag/C 층과의 비교는 전해질 · 셀 기하 · 적층압 · 적재 차이로 *"definitive comparisons difficult"* 라 하고 표준 실험실 셀 · 절차를 제안한다 (p.8) — 이 카드도 같은 이유로 `kang2026_…` · `spencerjolly2023_…` 값과 같은 줄에 두지 않는다.
+
+---
+
+## 11. 용어 미니 사전
+
+- **스퍼터링 (sputtering)** — Ar⁺ 이온이 타깃 (여기선 Ag) 을 때려 튀어나온 원자가 기판에 쌓이는 물리 증착.  막 두께는 전류 · 시간 · 거리로 조절한다 (이 논문은 시간 · 속도를 안 적었다).
+- **무음극 (anode-free)** — 처음에 Li 금속을 넣지 않고 양극의 Li 를 첫 충전 때 음극 집전체 위에 석출시켜 음극을 만드는 셀.  Li 저장고가 없어서 쿨롱 효율 손실이 그대로 용량 손실이 된다 (CE 99 % × 100 사이클 ≈ 37 %).
+- **핵생성 과전압 (nucleation overpotential)** — 석출이 시작될 때 전압이 한 번 크게 내려갔다 (꼭지) 올라오는데, 그 꼭지와 뒤 평탄 (성장) 전압의 차.  새 상 (Li 핵) 을 만드는 에너지 장벽의 신호다.
+- **3 전극 셀** — 작업 (WE) · 상대 (CE) · 기준 (RE) 전극.  WE − RE 전압을 보면 CE (Li 탈리) 쪽 과전압이 빠진다.  WE–RE 사이 전해질의 iR 은 RE 위치에 따라 일부 남는다.
+- **BSE (후방산란 전자) 상** — 원자번호가 큰 원소 (Ag) 가 밝게 보인다.  **SE (2 차 전자) 상** — 표면 형상이 보인다.
+- **P-FIB (plasma focused ion beam)** — Xe⁺ 플라스마 이온 빔으로 단면을 깎는다.  Ga FIB 보다 빨라 mm 폭 단면을 만든다.
+- **EDS (EDX)** — 전자빔이 낸 X 선으로 원소 지도를 그린다.  Li 는 못 본다.  10 kV 에서는 공간 분해능이 수백 nm–1 µm 라 100 nm 막의 위치를 잘라 말하기 어렵다.
+- **SIMS** — 이온빔으로 튀어나온 2 차 이온의 질량을 분석한다 — Li 를 본다.  세기가 주변 물질 (matrix) 에 따라 달라 절대 정량이 어렵다.
+- **Raman D · G · 2D 띠** — G (≈1580 cm⁻¹) = 흑연 면 안 진동 · D (≈1350) = 결함 · 가장자리가 있어야 켜지는 띠 · 2D (≈2700) = D 의 2 차 (층 쌓임 정보).  I_D/I_G 가 클수록 결함이 많고 결정이 작다 · 비는 레이저 파장에 따라 달라진다.
+- **Sa · Sq** — 표면 높이 편차의 산술 평균 · 제곱 평균 제곱근 (면 조도).
+- **CPE (Q) · Warburg (W)** — 이상적이지 않은 축전기 · 확산 임피던스.  α 는 CPE 의 이상성 (1 이면 순수 축전기).  용량이 mF 급이면 보통 계면 (전극 · 전하 이동) 요소다.
+- **쿨롱 효율 (CE) · 왕복 효율** — 방전 용량 ÷ 충전 용량 · 3 전극에서 석출한 Li 가운데 다시 뺀 몫.
+- **std err (표준 오차)** — sd/√n — 평균의 불확실성.  셀 사이 흩어짐은 sd 로 본다.
+- **희박 고용 (dilute solid solution)** — 한 원소가 다른 금속 결정 속에 소량 녹아 있는 상태 — 여기서는 Li 결정 속 Ag ≈0.5 at% [카드 산술].
+
+---
+
+## 12. 다음에 먹일 논문 (이 논문 참고문헌에서 · 최근 것 먼저 · 2026-11-24 litdb 대조)
+
+| # | 논문 (이 논문의 ref 번호) | 왜 (우리 축) | litdb |
+|---|---|---|---|
+| 1 | Park, Naik, Vishnugopi, Mukherjee, Hatzell, "Lithium Kinetics in Ag–C Porous Interlayer in Reservoir-Free Solid-State Batteries", *Adv. Energy Mater.* 15, 2405129 (2025) (ref 54 · SI S5) | Ag–C 다공 층 안의 Li 수송 · 석출 위치 (기공률 ≈29 % 기준값의 출처) · 연속체 모델 축 | 카드 없음 (`kang2026_…` 등이 인용만) |
+| 2 | Ko et al., "Mechanism of stable lithium plating and stripping in a metal-interlayer-inserted anode-less solid-state lithium metal battery", *Nat. Commun.* 16, 1066 (2025) (ref 51) | 금속 층의 위치 (집전체 쪽) 와 Li 석출 위치 — 층 순서 축 | 없음 |
+| 3 | Xie, Diallo, Kim, Tu, Ceder, "The Microscopic Mechanism of Lithiation and Delithiation in the Ag/C Buffer Layer for Anode-Free Solid-State Batteries", *Adv. Energy Mater.* 14, 2302960 (2024) (ref 28) | Ag/C 층의 리튬화 · 탈리튬화 미시 기전 · Li–Ag 합금 구동력 | 없음 |
+| 4 | Wang, Xia, Ji, Liu, Zhang, He, Zhang, Wan, Wang, "Lithium Anode Interlayer Design for All-Solid-State Lithium-Metal Batteries", *Nat. Energy* 9, 251–262 (2024) (ref 19) | 인터레이어 설계 원리 — 친Li · 소Li · 계면 에너지 · 젖음 | 카드 없음 (`kang2026_…` 가 인용만) |
+| 5 | Doerrer, Metzler, Matthews, Bu, Spencer-Jolly, Bruce, Pasta, Grant, "Spraying Li₆PS₅Cl and Silver-Carbon Multilayers to Facilitate Large-scale Fabrication of All-Solid-State Batteries", *Device* 2, 100468 (2024) (ref 29) | 같은 랩 · Ag 위치를 층으로 나눈 '구조화' Ag/C · DEM 제조 축 | 없음 |
+| 6 | Müller, Paravicini, Morzy, Krause, Casella, Osenciat, Futscher, Romanyuk, "Influence of Au, Pt, and C Seed Layers on Lithium Nucleation Dynamics for Anode-Free Solid-State Batteries", *ACS Appl. Mater. Interfaces* 16, 695–703 (2024) (ref 48 — 이 논문은 연도를 2007 로 오기) | 금속 · 탄소 씨앗층별 핵생성 과전압 — 핵생성 축 · 탄소 대 금속 | 없음 |
+| 7 | Fuchs, Ortmann, Becker, Haslam, Ziegler, Singh, Rohnke, Mogwitz, Peppler, Nazar, Sakamoto, Janek, "Imaging the microstructure of lithium and sodium metal in anode-free solid-state batteries using electron backscatter diffraction", *Nat. Mater.* 23, 1678–1685 (2024) (ref 61) | 집전체 위 석출 Li 의 결정 조직 (EBSD) — Li\|기판 계면 · Li 면 선택 | 없음 · 공저자 'Sakamoto, J.' (참고문헌 표기) |
+| 8 | Haslam, Sakamoto, "Stable Lithium Plating in 'Lithium Metal-Free' Solid-State Batteries Enabled by Seeded Lithium Nucleation", *J. Electrochem. Soc.* 170, 040524 (2023) (ref 39) | 매끈 · 연속 vs 덩어리 Au 씨앗 — 이 논문의 '거친 Ag 가 낫다' 근거 · Li\|기판 핵생성 | 없음 · 공저자 'Sakamoto, J.' (참고문헌 표기) |
+
+차순위 (8 편 밖): Kwon et al., *Adv. Funct. Mater.* 35, 2420474 (2025) (ref 43 · LPSCl 셀의 Cu 부식 — §10-⑥ 의 S 신호) · Futscher et al., *J. Mater. Chem. A* 10, 15535 (2022) (ref 59 · 비정질 탄소 층과 핵생성) · Sandoval et al., *Joule* 7, 2054 (2023) (ref 32 · 무음극 합금 층의 진화) · Kim J.-S. et al., *Nat. Commun.* 14, 782 (2023) (ref 35 · LLZTO 위 스퍼터 Ag + Ag/C).

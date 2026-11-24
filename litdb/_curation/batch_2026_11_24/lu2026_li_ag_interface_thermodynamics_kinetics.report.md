@@ -130,6 +130,7 @@ lu2026_li_ag_interface_thermodynamics_kinetics	agli2026_li_ag_interface_thermo_k
 - 놓친 것: 없음. 12 쪽 'Graphical Table of Contents' 는 `Fig. 4` 와 같은 그림이라 안 잘렸다 (정상).
 - **본 것**: 그림 4 장 전부 (`Fig. 4` 는 두 패널 3 배 확대 · `Fig. 2` · `Fig. 3` 은 픽셀 좌표 판독). 표 3 장은 이미지로 안 봤다 (PDF 텍스트 · 3–4 쪽 쪽 렌더).
 - 그림이 본문과 어긋난 곳: ① `Fig. 3` 의 '벌크' 기준 (figure-read Li ≈ 0.53 · Ag ≈ 0.68 eV) 이 본문 MACE 벌크값 (0.57 · 0.74) 과 다르다 ② `Fig. 3` 캡션 "계면 Li 는 계산 안 함" ↔ 그림에 계면 Li 점 (0.63 eV, 본문 인용) ③ `Fig. 2` 캡션 "네 방위" ↔ 패널 6 ④ `Fig. 4` 캡션 "(100) 은 벌크보다 크다" ↔ 본문 "벌크와 같다 (0.11)" ⑤ `Fig. 2` · `Fig. 3` y 축 단위 없음 ⑥ 방향 표기 일부 비직교 (`Fig. 1`, `Fig. 4` inset). 숫자 라벨 자체는 그림 · 본문 · 표가 서로 맞는다.
+- **scratchpad 공용 이름 대조 (코디네이터 경고 반영)**: 임시 파일 넷 (`lu2026_text.txt` · `wad_report.txt` · `f4_left.png` · `f4_right.png`) 이 scratchpad 루트에 있었고 그중 `wad_report.txt` 는 내가 읽은 뒤 (11:40:50) 누군가 다시 썼다 → 전부 `scratchpad/lu2026_li_ag_interface_thermodynamics_kinetics/` 에서 다시 만들어 대조했다: PDF 텍스트 재추출 = **바이트 동일** (제목 · 저자 Lu/Trinkle · 12 쪽 · digest 숫자 83 개 전부 PDF 텍스트에 있음) · W_ad 보고서 HTML 재변환 = **바이트 동일** (쓴 방법 문자열 13 개 확인) · `Fig. 4` 확대 크롭 = **픽셀 동일** + 마커 자동 검출 (축 spine 보정) 로 장벽 라벨 6 개 ±0.001 eV · 첫 홉 ΔE −0.457 (MACE) / −0.459 (DFT) / −0.172 eV ((100)) 재현 ⇒ **다른 논문 글자 섞임 없음 · digest 수정 없음**.
 
 ## (g) Jeff Sakamoto 저자 여부
 
