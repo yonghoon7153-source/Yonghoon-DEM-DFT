@@ -26,7 +26,9 @@
    "h": 1710,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_main.pdf",
-   "blank": 0.917
+   "blank": 0.917,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read + zoom (Fig. 1B inset x3, Fig. 1C x1.6) + values cross-checked with Sup2 Excel figure5 sheet 5a / figureS2"
   },
   {
    "key": "f2",
@@ -46,7 +48,9 @@
    "h": 1581,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_main.pdf",
-   "blank": 0.458
+   "blank": 0.458,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read + zoom (2B/2C dashed boxes + EDS x1.3-1.5, 2F-I x1.4)"
   },
   {
    "key": "f3",
@@ -66,7 +70,9 @@
    "h": 1325,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_main.pdf",
-   "blank": 0.504
+   "blank": 0.504,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "f4",
@@ -86,7 +92,9 @@
    "h": 1099,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_main.pdf",
-   "blank": 0.892
+   "blank": 0.892,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read + values cross-checked with Sup2 Excel figure4 sheets 4a/4b"
   },
   {
    "key": "f5",
@@ -107,7 +115,9 @@
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_main.pdf",
    "blank": 0.859,
-   "manual_crop": "2026-11-24 litdb-curator: tool reported f5 as a number gap ('p11 영역 없음') - Fig. 5 is a full-page embedded raster on PDF p.10 (journal p.2062, image bbox 59.2-543.5 x 103.6-694.9 pt, native 2018x2464 px) while its caption sits on the next page (PDF p.11, journal p.2063, y 103-190 pt); clip = image bbox + 2 pt margin, rendered at 300 dpi; caption text taken from PDF p.11"
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f5 as a number gap ('p11 영역 없음') - Fig. 5 is a full-page embedded raster on PDF p.10 (journal p.2062, image bbox 59.2-543.5 x 103.6-694.9 pt, native 2018x2464 px) while its caption sits on the next page (PDF p.11, journal p.2063, y 103-190 pt); clip = image bbox + 2 pt margin, rendered at 300 dpi; caption text taken from PDF p.11",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop) + values cross-checked with Sup2 Excel figure5 sheets 5a/5b/5c"
   },
   {
    "key": "f6",
@@ -127,7 +137,9 @@
    "h": 1417,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_main.pdf",
-   "blank": 0.626
+   "blank": 0.626,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read + contours/stars re-derived by symmetric Butler-Volmer back-calculation (digest 3f)"
   },
   {
    "key": "fS1",
@@ -147,7 +159,9 @@
    "h": 469,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.256
+   "blank": 0.256,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "fS2",
@@ -167,7 +181,9 @@
    "h": 856,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.968
+   "blank": 0.968,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read + values cross-checked with Sup2 Excel figureS2"
   },
   {
    "key": "fS3",
@@ -187,7 +203,9 @@
    "h": 1594,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.955
+   "blank": 0.955,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "fS4",
@@ -207,7 +225,9 @@
    "h": 617,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.274
+   "blank": 0.274,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "fS5",
@@ -227,7 +247,9 @@
    "h": 556,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.716
+   "blank": 0.716,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "fS6",
@@ -247,7 +269,9 @@
    "h": 511,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.618
+   "blank": 0.618,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "fS7",
@@ -267,7 +291,9 @@
    "h": 1577,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.934
+   "blank": 0.934,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "fS8",
@@ -287,7 +313,9 @@
    "h": 1669,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.879
+   "blank": 0.879,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read + values cross-checked with Sup2 Excel figureS8"
   },
   {
    "key": "fS9",
@@ -307,7 +335,9 @@
    "h": 1307,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.926
+   "blank": 0.926,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "fS10",
@@ -327,7 +357,9 @@
    "h": 1398,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.934
+   "blank": 0.934,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   },
   {
    "key": "fS11",
@@ -347,7 +379,9 @@
    "h": 659,
    "dpi": 300,
    "src": "sandoval2023_alloy_interlayers_SI.pdf",
-   "blank": 0.562
+   "blank": 0.562,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full crop)"
   }
  ],
  "missing_labels": [
