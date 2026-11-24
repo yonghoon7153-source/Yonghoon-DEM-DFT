@@ -259,6 +259,8 @@ run '반입 ⑮ · ⑯ · ⑰ · ⑱ 새 시험 여섯 (수영 반복 · 형상 
 run '반입 ㉔ B2 흐름 판독 시험 둘 (흐름층 관측기 · B2-U 판독)' sh -c 'set -e; for t in docs/reviews/mixer_b2_flow_20261124/test_flow_observer.py docs/reviews/mixer_b2_flow_20261124/test_read_b2_u.py; do python3 -I -X utf8 -B "$t"; done'
 # ★ 2026-11-24 (반입 ㉕ · codex/suyoung-setting2-contact-1124) — 수영 설정 ② 아래판 접촉 후보 시험 셋 (carrier = 고정 물질 바닥 · stencil 모듈 인자 · 후보 4/4 + 고치기 전 경로 1 실패 확인).
 run '반입 ㉕ 수영 설정 ② 접촉 후보 시험 셋 (app · operator · carrier 후보 4/4 + 고치기 전 1 실패)' sh -c 'set -e; D=docs/reviews/suyoung_setting2_contact_20261124; F=docs/reviews/suyoung_floor_contact_20261123/material_floor.py; M=scripts/dem_suyoung_sf2d_dev.py; for t in $D/test_app.py $D/test_operator.py; do python3 -I -X utf8 -B "$t"; done; python3 -I -X utf8 -B $D/test_carrier_correction.py $F $M --candidate $D/correction.py; if out=$(python3 -I -X utf8 -B $D/test_carrier_correction.py $F $M 2>&1); then echo "고치기 전 경로가 통과함 = 시험이 결함을 못 잡음"; exit 1; fi; printf "%s\n" "$out" | grep -q "FAILED (failures=1)"'
+# ★ 2026-11-24 (반입 ㉖ · Codex B2 열람 전 영수증 ZIP · 44f7edbd) — B2 결과 전 짝 판독기 시험 넷.
+run '반입 ㉖ B2 결과 전 짝 판독기 시험' python3 -I -X utf8 -B docs/reviews/mixer_b2_prereg_20261124/test_preregistered_pair.py
 #  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의
 #    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`
 #    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`
