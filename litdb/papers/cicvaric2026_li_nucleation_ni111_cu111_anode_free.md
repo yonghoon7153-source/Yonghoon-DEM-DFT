@@ -83,7 +83,7 @@ Cu(111) · Ni(111) 단결정 위 Li 초기 석출을 −5…−25 mV (vs Li/Li�
 | 안정 SEI 도달 | 2nd 회 이후 | 1st 회 이후 | p.16785 |
 | 안정 회차 UPD | 환원 **≈ 0.5 V** · 산화 (탈리) **≈ 0.9 V** (`figure-read ≈` 0.82 V, +22 µA) | 약한 **2.3 · 2.0 · 1.1 · 0.8 V** + 뚜렷한 **0.25 V** (`figure-read ≈` −57 µA) · 산화 **≈ 0.5 · ≈ 1.6 V** (`figure-read ≈` +28 · +40 µA) — *"multiple UPD stages represent different modes of adsorption"* | p.16785 · `Fig. 1` |
 | UPD 전하 Q_exp | **≈ 100 µC** (환원 피크) | **≈ 300 µC** (환원 · 산화 둘 다) | p.16785 |
-| 단층 전하 Q_ML (SI) | Γ_ML = 1.39×10¹⁵ cm⁻² / N_A = 2.31×10⁻⁹ mol cm⁻² → ×F×1.3 cm² = **290 µC** | 1.48×10¹⁵ → 2.46×10⁻⁹ → **310 µC** | SI p.S2 (Γ 출처 = 각주 i, 분자 촉매 리뷰 · §10-①) |
+| 단층 전하 Q_ML (SI) | Γ_ML = 1.39×10¹⁵ cm⁻² / N_A = 2.31×10⁻⁹ mol cm⁻² → ×F×1.3 cm² = **290 µC** | 1.48×10¹⁵ → 2.46×10⁻⁹ → **310 µC** | SI p.S2 (1.39 / 1.48 값 자체의 출처는 안 적혀 있다 · 식에 달린 각주 i 는 분자 촉매 리뷰 · §10-①) |
 | **θ = Q_exp/Q_ML (논문)** | **≈ ⅓** | **≈ 1** | SI |
 | ⚠ θ — (111) 기하 밀도로 다시 (`우리 산수`) | 4/(√3 a²), a = 논문 DFT 3.63 Å → **1.75×10¹⁵ cm⁻²** → Q_ML 365 µC → **θ ≈ 0.27** | a = 3.52 Å → **1.86×10¹⁵** → 388 µC → **θ ≈ 0.77** | §10-① |
 | Li 면밀도 (`우리 산수`) | Q_exp → **4.8×10¹⁴ cm⁻²** = bcc Li(110) 면의 0.42 층 | **1.44×10¹⁵ cm⁻²** = Li(110) 면의 **1.25 층** · 조밀 육방 Li 층의 1.15 층 | bcc Li a = 3.51 Å (교과서 · 논문 밖) |
@@ -93,7 +93,7 @@ Cu(111) · Ni(111) 단결정 위 Li 초기 석출을 −5…−25 mV (vs Li/Li�
 ### 3b. 겉보기 속도계수 k_app (`Fig. 2`)
 
 > k_app(t, E) = √(2D) · A_W(t, E) / R_CT(t, E) (식 1) · D = 1×10⁻¹⁰ m² s⁻¹ (EC:EMC 속 Li⁺, ref 29 문헌값 · 고정) · A_W = Warburg 계수 · R_CT = 전하이동 저항 · 전위당 26 스펙트럼 / 3600 s.
-> 단위 1e−2 cm s⁻¹. 평균 = **2000 s 이후 점들의 평균**, 오차 막대 = 그 점들의 표준편차 (캡션) — **반복 시료 사이 편차가 아니다**.
+> 단위 1e−2 cm s⁻¹. 캡션: *"average k_app … after stabilisation (2000 s) with standard deviation as error bars"* → **2000 s 이후 점들의 평균과 그 산포**로 읽힌다 — 반복 시료 사이 편차라는 말은 없다 (반복 실험 자체가 미기재).
 
 | 전위 | Cu(111) 평균 k_app (`figure-read ≈`) | Ni(111) (`figure-read ≈`) | Cu / Ni (`우리 산수`) |
 |---|---|---|---|
@@ -394,7 +394,7 @@ Cu(111) · Ni(111) 단결정 위 Li 초기 석출을 −5…−25 mV (vs Li/Li�
 
 ## 10. 주의 / 한계 (over-claim 방지)
 
-1. **🔴 SI 의 표면 원자 밀도가 (111) 기하와 안 맞는다.** fcc(111) 면밀도 = 4/(√3 a²) → 논문 자신의 DFT 격자 (3.63 / 3.52 Å) 로 **1.75 / 1.86 ×10¹⁵ cm⁻²** 인데 SI 는 **1.39 / 1.48 ×10¹⁵** 를 쓴다 (≈ 21 % 작음 · `우리 산수` · 실험 격자로도 1.77 / 1.86). 그 값의 출처 각주 i 는 **인공광합성 분자 촉매 리뷰 (Langmuir 2024)** 다. 기하 밀도로 다시 세면 **θ ≈ 0.27 (Cu) · ≈ 0.77 (Ni)** — "⅓ vs full monolayer" 의 대비 (≈ 3×) 는 남지만 **"Ni 에서 완전 단층"** 은 성립하지 않는다. DFT 가 θ = 1 을 가정한 근거 (*"in good agreement with the experimental results for Ni"*) 가 약해진다.
+1. **🔴 SI 의 표면 원자 밀도가 (111) 기하와 안 맞는다.** fcc(111) 면밀도 = 4/(√3 a²) → 논문 자신의 DFT 격자 (3.63 / 3.52 Å) 로 **1.75 / 1.86 ×10¹⁵ cm⁻²** 인데 SI 는 **1.39 / 1.48 ×10¹⁵** 를 쓴다 (≈ 21 % 작음 · `우리 산수` · 실험 격자로도 1.77 / 1.86). 1.39 / 1.48 값 자체의 출처는 적혀 있지 않고, 그 식에 달린 각주 i 는 **인공광합성 분자 촉매 리뷰 (Langmuir 2024)** 다. 두 값의 비 (1.065) 는 (a_Cu/a_Ni)² (1.064) 와 맞는다 (`우리 산수`) — 그래서 **Ni/Cu 덮임 비 (≈ 3×) 는 이 오차에 안 흔들리고, 절대 θ 만 흔들린다**. 기하 밀도로 다시 세면 **θ ≈ 0.27 (Cu) · ≈ 0.77 (Ni)** — "⅓ vs full monolayer" 의 대비 (≈ 3×) 는 남지만 **"Ni 에서 완전 단층"** 은 성립하지 않는다. DFT 가 θ = 1 을 가정한 근거 (*"in good agreement with the experimental results for Ni"*) 가 약해진다.
 2. **🔴 Ni 'UPD' 귀속.** ① 안정 회차 UPD 를 2.3 · 2.0 V 부터 센다 (p.16785) — 그런데 논문 자신의 DFT 를 금속 Li 기준으로 바꾸면 (교과서 E_coh 1.63 eV · `우리 산수`) 흡착 세기는 θ → 0 에서 Ni ≈ 1.26 eV · Cu ≈ 1.00 eV, θ = 1 에서 0.56 / 0.42 eV 다 → **UPD 는 ≲ 1.3 V 규모**여야 하고 2.3 · 2.0 V 는 그 밖이다. ② 단결정 **표면 전처리가 기술되어 있지 않다** — Cu 쪽에서 스스로 1.5–2.5 V 를 Cu 산화물 환원 · 리튬화로 귀속하면서 Ni 쪽 같은 영역은 UPD 로 센다 (자연 NiO 가능성 미논의). ③ 같은 논문 안에서 **"first UPD peak at ca. 1.0 V"** (DFT 절) 와 **"starting with weak peaks at 2.3 … V"** (2.1 절) 가 어긋난다. ④ 적분 구간 미기재. ⑤ Ni 300 µC = Li 면밀도 1.44×10¹⁵ cm⁻² = **Li 자신의 조밀면 1.15–1.25 층** (`우리 산수`) — 전부 Li UPD 라면 단층 흡착을 넘는다. ⇒ Ni 의 300 µC 에는 비-UPD (SEI · 산화물) 전하가 섞였을 가능성이 크다.
 3. **친Li = 고립 원자 기준 흡착 에너지 하나.** 금속 Li 기준 · 점착 · 젖음 · 핵생성 에너지가 없다. 0.12–0.28 eV 차이가 "젖음이 좋다 · 성장이 균일하다" 로 가는 다리는 이 논문에 없다.
 4. **의사형 1ML 모형.** Li–Li 2.57 / 2.49 Å (bcc Li 3.04 Å 대비 −15.6 / −18.1 % · `우리 산수`) · Li(110) 면보다 1.53 / 1.62× 빽빽 → θ ≥ 0.75 와 둘째 층 전체가 **Li 가 실제로 취하지 않을 압축 상태** 위에서 계산됐다. 둘째 층은 첫 층 꼭대기 (top) 에 쌓아 **AA 적층**이고, 그 top 선호는 20–30 meV 로 수치 잡음 크기다. θ 당 배치 1 개 (열거 없음).
@@ -443,3 +443,6 @@ Cu(111) · Ni(111) 단결정 위 Li 초기 석출을 −5…−25 mV (vs Li/Li�
 | 17 | G. Li *et al.*, *J. Phys. Chem. C* 127(33), 16297–16303 (2023), DOI 10.1021/acs.jpcc.3c03096 — crystal facet selectivity of Cu current collector | 면 의존 DFT | 없음 |
 | 36 | K. Yan *et al.*, *Nat. Energy* 1, 16010 (2016), DOI 10.1038/nenergy.2016.10 — selective deposition via heterogeneous seeded growth | 핵생성 과전압 · 합금 씨앗 — §7 ③ 쪽 | 없음 |
 | 38 | M. Jäckle *et al.*, *Energy Environ. Sci.* 11(12), 3400–3407 (2018), DOI 10.1039/C8EE01448E — self-diffusion barriers as dendrite descriptors | 장벽 서술자 원전 | 없음 |
+
+> **같은 배치 (2026-11-24 · `litdb/_curation/batch_2026_11_24/batch.json`) 에서 이 편과 이어 읽을 것** — 이 논문에 없는 §7 ② · ③ 쪽이다 (링크는 그 digest 들이 정본에 들어간 뒤 확인):
+> `seymour2021_void_suppression_interfacial_adhesion_vacancy_transport` (점착 W_adh 와 2γ_metal 비교 — §7 ②) · `yang2021_flat_li_stripping_lithiophilic_interface_design` (친Li 계면 설계 — 점착 기준) · `lu2026_li_ag_interface_thermodynamics_kinetics` (Li–Ag — §7 ③) · `fuchs2023_cu_llzo_anode_free_li_growth_modes` (Cu 집전체 | 고체 전해질 위 Li 성장 모드 — 이 논문의 액체 전해질 Cu 와 대조).

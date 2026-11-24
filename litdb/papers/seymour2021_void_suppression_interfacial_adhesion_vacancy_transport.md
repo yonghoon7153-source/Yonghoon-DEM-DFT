@@ -13,7 +13,7 @@
 > **저자**: **Ieuan David Seymour\*** (교신 · ids08@imperial.ac.uk) · **Ainara Aguadero** — Department of Materials, Imperial College London
 > 접수 2021-04-18 · 수락 2021-06-09 · 게재 2021-06-09 · **OA CC-BY 3.0** · 자금 EPSRC Platform Grant EP/R002010/1 · 계산 Imperial RCS (10.14469/hpc/2232) + UK Materials and Molecular Modelling Hub (EPSRC EP/P020194/1 · EP/T022213/1 · EP/P003532/1 · ICSF EP/R024006/1) · 감사 Michael Finnis · Graeme Henkelman · Edouard Quérel · Rowena Brugge
 >
-> **계보**: Finnis (금속–강이온성 세라믹 결합은 주로 정전기적, ref 80) · Kumar et al. 2018 *Nat. Commun.* (이 논문 결합 끊기 모형의 바탕, ref 66) → **본 논문** (그 모형을 알칼리 금속 공공 편석에 적용 → `W_ad ≥ 2σ_m` 판정식) → `wang2022_resistive_decomposing_interfaces_se_alkali_metal` (ref 28 로 *"Seymour `W>2γ_metal`"* 을 판정 문턱으로 소환) · 후속 = Seymour et al. 2023 *ChemSusChem* 16, e202202215 (우리 `kb/papers/adhesion_literature_review.md` #7 기록 · 이 PDF 로는 미확인). 같은 해 나란한 두 편: Yang et al. 2021 고전 MD (ref 47, `W > 0.7 J m⁻²` + 적층압) · Tewari & Mukherjee 2021 KMC (ref 46).
+> **계보**: Finnis (금속–강이온성 세라믹 결합은 주로 정전기적, ref 80) · Kumar et al. 2018 *Nat. Commun.* (이 논문 결합 끊기 모형의 바탕, ref 66) → **본 논문** (그 모형을 알칼리 금속 공공 편석에 적용 → `W_ad ≥ 2σ_m` 판정식) → `wang2022_resistive_decomposing_interfaces_se_alkali_metal` (ref 28 로 *"Seymour `W>2γ_metal`"* 을 판정 문턱으로 소환) · 후속 = Seymour et al. 2023 *ChemSusChem* 16, e202202215 (우리 `kb/papers/adhesion_literature_review.md` #7 기록 · 이 PDF 로는 미확인) · 2026 후속 = `lu2026_li_ag_interface_thermodynamics_kinetics` (Li–Ag 계면 — 이 논문의 LiMg · AlSc W 를 금속 계면 비교 앵커로 인용 · 같은 배치 digest). 같은 해 나란한 두 편: Yang et al. 2021 고전 MD (ref 47, `W > 0.7 J m⁻²` + 적층압) · Tewari & Mukherjee 2021 KMC (ref 46).
 
 ---
 
@@ -39,7 +39,7 @@
 
 ## 1. 한 줄 요약
 
-방전(스트리핑) 중 Li/Na 금속 쪽 계면에 남는 **공공(vacancy)이 계면에 머무르느냐, 금속 속으로 빠지느냐**가 공극을 가른다고 보고, 최근접 결합 끊기 모형으로 그 에너지 차를 **ΔE_Vm^Bulk–Int = (σ_m − W_ad/2)/ρ** 로 쓴 뒤 VASP-PBE 정합 계면 12 계로 검증했다 — **W_ad ≥ 2σ_m (Young–Dupré 로 θ = 0°, 완전 젖음)** 일 때만 계면 편석의 에너지 이득이 사라진다. 문턱을 넘는 것은 **금속 기판 LiMg · AlSc (✎ W/2σ_m 1.44–1.81) 와 O 종결 Li₃OCl (1.14 · Na 쪽 1.04)** 뿐이고, **할로겐화물 · Li₂O · γ-Li₃PO₄ 와 아르지로다이트 분해산물 Li₂S · Li₃P 는 전부 미달 (✎ 0.25–0.66)** 이다.
+방전(스트리핑) 중 Li/Na 금속 쪽 계면에 남는 **공공(vacancy)이 계면에 머무르느냐, 금속 속으로 빠지느냐**가 공극을 가른다고 보고, 최근접 결합 끊기 모형으로 그 에너지 차를 **ΔE_Vm^Bulk–Int = (σ_m − W_ad/2)/ρ** 로 쓴 뒤 VASP-PBE 정합 계면 12 계로 검증했다 — **W_ad ≥ 2σ_m (Young–Dupré 로 θ = 0°, 완전 젖음)** 일 때만 계면 편석의 에너지 이득이 사라진다. 문턱을 넘는 것은 **금속 기판 LiMg · AlSc (✎ W/2σ_m 1.44–1.81) 와 O 종결 Li₃OCl (1.14 · Na 쪽 1.04)** 뿐이고, **할로겐화물 · Li₂O · γ-Li₃PO₄ 와 아르지로다이트 분해산물 Li₂S · Li₃P 는 전부 미달 (✎ 정합·평균 W 로 0.25–0.66 · 비정합 LiCl 은 ≈0.04)** 이다.
 
 ⚠ 모형 오차는 작지 않다 — 정합 12 계에서 ✎ **평균 절대 편차 0.071 eV (최대 0.136) · 부호 일치 11/12** (γ-Li₃PO₄ 만 틀림 · 회귀 기울기 0.97). 비정합 Li/LiCl 에서는 **평균 W 가 자리별 공공 에너지를 대표하지 못해서** (`Fig. 6`), 저자 스스로 반정합·비정합에서는 2σ_m 을 **"하한 (lower bound)"** 으로 낮춘다. 공공 덩어리 · 온도 · 전류 · 공극 핵생성은 **안 다룬다** — 이 논문이 세운 것은 **편석의 부호 (열역학)** 이지 공극이 생기는 속도가 아니다.
 
@@ -83,7 +83,7 @@
 | BCC Li (100) | LiCl (100) 비정합 | 5.152 | Li 3a×3b ↔ LiCl 2a×2b → √2a×√2b | — | −0.05 % (본문 "<−0.05 %") | ✎ −0.04 % |
 
 > 🔑 ✎ **논문의 strain 은 (a − a₀)/a — 분모가 *맞춘 뒤* 격자다.** 표 9 행 전부 이 정의로 재현되고, 통상 정의(분모 a₀)로는 재현되지 않는다. 정의가 본문·SI 어디에도 안 적혀 있다. Li₃OCl 정합 Li 는 실제로 **13.1 % 늘린 Li** 다 (§10-⑤).
-> ✎ `Table S6` 의 J m⁻² ↔ eV atom⁻¹ 비에서 거꾸로 낸 ρ 가 **맞춘 격자의 1/a² 와 12 행 모두 일치**한다 (예: Li₃OCl 정합 6.62 nm⁻² = 1/3.886² Å⁻²) — 에너지 정규화는 맞춘 격자로 정확히 했다. 틀린 건 strain 라벨뿐이다.
+> ✎ `Table S6` 의 J m⁻² ↔ eV atom⁻¹ 비에서 거꾸로 낸 ρ 가 **맞춘 격자로 계산한 표면 원자 밀도와 12 행 모두 일치**한다 (예: Li₃OCl 정합 6.62 nm⁻² = 1/3.886² Å⁻² · HCP 행은 육방 면적식으로) — 에너지 정규화는 맞춘 격자로 정확히 했다. 틀린 건 strain 라벨뿐이다.
 
 ### 3b. 표면 에너지 (`Table S5`)
 
@@ -211,7 +211,7 @@
 | Li–Mg 합금 음극 | Li 기공 형성 억제, 단 합금 내 Li 화학확산이 율속 | 83 |
 | SE 입계 덴드라이트 | W 가 크면 SE 입계에 Li 덴드라이트가 우선 생길 수 있다 (입계 에너지 ∝ 표면 에너지 가정) | 88 |
 
-> ⚠ **Yang 문턱의 압력 숫자가 우리 문서 둘에서 다르다** — 이 논문은 Yang 을 **10–20 MPa** 로 인용하고, `wang2022_…` digest 는 같은 Yang 문턱을 **20–30 MPa** 로 적었다. 원전 (Yang 2021 *Adv. Mater.* 33, 2008081) 확인 전에는 압력을 붙여 인용하지 않는다.
+> ⚠ **Yang 문턱의 압력 숫자가 이 논문과 원전 쪽 기록에서 다르다** — 이 논문은 Yang 을 **W > 0.7 J m⁻² + 10–20 MPa** 로 인용한다. 그런데 `wang2022_…` digest 는 같은 Yang 문턱을 **20–30 MPa** 로 적었고, 같은 배치 (2026-11-24) 에서 원전을 직접 읽은 `yang2021_atomistic_li_stripping_plating_interface_md` digest 도 원전 Discussion 을 *'0.7–1.4 J m⁻² 는 20–30 MPa'* 로 옮기면서 원전 지도 (`Fig. 5b`) 와도 어긋난다고 적었다. ⇒ **Seymour 의 '10–20 MPa' 는 원전과 다른 인용일 가능성이 크다.** 압력은 이 논문에서 가져오지 말고 Yang digest 에서 가져온다.
 
 ---
 
@@ -340,11 +340,11 @@
 | 항목 | 이 논문 | 우리 (보고서 부록 A · 원장 위치) | 차이가 판정에 주는 영향 |
 |---|---|---|---|
 | 코드 · 범함수 | VASP 5.4.4 · PBE · vdW 없음 | 평면파 DFT · PBE + D3(BJ) (UMA+D3 이완 + DFT 한 점 확인) | D3 는 W 와 γ_Li **둘 다** 올린다 — 비 W/2γ 를 쓰려면 γ_Li 도 D3 로 |
-| 의사퍼텐셜 | **가장 무른 PAW** (Li 1 가전자 · O_s …) · 더 많은 가전자 시험은 **벌크 단위세포만** | (우리 계산 기록에) | 표면·계면 에너지에서 무른 PAW 의 영향은 이 논문이 보이지 않았다 |
-| 컷오프 · 스미어링 | 500 eV · Methfessel–Paxton 0.1 eV · 비스핀 | (우리 기록) | — |
+| 의사퍼텐셜 | **가장 무른 PAW** (Li 1 가전자 · O_s …) · 더 많은 가전자 시험은 **벌크 단위세포만** | 우리 입력 기록 (이 digest 에 옮기지 않음) | 표면·계면 에너지에서 무른 PAW 의 영향은 이 논문이 보이지 않았다 |
+| 컷오프 · 스미어링 | 500 eV · Methfessel–Paxton 0.1 eV · 비스핀 | 우리 입력 기록 (이 digest 에 옮기지 않음) | — |
 | k 점 | Γ 중심 8×8×8 (BCC) · 11×11×5 (HCP), 같은 밀도를 ab 면에, c 로 1 점 (<5 meV atom⁻¹) | Ag–C 9×9×1 (12×12×1 점검) | — |
 | 진공 | ≥15 Å | 분리 끝점 10 Å (12 Å 와 0.01 J m⁻² 안) | — |
-| 금속 슬랩 | Li 11 층 (BCC 100) · 9 층 (HCP 0001 · Li₃P) · 12 층 (HCP 10-10) | Ag 3 층 · 흑연 3 층 등 (보고서) · Li 슬랩은 **아직 없음** | 보고서 7 절 Li(100)·Li(110) 슬랩에 이 논문 층수가 기준점 |
+| 금속 슬랩 | Li 11 층 (BCC 100) · 9 층 (HCP 0001 · Li₃P) · 12 층 (HCP 10-10) | 흑연 ABA 3 층 · 작은 확인 모델 Ag 3 층 · LPSCl 2 층 등 (보고서 부록 A) · Li 슬랩은 **아직 없음** | 보고서 7 절 Li(100)·Li(110) 슬랩에 이 논문 층수가 기준점 |
 | 변형 | 금속 쪽에 전부 (최대 ✎ +13.1 % · −7.9 %) | 흡착층 쪽 · ≲2 % | 큰 변형은 σ_m 을 ±10 % 바꾼다 (§3b) |
 | γ 기준 | **같은 변형을 건 금속 슬랩**의 σ_m (E_bulk 는 Fiorentini–Methfessel 5 슬랩 맞춤) | 보고서 7 절: *"같은 방법 · 같은 Li 면으로 γ_Li"* | ✎ **"같은 변형"** 까지 맞춰야 한다 — 이 논문이 그렇게 했다 |
 | 공공 | 단일 공공 · 층별 · 3 이완 방식 | 없음 | 우리 판정은 W/2γ 비까지 — ΔE 직접 계산은 안 했다 |
@@ -376,13 +376,13 @@
 - **슬랩 · 셀**: 대칭 표면 슬랩은 **pymatgen** (refs 60·61) 으로 생성 · Li/Na 슬랩 층수 `Table S5` (BCC 11 · HCP (0001) 9 · (10-10) 12) · 계면 Li 11 층 (Li₃P 계면만 9 층) · 기판 층수 **본문 미기재** (figure-read: LiCl 5 · LiMg 9 원자면) · 계면 셀 하나 + 진공 (금속 바깥면 · 기판 바깥면이 자유면) · **쌍극자 보정 언급 없음** · 원자 수 미기재 (✎ Li₂S 계면 Li 66 · Li₃P 계면 Li 135).
 - **정합 계면**: 금속 슬랩을 기판 격자에 맞게 변형 (`Table S2`–`S4`) · 표면 원자 배열이 비슷한 쌍만 · 금속 원자를 음이온 위 (금속 기판은 hollow) 에 놓는 **한 배치** · 상호작용을 줄이도록 ab 슈퍼셀 확장 · LiCl 만 3 병진 (4×4 슈퍼셀).
 - **비정합 계면**: **MPInterfaces** (ref 74, SI ref 23) 의 일치 자리 격자(CSL) 로 부정합 최소 셀 — LiCl (<−0.05 %) · Li₂S (−1.7/+1.7 %) · Li₃P (−3.0/+2.8 %).
-- **표면 에너지**: σ = (E_slab − m·E_bulk − Σ Δn_i μ_i)/2A (식 1). 비화학량론 기판은 μ_i 를 기준상으로 — Li₃OCl Cl/O 종결은 LiCl · Li₂O 단위세포, LiMg Mg 종결은 **Mg (Fm-3m)**, AlSc 는 Al (Fm-3m) · Sc (P6₃/mmc). 변형된 알칼리 슬랩의 E_bulk 는 **두께가 다른 슬랩 5 개의 선형 맞춤** (Fiorentini–Methfessel, ref 62 — 본문은 *"Vincenzo and Methfessel"* 로 적었다) · 같은 변형을 기준 벌크에도 걸어 변형 기여를 일부 상쇄. Mattsson 류 표면 보정 (ref 63) 은 안 넣음 (Li·Na 에서 작다고 봄, ref 64).
+- **표면 에너지**: σ = (E_slab − m·E_bulk − Σ Δn_i μ_i)/2A (식 1). 비화학량론 기판은 μ_i 를 기준상으로 — Li₃OCl Cl/O 종결은 LiCl · Li₂O 단위세포, LiMg Mg 종결은 **Mg (Fm-3m)** (⚠ Mg 바닥상태는 hcp 다 — SI 가 fcc 를 기준으로 적었다 · 차이는 작을 것), AlSc 는 Al (Fm-3m) · Sc (P6₃/mmc). 변형된 알칼리 슬랩의 E_bulk 는 **두께가 다른 슬랩 5 개의 선형 맞춤** (Fiorentini–Methfessel, ref 62 — 본문은 *"Vincenzo and Methfessel"* 로 적었다) · 같은 변형을 기준 벌크에도 걸어 변형 기여를 일부 상쇄. Mattsson 류 표면 보정 (ref 63) 은 안 넣음 (Li·Na 에서 작다고 봄, ref 64).
 - **W_ad**: (E_m + E_sub − E_int)/A (식 2) · 셋 다 **같은 셀 크기** · J m⁻² 와 **금속 표면 원자 밀도 ρ 로 나눈 eV atom⁻¹** 둘 다.
 - **공공**: 금속 원자 하나를 c 방향 위치별로 제거 · E_Vm = E_slab,i−1 − E_slab,i + E_bulk (식 3) · E_bulk (원자 1 개) 는 식 1 의 벌크값 (변형 포함). **기판 쪽 원자 제거는 안 다룸** (초점이 금속 쪽 공극 · Li 의 SE 삽입 장벽은 범위 밖, ref 65).
 - **NEB**: **climbing-image NEB** (refs 52·53) · **중간 이미지 3 개/홉** · 고정 셀 · 이미지마다 힘 < 0.01 eV Å⁻¹.
 - **AIMD / MLIP**: **없음** (후속으로 EAM · MLIP 언급만).
 - **무질서 처리**: **없음** — 질서 화합물 · 계마다 단일 배치 (LiCl 만 3 배치 + 비정합 1). SQS · 열거 · 앙상블 0.
-- **기타 도구**: **VESTA** (ref 54, 모든 구조 그림) · **Materials Project** (ref 59, 반응 에너지) · 그림 꼴은 Origin 풍 (확인 안 됨).
+- **기타 도구**: **VESTA** (ref 54, 모든 구조 그림) · **Materials Project** (ref 59, 반응 에너지).
 
 ---
 
@@ -445,7 +445,7 @@
 
 ⑬ **접촉각 해석의 혼용.** θ 를 **0 K 고체 · 변형된 슬랩**의 σ_m 과 W 로 계산하고, 그걸 *"기판과 액체 알칼리 금속 사이의 접촉각"* 으로 읽는다. 실험 접촉각 (용융 Li 142° → 95°) 과 같은 양이 아니다 — 저자도 실험이 어렵다고만 적는다. 우리 보고서가 이미 *"녹은 Li 로 잰 접촉각과 같은 양이 아니다"* 로 선을 그었다 — 그 선을 지킨다.
 
-⑭ **Yang 문턱과의 "좋은 일치" 는 압력 조건부다.** 2σ_m (EAM) 0.736 ≈ 0.7 은 Yang 의 **가압 (10–20 MPa) 문턱**과 맞고, **무압 문턱 1.8 J m⁻²** 는 2σ_m 의 2.4 배다. 저자는 이 차이를 *"비정합 분포"* 로 설명하지만 검증하지 않았다. 그리고 그 압력 숫자를 우리 `wang2022_…` digest 는 20–30 MPa 로 적었다 (§3g) — 원전 확인 대상.
+⑭ **Yang 문턱과의 "좋은 일치" 는 압력 조건부다.** 2σ_m (EAM) 0.736 ≈ 0.7 은 Yang 의 **가압 (10–20 MPa) 문턱**과 맞고, **무압 문턱 1.8 J m⁻²** 는 2σ_m 의 2.4 배다. 저자는 이 차이를 *"비정합 분포"* 로 설명하지만 검증하지 않았다. 그리고 그 압력 숫자 자체가 원전과 다를 가능성이 크다 — 원전을 읽은 같은 배치 `yang2021_atomistic_…` digest 와 `wang2022_…` digest 는 둘 다 **20–30 MPa** 다 (§3g).
 
 ⑮ **"Na 가 공극 저항이 높다" 는 ΔE^Bulk–Free 하나에서 나왔다.** Na 의 표면 편석이 0.182 로 Li 0.233 보다 작다는 것뿐이고, Na 의 W/2σ (NaCl 0.33 · NaBr 0.36) 는 Li 와 비슷하게 문턱 미달이다. 계면 편석 기준으로는 Na 가 유리하다는 근거가 따로 없다.
 
@@ -490,7 +490,7 @@
 - ⛔ **이 논문의 σ_m (0.463 J m⁻²) 을 우리 W 의 분모로 쓰지 않는다** — 범함수 (D3 없음) · 이완 기준이 다르다. 우리 γ_Li 는 우리 틀로 낸다.
 - ⛔ **Li₂O 이완 ΔE 를 한 숫자로 인용하지 않는다** — 표 0.346 · 그림 0.396 (§10-①).
 - ⛔ **`Fig. 5b` 의 hollow · Li top 비이완/이완 값을 인용하지 않는다** — 범례 신뢰 불가 (§10-②).
-- ⛔ **Yang 문턱에 압력을 붙여 인용하지 않는다** — 이 논문 10–20 MPa · `wang2022_…` digest 20–30 MPa (원전 미확인).
+- ⛔ **Yang 문턱의 압력을 이 논문에서 가져오지 않는다** — 이 논문 10–20 MPa 는 원전 쪽 기록 (`yang2021_atomistic_…` · `wang2022_…` digest 둘 다 20–30 MPa) 과 다르다. 압력은 Yang digest 에서.
 - ⚠ strain % 는 **(a − a₀)/a** 정의다. 통상 정의로 옮기려면 다시 계산한다 (Li₃OCl 13.1 %).
 - ⚠ Li₂S · Li₃P 의 "계면 편석" 은 **모형 판정**이다 (공공 에너지 미계산).
 - ⚠ 장벽 (0.037–0.444 eV) 은 상온 ns–µs 홉이다 — "공공이 못 움직인다" 로 쓰지 않는다 (홉 검산 §3c).
@@ -515,17 +515,19 @@
 - **Methfessel–Paxton 스미어링**: 금속의 페르미 준위 근처 점유를 매끄럽게 하는 방법. 0.1 eV 는 금속에 흔한 값.
 - **B2 (CsCl 형) 금속간 화합물**: 단순 입방 두 부격자에 두 원소가 번갈아 앉은 구조 (LiMg · AlSc). BCC Li 와 격자가 비슷해 정합 계면을 만들기 쉽다.
 
-## 16. 이 논문에서 이어 먹일 문헌 (참고문헌 · 후속) — litdb 미보유 확인 2026-11-24
+## 16. 이 논문에서 이어 먹일 문헌 (참고문헌 · 후속) — litdb 대조 2026-11-24
+
+> **같은 배치 (2026-11-24) 에 이미 digest 가 있는 이 논문의 참고문헌·후속**: ref 17 Sharafi 2017 → `sharafi2017_llzo_surface_chemistry_li_wetting_interfacial_resistance` · ref 29 Wang–Choudhury–Sakamoto 2019 → `wang2019_li_se_interface_dynamics_stack_pressure_current_density` · ref 47 Yang 2021 → `yang2021_atomistic_li_stripping_plating_interface_md` · 2026 후속 `lu2026_li_ag_interface_thermodynamics_kinetics`. 아래는 **litdb 에 digest 가 없는 것**만이다.
 
 | # | 문헌 | 왜 | litdb |
 |---|---|---|---|
 | 1 | Seymour, Quérel, Brugge, Pesci, Aguadero, *ChemSusChem* **16**, e202202215 (2023) — *"Understanding and Engineering Interfacial Adhesion in Solid-State Batteries with Metallic Anodes"* (제목·서지 = `kb/papers/adhesion_literature_review.md` #7 기록, 이 PDF 로 미확인) | **직계 후속** — 같은 저자 · 금속 음극 점착 공학 · registry · 종결 의존 | digest 없음 |
-| 2 | M. Yang, Y. Liu, A. M. Nolan, Y. Mo, *Adv. Mater.* **33**, 2008081 (2021) (ref 47) | W > 0.7 J m⁻² (가압) · 1.8 (무압) 문턱의 원전 · 압력 숫자 확인 (10–20 대 20–30 MPa) | 없음 |
-| 3 | K. Kim, D. J. Siegel, *ACS Appl. Mater. Interfaces* **11**, 39940 (2019) (ref 26) | Li/Li₃OCl W 0.77 대 0.09 · DFT 로 젖음 (접촉각) 을 예측하는 방법 | 없음 |
-| 4 | N. D. Lepley, N. A. W. Holzwarth, *Phys. Rev. B* **92**, 214201 (2015) (ref 71) | Li 와 Li₂O · Li₂S · Li₃PO₄ · Li₃PS₄ 계면 DFT — 황화물 쪽 계면 계산법의 상위 앵커 | 없음 (`wang2022_…` 가 ref 26 으로 소환) |
-| 5 | K. S. Nagy, S. Kazemiabnavi, K. Thornton, D. J. Siegel, *ACS Appl. Mater. Interfaces* **11**, 7954 (2019) (ref 64 · SI ref 1) | Li·Na 면별 표면 에너지 — γ_Li 기준값의 원전 | 없음 |
-| 6 | M. J. Wang, E. Carmona, A. Gupta, P. Albertus, J. Sakamoto, *Nat. Commun.* **11** (2020) (ref 86) | 무음극 — SE 에서 집전체 위로 Li 직접 석출 · Li/SE 대 Li/집전체 공극 | 없음 |
-| 7 | T. Krauskopf, B. Mogwitz, C. Rosenbach, W. G. Zeier, J. Janek, *Adv. Energy Mater.* **9**, 1902568 (2019) (ref 83) | Li–Mg 합금 음극 — 금속 인터레이어가 공극을 막지만 합금 내 확산이 율속 | 없음 |
-| 8 | T. Krauskopf, H. Hartmann, W. G. Zeier, J. Janek, *ACS Appl. Mater. Interfaces* **11**, 14463 (2019) (ref 30) | 공공 확산 지배 공극 · 50–200 µA cm⁻² | 없음 |
+| 2 | K. Kim, D. J. Siegel, *ACS Appl. Mater. Interfaces* **11**, 39940 (2019) (ref 26) | Li/Li₃OCl W 0.77 대 0.09 · DFT 로 젖음 (접촉각) 을 예측하는 방법 | 없음 |
+| 3 | N. D. Lepley, N. A. W. Holzwarth, *Phys. Rev. B* **92**, 214201 (2015) (ref 71) | Li 와 Li₂O · Li₂S · Li₃PO₄ · Li₃PS₄ 계면 DFT (내용 = `wang2022_…` digest 기록 · 이 논문은 산화물·인산염 W 의 선행 보고로만 인용) — 황화물 쪽 계면 계산법의 상위 앵커 | 없음 |
+| 4 | K. S. Nagy, S. Kazemiabnavi, K. Thornton, D. J. Siegel, *ACS Appl. Mater. Interfaces* **11**, 7954 (2019) (ref 64 · SI ref 1) | Li·Na 면별 표면 에너지 — γ_Li 기준값의 원전 | 없음 |
+| 5 | M. J. Wang, E. Carmona, A. Gupta, P. Albertus, J. Sakamoto, *Nat. Commun.* **11** (2020) (ref 86) | 무음극 — SE 에서 집전체 위로 Li 직접 석출 · Li/SE 대 Li/집전체 공극 (Ag–C 무음극 문맥) | 없음 |
+| 6 | T. Krauskopf, B. Mogwitz, C. Rosenbach, W. G. Zeier, J. Janek, *Adv. Energy Mater.* **9**, 1902568 (2019) (ref 83) | Li–Mg 합금 음극 — 금속 인터레이어가 공극을 막지만 합금 내 확산이 율속 | 없음 |
+| 7 | T. Krauskopf, H. Hartmann, W. G. Zeier, J. Janek, *ACS Appl. Mater. Interfaces* **11**, 14463 (2019) (ref 30) | 공공 확산 지배 공극 · 50–200 µA cm⁻² | 없음 |
+| 8 | J. Gao, X. Guo, Y. Li, Z. Ma, X. Guo, H. Li, Y. Zhu, W. Zhou, *Adv. Theory Simul.* **2**, 1900028 (2019) (ref 65) | 비정합 Li/LLZO 에서 Li 공공 형성 에너지가 자리별 **최대 0.55 eV** — "평균 W 로는 부족" 의 독립 DFT 근거 | 없음 |
 
-다음 순번: Kasemchainan et al. *Nat. Mater.* 18, 1105 (2019) (ref 28, 임계 스트리핑 전류) · Tewari & Mukherjee *J. Phys. Chem. C* 125, 2221 (2021) (ref 46, KMC) · Gao, Jalem, Tateyama *ACS AMI* 12, 16350 (2020) (ref 25, Li/LLZO Zr 배위) · Lowe & Siegel *ACS AMI* 12, 46015 (2020) (ref 70, Li 화학포텐셜에서의 Li₂O 종결) · Kumar et al. *Nat. Commun.* 9 (2018) (ref 66, 결합 끊기 모형 원형) · (이 논문 밖) Lee et al. *Nat. Energy* 5, 299 (2020) — Ag–C 원전, `spencerjolly2023_…` · `liao2025_…` · `kang2026_…` digest 가 인용하지만 카드 없음.
+다음 순번: Kasemchainan et al. *Nat. Mater.* 18, 1105 (2019) (ref 28 — 이 논문에선 ~10 MPa 적층압 · 무압 Li/LLZO 공극의 근거) · Tewari & Mukherjee *J. Phys. Chem. C* 125, 2221 (2021) (ref 46, KMC) · Gao, Jalem, Tateyama *ACS AMI* 12, 16350 (2020) (ref 25, Li/LLZO Zr 배위) · Lowe & Siegel *ACS AMI* 12, 46015 (2020) (ref 70, Li 화학포텐셜에서의 Li₂O 종결) · Kumar et al. *Nat. Commun.* 9 (2018) (ref 66, 결합 끊기 모형의 바탕) · (이 논문 밖 · 2024 후속 계열) Xie/Ceder *Adv. Energy Mater.* 2024 (Li–Ag 클러스터) · Thomas/Behara/Van der Ven *Chem. Mater.* 2024 (Li–Ag 합금상 이동 장벽) — `lu2026_…` digest 가 이미 *"따로 먹여야 한다"* 고 적은 두 편 · (이 논문 밖) Lee et al. *Nat. Energy* 5, 299 (2020) — Ag–C 원전, `spencerjolly2023_…` · `liao2025_…` · `kang2026_…` digest 가 인용하지만 카드 없음.

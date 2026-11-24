@@ -315,14 +315,14 @@ Ag(111)·Ag(100) 위에 BCC Li 를 Kurdjumov–Sachs · Nishiyama–Wassermann �
 
 > ⛔ **우리 W 값은 이 digest 에 없다 — 위치만**: `db/properties/adhesion.json` (SE|NCM 옛 축) · `db/properties/wad_*` (Ag|흑연 · C|C · LPSCl 쌍 · 작은 모델 DFT 확인) · 공유 보고서 `docs/collab/wad_dem_interface_adhesion_report_2026_11_24.html` (2 절 표). 아래는 **방법** 비교다.
 > `our_dft_baseline.md` (comp1 · modelc 의 gap · 탄성 · Ea · ESW) 와 겹치는 물성은 **없다** (n/a) — 이 논문은 argyrodite 를 계산하지 않는다.
-> 우리 방법의 출처: 보고서 부록 A · `db/properties/wad_agc_graphite_prereg_2026_10_02.json` (`1_무엇을_재는가` · `2_모델` · `3_QE_설정`).
+> 우리 방법의 출처: 보고서 부록 A · `db/properties/wad_agc_graphite_prereg_2026_10_02.json` (`1_무엇을_재는가` · `2_모델` · `3_QE_설정`) · 마감 `db/properties/wad_agc_graphite_closed_2026_10_06.json` (헤드라인 k). 아래 '우리' 칸의 DFT 설정은 Ag(111)\|흑연 카드 기준이다 — LPSCl 쌍의 작은 모델 확인 (VASP 경로) 설정은 그 카드 (`wad_*_vasp_*`) 를 따로 본다.
 
 | 항목 | 이 논문 | 우리 W_ad (방법만) | 같다 / 다르다 · 결과에 미치는 방향 |
 |---|---|---|---|
 | 보고량 정의 | **W_ad = (E_Ag + E_Li − E_int)/A** — 분리 상태 = 따로 계산한 두 슬랩 (이완 여부 · Li 슬랩 격자 n/a) | **W_sep = [E(far) − E(bound)]/A** — 붙은 계면을 이완한 뒤 **같은 기하로 강체 분리** (끝점 10 Å · 12 Å 점검) | **다르다.** 분리 슬랩을 이완하면 E_sep 가 내려가므로 같은 설정이면 **W(이완 슬랩) ≤ W_sep**. 논문이 어느 쪽인지 안 적어서 차이 크기는 모른다 |
 | 범함수 · vdW | PBE · **vdW 없음** | PBE + **D3(BJ) 2 체** (3 체 ATM 은 민감도 열) | **다르다.** D3 는 계면을 가로지르는 끌림을 더해 같은 기하에서 W 를 키운다 · 격자상수도 줄인다 (아래 격자 줄) |
-| 코드 · 의사퍼텐셜 · 컷오프 | VASP · PAW (판본 n/a) · 500 eV | QE · Ag ONCV (노름보존) · C PAW (pslibrary) · 52 / 520 Ry | **다르다** (코드 · PP). 같은 PBE 라도 W 가 0.0x J/m² 수준 달라질 수 있다 → 문헌 값과 같은 줄에 놓을 때 방법을 같이 적는다 |
-| k 점 · 스미어링 | Γ 중심 8×8×1 (셀 크기 n/a → 간격 n/a) · MP 0.1 (단위 n/a) | 6×6×1 (Ag(111) √3×√3 · 0.243 Å⁻¹) + 9×9×1 점검 · MV 0.01 Ry | 비교 불가 (논문 셀 크기 미기재) |
+| 코드 · 의사퍼텐셜 · 컷오프 | VASP · PAW (판본 n/a) · 500 eV | QE · Ag ONCV (노름보존) · C PAW (pslibrary) · 52 / 520 Ry (Ag\|흑연 카드 · 70 Ry 점검 통과) | **다르다** (코드 · PP). 같은 PBE 라도 W 가 0.0x J/m² 수준 달라질 수 있다 → 문헌 값과 같은 줄에 놓을 때 방법을 같이 적는다 |
+| k 점 · 스미어링 | Γ 중심 8×8×1 (셀 크기 n/a → 간격 n/a) · MP 0.1 (단위 n/a) | Ag(111)\|흑연 헤드라인 9×9×1 (Ag(111) √3×√3 셀 · 대표 registry 12×12×1 탐침으로 수렴 확인 · 사전등록 때는 6×6×1) · MV 0.01 Ry | 비교 불가 (논문 셀 크기 미기재) |
 | 힘 수렴 | **0.005 eV/Å** | 1e-3 Ry/bohr (≈ 0.026 eV/Å) | 논문이 더 빡빡하다 |
 | 쌍극자 보정 | 언급 없음 | 있음 (진공 중앙 · tefield/dipfield) | 비대칭 Li\|Ag 슬랩에서 W 에 영향 가능 — 논문 쪽 n/a |
 | 계면 셀 · 변형 | 정합 FCC Li **3.77 % 2축 압축** · 반정합 BCC < 4 % · **변형 전부 Li** · Ag **4.17 Å** | Ag(111)\|흑연: Ag 격자 (PBE+D3 **4.070 Å**) 에 흑연 +1.078 % · LPSCl 쌍: 흡착층을 SE 격자에 | **원칙은 같다** (무른 쪽이 변형을 진다). **크기는 다르다** — 우리 Ag 격자가 D3 로 ≈2.4 % 작다 ⇒ Li\|Ag 를 만들면 Li 변형을 **우리 설정으로 다시 잰다** (3.77 % 를 옮기지 않는다) |

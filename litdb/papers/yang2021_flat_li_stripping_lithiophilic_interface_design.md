@@ -280,6 +280,7 @@ k = ν₀·exp(−ΔE/k_BT), **ν₀ = 10¹³ s⁻¹ 가정** (모든 홉 · ref
 | ⑥ | **J_C** (KMC 결과) | 10¹–10² vs 10⁻⁵–10⁻⁴ A cm⁻² | 정량 기준 없음 — "L1 공공 축적이 보이기 시작하는 전류" 를 그림으로 판정 |
 
 - ⚠ **W 숫자 문턱 (예: 0.7 J m⁻²) 은 이 논문에 없다** — 그건 M. Yang · Mo 2021 *Adv. Mater.* (`[Wang22Res]` ref 29) 다 (머리말 경고).
+- 점착과 공공 수송을 **판정식** (`[Wang22Res]` 표기 W_adh > 2γ_metal) 으로 만든 편은 Seymour & Aguadero, *J. Mater. Chem. A*, 9, 19901 (2021) — 같은 날 배치 #1 (`papers/seymour2021_void_suppression_interfacial_adhesion_vacancy_transport.md`) · 이 논문의 완전 젖음 조건 (W ≥ 2γ_Li ⇔ θ = 0) 과 같은 꼴이다 (내용은 그 digest 에서 확인 — 여기서는 안 읽었다).
 - 저자의 종합: *"계면 점착 · 젖음 · 계면 전자밀도 축적이 친Li 계면의 특징"* — ① · ④ 는 DFT 로 바로 계산되고 실험으로도 잴 수 있는 양이라 코팅 설계 지침으로 쓰자는 제안 (p. 2819).
 
 ### 4f. 이 논문이 안 한 것
