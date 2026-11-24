@@ -106,5 +106,6 @@
 | 11-24 13:26 | kgy → gabia | 넘김 ⑨ | T `20261124T042600Z` · tip `c4bf7a077d2c043cbe424c37c3e259401ca87d49` · 묶음 sha256 `f110b2c08e4c654f716149115e9a15989cde4e9c10629cf023b568a10380b9ac` · PARKED_OK · RECV_OK |
 | 11-24 13:3x | gabia | recover 8 → `P1_c1_R_j_lo` 시도 12 등록 · 시작 | recover8 rc 0 · START_OK 12 (원장 = gabia) |
 | 11-25 07:19 · 07:27 | kgy · gabia | 시도 11 · 12 끝 (화면) | 둘 다 그룹 3/3 · 팔 JSON 12 · 사슬 0 · 두 GPU 의 사용량 (58 % · 90 %) = 우리 사슬 밖 프로세스 (미확인) |
+| 11-25 07:44 | gabia → kgy | `P1_c1_R_j_hi` 시도 13 등록 · 시작 → 넘김 ⑩ | 원장 끝 `result 12 completed` → START_OK 13 (항목 커밋 `17f260b8599d76b4ad9ba4274a566834610b2d8a`) · T `20261124T224357Z` · tip `5fc8e0bcefe06cd711cb11b1d76dd17a6f2d364d` · 묶음 sha256 `fe588245b61707f1cccdbbbe3d868124c72e79c78a43d0d433bae94ff2e8c1ae` · PARKED_OK |
 
-채택 단위 6/12 (시도 3 · 4 · 5 · 6 · 8 · 10) → 시도 11 (kgy recover) · 12 (gabia 원장이 스스로 기록) 이 들어가면 8/12.  남음 = kgy `P0_c1_R_j_lo` · `P0_c1_R_j_hi` · `P1_c0_R_j0` · gabia `P1_c1_R_j_hi`.  다음 = 넘김 ⑩ (gabia → kgy · gabia 가 `P1_c1_R_j_hi` 시작 확인 뒤) → kgy recover 11 → `P0_c1_R_j_lo`.  넘김 ⑩ 의 T · tip · sha256 = 1저자 화면을 받은 뒤 다음 기록에.
+채택 단위 6/12 (시도 3 · 4 · 5 · 6 · 8 · 10) → 시도 11 (kgy recover) · 12 (gabia 원장이 스스로 기록) 이 들어가면 8/12.  남음 = kgy `P0_c1_R_j_lo` · `P0_c1_R_j_hi` · `P1_c0_R_j0` · gabia `P1_c1_R_j_hi`.  다음 = 넘김 ⑩ (gabia → kgy · gabia 가 `P1_c1_R_j_hi` 시작 확인 뒤) → kgy recover 11 → `P0_c1_R_j_lo`.  넘김 ⑩ gabia 쪽 = 위 표 끝 줄 (11-25 07:44) · kgy 쪽 (RECV · recover 11 · 시도 14 `P0_c1_R_j_lo`) = 1저자 화면을 받은 뒤 다음 기록에.
