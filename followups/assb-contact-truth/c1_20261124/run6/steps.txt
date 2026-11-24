@@ -1,0 +1,23 @@
+10:41:34Z start · budget left 208 min
+10:52:59Z 20_conv rc=0
+11:01:38Z 21_c1a_G05_Wa10 rc=0
+11:01:55Z 21_c1a_G05_Wa0.1 rc=0
+11:01:55Z 21_c1a_G2_Wa10 rc=0
+11:02:01Z 21_c1a_G2_Wa0.1 rc=0
+11:02:02Z 22_failcheck rc=0
+11:04:26Z 23_dc rc=0
+11:08:21Z 24_c1b_Wa10 rc=0
+11:08:50Z 24_c1b_Wa0.1 rc=0
+11:08:52Z 25_failcheck rc=0
+11:08:52Z budget left 181 min before AD (D3: AD only if ≥ 90 min)
+11:12:46Z 26_ad_c1a_G05_Wa10 rc=0
+11:12:55Z 26_ad_c1a_G05_Wa0.1 rc=0
+11:12:55Z 26_ad_c1a_G2_Wa10 rc=0
+11:12:58Z 26_ad_c1a_G2_Wa0.1 rc=0
+11:13:44Z 27_ad_dc rc=0
+11:17:31Z 28_ad_c1b_Wa10 rc=0
+11:17:53Z 28_ad_c1b_Wa0.1 rc=0
+11:22:44Z 30_analyze_c1a rc=0
+11:22:45Z 31_analyze_c1b rc=0
+11:24:12Z 32_analyze_ad rc=0
+11:24:12Z done · budget left 165 min

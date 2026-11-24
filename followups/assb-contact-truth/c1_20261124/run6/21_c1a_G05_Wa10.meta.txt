@@ -1,0 +1,11 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/venv/bin/python -I /home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/c1_grid.py c1a --out /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/out6/grid --spk /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/out6/spikes --shape G05 --Wa 10
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/assb-truth/c1/copy/degradation-degeneracy
+start_utc: 2026-11-24T10:52:59Z
+copy_head: bf61565ba79f3aa66b16fd097da3105752c3248f
+repo_head: 67d96b77316d25569774e978a89e7941353d8d0c
+copy_dirty: 0
+disk_free_start: 26048151552
+end_utc: 2026-11-24T11:01:38Z
+rc: 0
+elapsed_s: 519.59
+disk_free_end: 25979371520

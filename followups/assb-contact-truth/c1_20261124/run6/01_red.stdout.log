@@ -1,0 +1,83 @@
+.....................................FFFFFF                              [100%]
+=================================== FAILURES ===================================
+_____________________ test_r6_std_constants_pre_registered _____________________
+
+    def test_r6_std_constants_pre_registered():
+        """§8-13 ① · ⑤: 표준 = 지수 (오른쪽 · α 4.0) 반경 격자 · x 80 · r 80 · 1e-9 · 판정 짝 정밀판 = r 160 · x 80 · 1e-10 · 진단 둘."""
+        import c1_grid as gr
+>       assert tr.STD_R_MESH == ("exp_right", 4.0)
+               ^^^^^^^^^^^^^
+E       AttributeError: module 'c1_truth' has no attribute 'STD_R_MESH'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:520: AttributeError
+____ test_r6_particle_mesh_exponential_toward_surface_and_uniform_when_none ____
+
+    def test_r6_particle_mesh_exponential_toward_surface_and_uniform_when_none():
+        """기본 반경 모서리 = R − R·(e^{α(N−i)/N} − 1)/(e^α − 1) (α 4) · 표면 칸이 가장 작다 · r_mesh=None 이면 PyBaMM 기본 균일 (기준판 꼴)."""
+        m, s, sim = tr.build_model("G05", **LOWRES)
+        e = np.asarray(sim.mesh["positive particle"].edges)
+        want = _exp_right_edges(20, 4.0, tr.R_P)
+>       assert e.shape == want.shape and np.allclose(e, want, rtol=1e-12, atol=1e-18)
+E       assert ((21,) == (21,)
+E         
+E         Use -v to get more diff and False)
+E        +  where False = <function allclose at 0x7f2d4f9ceeb0>(array([0.000e+00, 2.610e-07, 5.220e-07, 7.830e-07, 1.044e-06, 1.305e-06,\n       1.566e-06, 1.827e-06, 2.088e-06, 2.349...e-06,\n       3.132e-06, 3.393e-06, 3.654e-06, 3.915e-06, 4.176e-06, 4.437e-06,\n       4.698e-06, 4.959e-06, 5.220e-06]), array([0.00000000e+00, 9.63879538e-07, 1.75303736e-06, 2.39914514e-06,\n       2.92813344e-06, 3.36123244e-06, 3.715823...052e-06, 5.05265409e-06,\n       5.10064283e-06, 5.13993268e-06, 5.17210049e-06, 5.19843727e-06,\n       5.22000000e-06]), rtol=1e-12, atol=1e-18)
+E        +    where <function allclose at 0x7f2d4f9ceeb0> = np.allclose
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:533: AssertionError
+______________ test_r6_nonuniform_pulse_conserves_lithium_low_res ______________
+
+    def test_r6_nonuniform_pulse_conserves_lithium_low_res():
+        """비균일 반경 격자 (표준 꼴) 의 펄스 Li 수지 (이중층 포함) ≤ 1e-6 (S9 (iv) 와 같은 문턱 · 20 · 1e-8)."""
+        m, s, sim = tr.build_model("G05", **LOWRES)
+        h = np.diff(np.asarray(sim.mesh["positive particle"].edges))
+>       assert h.max() / h.min() > 10.0                                   # 정말 비균일인지 먼저
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (np.float64(2.6100000000000055e-07) / np.float64(2.609999999999997e-07)) > 10.0
+E        +  where np.float64(2.6100000000000055e-07) = <built-in method max of numpy.ndarray object at 0x7f2d28b5ed90>()
+E        +    where <built-in method max of numpy.ndarray object at 0x7f2d28b5ed90> = array([2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07,\n       2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07,\n       2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07,\n       2.61e-07, 2.61e-07]).max
+E        +  and   np.float64(2.609999999999997e-07) = <built-in method min of numpy.ndarray object at 0x7f2d28b5ed90>()
+E        +    where <built-in method min of numpy.ndarray object at 0x7f2d28b5ed90> = array([2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07,\n       2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07,\n       2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07, 2.61e-07,\n       2.61e-07, 2.61e-07]).min
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:547: AssertionError
+________________ test_r6_restricted_pulse_matches_full_low_res _________________
+
+    def test_r6_restricted_pulse_matches_full_low_res():
+        """§8-13 ③ 기준판의 제한 출력 길 (V · R-평균 c_s · Δφ) = 전체 상태 길: max |ΔV| ≤ 1e-12 V · Li 상대값 차 ≤ 1e-12 (균일 20 · 1e-8)."""
+>       mf, sf, simf = tr.build_model("G05", r_mesh=None, **LOWRES)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_model() got an unexpected keyword argument 'r_mesh'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:556: TypeError
+_______________________ test_r6_s9_verdict_criteria_fake _______________________
+
+    def test_r6_s9_verdict_criteria_fake():
+        """§8-13 ④: (i) ref 대비 · (ii) 2N 대비 τ̂ ≤ 1 % · (iii) z 둘 다 ≤ 5 % · (iv) Li ≤ 1e-6 · NaN → 실패 (가짜 수)."""
+        import c1_spikes as sp
+        tau = [{"row": "a", "nu": 1.000, "nu2": 1.004, "ref": 0.996}, {"row": "b", "nu": 2.0, "nu2": 2.01, "ref": 2.01}]
+        z = [{"pulse": "p", "nu": 100.0, "nu2": 102.0, "ref": 97.0}]
+        li = [1e-10, 5e-7]
+>       v = sp.s9_verdict(tau, z, li)
+            ^^^^^^^^^^^^^
+E       AttributeError: module 'c1_spikes' has no attribute 's9_verdict'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:573: AttributeError
+______________________ test_r6_s9_rows_fixed_from_round5 _______________________
+
+    def test_r6_s9_rows_fixed_from_round5():
+        """§8-13 ②: S9 행 목록 (Tafel 7 · 선형 2 · z 2) 이 사전 등록 그대로."""
+        import c1_spikes as sp
+>       assert sp.S9_TAF_ROWS == (("SOC0.8 taf+", "fresh"), ("SOC0.8 taf-", "fresh"), ("SOC0.8 taf+", "K_k8"), ("SOC0.8 taf-", "K_k8"),
+               ^^^^^^^^^^^^^^
+                                  ("SOC0.5 taf+", "fresh"), ("SOC0.8 taf+", "A_k8"), ("SOC0.8 taf-", "A_k8"))
+E       AttributeError: module 'c1_spikes' has no attribute 'S9_TAF_ROWS'
+
+/home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py:590: AttributeError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_r6_std_constants_pre_registered
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_r6_particle_mesh_exponential_toward_surface_and_uniform_when_none
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_r6_nonuniform_pulse_conserves_lithium_low_res
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_r6_restricted_pulse_matches_full_low_res
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_r6_s9_verdict_criteria_fake
+FAILED ../../../../../../../../../home/user/Yonghoon-DEM-DFT/followups/assb-contact-truth/c1_20261124/test_c1.py::test_r6_s9_rows_fixed_from_round5
+6 failed, 37 passed in 28.64s

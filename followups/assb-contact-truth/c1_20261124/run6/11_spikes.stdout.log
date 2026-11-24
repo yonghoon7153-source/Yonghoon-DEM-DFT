@@ -1,0 +1,25 @@
+S6 x_top=0.261417 x_low=0.999795 x_mid=0.625844 x_end=0.990271 SOC x=[0.407188, 0.625844, 0.8445] Q1C=6.4478Ah tau_ct0=19.069ms geo_ok=True mono=True
+S6 PASS
+S1 term=event: Minimum voltage [V] t_end=35536s Q=6.3646Ah tau_Li=2.569e-08s (≤1e-06) ce_dev=1.280e-03
+S1 PASS
+S2 faradaic_suppressed_k0x1e-4: C_eff=0.296818F hand=0.296732F rel=+0.0290%
+S2 as_is_t0plus: C_eff=0.263876F hand=0.296732F rel=-11.0727%
+S2 PASS
+S3 G05|Wa10.0: build 0.17s bundle(12 pulses) 27.28s
+S3 G2|Wa0.1: build 0.25s bundle(12 pulses) 28.55s
+S3 projection core ≤ 76.6 min (upper) · all_final_time=True
+S3 PASS
+S4 ce max rel dev: S1(C/10) 1.280e-03 · S3 bundles 2.557e-04 (spatial 2.557e-04) · limit 1e-9
+S4 diag c_dl_x1: {'ce_max_rel_dev': 0.00010278736706514913, 'ce_pos_mean_rel_end': 1.0553861791162689e-06, 'pred_pos_rel_end_est': 1.7376544343621119e-06}
+S4 diag c_dl_x0.001: {'ce_max_rel_dev': 6.712807911535279e-06, 'ce_pos_mean_rel_end': -3.520533929934899e-07, 'pred_pos_rel_end_est': 1.7373202377345248e-09}
+S4 diag decoupling max|ΔV|: {'D_e_x10': 3.320455022048918e-12, 'ce0_x2': 1.6147083670148277e-12}
+S4 FAIL
+S4′ max|ΔV| = 4.363e-08 V (limit 1e-06) · by protocol {'C/10': 3.958921723778985e-08, 'pulse': 4.363194072709575e-08} · worst pulse SOC0.2 taf+ G05 Wa0.1 D_e_x10 t=10.01 · n=100
+S4′ PASS
+S5′ G05: model/k0·g_reg soc 8.88e-16 dense 5.55e-15 · x_mid vs target 0.00e+00 · |g_reg/g−1| soc {'0.8': 4.290536085860275e-06, '0.5': 4.5592934460048085e-06, '0.2': 1.4496594617718905e-05} window max 2.68e-03 @x=0.990271 · x_top→x0 max 5.518e-01
+S5′ G2: model/k0·g_reg soc 2.22e-15 dense 2.24e-14 · x_mid vs target 0.00e+00 · |g_reg/g−1| soc {'0.8': 8.581127397988553e-06, '0.5': 9.118649253681e-06, '0.2': 2.8993819701117474e-05} window max 5.37e-03 @x=0.990271 · x_top→x0 max 3.978e+00
+S5′ Li (dl 포함) max 4.68e-11
+S5′ PASS
+S8 (i) CC C/3 0.1 s 제한 ↔ 전체: max|ΔV| 0.00e+00 V (n 103410) · |Δt_end| 0.0e+00 s · |ΔQ_F| 0.00e+00 C (lim 2.22e-06) · Li(제한) 3.4e-11 · (ii) {'supported': True, 'n': 16902, 'max_abs_dv': 0.0, 'same_length': True, 'within_1e-10': True}
+S8 PASS
+SPIKES ALL PASS

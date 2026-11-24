@@ -1,0 +1,16 @@
+S9 nu80_t1e-9: n_r 80 · surface cell 4.993 nm · states 6643 · build 0.2 s · solve 22.8 s
+S9 nu160_t1e-10: n_r 160 · surface cell 2.465 nm · states 13043 · build 0.2 s · solve 49.3 s
+S9 ref_u1280_t1e-10: n_r 1280 · surface cell 4.078 nm · states 102643 · build 0.7 s · solve 369.5 s
+S9 τ̂ SOC0.8 taf+|fresh: nu80 2.4772 · nu160 2.4769 · ref 2.4772 ms
+S9 τ̂ SOC0.8 taf-|fresh: nu80 2.4740 · nu160 2.4738 · ref 2.4740 ms
+S9 τ̂ SOC0.8 taf+|K_k8: nu80 3.9483 · nu160 3.9488 · ref 3.9485 ms
+S9 τ̂ SOC0.8 taf-|K_k8: nu80 3.9453 · nu160 3.9459 · ref 3.9455 ms
+S9 τ̂ SOC0.5 taf+|fresh: nu80 2.4671 · nu160 2.4670 · ref 2.4671 ms
+S9 τ̂ SOC0.8 taf+|A_k8: nu80 1.0205 · nu160 1.0208 · ref 1.0207 ms
+S9 τ̂ SOC0.8 taf-|A_k8: nu80 1.0192 · nu160 1.0195 · ref 1.0194 ms
+S9 τ̂ SOC0.8 lin-|fresh: nu80 11.2929 · nu160 11.2924 · ref 11.2927 ms
+S9 τ̂ SOC0.8 lin+|fresh: nu80 11.2928 · nu160 11.2922 · ref 11.2925 ms
+S9 z SOC0.8 taf+: nu80 1637.105 · nu160 1637.441 · ref 1637.211
+S9 z SOC0.8 taf-: nu80 1653.252 · nu160 1653.587 · ref 1653.354
+S9 worst (i) 2.111e-04 · (ii) 2.898e-04 · (iii) ref 6.448e-05 · 2N 2.049e-04 · (iv) Li 4.26e-11 · fails 0
+S9 PASS

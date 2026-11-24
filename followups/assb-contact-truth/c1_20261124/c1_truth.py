@@ -165,12 +165,30 @@ INPUT_NAMES = ("k0", "c_dl", "D_s", "eps_am", "eps_se", "sigma_s", "kappa", "I",
 
 STD_VAR_PTS = {"x_s": 80, "x_p": 80, "r_p": 80}   # 4 차 표준 (§8-9 ①) · 3 차 40 · 1 · 2 차 PyBaMM 기본 20
 STD_TOL = 1e-9
+STD_R_MESH = ("exp_right", 4.0)   # 6 차 표준 반경 격자 꼴 (§8-13 ①): Exponential1DSubMesh · side right (입자 표면) · stretch 4.0 · None = PyBaMM 기본 균일
+PULSE_KEEP = ("Voltage [V]", "R-averaged positive particle concentration [mol.m-3]",
+              "Positive electrode surface potential difference [V]")   # §8-13 ③ 기준판 펄스의 제한 출력 (run_pulse_lean 이 읽는 셋)
+
+
+def _submesh_types(model, r_mesh):
+    """r_mesh = None → None (Simulation 이 model.default_submesh_types 를 그대로 쓴다) · ("exp_right", α) → 입자 격자만 바꾼 사전."""
+    if r_mesh is None:
+        return None
+    import pybamm
+    kind, stretch = r_mesh
+    if kind != "exp_right":
+        raise ValueError(f"unknown r_mesh {r_mesh!r}")
+    st = dict(model.default_submesh_types)
+    st["positive particle"] = pybamm.MeshGenerator(pybamm.Exponential1DSubMesh,
+                                                   submesh_params={"side": "right", "stretch": float(stretch)})
+    return st
 
 
 def build_model(shape: str, *, var_pts=STD_VAR_PTS, rtol: float = STD_TOL, atol: float = STD_TOL, D_e: float = D_E,
-                ce0: float = CE0, kappa_ce_exp: float = 0.0, output_variables=None):
+                ce0: float = CE0, kappa_ce_exp: float = 0.0, output_variables=None, r_mesh=STD_R_MESH):
     """g 모양 하나의 truth 모형을 만들어 (model, solver, sim) 를 돌려준다.
-    kappa_ce_exp ≠ 0 은 시험의 음성 대조 전용 (κ ∝ (c_e/CE0)^n — truth 는 0)."""
+    kappa_ce_exp ≠ 0 은 시험의 음성 대조 전용 (κ ∝ (c_e/CE0)^n — truth 는 0).
+    r_mesh: 입자 반경 격자 꼴 (§8-13 ① — 기본 = 6 차 표준 · None = 균일)."""
     import pybamm
     pv = _chen()
     k0 = pybamm.InputParameter("k0")
@@ -228,7 +246,8 @@ def build_model(shape: str, *, var_pts=STD_VAR_PTS, rtol: float = STD_TOL, atol:
         var_pts = vp
     # output_variables: §8-11 ② (c) — B2 (DC) 의 촘촘 출력에서 전체 상태를 저장하지 않는다 (해의 끝 상태는 PyBaMM 이 따로 둔다)
     solver = pybamm.IDAKLUSolver(rtol=rtol, atol=atol, output_variables=list(output_variables) if output_variables else None)
-    sim = pybamm.Simulation(model, parameter_values=pv, solver=solver, var_pts=var_pts)
+    sim = pybamm.Simulation(model, parameter_values=pv, solver=solver, var_pts=var_pts,
+                            submesh_types=_submesh_types(model, r_mesh))
     sim.build()
     sim._c1_rename = _rename
     return sim.built_model, sim.solver, sim

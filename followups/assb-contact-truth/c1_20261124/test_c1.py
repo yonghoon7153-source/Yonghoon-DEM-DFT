@@ -504,3 +504,95 @@ def test_restricted_output_cc_matches_full_low_res():
     assert abs(float(rf["t"][-1]) - float(rr["t"][-1])) <= 1e-6
     assert abs(qf_f["qf"][-1] - qf_r["qf"][-1]) <= 1e-10 * I * float(rf["t"][-1])
     assert qf_r["rel"] <= 1e-6
+
+
+# --------------------------------------------------------------------------------------------
+# 6 차 (§8-13) — 표면 쪽 지수 반경 격자 · 기준판 제한 출력 길 · S9 판정
+# --------------------------------------------------------------------------------------------
+def _exp_right_edges(N, stretch, R):
+    i = np.arange(N + 1)
+    return R - R * (np.exp(stretch * (N - i) / N) - 1) / (np.exp(stretch) - 1)
+
+
+def test_r6_std_constants_pre_registered():
+    """§8-13 ① · ⑤: 표준 = 지수 (오른쪽 · α 4.0) 반경 격자 · x 80 · r 80 · 1e-9 · 판정 짝 정밀판 = r 160 · x 80 · 1e-10 · 진단 둘."""
+    import c1_grid as gr
+    assert tr.STD_R_MESH == ("exp_right", 4.0)
+    assert tr.STD_VAR_PTS == {"x_s": 80, "x_p": 80, "r_p": 80} and tr.STD_TOL == 1e-9
+    assert gr.VAR_FINE == {"x_s": 80, "x_p": 80, "r_p": 160} and gr.TOL_FINE == 1e-10
+    assert [lab for lab, _ in gr.CONV_DIAG] == ["r160nu_x80_t1e-9", "x160_r80nu_t1e-9"]
+    assert gr.CONV_DIAG[0][1]["var_pts"] == {"x_s": 80, "x_p": 80, "r_p": 160}
+    assert gr.CONV_DIAG[1][1]["var_pts"] == {"x_s": 160, "x_p": 160, "r_p": 80}
+
+
+def test_r6_particle_mesh_exponential_toward_surface_and_uniform_when_none():
+    """기본 반경 모서리 = R − R·(e^{α(N−i)/N} − 1)/(e^α − 1) (α 4) · 표면 칸이 가장 작다 · r_mesh=None 이면 PyBaMM 기본 균일 (기준판 꼴)."""
+    m, s, sim = tr.build_model("G05", **LOWRES)
+    e = np.asarray(sim.mesh["positive particle"].edges)
+    want = _exp_right_edges(20, 4.0, tr.R_P)
+    assert e.shape == want.shape and np.allclose(e, want, rtol=1e-12, atol=1e-18)
+    h = np.diff(e)
+    assert h[-1] == h.min() and h[0] == h.max()
+    assert abs(h[-1] - tr.R_P * (np.exp(4.0 / 20) - 1) / (np.exp(4.0) - 1)) <= 1e-18
+    mu, su, simu = tr.build_model("G05", r_mesh=None, **LOWRES)
+    eu = np.asarray(simu.mesh["positive particle"].edges)
+    assert np.allclose(eu, np.linspace(0.0, tr.R_P, 21), rtol=1e-12, atol=1e-18)
+    assert np.allclose(np.asarray(sim.mesh["positive electrode"].edges), np.asarray(simu.mesh["positive electrode"].edges))
+
+
+def test_r6_nonuniform_pulse_conserves_lithium_low_res():
+    """비균일 반경 격자 (표준 꼴) 의 펄스 Li 수지 (이중층 포함) ≤ 1e-6 (S9 (iv) 와 같은 문턱 · 20 · 1e-8)."""
+    m, s, sim = tr.build_model("G05", **LOWRES)
+    h = np.diff(np.asarray(sim.mesh["positive particle"].edges))
+    assert h.max() / h.min() > 10.0                                   # 정말 비균일인지 먼저
+    d = tr.base_inputs(shape="G05", Wa=0.1, x_mid=0.625847)
+    for x, I in ((0.844504, 1.9989605), (0.407188, -1.9989605)):
+        r = tr.run_pulse_lean(m, s, sim, d, x_start=x, I_A=I)
+        assert r["li_rel_with_dl"] <= 1e-6
+
+
+def test_r6_restricted_pulse_matches_full_low_res():
+    """§8-13 ③ 기준판의 제한 출력 길 (V · R-평균 c_s · Δφ) = 전체 상태 길: max |ΔV| ≤ 1e-12 V · Li 상대값 차 ≤ 1e-12 (균일 20 · 1e-8)."""
+    mf, sf, simf = tr.build_model("G05", r_mesh=None, **LOWRES)
+    mr, sr, simr = tr.build_model("G05", r_mesh=None, output_variables=list(tr.PULSE_KEEP), **LOWRES)
+    d = tr.base_inputs(shape="G05", Wa=0.1, x_mid=0.625847)
+    for x, I in ((0.844504, 1.9989605), (0.407188, -1.9989605)):
+        a = tr.run_pulse_lean(mf, sf, simf, d, x_start=x, I_A=I)
+        b = tr.run_pulse_lean(mr, sr, simr, d, x_start=x, I_A=I)
+        assert a["V"].shape == b["V"].shape and a["n_pulse"] == b["n_pulse"]
+        assert np.max(np.abs(a["V"] - b["V"])) <= 1e-12
+        assert abs(a["li_rel_with_dl"] - b["li_rel_with_dl"]) <= 1e-12
+
+
+def test_r6_s9_verdict_criteria_fake():
+    """§8-13 ④: (i) ref 대비 · (ii) 2N 대비 τ̂ ≤ 1 % · (iii) z 둘 다 ≤ 5 % · (iv) Li ≤ 1e-6 · NaN → 실패 (가짜 수)."""
+    import c1_spikes as sp
+    tau = [{"row": "a", "nu": 1.000, "nu2": 1.004, "ref": 0.996}, {"row": "b", "nu": 2.0, "nu2": 2.01, "ref": 2.01}]
+    z = [{"pulse": "p", "nu": 100.0, "nu2": 102.0, "ref": 97.0}]
+    li = [1e-10, 5e-7]
+    v = sp.s9_verdict(tau, z, li)
+    assert v["pass"] is True and v["fails"] == []
+    assert sp.s9_verdict([{"row": "a", "nu": 1.0, "nu2": 1.0, "ref": 0.98}], z, li)["pass"] is False      # (i) 2.0 %
+    assert sp.s9_verdict([{"row": "a", "nu": 1.0, "nu2": 1.02, "ref": 1.0}], z, li)["pass"] is False      # (ii) 2.0 %
+    assert sp.s9_verdict(tau, [{"pulse": "p", "nu": 100.0, "nu2": 100.0, "ref": 94.0}], li)["pass"] is False   # (iii) ref 6.4 %
+    assert sp.s9_verdict(tau, [{"pulse": "p", "nu": 100.0, "nu2": 94.0, "ref": 100.0}], li)["pass"] is False   # (iii) 2N 6.4 %
+    assert sp.s9_verdict(tau, z, li + [2e-6])["pass"] is False                                            # (iv)
+    assert sp.s9_verdict([{"row": "a", "nu": float("nan"), "nu2": 1.0, "ref": 1.0}], z, li)["pass"] is False
+    assert sp.s9_verdict(tau, [{"pulse": "p", "nu": 100.0, "nu2": float("inf"), "ref": 100.0}], li)["pass"] is False
+    assert sp.s9_verdict([], z, li)["pass"] is False and sp.s9_verdict(tau, [], li)["pass"] is False      # 빈 표는 통과 아님
+    f = sp.s9_verdict([{"row": "a", "nu": 1.0, "nu2": 1.02, "ref": 0.98}], z, li)
+    assert {x["crit"] for x in f["fails"]} == {"i", "ii"}
+
+
+def test_r6_s9_rows_fixed_from_round5():
+    """§8-13 ②: S9 행 목록 (Tafel 7 · 선형 2 · z 2) 이 사전 등록 그대로."""
+    import c1_spikes as sp
+    assert sp.S9_TAF_ROWS == (("SOC0.8 taf+", "fresh"), ("SOC0.8 taf-", "fresh"), ("SOC0.8 taf+", "K_k8"), ("SOC0.8 taf-", "K_k8"),
+                              ("SOC0.5 taf+", "fresh"), ("SOC0.8 taf+", "A_k8"), ("SOC0.8 taf-", "A_k8"))
+    assert sp.S9_LIN_ROWS == (("SOC0.8 lin-", "fresh"), ("SOC0.8 lin+", "fresh"))
+    assert sp.S9_Z_PULSES == ("SOC0.8 taf+", "SOC0.8 taf-")
+    assert [lab for lab, _ in sp.S9_CONFIGS] == ["nu80_t1e-9", "nu160_t1e-10", "ref_u1280_t1e-10"]
+    ref = dict(sp.S9_CONFIGS)["ref_u1280_t1e-10"]
+    assert ref["var_pts"] == {"x_s": 80, "x_p": 80, "r_p": 1280} and ref["r_mesh"] is None and ref["rtol"] == 1e-10
+    assert tuple(ref["output_variables"]) == tuple(tr.PULSE_KEEP)
+    assert sp.S9_LIM == {"tau": 0.01, "z": 0.05, "li": 1e-6}

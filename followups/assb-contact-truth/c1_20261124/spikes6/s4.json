@@ -1,0 +1,27 @@
+{
+ "spike": "S4",
+ "ce_max_rel_dev_S1_C10": 0.0012795302290919963,
+ "ce_max_rel_dev_S3_bundles": 0.00025572719205912975,
+ "ce_spatial_rel_S3": 0.00025572719186425276,
+ "ce_max_rel_dev": 0.0012795302290919963,
+ "limit": 1e-09,
+ "pass": false,
+ "diag_mechanism": {
+  "c_dl_x1": {
+   "ce_max_rel_dev": 0.00010278736706514913,
+   "ce_pos_mean_rel_end": 1.0553861791162689e-06,
+   "pred_pos_rel_end_est": 1.7376544343621119e-06
+  },
+  "c_dl_x0.001": {
+   "ce_max_rel_dev": 6.712807911535279e-06,
+   "ce_pos_mean_rel_end": -3.520533929934899e-07,
+   "pred_pos_rel_end_est": 1.7373202377345248e-09
+  }
+ },
+ "diag_decoupling_max_abs_dV_V": {
+  "D_e_x10": 3.320455022048918e-12,
+  "ce0_x2": 1.6147083670148277e-12
+ },
+ "mechanism_note": "PyBaMM 26.8 full_diffusion: ∂(εc)/∂t = −∇·(−D∇c + t₊ i_e/F) + Σa j_F/F · FullDifferential: a C_dl ∂Δφ/∂t = ∇·i_e − Σa j_F → t₊=1 이면 ∂(εc)/∂t = ∇·D∇c − a C_dl ∂Δφ/∂t / F",
+ "elapsed_s": 12.603009223937988
+}

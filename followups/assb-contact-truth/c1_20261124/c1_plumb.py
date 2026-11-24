@@ -49,7 +49,8 @@ def call(name, fn, *a):
     try:
         with contextlib.redirect_stdout(buf):
             rc = fn(*a)
-        print(f"PLUMB {name}: no exception (rc {rc if not isinstance(rc, tuple) else 'tuple'}) · t {ts:.1f}–{_t.time() - _T0:.1f} s", flush=True)
+        shown = rc if isinstance(rc, (int, type(None))) else type(rc).__name__     # 6 차: 반환값의 수는 찍지 않는다 (8-12 사후 발견 4)
+        print(f"PLUMB {name}: no exception (rc {shown}) · t {ts:.1f}–{_t.time() - _T0:.1f} s", flush=True)
         return True
     except Exception:
         print(f"PLUMB {name}: EXCEPTION · t {ts:.1f}–{_t.time() - _T0:.1f} s\n{traceback.format_exc()}", flush=True)
@@ -85,7 +86,7 @@ def main():
     import json as _j
     I1 = _j.loads((Path(a.spk) / "s6_registered.json").read_text())["I_1C_A"]
     ok.append(call("ad_dc_z", lambda: cg.dc_z(out, I1, arm_a="AD", tag_a="ad_dc")))
-    ok.append(call("heavy160_taf_soc02", heavy160, a.spk))
+    ok.append(call("heavy_fine_nu160_x80_taf_soc08", heavy160, a.spk))
     print("PLUMB ALL OK" if all(ok) else "PLUMB FAILURES")
     import c1_memguard as mg
     rc_mem = mg.rusage_exit_hook()                       # §8-11 ③ 교차 확인
@@ -95,18 +96,20 @@ def main():
 
 
 def heavy160(spk):
-    """§8-11 ④: 160 · 1e-10 의 Tafel 진폭 펄스 (SOC 0.2 taf±) × 수렴 묶음 셋 (Wa 0.1 · G½) — 가벼운 길 · 결과 버림 (최대 RSS 는 감시자가 기록)."""
+    """§8-13 ⑤ (8-11 ④ 의 꼴): 판정 짝 정밀판 NU(160) · x 80 · 1e-10 의 Tafel 진폭 펄스 (SOC 0.8 taf± — 5 차 최악 행) × 수렴 묶음 셋
+    (Wa 0.1 · G½) — 가벼운 길 · 결과 버림 (최대 RSS 는 감시자가 기록)."""
     import json as _j
     import time as _t
     import c1_truth as tr
     R = _j.loads((Path(spk) / "s6_registered.json").read_text())
     base = tr.base_inputs(shape="G05", Wa=0.1, x_mid=R["x_mid"])
     runs = {"fresh": base, "A_k8": tr.knob_inputs("A", 0.25, base=base), "K_k8": tr.knob_inputs("K", 0.25, base=base)}
-    m, so, sim = tr.build_model("G05", var_pts={"x_s": 160, "x_p": 160, "r_p": 160}, rtol=1e-10, atol=1e-10)
+    import c1_grid as gr
+    m, so, sim = tr.build_model("G05", var_pts=gr.VAR_FINE, rtol=gr.TOL_FINE, atol=gr.TOL_FINE)
     t0 = _t.time()
     for name, d in runs.items():
         for sgn in ("+", "-"):
-            r = tr.run_pulse_lean(m, so, sim, d, x_start=R["soc_x"]["0.2"], I_A=R["pulse_I_A"]["taf" + sgn])
+            r = tr.run_pulse_lean(m, so, sim, d, x_start=R["soc_x"]["0.8"], I_A=R["pulse_I_A"]["taf" + sgn])
             del r
     return {"elapsed_s": _t.time() - t0}
 

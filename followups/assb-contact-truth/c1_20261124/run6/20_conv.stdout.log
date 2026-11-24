@@ -1,0 +1,8 @@
+conv variant std: 85.4s
+conv variant fine: 217.6s
+conv variant r160nu_x80_t1e-9: 184.2s
+conv variant x160_r80nu_t1e-9: 187.8s
+conv (판정 짝 std (NU80 · x80 · 1e-9) vs fine (NU160 · x80 · 1e-10)): worst τ̂ change 2.898e-04 (limit 0.01) · worst z change 2.049e-04 (limit 0.05)
+conv 진단 r160nu_x80_t1e-9 (판정 아님): τ̂ 2.898e-04 · z 2.050e-04
+conv 진단 x160_r80nu_t1e-9 (판정 아님): τ̂ 4.970e-03 · z 1.965e-04
+conv Li max 5.36e-11

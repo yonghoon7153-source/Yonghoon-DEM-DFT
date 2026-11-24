@@ -1,0 +1,7 @@
+{"t": 0.0, "total_B": 15413248}
+{"t": 5.1, "total_B": 555012096}
+{"t": 10.18, "total_B": 942112768}
+{"t": 15.25, "total_B": 1281093632}
+{"t": 20.32, "total_B": 2241708032}
+{"t": 25.39, "total_B": 408055808}
+{"summary": true, "peak_B": 2823688192, "n_samples": 144, "duration_s": 29.24, "tripped": false, "cap_B": 12000000000, "interval_s": 0.2}

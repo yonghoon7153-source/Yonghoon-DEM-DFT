@@ -4065,3 +4065,17 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 사용자가 정할 것: (가) 반경 격자를 입자 표면 쪽으로 조이기 (비균일 격자 · 새 표준) · (나) 규칙 5 바꾸기 (사후 규칙 변경) · (다) C1 닫기 —
   `followups/assb-contact-truth/STATUS.md` · [[pybamm]] 기본 입자 격자 종류는 설계서 §8-12.
 - `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).
+
+## [2026-11-24] update | ASSB 합성 truth C1 6 차 — 표면 쪽 비균일 반경 격자가 사전 스파이크를 통과해 격자 전체가 끝났다 (규칙 5 통과 · C1a 검출 지도 · C1b · AD)
+- 승인: 사용자 원문 "권고대로 해용" (2026-11-24) — 5 차 보고의 (가) + 미리 정한 대체 경로 (스파이크 실패 시 격자 전에 멈춤). 사전 등록은
+  `followups/assb-contact-truth/DESIGN_v1.md` §8-13 (새 계산 전: 격자 꼴 하나와 그 칸 크기 · 스파이크 행 목록 · 균일 기준판 · 통과 조건 넷 · 통과 시 새 표준과 판정 짝) ·
+  결과는 같은 문서 §8-14.
+- 무엇: `followups/assb-contact-truth/c1_20261124/` 6 차 (README 6 차 절 · 반경 격자 꼴 · 기준판 제한 출력 길 · 사전 스파이크 · 새 시험 · `run6/` · `spikes6/` · `run6_tables/` ·
+  `LARGE_OUTPUTS_SHA256.txt` 6 차 절) · `followups/assb-contact-truth/STATUS.md` (C1 행 · 사용자가 정할 것).
+- 결과 (수치는 옮기지 않는다 — 진단 전용 · 인용 금지 · 정본 아님): 새 시험 RED → GREEN · 사전 스파이크가 네 조건을 모두 통과 · 새 표준으로 스파이크 · 배관 통과 · 격자 수렴
+  규칙 통과 · C1a 검출 지도 (일반 문장은 가장 촘촘한 관측 간격에서만 · R5 가정 아래 · 1D 균질 truth) · DC 영 채널 통과 (사전 등록한 Faradaic 축 보정으로) · C1b 는 AD 끔 · 켬
+  모두 재현 불가 · 첫 충전 상한은 순수 θ 손실 조건에서 깨졌다 (진단 · 문장마다 '정칙화 영향') · AD 대리 실행. 사후 발견: 균일 반경 격자의 τ̂ 치우침이 앞 차수 중단의 원인.
+- 하지 않은 것: RUN_SCOPE 변경 0 · 규칙 변경 0 · 재실행 0 · 위키 페이지 수정 0 · 수치 복사 0 · 커밋 · push 0 (호출자가 검토 뒤).
+- 사용자가 정할 것: (가) C1 을 닫고 C2 설계 (문서만) 로 · (나) C1 안의 남은 선택을 새 사전 등록으로 · (다) 멈춤 — `followups/assb-contact-truth/STATUS.md` ·
+  근거 [[assb-synthetic-truth-contact-loss-requirements]] · [[pybamm]] 비균일 입자 격자는 설계서 §8-13.
+- `python3 wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).

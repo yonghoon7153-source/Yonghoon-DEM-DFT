@@ -1,0 +1,23 @@
+{
+ "spike": "S8",
+ "res": "40 · 1e-9",
+ "i_cc": {
+  "max_abs_dv": 0.0,
+  "n_common": 103410,
+  "dt_end_s": 0.0,
+  "dQF_end_C": 0.0,
+  "lim_QF_C": 2.2225096256508237e-06,
+  "li_rel_restricted": 3.430848781168783e-11,
+  "li_rel_full": 3.430848781168783e-11,
+  "pass": true
+ },
+ "ii_pulse_rest": {
+  "supported": true,
+  "n": 16902,
+  "max_abs_dv": 0.0,
+  "same_length": true,
+  "within_1e-10": true
+ },
+ "pass": true,
+ "elapsed_s": 8.050155401229858
+}

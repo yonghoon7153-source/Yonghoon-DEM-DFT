@@ -1,0 +1,17 @@
+PLUMB conv: no exception (rc 0) · t 0.0–134.2 s
+PLUMB c1a: no exception (rc 0) · t 134.2–158.3 s
+PLUMB failcheck: no exception (rc 0) · t 158.3–158.3 s
+PLUMB dc: no exception (rc 0) · t 158.3–192.8 s
+PLUMB c1b: no exception (rc 0) · t 192.8–241.0 s
+PLUMB ad_c1a: no exception (rc 0) · t 241.0–250.2 s
+PLUMB ad_dc: no exception (rc tuple) · t 250.2–261.3 s
+PLUMB ad_c1b: no exception (rc 0) · t 261.3–308.8 s
+PLUMB analyze_c1a: no exception (rc 0) · t 308.8–311.1 s
+PLUMB expectation: no exception (rc list) · t 311.1–311.1 s
+PLUMB dc_features: no exception (rc list) · t 311.1–311.1 s
+PLUMB analyze_c1b: no exception (rc 0) · t 311.1–311.1 s
+PLUMB analyze_ad: no exception (rc 0) · t 311.1–311.9 s
+PLUMB analyze_ad_c1b: no exception (rc 0) · t 311.9–311.9 s
+PLUMB ad_dc_z: no exception (rc tuple) · t 311.9–311.9 s
+PLUMB heavy_fine_nu160_x80_taf_soc08: no exception (rc dict) · t 311.9–353.6 s
+PLUMB ALL OK

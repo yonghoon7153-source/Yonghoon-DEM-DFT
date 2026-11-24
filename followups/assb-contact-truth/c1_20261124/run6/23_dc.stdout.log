@@ -1,0 +1,25 @@
+DC(Q_F) Wa10 C/20 f0.500: z 1.247 (direct 1.250) max|ΔV| 9.76e-04 V · n 7150
+DC(Q_F) Wa10 C/20 f0.250: z 1.872 (direct 1.874) max|ΔV| 1.47e-03 V · n 7150
+DC(Q_F) Wa10 C/3 f0.500: z 0.103 (direct 0.106) max|ΔV| 8.96e-05 V · n 1032
+DC(Q_F) Wa10 C/3 f0.250: z 0.156 (direct 0.159) max|ΔV| 1.35e-04 V · n 1032
+DC(Q_F) Wa10 1C f0.500: z 0.045 (direct 0.049) max|ΔV| 4.18e-05 V · n 313
+DC(Q_F) Wa10 1C f0.250: z 0.068 (direct 0.074) max|ΔV| 6.26e-05 V · n 313
+DC(Q_F) Wa0.1 C/20 f0.500: z 0.320 (direct 0.324) max|ΔV| 1.93e-04 V · n 7147
+DC(Q_F) Wa0.1 C/20 f0.250: z 0.480 (direct 0.485) max|ΔV| 2.89e-04 V · n 7147
+DC(Q_F) Wa0.1 C/3 f0.500: z 0.003 (direct 0.006) max|ΔV| 9.87e-07 V · n 588
+DC(Q_F) Wa0.1 C/3 f0.250: z 0.007 (direct 0.009) max|ΔV| 3.24e-06 V · n 588
+DC(Q_F) Wa0.1 1C f0.500: z 0.005 (direct 0.010) max|ΔV| 7.68e-06 V · n 6
+DC(Q_F) Wa0.1 1C f0.250: z 0.010 (direct 0.021) max|ΔV| 1.57e-05 V · n 6
+DC(time · 진단) Wa10 C/20 f0.500: z 5.968
+DC(time · 진단) Wa10 C/20 f0.250: z 9.263
+DC(time · 진단) Wa10 C/3 f0.500: z 0.870
+DC(time · 진단) Wa10 C/3 f0.250: z 1.337
+DC(time · 진단) Wa10 1C f0.500: z 0.882
+DC(time · 진단) Wa10 1C f0.250: z 1.351
+DC(time · 진단) Wa0.1 C/20 f0.500: z 1.889
+DC(time · 진단) Wa0.1 C/20 f0.250: z 2.944
+DC(time · 진단) Wa0.1 C/3 f0.500: z 0.025
+DC(time · 진단) Wa0.1 C/3 f0.250: z 0.041
+DC(time · 진단) Wa0.1 1C f0.500: z 0.010
+DC(time · 진단) Wa0.1 1C f0.250: z 0.018
+DC z_max (Q_F · 판정) 1.872 (limit 2.0) · z_max (time · 진단) 9.263 · fail 0 · Li violations []

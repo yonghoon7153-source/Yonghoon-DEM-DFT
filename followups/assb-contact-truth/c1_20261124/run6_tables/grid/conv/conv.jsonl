@@ -1,0 +1,12 @@
+{"variant": "std", "run": "fresh", "li_max": 4.404378953429175e-11, "elapsed_s": 28.534835815429688, "utc": "10:42:04Z"}
+{"variant": "std", "run": "A_k8", "li_max": 4.447464122255832e-11, "elapsed_s": 56.96863508224487, "utc": "10:42:32Z"}
+{"variant": "std", "run": "K_k8", "li_max": 4.338800077383961e-11, "elapsed_s": 85.37157869338989, "utc": "10:43:01Z"}
+{"variant": "fine", "run": "fresh", "li_max": 4.804808596932864e-11, "elapsed_s": 75.16537117958069, "utc": "10:44:16Z"}
+{"variant": "fine", "run": "A_k8", "li_max": 5.242797177489761e-11, "elapsed_s": 149.9939329624176, "utc": "10:45:31Z"}
+{"variant": "fine", "run": "K_k8", "li_max": 5.358653654669787e-11, "elapsed_s": 217.5843641757965, "utc": "10:46:38Z"}
+{"variant": "r160nu_x80_t1e-9", "run": "fresh", "li_max": 4.8105014487597826e-11, "elapsed_s": 64.74752998352051, "utc": "10:47:43Z"}
+{"variant": "r160nu_x80_t1e-9", "run": "A_k8", "li_max": 5.021539631485001e-11, "elapsed_s": 126.47234082221985, "utc": "10:48:45Z"}
+{"variant": "r160nu_x80_t1e-9", "run": "K_k8", "li_max": 5.0604592989748874e-11, "elapsed_s": 184.18303871154785, "utc": "10:49:42Z"}
+{"variant": "x160_r80nu_t1e-9", "run": "fresh", "li_max": 4.524234311892501e-11, "elapsed_s": 62.1099066734314, "utc": "10:50:44Z"}
+{"variant": "x160_r80nu_t1e-9", "run": "A_k8", "li_max": 4.767110809835096e-11, "elapsed_s": 126.07452201843262, "utc": "10:51:48Z"}
+{"variant": "x160_r80nu_t1e-9", "run": "K_k8", "li_max": 4.8423119939682485e-11, "elapsed_s": 187.8208522796631, "utc": "10:52:50Z"}

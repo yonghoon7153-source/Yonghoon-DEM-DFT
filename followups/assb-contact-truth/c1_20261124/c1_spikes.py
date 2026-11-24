@@ -468,13 +468,191 @@ def s8(out: Path) -> dict:
     return res
 
 
+# ------------------------------------------------------------------ 6 차 (§8-13) — S9 표면 쪽 지수 반경 격자 ↔ 균일 기준판 (5 차 최악 행)
+S9_TAF_ROWS = (("SOC0.8 taf+", "fresh"), ("SOC0.8 taf-", "fresh"), ("SOC0.8 taf+", "K_k8"), ("SOC0.8 taf-", "K_k8"),
+               ("SOC0.5 taf+", "fresh"), ("SOC0.8 taf+", "A_k8"), ("SOC0.8 taf-", "A_k8"))      # 5 차 |τ̂ 변화| 1–7 위
+S9_LIN_ROWS = (("SOC0.8 lin-", "fresh"), ("SOC0.8 lin+", "fresh"))                             # 선형 중 5 차 변화 최대 둘 (대조)
+S9_Z_PULSES = ("SOC0.8 taf+", "SOC0.8 taf-")                                                    # A_k8 · K_k8 이 둘 다 든 펄스
+S9_CONFIGS = (("nu80_t1e-9", {"var_pts": {"x_s": 80, "x_p": 80, "r_p": 80}, "rtol": 1e-9, "atol": 1e-9}),          # 반경 = 표준 꼴 (tr.STD_R_MESH)
+              ("nu160_t1e-10", {"var_pts": {"x_s": 80, "x_p": 80, "r_p": 160}, "rtol": 1e-10, "atol": 1e-10}),
+              ("ref_u1280_t1e-10", {"var_pts": {"x_s": 80, "x_p": 80, "r_p": 1280}, "rtol": 1e-10, "atol": 1e-10,
+                                    "r_mesh": None, "output_variables": tr.PULSE_KEEP}))               # 균일 기준판 · 제한 출력
+S9_LIM = {"tau": 0.01, "z": 0.05, "li": 1e-6}
+
+
+def _fin(*v) -> bool:
+    return all(isinstance(x, (int, float, np.floating)) and bool(np.isfinite(x)) for x in v)
+
+
+def s9_verdict(tau_rows, z_rows, li_values, lim=S9_LIM) -> dict:
+    """§8-13 ④ — τ̂ 행마다 (i) |nu/ref − 1| ≤ 1 % · (ii) |nu/nu2 − 1| ≤ 1 % · z 행마다 (iii) |nu/ref − 1| · |nu/nu2 − 1| ≤ 5 % ·
+    (iv) Li 값 모두 ≤ 1e-6. NaN · 무한 · 0 분모 · 빈 표 → 실패."""
+    fails, worst = [], {"i": 0.0, "ii": 0.0, "iii_ref": 0.0, "iii_2N": 0.0, "li": 0.0}
+    if not tau_rows:
+        fails.append({"crit": "empty", "what": "tau_rows"})
+    if not z_rows:
+        fails.append({"crit": "empty", "what": "z_rows"})
+    if not li_values:
+        fails.append({"crit": "empty", "what": "li_values"})
+    for r in tau_rows:
+        if not _fin(r["nu"], r["nu2"], r["ref"]) or r["ref"] == 0 or r["nu2"] == 0:
+            fails.append({"crit": "nan", "row": r["row"]})
+            continue
+        ci, cii = abs(r["nu"] / r["ref"] - 1), abs(r["nu"] / r["nu2"] - 1)
+        worst["i"], worst["ii"] = max(worst["i"], ci), max(worst["ii"], cii)
+        if ci > lim["tau"]:
+            fails.append({"crit": "i", "row": r["row"], "value": ci})
+        if cii > lim["tau"]:
+            fails.append({"crit": "ii", "row": r["row"], "value": cii})
+    for r in z_rows:
+        if not _fin(r["nu"], r["nu2"], r["ref"]) or r["ref"] == 0 or r["nu2"] == 0:
+            fails.append({"crit": "nan", "pulse": r["pulse"]})
+            continue
+        a, b = abs(r["nu"] / r["ref"] - 1), abs(r["nu"] / r["nu2"] - 1)
+        worst["iii_ref"], worst["iii_2N"] = max(worst["iii_ref"], a), max(worst["iii_2N"], b)
+        if a > lim["z"] or b > lim["z"]:
+            fails.append({"crit": "iii", "pulse": r["pulse"], "value_ref": a, "value_2N": b})
+    for v in li_values:
+        if not _fin(v) or v > lim["li"]:
+            fails.append({"crit": "iv", "value": v})
+        else:
+            worst["li"] = max(worst["li"], float(v))
+    return {"pass": not fails, "fails": fails, "worst": worst}
+
+
+def _s9_need():
+    need = list(S9_TAF_ROWS) + list(S9_LIN_ROWS)
+    for p in S9_Z_PULSES:
+        for r in ("A_k8", "K_k8"):
+            if (p, r) not in need:
+                need.append((p, r))
+    return need
+
+
+def s9(out: Path, reg_path: Path) -> dict:
+    """§8-13 ② – ④: 5 차 등록점 · 수렴 묶음 (Wa 0.1 · G½) 의 고른 펄스를 판 셋 (NU80 · NU160 · 균일 1280 기준판) 으로 →
+    τ̂ (5 차 수렴과 같은 잡음 없는 F1) · z · Li → 판정. 판 · 펄스마다 npz + JSONL 점진 기록."""
+    import gc
+    import c1_grid as gr
+    t0 = time.time()
+    R = json.loads(Path(reg_path).read_text())
+    base = tr.base_inputs(shape="G05", Wa=0.1, x_mid=R["x_mid"])
+    runs = {"fresh": base, "A_k8": tr.knob_inputs("A", 0.25, base=base), "K_k8": tr.knob_inputs("K", 0.25, base=base)}
+    need = _s9_need()
+    od = out / "s9"
+    od.mkdir(parents=True, exist_ok=True)
+    V, li, cfg_info, errors = {}, {}, {}, []
+    stop = None
+    for lab, kw in S9_CONFIGS:
+        kw = dict(kw)
+        if "output_variables" in kw:
+            kw["output_variables"] = list(kw["output_variables"])
+        if gr.budget_left() < 60:
+            stop = "rule7_wallclock"
+            break
+        tb = time.time()
+        try:
+            model, solver, sim = tr.build_model("G05", **kw)
+        except Exception as e:  # 기준판을 만들지 못함 → 실패 (멈춤)
+            errors.append({"cfg": lab, "stage": "build", "error": repr(e)[:400]})
+            continue
+        e_r = np.asarray(sim.mesh["positive particle"].edges)
+        info = {"build_s": time.time() - tb, "n_states": int(model.concatenated_initial_conditions.shape[0]),
+                "r_surface_cell_m": float(e_r[-1] - e_r[-2]), "r_centre_cell_m": float(e_r[1] - e_r[0]), "n_r": int(e_r.size - 1)}
+        V[lab] = {}
+        ts = time.time()
+        for (p, run) in need:
+            if gr.budget_left() < 60:
+                stop = "rule7_wallclock"
+                break
+            soc, ampsgn = p.split()
+            s = soc.replace("SOC", "")
+            tp = time.time()
+            try:
+                res = tr.run_pulse_lean(model, solver, sim, runs[run], x_start=R["soc_x"][s], I_A=R["pulse_I_A"][ampsgn])
+            except Exception as e:  # 해법 실패
+                errors.append({"cfg": lab, "pulse": p, "run": run, "stage": "solve", "error": repr(e)[:400]})
+                continue
+            term = [str(x) for x in res["termination"]]
+            if any(x != "final time" for x in term):
+                errors.append({"cfg": lab, "pulse": p, "run": run, "stage": "termination", "termination": term})
+            V[lab][(p, run)] = (res["V"], res["n_pulse"])
+            li[f"{lab}|{p}|{run}"] = float(res["li_rel_with_dl"])
+            np.savez_compressed(od / f"{lab}__{p.replace(' ', '_')}__{run}.npz", V=res["V"], n_pulse=res["n_pulse"],
+                                li=res["li_rel_with_dl"])
+            gr.append_jsonl(od / "s9.jsonl", {"cfg": lab, "pulse": p, "run": run, "li": float(res["li_rel_with_dl"]),
+                                              "termination": term, "solve_s": time.time() - tp,
+                                              "utc": time.strftime("%H:%M:%SZ", time.gmtime())})
+            del res
+        info["solve_s"] = time.time() - ts
+        cfg_info[lab] = info
+        del model, solver, sim
+        gc.collect()
+        print(f"S9 {lab}: n_r {info['n_r']} · surface cell {info['r_surface_cell_m'] * 1e9:.3f} nm · states {info['n_states']} · "
+              f"build {info['build_s']:.1f} s · solve {info['solve_s']:.1f} s", flush=True)
+        if stop:
+            break
+    labs = [lab for lab, _ in S9_CONFIGS]
+
+    def tau_of(lab, key):
+        if lab not in V or key not in V[lab]:
+            return float("nan")
+        p, _ = key
+        s, ampsgn = p.split()[0].replace("SOC", ""), p.split()[1]
+        Vv, n_pulse = V[lab][key]
+        return float(gr.f1_noise_free(Vv, n_pulse, R["soc_x"][s], R["pulse_I_A"][ampsgn], 1e-4, R["W_fit_s"][f"G05|SOC{s}"])["tau"])
+
+    def z_of(lab, p):
+        try:
+            va, vk = V[lab][(p, "A_k8")][0], V[lab][(p, "K_k8")][0]
+        except KeyError:
+            return float("nan")
+        return float(np.linalg.norm(va - vk) / 1e-3) if va.shape == vk.shape else float("nan")
+
+    tau_rows = [{"row": f"{p}|{r}", "nu": tau_of(labs[0], (p, r)), "nu2": tau_of(labs[1], (p, r)), "ref": tau_of(labs[2], (p, r))}
+                for (p, r) in list(S9_TAF_ROWS) + list(S9_LIN_ROWS)]
+    z_rows = [{"pulse": p, "nu": z_of(labs[0], p), "nu2": z_of(labs[1], p), "ref": z_of(labs[2], p)} for p in S9_Z_PULSES]
+    n_expected = len(need) * len(labs)
+    v = s9_verdict(tau_rows, z_rows, list(li.values()))
+    if errors:
+        v["fails"].append({"crit": "solver", "errors": errors})
+        v["pass"] = False
+    if len(li) != n_expected:
+        v["fails"].append({"crit": "incomplete", "n_done": len(li), "n_expected": n_expected})
+        v["pass"] = False
+    if stop:
+        v["fails"].append({"crit": stop})
+        v["pass"] = False
+    res = {"spike": "S9", "configs": dict(S9_CONFIGS), "cfg_info": cfg_info, "tau_rows": tau_rows, "z_rows": z_rows, "li": li,
+           "errors": errors, "stop": stop, "verdict": v, "pass": v["pass"], "limits": S9_LIM, "reg": str(reg_path),
+           "elapsed_s": time.time() - t0}
+    jdump(res, out / "s9.json")
+    for r in tau_rows:
+        print(f"S9 τ̂ {r['row']}: nu80 {r['nu'] * 1e3:.4f} · nu160 {r['nu2'] * 1e3:.4f} · ref {r['ref'] * 1e3:.4f} ms", flush=True)
+    for r in z_rows:
+        print(f"S9 z {r['pulse']}: nu80 {r['nu']:.3f} · nu160 {r['nu2']:.3f} · ref {r['ref']:.3f}", flush=True)
+    print(f"S9 worst (i) {v['worst']['i']:.3e} · (ii) {v['worst']['ii']:.3e} · (iii) ref {v['worst']['iii_ref']:.3e} · 2N "
+          f"{v['worst']['iii_2N']:.3e} · (iv) Li {v['worst']['li']:.2e} · fails {len(v['fails'])}", flush=True)
+    print("S9 PASS" if v["pass"] else "S9 FAIL", flush=True)
+    return res
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("which", choices=["s1", "s2", "s3", "s4", "s5", "s6", "s4p", "s5p", "s8", "all", "all2", "all5"])
+    ap.add_argument("which", choices=["s1", "s2", "s3", "s4", "s5", "s6", "s4p", "s5p", "s8", "s9", "all", "all2", "all5"])
     ap.add_argument("--out", required=True)
+    ap.add_argument("--reg", default=None, help="s9: 5 차 S6 등록 파일 (s6_registered.json)")
     a = ap.parse_args(argv)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    if a.which == "s9":
+        r = s9(out, Path(a.reg))
+        jdump({"s9": r["pass"], "stop": r["stop"]}, out / "spike_status_s9.json")
+        import c1_memguard as mg
+        rc_mem = mg.rusage_exit_hook()
+        if rc_mem is not None:
+            return rc_mem
+        return 0 if r["pass"] else (4 if r["stop"] else 3)
     if a.which == "all":
         order = ["s6", "s1", "s2", "s3", "s4", "s5"]
     elif a.which == "all2":     # 2 차: S4 (1 차 판정 — 정보로만 다시 잼) + S4′ · S5′ (판정)
