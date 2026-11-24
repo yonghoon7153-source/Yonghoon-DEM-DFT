@@ -18321,6 +18321,20 @@
    "evidence_tests": [
     "scripts/supp20_input_receipt.py --selftest — J21 끝 (b34cb4c0a · 지문 a82b3167…) 112/123 → 선언 뒤 J22 끝 123/123"
    ]
+  },
+  {
+   "id": "SELF-198",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "J21 2 · 3 조각을 따로 돌린 뒤 origin 대조 (11-24 21:50 KST)",
+   "opened_in": "docs/session_20260923_progress.md",
+   "title": "J21 (b34cb4c0a) 을 게이트 1 조각만 통과한 채 push 했다 — 스크래치 끝맺음 스크립트의 지운 줄 찌꺼기 `${3x:-}` 가 bad substitution 이라 bash 가 조각 반복을 통째로 건너뛰고 철회값 스윕 → ff → push 로 갔다 (11-24 19:48 KST) · 그 뒤 따로 돌린 2 조각 15/0 · 3 조각 실패 1 (SELF-197) · 그 사이 1저자에게 'push 21:40 무렵' 이라고 틀리게 알렸다",
+   "note": "고침 = 끝맺음 스크립트 구조 (전부 main() 안 = 도는 중 파일을 고쳐도 안전 · 철회값 스윕 직전과 push 직전에 세 조각 기록 대조 (같은 HEAD 시작 줄 + 깨끗한 끝 줄 · 반복과 독립) · 띄우기 전 bash -n) = J22 에 적용 → 세 조각 같은 HEAD 6be88bbeb 203/0 뒤 push.  11-25 J22 3 조각 + 스윕이 백그라운드 2 시간 한도에 끊겼을 때 이 구조가 push 를 막았고 (끊김 = push 없음), 게이트를 다시 돌리지 않는 짧은 판 (기록 대조 → 스윕 → ff → push) 으로 마무리.  교훈 = 무거운 단계가 한 조각에 몰리지 않게 단계 시간 기록으로 조각을 나누고 스윕은 따로 호출 (J23 부터).",
+   "claimed_fixed_sha": "6be88bbeb",
+   "evidence_tests": [
+    "docs/session_20260923_progress.md — 11-25 J22 줄: 세 조각 시작 기록 = 모두 6be88bbeb · CHECK_ALL_PART 125/0 · 15/0 · 63/0 · 철회값 스윕 rc 0 · push b34cb4c0a..6be88bbeb"
+   ]
   }
  ]
 }
