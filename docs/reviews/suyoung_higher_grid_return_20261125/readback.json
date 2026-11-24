@@ -1,0 +1,77 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "release": "e1678150e218f07f3269cfb78ad7e1e51e0a98b8",
+  "physics": "eb3d7cc5520e46cc8ce50f2c821c9de1c99b7112",
+  "prior_tar_sha256": "882c078ba22efab1699773b1c657996933aa2b87b34c8058c62a6a5860f8a0af",
+  "return_tar_sha256": "596dbdae8524f20778b21f4bf5ffba12c7f50a0fa25730288ca95dc5697f28cb",
+  "outer_screen_sha256": "df023c20b4c6ea1810fcfceefc7daf7746cb58fb98f069d1a8ad0c0b38ec5da2",
+  "prior_trace_receipts": 4,
+  "return_inner_hashes": 18,
+  "original_u6a_abs_delta": 0.0041293688761523395,
+  "threshold": 0.05,
+  "displacement_unit": "code length",
+  "arm_times": [
+    {
+      "grid": "32",
+      "start_utc": "2026-11-24T10:45:01Z",
+      "elapsed_s": "7242",
+      "rc": "0"
+    },
+    {
+      "grid": "48",
+      "start_utc": "2026-11-24T12:45:43Z",
+      "elapsed_s": "26123",
+      "rc": "0"
+    }
+  ],
+  "pairs": {
+    "F8_F16": {
+      "union_knots": 5473,
+      "common_end_u": 0.12270908701625816,
+      "max_abs_difference_MPa": 0.5308417087682225,
+      "coarse_minus_fine_at_first_max_MPa": 0.5308417087682225,
+      "u_at_first_max_abs": 0.12270908701625816,
+      "fine_peak_MPa": 0.6697935989719649,
+      "ratio": 0.7925452103199953,
+      "exceeding_knots": 3880,
+      "first_exceedance_u": 0.015450760408297182,
+      "comparison": "EXCEEDS"
+    },
+    "F12_F24": {
+      "union_knots": 10161,
+      "common_end_u": 0.15189136502012468,
+      "max_abs_difference_MPa": 0.1939165094755293,
+      "coarse_minus_fine_at_first_max_MPa": 0.1939165094755293,
+      "u_at_first_max_abs": 0.15189136502012468,
+      "fine_peak_MPa": 1.0072848238006886,
+      "ratio": 0.19251407833570175,
+      "exceeding_knots": 1549,
+      "first_exceedance_u": 0.016908379314740207,
+      "comparison": "EXCEEDS"
+    },
+    "F16_F32": {
+      "union_knots": 13343,
+      "common_end_u": 0.1495965496135706,
+      "max_abs_difference_MPa": 0.19235101708639157,
+      "coarse_minus_fine_at_first_max_MPa": 0.19235101708639157,
+      "u_at_first_max_abs": 0.1494395752697999,
+      "fine_peak_MPa": 1.010723386786247,
+      "ratio": 0.19031024670162397,
+      "exceeding_knots": 5274,
+      "first_exceedance_u": 0.017749313299226688,
+      "comparison": "EXCEEDS"
+    },
+    "F24_F48": {
+      "union_knots": 20995,
+      "common_end_u": 0.15692949395829225,
+      "max_abs_difference_MPa": 0.17977472847264764,
+      "coarse_minus_fine_at_first_max_MPa": 0.17977472847264764,
+      "u_at_first_max_abs": 0.15692949395829225,
+      "fine_peak_MPa": 1.0231117427962055,
+      "ratio": 0.175713679115163,
+      "exceeding_knots": 8112,
+      "first_exceedance_u": 0.018493072689950263,
+      "comparison": "EXCEEDS"
+    }
+  }
+}
