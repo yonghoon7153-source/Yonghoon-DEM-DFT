@@ -102,6 +102,343 @@
     ],
     "not_received": "b4 (= S3 추정 · Ag 0.1 mA cm⁻² 도금) — 사용자 결정 2026-11-24 '안 줄게' (b7 · b10 이 Ag 0.5 · 1 mA cm⁻² · 0.1 은 Fig. 6 · S17 그림으로 대신) · Cu · Au 도금 6 개 (b2 · b3 · b5 · b6 · b8 · b9) 도 안 받음"
    }
+  },
+  {
+   "n": 3,
+   "slug": "becker2026_electrodeposited_li_microstructure_metal_interlayers_anode_free",
+   "citation": "Juri Becker, Luca Schuster, Sascha Kremer, Till Fuchs, Jürgen Janek, 'Microstructure of electrodeposited lithium and its evolution during cycling when using metal interlayers in \"anode-free\" solid-state batteries', Energy Environ. Sci. 19, 2367–2383 (2026) · DOI 10.1039/D5EE07230A (목록 #3)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/becker2026_li_microstructure_interlayer_main.pdf",
+     "sha256": "6d3ed7967c750aeb0868860806ed8adcb1a7dae7a8313ac25e6df45028f272a2",
+     "bytes": 9371553,
+     "uploaded_as": "3._Microstructure_of_electrodeposited_lithium_and_its_evolution_during_cycling_when_using_metal_interlayers_in__anode-free__solid-state_batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/becker2026_li_microstructure_interlayer_SI.pdf",
+     "sha256": "5e1b2f3ce277e4a484d0907847c0ad42a9f5d1ed5df0fd998a0eafeaca859f17",
+     "bytes": 4352460,
+     "uploaded_as": "3._Sup__Microstructure_of_electrodeposited_lithium_and_its_evolution_during_cycling_when_using_metal_interlayers_in__anode-free__solid-state_batteries.pdf"
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "slug": "haslam2025_alloying_interlayers_li_morphology_microstructure_anode_free",
+   "citation": "Catherine G. Haslam, Till Fuchs, Daniel W. Liao, Juri Becker, Neil P. Dasgupta, Jürgen Janek, Jeff Sakamoto, 'The Effect of Alloying Interlayers on Lithium Anode Morphology and Microstructure in \"Anode-Free\" Solid-State Batteries', ACS Energy Lett. 10, 2285–2291 (2025) · DOI 10.1021/acsenergylett.5c00149 (목록 #4)",
+   "jeff_sakamoto": true,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/haslam2025_alloying_interlayer_li_morphology_main.pdf",
+     "sha256": "91b58ebf11403a7a24736abc853da73df0f8fe96f180a7b29fdd77d03b31a2f5",
+     "bytes": 6636113,
+     "uploaded_as": "4._The_effect_of_alloying_interlayers_on_lithium_anode_morphology_and_microstructure_in__anode-free__solid-state_batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/haslam2025_alloying_interlayer_li_morphology_SI.pdf",
+     "sha256": "ed21c96321a2bdaad8d146c1ae32a5df1a01e5bdfe802e17a1b8ed4a3a26b313",
+     "bytes": 1399598,
+     "uploaded_as": "4._Sup_The_effect_of_alloying_interlayers_on_lithium_anode_morphology_and_microstructure_in__anode-free__solid-state_batteries.pdf"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "slug": "choi2025_silver_exsolution_argyrodite_anode_free",
+   "citation": "Seung Ho Choi, Chang Hoon Baek, Jihoon Oh, Geung-Jong Lee, Minsoo Kim, Hyesu Lee, Dong-Joo Yoo, Yoon Seok Jung, KyungSu Kim, Ji-Sang Yu, Woosuk Cho, Haesun Park, Jang Wook Choi, 'Silver exsolution from Li-argyrodite electrolytes for initially anode-free all-solid-state batteries', Nat. Commun. 16, 5871 (2025) · DOI 10.1038/s41467-025-61074-9 (목록 #5 · 정윤석 공저)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/choi2025_ag_exsolution_argyrodite_main.pdf",
+     "sha256": "38da27a4fa4db458876b889c43f250628ed5abaf8f3440ec9651afe2320cddef",
+     "bytes": 2474526,
+     "uploaded_as": "5._Silver_exsolution_from_Li-argyrodite_electrolytes_for_initially_anode-free_all-solid-state_batteries.pdf"
+    },
+    {
+     "inbox": "litdb/inbox/choi2025_ag_exsolution_argyrodite_SI.pdf",
+     "sha256": "d760151626a8532e243ce9a5eec38dccf439dbdb93c552c6ac44ebdf3bd8f941",
+     "bytes": 7170749,
+     "uploaded_as": "5._Sup1_Silver_exsolution_….pdf"
+    },
+    {
+     "inbox": "litdb/inbox/choi2025_ag_exsolution_argyrodite_sup2_poscar.zip",
+     "sha256": "6f9aeccefaaebc9a82374dcd790f7e1f6cfe11a5146ff09f7662bed746dca313",
+     "bytes": 2309,
+     "uploaded_as": "5._Sup2_Silver_exsolution_….zip (POSCAR_initial · POSCAR_final)"
+    },
+    {
+     "inbox": "litdb/inbox/choi2025_ag_exsolution_argyrodite_source_data.xlsx",
+     "sha256": "b72dfcc315c2c8041ce645678499149b09d2aa7a91a533e1e3ab812f0d62a104",
+     "bytes": 15421494,
+     "uploaded_as": "5._Sup3_Silver_exsolution_….xlsx (원자료 · 그림별 시트 24)"
+    },
+    {
+     "inbox": "litdb/inbox/choi2025_ag_exsolution_argyrodite_sup2/",
+     "note": "zip 을 푼 폴더 (POSCAR_initial · POSCAR_final · 텍스트)"
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "slug": "hiraoka2025_operando_raman_carbon_structure_anode_free_sulfide",
+   "citation": "Koji Hiraoka, Junichi Sakabe, Naoki Suzuki, Shiro Seki, 'Operando and ex situ Raman spectroscopies for evaluating carbon structural changes in anode-free-type sulfide-based all-solid-state Li-ion batteries', J. Mater. Chem. A 13, 27960–27969 (2025) · DOI 10.1039/D5TA02406D (목록 #6)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/hiraoka2025_operando_raman_carbon_anode_free_main.pdf",
+     "sha256": "71c4001024faa648e869a90e38767374b2158f753e4973c0a313fecd4ec3525d",
+     "bytes": 3102846,
+     "uploaded_as": "6._Operando_and_ex_situ_Raman_….pdf"
+    },
+    {
+     "inbox": "litdb/inbox/hiraoka2025_operando_raman_carbon_anode_free_SI.pdf",
+     "sha256": "cc844ba9fb852e6d7cf9a5e54b925498041bd2ed196335d2bebe797070627839",
+     "bytes": 1900425,
+     "uploaded_as": "6._Sup_Operando_and_ex_situ_Raman_….pdf"
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "slug": "sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free",
+   "citation": "Stephanie Elizabeth Sandoval, Douglas Lars Nelson, Hari Sridhara, Talia A. Thomas, John A. Lewis, Kelsey Anne Cavallaro, Pavel Shevchenko, Neil P. Dasgupta, Francois L. E. Usseglio-Viretta, Donal P. Finegan, Matthew T. McDowell, 'Visualizing diverse lithium growth and stripping behaviors in anode-free solid-state batteries with operando X-ray tomography', EES Batteries 1, 1809–1821 (2025) · DOI 10.1039/D5EB00111K (목록 #7) · ⚠ 같은 1저자 · 같은 해 digest sandoval2025_electro_chemo_mechanics_anode_free_ssb 와 다른 편",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_main.pdf",
+     "sha256": "5158e6d94ad931a2df73f049f3b63997f702bc4f703dc07d40a73b2db2b2b589",
+     "bytes": 3207373,
+     "uploaded_as": "7._Visualizing_….pdf (본문)"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_sup3.pdf",
+     "sha256": "3538f290d441f5fcba567cb052200ab90500e7498981a8639c8534f944223752",
+     "bytes": 1777019,
+     "uploaded_as": "7._Sup3_….pdf (SI)"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_sup1.xlsx",
+     "sha256": "87722fa01186b1e05a7bb61b64a4dfe8d66d5e116fcd7790969d56f20b093caf",
+     "bytes": 4102569,
+     "uploaded_as": "7._Sup1_….xlsx (Summary)"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_sup2.xlsx",
+     "sha256": "a438dadc349e4e783f22be232f18f5ba6f138f903fd613f4eca876b14daaaf66",
+     "bytes": 3777422,
+     "uploaded_as": "7._Sup2_….xlsx (Case A · Case B)"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_sup4.mp4",
+     "sha256": "70ac6b22345364a30146bf519ef46c9dc0603968f0fd385186839c9349361677",
+     "bytes": 551455,
+     "uploaded_as": "7._Sup4.mp4"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_sup5.avi",
+     "sha256": "f991edd283121d513f4acccc65bf4220b2752b21f8c852edba429caaef83a460",
+     "bytes": 564846,
+     "uploaded_as": "7._Sup5.avi"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_sup6.avi",
+     "sha256": "5e2e5d80e19a0ac9c41f6d00f979ea2e974f74e0280284a9822169e634ae6f4e",
+     "bytes": 2120932,
+     "uploaded_as": "7._Sup6.avi"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_sup7.mp4",
+     "sha256": "4161bff58d59764e800c908638e14a1615cb7f5684fd1ec14f79fca190f75518",
+     "bytes": 3218552,
+     "uploaded_as": "7._Sup7.mp4"
+    },
+    {
+     "inbox": "litdb/inbox/sandoval2025b_operando_xct_li_growth_sup8.mp4",
+     "sha256": "a45109e5dea3f8ff5fcc7dc7ba26d133fc3c78521839b52a08bfc1ecc293c0a4",
+     "bytes": 5447153,
+     "uploaded_as": "7._Sup8.mp4"
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "slug": "ko2025_metal_interlayer_anode_less_li_plating_stripping_mechanism",
+   "citation": "Dong-Su Ko, Sewon Kim, Sangjun Lee, Gabin Yoon, Daeho Kim, ChaeHo Shin, Dongmin Kim, Jaewoo Lee, Soohwan Sul, Dong-Jin Yun, Changhoon Jung, 'Mechanism of stable lithium plating and stripping in a metal-interlayer-inserted anode-less solid-state lithium metal battery', Nat. Commun. 16, 1066 (2025) · DOI 10.1038/s41467-025-55821-1 (목록 #8)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_main.pdf",
+     "bytes": 7693982,
+     "sha256": "1a987bb4631367ffc7821df9c935259c6771f36a64d186dc38a978f5fd27dbf4",
+     "uploaded_as": "8._Mechanism_….pdf (본문 13 쪽)"
+    },
+    {
+     "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_SI.pdf",
+     "bytes": 5856387,
+     "sha256": "5fb86dea7a869eb3d88374862e36155556e26193d61a149cc11591c611c782dc",
+     "uploaded_as": "8._Sup_….pdf (SI 34 쪽)"
+    },
+    {
+     "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_sup3.zip",
+     "bytes": 22515732,
+     "sha256": "d10a7698d3189056b6ff4535b0b22b316dbe4818de3a34d3eefd76ae2ad3cbb0",
+     "uploaded_as": "8._Sup3_….zip (원자료 xlsx 22 개 — 'Source data for Fig.1–5 · Supplementary Fig.3 · 5–7 · 9–13 · 15–20 · 28 · Supplementary Table.1')"
+    }
+   ],
+   "source_data_dir": {
+    "path": "litdb/inbox/ko2025_metal_interlayer_anode_less_sup3/",
+    "files": 22,
+    "note": "zip 을 새 빈 폴더에 그대로 푼 것 (git 밖)"
+   },
+   "videos": {
+    "map_assumed": "MOESM(n+3) = Supplementary Movie n (Nat. Commun. 관례 추정 · MOESM1 SI · MOESM2 peer review · MOESM3 설명 파일) · 사용자 이름 Sup2 = MOESM5 = Movie 2 추정 — 첫 장면 · 본문 설명으로 확인",
+    "content_from_main": "Movies 1–5 operando SEM (본문 p.3 — 3 Au · 4 Ag · 5 Zn · 1 · 2 는 본문에서 확인) · Movie 6 Ag 나노입자를 Li 에 올리면 자발 리튬화 (SEM · Supplementary Fig. 25) · Movie 7 in-situ TEM Ag 박막 바이어스 (Fig. 6e–g)",
+    "received_2026_11_24": [
+     {
+      "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_MOESM4.avi",
+      "bytes": 8921064,
+      "sha256": "bcf305358ab08419355308e0342dc7fba4194bc3629bc3fbc733114cfee6b4ef",
+      "uploaded_as": "41467_2025_55821_MOESM4_ESM.avi"
+     },
+     {
+      "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_sup2.avi",
+      "bytes": 6812358,
+      "sha256": "41fd9fe2e590581ef462c5d590572e039208828fbf067d3c6e6a439c09f874f2",
+      "uploaded_as": "8._Sup2_….avi"
+     },
+     {
+      "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_MOESM6.avi",
+      "bytes": 9299930,
+      "sha256": "acbd9609c388104be1c15e23b5abf770dba909d15acc3bab665919b5a57d515c",
+      "uploaded_as": "41467_2025_55821_MOESM6_ESM.avi"
+     },
+     {
+      "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_MOESM7.avi",
+      "bytes": 15945046,
+      "sha256": "ad839735e10a56e834c55aae9baa55cf5d869516ba2ce4b60fb265360856a286",
+      "uploaded_as": "41467_2025_55821_MOESM7_ESM.avi"
+     },
+     {
+      "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_MOESM8.avi",
+      "bytes": 13756312,
+      "sha256": "c0ca2384e3ea6580d6b59ccfbc5f28a2ab59715903947ae64d14c150b1b09f17",
+      "uploaded_as": "41467_2025_55821_MOESM8_ESM.avi"
+     },
+     {
+      "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_MOESM9.avi",
+      "bytes": 12204850,
+      "sha256": "9fe4cdebd9d719f5f2862da2053d6dd9a80d5a2e6d4e83296f528badfd907573",
+      "uploaded_as": "41467_2025_55821_MOESM9_ESM.avi"
+     },
+     {
+      "inbox": "litdb/inbox/ko2025_metal_interlayer_anode_less_MOESM10.avi",
+      "bytes": 14751838,
+      "sha256": "95bdd7cc0cfe9497f3e45b6208e4913e2dea1cbd79288f796e8f5af3d6c04549",
+      "uploaded_as": "41467_2025_55821_MOESM10_ESM.avi"
+     }
+    ],
+    "not_received": "없음 (본문이 가리키는 Movie 1–7 = 7 개를 다 받음 · 짝은 확인 전)"
+   }
+  },
+  {
+   "n": 9,
+   "slug": "lee2020_silver_carbon_composite_anode_all_solid_state_li_metal",
+   "citation": "Yong-Gun Lee, Satoshi Fujiki, Changhoon Jung, Naoki Suzuki, Nobuyoshi Yashiro, Ryo Omoda, Dong-Su Ko, Tomoyuki Shiratsuchi, Toshinori Sugimoto, Saebom Ryu, Jun Hwan Ku, Taku Watanabe, Youngsin Park, Yuichi Aihara, Dongmin Im, In Taek Han, 'High-energy long-cycling all-solid-state lithium metal batteries enabled by silver–carbon composite anodes', Nat. Energy 5, 299–308 (2020) · DOI 10.1038/s41560-020-0575-z (목록 #9 · wishlist 13 줄 (WIP 490 MPa 원전) · 390 줄 (30 µm 습식 SE 막 · SI 표 S1) 이 같은 편)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/lee2020_ag_c_composite_anode_main.pdf",
+     "bytes": 6102352,
+     "sha256": "3452770465c31f45acbb8988f2eb58386cfd25cb378ac8c6a09db564684fd2a9",
+     "uploaded_as": "9._High-energy_….pdf (본문 10 쪽)"
+    },
+    {
+     "inbox": "litdb/inbox/lee2020_ag_c_composite_anode_SI.pdf",
+     "bytes": 1886475,
+     "sha256": "120d136d99668016ebb6fd17d3e0778ae872b6600441c4b16161f390f8e10391",
+     "uploaded_as": "9._Sup_….pdf (SI 18 쪽)"
+    }
+   ],
+   "videos": {
+    "content_from_SI": "Video 1 가열 시험 (시판 LIB 1.4 Ah 대 ASSB 1.2 Ah · 4.25 V) · Video 2 0.6 Ah 파우치 SOC 50 % 를 150 °C 기름에 5 분 넘게 · Video 3 SOC 50 % 셀 절단 시험 (LED) — 셋 다 안전 시험 (본문 · SI)",
+    "map_assumed": "MOESM2–4 = Video 1–3 추정 · MOESM5 (10.6 s · 1440×1080) 는 무엇인지 모름 — 첫 장면으로 확인",
+    "received_2026_11_24": [
+     {
+      "inbox": "litdb/inbox/lee2020_ag_c_composite_anode_MOESM2.wmv",
+      "bytes": 9263780,
+      "sha256": "3b8750812bf3757f956f4d291465a0d275746ee6983d70ea08959aeab10e3afc",
+      "uploaded_as": "41560_2020_575_MOESM2_ESM.wmv"
+     },
+     {
+      "inbox": "litdb/inbox/lee2020_ag_c_composite_anode_MOESM3.wmv",
+      "bytes": 22837340,
+      "sha256": "1bf0931bb3266eedfe14b1949313b1baef257704709a599afc23d3ab335de42b",
+      "uploaded_as": "41560_2020_575_MOESM3_ESM.wmv"
+     },
+     {
+      "inbox": "litdb/inbox/lee2020_ag_c_composite_anode_MOESM5.wmv",
+      "bytes": 11317636,
+      "sha256": "5e508053a291e21cbe5ae952fba1cea943ddb5f0b75b73290b8607934c43eca1",
+      "uploaded_as": "41560_2020_575_MOESM5_ESM.wmv"
+     }
+    ],
+    "not_received": "MOESM4 — 30 MB 넘어서 못 올림 · 사용자 2026-11-24 '굳이 필요없을듯'"
+   }
+  },
+  {
+   "n": 10,
+   "slug": "kasemchainan2019_critical_stripping_current_dendrite_on_plating",
+   "citation": "Jitti Kasemchainan, Stefanie Zekoll, Dominic Spencer Jolly, Ziyang Ning, Gareth O. Hartley, James Marrow, Peter G. Bruce, 'Critical stripping current leads to dendrite formation on plating in lithium anode solid electrolyte cells', Nat. Mater. 18, 1105–1111 (2019) · DOI 10.1038/s41563-019-0438-9 (목록 #10)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/kasemchainan2019_critical_stripping_current_main.pdf",
+     "bytes": 5489840,
+     "sha256": "62cc0e913ae7907d19287551025de7f5c8de548bcbc6d9d91165d3c35cc67956",
+     "uploaded_as": "10._Critical_….pdf (본문 8 쪽)"
+    },
+    {
+     "inbox": "litdb/inbox/kasemchainan2019_critical_stripping_current_SI.pdf",
+     "bytes": 1351535,
+     "sha256": "eb2595f71bf57a92a4fca28c3279117e9ac50c4e11d288ef25a60c6220abd83c",
+     "uploaded_as": "10._Sup_….pdf (SI 8 쪽)"
+    }
+   ]
+  },
+  {
+   "n": 11,
+   "slug": "xie2024_agc_buffer_layer_lithiation_delithiation_mechanism",
+   "citation": "Fengyu Xie, Mouhamad Said Diallo, Haegyeom Kim, Qingsong Howard Tu, Gerbrand Ceder, 'The microscopic mechanism of lithiation and delithiation in the Ag/C buffer layer for anode-free solid-state batteries', Adv. Energy Mater. 14, 2302960 (2024) · DOI 10.1002/aenm.202302960 (목록 #11)",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+     "bytes": 9404606,
+     "sha256": "4253d2e29b9e8fb43d027131e9d336819fed5279742aed47ee16c5cbbdaeda98",
+     "uploaded_as": "11._The_microscopic_….pdf (본문 18 쪽)"
+    },
+    {
+     "inbox": "litdb/inbox/xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+     "bytes": 3312404,
+     "sha256": "2a10ebadf22f4f23d7670807867ebc4a5b82f08125c4f831982b7ae3a6fab866",
+     "uploaded_as": "11._Sup_….pdf (SI 14 쪽)"
+    }
+   ]
+  },
+  {
+   "n": 12,
+   "slug": "lepley2015_modeling_interfaces_between_solids_li_battery_materials",
+   "citation": "N. D. Lepley, N. A. W. Holzwarth, 'Modeling interfaces between solids: Application to Li battery materials', Phys. Rev. B 92, 214201 (2015) · DOI 10.1103/PhysRevB.92.214201 (목록 #12) · ⚠ wishlist 579 줄의 Lepley · Holzwarth · Du 2013 PRB 88, 104103 (β-Li₃PS₄ 표면) 과 다른 편",
+   "jeff_sakamoto": false,
+   "inbox_files": [
+    {
+     "inbox": "litdb/inbox/lepley2015_modeling_interfaces_between_solids_main.pdf",
+     "bytes": 3380527,
+     "sha256": "b4fbf0a21e3298bbe873abeab35229d925cc7b7a1fe1f6d33ec1cd1648675f0e",
+     "uploaded_as": "12._Modeling_….pdf (본문 15 쪽 · SI 없음)"
+    }
+   ]
   }
  ]
 }
