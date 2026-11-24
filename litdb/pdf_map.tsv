@@ -666,3 +666,5 @@ masias2019_li_metal_elastic_plastic_creep_properties	masias2019_li_creep
 sandoval2025_electro_chemo_mechanics_anode_free_ssb	afssb2024_electro_chemo_mechanics
 # ── Ag/CB 인터레이어 Ag 두께 방향 분포 (Metzler 외 2025 · ACS Appl. Mater. Interfaces 17, 39089) — litdb 2026-11-24 · 업로드 파일명이 'agdist2025_…' 라 slug 토큰과 안 겹친다 (--inbox --only metzler2025 --dry = 0편) · 본문 · SI 공통 조각 ──
 metzler2025_ag_particle_distribution_carbon_interlayer_anode_free	agdist2025_ag_c_interlayer
+# ── 2026-11-24b 묶음 (Li 금속 음극 둘째 12 편) — 자동 매칭이 SI 를 못 붙인 하나만
+sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free	sandoval2025b_operando_xct_li_growth

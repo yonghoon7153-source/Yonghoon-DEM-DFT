@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 384편 · 생성 2026-11-24
+> digest 387편 · 생성 2026-11-24
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -41,7 +41,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (24편)
+## MPM · 연속체 (25편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -65,6 +65,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | MPM 이 큰 인장에서 끊기는 문제 (extension instability) 를 입자 영역을 변형 경사 F 로 실어 나르는 평행사변형 (CPDI) + 그 모서리 값의 Q4 보간 기저로 푼 원전 — 2D 평면 변형률 · 탄성 neo-Hookean · 동적 시험 다섯 (MMS 수렴 두 건 · 자중 막대 평균 신장 ×2.8  | MPM (명시적 GIMP 계열 · USL · 입자 영역 = 평행사변형을 전체 변형 경사 F 로 실어 나름 ( | 2026-11-12 | 🖼 87 |
 | `sandoval2025_electro_chemo_mechanics_anode_free_ssb` | 무음극 (anode-free) 전고체전지의 전기-화학-역학 — 첫 석출 (접촉 · 핵생성 · 적층압 · 온도 · 집전체 두께 · Cu/Li₂O 화학 불균일 · SE 미세구조) → 사이클 (CE > 99.95 % · 방전 끝 국부 Li 고갈 공극 → 다음 충전 필라멘트) → 인터레이어 (탄소 · Au/Ag · Li₂Te · | review (Perspective · 자체 계산 0 · 자체 실험 0 · SI = 에너지밀도 산정 1 건) | 2026-11-24 | 🖼 9 |
+| `sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free` | 무음극 Li \\| Li₆PS₅Cl \\| (Au · Ag 100 nm 입힌) Cu 반쪽 셀 셋의 operando X 선 μCT — 굵은 분말 · 고분극 셀은 집전체 계면 전체에서 Li 로 찬 균열 (원래 기공을 채우지 않고 그 옆에서 자라 기공을 닫음 · 박리로 줄지만 ≈ 20 % 남음) · 고운 분말 · 저분극 셀은 평평 | exp (operando 싱크로트론 X 선 μCT + 정전류 전기화학 + 영상 분할 · 원자단위 계산 0) | 2026-11-24 | 🖼 14 |
 | `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` | MPM 구현 선택 (기저 함수 · 매끈함 길이 · 경계 처리) 이 오차 · 안정에 주는 영향 — 선형 · 2차 B-spline (+ 경계 수정 B-spline · 열린 균일 매듭) · uGIMP · cpGIMP 를 '조각 상수 함수의 합성곱' 하나로 묶고 (식 31) · 노드 적분 오차 = 합성 중점 O(Δx²) + 도약 | MPM (수치 해석 · 검증 — Uintah Computational Framework (UCF) 의 명시적 | 2026-11-12 | 🖼 74 |
 | `steffen2010_mpm_space_time_error_balance_moving_mesh` | MPM 의 공간 · 시간 오차를 떼어 내 균형 맞추기 — moving-mesh MPM (참조 배치 고정 · 격자 넘김 없음) 으로 시간 오차를 드러내고, 격자 넘김의 시간 도약 오차 O(Δt²) · 노드 적분 (quadrature) 오차의 누적 (전역 ∝ α^k · α = 1/셀당 물질점 · 선형 기저 k = 1 · 2차 | MPM numerical error analysis (1D · explicit Forward-Euler /  | 2026-11-12 | 🖼 179 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
@@ -172,11 +173,12 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
-## 복합양극 미세구조 · percolation (59편)
+## 복합양극 미세구조 · percolation (61편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity` | NMC111–Li₃PS₄ 유리 복합 양극의 전자 · 이온 전도도 — DC 분극 (이온 차단 / 전자 차단 대칭셀) vs AC 임피던스 (TLM 물방울) · NMC 48 / 55 / 62 vol% · SOC 0 → 50 % 에서 σ_e 26–45 배 · 식 없는 "tortuosity 4–6" — Asano (J. Elect | exp (DC 분극 · AC 임피던스 TLM — 이온 차단 · 전자 차단 대칭셀; 황화물 ASSB 복합 양극 | 2026-10-03 | 🖼 7 |
+| `becker2026_electrodeposited_li_microstructure_metal_interlayers_anode_free` | Microstructure of electrodeposited lithium and its evolution during cycling when using metal interlayers in "anode-free" solid-state batteries — Becker et al. (Energy Environ. Sci. | exp (cryo-BIB 단면 EBSD · EDS · XRD · 전기화학) + Monte Carlo Pott | 2026-11-24 | 🖼 29 |
 | `beutl2024_round_robin_coin_cell_sulfide_assb` | 황화물 전고체전지 코인셀 (CR2032) 조립 · 시험의 4 기관 round robin — Li₆PS₅Cl (NEI "LPSCl fine" ≈1 µm) 펠릿 100 mg · ⌀10 mm · 360 MPa → 겉보기 밀도 1.49–1.60 g/cm³ ("crystallographic 1.64" 기준 상대밀도 > 90 % — | experiment (interlab round robin · CR2032 coin cell · EIS im | 2026-10-14 | 🖼 17 |
 | `bielefeld2019_microstructural_modeling_composite_cathode` | 복합 양극의 3D 미세구조 모델링 — percolation 이론으로 이온·전자 전도 클러스터 분석 — Bielefeld (J. Phys. Chem. C 2019) | continuum (geometric microstructure + percolation) | 2026-06-26 | 🖼 11 |
 | `bielefeld2020_effective_ionic_conductivity_binder` | Bielefeld 2020 (ACS Appl. Mater. Interfaces 12, 12821−12833) — 유효 이온전도도 + 바인더 영향 모델링 (Janek 그룹, GeoDict — ★ Bielefeld 2019의 σ-추가 후속편) | FEM·digital-twin | 2026-07-28 | 🖼 7 |
@@ -193,6 +195,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `froboese2019_microstructure_ionic_conductivity_assb_electrode` | ASSB 전극 미세구조 ↔ 이온전도도 실측 — 고분자 SE (PEO:LiTFSI:SiO₂) + 비활성 유리구 모델 전극에서 "AM" 입경 4 종 × 부피분율 0–60 % 스윕, 기공률 · tortuosity (= τ², Eq 15) · Bruggeman τ = γφ^(1−α) 맞춤 · Li 계면저항 — Froboese ( | exp (EIS — Li/모델 전극/Li 대칭 코인셀, 80 °C; 고분자 SE + 비활성 유리구 모델 전극 | 2026-10-03 | 🖼 19 |
 | `galvezaranda2024_time_dependent_dl_calendering_microstructure` | 압연(calendering) DEM 궤적을 1D-CNN 시간-surrogate 로 대체하다 — 3 프레임 lag → 다음 프레임 3D 복셀 미세구조, NMC111 96 % / CBD 4 %, CD 20–50 % — Galvez-Aranda / Le Dinh / Vijay / Zanotto / Franco (Advanced | DL 시간-surrogate(1D-CNN, TensorFlow/Keras) on DEM 압연 궤적 + Geo | 2026-09-11 | 🖼 13 |
 | `hamann2026_llzo_bilayer_porosity_asr_dendrite_ccd` | Effects of LLZO Microstructure Porosity, LLZO/Li-Metal Interfacial Polarization Resistance, and Applied Areal Current Density on Li-Metal Dendrite Formation in LLZO Bilayer Symmetr | FDM voxel electrochemistry (steady/uniform-state Poisson in  | 2026-09-29 | 🖼 22 |
+| `haslam2025_alloying_interlayers_li_morphology_microstructure_anode_free` | The Effect of Alloying Interlayers on Lithium Anode Morphology and Microstructure in "Anode-Free" Solid-State Batteries — Haslam et al. (ACS Energy Lett. 2025, 10, 2285–2291) | exp 전용 (정전류 도금 · 광학 3D 형상 · PFIB-SEM · EDS · cryo-EBSD — 원자단 | 2026-11-24 | 🖼 9 |
 | `hlushkou2018_void_space_ion_transport_assb_cathode` | 복합 양극의 잔류 공극(void)이 SE 이온 수송 tortuosity 를 키운다 — 전자차단 대칭셀 EIS τ_cond 1.6 · FIB-SEM 재구성 random-walk τ_diff 1.74 · void 를 SE 로 채우면 1.27 — Hlushkou (J. Power Sources 2018) | mixed (exp: Li/SE/복합양극/SE/Li 전자차단 대칭셀 EIS Warburg-short · si | 2026-10-03 | 🖼 11 |
 | `holzer2013_constrictivity_effective_transport_porous_layers` | The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells — 협착을 두 양으로 나눈다: 기하 constriction factor β = (r_min/r_max)² ↔ 수 | exp + 3D image analysis (constrictivity β/δ 정의·측정 — FIB-SEM  | 2026-10-03 | 🖼 16 |
 | `islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell` | Microstructure-Resolved Impedance Modeling of Solid-State Batteries — Li/Li₆PS₅Cl/Li 대칭셀의 phase-field 소결·SEI 미세구조를 COMSOL 옴익-전도 + Butler–Volmer + C_dl 임피던스 모델로 — Islam, Katsube, Ji | FEM (COMSOL Multiphysics 2D 옴익 전도 + Butler-Volmer + C_dl, 1  | 2026-09-22 | 🖼 11 |
