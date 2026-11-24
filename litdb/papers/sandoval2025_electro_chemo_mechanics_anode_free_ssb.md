@@ -753,3 +753,9 @@ Nat. Mater. 관점 논문의 SI 가 출처 없이 1.64 를 썼다 (상대밀도 
 
 - [30] Lee 2020 *Nat. Energy* 5, 299 → digest `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal`: 제조 WIP 490 MPa (등방) · 운전 2 MPa · 60 °C · 1,000 사이클 89 % 유지 · CE > 99.8 % 평균 · 탄소층은 충 · 방전 내내 SE 쪽에 남음 · WIP 온도 · 유지 · 기공은 원문에 없다.
 - 같은 1 저자의 operando μCT 편 (다른 논문) → `sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free`.
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- **바로잡기 ①** SI 표 1 행 (Au · Ag 100 nm · 'sputtered' · LPSC · Cu) — 원문 (Sandoval 외 2023 p. 2067–2068) 은 CHA Mark 50 **전자빔 증착** (1 Å s⁻¹) 이다 → `sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free`.
+- **바로잡기 ②** `Fig. 4b` (Au 100 nm 입힌 Cu · cryo-FIB-SEM · ref 29) — 원문은 Li–Au 입자가 **두 계면 (Cu\|Li · Li\|LPSCl) 에 약 반씩** 남는다고 적었다 (p. 2059) · '시드가 집전체 쪽에 남는다' 로 읽지 않는다. 참고문헌 ref 29 '—' → 이제 위 digest.
+- Park 외 2025 (Ag–C 층 안 Li 확산 크리프 · `park2025_li_kinetics_agc_porous_interlayer_reservoir_free`) 는 이 관점 논문과 같은 모형 계열이 아니다 — 이 편은 자체 모형이 없다 (Park 끝 보고 · 공저자 일부 겹침 · 서로 인용 없음).

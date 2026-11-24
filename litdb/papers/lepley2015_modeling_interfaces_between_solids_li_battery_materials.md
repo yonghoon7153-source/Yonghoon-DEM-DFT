@@ -501,3 +501,7 @@
 | 8 | Finnis · *J. Phys.: Condens. Matter* 8, 5811 (1996) — "The theory of metal - ceramic interfaces" · DOI 10.1088/0953-8984/8/32/003 | 이 논문 ref 2 · '분리 일 대 점착 일' 정의 원전 — 우리 W_sep 이름의 뿌리 | 없음 |
 
 다음 순번: Benedek, Seidman, Woodward · *J. Phys.: Condens. Matter* 14, 2877 (2002) — "The effect of misfit on heterophase interface energies" · DOI 10.1088/0953-8984/14/11/307 (ref 3 · 변형과 계면 에너지) · Camacho-Forero & Balbuena · *J. Power Sources* 396, 782 (2018) · DOI 10.1016/j.jpowsour.2018.06.092 (baer2026 ref 57).
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- (d) #2 Kotakadi 외, *Joule*, 9, 102175 (2025) → 이제 digest `kotakadi2025_metallic_interlayers_li_li6ps5cl_operando_sem`.

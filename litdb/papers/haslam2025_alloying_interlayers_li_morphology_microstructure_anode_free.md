@@ -456,3 +456,9 @@ Ag 셀은 계면에도 Li 속에도 입자 · 다른 상이 없다 — Ag 의 Li
 | Ag 계면 계산 | `lu2026_li_ag_interface_thermodynamics_kinetics.md` (Li\|Ag W_ad · 공공 · 미심사) |
 | Ag–C 층 | `metzler2025_ag_particle_distribution_carbon_interlayer_anode_free.md` · `metzler2026_sputtered_ag_carbon_interlayers_anode_free.md` · `spencerjolly2023_ag_graphite_interlayer_operando_xrd.md` · `liao2025_interfacial_adhesion_li_plating_carbon_interlayer.md` (공저자 Liao) |
 | litdb 에 없는 참고문헌 중 중요한 것 | ref 11 Sandoval 2023 *Joule* 7, 2054 (황화물 Au/Ag) · ref 15 Becker *Adv. Energy Mater.* 15, 2404975 (강철\|LPSCl EBSD · 온라인 2024-12) · ref 16 Fuchs 2024 *Nat. Mater.* 23, 1678 (EBSD 법) · ref 19 Yoon 2023 *J. Mater. Chem. A* 11, 23288 (≈1 µm) · ref 24 Kazyak 2022 *Matter* 5, 3912 (CC\|SE 점착 · operando 3D) · ref 25 Haslam 2023 *J. Electrochem. Soc.* 170, 040524 · ref 27 Thomas 2024 *Chem. Mater.* 36, 8936 (Li–Ag 계산) |
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- 황화물 쪽 같은 층 실험 (Sandoval 외, *Joule*, 7, 2054 (2023)) 이 이제 digest 다 → `sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free`.
+- **바로잡기** — 얇은 금속 층에서 확인된 합금 자리가 집전체 쪽이라는 서술은 **LLZO (막을 SE 위에 둠) 한정**이다. Li₆PS₅Cl 무음극 셀 (막을 Cu 위에 둠 · 15 MPa) 에서는 Au 가 Li–Au 입자로 Cu\|Li 와 Li\|LPSCl 에 약 반씩 남았고, Ag 풍부 영역도 첫 도금 뒤 SE 쪽에 보였다 (사후 단면 · 그 digest `Fig. 2` · p. 2058–2059).
+- 부피 변화 — Sandoval 2023 의 결론은 '합금의 제어되지 않은 부피 변화가 뭉침을 가속' 으로, 이 digest 의 '팽창이 공극을 메운다' 가설과 반대 방향을 강조한다 (둘 다 재지 않은 가설 · 한쪽만 싣지 않는다).

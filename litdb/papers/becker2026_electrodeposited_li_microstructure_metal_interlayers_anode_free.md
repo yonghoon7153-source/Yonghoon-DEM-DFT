@@ -589,3 +589,8 @@
 - **cryo-BIB (broad ion beam)**: 넓은 Ar⁺ 빔으로 −100 °C 아래에서 mm 폭 단면을 판다 (FIB 보다 훨씬 넓다 → 결정립 통계가 가능).
 - **Monte Carlo Potts 모델**: 격자 자리마다 '어느 결정립에 속하나' 를 정수 하나로 두고, 이웃과 다를 때 입계 에너지를 매긴 뒤 무작위로 바꿔 보며 에너지가 내려가면 받아들이는 (Metropolis) 결정립 성장 모델. 물리 단위가 없고 결정립 모양 · 고정 효과의 정성 비교에 쓴다.
 - **임계 전류 밀도 (CCD)**: Li 대칭셀에서 단락 (덴드라이트) 없이 버티는 최대 전류. 이 논문은 재지 않았고 Chen (ref 37) 을 인용만 한다.
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- Kotakadi 외 2025 (`kotakadi2025_metallic_interlayers_li_li6ps5cl_operando_sem` · 같은 Li₆PS₅Cl · 적층압 0 operando SEM · 위에서 봄): Bi 층은 Li₃Bi (+61 %) 에서 들려 깨지고 Li 가 **층 밑** 기둥으로 · Ag 층은 Li 가 **층 위** 방울로 — 이 digest (15 MPa 사후 단면) 와 Bi · Ag 둘 다 Li 자리가 반대다. 압력 · 층 파괴 · 관찰법이 다르다 (위에서 보는 관찰은 층 밑 Li 를 못 본다). Bi 평탄 전위 (Kotakadi 0.78 · 0.74 V) 는 이 digest 의 800 · 760 mV 와 같다.
+- Sandoval 외 2023 (`sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free` · LPSCl · 15 MPa · Cu 위 Au 100 nm): Li–Au 입자가 Cu\|Li 와 Li\|LPSCl 에 약 반씩 — 이 digest 의 'Au 는 대부분 Ti\|Li 근처' (`Fig. 2b` · 지도 하나 · 입자 하나) 와 부분적으로 어긋난다 (집전체 Ti 대 Cu · 두께 160 대 100 nm).

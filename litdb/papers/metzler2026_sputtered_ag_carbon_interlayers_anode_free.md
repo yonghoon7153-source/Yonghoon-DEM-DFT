@@ -436,3 +436,9 @@ C1 · DC1 · C10 · DC10 은 figure-read ≈ (눈금 840 px = 250 mAh g⁻¹) ·
 - '첫 효율 86 % 는 Lee 2020 의 89 % (ref 17) 와 비슷' — Lee 2020 원문의 89 % 는 **1,000 사이클 용량 유지율**이고 첫 사이클 효율 명시값은 없다 (figure-read ≈91–92 %) → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` §16.
 - (d) 3 번 Xie 2024 → 이제 digest `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism`. 방전 뒤 Ag 위치는 Xie (CC 위 나노입자 · 방전은 계산 안 함 · 도식의 추론) 와 이 논문 (C 위 · 실험) 이 반대다 — '방전 뒤 Ag 는 탄소 위' 의 근거에 Xie 를 같이 걸지 않는다.
 - 운전 중 처음 벌어지는 C \| CC 계면 — Lee 2020 원전 셀은 Cu 가 황화물과 반응해 **SUS** 집전체를 썼다 (`lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` · `Fig. S4`) → C \| SUS · Li \| SUS 도 후보.
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- '흔한 Ag/C 층은 ≈29 % (ref S5)' 의 출처 Park 외 2025 가 이제 digest `park2025_li_kinetics_agc_porous_interlayer_reservoir_free` — 원문 29.1–29.2 % 는 **그 배합 (카본블랙 : Ag = 3 : 1 · 7.2 µm) 을 380 MPa 로 붙인 뒤 cryo FIB-SEM 단면에서 잰 2D 값**이고, 충전 1 mAh cm⁻² 뒤에는 3–8 % 로 준다 · '흔한 Ag/C 층' 의 일반값으로 읽지 않는다.
+- (d) #1 Park → 위 digest · 차순위의 Sandoval 외 2023 → `sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free`.
+- Li 가 쌓이는 자리 — Park 의 Ag 200 nm · 1 MPa (Li 가 SE \| 층 사이 · 층이 들림) 는 이 편 (Li 가 Cu \| C 사이 · 4 MPa · LPSCl) 과 반대 자리다 · 층 · 압력 · SE 가 달라 모순이 아니라 '자리는 조건 의존' 의 예.

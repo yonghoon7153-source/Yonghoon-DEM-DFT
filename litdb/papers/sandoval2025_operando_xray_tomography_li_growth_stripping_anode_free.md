@@ -637,3 +637,7 @@ Au 100 nm = 19.32 g cm⁻³ × 10⁻⁵ cm ÷ 196.97 = 9.81 × 10⁻⁷ mol cm�
 | 50 | Hao … Shearing · *Adv. Funct. Mater.* 31, 2007564 (2021) | 회색값 분할 | 없음 |
 | 51 | Hu … Bruce · *Joule* 8, 2623 (2024) | Li 대 공극 분할 | 없음 |
 | 52 | Sandoval … McDowell · *J. Electrochem. Soc.* 168, 100517 (2021) | Ag 합금 입자 | 없음 |
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- 머리 '이어 읽기' 의 'Case B 셀 단면 한 장은 *Joule* 7, 2054 (litdb 없음)' · 참고문헌 표 ref 12 '없음' → 이제 digest `sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free` (그 편 `Fig. 3` Ag 셀 = Case B · 2 mAh cm⁻² 평균 두께 ≈10 µm ↔ 이 digest 원자료 9.66 ± 2.29 µm · 같은 차수).

@@ -599,3 +599,8 @@ DFT 이완 뒤 (`_cb_relaxed`) 에는 (100) 바깥이 Li 2 (+ S_free 1) 로, (01
 
 - Lepley (ref 58) → digest `lepley2015_modeling_interfaces_between_solids_li_battery_materials`. γ-Li₃PS₄ \| Li 의 음의 계면 에너지 −216 meV/Å² (그림 ≈ −226) 는 이 카드 서술과 맞다 — 다만 Li₃PS₄ 는 LPSCl 의 Li 쪽 분해산물이 아니라 산화 쪽 산물이라, 같은 PS₄ 골격의 대리 계로 읽는다.
 - (d) 1 번 Kotakadi 외 ChemRxiv (2025) 는 저널판이 있다 — *Joule* 9, 102175 (2025) · DOI 10.1016/j.joule.2025.102175 (Crossref · 같은 묶음 보고 넷이 확인).
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- (d) #1 Kotakadi 외 (ChemRxiv) 의 저널판 *Joule*, 9, 102175 (2025) 이 이제 digest `kotakadi2025_metallic_interlayers_li_li6ps5cl_operando_sem` (11-24b 첨언의 서지 줄을 이 digest 가 받는다).
+- Kotakadi 의 in situ XPS — Li 가 닿으면 In 쪽 금속 황화물이 Li₂S 로 바뀐다 · 이 digest 의 'Li \| Li₆PS₅Cl 은 이완만으로도 반응' 과 같은 방향 (계 · 방법이 다르다).

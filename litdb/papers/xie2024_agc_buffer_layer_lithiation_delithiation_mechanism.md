@@ -534,3 +534,8 @@
 - 점착 · ASR 근거로 인용된 문헌: Wang M. & J. Sakamoto, *J. Power Sources*, 377, 7 (2018) (ref 60 · 추가 논문 목록 `litdb/_curation/batch_2026_11_24/extra_papers_2026_11_24.md` '그 밖' 에 '점착 ↔ 계면 저항' 으로 있음 · 제목은 이 논문 참고문헌에 없다). 같은 이름은 refs 13 (Liu *et al.* *Nat. Mater.* 2021) · 15 (Kazyak *et al.* *Matter* 2020 = litdb `kazyak2020_li_penetration_ceramic_se_operando_microscopy`) · 19 (Wang, Choudhury, Sakamoto *Joule* 2019 = litdb `wang2019_li_se_interface_dynamics_stack_pressure_current_density`) · 20 (*Electrochim. Acta* 2019) · 68 (Haslam & Sakamoto *J. Electrochem. Soc.* 2023 · Au 씨앗) · SI [6] (Masias *et al.* 2019 = litdb `masias2019_li_metal_elastic_plastic_creep_properties`) 의 참고문헌 저자 목록에 있다.
 - litdb 에 이미 있는 참고문헌: ref 26 = `spencerjolly2023_ag_graphite_interlayer_operando_xrd` · ref 18 Kasemchainan 2019 (이번 묶음 10 번 · 병렬) · ref 21 Lee 2020 (이번 묶음 9 번 · 병렬).
 - 이 논문을 인용한 litdb 카드: `lu2026_li_ag_interface_thermodynamics_kinetics` (ref [15]) · `metzler2026_sputtered_ag_carbon_interlayers_anode_free` (ref 28) · `kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode` (Ref. 39 · 다공도 0.4).
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- 모형 입력 다공도 40 % ('demonstrative') 의 측정 대역 참고 — Park 외 2025 (`park2025_li_kinetics_agc_porous_interlayer_reservoir_free`) 의 2D 기공률 29 % (처음 · 380 MPa 뒤) · 3–8 % (충전 1 mAh cm⁻² 뒤).
+- Park 의 테이프 박리 (집전체 쪽이 먼저 떨어짐 · 정성) 는 이 digest 의 점착 세기 입력 순서 (SE/BL > BL/CC) 와 같은 방향이다.

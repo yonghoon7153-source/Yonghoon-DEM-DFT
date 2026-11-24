@@ -489,3 +489,8 @@ Ag 석출은 이온 확산 + 전기화학 환원으로 전자가 닿는 입계�
 > 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) 의 끝 보고에서 이 카드에 걸리는 것만 모았다 (2026-11-24). 위 본문은 고치지 않았다 — 겹치면 이 절이 우선한다.
 
 - 계보 · (d) 에서 '진행 중' 으로 적은 같은 묶음 편이 다 끝났다 → `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` (Ag–C 원전 · ref 35) · `ko2025_metal_interlayer_anode_less_li_plating_stripping_mechanism` (가넷 위 Ag 층 · Li–Ag 상 순서).
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- (d) #1 Kotakadi 외, *Joule*, 9, 102175 (2025) → 이제 digest `kotakadi2025_metallic_interlayers_li_li6ps5cl_operando_sem` · '다음 순번: Sandoval 외 *Joule* 7, 2054' → 이제 digest `sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free`.
+- Kotakadi 의 in situ XPS 에서 스퍼터 Ag 는 S 2p 로 반응이 안 갈렸다 (In · Mg 는 금속 황화물 성분이 생김 · Li 가 오면 In 쪽은 Li₂S) — 이 digest 의 운전 중 계면 그림 (LPSCl \| SEI \| Li–Ag) 과 모순 없다.

@@ -444,3 +444,9 @@
 
 - 모델 입력 ε_p,interlayer 0.4 (Ref. 39 = Xie 2024) — Xie 원문은 40 % 를 'demonstrative' (보여 주기용) 라 명시했다 · 실측 아님 → `xie2024_agc_buffer_layer_lithiation_delithiation_mechanism` §10. 흔한 Ag/C 층 기공 ≈29 % (Park 2025 *Adv. Energy Mater.*) 와 다르다.
 - [19] Lee 2020 → 이제 digest `lee2020_silver_carbon_composite_anode_all_solid_state_li_metal` (Ag : 카본블랙 1 : 3 · 10 µm · SUS · 같은 배합 축).
+
+## 🔗 이어 읽기 · 바로잡기 (2026-11-25 묶음)
+
+- **확인 필요 (11-25 · Park 외 2025 digest `park2025_li_kinetics_agc_porous_interlayer_reservoir_free` 를 원문과 대조)** — SI 표 S3 의 D_interlayer **3.15 × 10⁻¹⁰ m² s⁻¹** (출처 Ref. S3 · S4) 에 대해, Ref. S3 (= Park 2025) 원문의 GITT 값은 Ag–C 50 nm **3.14 × 10⁻⁹ cm² s⁻¹** (= 3.14 × 10⁻¹³ m² s⁻¹ · 단위는 그 SI `Fig. S9a` 축 · 본 세션이 그림으로 확인) 이라 10³ 배 차이다. 원문 D 는 층의 화학 확산 (GITT) 이라 모형의 표면 확산과 다른 양이기도 하다. Ref. S4 원문은 못 봐서 **불일치로 확정하지 않는다**.
+- 같은 표의 κ_e 1000 S m⁻¹ (Ref. S3) — Park 원문 글자층에서 이 값을 찾지 못했다 (SI Note S1 은 리튬화 탄소의 Li⁺ 전도도 8.4 × 10⁻³ S cm⁻¹ 를 계산한다 · 끝 보고는 원문의 전자 전도 숫자가 탄소 10² S m⁻¹ 하나라고 적었다) — 확인 필요.
+- 'Ag/C 층 기공 ≈29 % (Park 2025)' — 원문 29 % 는 그 배합 · 2D · 380 MPa 뒤 값이고 충전 뒤 3–8 % 다 · '흔한 Ag/C 층' 은 원문 표현이 아니다.
