@@ -65,6 +65,9 @@ NEW_TARGET = SP + "/reil_env18/pytest_t"
 #: RECORD 의 생성 wrapper 행 접두 — venv (site-packages 기준) · `pip install --target` (target 기준, 실제 파일은 target/bin/)
 WRAPPER_PREFIX = {"venv": "../../../bin/", "target": "../../bin/"}
 INTERPRETERS = ("python", "python3.11")
+#: v2 (검토 §137 Q5): RECORD 밖 파일 가운데 실행 경로에 닿을 수 있는 것 — 자동 실패가 아니라 채택 보류 표지 (adoption_hold) 로 올린다
+#: (.pth 의 import 줄은 시작 때 실행될 수 있다 · sitecustomize / usercustomize 는 .py 로 잡힌다)
+EXEC_SUFFIXES = (".pth", ".py", ".pyc", ".pyo", ".so", ".pyd")
 _LINE = re.compile(rb"([^\r\n]*)(\r\n|\n|\r|)")
 _DIST = re.compile(r"(?P<name>[^=\s#]+)==(?P<version>[^\s#]+)  # record-sha256 (?P<record>[0-9a-f]{64}|none)")
 
@@ -262,9 +265,21 @@ def records(*, venv: Path, target: Path, old_sci: Path, old_test: Path, old_bin:
     if not sp.is_dir() or not target.is_dir():
         raise UsageError(f"site-packages 또는 target 없음: {sp} · {target}")
     groups = []
-    new_sci = {metadata_key(d): d / "RECORD" for d in sorted(sp.glob("*.dist-info"))}
-    new_test = {f"{d.name}.RECORD": d / "RECORD" for d in sorted(target.glob("*.dist-info"))}
     report = {"dists": {}, "problems": [], "observations": {}}
+    sci_dirs, test_dirs = sorted(sp.glob("*.dist-info")), sorted(target.glob("*.dist-info"))
+    # v2 (검토 §137 ENV18-C2): 사전 (dict) 에 넣기 **전에** 배포판 식별 (METADATA 의 정규화 Name + Version) 중복을 거부한다 —
+    # 서로 다른 dist-info 디렉터리가 같은 식별을 내면 하나가 다른 하나를 덮어, 가짜가 대조에서 빠지고 관측에만 남을 수 있었다.
+    for label, dirs in (("science", sci_dirs), ("test_tools", test_dirs)):
+        seen = {}
+        for d in dirs:
+            seen.setdefault(metadata_key(d), []).append(d.name)
+        for k, names in sorted(seen.items()):
+            if len(names) > 1:
+                report["problems"].append(f"{label}: 같은 배포판 식별 ({k[:-len('.RECORD')]}) 을 내는 dist-info 가 둘 이상 — {names}")
+    new_sci = {}
+    for d in sci_dirs:
+        new_sci.setdefault(metadata_key(d), d / "RECORD")      # 중복은 위에서 이미 미허용 — 덮어쓰지 않는다
+    new_test = {f"{d.name}.RECORD": d / "RECORD" for d in test_dirs}
     for label, kind, base, root, old_dir, new_map, out in (
             ("science", "venv", sp, venv, old_sci, new_sci, sci_out),
             ("test_tools", "target", target, target, old_test, new_test, test_out)):
@@ -294,12 +309,24 @@ def records(*, venv: Path, target: Path, old_sci: Path, old_test: Path, old_bin:
             if used_c != set(collisions):
                 report["problems"].append(f"설명된 충돌이 선언과 다름 — 선언 {sorted(collisions)} · 관측 {sorted(used_c)}")
         groups.append((label, kind, base, root, rows_by_key))
-    for label, kind, base, root, rows_by_key in groups:     # 관측 (판정에 쓰지 않음): RECORD 어디에도 없는 파일
+    hold = []
+    for label, kind, base, root, rows_by_key in groups:     # 관측 (rc 판정에 쓰지 않음): RECORD 어디에도 없는 파일 — v2 는 전체 목록 · 크기 · sha
         cov = covered_files(kind, base, root, rows_by_key)
         scan = base if kind == "venv" else root
-        extra = sorted(str(p) for p in scan.rglob("*") if p.is_file() and str(p) not in cov)
-        report["observations"][label] = {"scanned": str(scan), "files_not_in_any_record": len(extra), "first": extra[:50],
-                                         "note": "관측 — 이 세대에서는 판정에 쓰지 않는다 (옛 세대에 같은 관측이 없어 기준이 없다)"}
+        unlisted = []
+        for p in sorted(scan.rglob("*")):
+            if p.is_file() and str(p) not in cov:
+                b, rel = p.read_bytes(), str(p.relative_to(scan))
+                ex = p.suffix in EXEC_SUFFIXES
+                unlisted.append({"path": rel, "size": len(b), "sha256": sha256_hex(b), "execution_relevant": ex})
+                if ex:
+                    hold.append(f"{label}/{rel}")
+        report["observations"][label] = {
+            "scanned": str(scan), "files_not_in_any_record": len(unlisted), "unlisted": unlisted,
+            "note": "관측 — rc 판정에 쓰지 않는다 (옛 세대에 같은 관측이 없어 기준이 없다). 실행 경로 관련 (" + " ".join(EXEC_SUFFIXES)
+                    + ") 은 adoption_hold 로 올린다 — 결과 검토에서 처분하고, 일반 잉여 파일로 묵인하지 않는다"}
+    report["adoption_hold"] = bool(hold)
+    report["adoption_hold_reasons"] = hold
     used = {(k.split("/", 1)[1], c["path"]) for k, r in report["dists"].items() for c in r["changed_rows"] if c["kind"] == "declared"}
     missing = sorted(set(declared) - used)
     if missing:
@@ -423,8 +450,20 @@ def expected_lock(old: bytes, *, old_records: Path, new_records: Path, py_old: s
     return "\n".join(lines).encode("utf-8"), P, changed
 
 
-def seal(*, old: Path, new: Path, old_records: Path, new_records: Path, py_old: tuple, py_new: tuple) -> dict:
+def seal(*, old: Path, new: Path, old_records: Path, new_records: Path, py_old: tuple, py_new: tuple, records_report: Path) -> dict:
+    """v2 (검토 §137 Q3): seal 은 S9a (records) 가 허용만으로 끝나고 그 보고의 원문 sha 와 보존 RECORD 가 같을 때만 RECORD 를 받는다 —
+    seal 단독 통과를 RECORD 수용으로 쓰지 않는다."""
     rep = {"old": str(old), "new": str(new), "files": {}, "problems": []}
+    rr_bytes = Path(records_report).read_bytes()
+    rr = json.loads(rr_bytes.decode("utf-8"))
+    rep["records_report_sha256"] = sha256_hex(rr_bytes)
+    if rr.get("allowed_only") is not True:
+        rep["problems"].append("S9a 가 허용만이 아니다 — seal 대조를 RECORD 수용으로 쓰지 않는다")
+    want = {k.split("/", 1)[1]: v.get("new_raw_sha256") for k, v in rr.get("dists", {}).items() if k.startswith("science/")}
+    got = {p.name: sha256_hex(p.read_bytes()) for p in sorted(Path(new_records).iterdir())}
+    if want != got:
+        bad = sorted(k for k in set(want) | set(got) if want.get(k) != got.get(k))
+        rep["problems"].append(f"보존 RECORD 가 S9a 보고와 다름 — {bad[:5]}")
     for d, side in ((old, "옛"), (new, "새")):
         names = sorted(p.name for p in d.iterdir())
         if names != sorted(SEAL_FILES):
@@ -503,6 +542,7 @@ def main(argv=None) -> int:
     s = sub.add_parser("seal")
     s.add_argument("--new", required=True, type=Path)
     s.add_argument("--new-records", required=True, type=Path)
+    s.add_argument("--records-report", required=True, type=Path)
     for x in (b, w, r, s):
         x.add_argument("--out", required=True, type=Path)
     a = ap.parse_args(argv)
@@ -522,7 +562,8 @@ def main(argv=None) -> int:
                           new_bin=NEW_VENV + "/bin", declared=DECLARED, collisions=COLLISIONS,
                           sci_out=_new_dir(a.records_out), test_out=_new_dir(a.test_records_out))
         else:
-            rep = seal(old=repo / OLD_SEAL, new=a.new, old_records=old_sci, new_records=a.new_records, py_old=PY_OLD, py_new=PY_NEW)
+            rep = seal(old=repo / OLD_SEAL, new=a.new, old_records=old_sci, new_records=a.new_records, py_old=PY_OLD, py_new=PY_NEW,
+                       records_report=a.records_report)
     except UsageError as exc:
         print(f"사용 오류: {exc}", file=sys.stderr)
         return 2

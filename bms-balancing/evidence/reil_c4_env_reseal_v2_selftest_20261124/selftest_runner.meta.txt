@@ -1,0 +1,14 @@
+argv: /usr/bin/python3.11 -I -B bms-balancing/evidence/reil_c4_env_reseal_v2_selftest_20261124/selftest_runner.py
+cwd: /home/user/Yonghoon-DEM-DFT
+env: TMPDIR=<세션 스크래치>/reseal_dev/tmp_final_selftest_runner_<시각> (임시 파일만)
+start_utc: 2026-11-24T12:55:42Z
+head: d0ef9e8561f3aaae9cb0eb82c8577984b5e84cb4 (작업트리에 v2 의 미커밋 파일 — 대조기 · 실행기 · 하네스 · 이 폴더)
+checker_sha256: 0049e7e9a153ec3a0fe8b38f5f106ecc4264c75d8c819c7b14886ba6f7e079c0
+runner_sha256: bf47d9f7a883d87740be0db8649c3b140f9d9efb554986ccc3b6e0a18df0bb92
+harness_sha256: f4afd4b61cf5d798ced37770a8673d7fa32f30352334fd61b1dfced4fa252642
+selftest_sha256: 84b4c9b0011e434e368d7e87821b21eee902acf5f82e47bc12b1eb7cc9a766a2
+mutation_proof_sha256: 61173d2029227f3a8f22282264cf0b1d84533ca55951032f729dfc6d1a046d2e
+selftest_runner_sha256: 2aabb6cee550290fd2449d20c6d4ef6532fc72eeff974bdc4543a3657a72e996
+mutation_proof_runner_sha256: ef8915137206fba3eb6beff419b050eedf39f05191db81d5969aa0f31994030f
+end_utc: 2026-11-24T12:56:06Z
+rc: 0

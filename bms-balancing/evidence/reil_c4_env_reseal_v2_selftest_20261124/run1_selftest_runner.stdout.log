@@ -1,0 +1,26 @@
+runner bms-balancing/scripts/reil_c4_env_reseal_run.py sha256 459b5f4c2b2fc44a3d0995ce89814644a64048f91d0a32734974f95115427139
+harness bms-balancing/scripts/reil_c4_env_reseal_harness.py sha256 f4afd4b61cf5d798ced37770a8673d7fa32f30352334fd61b1dfced4fa252642
+checker bms-balancing/scripts/reil_c4_env_reseal_check.py sha256 0049e7e9a153ec3a0fe8b38f5f106ecc4264c75d8c819c7b14886ba6f7e079c0
+python 3.11.18 · isolated 1 · dont_write_bytecode True
+PASS T1a precheck → rc 0 · 문제 0 · 실행기 쓰기 0 (기록 폴더 없음)
+PASS T1b run → rc 0 · 새 커밋 1 · 그 커밋에는 새 봉인 · 기록만
+PASS T1c 10_end.json = PRE_COMMIT · S10 PENDING (커밋 결과를 담지 않음 · ENV18-N2)
+PASS T1d 11_after_commit.json (커밋 밖) = 커밋 rc 0 · 새 커밋 · HEAD 일치 · S10 · 전체 · 디스크 한도 안 · ok
+PASS T1e 바깥 반환 outer_return.json = rc 0 · 상한 안 · stdout / stderr sha
+PASS T1f 자식 env — CA 변수 넷 · PIP_CERT 밖 PIP_* · 비밀 형태 이름 빠짐 · PIP_CERT · PIP_CONFIG_FILE=/dev/null 있음 (ENV18-N1)
+PASS T1g S0 기록 — PIP_CERT 파일의 크기 · sha (경로는 안 적음) · precheck 원문 사본 · 실행기 사본 · 10월 diff
+PASS T14 같은 출력 폴더로 하네스 다시 → rc 2 (덮어쓰기 · 재시도 없음)
+PASS T2 precheck 없이 run → rc 2 · 기록 폴더 · 작업 뿌리 만들지 않음 · 거부 사유를 stdout 에 · traceback 0
+PASS T3 승인 블록 없음 → precheck rc 2
+PASS T5 승인 블록 둘 → precheck rc 2
+PASS T4 승인 블록의 실행기 sha 틀림 → precheck rc 2
+PASS T6 PIP_CERT 없음 → precheck rc 2 (유효 CA 미고정 · ENV18-N1)
+PASS T7 자식 timeout → 프로세스 그룹째 끊음 (손주 sleep 도) · 첫 원인 = S5 timeout · 정지 기록 커밋 · ok 아님
+PASS T8 rc 0 인데 같은 그룹에 남은 자식 → 끊고 멈춤 (첫 원인 = S3)
+PASS T9 첫 원인 보존 — S5 rc 3 뒤 S10 비밀값 검사 실패 → STOP.json 은 S5 그대로 · 뒤 오류는 followups · 커밋 안 함
+PASS T9b 커밋 실패 (pre-commit hook) → 11_after_commit 에 rc 1 · 새 커밋 없음 · ok 아님 · 실행기 rc 1
+PASS T10 전체 1,800 s 의 축소판 (6 s) 소진 → 자식을 시작하지 않거나 timeout · S10 은 5 s 미만이면 커밋 시작 안 함 · ok 아님
+PASS T11 바깥 하네스의 절대 상한 → 그룹째 끊음 · rc 124 · killed_at_limit · 손주 없음
+PASS T12 S10 배정 1 s → git add · commit 을 시작하지 않음 (index.lock 위험 · 스테이지 0) · 기록은 작업트리에 · ok 아님
+PASS T13 S9a 의 채택 보류 표지 → 10_end · 11_after_commit · 커밋 제목에 그대로 (자동 실패 아님 · 자동 채택 아님)
+21 / 21 PASS

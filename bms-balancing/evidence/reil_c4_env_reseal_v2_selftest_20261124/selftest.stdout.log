@@ -1,0 +1,65 @@
+tool bms-balancing/scripts/reil_c4_env_reseal_check.py sha256 0049e7e9a153ec3a0fe8b38f5f106ecc4264c75d8c819c7b14886ba6f7e079c0
+python 3.11.18 · isolated 1 · dont_write_bytecode True
+PASS P1 10월 RECORD 원문 34 — 문제 0 · 줄 끝은 전부 CRLF (마지막 줄 포함)
+PASS P2 10월 lock 의 record-sha256 30 = 원문 30 의 text_sha (env_profile 의 read_text 규칙)
+PASS P3 쉼표 든 경로 (따옴표 필요한 행) 는 정상 처리
+PASS R1 깨끗한 합성 세대 → 허용 차이만 (wrapper 4 · 선언 1 · 충돌 1)
+PASS R19 --records-out 에 새 원문이 바이트 그대로 보존
+PASS R2 줄 끝 CRLF → LF
+PASS R3 마지막 줄바꿈 없음
+PASS R4 중복 경로 (dict 로 덮지 않음)
+PASS R5 wrapper 본문 변경 (첫 줄 밖)
+PASS R6 wrapper 첫 줄이 다른 venv
+PASS R7 wrapper 가 옛 경로 그대로 (행이 옛것과 같아도 잡음)
+PASS R8 다른 배포판 dist-info 의 행 (옛 · 새 둘 다 있어도)
+PASS R9 선언 밖 행 변경 (RECORD · 파일 일관)
+PASS R10 선언 행이 선언과 다른 값
+PASS R11 설치 바이트 변조 (RECORD 그대로)
+PASS R12 설치 파일 없음
+PASS R13 해시 없는 행이 pyc · RECORD 가 아님
+PASS R14 pytest_t 쪽 wrapper 파일 변조 (RECORD 그대로 — ../../bin → target/bin 으로 찾아 RECORD↔바이트 검사가 잡음)
+PASS R14b pytest_t 쪽 wrapper 본문 변경 (RECORD 도 맞춰 줌 — 본문 결속만 잡을 수 있음)
+PASS R15 새 venv 에만 있는 배포판
+PASS R16 옛 세대에 있던 배포판이 새 venv 에 없음
+PASS R17 CSV 다시 쓰기와 다른 원문 (불필요한 따옴표)
+PASS R18 설명된 충돌 — 디스크가 주인 행과 다르면 잡음
+PASS R20 RECORD 밖 파일은 관측으로만 (판정 불변)
+PASS S1 기대 변환만 한 새 봉인 → 허용 (lock record-sha 변경 = numpy 만)
+PASS S2 lock 의 다른 줄 (#@ files) 변경
+PASS S3 RECORD 가 안 바뀐 배포판의 record-sha 변경
+PASS S4 PROFILE 의 다른 값 (libc)
+PASS S5 PROFILE 직렬화 변경 (indent 2)
+PASS S6 MANIFEST 값 하나 틀림
+PASS S7 .npy 한 비트 (MANIFEST 는 맞춰 줌)
+PASS S8 새 봉인에 파일 하나 더
+PASS S8b 새 봉인에 파일 하나 빠짐
+PASS S9 lock 의 python 줄이 옛 판 그대로
+PASS S10 진짜 10월 봉인 ↔ 자기 자신 (옛 lock ↔ 원문 30 결속 · PROFILE · MANIFEST 왕복)
+PASS B0 지금 ensurepip 묶음 (읽기) → 허용 · pip 는 선언 1 행만 · setuptools 는 10월 sha 와 같음
+PASS B1 합성 pip wheel — 선언 행만 다름 → 허용
+PASS B2 구성원 하나 더 다름 (선언 밖)
+PASS B3 구성원이 wheel 자신의 RECORD 와 다름
+PASS B4 wheel 파일의 sha256 이 고정값과 다름
+PASS B5 묶음 디렉터리에 파일 하나 더
+PASS B6 옛 설치에만 있는 행이 pip 생성 범주가 아님
+PASS W0 10월 기록 04_artifacts_science.json — ok · 문제 0 · 파일 28 (이름 · 크기 · sha256)
+PASS W0 10월 기록 04_artifacts_test.json — ok · 문제 0 · 파일 4 (이름 · 크기 · sha256)
+PASS W1 정확히 같은 집합 → 허용
+PASS W2 같은 이름 · 크기, 다른 sha256
+PASS W3 받은 쪽에 하나 더
+PASS W4 하나 빠짐
+PASS W5 파일 아닌 항목
+PASS C1 --out 이 이미 있으면 rc 2 (덮어쓰지 않음)
+PASS C2 records 의 --venv 가 고정 경로가 아니면 rc 2
+PASS C3 CLI bundled (S0 의 argv 꼴) → rc 0 · tool_sha256 기록
+PASS R21 같은 Name+Version 의 dist-info 둘 — 가짜가 앞서 정렬 (ENV18-C2 반례)
+PASS R21b 같은 Name+Version 의 dist-info 둘 — 가짜가 뒤에 정렬
+PASS R21c pytest_t 에 같은 Name+Version 의 dist-info 둘
+PASS R22 RECORD 밖 파일 60 — 전체 목록 · 크기 · sha256 (판정 불변 · 보류 없음)
+PASS R23 RECORD 밖 .pth (시작 때 실행될 수 있음) → 채택 보류 표지 (자동 실패 아님)
+PASS R23b RECORD 밖 sitecustomize.py → 채택 보류 표지
+PASS R23c RECORD 밖 .txt 만 → 보류 없음
+PASS S11 S9a 보고 뒤 보존 RECORD 변조 → seal 미허용 (seal 단독 통과 금지)
+PASS S12 S9a 보고가 허용만이 아님 → seal 미허용
+PASS S13 S9a 보고와 결속된 정상 seal → 허용
+62 / 62 PASS

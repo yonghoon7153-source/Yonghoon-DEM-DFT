@@ -1,0 +1,18 @@
+kind: 실행기 변이 증명 — 1 차 개발 실행 (최종 기록 실행이 아님 · 보존용)
+argv: /usr/bin/python3.11 -I -B bms-balancing/evidence/reil_c4_env_reseal_v2_selftest_20261124/mutation_proof_runner.py
+cwd: /home/user/Yonghoon-DEM-DFT
+stdout: dev1_mutation_proof_runner.stdout.log (세션 스크래치패드의 runner_mut_dev.log 를 바이트 그대로 복사 · 파일 mtime 2026-11-24T12:33:50Z)
+stderr: 따로 받지 않았다 — 배경 작업 출력 (세션 쪽 파일) 에는 rc 줄과 이 stdout 과 같은 줄만 있었다
+rc: 1 (배경 작업 감싸개가 적은 "rc=1")
+결과: 8 / 9 기대대로 — RM6 (precheck 선행 확인 중 존재 검사만 뺌) 이 살아남음
+쓴 도구 sha256:
+  mutation_proof_runner.py 3d6bc57f49cc33f3b7c85e316280c6568ae038b50cddaa5f7f88c3df9b8ffc15
+  selftest_runner.py       fe2c59a9ca797651a55cb75f037d93eaf1a0dc8532edabc30afc00e333882096
+  실행기 reil_c4_env_reseal_run.py     459b5f4c2b2fc44a3d0995ce89814644a64048f91d0a32734974f95115427139
+  하네스 reil_c4_env_reseal_harness.py f4afd4b61cf5d798ced37770a8673d7fa32f30352334fd61b1dfced4fa252642
+  대조기 reil_c4_env_reseal_check.py   0049e7e9a153ec3a0fe8b38f5f106ecc4264c75d8c819c7b14886ba6f7e079c0
+왜 살아남았나: 변이가 `if not pre_ret.is_file():` 를 `if False:` 로 바꾸면 else 쪽이 없는 파일을 읽다 FileNotFoundError 로 죽는다.
+  main 의 예외 처리가 기록 폴더 전이라 rc 2 를 돌려주고 아무것도 만들지 않으므로, rc 2 · 폴더 없음만 보던 T2 가 "통제된 거부" 와 "충돌" 을 구분하지 못했다
+  (fixture 가 진실을 가린 꼴 — CLAUDE.md 규율 2).
+처리: T2 가 stdout 의 거부 사유 ("precheck 의 바깥 반환이 없다") 와 stderr 의 traceback 0 까지 보게 강화 · 변이 RM6b (precheck 선행 요구 전부 끔) 를 더함.
+  실행기 · 하네스 · 대조기는 바꾸지 않았다.

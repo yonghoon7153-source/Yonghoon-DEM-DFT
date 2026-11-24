@@ -1,0 +1,10 @@
+kind: 10월 실행기 대비 unified diff (정적 사본 · 실행기 S0 의 00_runner_vs_oct.diff 와 같은 호출)
+call: difflib.unified_diff(<10월 실행기 줄들>, <v2 실행기 줄들>, "bms-balancing/evidence/reil_c4_env_20261013/00_runner.py", "bms-balancing/scripts/reil_c4_env_reseal_run.py") → "".join → utf-8 · x 모드
+argv: /usr/bin/python3.11 -I -B -c <위 호출> bms-balancing/evidence/reil_c4_env_reseal_v2_selftest_20261124/runner_vs_oct.diff
+cwd: /home/user/Yonghoon-DEM-DFT
+utc: 2026-11-24T12:56:22Z
+in_oct_runner_sha256: 5c781a2d78af5c02dfcecfc5df7dfe2a254353bfdf1f3fa262d760eed352d2cc
+in_v2_runner_sha256: bf47d9f7a883d87740be0db8649c3b140f9d9efb554986ccc3b6e0a18df0bb92
+out_sha256: 33235a366fac16d8c1520d9319b91d78e526c5ab48403925dcec01541bb7cfd0
+out_bytes: 61518 · 969 줄 (+ 로 시작 592 · - 로 시작 331 — 머리 두 줄 포함)
+note: 실행기 S0 은 같은 이름표 · 같은 입력으로 다시 만든다 — 두 실행기가 그대로면 바이트가 같다. 앞 판 (실행기 459b5f4c 기준) 은 run1_runner_vs_oct.* 로 보존.

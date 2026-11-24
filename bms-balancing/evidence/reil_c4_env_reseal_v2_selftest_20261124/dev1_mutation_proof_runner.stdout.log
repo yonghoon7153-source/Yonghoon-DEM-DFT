@@ -1,0 +1,10 @@
+PASS RM0 변이 없음 (대조군) — selftest_runner rc 0 · 21 / 21 PASS · FAIL 사례 [] · 기대 []
+PASS RM1 -B 를 뺌 (하네스 argv · 실행기 확인) — 1 차 결함의 재현 — selftest_runner rc 1 · 6 / 19 PASS · FAIL 사례 ['T1a', 'T1b', 'T1c', 'T1d', 'T1e', 't_happy', 'T7', 'T8', 'T9', 'T9b', 'T10', 'T12', 'T13'] · 기대 ['T1a']
+PASS RM2 자식 env 에서 CA 변수를 빼지 않음 (ENV18-N1) — selftest_runner rc 1 · 20 / 21 PASS · FAIL 사례 ['T1f'] · 기대 ['T1f']
+PASS RM3 그룹이 아니라 본 자식만 끊음 — selftest_runner rc 1 · 19 / 21 PASS · FAIL 사례 ['T7', 'T8'] · 기대 ['T7']
+PASS RM4 S10 의 뒤 오류가 첫 원인 자리를 차지함 (followups 로 안 감) — selftest_runner rc 1 · 18 / 21 PASS · FAIL 사례 ['T7', 'T8', 'T9'] · 기대 ['T9']
+PASS RM5 S10 의 5 s 미만 보호 끔 (index.lock 위험) — selftest_runner rc 1 · 20 / 21 PASS · FAIL 사례 ['T12'] · 기대 ['T12']
+FAIL RM6 precheck 선행 요구 끔 — selftest_runner rc 0 · 21 / 21 PASS · FAIL 사례 [] · 기대 ['T2']
+PASS RM7 승인 블록의 실행기 · 하네스 · 대조기 sha 대조 끔 — selftest_runner rc 1 · 20 / 21 PASS · FAIL 사례 ['T4'] · 기대 ['T4']
+PASS RM8 남은 자식 검사 끔 — selftest_runner rc 1 · 20 / 21 PASS · FAIL 사례 ['T8'] · 기대 ['T8']
+실행기 변이 증명: 8 / 9 기대대로
