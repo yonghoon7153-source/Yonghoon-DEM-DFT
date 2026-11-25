@@ -1,6 +1,6 @@
 # 접촉역학과 소성
 
-전극 미세구조 · 공정 · 장 `dem-contact` · 논문 74편 · 읽기 카드 74편
+전극 미세구조 · 공정 · 장 `dem-contact` · 논문 80편 · 읽기 카드 80편
 
 > 탄소성 접촉 모형, 점착, 분말 치밀화 이론.
 
@@ -70,7 +70,7 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 3. Cárdenas-Barrantes et al. 2020 (`cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd`) — 강체와 무른 입자 혼합의 압밀을 배위수와 단일 입자 응답으로 풀어 무른 입자 갈래의 중심에 있다.
 4. So et al. 2022 (`so2022_dem_contact_model_assb_compaction_sintering`) — 경도 기반 항복과 평형 overlap으로 실제 E_SE를 쓴 채 LPS 압밀을 실험에 맞춘 배터리 DEM이다.
 
-## 이 장의 논문 (74편)
+## 이 장의 논문 (80편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -115,13 +115,17 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `paulick2015_particle_contact_stiffness_two_particle_method` | Paulick et al. 2015 | A new method for the determination of particle contact stiffness | 같은 힘에서 두 알 변위와 한 알 변위의 차로 잰 유리 구슬 접촉강성은 낮은 힘에서 한 알 강성보다 낮고 80 N에서 높았다. |
 | `vanlew2015_modifying_youngs_modulus_distribution` | Van Lew et al. 2015 | Modifying Young's modulus in DEM simulations based on distributions of experimental measurements | 단일 pebble 압쇄로 잰 입자별 E는 벌크값보다 낮고, 이를 넣은 DEM packing은 더 무르다. |
 | `devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode` | Vasconcelos et al. 2016 | Grid indentation analysis of mechanical properties of composite electrodes in Li-ion batteries | 격자 압입 분해로 얻은 입자 탄성률은 단일 입자 압입 값과 맞지만, 연한 기지 값은 2–3배 크게 나온다. |
+| `coetzee2017_dem_calibration_review` | Coetzee 2017 | Review: Calibration of the discrete element method | DEM 파라미터는 벌크 역보정으로 정하는 일이 가장 흔하다. 다만 해가 유일하지 않아 여러 실험과 별도 검증이 필요하다. |
 | `haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem` | Hærvig et al. 2017 | On the adhesive JKR contact and rolling models for reduced particle stiffness discrete element simulations | 영률을 낮출 때 표면 에너지를 γ_mod = γ(E_mod/E)^{2/5}로 함께 줄이면 분리 에너지가 같아 충돌의 붙음과 되튐이 그대로다. |
+| `huang2017_mpfem_2d_binary_al_sic_hard_soft_compaction` | Huang et al. 2017 | Multi-particle FEM simulation of 2D compaction on binary Al/SiC composite powders | 무른 Al과 단단한 SiC 혼합의 2D 압축에서 하중은 맞닿은 SiC 사슬로 전달되고, 정렬 packing에서는 마찰이 거의 무관하다. |
 | `mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation` | McGrogan et al. 2017 | Compliant Yet Brittle Mechanical Behavior of Li₂S–P₂S₅ Lithium‐Ion‐Conducting Solid Electrolyte | 광유 속 압입으로 잰 70Li₂S–30P₂S₅ 유리는 E 18.5 GPa로 무르지만 K_Ic 0.23 MPa·m^½로 취성이다. |
 | `devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte` | de Vasconcelos et al. 2019 | In-Situ Nanoindentation Measurement of Local Mechanical Behavior of a Li-Ion Battery Cathode in Liquid Electrolyte | 액체 전해질에 담가도 NMC532의 탄성률과 경도는 그대로였고, 응집체의 압입 인성만 올랐으며 고분자 기지는 크게 물러졌다. |
 | `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` | Roessler · Katterfeld 2019 | DEM parameter calibration of cohesive bulk materials using a simple angle of repose test | 점착 분말에는 안식각 대신 원통 인양 중 기둥의 상 전이와 굽힘 윤곽이 재현성 있는 보정 기준이 된다. |
 | `vu2019_soft_grain_compression_beyond_jamming_dic` | Vu · Barés 2019 | Soft-grain compression: Beyond the jamming point | 입자 안 변형장 통계는 재밍점과 함께 재료마다 자리가 다른 두 번째 교차를 드러낸다고 원문은 결론 짓는다. |
+| `zhou2019_mpfem_2d_copper_powder_die_compaction_release` | Zhou et al. 2019 | Particulate Scale Multiparticle Finite Element Method Modeling on the 2D Compaction and Release of Copper Powder | 2D MPFEM으로 구리 원판의 다이 압축과 0 MPa까지의 탈압을 풀었고, 잔류 응력이 남으며 결합재 없는 압분체 아래쪽이 갈라졌다. |
 | `cantor2020_compaction_model_highly_deformable_particles` | Cantor et al. 2020 | Compaction Model for Highly Deformable Particle Assemblies | 초탄성 원판 1500개의 등방 압축에서 단일 입자 상자 법칙과 배위수 법칙을 곱해 압밀 식을 세웠다 |
 | `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd` | Cárdenas-Barrantes et al. 2020 | Compaction of mixtures of rigid and highly deformable particles: A micromechanical model | 2D 강체-초탄성 원판 혼합물의 압밀은 단일 입자 상자 응답과 배위수 법칙으로 기술되고, 거시 적합량은 φmax(κ) 하나다. |
+| `shenouda2020_dem_metal_powder_am_liggghts_tutorial` | Shenouda & Hoff 2020 | Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC | LIGGGHTS-PUBLIC 입문 튜토리얼이다. Hertz와 SJKR 접촉으로 점착이 커질수록 금속 AM 분말의 안식각이 오르고 유량이 떨어짐을 보였다. |
 | `bares2021_soft_rigid_mix_experiment_dic_proceedings` | Barés et al. 2021 | Highly strained mixtures of bidimensional soft and rigid grains: an experimental approach from the local scale | 실리콘과 PVC 원기둥 혼합을 2D로 눌러 DIC로 재니 변형은 무른 입자에 몰리고 접촉 길이는 φ에 선형으로 늘었다. |
 | `cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd` | Cárdenas-Barrantes et al. 2021 | Micromechanical description of the compaction of soft pentagon assemblies | 2D 무른 오각형과 원판의 압밀은 거시적으로 비슷하고, 차이는 마찰에 따른 재배열과 도달 밀도에서 나오며 압밀 식은 다각형으로 넓혀진다. |
 | `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` | Cárdenas-Barrantes et al. 2021 | A micro-mechanical compaction model for granular mix of soft and rigid particles | 강체와 무른 원판 혼합의 등방 압밀은 단일 입자 압축 법칙과 배위수 증가 법칙을 묶은 식 하나로 기술되고, 거시 적합 변수는 φmax 하나다. |
@@ -132,6 +136,8 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `so2021_dem_mold_pressure_assb_coldpress` | So et al. 2021 | Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method | 접촉 소성을 넣은 3D DEM이 압밀을 재현했고, 응집체 SE의 이온전도는 φ_SE^crit = 0.13의 percolation식을 따른다. |
 | `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` | Cárdenas-Barrantes et al. 2022 | Experimental validation of a micromechanically based compaction law for mixtures of soft and hard grains | 실리콘과 PVC 원기둥 혼합을 일축으로 누르며 입자 내부 변형을 DIC로 재어, 일축 압밀 식과 국소-전역 선형 관계를 보였다. |
 | `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` | Cárdenas-Barrantes et al. 2022 | Three-dimensional compaction of soft granular packings | 입자별 유한요소로 탄성 구를 3D 압밀하면 Hertz DEM은 jammed 근처에서만 맞고, 압밀 식의 꼴은 2D와 다르다. |
+| `damore2022_lpscl_symmetry_breaking_surface_energy_wulff_pbe0` | D'Amore et al. 2022 | From symmetry breaking in the bulk to phase transitions at the surface: a quantum-mechanical exploration of Li₆PS₅Cl argyrodite superionic conductor | PBE0 계산에서 Li₆PS₅Cl은 P1 의사 입방으로 대칭이 깨지고, 세 면의 두 면 평균 표면 에너지는 0.29–0.34 J/m²로 서로 비슷하다. |
+| `li2022_mpfem_3d_soft_hard_composite_compaction_vibration_unloading` | Li et al. 2022 | A Study of Compaction Densification Behavior of Composite Particles by Multiparticle Finite Element Method | 3D MPFEM에서 하중은 단단한 구에 모이고, 눌린 무른 구는 오목해져 공극을 덜 채우며, 탈압 뒤 잔류 응력은 모서리와 접점에 남는다. |
 | `so2022_dem_contact_model_assb_compaction_sintering` | So et al. 2022 | Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes | Maxwell 모델에서 유도한 평형 overlap 변화율 식에 항복, 융착, 면적·스프링 보정을 묶어 LPS 압밀을 Sakuda 실험에 맞췄다. |
 | `stallard2022_nmc811_single_crystal_shear_strength_lithiation` | Stallard et al. 2022 | Effect of Lithiation upon the Shear Strength of NMC811 Single Crystals | 단결정 NMC811의 기저면 전단강도는 완전 리튬화 상태의 86 ± 12 MPa에서 탈리튬화 뒤 39 ± 5 MPa로 준다. |
 | `berkenkemper2023_compressibility_descriptors_binary_mixtures_deformation` | Berkenkemper et al. 2023 | Investigating compressibility descriptors for binary mixtures of different deformation behavior | 세 이원 부형제 혼합을 300 MPa로 누르면 K, W, ab는 조성에 거의 선형이고, Heckel Py와 기공은 소성끼리 섞은 혼합에서만 선형이다. |

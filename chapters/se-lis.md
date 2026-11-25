@@ -1,6 +1,6 @@
 # Li–S 전환형 양극
 
-전해질 · 계면 · 장 `se-lis` · 논문 10편 · 읽기 카드 10편
+전해질 · 계면 · 장 `se-lis` · 논문 11편 · 읽기 카드 11편
 
 > 황 양극의 반응 기구와 전해질 · 촉매 계면.
 
@@ -70,7 +70,7 @@ Li₂S 전환의 장벽을 낮췄다는 주장은 대부분 장벽을 직접 계
 4. Wang et al. 2025 (`wang2025_miec_tis2_lps_three_phase_interface_lis_assb`) — 전자 경로를 전해질 쪽에서 여는 대안과 계산 모델이 실험 유리와 어긋나는 문제를 함께 보여 준다.
 5. Zhang et al. 2026 (`zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector`) — Li₂S 양극 재구성과 저압 운전을 함께 다루고, 용량과 압력 수치를 읽을 때의 단서를 보여 준다.
 
-## 이 장의 논문 (10편)
+## 이 장의 논문 (11편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -81,6 +81,7 @@ Li₂S 전환의 장벽을 낮췄다는 주장은 대부분 장벽을 직접 계
 | `lin2026_p_doped_compounds_li_s_review` | Lin et al. 2026 | Research on the preparation and application of multifunctional P-doped compounds in lithium–sulfur batteries | 액체 Li–S 전지의 P 도핑 사례를 흡착, 촉매, 전도의 틀로 묶었지만 화학 근거와 재수록 그림이 본문과 어긋나는 곳이 많다. |
 | `liu2026_li4sns4_mediator_low_barrier_li2s` | Liu et al. 2026 | Lithium Thiostannate Molecular Mediator Enables Interfacial Electronic Reconstruction for Low‐Barrier Li₂S Chemistry | Li₄SnS₄ 층은 Li₂S의 첫 충전 전위를 낮춘다. 다만 장벽 저하는 결합 서술자에서 추론했을 뿐 계산하지 않았다. |
 | `luo2026_lis_separator_crystal_engineering_review` | Luo et al. 2026 | Tailoring Lithium–Sulfur Battery Separators via Crystal Engineering: From Fundamental Modulation to Multidimensional Synergy | 결정공학으로 만든 분리막 코팅은 사이클과 전해질 변화 속에 진화하므로 분리막 고유 지표를 상태의 함수로 재야 한다. |
+| `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` | Shen et al. 2026 | Interacting Cosolvents-Regulated Solvation for Rapid Quasi-Solid–State Sulfur Reactions in Li–S Batteries | CPME/THF 22:3 전해질은 Li₂S₆ 용해도를 낮게 묶은 채 전도도와 Li₂S·S₈ 석출 속도를 올리지만, 분자 기전의 계산 근거는 얇다. |
 | `wei2026_data_driven_hea_mediator_lis` | Wei et al. 2026 | Data-Driven Atomic Interplay Modulation Enables Dual-Functional High-Entropy Alloy Mediator for Li–S Batteries | DOS 적분 지표로 V와 Mn을 더한 6원소 합금 중간층이 Li–S 셀 성능을 높였다고 보고하지만, 기전 계산은 서로 맞지 않는다. |
 | `wu2026_asslsb_li2s_reaction_mechanisms_engineering_review` | Wu et al. 2026 | Toward practical all-solid-state lithium–sulfur batteries: from reaction mechanisms to engineering strategies | 고체로 바꾸면 셔틀은 사라지지만 황 전환이 계면 한정, 수송 결합 반응이 되어 새 제약이 생긴다는 틀의 리뷰다. |
 | `zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector` | Zhang et al. 2026 | Stable and Low‐Pressure Anode‐Free All‐Solid‐State Li–S Batteries Enabled by Reaction‐Derived Nanocrystalline‐Amorphous Li₂S Cathodes and Deformable Sodium Current Collectors | PI₃로 재구성한 Li₂S 양극과 변형 가능한 Na 집전체를 짝지으면 4 MPa 이하에서도 무음극 전고체 Li–S 셀이 수백 사이클 돈다. |

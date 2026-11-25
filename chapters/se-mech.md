@@ -1,6 +1,6 @@
 # 기계 · 열 물성과 막 공정
 
-전해질 · 계면 · 장 `se-mech` · 논문 9편 · 읽기 카드 8편
+전해질 · 계면 · 장 `se-mech` · 논문 9편 · 읽기 카드 9편
 
 > 탄성 상수, 압력에 따른 전도도, 열전도, 전해질 막 제조.
 
@@ -78,7 +78,7 @@ Yuan et al. 2026은 PEO-LiTFSI 막에 SiO₂ 나노시트를 층층이 넣어 �
 | `deng2016_elastic_superionic_electrolytes_dft` | Deng et al. 2016 | Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations | PBEsol로 23종 초이온 전도체의 전체 탄성텐서를 계산해 thiophosphate가 가장 무르고 연성임을 보였다. |
 | `tian2020_electrochemo_mechanical_stress_assb` | Tian et al. 2020 | Evaluation of The Electrochemo-Mechanically Induced Stress in All-Solid-State Li-Ion Batteries | Si/LiPON/LiCoO₂ 박막 셀에서 LiPON 분해 계면층의 부피 수축이 1.2 C 충전보다 큰 최대 제1주응력을 만든다고 계산했다. |
 | `cronau2021_stack_pressure_ionic_conductivity` | Cronau et al. 2021 | How to Measure a Reliable Ionic Conductivity? The Stack Pressure Dilemma of Microcrystalline Sulfide-Based Solid Electrolytes | 비정질과 유리세라믹은 제작압으로 소결되지만 미세결정은 소결되지 않아, 측정 때의 적층압이 전도도를 좌우한다. |
-| `cronau2022_wet_milling_particle_size_ionic_conductivity` | Cronau et al. 2022 | Ionic Conductivity versus Particle Size of Ball‐Milled Sulfide‐Based Solid Electrolytes: Strategy Towards Optimized Composite Cathode Performance in All‐Solid‐State Batteries | (카드 없음) |
+| `cronau2022_wet_milling_particle_size_ionic_conductivity` | Cronau et al. 2022 | Ionic Conductivity versus Particle Size of Ball‐Milled Sulfide‐Based Solid Electrolytes: Strategy Towards Optimized Composite Cathode Performance in All‐Solid‐State Batteries | 저에너지 습식 밀링으로 SE 입자를 1 µm까지 줄이면 용량이 오르지만, 전도도 하락이 커져 2 h에서 용량이 최대가 된다. |
 | `boger2023_thermal_conductivity_argyrodite_lgps` | Böger et al. 2023 | Thermal Conductivities of Lithium-Ion-Conducting Solid Electrolytes | 밀도가 다른 펠릿의 LFA 값을 Bruggeman 식으로 외삽하면 다섯 고체전해질의 치밀 κ_SE는 0.49–0.71 W m⁻¹ K⁻¹이고, 공극 지수는 1.5보다 크다. |
 | `torii2025_lpscl_mechanical_anisotropy_dft` | Torii et al. 2025 | First-Principles Investigation of Mechanical Properties and Anisotropy of Argyrodite Li₆PS₅Cl Crystal Electrolytes | Li₆PS₅Cl은 인장에는 변형률 0.2까지 선형으로 버티지만 전단에는 변형률 0.007에서 Li₄Cl 형성과 함께 파괴된다. |
 | `cao2026_dual_binder_18um_sulfide_electrolyte_film` | Cao et al. 2026 | Dual‐Binder‐Enabled 18‐µm‐Thick High‐Conductivity Sulfide Electrolyte Film for High‐Energy‐Density All‐Solid‐State Batteries | PTFE 전구막에 LiTFSI-PMEMA를 접어 넣어 18 µm, 1.56 mS cm⁻¹ 막을 얻었지만, DFT 기반 수송 기전은 근거가 약하다. |

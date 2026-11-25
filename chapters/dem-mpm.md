@@ -1,6 +1,6 @@
 # MPM과 연속체 모형
 
-전극 미세구조 · 공정 · 장 `dem-mpm` · 논문 23편 · 읽기 카드 21편
+전극 미세구조 · 공정 · 장 `dem-mpm` · 논문 22편 · 읽기 카드 22편
 
 > 물질점법과 연속체 구성 모형.
 
@@ -71,7 +71,7 @@
 4. Homel · Herbold 2017 (`homel2017_mpm_field_gradient_partitioning_fracture_self_contact`) — 노드당 두 장으로 장 수와 메모리 문제를 피하는 길을 보인다.
 5. Hu et al. 2018 (`hu2018_mls_mpm_cpic_two_way_rigid_coupling`) — 우리 Taichi MLS-MPM 이산화의 인용 원전이다.
 
-## 이 장의 논문 (23편)
+## 이 장의 논문 (22편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -95,6 +95,5 @@
 | `hu2018_mls_mpm_cpic_two_way_rigid_coupling` | Hu et al. 2018 | A moving least squares material point method with displacement discontinuity and two-way rigid body coupling | MLS-MPM은 APIC의 C_p로 힘과 변형구배를 구해 전달을 약 두 배 빠르게 하고, CPIC는 격자 한 장에서 강체 표면 양쪽 재료를 따로 움직이게 한다. |
 | `devaucorbeil2020_mpm_after_25_years_review` | de Vaucorbeil, Nguyen, Sinaie, Wu 2020 | Material point method after 25 years: Theory, implementation, and applications | MPM 25년을 정리한 첫 종합 리뷰로, 변종, 접촉, 파괴, 응용, 코드, 타 방법과의 비교를 한 틀에 묶었다. |
 | `nezamabadi2022_mpm_cd_plastic_particle_compaction` | Nezamabadi et al. 2022 | Modelling the compaction of plastic particle packings | 입자별 격자와 Contact Dynamics를 쓴 2D MPM에서 소성 원판은 탄성보다 낮은 응력으로 공극을 채우고, 재밍 뒤는 다공 연속체식이 따라간다. |
-| `sandoval2025_electro_chemo_mechanics_anode_free_ssb` | Sandoval et al. 2025 | Electro-chemo-mechanics of anode-free solid-state batteries | (카드 없음) |
-| `sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free` | Sandoval et al. 2025 | Visualizing diverse lithium growth and stripping behaviors in anode-free solid-state batteries with operando X-ray tomography | (카드 없음) |
+| `singer2022_partitioned_mpm_dem_coupling_kratos` | Singer et al. 2022 | A partitioned material point method and discrete element method coupling scheme | MPM과 DEM을 블랙박스로 두고 외곽에서 힘과 변위만 주고받는 약결합이 빔 충격과 블록 전도를 맞췄다. |
 | `pycompact2025_dem_mpfem_workflow` | Mohammadhosseinzadeh et al. 2026 | PyCompact: An integrated workflow for discrete element method–multi-particle finite element method for powder compaction simulation | LIGGGHTS 침강 packing의 (x, y, z, r) 표만 OpenRadioss MPFEM으로 넘겨 압축과 제하를 다시 풀었고, 상대밀도 편차는 최대 2.5 %였다. |

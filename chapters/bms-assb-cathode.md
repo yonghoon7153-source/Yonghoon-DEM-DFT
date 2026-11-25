@@ -1,6 +1,6 @@
 # 고체전지 복합양극
 
-전지 진단 · BMS · 장 `bms-assb-cathode` · 논문 35편 · 읽기 카드 15편
+전지 진단 · BMS · 장 `bms-assb-cathode` · 논문 35편 · 읽기 카드 16편
 
 > 복합양극 미세구조, 이온 · 전자 수송과 반응 속도, 그 모델과 측정.
 
@@ -26,7 +26,7 @@
 | `neumann2020_interfacial-effects-thiophosphate-assb-model` | Neumann A. et al. 2020 | Analysis of Interfacial Effects in All-Solid-State Batteries with Thiophosphate Solid Electrolytes | (카드 없음) |
 | `ansah2021_assb-fem-parametric-sweep-thickness-diffusivity` | Ansah S. et al. 2021 | A Comprehensive Parametric Study for Solid-state Lithium-ion Battery Through Finite Element Simulation | (카드 없음) |
 | `barai2021_delamination_cathode_llzo_multiscale` | Barai et al. 2021 | Investigation of Delamination-Induced Performance Decay at the Cathode/LLZO Interface | 박리는 양극 SOC 변화에 따른 수축 하나로 생기고, 그 세기는 Li 부분몰부피와 전해질 영률이 정한다. |
-| `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann et al. 2021 | Editors’ Choice—Quantifying the Impact of Charge Transport Bottlenecks in Composite Cathodes of All-Solid-State Batteries | (카드 없음) |
+| `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann et al. 2021 | Editors’ Choice—Quantifying the Impact of Charge Transport Bottlenecks in Composite Cathodes of All-Solid-State Batteries | EIS-TLM으로 NCM-622/Li₆PS₅Cl 양극의 부분 전도도와 τ²를 재어, 비용량 최적이 두 병목 사이인 42 vol% CAM 근처임을 보였다 |
 | `neumann2021_garnet_3d_structure_grain_boundaries_li_transport` | Neumann et al. 2021 | Effect of the 3D Structure and Grain Boundaries on Lithium Transport in Garnet Solid Electrolytes | 입계를 입자 사이 복셀 면의 계면 조건으로 넣어야 다공 garnet의 유효 이온전도도 감소가 실험 자릿수에 다가간다. |
 | `bielefeld2022_li_kinetics_morphology_voids_fem_composite_cathode` | Bielefeld et al. 2022 | Influence of Lithium Ion Kinetics, Particle Morphology and Voids on the Electrochemical Performance of Composite Cathodes for All-Solid-State Batteries | 맞춘 값 없는 3D FEM에서 충전 곡선 모양은 SOC 의존 D̃_Li와 j₀가 정했고, 과전압은 큰 입자와 큰 공극이 키웠다. |
 | `minnmann2022_designing_cathodes_solidstate` | Minnmann et al. 2022 | Designing Cathodes and Cathode Active Materials for Solid‐State Batteries | 고체전지 복합양극은 CAM과 SE의 함량, 입자 크기, 분포, 계면을 함께 맞춰야 한다는 정성 설계 지침을 제시한다. |
