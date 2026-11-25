@@ -13,6 +13,9 @@
   · 읽기 (library · episode_page · resolve_file) = 편마다 episode.json · SHA256SUMS · 파일 (일반 파일 · 크기 · sha256) 대조 —
     하나라도 어긋나면 그 편은 목록에서 빠지고 무엇이 깨졌는지 안내한다 (fail-closed).  파일 주소 = 등록된 편 · 등록된 역할만.
   · scripts/avi_package_episode.py · scripts/avi_register_episode.py · webapp/app.py (POST /videos/upload) 가 **같은 함수**를 부른다.
+  · 지우기 (delete_episode · 1저자 11-25) = 영구 삭제가 아니다 — 편 폴더를 <폴더>/.deleted/<id>__<UTC 시각>/ 로 옮기고 (지우지 않는다 ·
+    .replaced/ 보관과 같은 정신) 옆에 기록 <id>__<UTC 시각>.json (무엇 · 언제 · 명령 / web) · 되돌리기 = 그 폴더를 손으로 옮김.
+    명령 (avi_register_episode.py --delete) · 화면 (POST /videos/<id>/delete · 이 컴퓨터 · 같은 출처 · 확인 창) 이 같은 함수를 부른다.
   · 내부판 (visibility internal) = 화면에 빨간 배지 · 공개 안전 검사는 기록만 · 공개판 = 검사 통과해야 꾸러미 · 등록.
   · 공개판 꾸러미 (Codex 11-25 AVI-02 · 1저자 11-25 Q1 · Q2 (가)) = 영상 · 썸네일 · 자막 · **시청자 대본** (장면 파일에서 만든다 ·
     제작 대본은 넣지 않는다) · **공개 장면** (장면 파일의 공개 투영) · 시간표만.  제작 기록 (QC · 점검 기록 · 기준표 · README) 은
@@ -64,6 +67,9 @@ except ImportError:                     # pragma: no cover — 윈도우 (웹앱
 HERE = Path(__file__).resolve().parent
 SCHEMA = 'avi-episode/1'
 REG_SCHEMA = 'avi-registration/1'
+DEL_SCHEMA = 'avi-deletion/1'
+#: 지운 편의 보관 자리 (<폴더>/.deleted/) — 점으로 시작해 목록 (library) 이 읽지 않고 (.replaced/ 와 같다) · 편 id 꼴이 아니라 어떤 주소로도 안 열린다
+DELETED_DIR = '.deleted'
 KST = timezone(timedelta(hours=9))
 ID_RE = re.compile(r'[a-z0-9][a-z0-9_]{1,63}')
 RESERVED_IDS = frozenset({'upload'})
@@ -120,6 +126,11 @@ class BundleExists(BundleError):
 
 class BundleTooLarge(BundleError):
     status = 413
+
+
+class EpisodeMissing(BundleError):
+    """지우기 — 그 id 의 편 폴더가 없다 (영상 폴더가 없을 때 포함)."""
+    status = 404
 
 
 # ─────────────────────────────  작은 도우미  ─────────────────────────────
@@ -1269,6 +1280,75 @@ def register_dir(ep_dir, folder, *, ep_id, replace=False, via='cli', **pkg_kw):
         out = Path(td) / f'{check_id(ep_id)}.zip'
         package_episode(ep_dir, ep_id, out, **pkg_kw)
         return register_bundle(out, folder, replace=replace, via=via)
+
+
+# ─────────────────────────────  지우기 (보관 폴더로 옮김 · 1저자 11-25)  ─────────────────────────────
+
+def delete_episode(folder, ep_id, *, via='cli'):
+    """등록된 편 지우기 → dict(id, moved_to, record, restore_to, state).  ⚠ 영구 삭제가 아니다 — 편 폴더를 <folder>/.deleted/<id>__<UTC 시각>/
+    로 옮기고 (os.replace 한 번 · 파일 · 바이트 그대로 · .replaced/ 보관과 같은 정신) 그 옆에 작은 기록 <id>__<UTC 시각>.json (무엇 · 언제 ·
+    어떤 길 = cli · web) 을 남긴다.  되돌리기 = 그 폴더를 <folder>/<id>/ 로 손으로 옮긴다 (같은 id 편이 없을 때 · 기록은 역사로 남는다).
+
+    명령 (scripts/avi_register_episode.py --delete) · 화면 (POST /videos/<id>/delete) 이 이 함수를 부른다 · 등록 (register_bundle) 과 같은 잠금.
+    거부 = BundleError · 폴더 그대로: via 꼴 · 편 id 꼴 (check_id — 경로 · 구분자 · 빈 값 · 점 이름 · 예약어 upload) · 영상 폴더 · 편 폴더가
+    없음 (EpisodeMissing · 404 · 폴더를 만들지 않는다) · 편 폴더가 심볼릭 링크 · 보관 자리 (.deleted) 가 폴더가 아님 (심볼릭 링크 · 파일 —
+    링크 너머에 쓰지 않는다) · 같은 이름 보관본이 이미 있음.  옮긴 뒤 목록 (library) 에서 그 편만 빠진다 (점으로 시작하는 폴더는 읽지 않는다) —
+    다른 편 · 깨진 편 안내 그대로 · 같은 id 를 다시 등록할 수 있다 (--replace 없이).  깨진 편 (목록에서 뺀 편) 도 옮긴다 (기록 state broken · 사유)."""
+    if via not in ('cli', 'web'):
+        raise BundleError('via 는 cli · web')
+    check_id(ep_id)
+    root = Path(folder)
+    src = root / ep_id
+    keep = root / DELETED_DIR
+
+    def _target():
+        if not root.is_dir():
+            raise EpisodeMissing(f'없는 편 — {ep_id} (영상 폴더가 없다)')
+        if src.is_symlink():
+            raise BundleError(f'편 폴더가 심볼릭 링크다 — {ep_id} (옮기지 않는다 · 링크 · 대상은 손으로 정리한다)')
+        if not src.is_dir():
+            raise EpisodeMissing(f'없는 편 — {ep_id}')
+    _target()                                       # 잠그기 전에 한 번 — 거부면 .lock 도 만들지 않는다 (폴더 그대로)
+    with _lock(str(root)):
+        _target()                                   # 잠근 뒤 다시 — 같은 때의 올리기 · 지우기와 엇갈리지 않게
+        if keep.is_symlink() or (keep.exists() and not keep.is_dir()):
+            raise BundleError(f'보관 자리 ({DELETED_DIR}) 가 폴더가 아니다 (심볼릭 링크 · 파일) — 고친 뒤 지운다 (fail-closed · 옮기지 않았다)')
+        ep, why = load_episode(src)
+        man = (ep or {}).get('man') or {}
+        reg = (ep or {}).get('reg') or {}
+        vid = next((f for f in man.get('files') or [] if isinstance(f, dict) and f.get('role') == 'video'), None)
+        name = f"{ep_id}__{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}"
+        dst, rec_p, tmp = keep / name, keep / f'{name}.json', keep / f'.{name}.json.part'
+        if any(p.exists() or p.is_symlink() for p in (dst, rec_p, tmp)):
+            raise BundleError('같은 이름 보관본이 이미 있다 — 다시 지운다 (옮기지 않았다)')
+        rec = dict(schema=DEL_SCHEMA, id=ep_id, deleted_at=_now_kst().isoformat(timespec='seconds'), via=via,
+                   moved_to=f'{DELETED_DIR}/{name}', state=('ok' if ep else 'broken'))
+        if ep:
+            rec.update(visibility=man.get('visibility'), title=man.get('title'), series=man.get('series'), episode=man.get('episode'),
+                       video=(dict(name=vid.get('name'), sha256=vid.get('sha256')) if vid else None), files=len(man.get('files') or []),
+                       sums_sha256=ep.get('sums_sha'), bundle_sha256=reg.get('bundle_sha256'), registered_at=reg.get('registered_at'),
+                       registered_via=reg.get('via'))
+        else:
+            rec.update(why=why, visibility=_peek_visibility(src))
+        rec['restore'] = f'되돌리기 = 이 폴더를 <영상 폴더>/{ep_id}/ 로 손으로 옮긴다 (같은 id 편이 없을 때)'
+        made_keep = not keep.exists()
+        keep.mkdir(exist_ok=True)
+        try:
+            #  기록을 먼저 제 이름으로 (임시 → 이름 바꾸기) · 그다음 편 폴더를 한 번에 옮긴다 — 옮긴 뒤에는 실패할 일이 남지 않는다
+            tmp.write_text(json.dumps(rec, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+            os.replace(tmp, rec_p)
+            os.replace(src, dst)
+        except OSError as e:
+            for p in (tmp, rec_p):
+                with contextlib.suppress(OSError):
+                    p.unlink()
+            if made_keep:
+                with contextlib.suppress(OSError):
+                    keep.rmdir()
+            raise BundleError(f'편 폴더를 옮기지 못했다 ({type(e).__name__}) — 폴더 그대로')
+    for k in [k for k in _HELD_CACHE if k[0] == str(src)]:
+        _HELD_CACHE.pop(k, None)                   # 공개 보류 캐시 — 이 편 자리 열쇠는 비운다 (같은 id 를 다시 올리면 새로 잰다)
+    return dict(id=ep_id, moved_to=str(dst), record=str(rec_p), restore_to=str(src), state=rec['state'])
 
 
 # ─────────────────────────────  읽기 (화면)  ─────────────────────────────

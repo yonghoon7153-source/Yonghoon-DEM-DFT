@@ -6133,6 +6133,8 @@ def mixer_story_fig(name):
 #  (모듈 수준 import 없음 → 망 정지 경로 밖 · 194 실행기 DEP_LAZY_OFFPATH 에 분류).  자료 값 · 문장은 꾸러미 파일에서 읽는다 (템플릿
 #  templates/videos.html 에 베끼지 않는다).  파일 주소 = 등록된 편 · 등록된 역할만 (그 밖 = 404) · 재생 = Range (send_file conditional) ·
 #  받기 = attachment · 자막 = srt → WebVTT.  올리기 = 같은 등록 함수 · 이 컴퓨터 (루프백 · 프록시 머리 없음) · 같은 출처만.
+#  지우기 (1저자 11-25) = POST 만 · 올리기와 같은 관문 + 확인 창 표지 · 같은 지우기 함수 (video_library.delete_episode · 명령 --delete 와 같음) ·
+#  영구 삭제가 아니다 (편 폴더 → <영상 폴더>/.deleted/<id>__<UTC 시각>/ + 기록 · 되돌리기 = 그 폴더를 손으로 옮김).
 #  내부판 (visibility internal) = 이 컴퓨터에서만 (1저자 11-24 Q1) — 다른 컴퓨터의 요청에는 목록 · 재생목록 · 다른 시리즈 · 첫 편 · 편 화면 ·
 #  재생 · 받기 · 자막 어디에도 없다 (등록 안 된 편과 같은 404 · 있다는 사실도 흘리지 않는다).
 #  회귀 webapp/test_video_page.py.
@@ -6246,6 +6248,27 @@ def videos_upload():
     except video_library.BundleError as e:
         return _videos_render(None, e.status, f'등록하지 않았다 — {e}')
     return redirect(f"/videos/{res['id']}", code=303)
+
+
+@app.route('/videos/<ep_id>/delete', methods=['POST'])
+def videos_delete(ep_id):
+    """편 지우기 → 같은 지우기 함수 (video_library.delete_episode · via web) → 303 /videos.  POST 만 (GET = 405) · 올리기와 같은 관문 (이 컴퓨터 ·
+    같은 출처) · 확인 창 표지 (form confirm = 편 id — 화면 스크립트가 확인 창을 수락했을 때만 채운다 · 스크립트가 없으면 지우지 않는다).
+    영구 삭제가 아니다 — 편 폴더를 <영상 폴더>/.deleted/<id>__<UTC 시각>/ 로 옮기고 기록을 남긴다 (되돌리기 = 그 폴더를 손으로 옮김)."""
+    import video_library
+    if not _videos_local_request():
+        return _videos_render(None, 403, '지우기는 이 컴퓨터 (루프백 · 프록시를 거치지 않은 요청) 에서만 된다 — 명령 '
+                                        'scripts/avi_register_episode.py --delete <편 id> 를 쓴다')
+    if not _sec._same_origin(request):
+        return _videos_render(None, 403, '다른 출처에서 온 지우기 요청은 받지 않는다 (CSRF 막음)')
+    if request.form.get('confirm') != ep_id:
+        return _videos_render(None, 400, '확인 창을 거치지 않은 지우기 요청은 받지 않는다 — 편 화면의 "삭제" 단추 (확인 창) 또는 명령 '
+                                        'scripts/avi_register_episode.py --delete <편 id> 를 쓴다')
+    try:
+        video_library.delete_episode(app.config['VIDEO_FOLDER'], ep_id, via='web')
+    except video_library.BundleError as e:
+        return _videos_render(None, e.status, f'지우지 않았다 — {e}')
+    return redirect('/videos', code=303)
 
 
 # ─────────────────────────  공유 보고서 (/reports)  ─────────────────────────

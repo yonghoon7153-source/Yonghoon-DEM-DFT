@@ -26,6 +26,11 @@
            K11c 공개판 = MP4 길이를 못 재면 거부 · 내부판 = 미측정 기록 (Q4 3 회차 P2-1) ·
            K12 장면 파일 문장 ↔ 시간표 문장 (Q4 3 회차 P2-2) · K12b 공개판 = 대조 다섯을 다 잰다 ·
            K13 등록 = 공개판은 판 대조 기록 (다 잰 통과) 필수 · K13b 기록 없는 등록된 공개판 = 공개 보류 (Q4 3 회차 N10)
+  L 지우기 (1저자 11-25) — 같은 함수 (video_library.delete_episode · 화면 POST /videos/<id>/delete · 명령 --delete) · 영구 삭제가 아니다
+           (편 폴더 → <폴더>/.deleted/<id>__<UTC 시각>/ · 바이트 그대로 + 옆에 기록) · POST 만 (GET · DELETE = 405) · 올리기와 같은 관문
+           (이 컴퓨터 · 같은 출처) + 확인 창 표지 · 거부 (다른 컴퓨터 · 프록시 · 다른 출처 · 없는 편 · 예약어 · 경로 꼴 · 심볼릭 링크 ·
+           보관 자리 깨짐) = 폴더 그대로 · 옮긴 뒤 목록에서 빠지고 다른 편 · 깨진 편 안내 그대로 · 같은 id 를 --replace 없이 다시 등록 ·
+           단추 = 이 컴퓨터 편 화면에만 (on… 속성 없음 · 확인 창 글)
 ⚠ 금지값 (claims.json quotation_ban) 을 이 파일에 적지 않는다 — 철회값 검사는 등록부에서 실행 중에 읽는다.
 """
 import hashlib
@@ -1107,6 +1112,7 @@ def _run(webapp, V, c, tpl, app_src, lib_src, td):
         and "('webapp/app.py', 'video_library')" in (ROOT / 'scripts' / 'run_network_194_parallel.py').read_text(encoding='utf-8'))
 
     _run_k(webapp, V, c, td, have, pkg, refused, lib, ep, bun, zman, ib, iman, repo, csha)
+    _run_l(webapp, V, c, td, have, pkg, bun, ib, tpl, app_src, lib_src)
 
     print(f'\ntest_video_page: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 1 if _fail else 0
@@ -1677,6 +1683,329 @@ def _run_k(webapp, V, c, td, have, pkg, refused, lib, ep, bun, zman, ib, iman, r
     chk('K13 등록 — 공개판은 판 대조 기록 (다 잰 통과 · 지금 판) 이 있어야 (기록 없음 · 미측정 · MP4 못 잼 · 옛 도구 = 거부 · 반례 (d)) · '
         '내부판은 기록이 없어도 등록 · 기록이 있으면 등록', ok_k13)
     chk('K13b 판 대조 기록이 없는 등록된 공개판 = 공개 보류 (까닭 = 판 대조 기록 · 다른 컴퓨터 404 · 이 컴퓨터 빨간 배지)', ok_k13b)
+
+
+def _tree(folder):
+    """폴더 아래 (숨은 이름 포함) 항목마다 상대 경로 → 파일 sha256 · 'dir' · 'link:<대상>' — 옮긴 뒤 바이트까지 같은지 · 거부 뒤 그대로인지 본다."""
+    folder = Path(folder)
+    out = {}
+    if not folder.exists():
+        return out
+    for r, ds, fs in os.walk(folder):
+        for x in ds + fs:
+            p = Path(r) / x
+            if p.is_symlink():
+                out[os.path.relpath(p, folder)] = 'link:' + os.readlink(p)
+            elif p.is_dir():
+                out[os.path.relpath(p, folder)] = 'dir'
+            else:
+                out[os.path.relpath(p, folder)] = _sha(p.read_bytes())
+    return out
+
+
+def _fn_src(src, name):
+    """소스 글 → 그 이름의 함수 본문 (장식 빼고) · 없으면 ''."""
+    import ast
+    try:
+        tree = ast.parse(src)
+    except SyntaxError:
+        return ''
+    for n in ast.walk(tree):
+        if isinstance(n, ast.FunctionDef) and n.name == name:
+            return ast.get_source_segment(src, n) or ''
+    return ''
+
+
+def _run_l(webapp, V, c, td, have, pkg, bun, ib, tpl, app_src, lib_src):
+    """L. 지우기 (1저자 11-25) — 편 화면의 작은 "삭제" 단추 · 명령 --delete · 같은 함수 (video_library.delete_episode) ·
+    영구 삭제가 아니다 (편 폴더 → <폴더>/.deleted/<id>__<UTC 시각>/ + 옆에 기록) · POST 만 · 올리기와 같은 관문 (이 컴퓨터 · 같은 출처) ·
+    거부 = 폴더 그대로 · 옮긴 뒤 목록에서 빠지고 다른 편 · 깨진 편 안내 그대로 · 같은 id 를 --replace 없이 다시 등록."""
+    cfg = webapp.app.config
+    old_folder = cfg.get('VIDEO_FOLDER')
+    BE = getattr(V, 'BundleError', ValueError) if have else ValueError
+    dele = getattr(V, 'delete_episode', None) if have else None
+    TAGRX = r'__\d{8}T\d{12}Z'                              # .replaced/ 와 같은 UTC 꼴 (%Y%m%dT%H%M%S%fZ)
+    far = {'REMOTE_ADDR': '10.9.8.7'}
+    same = {'Origin': 'http://localhost'}                  # 시험 client 의 host = localhost (같은 출처)
+    L = td / 'lib_del'
+    kb = td / 'b' / 'del_keep.zip'
+
+    def rf(fn, *a, **kw):
+        """→ (거부됐나, 사유 글)."""
+        if fn is None:
+            return False, '지우기 함수 없음'
+        try:
+            fn(*a, **kw)
+        except BE as e:
+            return True, str(e)
+        except Exception as e:                              # noqa: BLE001
+            return False, f'다른 예외 {type(e).__name__}: {e}'
+        return False, '거부 안 함'
+
+    def lib_state(folder):
+        """→ ({편 id: SHA256SUMS sha256}, [(깨진 편, 사유)]) · 못 읽으면 None."""
+        try:
+            lb = V.library(folder)
+        except Exception:                                   # noqa: BLE001
+            return None
+        return ({e['man']['id']: e['sums_sha'] for e in lb['episodes']}, sorted((q['ep'], q['why']) for q in lb['problems']))
+
+    def moved(folder, ep_id):
+        """.deleted 아래 그 편의 (보관 폴더들, 기록들) — 이름 순 (= 옮긴 때 순)."""
+        k = Path(folder) / '.deleted'
+        if not k.is_dir() or k.is_symlink():
+            return [], []
+        rx = re.escape(ep_id) + TAGRX
+        ds = sorted(p for p in k.iterdir() if p.is_dir() and not p.is_symlink() and re.fullmatch(rx, p.name))
+        js = sorted(p for p in k.iterdir() if p.is_file() and re.fullmatch(rx + r'\.json', p.name))
+        return ds, js
+
+    def rec_of(p):
+        try:
+            return json.loads(Path(p).read_text(encoding='utf-8'))
+        except Exception:                                   # noqa: BLE001
+            return {}
+
+    def post(u, data=None, **kw):
+        return c.post(u, data=(data if data is not None else {}), **kw)
+
+    ok_setup = False
+    if have:
+        try:
+            pkg(make_ep(td / 'src' / 'del_keep', qc_secret=False), 'ep58_keep', kb)
+            V.register_bundle(bun, L)                       # ep99_test (공개판)
+            V.register_bundle(kb, L)                        # ep58_keep (공개판 · 같은 시리즈)
+            if ib.is_file():
+                V.register_bundle(ib, L)                    # ep98_int (내부판)
+            (L / 'ep57_broken').mkdir()                     # 깨진 편 = 등록부 문제 목록에 한 줄
+            (L / 'ep57_broken' / 'episode.json').write_text('{"schema": ', encoding='utf-8')
+            ok_setup = True
+        except Exception as e:                              # noqa: BLE001
+            print(f'    L 준비 예외 — {type(e).__name__}: {e}')
+    st0 = lib_state(L) if ok_setup else None
+    try:
+        cfg['VIDEO_FOLDER'] = str(L)
+        _run_l_body(V, c, td, dele, rf, lib_state, moved, rec_of, post, far, same, L, kb, bun, st0, ok_setup, tpl, app_src, lib_src)
+    finally:
+        cfg['VIDEO_FOLDER'] = old_folder
+
+
+def _run_l_body(V, c, td, dele, rf, lib_state, moved, rec_of, post, far, same, L, kb, bun, st0, ok_setup, tpl, app_src, lib_src):
+    # ═══ L1. 라이브러리 지우기 = 옮김 (지우지 않음 · 바이트 그대로) + 옆에 기록 · 목록에서 빠짐 · 다른 편 · 깨진 편 안내 그대로 ═══
+    want_eps = {'ep99_test', 'ep58_keep', 'ep98_int'}
+    chk(f'L0 준비 — 공개판 둘 (ep99_test · ep58_keep) · 내부판 하나 · 깨진 편 하나 (등록부 문제 목록) ({st0 and sorted(st0[0])})',
+        ok_setup and st0 is not None and set(st0[0]) == want_eps and [e_ for e_, _ in st0[1]] == ['ep57_broken'])
+    t99 = _tree(L / 'ep99_test')
+    res1 = {}
+    if ok_setup and dele is not None:
+        try:
+            res1 = dele(L, 'ep99_test', via='cli') or {}
+        except Exception as e:                              # noqa: BLE001
+            print(f'    L1 예외 — {type(e).__name__}: {e}')
+    ds1, js1 = moved(L, 'ep99_test')
+    chk(f'L1 지우기 = 편 폴더를 .deleted/<id>__<UTC 시각>/ 로 옮긴다 (영구 삭제 아님 · 옮긴 폴더 = 파일 · 바이트 그대로 · '
+        f'registration.json 포함) · 그 옆에 같은 이름 .json 기록 ({len(ds1)} · {len(js1)})',
+        bool(t99) and 'registration.json' in t99 and not (L / 'ep99_test').exists() and len(ds1) == 1 and len(js1) == 1
+        and _tree(ds1[0]) == t99 and js1[0].name == ds1[0].name + '.json')
+    r1 = rec_of(js1[0]) if len(js1) == 1 else {}
+    reg1 = rec_of(ds1[0] / 'registration.json') if len(ds1) == 1 else {}
+    chk('L1b 기록 = 무엇 (id · 공개 범위 · 꾸러미 sha256 = 등록 기록) · 언제 (deleted_at) · 어떤 길 (via cli) · 옮긴 자리 (.deleted/ 상대) · '
+        '절대 경로 없음 · 함수 반환 = 옮긴 자리 · 기록 경로',
+        r1.get('schema') == 'avi-deletion/1' and r1.get('id') == 'ep99_test' and r1.get('via') == 'cli' and r1.get('state') == 'ok'
+        and r1.get('moved_to') == '.deleted/' + (ds1[0].name if ds1 else '?') and r1.get('visibility') == 'public'
+        and len(str(r1.get('bundle_sha256') or '')) == 64 and r1.get('bundle_sha256') == reg1.get('bundle_sha256')
+        and bool(re.match(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}', str(r1.get('deleted_at') or '')))
+        and str(td) not in json.dumps(r1, ensure_ascii=False)
+        and res1.get('id') == 'ep99_test' and res1.get('moved_to') == (str(ds1[0]) if ds1 else '?')
+        and res1.get('record') == (str(js1[0]) if js1 else '?'))
+    st1 = lib_state(L)
+    chk('L1c 옮긴 뒤 목록 (library) 에서 그 편만 빠진다 — 다른 편 (SHA256SUMS 까지) · 등록부 문제 목록 (깨진 편 · 사유) 그대로',
+        st0 is not None and st1 is not None and set(st1[0]) == set(st0[0]) - {'ep99_test'}
+        and all(st1[0][k_] == st0[0][k_] for k_ in st1[0]) and st1[1] == st0[1])
+    hl = c.get('/videos').get_data(as_text=True)
+    mv1 = ds1[0].name if ds1 else 'ep99_test__x'
+    probs1 = re.findall(r'<li class="vd-problem"[^>]*data-ep="([^"]+)"', hl)
+    chk('L1d 화면 — /videos 에 지운 편 · 보관본 (이름 · 링크 · 문제 줄) 없음 · 깨진 편 안내 그대로 (한 줄) · 지운 편 화면 · 재생 = 404 · '
+        '보관 폴더는 어떤 주소로도 안 열린다 · 다른 편 그대로 200 (단추 툴팁 · 확인 창 글의 ".deleted/" 는 안내 글)',
+        bool(ds1) and 'ep99_test' not in hl and mv1 not in hl and 'href="/videos/.deleted' not in hl and probs1 == ['ep57_broken']
+        and c.get('/videos/ep99_test').status_code == 404 and c.get('/videos/ep99_test/media/video').status_code == 404
+        and all(c.get(u_).status_code == 404 for u_ in ('/videos/.deleted', f'/videos/{mv1}', f'/videos/{mv1}/media/video',
+                                                         '/videos/.deleted/media/video', f'/videos/%2edeleted%2f{mv1}/media/video'))
+        and c.get('/videos/ep58_keep').status_code == 200)
+
+    # ═══ L2. 거부 = 폴더 그대로 (웹 · 라이브러리 · 명령 전 · 경계 자리) ═══
+    T0 = _tree(L)
+    bad = []
+
+    def expect(name, r_, codes, word=None):
+        body = r_.get_data(as_text=True)
+        if r_.status_code not in codes or (word is not None and word not in body):
+            bad.append((name, r_.status_code))
+    expect('GET', c.get('/videos/ep58_keep/delete'), (405,))
+    expect('DELETE 메서드', c.delete('/videos/ep58_keep/delete'), (405,))
+    expect('다른 컴퓨터', post('/videos/ep58_keep/delete', {'confirm': 'ep58_keep'}, environ_base=far), (403,), '지우기는 이 컴퓨터')
+    expect('프록시 (X-Forwarded-For)', post('/videos/ep58_keep/delete', {'confirm': 'ep58_keep'},
+                                            headers={'X-Forwarded-For': '203.0.113.9'}), (403,), '지우기는 이 컴퓨터')
+    expect('프록시 (Forwarded)', post('/videos/ep58_keep/delete', {'confirm': 'ep58_keep'}, headers={'Forwarded': 'for=203.0.113.9'}),
+           (403,), '지우기는 이 컴퓨터')
+    expect('다른 출처 (Origin)', post('/videos/ep58_keep/delete', {'confirm': 'ep58_keep'}, headers={'Origin': 'http://evil.example'}),
+           (403,), 'CSRF')
+    expect('다른 출처 (Referer)', post('/videos/ep58_keep/delete', {'confirm': 'ep58_keep'},
+                                       headers={'Referer': 'http://evil.example/videos'}), (403,), 'CSRF')
+    expect('Origin null', post('/videos/ep58_keep/delete', {'confirm': 'ep58_keep'}, headers={'Origin': 'null'}), (403,), 'CSRF')
+    expect('확인 표지 없음', post('/videos/ep58_keep/delete', {}, headers=same), (400,), '확인 창을 거치지')
+    expect('확인 표지 다름', post('/videos/ep58_keep/delete', {'confirm': 'ep98_int'}, headers=same), (400,), '확인 창을 거치지')
+    expect('없는 편', post('/videos/nope_ep/delete', {'confirm': 'nope_ep'}, headers=same), (404,), '없는 편')
+    expect('예약어 upload', post('/videos/upload/delete', {'confirm': 'upload'}, headers=same), (400,), '편 id 꼴')
+    for u_, cf_ in (('/videos/%2e%2e/delete', '..'), ('/videos/../delete', '..'), ('/videos/..%2fep58_keep/delete', '../ep58_keep'),
+                    ('/videos//delete', ''), ('/videos/.deleted/delete', '.deleted'), ('/videos/EP58_KEEP/delete', 'EP58_KEEP'),
+                    ('/videos/ep58_keep%2f..%2fep58_keep/delete', 'ep58_keep/../ep58_keep')):
+        r_ = post(u_, {'confirm': cf_}, headers=same)
+        if r_.status_code < 400 and r_.status_code != 308:
+            bad.append((u_, r_.status_code))
+    a_ = post('/videos/ep98_int/delete', {'confirm': 'ep98_int'}, environ_base=far)
+    b_ = post('/videos/nope_ep/delete', {'confirm': 'nope_ep'}, environ_base=far)
+    chk(f'L2 웹 거부 — GET · DELETE = 405 · 다른 컴퓨터 · 프록시 둘 = 403 (이 컴퓨터) · 다른 출처 (Origin · Referer · null) = 403 (CSRF) · '
+        f'확인 창 표지 없음 · 다름 = 400 · 없는 편 = 404 · 예약어 · 경로 꼴 일곱 = 거부 · 폴더 그대로 ({bad[:4]})',
+        not bad and _tree(L) == T0 and (L / 'ep58_keep' / 'episode.json').is_file())
+    chk('L2b 다른 컴퓨터의 지우기 요청 — 내부판 편 · 없는 편이 같은 응답 (403 · 본문 바이트까지 · 내부판이 있다는 사실을 흘리지 않는다)',
+        a_.status_code == b_.status_code == 403 and a_.get_data() == b_.get_data() and 'ep98_int' not in a_.get_data(as_text=True))
+    lib_bad = []
+    for bad_id in ('..', '../ep58_keep', 'ep58_keep/..', 'ep58_keep/../ep58_keep', '/', '', '.deleted', '.replaced', '.lock', '.incoming-x',
+                   'EP58_KEEP', ' ep58_keep', 'ep58_keep\n', 'ep58_keep\x00', 'upload', 'a', None, 58):
+        r_, w_ = rf(dele, L, bad_id)
+        if not r_:
+            lib_bad.append((bad_id, w_[:40]))
+    r_v, w_v = rf(dele, L, 'ep58_keep', via='other')
+    r_n, w_n = rf(dele, L, 'nope_ep')
+    chk(f'L2c 라이브러리 거부 — 경로 꼴 · 구분자 · 빈 값 · 점 이름 · 대문자 · 앞뒤 공백 · 제어 문자 · 예약어 · 한 글자 · 글 아닌 값 열여덟 · '
+        f'via 꼴 · 없는 편 (사유 "없는 편") = BundleError · 폴더 그대로 ({lib_bad[:3]} · {w_n[:30]})',
+        dele is not None and not lib_bad and r_v and r_n and '없는 편' in w_n and _tree(L) == T0)
+    edge_ok = False
+    if dele is not None:
+        L2 = td / 'lib_del2'
+        nolib = td / 'lib_del_none'
+        else_ = td / 'lib_del_elsewhere'
+        try:
+            V.register_bundle(kb, L2)
+            os.symlink(str(L2 / 'ep58_keep'), str(L2 / 'ep55_link'))
+            tl0 = _tree(L2)
+            r_m, w_m = rf(dele, nolib, 'ep58_keep')
+            r_l, w_l = rf(dele, L2, 'ep55_link')
+            same_after_link = _tree(L2) == tl0 and (L2 / 'ep55_link').is_symlink()
+            else_.mkdir()
+            os.symlink(str(else_), str(L2 / '.deleted'))
+            tl1 = _tree(L2)
+            r_s, w_s = rf(dele, L2, 'ep58_keep')
+            same_after_sym = _tree(L2) == tl1 and not any(else_.iterdir())
+            (L2 / '.deleted').unlink()
+            (L2 / '.deleted').write_text('파일\n', encoding='utf-8')
+            tl2 = _tree(L2)
+            r_f, w_f = rf(dele, L2, 'ep58_keep')
+            same_after_file = _tree(L2) == tl2
+            edge_ok = (r_m and '없는 편' in w_m and not nolib.exists() and r_l and '심볼릭 링크' in w_l and same_after_link
+                       and r_s and '.deleted' in w_s and same_after_sym and r_f and '.deleted' in w_f and same_after_file
+                       and (L2 / 'ep58_keep' / 'episode.json').is_file())
+            if not edge_ok:
+                print(f'    L2d — {(r_m, w_m[:40], nolib.exists())} {(r_l, w_l[:40])} {(r_s, w_s[:40])} {(r_f, w_f[:40])}')
+        except Exception as e:                              # noqa: BLE001
+            print(f'    L2d 예외 — {type(e).__name__}: {e}')
+    chk('L2d 경계 자리 — 영상 폴더가 없음 (= 없는 편 · 폴더를 만들지 않는다) · 편 폴더가 심볼릭 링크 (링크 · 대상 그대로) · 보관 자리 (.deleted) 가 '
+        '심볼릭 링크 · 파일 = 거부 · 폴더 그대로 (링크 너머에 아무것도 안 쓴다)', edge_ok)
+
+    # ═══ L3. 웹 지우기 (이 컴퓨터 · 같은 출처 · 확인 창 표지) = 303 → /videos · 옮김 · 기록 via web ═══
+    t58 = _tree(L / 'ep58_keep')
+    r = post('/videos/ep58_keep/delete', {'confirm': 'ep58_keep'}, headers=same)
+    ds2, js2 = moved(L, 'ep58_keep')
+    r2 = rec_of(js2[0]) if len(js2) == 1 else {}
+    chk(f'L3 웹 지우기 — 303 → /videos · 편 폴더 → .deleted/ (바이트 그대로) · 기록 via web ({r.status_code})',
+        r.status_code == 303 and r.headers.get('Location', '').endswith('/videos') and not (L / 'ep58_keep').exists()
+        and len(ds2) == 1 and len(js2) == 1 and _tree(ds2[0]) == t58 and r2.get('via') == 'web' and r2.get('id') == 'ep58_keep'
+        and r2.get('state') == 'ok')
+    st2 = lib_state(L)
+    chk('L3b 웹 지우기 뒤 — 남은 편 (내부판) · 등록부 문제 목록 그대로 · 먼저 옮긴 보관본 (ep99_test) 그대로',
+        st0 is not None and st2 is not None and set(st2[0]) == set(st0[0]) - {'ep99_test', 'ep58_keep'}
+        and all(st2[0][k_] == st0[0][k_] for k_ in st2[0]) and st2[1] == st0[1] and len(ds1) == 1 and _tree(ds1[0]) == t99)
+
+    # ═══ L4. 지운 뒤 같은 id 를 --replace 없이 다시 등록 (명령 함수 · 웹 올리기) ═══
+    ok_re = False
+    try:
+        V.register_bundle(bun, L)                           # replace 없이
+        up = c.post('/videos/upload', data={'bundle': (io.BytesIO(kb.read_bytes()), kb.name)}, content_type='multipart/form-data')
+        reg_new = rec_of(L / 'ep99_test' / 'registration.json')
+        ok_re = (up.status_code == 303 and (L / 'ep99_test' / 'episode.json').is_file() and (L / 'ep58_keep' / 'episode.json').is_file()
+                 and reg_new.get('replaced') is False and _tree(ds1[0]) == t99 and _tree(ds2[0]) == t58
+                 and c.get('/videos/ep99_test').status_code == 200 and c.get('/videos/ep58_keep').status_code == 200)
+    except Exception as e:                                  # noqa: BLE001
+        print(f'    L4 예외 — {type(e).__name__}: {e}')
+    chk('L4 지운 뒤 같은 id = --replace 없이 다시 등록 (명령 함수 · 웹 올리기 둘 다 · registration.json replaced False) · 보관본 그대로', ok_re)
+
+    # ═══ L5. 화면 — 이 컴퓨터 편 화면에만 작은 "삭제" 단추 (form POST · 확인 창 표지 빈칸 · on… 속성 없음) · 다른 컴퓨터에는 없다 ═══
+    hp = c.get('/videos/ep99_test').get_data(as_text=True)
+    fm = re.search(r'<form[^>]*class="vd-del"[^>]*>.*?</form>', hp, re.S)
+    ft = fm.group(0) if fm else ''
+    chk('L5 이 컴퓨터 편 화면 — 받기 줄 뒤에 작은 "삭제" 단추 (form method post · action /videos/<id>/delete · data-ep · 확인 창 표지 '
+        'confirm = 빈칸 · 받기 단추 꼴 (vd-btn) 아님) · on… 속성 없음',
+        bool(ft) and 'method="post"' in ft and 'action="/videos/ep99_test/delete"' in ft and 'data-ep="ep99_test"' in ft
+        and 'name="confirm" value=""' in ft and '>삭제</button>' in ft and 'vd-btn' not in ft
+        and re.search(r'<[a-zA-Z][^>]*\son[a-z]+\s*=', ft) is None and 0 <= hp.find('class="vd-actions"') < hp.find('class="vd-del"'))
+    rf_ = c.get('/videos/ep99_test', environ_base=far)
+    hf = rf_.get_data(as_text=True)
+    chk('L5b 다른 컴퓨터 편 화면 — 삭제 단추 · 지우기 주소 없음 (공개판 화면은 그대로 200)',
+        rf_.status_code == 200 and re.search(r'<form[^>]*class="vd-del"', hf) is None and '/delete"' not in hf)
+    chk('L5c 확인 창 — 템플릿 스크립트가 submit 에서 confirm ("<id> 를 지울까요? (보관 폴더 .deleted/ 로 옮김 · 되돌리기 = 그 폴더를 손으로 '
+        '옮김)") 을 묻고 수락했을 때만 표지를 채운다 · 편 id 는 data-ep 에서 읽는다 (템플릿에 편 id 를 베끼지 않는다)',
+        "' 를 지울까요? (보관 폴더 .deleted/ 로 옮김 · 되돌리기 = 그 폴더를 손으로 옮김)'" in tpl and "addEventListener('submit'" in tpl
+        and 'window.confirm(' in tpl and "getAttribute('data-ep')" in tpl and 'preventDefault()' in tpl
+        and 'ep99_test' not in tpl and 'ep01_mixer' not in tpl)
+
+    # ═══ L6. 명령 — scripts/avi_register_episode.py --delete (같은 함수 · via cli) ═══
+    env = {k: v for k, v in os.environ.items() if k not in ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE')}
+    env['WEBAPP_VIDEO_FOLDER'] = str(td / 'lib_del_envdefault')
+
+    def run(*args):
+        p = subprocess.run([sys.executable, '-I', *map(str, args)], capture_output=True, text=True, env=env, cwd=str(td))
+        return p.returncode, p.stdout + p.stderr
+    t99b = _tree(L / 'ep99_test')
+    rc1, o1 = run(REG, '--delete', 'ep99_test', '--folder', L)
+    ds3, js3 = moved(L, 'ep99_test')
+    rc2, o2 = run(REG, '--delete', 'ep99_test', '--folder', L)
+    rc3, o3 = run(REG, '--delete', '../ep58_keep', '--folder', L)
+    rc4, o4 = run(REG, kb, '--delete', 'ep58_keep', '--folder', L)
+    rc5, o5 = run(REG, '--folder', L)
+    chk(f'L6 명령 --delete — rc 0 · 옮긴 자리 · 되돌리기 안내 · 두 번째 보관본 (앞 보관본 · 기록 그대로) · 기록 via cli · 같은 편 다시 = rc 1 '
+        f'(없는 편) · 경로 꼴 = rc 1 · 꾸러미와 같이 · 아무것도 안 줌 = rc 2 ({rc1, rc2, rc3, rc4, rc5})',
+        (rc1, rc2, rc3, rc4, rc5) == (0, 1, 1, 2, 2) and '.deleted' in o1 and '되돌리기' in o1 and not (L / 'ep99_test').exists()
+        and len(ds3) == 2 and len(js3) == 2 and _tree(ds3[0]) == t99 and _tree(ds3[1]) == t99b and rec_of(js3[0]) == r1
+        and rec_of(js3[1]).get('via') == 'cli' and '없는 편' in o2 and '편 id 꼴' in o3 and (L / 'ep58_keep' / 'episode.json').is_file())
+
+    # ═══ L7. 깨진 편 (등록부 문제 목록의 편) 도 옮길 수 있다 — 기록 state broken + 사유 · 다른 편 그대로 ═══
+    ok_brk = False
+    st_pre = lib_state(L)
+    if dele is not None and st_pre is not None:
+        try:
+            dele(L, 'ep57_broken', via='cli')
+            dsb, jsb = moved(L, 'ep57_broken')
+            rb = rec_of(jsb[0]) if len(jsb) == 1 else {}
+            stb = lib_state(L)
+            ok_brk = (rb.get('state') == 'broken' and isinstance(rb.get('why'), str) and bool(rb['why']) and not (L / 'ep57_broken').exists()
+                      and len(dsb) == 1 and (dsb[0] / 'episode.json').read_text(encoding='utf-8') == '{"schema": '
+                      and stb is not None and stb[0] == st_pre[0] and stb[1] == [x for x in st_pre[1] if x[0] != 'ep57_broken'])
+        except Exception as e:                              # noqa: BLE001
+            print(f'    L7 예외 — {type(e).__name__}: {e}')
+    chk('L7 깨진 편도 옮긴다 (기록 state broken · 사유) · 깨진 그대로 보관 · 다른 편 · 남은 문제 목록 그대로', ok_brk)
+
+    # ═══ L8. 같은 함수 · 같은 관문 (정적) — 웹 경로 = POST 만 · 올리기와 같은 두 함수 · 같은 잠금 · 지우는 호출 없음 ═══
+    dsrc, usrc, lsrc = _fn_src(app_src, 'videos_delete'), _fn_src(app_src, 'videos_upload'), _fn_src(lib_src, 'delete_episode')
+    reg_src = REG.read_text(encoding='utf-8') if REG.is_file() else ''
+    chk('L8 웹 경로 = POST 만 · 올리기와 같은 관문 함수 둘 (_videos_local_request · _sec._same_origin) · 같은 지우기 함수 (via web · 명령 = via cli) · '
+        '라이브러리 = 등록과 같은 잠금 (_lock) · os.replace 로 옮김 · rmtree 없음',
+        "@app.route('/videos/<ep_id>/delete', methods=['POST'])" in app_src and bool(dsrc)
+        and dsrc.find('_videos_local_request()') < dsrc.find('_sec._same_origin(request)') < dsrc.find('video_library.delete_episode(')
+        and dsrc.find('_videos_local_request()') >= 0
+        and '_videos_local_request()' in usrc and '_sec._same_origin(request)' in usrc and "via='web'" in dsrc
+        and 'V.delete_episode(' in reg_src and "via='cli'" in reg_src
+        and '_lock(' in lsrc and 'os.replace(' in lsrc and 'rmtree' not in lsrc and 'check_id(' in lsrc)
 
 
 if __name__ == '__main__':
