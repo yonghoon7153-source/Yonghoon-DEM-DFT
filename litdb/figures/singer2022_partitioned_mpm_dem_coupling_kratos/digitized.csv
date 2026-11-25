@@ -1,0 +1,41 @@
+figure,series,x_name,x,y_name,y,note
+fig11,Liu et al experiment (black circles),time_s,0.10,rotation_angle_beta_deg,89.9,"PDF vector markers on p.20 (axis labels are drawn as glyph paths, so the scale comes from the markers: all series start at 90 deg, the experiment ends at 0 deg; dashed minor grid 17.2 pt per 10 deg); ±0.5 deg"
+fig11,Liu et al experiment (black circles),time_s,0.15,rotation_angle_beta_deg,89.9,
+fig11,Liu et al experiment (black circles),time_s,0.20,rotation_angle_beta_deg,89.8,
+fig11,Liu et al experiment (black circles),time_s,0.25,rotation_angle_beta_deg,88.2,
+fig11,Liu et al experiment (black circles),time_s,0.30,rotation_angle_beta_deg,76.5,
+fig11,Liu et al experiment (black circles),time_s,0.35,rotation_angle_beta_deg,32.4,
+fig11,Liu et al experiment (black circles),time_s,0.40,rotation_angle_beta_deg,5.5,
+fig11,Liu et al experiment (black circles),time_s,0.45,rotation_angle_beta_deg,0.3,
+fig11,Liu et al experiment (black circles),time_s,0.50,rotation_angle_beta_deg,0.1,
+fig11,Liu et al simulation (blue crosses),time_s,0.10,rotation_angle_beta_deg,89.9,"PDF vector markers on p.20 (axis labels are drawn as glyph paths, so the scale comes from the markers: all series start at 90 deg, the experiment ends at 0 deg; dashed minor grid 17.2 pt per 10 deg); ±0.5 deg"
+fig11,Liu et al simulation (blue crosses),time_s,0.15,rotation_angle_beta_deg,89.9,
+fig11,Liu et al simulation (blue crosses),time_s,0.20,rotation_angle_beta_deg,89.9,
+fig11,Liu et al simulation (blue crosses),time_s,0.25,rotation_angle_beta_deg,81.6,
+fig11,Liu et al simulation (blue crosses),time_s,0.30,rotation_angle_beta_deg,78.1,
+fig11,Liu et al simulation (blue crosses),time_s,0.35,rotation_angle_beta_deg,42.8,
+fig11,Liu et al simulation (blue crosses),time_s,0.40,rotation_angle_beta_deg,23.0,
+fig11,Liu et al simulation (blue crosses),time_s,0.45,rotation_angle_beta_deg,1.1,
+fig11,Liu et al simulation (blue crosses),time_s,0.50,rotation_angle_beta_deg,0.1,
+fig11,Jiang et al simulation (orange stars),time_s,0.10,rotation_angle_beta_deg,89.9,"PDF vector markers on p.20 (axis labels are drawn as glyph paths, so the scale comes from the markers: all series start at 90 deg, the experiment ends at 0 deg; dashed minor grid 17.2 pt per 10 deg); ±0.5 deg"
+fig11,Jiang et al simulation (orange stars),time_s,0.15,rotation_angle_beta_deg,89.9,
+fig11,Jiang et al simulation (orange stars),time_s,0.20,rotation_angle_beta_deg,89.9,
+fig11,Jiang et al simulation (orange stars),time_s,0.25,rotation_angle_beta_deg,89.4,
+fig11,Jiang et al simulation (orange stars),time_s,0.30,rotation_angle_beta_deg,63.6,
+fig11,Jiang et al simulation (orange stars),time_s,0.35,rotation_angle_beta_deg,41.0,
+fig11,Jiang et al simulation (orange stars),time_s,0.40,rotation_angle_beta_deg,3.3,
+fig11,Jiang et al simulation (orange stars),time_s,0.45,rotation_angle_beta_deg,0.1,
+fig11,Jiang et al simulation (orange stars),time_s,0.50,rotation_angle_beta_deg,0.1,
+fig11,Current work (green circles),time_s,0.10,rotation_angle_beta_deg,89.5,"PDF vector markers on p.20 (axis labels are drawn as glyph paths, so the scale comes from the markers: all series start at 90 deg, the experiment ends at 0 deg; dashed minor grid 17.2 pt per 10 deg); ±0.5 deg"
+fig11,Current work (green circles),time_s,0.15,rotation_angle_beta_deg,89.5,
+fig11,Current work (green circles),time_s,0.20,rotation_angle_beta_deg,89.5,
+fig11,Current work (green circles),time_s,0.25,rotation_angle_beta_deg,89.5,
+fig11,Current work (green circles),time_s,0.30,rotation_angle_beta_deg,84.1,
+fig11,Current work (green circles),time_s,0.35,rotation_angle_beta_deg,47.3,
+fig11,Current work (green circles),time_s,0.40,rotation_angle_beta_deg,-1.0,
+fig11,Current work (green circles),time_s,0.45,rotation_angle_beta_deg,-0.5,
+fig11,Current work (green circles),time_s,0.50,rotation_angle_beta_deg,-0.5,
+fig10_text,block 2 resting distance from the left box wall (experiment [36]),quantity,distance,cm,34.6,printed p.20
+fig10_text,block 2 resting distance (this simulation),quantity,distance,cm,34.5,printed p.20
+fig10_text,top block resting distance (experiment [36]),quantity,distance,cm,40.1,printed p.20
+fig10_text,top block resting distance (this simulation),quantity,distance,cm,39.7,printed p.20

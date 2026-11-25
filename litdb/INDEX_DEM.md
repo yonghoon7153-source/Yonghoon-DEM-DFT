@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 391편 · 생성 2026-11-25
+> digest 392편 · 생성 2026-11-25
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -41,7 +41,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (26편)
+## MPM · 연속체 (27편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -67,6 +67,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free` | Structural and electrochemical evolution of alloy interfacial layers in anode-free solid-state batteries — Sandoval et al. (Joule 2023, 7, 2054–2073) | exp 주 (정전류 반쪽 · 완전 셀 · in situ 정전위 EIS · PFIB / cryo-FIB-SEM | 2026-11-24 | 🖼 17 |
 | `sandoval2025_electro_chemo_mechanics_anode_free_ssb` | 무음극 (anode-free) 전고체전지의 전기-화학-역학 — 첫 석출 (접촉 · 핵생성 · 적층압 · 온도 · 집전체 두께 · Cu/Li₂O 화학 불균일 · SE 미세구조) → 사이클 (CE > 99.95 % · 방전 끝 국부 Li 고갈 공극 → 다음 충전 필라멘트) → 인터레이어 (탄소 · Au/Ag · Li₂Te · | review (Perspective · 자체 계산 0 · 자체 실험 0 · SI = 에너지밀도 산정 1 건) | 2026-11-24 | 🖼 9 |
 | `sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free` | 무음극 Li \\| Li₆PS₅Cl \\| (Au · Ag 100 nm 입힌) Cu 반쪽 셀 셋의 operando X 선 μCT — 굵은 분말 · 고분극 셀은 집전체 계면 전체에서 Li 로 찬 균열 (원래 기공을 채우지 않고 그 옆에서 자라 기공을 닫음 · 박리로 줄지만 ≈ 20 % 남음) · 고운 분말 · 저분극 셀은 평평 | exp (operando 싱크로트론 X 선 μCT + 정전류 전기화학 + 영상 분할 · 원자단위 계산 0) | 2026-11-24 | 🖼 14 |
+| `singer2022_partitioned_mpm_dem_coupling_kratos` | MPM (연속체) 과 DEM (구 · 구 다발) 을 블랙박스 두 개로 나눠 공유 경계에서만 주고받는 분할 결합 (KRATOS) — DEM 이 먼저 접촉력을 내고 (벽 조건 = MPM 외곽) → 그 힘을 MPM 경계 입자에 점하중으로 (보존 사상 Hᵀ) → MPM (암시 Newmark) 이 움직인 경계를 다시 DEM 벽으로 | MPM–DEM 분할 결합 (KRATOS · MPM = 암시 Newmark 갱신 라그랑주 + 경계 입자 점하중 | 2026-11-25 | 🖼 14 |
 | `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` | MPM 구현 선택 (기저 함수 · 매끈함 길이 · 경계 처리) 이 오차 · 안정에 주는 영향 — 선형 · 2차 B-spline (+ 경계 수정 B-spline · 열린 균일 매듭) · uGIMP · cpGIMP 를 '조각 상수 함수의 합성곱' 하나로 묶고 (식 31) · 노드 적분 오차 = 합성 중점 O(Δx²) + 도약 | MPM (수치 해석 · 검증 — Uintah Computational Framework (UCF) 의 명시적 | 2026-11-12 | 🖼 74 |
 | `steffen2010_mpm_space_time_error_balance_moving_mesh` | MPM 의 공간 · 시간 오차를 떼어 내 균형 맞추기 — moving-mesh MPM (참조 배치 고정 · 격자 넘김 없음) 으로 시간 오차를 드러내고, 격자 넘김의 시간 도약 오차 O(Δt²) · 노드 적분 (quadrature) 오차의 누적 (전역 ∝ α^k · α = 1/셀당 물질점 · 선형 기저 k = 1 · 2차 | MPM numerical error analysis (1D · explicit Forward-Euler /  | 2026-11-12 | 🖼 179 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |

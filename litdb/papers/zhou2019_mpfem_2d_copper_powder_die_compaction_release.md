@@ -303,6 +303,7 @@ Eq. (5) [인쇄 · `eq_05_double_log_compaction_equation.png`]: **m · log ln[(�
 - `cantor2020_compaction_model_highly_deformable_particles` · `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd` · `cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd` — 2D 입자별 FE + NSCD (LMGC90) · 초탄성 · 탈압 없음.  같은 2D 꼴의 다른 접촉 꼴.
 - `bardenhagen2000_mpm_granular_multibody_frictional_contact` · `bardenhagen2001_mpm_improved_contact_granular_stress_waves` — MPM 다물체 마찰 접촉 (우리 F 의 원형) · 견인력 분리 판정 (탈압에 필요).
 - `harthong2009_high_density_compaction_dem_voronoi_contact_law` — 높은 밀도 DEM 접촉 법칙 (이 논문 참고문헌 [40]).
+- `singer2022_partitioned_mpm_dem_coupling_kratos` — 같은 날 묶음의 넷째: 강체 (DEM) + 연속체 (MPM) **분할 결합** (KRATOS) · 메모 3.2 후보 A 와 물리 짝은 같고 결합 알고리즘은 다름 · MPFEM 이 아니다.
 - `li2022_mpfem_3d_soft_hard_composite_compaction_vibration_unloading` — 같은 그룹 (같은 교신) 의 **3D** 후속 · 같은 크기 무름 + 단단 금속 구 ≈50 개 · 하중 유지 → 탈압 · 입자 안 응력 단면 (단단 가운데 ≈230 → ≈88 MPa) · 단단 상수 C 575.3 · n 0.237 = 이 논문 Cu 와 같다.
 - `huang2017_mpfem_2d_binary_al_sic_hard_soft_compaction` — 같은 MSC.Marc 2D MPFEM 계열의 단단한 + 무른 이원 (Al/SiC) · 입자당 요소 1200 (지름당 ≈39) · 국부 적응 + 다시 메시 · 정렬 배열에서 마찰 무관 (S/F 해석 §7-A) · 탈압 없음.
 

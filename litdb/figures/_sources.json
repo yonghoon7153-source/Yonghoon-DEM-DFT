@@ -3753,6 +3753,13 @@
    "ba72a247-71._Granular_flow_down_an_inclined_plane_Bagnold_scaling_and_rheology.pdf"
   ]
  },
+ "singer2022_partitioned_mpm_dem_coupling_kratos": {
+  "figures": 14,
+  "generated": "2026-11-25",
+  "pdfs": [
+   "singer2022.pdf"
+  ]
+ },
  "siroma2015_transmission_line_model_porous_electrode_impedance": {
   "figures": 16,
   "generated": "2026-10-03",

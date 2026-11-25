@@ -281,6 +281,7 @@ DEM 으로 만든 자연 · 진동 무작위 충전의 같은 크기 (지름 1 m
 - `pycompact2025_dem_mpfem_workflow` — LIGGGHTS → 3D MPFEM 403–1033 입자 · 가압 + 제하 · 되튐 ≈ 재료 P/K 의 8 배.
 - `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` — 3D 탄성 구 50 · 100 개 NSCD (같은 규모 자릿수).
 - `martinbouvard2003_dem_composite_cold_compaction` — 무른 + 단단 DEM (이 논문 [28] 의 짝 논문).
+- `singer2022_partitioned_mpm_dem_coupling_kratos` — 같은 날 묶음의 넷째: 강체 (DEM) + 연속체 (MPM) **분할 결합** (KRATOS) · 메모 3.2 후보 A 와 물리 짝은 같고 결합 알고리즘은 다름 · MPFEM 이 아니다.
 
 ---
 

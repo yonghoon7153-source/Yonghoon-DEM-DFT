@@ -284,6 +284,7 @@ DEM 으로 만든 무작위 이원 충전 (판독 ≈96–98 원판 · R_Al/R_Si
 - `martinbouvard2003_dem_composite_cold_compaction` — 무른 + 단단 혼합 DEM (이 논문 [25]) · 단단–단단 하중 분담.
 - `demirtas2021_mpfem_hollow_sphere_die_compaction` · `pycompact2025_dem_mpfem_workflow` — 3D MPFEM (단일 재료).
 - `bardenhagen2000_mpm_granular_multibody_frictional_contact` — MPM 다물체 마찰 접촉 (우리 F 의 원형).
+- `singer2022_partitioned_mpm_dem_coupling_kratos` — 같은 날 묶음의 넷째: 강체 (DEM) + 연속체 (MPM) **분할 결합** (KRATOS) · 메모 3.2 후보 A 와 물리 짝은 같고 결합 알고리즘은 다름 · MPFEM 이 아니다.
 
 ---
 
