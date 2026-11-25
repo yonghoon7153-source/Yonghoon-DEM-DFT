@@ -668,3 +668,7 @@ sandoval2025_electro_chemo_mechanics_anode_free_ssb	afssb2024_electro_chemo_mech
 metzler2025_ag_particle_distribution_carbon_interlayer_anode_free	agdist2025_ag_c_interlayer
 # ── 2026-11-24b 묶음 (Li 금속 음극 둘째 12 편) — 자동 매칭이 SI 를 못 붙인 하나만
 sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free	sandoval2025b_operando_xct_li_growth
+# ── 2026-11-25 MPFEM · MPM–DEM 묶음 (1저자 업로드 파일명 = '<저자><연도>.pdf' 라 slug 와 연도 토큰만 겹친다 · zhou2019 는 다른 Zhou 2019 카드 (argyrodite) 와 갈라 둔다) — 제목 조각 + 업로드 파일명 ──
+zhou2019_mpfem_2d_copper_powder_die_compaction_release	particulate_scale_multiparticle_finite_element_method
+zhou2019_mpfem_2d_copper_powder_die_compaction_release	particulate scale multiparticle finite element method
+zhou2019_mpfem_2d_copper_powder_die_compaction_release	zhou2019.pdf
