@@ -279,6 +279,7 @@ DEM 으로 만든 무작위 이원 충전 (판독 ≈96–98 원판 · R_Al/R_Si
 ## 11. 관련 카드 (중복 서술 금지 — 겹치면 넘김)
 
 - `zhou2019_mpfem_2d_copper_powder_die_compaction_release` — 같은 그룹 계열 · 2D Cu 단일 재료 · **탈압 포함** · node-to-segment · 지름당 ≈13 요소.  이 논문을 [17] 로 인용.
+- `li2022_mpfem_3d_soft_hard_composite_compaction_vibration_unloading` — 같은 그룹 계열의 **3D** 무름 + 단단 (같은 크기 · 둘 다 소성 금속 · 무름 상수 E 62.59 · C 225.9 = 이 논문 Al 과 같고 n 만 0.25) · 탈압 포함 · 이 논문을 [23] 으로 인용.
 - `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd` · `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` · `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` — 2D 강체 + 초탄성 혼합 (NSCD) · φmax(κ) · 같은 크기.  단단한 상 = 강체.
 - `martinbouvard2003_dem_composite_cold_compaction` — 무른 + 단단 혼합 DEM (이 논문 [25]) · 단단–단단 하중 분담.
 - `demirtas2021_mpfem_hollow_sphere_die_compaction` · `pycompact2025_dem_mpfem_workflow` — 3D MPFEM (단일 재료).
