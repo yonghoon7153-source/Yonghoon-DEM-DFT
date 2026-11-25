@@ -98,7 +98,7 @@ table.pairs td.num { white-space: normal; }
 .fig-svg { display:block; width:100%; height:auto; background: var(--fig-bg); border:1px solid var(--rule); border-radius:6px; padding:6px; }
 a.xref { color: var(--accent); text-decoration: underline dotted; text-underline-offset: 2px; }
 a.xref:hover { text-decoration-style: solid; }
-h2[id], h3[id], li[id] { scroll-margin-top: 12px; }
+h2[id], h3[id], li[id] { scroll-margin-top: 56px; }
 h2:target, h3:target, li:target { background: var(--note-bg); border-radius: 4px; }
 #xref-back { position: fixed; right: 16px; bottom: 16px; z-index: 50; padding: .45rem .85rem; border: 1px solid var(--accent); border-radius: 999px; background: var(--bg); color: var(--accent); font-size: .9rem; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
 #xref-back[hidden] { display: none; }
@@ -507,21 +507,49 @@ h2:target, h3:target, li:target { background: var(--note-bg); border-radius: 4px
 </main>
 <a id="xref-back" href="#" hidden aria-label="링크를 누르기 전 자리로 돌아가기">↩ 돌아가기</a>
 <script>
+/* 절 번호 링크의 '↩ 돌아가기'.
+   ⚠ 웹앱은 이 보고서를 같은 출처 iframe 에 넣고 높이를 보고서 길이만큼 늘린다 — 그때 스크롤은 바깥 창이 한다.
+     그래서 스크롤 위치는 바깥 창에서 읽고 되돌리며, 단추는 바깥 창에 보이는 칸의 오른쪽 아래에 둔다.
+   못 하는 것: 스크립트를 막는 미리보기에서는 단추가 안 뜬다 (링크와 브라우저 뒤로 가기는 그대로 된다). */
 (function () {
-  var btn = document.getElementById("xref-back"), stack = [];
+  var btn = document.getElementById("xref-back"), stack = [], hooked = false;
+  function scroller() {
+    try {
+      if (window.frameElement && window.parent !== window &&
+          document.documentElement.scrollHeight <= window.innerHeight + 4) return window.parent;
+    } catch (e) {}
+    return window;
+  }
+  function ypos(w) { return w.pageYOffset || w.document.documentElement.scrollTop || 0; }
+  function place() {
+    var w = scroller();
+    if (w === window) { btn.style.position = "fixed"; btn.style.top = "auto"; btn.style.bottom = "16px"; return; }
+    var r = window.frameElement.getBoundingClientRect();
+    btn.style.position = "absolute"; btn.style.bottom = "auto";
+    btn.style.top = Math.max(8, Math.min(r.bottom, w.innerHeight) - r.top - 60) + "px";
+  }
+  function hook(w) {
+    if (hooked || w === window) return;
+    hooked = true;
+    w.addEventListener("scroll", function () { if (!btn.hidden) place(); }, { passive: true });
+    w.addEventListener("resize", function () { if (!btn.hidden) place(); });
+  }
   document.addEventListener("click", function (e) {
     var a = e.target.closest ? e.target.closest("a.xref, nav.toc a") : null;
     if (!a || !a.hash) return;
-    stack.push(window.scrollY);
-    btn.hidden = false;
+    var w = scroller();
+    stack.push(ypos(w));
+    btn.hidden = false; hook(w);
+    setTimeout(place, 60);
   });
   btn.addEventListener("click", function (e) {
     e.preventDefault();
-    if (stack.length) window.scrollTo(0, stack.pop());
+    var w = scroller();
+    if (stack.length) w.scrollTo(0, stack.pop());
     if (!stack.length) {
       btn.hidden = true;
       try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {}
-    }
+    } else { setTimeout(place, 60); }
   });
 })();
 </script>
