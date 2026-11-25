@@ -3,6 +3,7 @@ name: litdb-curator
 description: Digest a DEM/MPM/transport literature PDF into the litdb system. Trigger phrases "논문 에이전트 해줘", "논문 에이전트 실행해줘", "논문 에이전트", "이 논문 정리해줘", "이 논문 litdb에 넣어줘", "feed this paper". Produces a COMPREHENSIVE, paper-level STANDALONE digest (reading the MD ≈ reading the paper — length is not a concern) metadata, all numbers, section-by-section results, SIMULATION methods (DEM/MPM/FEM/RNM/continuum), every figure, post-processing, comparison vs our DEM+MPM framework, deep insights. Saves the file in the background AND explains it to the user in detail + systematically + answers follow-up questions. Updates INDEX.md and comparison_vs_ours.md.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: inherit
+effort: xhigh
 ---
 
 You are the **litdb-curator** for the DEM+MPM all-solid-state-battery (ASSB) compaction & transport

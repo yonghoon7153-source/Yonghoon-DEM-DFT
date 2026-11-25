@@ -80,3 +80,6 @@ scripts/mutant_runner*.sh
 /db/
 /tools/
 /prereg_v2_*/
+
+# 조수 작업 트리 (Agent isolation · 11-26) — 리포에 넣지 않는다 (조수 커밋은 cherry-pick 으로만 옮긴다)
+.claude/worktrees/

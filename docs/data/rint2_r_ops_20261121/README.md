@@ -110,3 +110,22 @@
 | 11-25 08:5x | kgy | 넘김 ⑩ 받기 → recover 11 → `P0_c1_R_j_lo` 시도 14 등록 · 시작 | 묶음 sha256 같음 (`fe588245…`) · RECV_OK · recover 11 rc 0 (결과 줄 completed · post · 원인 None · 재실행 자격 False) · ATTEMPT_ADDED n=14 (항목 커밋 `70d63f0c066baac97543b8dcd7bc07730c379a31`) · START_OK 14 (원장 = kgy) |
 
 채택 단위 6/12 (시도 3 · 4 · 5 · 6 · 8 · 10) → 시도 11 (kgy recover) · 12 (gabia 원장이 스스로 기록) 이 들어가면 8/12.  남음 = kgy `P0_c1_R_j_lo` · `P0_c1_R_j_hi` · `P1_c0_R_j0` · gabia `P1_c1_R_j_hi`.  다음 = 넘김 ⑩ (gabia → kgy · gabia 가 `P1_c1_R_j_hi` 시작 확인 뒤) → kgy recover 11 → `P0_c1_R_j_lo`.  넘김 ⑩ 끝 (위 표 끝 두 줄) → 채택 8/12 · 진행 = gabia 시도 13 `P1_c1_R_j_hi` · kgy 시도 14 `P0_c1_R_j_lo` · 남음 = kgy `P0_c1_R_j_hi` · `P1_c0_R_j0` (+ gabia 부록 팔).
+
+## 11-25 밤 – 11-26 아침 (서브 세션 · Claude 기록 · 1저자 현장 실행)
+
+σ 값은 이 표에 없다 (판독 = `verdict_results.json` 에만).  주소 · 계정 · 홈 경로는 적지 않는다.
+
+| 시각 (KST) | 기계 | 일 | 결과 |
+|---|---|---|---|
+| 11-25 19:55 | kgy | 시도 14 `P0_c1_R_j_lo` 끝 (본 세션 인계 · 화면) | 그룹 3/3 · 팔 JSON 12 · 사슬 0 · 원장 kgy 에서 스스로 결과 줄 (`result 14`) |
+| 11-25 20:0x | kgy | `P0_c1_R_j_hi` 시도 15 등록 · 시작 (본 세션) | ATTEMPT_ADDED n=15 (항목 커밋 `5a32b2412a9b1a3b1212452857db3b0e1b35a236`) · START_OK 15 (원장 = kgy) |
+| 11-25 21:34 | kgy → gabia | 넘김 ⑪ (서브 세션 블록 · 원장 끝 `start 15` 와 시도 15 그룹을 확인한 뒤에만) | T `20261125T123420Z` · tip `a82212d8dbc69f723051d7102699aff98a9e5e94` · 묶음 sha256 `33c98e6dda53b7c4ba28211528dec7e895a78ed15cfabff1f13e43452a1a9043` · PARKED_OK |
+| 11-25 21:5x | gabia | 넘김 ⑪ 받기 2 회차 | bash 문법 오류 — 아무것도 실행 안 됨 (원장 · 묶음 무영향) · 원인 = 다시 보낸 블록을 1저자 화면 글에서 옮겨 만들다 바깥 `fi` 한 줄이 빠졌다 (`SELF-201`) |
+| 11-25 21:5x | gabia | 넘김 ⑪ 받기 3 회차 (원래 보낸 블록 그대로 · `bash -n` 통과) | 묶음 sha256 같음 (`33c98e6d…`) · RECV_OK · 원장 = gabia (세워 둔 사본 없음) · 시도 13 `P1_c1_R_j_hi` 진행 (22:02 = 그룹 2 시작) |
+| 11-25 22:0x | gabia | 부록 팔 준비 블록 A (읽기 · 준비 · 결과 0 건 · GPU 안 씀) | 압밀 코드 작업 트리 = `298a73197` (`mpm3d_compaction.py` sha256 앞 16 `b8bb85278b09e423` = kgy 10-23 재압밀과 같음) · 실행기 작업 트리 = `49f60159a` (사슬 sha256 앞 16 `5fbc1c3417f17eba` = 봉인) · 킷 ② `kit_DBE_ptfe05_sdcp0_vgcf100` = DBE 입력 일곱 파일 복사 + 압밀 줄 두 곳 (`--sdcp-agg-d 1.0` 뺌 · 조성 `VGCF:PTFE=3:0.5`) · `run_mpm.sh` 45 줄의 RUN_DIR 표지 글자는 옛 `SDCP0.5` 그대로 (기록만 · 표지 글자) · 부록 팔 계획 rc 0 · 저장본 = 본 사슬과 따로 (1저자 11-25 밤 Q5) |
+| 11-25 22:05 | gabia | 블록 B — 압밀 대기 | 시도 13 결과 줄을 본 뒤에만 ② 압밀 (gabia 의 본 사슬 단위가 끝난 뒤 · 남은 본 사슬 단위는 kgy 몫) · 대기 스크립트 sha256 앞 16 `c8f684e0e557fddc` |
+| 11-25 22:0x | — | 1저자 *"권고대로 해요"* = 부록 팔 칸 발사 GO | ② 압밀 끝 → ① P0 → ① P1 자동 · ② 칸 = 침대 점검 (`docs/reviews/rint2_middle_arm_ptfe05_sdcp0_registration_20261124.md` §3) 을 통과해 표지 파일을 만든 뒤에만 · 칸 사이 멈춤 파일 |
+| 11-25 22:12 | gabia | 블록 C — 칸 차례 실행기 | ① P0 → ① P1 → [② 침대 점검 표지] → ② P0 → ② P1 · 칸 스크립트 sha256 앞 16 `6ccb93d31b6149ca` · 두 스크립트 지문 · `SYNTAX_OK` = 1저자 화면 대조 |
+| 11-26 06:1x | kgy · gabia | 화면 (watch) | kgy 시도 15 = 그룹 3 시작 · 팔 JSON 8/12 · gabia 시도 13 = 그룹 3 · 팔 JSON 11/12 (끝 아님) |
+
+남음 = gabia 시도 13 끝 → 넘김 ⑫ (gabia → kgy · 원장 끝 `result 13 completed` · gabia 에 사슬 없음을 확인한 뒤에만) → kgy 시도 15 끝 → 마지막 단위 `P1_c0_R_j0` (kgy) · 부록 팔 = 압밀 → ① 칸 둘 → ② 침대 점검 → ② 칸 둘 (σ 판독은 등록대로).

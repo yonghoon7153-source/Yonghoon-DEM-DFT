@@ -769,6 +769,7 @@ raw `/home/...` WSL path because Windows can't resolve it.
   → 그 브랜치로 커밋/푸시 → worktree 제거.  코드/문서 등 litdb 외 파일은 여전히
   이 브랜치에만.
 - ★ **논문 찾는 순서 (1저자 11-24)**: 최근 2 년 발견을 먼저 검색하고, 기본 (고전) 논문은 그 뒤에 찾는다 — 본 세션 · 서브 세션 · 논문 에이전트 · 문헌 조사 조수 모두.
+- ★ **논문 에이전트 추론 강도 (1저자 11-26)**: 기본 xhigh (`.claude/agents/litdb-curator.md` 머리 `effort: xhigh`) · 앵커 논문 (우리 판정 · 등록 값이 직접 기대는 논문) = max (부를 때 effort 를 max 로) · 11-29 (일) 18 시 비교 시험 (같은 한 편을 xhigh · max 로 한 번씩 → 독립 대조) 뒤 다시 본다.
 
 ---
 
