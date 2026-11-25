@@ -14,13 +14,16 @@
             (10월 기록은 SHA256SUMS · 셀 · 조성으로 · 11월 어닐은 run_anneal.check_results 로 묶는다 · 끝 꼴은 기록만)
   sp_inputs pick_dft 가 고른 12 구조의 단일점 scf.in (UMA 구조 · 셀 그대로 · 판 고정 설정 · k 3 3 1 · disk_io 는 프로브로 고름)
             + sp_plan.json (입력 · 구조 · 판 고정 도구 · 유사포텐셜 sha256) — 실행은 tools/doping/run_force_check_scf.sh
+  read_sp   카드 4 단계_1 판독 — 단일점 12 의 입력 결속 (G2 · 다시 만든 입력 sha256) · 수렴 (G1 · 판 고정 out_problems)
+            → 자리마다 (두 O 꼴 합쳐) DFT 순위 · 단계_2 이완 후보 (최저 + 0.30 eV 안의 둘째) · G3 기록 (O–B − O–P) · 판정 아님
   probe     DFT 메모리 프로브 입력 — 9 단계 판 고정 b2o3_bo_dft.py (sha256 0c3b7f51…) 의 pw_input_text 를 그대로 쓰고
             disk_io 한 줄만 바꾼다 (disk_io 는 숫자에 영향 없음 — QE 설명서: nowf · low 는 파동함수를 메모리에 ·
             medium · high 는 k 점이 둘 이상이면 디스크에)
   --selftest  음성 경로 포함
 
 이 도구가 못 하는 것 (한계 — 숨기지 않는다)
-  · UMA · DFT 를 돌리지 않는다 (입력 · 고르기만) · 형성 에너지 · D 를 내지 않는다 (판독 도구는 따로 · DFT 결과 전에 만든다).
+  · UMA · DFT 를 돌리지 않는다 (입력 · 고르기 · 단일점 판독만) · 형성 에너지 · D 를 내지 않는다 — read_sp 도 자리 사이
+    단일점 에너지를 빼지 않는다 (조성이 다르다 · D 는 기준상 · 이온 이완 · 압력 어림 · k 탐침 뒤 · 카드 4).
   · 'B 결합 S' 는 10월 UMA 이완 구조의 2.3 Å 안 S 다 — B 가 이완 중 S 하나를 놓은 경우 (B-P 의 BS₃) 그 S 는 후보가 아니다.
   · 조합 고르기는 UMA 에너지다 (DFT 아님) · 어닐 전 이완 하나로 고른다 — 다른 조합이 어닐 뒤 더 낮을 가능성은 남는다.
   · O 꼴 이름 (O–B · O–P) 은 끝 구조로 다시 매겨야 한다 — 여기서는 시작 꼴만 적는다 (pick_ob 는 고른 이완 구조의 끝 꼴을 적는다).
@@ -37,6 +40,7 @@ import json
 import shutil
 import sys
 import tempfile
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -61,6 +65,9 @@ ANNEAL_T_K, ANNEAL_TIME_PS, ANNEAL_DT_FS = 500.0, 20.0, 2.0   # 10월과 같은 
 RELAX_FMAX = 0.05
 N_PER_FAMILY = 3                                               # 자리 × O 꼴마다 UMA 최저 셋 (카드 4 단계_1)
 DISK_IO = ("nowf", "low", "medium", "high")
+FAMILIES = ("O-P", "O-B")
+KIND_SP_READ = "b2o3_site_dft_sp_read/v1"
+SP_RELAX_WINDOW_EV = 0.30   # 카드 4 단계_2 — 자리마다 단일점 최저 + 둘째가 첫째와 셀 에너지 0.30 eV 안이면 둘째도
 
 
 def sha256_file(p) -> str:
@@ -603,6 +610,109 @@ def cmd_probe(xyz: Path, out: Path, *, pseudo_dir: str, k, disk_io: str, repo_ro
     return t
 
 
+def cmd_read_sp(sp_dft: Path, sp_pick: Path, out: Path, *, pseudo_dir: str, repo_root: Path) -> dict:
+    """카드 4 단계_1 판독 — 단일점 12 의 결속 (G2) · 수렴 (G1) → 자리마다 DFT 순위 · 단계_2 이완 후보. **판정 아님**.
+
+    G2: sp_plan.json 의 입력 sha256 = 폴더의 scf.in = 같은 인자로 다시 만든 입력 (cmd_sp_inputs · 임시 폴더) ·
+        sp_pick manifest sha256 · 유사포텐셜 기록이 계획과 같아야 한다 · 계획에 없는 잡 폴더가 없어야 한다 — 하나라도 어긋나면 멈춘다.
+    G1: 잡마다 scf.out 을 판 고정 b2o3_bo_dft.py 의 parse_pw_out · out_problems (stage 'sp') 로 본다 — 한 실행 · JOB DONE 한 번 ·
+        SCF 수렴 · QE 판 · 설정 · 유사포텐셜 md5 · Zval · 전자 수 · 셀 · 처음 좌표 · k 격자. 원자 수만 잡의 계획값 (B-P 128 · B-Li 120) 으로 본다.
+        누락이 하나라도 있으면 판독하지 않는다 (누락 ≠ 실패 · 다 돈 뒤) · 검사 실패가 하나라도 있으면 판독하지 않는다 (카드 게이트 G1).
+    출력: 자리마다 (두 O 꼴 합쳐) DFT 에너지 순위 · 최저와의 차 (eV/셀) · 단계_2 이완 후보 (최저 + 0.30 eV 안의 둘째) ·
+        G3 기록 (자리마다 O–B 최저 − O–P 최저 · eV/셀) · UMA 순서와 DFT 순서 (기록만).
+    ⛔ 못 하는 것: D (자리 사이 형성 에너지 차) 를 내지 않는다 — 기준상 (Li₂S · Li₃PS₄) · 이온 이완 · 압력 어림 · k 탐침 뒤 (카드 4) ·
+       자리 사이 단일점 에너지를 빼지 않는다 (조성이 다르다) · 출력을 고치거나 다시 돌리지 않는다 · 결과 파일을 덮어쓰지 않는다 ·
+       다시 만든 입력은 지금 도구 코드로 만든다 (판 고정 b2o3_bo_dft.py 는 sha256 으로 묶였다 · 이 파일이 바뀌면 그 차이가 G2 로 드러난다).
+    """
+    mod = load_pinned(repo_root)
+    sp_dft, sp_pick, out = Path(sp_dft), Path(sp_pick), Path(out)
+    if out.exists():
+        raise SystemExit(f"⛔ {out} 가 이미 있다 — 덮지 않는다")
+    pf = sp_dft / "sp_plan.json"
+    if not pf.is_file():
+        raise SystemExit(f"⛔ {pf} 가 없다")
+    plan = json.loads(pf.read_text())
+    if plan.get("schema") != "b2o3_site_dft_sp_plan/v1" or plan.get("purpose") != PURPOSE_SP or plan.get("card") != CARD:
+        raise SystemExit("⛔ sp_inputs 의 단일점 계획이 아니다 (schema · purpose · card)")
+    jobs = plan.get("jobs") or {}
+    want = len(BASES) * len(FAMILIES) * N_PER_FAMILY
+    if len(jobs) != want:
+        raise SystemExit(f"⛔ 계획의 잡 {len(jobs)} 개 ≠ {want}")
+    cnt = Counter((j.get("site"), j.get("family")) for j in jobs.values())
+    if set(cnt) != {(s, f) for s in BASES for f in FAMILIES} or any(c != N_PER_FAMILY for c in cnt.values()):
+        raise SystemExit(f"⛔ 자리 × O 꼴마다 {N_PER_FAMILY} 개가 아니다: {dict(cnt)}")
+    if not (sp_pick / "manifest.json").is_file() or sha256_file(sp_pick / "manifest.json") != plan.get("sp_pick_manifest_sha256"):
+        raise SystemExit("⛔ sp_pick manifest 가 없거나 계획을 만든 뒤 바뀌었다 (sha256)")
+    pp = mod.pseudo_record(pseudo_dir)
+    if pp != plan.get("pseudo"):
+        raise SystemExit("⛔ 유사포텐셜 기록이 계획과 다르다 (파일 · sha256 · md5 · z_valence)")
+    extra = sorted(d.name for d in sp_dft.iterdir() if d.is_dir() and (d / "scf.in").exists() and d.name not in jobs)
+    if extra:
+        raise SystemExit(f"⛔ 계획에 없는 잡 폴더 {extra}")
+    with tempfile.TemporaryDirectory() as td:
+        re_plan = cmd_sp_inputs(sp_pick, Path(td) / "re", pseudo_dir=pseudo_dir, disk_io=plan["settings"]["disk_io"],
+                                repo_root=repo_root, k=tuple(plan["settings"]["k"]))
+    if set(re_plan["jobs"]) != set(jobs):
+        raise SystemExit("⛔ 다시 만든 입력의 잡 이름이 계획과 다르다")
+    g2 = []
+    for nm, j in sorted(jobs.items()):
+        fin = sp_dft / nm / "scf.in"
+        if not fin.is_file() or sha256_file(fin) != j["scf_in_sha256"]:
+            g2.append(f"{nm}: 폴더의 scf.in 이 계획과 다르다 · 없다")
+        elif re_plan["jobs"][nm]["scf_in_sha256"] != j["scf_in_sha256"]:
+            g2.append(f"{nm}: 같은 인자로 다시 만든 입력이 계획과 다르다")
+    if g2:
+        raise SystemExit("⛔ G2 입력 결속 실패 — 판독하지 않는다:\n  " + "\n  ".join(g2))
+    missing, bad, rows = [], [], []
+    nat0 = mod.DFT["nat"]
+    try:
+        for nm, j in sorted(jobs.items()):
+            fout = sp_dft / nm / "scf.out"
+            if not fout.is_file():
+                missing.append(nm)
+                continue
+            o = mod.parse_pw_out(fout)
+            mod.DFT["nat"] = j["nat"]          # 자리마다 원자 수가 다르다 — 원자 수 줄만 잡의 계획값으로 본다
+            q = mod.out_problems(o, mod.parse_pw_in(sp_dft / nm / "scf.in"), stage="sp", pp=pp["files"])
+            if q:
+                bad.append(f"{nm}: " + " · ".join(q[:3]))
+                continue
+            rows.append({"name": nm, "site": j["site"], "family": j["family"], "base": j["base"],
+                         "E_Ry": o["E_Ry"], "E_eV": o["E_Ry"] * mod.RY_EV, "E_uma_eV": j["E_uma_eV"],
+                         "end_motif": j["end_motif"], "nat": j["nat"], "nk": o["nk"], "scf_out_sha256": sha256_file(fout)})
+    finally:
+        mod.DFT["nat"] = nat0
+    if missing:
+        raise SystemExit(f"⛔ 단일점 출력 누락 {len(missing)} 건 ({missing}) — 누락은 실패가 아니다 · 다 돈 뒤 판독한다")
+    if bad:
+        raise SystemExit(f"⛔ G1 단일점 출력 검사 실패 {len(bad)} 건 — 판독하지 않는다 (카드 게이트 G1):\n  " + "\n  ".join(bad))
+    sites = {}
+    for s in BASES:
+        r = sorted((x for x in rows if x["site"] == s), key=lambda x: (x["E_eV"], x["name"]))
+        e0 = r[0]["E_eV"]
+        for x in r:
+            x["dE_site_min_eV"] = x["E_eV"] - e0
+        gap = r[1]["E_eV"] - e0
+        fam_min = {f: min(x["E_eV"] for x in r if x["family"] == f) for f in FAMILIES}
+        sites[s] = {"dft_order": [x["name"] for x in r],
+                    "uma_order": [x["name"] for x in sorted(r, key=lambda x: (x["E_uma_eV"], x["name"]))],
+                    "relax_pick": [r[0]["name"]] + ([r[1]["name"]] if gap <= SP_RELAX_WINDOW_EV else []),
+                    "second_gap_eV": gap, "lowest_family": r[0]["family"],
+                    "family_min_eV": fam_min, "O-B_minus_O-P_eV": fam_min["O-B"] - fam_min["O-P"]}
+    v = {"kind": KIND_SP_READ, "card": CARD, "decision": DECISION,
+         "tool": {"path": "tools/doping/b2o3_site_dft.py", "sha256": tool_sha()},
+         "pinned_dft": {"path": PINNED_DFT_REL, "sha256": PINNED_DFT_SHA},
+         "plan": {"path": str(pf), "sha256": sha256_file(pf), "tool_sha256_at_inputs": (plan.get("tool") or {}).get("sha256")},
+         "gates": {"G1": f"단일점 {len(rows)}/{want} — 출력 검사 (판 고정 out_problems · stage sp) 통과",
+                   "G2": f"입력 {want} = 계획 = 같은 인자로 다시 만든 입력 (sha256) · sp_pick manifest · 유사포텐셜 같음"},
+         "relax_window_eV": SP_RELAX_WINDOW_EV, "rows": sorted(rows, key=lambda x: (x["site"], x["E_eV"])), "sites": sites,
+         "판정_아님": "자리 사이 D 는 기준상 · 이온 이완 · 압력 어림 · k 탐침 뒤에만 낸다 (카드 4) — 단일점 에너지를 자리 사이에서 빼지 않는다 (조성이 다르다)",
+         "next": "단계_2 — 자리마다 relax_pick 을 고정 기준 셀 (V₀ 2436.33 Å³ · 등방 스케일) 로 옮겨 이온 이완 (카드 4 · 입력 도구는 따로)"}
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(v, ensure_ascii=False, indent=1) + "\n")
+    return v
+
+
 # ----------------------------------------------------------------------------- selftest
 def selftest() -> int:
     from ase import Atoms
@@ -922,6 +1032,80 @@ def selftest() -> int:
                     "[음성] 유사포텐셜 폴더가 없음 → 멈춘다")
                 chk(refuses(cmd_sp_inputs, pk, T / "sp6", pseudo_dir=str(pdir), disk_io="fast", repo_root=root),
                     "[음성] 모르는 disk_io → 멈춘다")
+                print("— read_sp (단일점 판독 · G2 결속 · G1 수렴 · 자리 안 순위 · 이완 후보 · 판정 아님)")
+                E0 = {"X00": -1000.00, "X01": -1000.40, "X02": -1000.15, "X03": -999.90, "X04": -1000.20, "X05": -999.80,
+                      "X06": -900.00, "X07": -899.50, "X08": -899.60, "X09": -899.55, "X10": -899.65, "X11": -899.40}
+
+                def fresh(tag, Emap=None, skip=(), kw_by=None):
+                    D = T / f"rs_{tag}"
+                    shutil.copytree(T / "sp1", D)
+                    for nm in pl["jobs"]:
+                        if nm in skip:
+                            continue
+                        txt = mod._fake_out(D / nm / "scf.in", E_list=[(Emap or E0)[nm]], stage="sp",   # _fake_out 은 eV 를 받아 Ry 로 찍는다
+                                            pp=pl["pseudo"]["files"], **(kw_by or {}).get(nm, {}))
+                        (D / nm / "scf.out").write_text(txt)
+                    return D
+
+                def rs(D, out_name, sp_pick=None, pseudo=None):
+                    return cmd_read_sp(D, sp_pick or pk, T / out_name, pseudo_dir=str(pseudo or pdir), repo_root=root)
+
+                def try_rs(D, out_name, **kw):     # 양성 호출 — 멈추면 실패 하나로 센다 (selftest 가 중간에 끊기지 않게)
+                    try:
+                        return rs(D, out_name, **kw)
+                    except SystemExit as ex:
+                        chk(False, f"[양성] 정상 출력인데 판독이 멈췄다 — {str(ex)[:120]}")
+                        return {"sites": {s: {} for s in BASES}, "rows": []}
+
+                D0 = fresh("ok")
+                v = try_rs(D0, "rs_ok.json")
+                chk(v["sites"]["B-P"].get("relax_pick") == ["X01", "X04"] and v["sites"]["B-Li"].get("relax_pick") == ["X06"],
+                    "[양성] 이완 후보 = 자리마다 최저 + 0.30 eV 안의 둘째 (B-P 둘 · B-Li 하나)")
+                chk(abs(v["sites"]["B-P"].get("O-B_minus_O-P_eV", 9) - 0.20) < 1e-6 and abs(v["sites"]["B-Li"].get("O-B_minus_O-P_eV", 9) + 0.45) < 1e-6,
+                    "[양성] G3 기록 — 자리마다 O–B 최저 − O–P 최저")
+                chk((v["sites"]["B-P"].get("dft_order") or [None])[0] == "X01" and v["sites"]["B-Li"].get("lowest_family") == "O-B"
+                    and all(abs(x["dE_site_min_eV"]) < 1e-9 for x in v["rows"] if x["name"] in ("X01", "X06")),
+                    "[양성] 자리 안 순위 · 최저와의 차 (두 O 꼴 합쳐)")
+                chk("판정_아님" in v and not any(k.startswith("D") for k in v) and (T / "rs_ok.json").is_file(),
+                    "[양성] D 를 내지 않는다 · 결과 파일을 쓴다")
+                chk(refuses(rs, D0, "rs_ok.json"), "[음성] 결과 파일이 이미 있으면 → 덮지 않는다")
+                Ein = dict(E0, X02=-999.95, X04=-1000.40 + 0.299)
+                Eout = dict(E0, X02=-999.95, X04=-1000.40 + 0.301)
+                chk(try_rs(fresh("w_in", Emap=Ein), "rs_win.json")["sites"]["B-P"].get("relax_pick") == ["X01", "X04"]
+                    and try_rs(fresh("w_out", Emap=Eout), "rs_wout.json")["sites"]["B-P"].get("relax_pick") == ["X01"],
+                    "[양성] 창 경계 — 둘째 차 0.299 eV 는 넣고 0.301 eV 는 뺀다")
+                chk(refuses(rs, fresh("miss", skip=("X03",)), "rs_m.json"), "[음성] 출력 하나 누락 → 판독하지 않는다")
+                chk(refuses(rs, fresh("nc", kw_by={"X05": {"not_conv": True}}), "rs_nc.json"), "[음성] SCF 미수렴 하나 → G1 멈춤")
+                chk(refuses(rs, fresh("jd", kw_by={"X07": {"job_done": False}}), "rs_jd.json"), "[음성] JOB DONE 없음 → G1 멈춤")
+                chk(refuses(rs, fresh("ver", kw_by={"X08": {"version": "7.3"}}), "rs_ver.json"), "[음성] QE 판이 다름 → G1 멈춤")
+                D = fresh("tamper")
+                (D / "X02" / "scf.in").write_text((D / "X02" / "scf.in").read_text() + "\n")
+                chk(refuses(rs, D, "rs_t.json"), "[음성] scf.in 이 계획 뒤 바뀜 → G2 멈춤")
+                D = fresh("regen")
+                (D / "X02" / "scf.in").write_text((D / "X02" / "scf.in").read_text().replace("conv_thr", "conv_thr ", 1))
+                pj = json.loads((D / "sp_plan.json").read_text()); pj["jobs"]["X02"]["scf_in_sha256"] = sha256_file(D / "X02" / "scf.in")
+                (D / "sp_plan.json").write_text(json.dumps(pj))
+                chk(refuses(rs, D, "rs_r.json"), "[음성] scf.in 과 계획 sha256 을 같이 바꿔 맞춰도 → 다시 만든 입력과 달라 G2 멈춤")
+                D = fresh("extra")
+                shutil.copytree(D / "X00", D / "Y99")
+                chk(refuses(rs, D, "rs_x.json"), "[음성] 계획에 없는 잡 폴더 → 멈춘다")
+                D = fresh("plan11")
+                pj = json.loads((D / "sp_plan.json").read_text()); pj["jobs"].pop("X11")
+                (D / "sp_plan.json").write_text(json.dumps(pj))
+                chk(refuses(rs, D, "rs_p.json"), "[음성] 계획의 잡이 12 개가 아님 → 멈춘다")
+                D = fresh("nat")
+                pj = json.loads((D / "sp_plan.json").read_text()); pj["jobs"]["X09"]["nat"] += 1
+                (D / "sp_plan.json").write_text(json.dumps(pj))
+                chk(refuses(rs, D, "rs_n.json"), "[음성] 잡의 원자 수가 계획과 다름 → G1 멈춤")
+                pdir2 = T / "pp2"
+                shutil.copytree(pdir, pdir2)
+                f0 = sorted(pdir2.iterdir())[0]
+                f0.write_text(f0.read_text() + "\n")
+                chk(refuses(rs, fresh("pp"), "rs_pp.json", pseudo=pdir2), "[음성] 유사포텐셜 파일이 계획과 다름 → 멈춘다")
+                pk_t = T / "pk_t"
+                shutil.copytree(pk, pk_t)
+                (pk_t / "manifest.json").write_text((pk_t / "manifest.json").read_text() + " ")
+                chk(refuses(rs, fresh("man"), "rs_man.json", sp_pick=pk_t), "[음성] sp_pick manifest 가 계획 뒤 바뀜 → 멈춘다")
                 MODELS["B-Li"] = {"B": 2}
                 chk(refuses(cmd_sp_inputs, pk, T / "sp7", pseudo_dir=str(pdir), disk_io="medium", repo_root=root),
                     "[음성] 조성이 모델과 다름 → 멈춘다")
@@ -946,6 +1130,8 @@ def main(argv=None) -> int:
     a4.add_argument("--ob_sel", required=True); a4.add_argument("--ob_results", required=True); a4.add_argument("--out", required=True)
     a5 = sp.add_parser("sp_inputs"); a5.add_argument("--sp_pick", required=True); a5.add_argument("--out", required=True)
     a5.add_argument("--pseudo_dir", required=True); a5.add_argument("--disk_io", required=True, choices=DISK_IO)
+    a6 = sp.add_parser("read_sp"); a6.add_argument("--sp_dft", required=True); a6.add_argument("--sp_pick", required=True)
+    a6.add_argument("--pseudo_dir", required=True); a6.add_argument("--out", required=True)
     a3 = sp.add_parser("probe"); a3.add_argument("--xyz", required=True); a3.add_argument("--out", required=True)
     a3.add_argument("--pseudo_dir", required=True); a3.add_argument("--k", type=int, nargs=3, default=[3, 3, 1])
     a3.add_argument("--disk_io", default="medium", choices=DISK_IO)
@@ -981,6 +1167,19 @@ def main(argv=None) -> int:
         for nm, j in pl["jobs"].items():
             print(f"  {nm:12s} {j['site']:5s} {j['family']} · nat {j['nat']} · scf.in {j['scf_in_sha256'][:12]}")
         print(f"단일점 입력 {len(pl['jobs'])} 개 → {a.out}/<이름>/scf.in · 계획 {a.out}/sp_plan.json (disk_io {a.disk_io} · k {pl['settings']['k']})")
+        return 0
+    if a.cmd == "read_sp":
+        root = Path(__file__).resolve().parents[2]
+        v = cmd_read_sp(Path(a.sp_dft), Path(a.sp_pick), Path(a.out), pseudo_dir=a.pseudo_dir, repo_root=root)
+        print(f"  게이트 G1 {v['gates']['G1']} · G2 {v['gates']['G2']}")
+        for s, g in v["sites"].items():
+            rs = [x for x in v["rows"] if x["site"] == s]
+            print(f"  {s:5s} DFT 순위 (두 O 꼴 합쳐 · 최저와의 차 eV/셀 · 판정 아님):")
+            for x in sorted(rs, key=lambda x: x["E_eV"]):
+                print(f"        {x['name']:12s} {x['family']} +{x['dE_site_min_eV']:.3f} · UMA {x['E_uma_eV']:.3f} eV · 끝 꼴 {x['end_motif']}")
+            print(f"        → 단계_2 이완 후보 {g['relax_pick']} (둘째와 {g['second_gap_eV']:.3f} eV · 창 {v['relax_window_eV']}) · "
+                  f"G3 기록 O–B − O–P = {g['O-B_minus_O-P_eV']:+.3f} eV/셀")
+        print(f"→ {a.out} · {v['판정_아님']}")
         return 0
     if a.cmd == "probe":
         root = Path(__file__).resolve().parents[2]
