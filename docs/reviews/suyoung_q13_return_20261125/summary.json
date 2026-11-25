@@ -1,0 +1,322 @@
+{
+  "after_result_amendment": true,
+  "decision": "CLOSE_2D_UNDISTINGUISHED",
+  "item6_percent": [
+    79.25,
+    19.25
+  ],
+  "item6_threshold_percent": 5,
+  "judgment_grids": [
+    16,
+    24,
+    36
+  ],
+  "label": "DEVELOPMENT_ONLY",
+  "original_item6": "FAILED",
+  "prior_tar_sha256": {
+    "F": "882c078ba22efab1699773b1c657996933aa2b87b34c8058c62a6a5860f8a0af",
+    "S": "120b5afb767007c3c99d2e51ae95742d665d366a173c492189f800373f068307"
+  },
+  "release": "6fe2ccaefa05241f0321f8ec2a889c3ad909caa6",
+  "setting": 2,
+  "stage3_go": false,
+  "targets": {
+    "0.84": {
+      "S_over_F_interval": null,
+      "arms": {
+        "F": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            -1.1206045219334266,
+            -1.1723472118388925,
+            -1.3296925121572838,
+            -1.353953361034637
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.3260826109376923,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.30963929860635087,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.26455859734663045,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.25821741347509786,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              -0.05174268990546582,
+              -0.15734530031839133,
+              -0.024260848877353247
+            ],
+            "interval": null,
+            "noise_signal": false,
+            "rule": "UNCONVERGED",
+            "suspect_asymptotic": false
+          }
+        },
+        "S": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            -1.0851868554871744,
+            -1.1245138351100834,
+            -1.2919220442384451,
+            -1.3382909495814208
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.3378386529904411,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.3248103403624505,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.2747422086016012,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.262293558654157,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              -0.039326979622908986,
+              -0.16740820912836174,
+              -0.046368905342975664
+            ],
+            "interval": null,
+            "noise_signal": false,
+            "rule": "UNCONVERGED",
+            "suspect_asymptotic": false
+          }
+        }
+      },
+      "common": true,
+      "ln_S_over_F_interval_report_only": null
+    },
+    "0.90": {
+      "S_over_F_interval": [
+        0.835295633792595,
+        1.1969743645449384
+      ],
+      "arms": {
+        "F": {
+          "ln_pressure_interval": [
+            -1.0002176620667582,
+            -0.8256377069589952
+          ],
+          "ln_sigma_MPa": [
+            -0.7226323398210225,
+            -0.7193727054898446,
+            -0.8007777219230742,
+            -0.8456377069589952
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.4854726435398923,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.48705768876608674,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.4489796469845586,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.42928351381963786,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              0.0032596343311779297,
+              -0.08140501643322962,
+              -0.044859985035921035
+            ],
+            "interval": [
+              -1.0002176620667582,
+              -0.8256377069589952
+            ],
+            "noise_signal": false,
+            "rule": "A",
+            "suspect_asymptotic": true
+          }
+        },
+        "S": {
+          "ln_pressure_interval": [
+            -1.0056072713058326,
+            -0.8204206521405256
+          ],
+          "ln_sigma_MPa": [
+            -0.7145538444263837,
+            -0.7087325207787072,
+            -0.7920251124187566,
+            -0.8404206521405256
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.4894104162788382,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.4922677413464982,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.45292663855032783,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.4315289616631618,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              0.005821323647676513,
+              -0.08329259164004943,
+              -0.04839553972176902
+            ],
+            "interval": [
+              -1.0056072713058326,
+              -0.8204206521405256
+            ],
+            "noise_signal": false,
+            "rule": "A",
+            "suspect_asymptotic": true
+          }
+        }
+      },
+      "common": true,
+      "ln_S_over_F_interval_report_only": [
+        -0.17996956434683742,
+        0.1797970099262326
+      ]
+    },
+    "0.95": {
+      "S_over_F_interval": [
+        0.8285413275606455,
+        1.197031954922536
+      ],
+      "arms": {
+        "F": {
+          "ln_pressure_interval": [
+            -0.6422316269449138,
+            -0.46768925346064516
+          ],
+          "ln_sigma_MPa": [
+            -0.4322153391116622,
+            -0.3646234260083897,
+            -0.44284179563255566,
+            -0.4876892534606452
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.6490695915658311,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.6944581165092508,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.642208799288277,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.6140436553397222,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              0.0675919131032725,
+              -0.07821836962416595,
+              -0.04484745782808952
+            ],
+            "interval": [
+              -0.6422316269449138,
+              -0.46768925346064516
+            ],
+            "noise_signal": false,
+            "rule": "A",
+            "suspect_asymptotic": true
+          }
+        },
+        "S": {
+          "ln_pressure_interval": [
+            -0.6557778144296095,
+            -0.4623865048836877
+          ],
+          "ln_sigma_MPa": [
+            -0.4215261050076484,
+            -0.34774279445460365,
+            -0.4312560683683805,
+            -0.48238650488368773
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.6560448621138731,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.7062805121188245,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.6496925237679237,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.6173084229299093,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              0.07378331055304477,
+              -0.08351327391377683,
+              -0.05113043651530724
+            ],
+            "interval": [
+              -0.6557778144296095,
+              -0.4623865048836877
+            ],
+            "noise_signal": false,
+            "rule": "A",
+            "suspect_asymptotic": true
+          }
+        }
+      },
+      "common": true,
+      "ln_S_over_F_interval_report_only": [
+        -0.1880885609689643,
+        0.17984512206122605
+      ]
+    }
+  },
+  "three_dimensional_go": false,
+  "trace_sha256": {
+    "F12": "627a488910a3c1b260f30211624b2b5dd6949dcb012b7f72f56036a75aeaa43c",
+    "F16": "7508fe658e67414781ed2304e123d31c8bb53623095fe3071b072aa05d0a716c",
+    "F24": "18470cdfd6464462b54bfe3e60c7f821c8a02eb3f2863a6585877d6ab1eeff24",
+    "F36": "96817b729df6e1dbffe2c00709b4c333d4452ffcbeb574b57e12d73c05a4f8a3",
+    "S12": "af587522f7c1efa23e6c5c7835aef6ab4d6084eda8ffefffed1e4e353ae1f310",
+    "S16": "381a79dc296486d9edab5c00be281c02a51210079b06e17728ebf5bde465fc8a",
+    "S24": "21664e9bd166d06246834bdfa1a2a7307988c1208d15f7af361a58b2986ba83c",
+    "S36": "898e35eff71ee4ac67e5a810b83aca3da925d40b6f492c7c427ae027411e2ed8"
+  },
+  "witness": 12
+}
