@@ -685,6 +685,52 @@
    "blank": 0.954,
    "viewed": false,
    "viewed_how": "not opened as an image — table read from the PDF text layer"
+  },
+  {
+   "key": "e01_02",
+   "kind": "equation",
+   "label": "eq1-2",
+   "page": 9,
+   "file": "eq_01_02_conductivity_transference.png",
+   "caption": "Equations (1)–(2), main p.I (Methods, left column): ionic conductivity σ = l/(R_b × S) (1) — l = thickness and S = cross-sectional area of the inner circle of the PTFE ring spacer; Li+ transference number t_Li+ = I^ss R_b^ss (ΔV − I^0 R_i^0) / [I^0 R_b^0 (ΔV − I^ss R_i^ss)] (2) — the bulk-resistance-corrected (Abraham-type) Bruce–Vincent form, ΔV = 10 mV.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    423.5,
+    296.0,
+    538.5
+   ],
+   "w": 1026,
+   "h": 480,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "blank": 0.904,
+   "manual_crop": "equation block cut by hand 2026-11-25 (litdb-curator) — vector text, 300 dpi, equation numbers kept; the text layer garbles these equations, so the crop is the readable copy",
+   "viewed": true,
+   "viewed_how": "opened at crop resolution (checked against the digest's transcription)"
+  },
+  {
+   "key": "e03_06",
+   "kind": "equation",
+   "label": "eq3-6",
+   "page": 9,
+   "file": "eq_03_06_nucleation_models_2d_3d.png",
+   "caption": "Equations (3)–(6), main p.I (Methods, right column): the four electrodeposition transients used for Fig. 3b,d — 2DI: I/I_m = (T/T_m) exp[−½ (T² − T_m²)/T_m²] (3); 2DP: I/I_m = (T/T_m)² exp[−⅔ (T³ − T_m³)/T_m³] (4); 3DI: (I/I_m)² = (1.9542/(T/T_m)) [1 − exp(−1.2564 T/T_m)]² (5); 3DP: (I/I_m)² = (1.2254/(T/T_m)) [1 − exp(−2.3367 T²/T_m²)]² (6); I_m, T_m = current and time of the maximal peak.",
+   "rotated_deg": 0,
+   "bbox": [
+    320.0,
+    174.0,
+    558.0,
+    327.0
+   ],
+   "w": 992,
+   "h": 638,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "blank": 0.945,
+   "manual_crop": "equation block cut by hand 2026-11-25 (litdb-curator) — vector text, 300 dpi, equation numbers kept; the text layer garbles these equations, so the crop is the readable copy",
+   "viewed": true,
+   "viewed_how": "opened at crop resolution (checked against the digest's transcription)"
   }
  ],
  "missing_labels": [],
@@ -702,7 +748,7 @@
    "caption_below": false
   }
  ],
- "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --pdf <main> <SI> --clean, 2026-11-25; run through a wrapper that only skips the shared litdb/figures/_sources.json write) cut main Fig. 1–5, Scheme 1, SI Fig. S1–S4 · S6 · S8–S18 · S20 and Tables S1–S2, and dropped SI Fig. S5 (p8), S7 (p10) and S19 (p22) as '그래픽 없음' although each is a vector plot above its caption — all three cut by hand (manual_crop). Re-cut 2 (fS11 lost its top half and x titles · fS18 lost its x titles; old boxes kept in bbox_extractor). TOC graphic (p1, no number) added by hand. Printed items now all present: main Fig. 1–5 + Scheme 1 + TOC, SI Fig. S1–S20, SI Tables S1–S2 (main text has no tables · no numbered equations worth a crop — eqs 1–6 are standard t_Li+, σ and 2D/3D nucleation forms, typeset garbled in the text layer).",
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --pdf <main> <SI> --clean, 2026-11-25; run through a wrapper that only skips the shared litdb/figures/_sources.json write) cut main Fig. 1–5, Scheme 1, SI Fig. S1–S4 · S6 · S8–S18 · S20 and Tables S1–S2, and dropped SI Fig. S5 (p8), S7 (p10) and S19 (p22) as '그래픽 없음' although each is a vector plot above its caption — all three cut by hand (manual_crop). Re-cut 2 (fS11 lost its top half and x titles · fS18 lost its x titles; old boxes kept in bbox_extractor). TOC graphic (p1, no number) added by hand. Printed items now all present: main Fig. 1–5 + Scheme 1 + TOC, SI Fig. S1–S20, SI Tables S1–S2 (main text has no tables). Equation crops added by hand: eqs (1)–(2) and (3)–(6) — the text layer garbles them.",
  "missing_labels_original": [
   {
    "key": "fS5",
@@ -741,5 +787,5 @@
    ]
   }
  ],
- "note": "2026-11-25 litdb-curator: 29 crops (main 5 figures + Scheme 1 + TOC · SI 20 figures · SI 2 tables). Viewed: 18 at crop resolution (with 600/500-dpi panel zooms of Fig. 2d, 3c, 4c, 4e, 5b,c and the native Fig. S8 raster) + 10 on contact sheets; Table S2 read from the PDF text only. [!] Re-running extract_figures.py --slug … --clean deletes the 4 hand crops and undoes the 2 re-cuts."
+ "note": "2026-11-25 litdb-curator: 31 crops (main 5 figures + Scheme 1 + TOC · SI 20 figures · SI 2 tables · 2 equation blocks). Viewed: 20 at crop resolution (incl. the 2 equation crops) (with 600/500-dpi panel zooms of Fig. 2d, 3c, 4c, 4e, 5b,c and the native Fig. S8 raster) + 10 on contact sheets; Table S2 read from the PDF text only. [!] Re-running extract_figures.py --slug … --clean deletes the 6 hand crops and undoes the 2 re-cuts."
 }
