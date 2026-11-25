@@ -1,0 +1,44 @@
+{
+  "status": "Q13_PAIR_READBACK_COMPLETE",
+  "scope": "DEVELOPMENT_ONLY",
+  "mode": "READBACK",
+  "release": "6fe2ccaefa05241f0321f8ec2a889c3ad909caa6",
+  "return_tar_sha256": "5564c50c7484ee9e3db137e5139fc80a1d83332c76a824a7e35540135020ff2f",
+  "screen_sha256": "7184ad97de1da56c02d51a40e1be35b3c476d67696b94aa12765cb8ac552b4c8",
+  "readback_rc": 0,
+  "solver_runs_during_readback": 0,
+  "timeouts": 0,
+  "retries": 0,
+  "arms": {
+    "S": {
+      "cpu": 0,
+      "physical_core": [
+        0,
+        0
+      ],
+      "threads": 1,
+      "rc": 0,
+      "steps": 15951,
+      "status": "TARGET_BRACKETED",
+      "native_elapsed_s": 14955.635019901907,
+      "started_ns": "1795565990209692186",
+      "ended_ns": "1795581789569499181",
+      "elapsed_including_wrapper_s": 15799.359806995
+    },
+    "F": {
+      "cpu": 2,
+      "physical_core": [
+        0,
+        1
+      ],
+      "threads": 1,
+      "rc": 0,
+      "steps": 16030,
+      "status": "TARGET_BRACKETED",
+      "native_elapsed_s": 9732.685410072096,
+      "started_ns": "1795565990210036936",
+      "ended_ns": "1795576259512180319",
+      "elapsed_including_wrapper_s": 10269.302143383
+    }
+  }
+}
