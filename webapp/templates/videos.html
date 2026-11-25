@@ -34,7 +34,6 @@
               border:1px solid var(--border,#2a2d3e); }
   .vd-badge-internal { color:#fecaca; background:rgba(220,38,38,.28); border-color:rgba(248,113,113,.85); }
   .vd-badge-public { color:var(--green,#34d399); background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.55); }
-  .vd-badge-warn { color:var(--yellow,#fbbf24); background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.55); }
   .vd-mini { font-size:10.5px; padding:0 6px; margin-left:4px; }
   .vd-local { font-size:12px; color:#fca5a5; }
   .vd-actions { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px; }
@@ -167,10 +166,16 @@ python3 -I scripts/avi_register_episode.py &lt;편 id&gt;.zip   (이미 있는 �
         {% elif e.public_ok %}
           <span class="vd-badge vd-badge-public" data-badge="public" title="꾸러미 · 등록 때와 지금 화면에서 같은 검사 — 규칙 {{ e.public_rules }} 종 · 글 파일 {{ e.public_files }} 개{% if e.deny_n %} · 내부 숫자 목록 {{ e.deny_n }} 개 (꾸러미 때){% else %} · 내부 숫자 목록 없이{% endif %}">공개판 · 공개 안전 검사 통과</span>
         {% else %}
-          <span class="vd-badge vd-badge-warn" data-badge="public-warn" title="지금 화면에서 다시 잰 검사 — 철회값 등록부가 바뀌었을 수 있다 (가린 자리는 ⟨인용금지⟩)">공개판 · 공개 안전 검사 걸림 {{ e.public_hits }} 건</span>
+          <span class="vd-badge vd-badge-internal" data-badge="public-held" title="공개판인데 지금 공개판 기준 (공개 안전 검사 · 역할 · 장면 투영) 에 맞지 않는다 — 다른 컴퓨터에는 이 편이 없다 (목록 · 화면 · 재생 · 받기 · 자막 = 404 · fail-closed) · 고친 꾸러미로 바꿔 등록한다">공개 보류 · 걸림</span>
+          <span class="vd-local" title="다른 컴퓨터의 요청에는 등록 안 된 편과 같다 (루프백 · 프록시를 거치지 않은 요청만 이 편을 본다)">이 컴퓨터에서만 보임</span>
         {% endif %}
         {% if e.number is not none %}<span>·</span><span>{{ e.number }} 편</span>{% endif %}
       </div>
+      {% if e.visibility == 'public' and e.held %}
+      <div class="vd-notice bad" role="status"><b>공개 보류</b> — 이 공개판은 지금 공개판 기준에 맞지 않아 다른 컴퓨터에는 보이지 않는다 (고친 꾸러미로 바꿔 등록 · <code>--replace</code>).  까닭 (규칙 · 파일 이름만):
+        <ul class="vd-held">{% for w in e.held %}<li>{{ w }}</li>{% endfor %}</ul>
+      </div>
+      {% endif %}
       <div class="vd-actions">
         {% for d in e.downloads %}<a class="vd-btn" href="{{ d.url }}" download>{{ labels[d.role] }} <small>{{ d.size_txt }}</small></a>{% endfor %}
       </div>
@@ -258,7 +263,7 @@ python3 -I scripts/avi_register_episode.py &lt;편 id&gt;.zip   (이미 있는 �
             <tbody>{% for f in e.files %}<tr><td class="vd-mono">{{ f.name }}</td><td class="vd-nowrap">{{ f.role }}</td><td class="vd-nowrap">{{ f.size_txt }}</td><td class="vd-hash">{{ f.sha256 }}</td><td>{% if f.verified %}<span class="vd-hash-ok">✓ 같음</span>{% endif %}</td></tr>{% endfor %}</tbody>
           </table></div>
           <p class="vd-note">SHA256SUMS sha256 <span class="vd-hash">{{ e.sums_sha }}</span></p>
-          {% for d in e.derived %}<p class="vd-note">꾸러미가 만든 사본 <code>{{ d.name }}</code> ← <code>{{ d.src }}</code> (뺀 칸: {{ d.dropped }} · 원본 sha256 <span class="vd-hash">{{ d.src_sha }}</span>)</p>{% endfor %}
+          {% for d in e.derived %}<p class="vd-note">꾸러미가 만든 사본 <code>{{ d.name }}</code> ← <code>{{ d.src }}</code> ({% if d.how %}{{ d.how }}{% if d.dropped %} · {% endif %}{% endif %}{% if d.dropped %}뺀 칸: {{ d.dropped }}{% endif %} · 원본 sha256 <span class="vd-hash">{{ d.src_sha }}</span>)</p>{% endfor %}
           {% if e.reg.at %}<p class="vd-note">등록 {{ e.reg.at }} · {{ 'web 올리기' if e.reg.via == 'web' else '명령' }}{% if e.reg.replaced %} · 옛 판을 바꿈 (보관){% endif %} · 꾸러미 sha256 <span class="vd-hash">{{ e.reg.bundle_sha }}</span></p>{% endif %}
           {% if e.reg_note %}<p class="vd-note">{{ e.reg_note }}</p>{% endif %}
           <p class="vd-note">꾸러미 만든 때 {{ e.packaged_at }}</p>
@@ -276,7 +281,7 @@ python3 -I scripts/avi_register_episode.py &lt;편 id&gt;.zip   (이미 있는 �
         <li><a class="vd-item{% if it.current %} is-current{% endif %}" href="{{ it.url }}"{% if it.current %} aria-current="true"{% endif %}>
           <span class="vd-idx">{% if it.current %}▶{% else %}{{ loop.index }}{% endif %}</span>
           <span class="vd-thumb">{% if it.thumb_url %}<img src="{{ it.thumb_url }}" alt="" loading="lazy">{% else %}<span class="vd-nothumb">썸네일 없음</span>{% endif %}<span class="vd-dur">{{ it.duration_txt }}</span></span>
-          <span class="vd-item-title">{{ it.title }}{% if it.visibility == 'internal' %}<span class="vd-badge vd-badge-internal vd-mini">내부</span>{% endif %}</span>
+          <span class="vd-item-title">{{ it.title }}{% if it.visibility == 'internal' %}<span class="vd-badge vd-badge-internal vd-mini">내부</span>{% elif it.held %}<span class="vd-badge vd-badge-internal vd-mini vd-held-mini">보류</span>{% endif %}</span>
         </a></li>
         {% endfor %}
       </ol>

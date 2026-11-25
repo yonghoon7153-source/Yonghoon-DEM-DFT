@@ -53,15 +53,17 @@ STOP = {
 
 # sentence ending -> (label, calmer form example).  Order matters (longest first).  The command only SHOWS these:
 # the assistant changes an ending in build_scenes.py when the meaning stays the same (skill §음성 단계 자동 판단).
-_ENDINGS = (("거든요", "~거든요", "~기 때문입니다"), ("거죠", "~거죠", "~셈입니다"), ("잖아요", "~잖아요", "~ㅂ니다"),
+# '~거든요' has no calmer example: turning it into '~기 때문입니다' makes a causal claim = meaning change -> S4 (1저자 · skill §7-1 6).
+_ENDINGS = (("거든요", "~거든요", None), ("거죠", "~거죠", "~셈입니다"), ("잖아요", "~잖아요", "~ㅂ니다"),
             ("는데요", "~는데요", None), ("고요", "~고요", None), ("죠", "~죠", "~ㅂ니다"), ("니다", "~ㅂ니다", None),
             ("요", "~요", "~ㅂ니다"), ("다", "~다", None))
-_NO_HINT = {"~는데요": "이어지는 말 — 끝말보다 쉼 · 앞뒤를 본다", "~고요": "이어지는 말 — 끝말보다 쉼 · 앞뒤를 본다",
+_NO_HINT = {"~거든요": "까닭 · 부연 말투 — '…때문' 꼴로 바꾸면 원인 주장 (뜻 바뀜 → S4 · 1저자) · 끝말보다 쉼 · 앞뒤를 본다",
+            "~는데요": "이어지는 말 — 끝말보다 쉼 · 앞뒤를 본다", "~고요": "이어지는 말 — 끝말보다 쉼 · 앞뒤를 본다",
             "~ㅂ니다": "이미 차분한 꼴 — 앞뒤 문장의 끝말 · 쉼을 본다", "~다": "이미 차분한 꼴 — 앞뒤를 본다"}
 
 
 def ending_form(say):
-    """('~거든요', '~기 때문입니다 (뜻 그대로일 때만)') — the ending label and a calmer example (or why there is none)."""
+    """('~거죠', '~셈입니다 (뜻 그대로일 때만)') — the ending label and a calmer example (or why there is none)."""
     s = (say or "").strip()
     core = s.rstrip(" .?!…\"'”’").rstrip()
     for k, lab, calm in _ENDINGS:
@@ -685,7 +687,7 @@ def _selftest_body(root, shutil, struct, A):
     check("★ 다시 부르면: 이미 2 회 다 쓴 문장은 다시 찍지 않는다 (호출 0) · 후보로 남김",
           lambda: (st.__setitem__("b2", b.va(run=True)) or True) and len(b.calls) == n0b and st["b2"]["stop"] == "no_targets"
           and [c["id"] for c in st["b2"]["candidates"]] == ["s01_l04"])
-    b.write([t if k != 3 else "라 문장이기 때문입니다." for k, t in enumerate(texts0)])
+    b.write([t if k != 3 else "라 문장입니다." for k, t in enumerate(texts0)])
     n0b = len(b.calls)
     check("★ 끝말을 고치면 (조수가 글을 바꿈) 그 문장 + 앞뒤만 다시 · 다시 찍기 횟수는 0 부터",
           lambda: (st.__setitem__("b3", b.va(run=True)) or True)

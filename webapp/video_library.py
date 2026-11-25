@@ -14,6 +14,19 @@
     하나라도 어긋나면 그 편은 목록에서 빠지고 무엇이 깨졌는지 안내한다 (fail-closed).  파일 주소 = 등록된 편 · 등록된 역할만.
   · scripts/avi_package_episode.py · scripts/avi_register_episode.py · webapp/app.py (POST /videos/upload) 가 **같은 함수**를 부른다.
   · 내부판 (visibility internal) = 화면에 빨간 배지 · 공개 안전 검사는 기록만 · 공개판 = 검사 통과해야 꾸러미 · 등록.
+  · 공개판 꾸러미 (Codex 11-25 AVI-02 · 1저자 11-25 Q1 · Q2 (가)) = 영상 · 썸네일 · 자막 · **시청자 대본** (장면 파일에서 만든다 ·
+    제작 대본은 넣지 않는다) · **공개 장면** (장면 파일의 공개 투영) · 시간표만.  제작 기록 (QC · 점검 기록 · 기준표 · README) 은
+    넣지 않고 episode.json `excluded` 에 이름 · 역할 · 사유 · 만든 두 파일은 `derived` (원본 sha256) 에 적는다.  내부판 = 그대로.
+  · 공개 안전 검사 = 글 규칙 (IP · 주소 · 홈 경로 · 내부판 파일 이름 · 잡 번호 · 제작 표지) + 철회값 + git 커밋 식별자 (리포에서 실제
+    커밋으로 풀리는 7–40 hex · git 을 못 쓰면 걸림) + 내부 숫자 목록 (수 경계로 맞춤).
+  · 공개 보류 (Q4 P1-2 · fail-closed) = 등록된 공개판이 지금 공개판 기준 (공개 안전 검사 · 역할 · 장면 투영 · 판 대조 기록) 에 맞지 않으면
+    다른 컴퓨터에는 등록 안 된 편과 같다 (목록 · 화면 · 재생 · 받기 · 자막) · 이 컴퓨터에는 빨간 '공개 보류 · 걸림' 배지와 까닭 (규칙 · 파일
+    이름만).
+  · 판 대조 (Q4 P2-6 · 3 회차 P2-1 · P2-2) = 꾸러미가 다섯을 대조한다 — MP4 길이 (ffprobe) ↔ 시간표 끝 · 자막 수 ↔ 시간표 자막 수 ·
+    자막 마지막 줄 ↔ 시간표 마지막 자막 · 자막 마지막 줄 ≤ MP4 길이 (허용 0.5 s) · 장면 파일 문장 (id · 글) ↔ 시간표 문장.  어긋나면
+    만들지 않는다 (공개판 · 내부판 둘 다).  공개판은 다섯을 다 재야 꾸린다 (ffprobe 없음 · --no-probe · 시간표 · 자막 · 장면 파일 없음 = 거부) ·
+    내부판 (검토 후보) 은 못 잰 대조를 episode.json build_check 의 미측정으로 적는다.  공개판 등록 = 지금 판의 다 잰 통과 기록이 있어야
+    (기록을 본다 — 등록 때 영상을 다시 재지 않는다).
 
 ⚠ Flask 를 import 하지 않는다 (명령에서도 쓴다).  app.py 는 이 모듈을 **라우트 함수 안에서만** import 한다 — 194 실행기
   (`scripts/run_network_194_parallel.py` DEP_LAZY_OFFPATH) 에 "웹앱 화면 · 라우트 전용" 으로 분류 (망 정지 경로 밖 · 봉인 32 밖).
@@ -32,6 +45,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import time
 import unicodedata
 import zipfile
 from datetime import date, datetime, timedelta, timezone
@@ -78,6 +92,21 @@ ROLES = {
     'readme':    dict(max=1, text=True,  inline=False, download=False, mime=None,                   ext=('.md',)),
 }
 DOWNLOAD_ORDER = ('video', 'subtitles', 'script')
+
+#: 공개판 꾸러미에 넣는 역할 (Codex 11-25 AVI-02) — 영상 · 썸네일 · 자막 · 시청자 대본 (만든 것) · 공개 장면 (투영) · 시간표.
+#: 그 밖 역할 (qc · qc_report · rubric · readme = 제작 기록) 은 공개판에 넣지 않는다 (꾸러미 = episode.json `excluded` · 등록 = 거부).
+PUBLIC_ROLES = ('video', 'thumbnail', 'subtitles', 'script', 'scenes', 'timeline')
+PUBLIC_EXCLUDE_REASON = '제작 기록 — 공개판에 넣지 않는다 (QC · 점검 기록 · 기준표 · 편 설명)'
+#: 공개 장면 (scenes.json 공개 투영) 에 남는 칸 — 머리 · 장면 · 문장 · 샷.  그 밖 칸 (읽는 꼴 · 메모 · 감정 · 강조 · 빠르기 · 쉼 ·
+#: 목소리 모형 · 화면 개체 · 썸네일 …) 은 뺀다 (뺀 칸 이름 = episode.json derived `dropped_keys`).
+PUBLIC_SCENE_HEAD = ('episode', 'title', 'subtitle', 'series', 'fps', 'width', 'height')
+PUBLIC_SCENE_KEYS = ('id', 'title', 'lines', 'shots')
+PUBLIC_LINE_KEYS = ('id', 'text', 'captions')
+PUBLIC_SHOT_KEYS = ('id', 'from')
+VIEWER_SCRIPT = 'viewer_script/1'
+PUBLIC_SCENES = 'public_scenes/1'
+_DERIVED_HOW = {VIEWER_SCRIPT: '시청자 대본 — 장면 제목 · 문장 글 + 제작 대본의 참고 문헌 목록 줄',
+                PUBLIC_SCENES: '공개 장면 — 장면 파일의 공개 투영'}
 
 
 class BundleError(ValueError):
@@ -222,6 +251,93 @@ PUBLIC_RULES = (
     ('내부판 파일 이름', re.compile(r'[\w.-]*INTERNAL[\w.-]*\.(?:mp4|mov|webm|srt|vtt|md|json|png|jpe?g|wav|zip)\b')),
     ('잡 번호', re.compile(r'\b(?:job|jobid)\s*[:#=]?\s*\d{4,}\b|잡\s*(?:번호\s*)?\d{4,}', re.I)),
 )
+
+#: 제작 표지 (Codex 11-25 AVI-02) — 제작 쪽 기록에만 있어야 할 낱말 · 꼴.  공개판 글에 있으면 거부 (값은 적지 않는다).
+#: '1저자' 앞에 한글 · 숫자가 붙으면 다른 낱말 ('제1저자' = 일반 낱말) · '조수' 앞에 한글이 붙으면 다른 낱말 ('제조수율' · '구조수정' ·
+#: '보조수단') · 'DECISIONS' 는 대문자만 (영어 'decisions' 는 보통 낱말) · 목소리 ID = Typecast 꼴 'tc_' + hex 20 자 이상.
+PRODUCTION_MARKS = ('1저자', 'Codex', 'Claude', '조수', 'internal/', 'voice-auto', 'DECISIONS', 'tc_<hex 20+>')
+PUBLIC_RULES += (
+    ('제작 표지', re.compile(r'(?<![가-힣0-9])1저자'
+                            r'|(?<![가-힣])조수'
+                            r'|(?<![A-Za-z])(?i:codex|claude)(?![A-Za-z])'
+                            r'|(?i:internal)[/\\]'
+                            r'|(?i:voice[-_]auto)'
+                            r'|DECISIONS'
+                            r'|(?<![A-Za-z0-9])(?i:tc_[0-9a-f]{20,})')),
+)
+BAN_RULE = '철회값 (claims.json quotation_ban)'
+
+#: git 커밋 식별자 (Codex 11-25 AVI-02 · 공개 script.md 34 행에 커밋 둘) — 7–40 자리 hex 낱말 중 글자 (a–f) 와 숫자가 **둘 다** 든 것만
+#: 후보 (숫자만 = 날짜 · 수 · 64 hex = sha256 은 후보 아님 · 앞뒤에 영문 · 숫자가 붙으면 낱말이 아님) → `git cat-file --batch-check`
+#: **한 번** 으로 `<낱말>^{commit}` (커밋으로 풀리나) 와 `<낱말>` (둘 넘는 개체의 앞자리 = 모호) 를 대조한다.  풀리거나 모호하면 걸림.
+#: ⚠ `^{commit}` 만 물으면 커밋 둘이 앞자리를 나눠 가진 짧은 sha 가 'missing' 으로 나온다 (git 2.43 실측) — 그래서 `<낱말>` 도 묻는다.
+#: git 을 못 쓰면 (없음 · 저장소 아님 · 시간 초과 · 출력 꼴) 후보가 있는 글 = 걸림 (fail-closed · COMMIT_FAIL_RULE).
+COMMIT_RULE = 'git 커밋 식별자'
+COMMIT_FAIL_RULE = 'git 커밋 식별자 검사 못 함'
+GIT_EXE = 'git'
+_HEX_TOKEN = re.compile(r'(?<![0-9A-Za-z])[0-9A-Fa-f]{7,40}(?![0-9A-Za-z])')
+_GIT_ENV_DROP = ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES',
+                 'GIT_COMMON_DIR', 'GIT_NAMESPACE', 'GIT_CEILING_DIRECTORIES')
+_OID = re.compile(r'[0-9a-f]{40}|[0-9a-f]{64}')
+_OBJ_TYPES = ('commit', 'tree', 'blob', 'tag')
+
+
+def _commit_candidates(line):
+    """한 줄 → 커밋 식별자 후보 낱말 (소문자) 목록."""
+    out = []
+    for m in _HEX_TOKEN.finditer(line):
+        t = m.group(0)
+        if re.search('[A-Fa-f]', t) and re.search('[0-9]', t):
+            out.append(t.lower())
+    return out
+
+
+def _git_commit_tokens(tokens, repo_root=None):
+    """후보 낱말 → (커밋 · 모호로 풀린 낱말 집합, 못 쓴 까닭 또는 None).  git 은 한 번만 부른다 (낱말마다 두 줄).
+
+    저장소 = repo_root (없으면 이 라이브러리가 든 리포 뿌리 · 그 폴더 자신이 저장소여야 한다 — 위 폴더로 찾아 올라가지 않는다)."""
+    toks = sorted(set(tokens))
+    if not toks:
+        return set(), None
+    root = Path(repo_root) if repo_root is not None else HERE.parent
+    env = {k: v for k, v in os.environ.items() if k not in _GIT_ENV_DROP}
+    env['GIT_CEILING_DIRECTORIES'] = str(root.resolve().parent)
+    env['GIT_TERMINAL_PROMPT'] = '0'
+    inp = ''.join(f'{t}^{{commit}}\n{t}\n' for t in toks)
+    try:
+        p = subprocess.run([GIT_EXE, '-C', str(root), 'cat-file', '--batch-check'], input=inp, capture_output=True, text=True,
+                           timeout=60, env=env)
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        return set(), type(e).__name__
+    out = p.stdout.splitlines()
+    if p.returncode != 0:
+        return set(), f'git rc {p.returncode}'
+    if len(out) != 2 * len(toks):
+        return set(), 'git 출력 줄 수'
+    hits = set()
+    for i, t in enumerate(toks):
+        a, b = out[2 * i].split(), out[2 * i + 1].split()
+        if len(a) == 3 and _OID.fullmatch(a[0]) and a[1] == 'commit':
+            hits.add(t)
+        elif a == [f'{t}^{{commit}}', 'ambiguous']:
+            hits.add(t)
+        elif a != [f'{t}^{{commit}}', 'missing']:
+            return set(), 'git 출력 꼴'
+        if b == [t, 'ambiguous']:
+            hits.add(t)
+        elif not (b == [t, 'missing'] or (len(b) == 3 and _OID.fullmatch(b[0]) and b[1] in _OBJ_TYPES)):
+            return set(), 'git 출력 꼴'
+    return hits, None
+
+
+def _deny_rx(lit):
+    """내부 숫자 목록의 글자열 하나 → 정규식 — **수 경계로만** 맞춘다 (Codex 11-25 · '0.5' 가 '10.5' · '0.55' · '1.0.5' 안에서 걸리지 않는다).
+    글자열 끝이 숫자면 그 바깥에 숫자 · (소수점 + 숫자) 가 붙지 않아야 한다 · 끝이 숫자가 아니면 그쪽은 그냥 맞춘다."""
+    pre = r'(?<![0-9])(?<![0-9]\.)' if lit[:1] in tuple('0123456789.') else ''
+    post = r'(?![0-9])(?!\.[0-9])' if lit[-1:] in tuple('0123456789') else ''
+    return re.compile(pre + re.escape(lit) + post)
+
+
 _WS = {' ': ' ', ' ': ' ', ' ': ' ', ' ': ' ', '−': '-'}
 
 
@@ -279,10 +395,11 @@ def find_deny_lists(ep_dir, video=None):
     return out
 
 
-def public_check(texts, deny=None):
-    """[(파일 이름, 글)] → dict(ok, rules, files, hits=[dict(file, line, rule, claim?)], deny_list, ban_list).
+def public_check(texts, deny=None, repo_root=None):
+    """[(파일 이름, 글)] → dict(ok, rules, files, hits=[dict(file, line, rule, claim? · item? · n? · why?)], deny_list, ban_list).
 
-    공개판에서 거부 · 내부판에서 기록만.  ⚠ 걸린 값은 어디에도 남기지 않는다 (철회값 · 내부 숫자는 값 자체가 누수다)."""
+    공개판에서 거부 · 내부판에서 기록만.  ⚠ 걸린 값은 어디에도 남기지 않는다 (철회값 · 내부 숫자 · 커밋 식별자는 값 자체가 누수다).
+    repo_root = 커밋 식별자를 대조할 저장소 (없으면 이 라이브러리가 든 리포 뿌리)."""
     hits = []
     bans, ban_err = [], None
     if ledger_view is None:
@@ -295,6 +412,8 @@ def public_check(texts, deny=None):
         except Exception as e:           # noqa: BLE001
             ban_err = f'철회값 등록부를 읽지 못했다 ({type(e).__name__})'
     deny_lits, deny_sha = (deny or ([], None))
+    deny_rx = [_deny_rx(lit) for lit in deny_lits]
+    cands = []                            # (파일, 줄, 후보 낱말들) — git 은 아래에서 한 번만
     for name, text in texts:
         for i, ln in enumerate(str(text).splitlines(), 1):
             nl = _norm(ln)
@@ -303,13 +422,24 @@ def public_check(texts, deny=None):
                     hits.append(dict(file=name, line=i, rule=rule))
             for rx, claim in bans:
                 if rx.search(ln) or rx.search(nl):
-                    hits.append(dict(file=name, line=i, rule='철회값 (claims.json quotation_ban)', claim=str(claim)))
-            for k, lit in enumerate(deny_lits, 1):
-                if lit in nl:
+                    hits.append(dict(file=name, line=i, rule=BAN_RULE, claim=str(claim)))
+            for k, rx in enumerate(deny_rx, 1):
+                if rx.search(nl):
                     hits.append(dict(file=name, line=i, rule='내부 숫자 목록', item=k))
+            toks = _commit_candidates(nl)
+            if toks:
+                cands.append((name, i, toks))
+    if cands:
+        found, git_err = _git_commit_tokens([t for _, _, ts in cands for t in ts], repo_root)
+        if git_err:
+            hits.append(dict(file='', line=0, rule=COMMIT_FAIL_RULE, why=git_err))
+        for name, i, ts in cands:
+            n = len({t for t in ts if t in found})
+            if n:
+                hits.append(dict(file=name, line=i, rule=COMMIT_RULE, n=n))
     if ban_err:
         hits.append(dict(file='', line=0, rule=ban_err))
-    return dict(ok=not hits, rules=[r for r, _ in PUBLIC_RULES] + ['철회값 (claims.json quotation_ban)'], files=len(texts),
+    return dict(ok=not hits, rules=[r for r, _ in PUBLIC_RULES] + [BAN_RULE, COMMIT_RULE], files=len(texts),
                 hits=hits, deny_list=(dict(n=len(deny_lits), sha256=deny_sha) if deny_sha else None),
                 ban_list=dict(n=len(bans), error=ban_err))
 
@@ -318,10 +448,241 @@ def _hits_text(pc, limit=8):
     out = []
     for h in pc.get('hits') or []:
         where = f"{h.get('file')}:{h.get('line')}" if h.get('file') else ''
-        extra = f" ({h['claim']})" if h.get('claim') else (f" (목록 {h['item']} 째)" if h.get('item') else '')
+        extra = (f" ({h['claim']})" if h.get('claim') else f" (목록 {h['item']} 째)" if h.get('item')
+                 else f" ({h['n']} 개)" if h.get('n') else f" ({h['why']})" if h.get('why') else '')
         out.append(f"{h.get('rule')}{extra}{' · ' + where if where else ''}")
     more = len(out) - limit
     return ' · '.join(out[:limit]) + (f' · 그 밖 {more} 건' if more > 0 else '')
+
+
+# ─────────────────────────────  시청자 대본 · 공개 장면 (공개판 · Codex 11-25 AVI-02 · 1저자 11-25 Q2 (가))  ─────────────────────────────
+
+_MD_ESC = (('\\', '\\\\'), ('&', '&amp;'), ('<', '&lt;'), ('>', '&gt;'), ('"', '&quot;'), ('[', '\\['), ('`', '\\`'),
+           ('*', '\\*'), ('_', '\\_'))
+_MD_LEAD = re.compile(r'#|[-+]|\d{1,9}(?=[.)](?:\s|$))|~')
+_REF_ITEM = re.compile(r'(?:\d{1,3}[.)]|[-*+])[ \t]+\S')
+_HEADING = re.compile(r'#{1,6}(?:[ \t]|$)')
+
+
+def _md_plain(s):
+    """평문 한 줄 → md 에서 글 그대로 보이게 — 태그 · 링크 · 강조 · 코드 꼴을 막고 (문자 참조 · 역빗금) 줄머리 표지 (# - + 1. 1) ~) 를 막는다."""
+    for a, b in _MD_ESC:
+        s = s.replace(a, b)
+    m = _MD_LEAD.match(s)
+    if m:
+        g = m.group(0)
+        if g[0].isdigit():
+            s = g + '\\' + s[len(g):]                    # '1. x' → '1\. x'
+        elif g == '~':
+            s = '&#126;' + s[1:]                          # 울타리 (~~~) 막음
+        else:
+            s = '\\' + s
+    return s
+
+
+def public_refs(script_md):
+    """제작 대본 → 공개 참고 문헌 목록 줄 [str] — 첫 '## … 참고 문헌 …' 절의 **들여쓰지 않은 목록 줄만** (번호 · - · * · + 로 시작).
+    머리 줄 (괄호 설명 · 판 기록 · 커밋 식별자) · 목록 밖 글 · 들여쓴 하위 줄 · 다음 머리 줄 뒤는 버린다."""
+    if not isinstance(script_md, str):
+        return []
+    lines = script_md.splitlines()
+    start = next((i for i, ln in enumerate(lines) if ln.startswith('## ') and '참고 문헌' in ln), None)
+    if start is None:
+        return []
+    out = []
+    for ln in lines[start + 1:]:
+        if _HEADING.match(ln):
+            break
+        if _REF_ITEM.match(ln):
+            out.append(ln.rstrip())
+    return out
+
+
+def viewer_script(scenes, script_md=None, *, title=None, subtitle=None, series=None):
+    """장면 파일 (+ 제작 대본) → 시청자 대본 md 글 (공개판의 script.md · 1저자 11-25 Q2 (가)).
+
+    # 제목 · 부제 · 시리즈 한 줄 → 장면마다 '## 장면 제목' + 그 장면 문장의 글 (text) 을 순서대로 (한 문장 = 한 문단 · 평문 그대로 보이게) →
+    '## 참고 문헌' + 제작 대본 참고 문헌 절의 목록 줄 (public_refs · 없으면 절도 없음).  읽는 꼴 (say) · 메모 · 감정 · 제작 이력 = 넣지 않는다."""
+    sc = scenes if isinstance(scenes, dict) else {}
+    t = title if isinstance(title, str) and title.strip() else sc.get('title')
+    out = ['# ' + (_md_plain(t.strip()) if isinstance(t, str) and t.strip() else '대본'), '']
+    sub = subtitle if isinstance(subtitle, str) else sc.get('subtitle')
+    ser = series if isinstance(series, str) else sc.get('series')
+    head = ' · '.join(x.strip() for x in (sub, ser) if isinstance(x, str) and x.strip())
+    if head:
+        out += [_md_plain(head), '']
+    for s in sc.get('scenes') if isinstance(sc.get('scenes'), list) else []:
+        if not isinstance(s, dict):
+            continue
+        st = s.get('title') if isinstance(s.get('title'), str) and s.get('title').strip() else s.get('id')
+        if not isinstance(st, str) or not st.strip():
+            continue
+        if '참고 문헌' in st:
+            raise BundleError("장면 제목에 '참고 문헌' 이 들어 있다 — 시청자 대본의 참고 문헌 절과 헷갈린다 (장면 제목을 바꾼다)")
+        out += ['## ' + _md_plain(st.strip()), '']
+        for ln in s.get('lines') if isinstance(s.get('lines'), list) else []:
+            if not isinstance(ln, dict) or not isinstance(ln.get('text'), str):
+                continue
+            for part in ln['text'].splitlines():
+                if part.strip():
+                    out += [_md_plain(part.strip()), '']
+    refs = public_refs(script_md)
+    if refs:
+        out += ['## 참고 문헌', ''] + refs + ['']
+    return '\n'.join(out).rstrip('\n') + '\n'
+
+
+def public_scenes(scenes):
+    """장면 파일 → (공개 투영 dict, 뺀 칸 [str]) — 머리 = PUBLIC_SCENE_HEAD · 장면 = id · title · lines[id · text · captions] ·
+    shots[id · from].  글 칸은 글 (str) · captions = 글 목록 · fps · width · height = 수 — 꼴이 다르면 그 칸도 뺀다 (안에 제작 자료가 숨지 않게)."""
+    dropped = set()
+    out = {}
+    for k, v in scenes.items():
+        if k == 'scenes':
+            continue
+        if k in PUBLIC_SCENE_HEAD and (isinstance(v, str) if k in ('episode', 'title', 'subtitle', 'series') else _finite(v)):
+            out[k] = v
+        else:
+            dropped.add(k)
+    raw = scenes.get('scenes')
+    if raw is not None and not isinstance(raw, list):
+        dropped.add('scenes')
+    scs = []
+    for sc in raw if isinstance(raw, list) else []:
+        if not isinstance(sc, dict):
+            dropped.add('scenes[]')
+            continue
+        s2 = {}
+        for k, v in sc.items():
+            if k in PUBLIC_SCENE_KEYS and k not in ('lines', 'shots') and isinstance(v, str):
+                s2[k] = v
+            elif k not in PUBLIC_SCENE_KEYS or k in ('id', 'title') or not isinstance(v, list):
+                dropped.add(f'scenes.{k}')
+        for key, keep in (('lines', PUBLIC_LINE_KEYS), ('shots', PUBLIC_SHOT_KEYS)):
+            rows = []
+            for x in sc.get(key) if isinstance(sc.get(key), list) else []:
+                if not isinstance(x, dict):
+                    dropped.add(f'{key}[]')
+                    continue
+                r = {}
+                for k, v in x.items():
+                    if k in keep and k != 'captions' and isinstance(v, str):
+                        r[k] = v
+                    elif k == 'captions' and key == 'lines' and isinstance(v, list) and all(isinstance(c, str) for c in v):
+                        r[k] = list(v)
+                    else:
+                        dropped.add(f'{key}.{k}')
+                rows.append(r)
+            s2[key] = rows
+        scs.append(s2)
+    out['scenes'] = scs
+    return out, sorted(dropped)
+
+
+# ─────────────────────────────  판 대조 (영상 ↔ 시간표 ↔ 자막 · Q4 P2-6)  ─────────────────────────────
+
+#: 같은 빌드인지 보는 허용폭 (초) — MP4 길이 ↔ 시간표 끝 · 자막 마지막 줄 ↔ 시간표 마지막 자막 · 자막 마지막 줄 ≤ MP4 길이 + 이 값
+BUILD_TOL_S = 0.5
+#: 판 대조 기록의 판 — 2 = 대조 다섯 (장면 파일 문장 포함 · Q4 3 회차 P2-2).  공개판 등록 · 공개 보류는 이 판의 다 잰 통과 기록만 받는다.
+BUILD_CHECK = 'build_check/2'
+#: 판 대조 다섯 — 이름 = 거부 사유 · 미측정 목록의 낱말 (값이 아니다)
+BUILD_CMP = ('MP4 길이 ↔ 시간표 끝', '자막 수 ↔ 시간표 자막 수', '자막 마지막 줄 ↔ 시간표 마지막 자막', '자막 마지막 줄 ↔ MP4 길이',
+             '장면 파일 문장 ↔ 시간표 문장')
+_LINE_ID = re.compile(r'[A-Za-z0-9_-]{1,40}')
+
+
+def _srt_cues(text):
+    """SRT 글 → [(시작 s, 끝 s)] — srt_to_vtt 와 같은 덩어리 규칙 (번호 줄 · 시각 줄 없는 덩어리는 건너뜀)."""
+    t = str(text).lstrip('\ufeff').replace('\r\n', '\n').replace('\r', '\n')
+    out = []
+    for block in re.split(r'\n[ \t]*\n', t.strip()):
+        lines = block.split('\n')
+        if lines and lines[0].strip().isdigit():
+            lines = lines[1:]
+        if not lines:
+            continue
+        m = _SRT_TIME.search(lines[0])
+        if not m:
+            continue
+        g = [int(x) for x in m.groups()]
+        out.append((g[0] * 3600 + g[1] * 60 + g[2] + g[3] / 1000.0, g[4] * 3600 + g[5] * 60 + g[6] + g[7] / 1000.0))
+    return out
+
+
+def _line_pairs(lines):
+    """문장 목록 → [(id, 글)] — 글이 있는 문장만 (객체 · 글 = 빈칸 아닌 str · 순서 그대로)."""
+    return [(ln.get('id'), ln['text']) for ln in lines
+            if isinstance(ln, dict) and isinstance(ln.get('text'), str) and ln['text'].strip()]
+
+
+def _scene_line_pairs(scenes):
+    """장면 파일 → 장면 순서 · 문장 순서의 [(id, 글)] · 꼴이 아니거나 글 있는 문장이 없으면 None (못 잼)."""
+    if not isinstance(scenes, dict) or not isinstance(scenes.get('scenes'), list):
+        return None
+    out = []
+    for sc in scenes['scenes']:
+        if isinstance(sc, dict) and isinstance(sc.get('lines'), list):
+            out += _line_pairs(sc['lines'])
+    return out or None
+
+
+def _timeline_line_pairs(timeline):
+    """시간표 → lines 의 [(id, 글)] (avi_timeline.all_lines 가 장면 파일 문장을 그대로 잇는다) · 없으면 None (못 잼)."""
+    tl = timeline if isinstance(timeline, dict) else {}
+    return (_line_pairs(tl['lines']) or None) if isinstance(tl.get('lines'), list) else None
+
+
+def build_check(mp4_s, timeline, srt_text, scenes=None):
+    """영상 · 시간표 · 자막 · 장면 파일이 같은 판인가 → dict(ok, method, mp4_s, timeline_end_s, srt_cues, timeline_captions,
+    srt_last_end_s, timeline_last_off_s, scene_lines, timeline_lines, tol_s, problems, not_measured).  못 잰 쪽이 있는 대조는
+    미측정으로 남긴다 (짐작으로 채우지 않는다).
+
+    대조 다섯 (BUILD_CMP) = MP4 길이 ↔ 시간표 끝 (summary.duration_s) · 자막 수 ↔ 시간표 자막 수 · 자막 마지막 줄 끝 ↔ 시간표 마지막 자막 끝 ·
+    자막 마지막 줄 끝 ≤ MP4 길이 (허용 BUILD_TOL_S · 수는 같아야) · 장면 파일 문장 ↔ 시간표 문장 (글 있는 문장의 id · 글 · 순서가 같아야 ·
+    시청자 대본 · 공개 장면의 원본이 영상과 같은 판인가 · Q4 3 회차 P2-2).  ⚠ 판이 다르면 (예: 리포의 옛 판 글 + 새 MP4 · 한 문장 앞선
+    장면 파일) 여기서 걸린다 · 사유에 문장 글은 적지 않는다 (수 · 처음 다른 문장 id 만)."""
+    tl = timeline if isinstance(timeline, dict) else {}
+    summ = tl.get('summary') if isinstance(tl.get('summary'), dict) else {}
+    t_end = float(summ['duration_s']) if _finite(summ.get('duration_s')) else None
+    caps = tl.get('captions') if isinstance(tl.get('captions'), list) else None
+    offs = [float(c['off']) for c in caps or [] if isinstance(c, dict) and _finite(c.get('off'))]
+    cues = _srt_cues(srt_text) if isinstance(srt_text, str) else None
+    mp4 = float(mp4_s) if _finite(mp4_s) else None
+    s_n = len(cues) if cues is not None else None
+    s_last = max(e for _, e in cues) if cues else None
+    t_n = len(caps) if caps is not None else None
+    t_last = max(offs) if offs else None
+    problems, nm = [], []
+
+    def cmp(name, a, b, good, fmt='{:g}'):
+        if a is None or b is None:
+            nm.append(name)
+        elif not good(a, b):
+            problems.append(f'{name} ({fmt.format(a)} ↔ {fmt.format(b)})')
+    cmp(BUILD_CMP[0], mp4, t_end, lambda a, b: abs(a - b) <= BUILD_TOL_S, '{:.3f} s')
+    cmp(BUILD_CMP[1], s_n, t_n, lambda a, b: a == b, '{}')
+    cmp(BUILD_CMP[2], s_last, t_last, lambda a, b: abs(a - b) <= BUILD_TOL_S, '{:.3f} s')
+    cmp(BUILD_CMP[3], s_last, mp4, lambda a, b: a <= b + BUILD_TOL_S, '{:.3f} s')
+    sl, tlp = _scene_line_pairs(scenes), _timeline_line_pairs(timeline)
+    if sl is None or tlp is None:
+        nm.append(BUILD_CMP[4])
+    elif sl != tlp:
+        k = next((i for i, (a, b) in enumerate(zip(sl, tlp)) if a != b), min(len(sl), len(tlp)))
+        pid = (sl[k] if k < len(sl) else tlp[k])[0]
+        pid = pid if isinstance(pid, str) and _LINE_ID.fullmatch(pid) else '(꼴 밖 id)'
+        problems.append(f'{BUILD_CMP[4]} ({len(sl)} ↔ {len(tlp)} 문장 · 처음 다른 문장 {pid})')
+    return dict(ok=not problems, method=BUILD_CHECK, mp4_s=mp4, timeline_end_s=t_end, srt_cues=s_n, timeline_captions=t_n,
+                srt_last_end_s=(round(s_last, 3) if s_last is not None else None),
+                timeline_last_off_s=(round(t_last, 3) if t_last is not None else None),
+                scene_lines=(len(sl) if sl is not None else None), timeline_lines=(len(tlp) if tlp is not None else None),
+                tol_s=BUILD_TOL_S, problems=problems, not_measured=nm)
+
+
+def build_record_ok(bc):
+    """판 대조 기록이 공개판 기준인가 = 지금 판 (BUILD_CHECK) · 통과 · 미측정 없음 · MP4 를 ffprobe 로 잰 길이 (Q4 3 회차 N10).
+    공개판 등록 · 공개 보류가 같은 함수.  ⚠ 기록을 본다 — 등록 때 영상을 다시 재지 않는다 (손으로 지은 기록까지 막는 자리는 아니다)."""
+    return (isinstance(bc, dict) and bc.get('method') == BUILD_CHECK and bc.get('ok') is True
+            and isinstance(bc.get('not_measured'), list) and not bc['not_measured'] and _finite(bc.get('mp4_s')))
 
 
 # ─────────────────────────────  꾸러미 만들기  ─────────────────────────────
@@ -348,12 +709,18 @@ def _probe_duration(video):
 
 
 def package_episode(ep_dir, ep_id, out_zip, *, internal=False, video=None, title=None, series=None, number=None,
-                    updated=None, deny_list=None, probe=True):
+                    updated=None, deny_list=None, probe=True, repo_root=None):
     """편 폴더 → 꾸러미 zip (out_zip) → episode.json 내용 (dict).  거부 = BundleError (만들지 않는다).
 
     넣는 것 = 폴더 맨 위의 일반 파일 중 역할 있는 것 (role_of) · video = 폴더 밖 mp4 를 고를 때.
-    공개판 (internal=False) = INTERNAL 표지 이름 · internal 폴더 · id 거부 · qc_report 의 internal 칸을 뺀 사본 · 공개 안전 검사 통과 필수.
-    """
+    공개판 (internal=False · Codex 11-25 AVI-02 · 1저자 11-25 Q1 · Q2 (가)) = INTERNAL 표지 이름 · internal 폴더 · id 거부 ·
+      넣는 역할 = PUBLIC_ROLES (영상 · 썸네일 · 자막 · 시청자 대본 · 공개 장면 · 시간표) — script.md = viewer_script (장면 파일 +
+      제작 대본의 참고 문헌 목록 줄 · 제작 대본 자체는 넣지 않는다) · scenes.json = public_scenes (투영) · 그 밖 역할 (제작 기록) = 뺌
+      (episode.json `excluded` = 이름 · 역할 · 사유 · `derived` = 만든 두 파일의 원본 이름 · sha256) · 공개 안전 검사 통과 필수.
+    내부판 (internal=True) = 모든 역할 · 파일 그대로 · 공개 안전 검사는 기록만 (지금과 같음).
+    판 대조 (build_check · 둘 다 · Q4 P2-6 · 3 회차 P2-1 · P2-2) = 어긋나면 거부 · 공개판은 다섯을 다 재야 꾸린다 (MP4 = ffprobe 로 잰 길이만 ·
+      못 재면 거부 · 사유 = 대조 이름) · 내부판은 못 잰 대조를 미측정으로 적는다 · 거부 차례 = 공개 안전 검사 → 판 대조.
+    repo_root = 커밋 식별자를 대조할 저장소 (없으면 이 라이브러리가 든 리포 뿌리 · 시험이 임시 저장소를 줄 때)."""
     check_id(ep_id)
     ep_dir = Path(ep_dir)
     if not ep_dir.is_dir():
@@ -396,43 +763,34 @@ def package_episode(ep_dir, ep_id, out_zip, *, internal=False, video=None, title
     if len({n.casefold() for n in names}) != len(names):
         raise BundleError('대소문자만 다른 같은 이름이 있다')
     visibility = 'internal' if internal else 'public'
-    # 글 파일 읽기 (UTF-8) · JSON 역할 파싱
-    items, derived, texts = [], [], []
-    scenes, timeline = {}, {}
+    # 글 파일 읽기 (UTF-8) · JSON 역할 파싱 — 역할마다 (이름, 바이트, 글, JSON)
+    got = {}
     for role in ROLES:
         for p in picked.get(role, []):
             arc = unicodedata.normalize('NFC', p.name)
-            spec = ROLES[role]
             size = p.stat().st_size
             limit = MAX_FILE_BYTES if role == 'video' else MAX_TEXT_BYTES
             if size > limit:
                 raise BundleTooLarge(f'{arc} 가 상한 ({fmt_size(limit)}) 을 넘는다')
-            if not spec['text']:
-                items.append(dict(name=arc, role=role, path=p))
+            if not ROLES[role]['text']:
+                got[role] = dict(name=arc, path=p)
                 continue
             raw = p.read_bytes()
             try:
                 txt = raw.decode('utf-8-sig' if role == 'subtitles' else 'utf-8')
             except ValueError:
                 raise BundleError(f'{arc} 가 UTF-8 글이 아니다')
-            if spec['ext'] == ('.json',):
+            obj = None
+            if ROLES[role]['ext'] == ('.json',):
                 try:
                     obj = json.loads(txt)
                 except ValueError as e:
                     raise BundleError(f'{arc} ({role}) 을 JSON 으로 읽지 못했다 ({type(e).__name__})')
-                if role == 'scenes' and isinstance(obj, dict):
-                    scenes = obj
-                if role == 'timeline' and isinstance(obj, dict):
-                    timeline = obj
-                if (role == 'qc_report' and not internal and isinstance(obj, dict) and 'internal' in obj):
-                    pub = {k: v for k, v in obj.items() if k != 'internal'}
-                    raw = (json.dumps(pub, ensure_ascii=False, indent=1) + '\n').encode('utf-8')
-                    txt = raw.decode('utf-8')
-                    derived.append(dict(name='qc_report.json', role=role, **{'from': arc},
-                                        from_sha256=hashlib.sha256(p.read_bytes()).hexdigest(), dropped_keys=['internal']))
-                    arc = 'qc_report.json'
-            items.append(dict(name=arc, role=role, data=raw))
-            texts.append((arc, txt))
+            got[role] = dict(name=arc, path=p, raw=raw, txt=txt, obj=obj)
+    scenes = got['scenes']['obj'] if 'scenes' in got and isinstance(got['scenes']['obj'], dict) else {}
+    timeline = got['timeline']['obj'] if 'timeline' in got and isinstance(got['timeline']['obj'], dict) else {}
+    if not internal and 'scenes' in got and not isinstance(got['scenes']['obj'], dict):
+        raise BundleError('공개판은 scenes.json 이 JSON 객체여야 한다 — 시청자 대본 · 공개 장면을 거기서 만든다')
     # 머리 값
     the_title = title if title is not None else scenes.get('title')
     if not isinstance(the_title, str) or not the_title.strip():
@@ -446,6 +804,47 @@ def package_episode(ep_dir, ep_id, out_zip, *, internal=False, video=None, title
         number = int(m.group(1)) if m else None
     if number is not None and (not isinstance(number, int) or isinstance(number, bool) or number < 0):
         raise BundleError(f'편 번호가 0 이상 정수가 아니다 — {number!r}')
+    # 꾸러미에 넣을 것 (역할 순서) — 공개판 = PUBLIC_ROLES 만 · 시청자 대본 · 공개 장면은 만든다 · 내부판 = 그대로
+    items, derived, excluded, texts = [], [], [], []
+    chapter_lead = None
+    for role in ROLES:
+        g = got.get(role)
+        if not internal and role == 'script':
+            if 'scenes' in got:
+                vs = viewer_script(scenes, g['txt'] if g else None, title=the_title, subtitle=sub, series=the_series)
+                raw = vs.encode('utf-8')
+                d = dict(name='script.md', role='script', **{'from': got['scenes']['name']},
+                         from_sha256=hashlib.sha256(got['scenes']['raw']).hexdigest(), method=VIEWER_SCRIPT)
+                if g:
+                    d.update(refs_from=g['name'], refs_from_sha256=hashlib.sha256(g['raw']).hexdigest())
+                derived.append(d)
+                items.append(dict(name='script.md', role='script', data=raw))
+                texts.append(('script.md', vs))
+            elif g:
+                excluded.append(dict(name=g['name'], role='script',
+                                     reason='장면 파일 (scenes.json) 이 없어 시청자 대본을 만들지 못했다 — 제작 대본은 공개판에 넣지 않는다'))
+            continue
+        if g is None:
+            continue
+        if not internal and role not in PUBLIC_ROLES:
+            excluded.append(dict(name=g['name'], role=role, reason=PUBLIC_EXCLUDE_REASON))
+            continue
+        if 'raw' not in g:
+            items.append(dict(name=g['name'], role=role, path=g['path']))
+            continue
+        arc, raw, txt = g['name'], g['raw'], g['txt']
+        if not internal and role == 'scenes':
+            proj, dropped = public_scenes(scenes)
+            raw = (json.dumps(proj, ensure_ascii=False, indent=1) + '\n').encode('utf-8')
+            txt = raw.decode('utf-8')
+            derived.append(dict(name='scenes.json', role='scenes', **{'from': arc}, from_sha256=hashlib.sha256(g['raw']).hexdigest(),
+                                dropped_keys=dropped, method=PUBLIC_SCENES))
+            arc = 'scenes.json'
+            vm = scenes.get('voice_model') if isinstance(scenes.get('voice_model'), dict) else {}
+            if _finite(vm.get('lead_in')) and 0 <= vm['lead_in'] <= 30:
+                chapter_lead = float(vm['lead_in'])         # 챕터 시각 = 첫 문장 − lead_in (투영에서 빠지는 값 · 화면 그대로)
+        items.append(dict(name=arc, role=role, data=raw))
+        texts.append((arc, txt))
     vid = next(x for x in items if x['role'] == 'video')
     dur, dsrc = None, None
     if probe:
@@ -455,6 +854,10 @@ def package_episode(ep_dir, ep_id, out_zip, *, internal=False, video=None, title
         dv = (timeline.get('summary') or {}).get('duration_s') if isinstance(timeline.get('summary'), dict) else None
         if _finite(dv) and dv >= 0:
             dur, dsrc = float(dv), 'timeline'
+    #  판 대조 (Q4 P2-6 · 3 회차 P2-1 · P2-2 · 공개판 · 내부판 둘 다) — MP4 길이는 ffprobe 로 잰 값만 (시간표로 채운 길이로 시간표를
+    #  대조하지 않는다) · 장면 파일 = 원본 (시청자 대본 · 공개 장면을 만드는 그 파일).  거부는 공개 안전 검사 뒤 (아래 — 걸린 글이 먼저 보인다)
+    bc = build_check(dur if dsrc == 'ffprobe' else None, timeline, got['subtitles']['txt'] if 'subtitles' in got else None,
+                     got['scenes']['obj'] if 'scenes' in got else None)
     upd = updated or _now_kst().date().isoformat()
     try:
         if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', upd):
@@ -485,14 +888,25 @@ def package_episode(ep_dir, ep_id, out_zip, *, internal=False, video=None, title
     man = dict(schema=SCHEMA, id=ep_id, title=the_title.strip(), subtitle=sub.strip(), series=the_series.strip(), episode=number,
                visibility=visibility, duration_s=(round(dur, 3) if dur is not None else None), duration_source=dsrc,
                updated=upd, packaged_at=_now_kst().isoformat(timespec='seconds'), source=dict(folder=ep_dir.name),
-               files=files, derived=derived, tool=dict(name='video_library.package_episode', schema=SCHEMA))
-    head = json.dumps({k: man[k] for k in ('id', 'title', 'subtitle', 'series')}, ensure_ascii=False)
-    pc = public_check(texts + [('episode.json', head)], deny=deny)
+               files=files, derived=derived, tool=dict(name='video_library.package_episode', schema=SCHEMA),
+               build_check={k: v for k, v in bc.items() if k != 'problems'})
+    if not internal:
+        man['excluded'] = excluded
+        if chapter_lead is not None:
+            man['chapter_lead_s'] = chapter_lead
+    pc = public_check(texts + [('episode.json', _head_text(man))], deny=deny, repo_root=repo_root)
     if pc.get('deny_list'):
         pc['deny_list']['lists'] = deny_meta
     man['public_check'] = pc
     if not internal and not pc['ok']:
         raise BundleError(f'공개 안전 검사 걸림 {len(pc["hits"])} 건 — {_hits_text(pc)} (공개판으로 꾸리지 않는다 · 값은 적지 않는다)')
+    if bc['problems']:
+        raise BundleError('영상 ↔ 시간표 ↔ 자막 ↔ 장면 파일 판이 다르다 — ' + ' · '.join(bc['problems'])
+                          + ' (같은 빌드의 영상 · 시간표 · 자막 · 장면 파일로 꾸린다 · 리포의 옛 판 글에 새 MP4 를 붙이지 않는다)')
+    if not internal and bc['not_measured']:
+        raise BundleError('공개판인데 판 대조를 다 재지 못했다 — ' + ' · '.join(bc['not_measured'])
+                          + ' (공개판은 ffprobe 로 잰 MP4 길이 · 시간표 · 자막 · 장면 파일이 다 있어야 꾸린다 · '
+                            '--no-probe 와 미측정 기록은 검토 후보 (--internal) 만)')
     check_manifest(man)
     out = Path(out_zip)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -526,6 +940,19 @@ def package_episode(ep_dir, ep_id, out_zip, *, internal=False, video=None, title
 
 
 # ─────────────────────────────  episode.json 검사  ─────────────────────────────
+
+def _head_text(man):
+    """episode.json 에서 공개 안전 검사에 넣는 글 — 머리 (id · 제목 · 부제 · 시리즈) · 원본 폴더 이름 · 파일 이름 · 뺀 파일 (이름 · 역할 ·
+    사유) · 만든 파일 (이름 · 원본 이름 · 만든 법).  꾸러미 · 등록 · 화면이 같은 글을 본다."""
+    src = man.get('source') if isinstance(man.get('source'), dict) else {}
+    keep = {k: man.get(k) for k in ('id', 'title', 'subtitle', 'series')}
+    keep['source'] = src.get('folder')
+    keep['files'] = [f.get('name') for f in man.get('files') or [] if isinstance(f, dict)]
+    keep['excluded'] = [{k: e.get(k) for k in ('name', 'role', 'reason')} for e in man.get('excluded') or [] if isinstance(e, dict)]
+    keep['derived'] = [{k: d.get(k) for k in ('name', 'from', 'refs_from', 'method')} for d in man.get('derived') or []
+                       if isinstance(d, dict)]
+    return json.dumps(keep, ensure_ascii=False)
+
 
 def check_manifest(man):
     """episode.json 내용 검사 — 어긋나면 BundleError (무엇이 왜)."""
@@ -588,6 +1015,21 @@ def check_manifest(man):
         raise BundleError('공개판인데 꾸러미의 공개 안전 검사 기록이 통과가 아니다')
     if not isinstance(man.get('derived', []), list):
         raise BundleError('episode.json 의 derived 꼴')
+    exc = man.get('excluded', [])
+    if not isinstance(exc, list) or not all(
+            isinstance(e, dict) and name_ok(e.get('name')) and e.get('role') in ROLES
+            and isinstance(e.get('reason'), str) and 0 < len(e['reason']) <= 300 for e in exc):
+        raise BundleError('episode.json 의 excluded 꼴 (뺀 파일마다 이름 · 역할 · 사유)')
+    lead = man.get('chapter_lead_s')
+    if lead is not None and (not _finite(lead) or not 0 <= lead <= 30):
+        raise BundleError('episode.json 의 chapter_lead_s 꼴 (0–30 초)')
+    bc = man.get('build_check')
+    if bc is not None and not (isinstance(bc, dict) and bc.get('ok') is True):
+        raise BundleError('episode.json 의 build_check 꼴 (판 대조 기록이 통과가 아니다)')
+    if isinstance(bc, dict) and 'not_measured' in bc and not (
+            isinstance(bc['not_measured'], list) and len(bc['not_measured']) <= len(BUILD_CMP)
+            and all(isinstance(x, str) and 0 < len(x) <= 80 for x in bc['not_measured'])):
+        raise BundleError('episode.json 의 build_check 꼴 (미측정 목록)')
     return man
 
 
@@ -718,8 +1160,28 @@ def _check_zip(z, caps):
                 texts.append((f['name'], _read_small(f['name']).decode('utf-8-sig' if f['role'] == 'subtitles' else 'utf-8')))
             except ValueError:
                 raise BundleError(f"{f['name']} 가 UTF-8 글이 아니다")
-    head = json.dumps({k: man.get(k) for k in ('id', 'title', 'subtitle', 'series')}, ensure_ascii=False)
-    pc = public_check(texts + [('episode.json', head)])
+    if man['visibility'] == 'public':
+        #  공개판 = 꾸러미 도구와 같은 기준 (Codex 11-25 AVI-02) — 제작 기록 역할 없음 · 장면 파일 = 공개 투영 꼴
+        extra = sorted({f['role'] for f in man['files']} - set(PUBLIC_ROLES))
+        if extra:
+            raise BundleError(f'공개판 꾸러미에 제작 기록 역할 ({", ".join(extra)}) 이 있다 — 공개판은 영상 · 썸네일 · 자막 · 시청자 대본 · '
+                              '공개 장면 · 시간표만 (avi_package_episode.py 로 다시 꾸린다)')
+        roles_by = {f['name']: f['role'] for f in man['files']}
+        for n, t in texts:
+            if roles_by.get(n) != 'scenes':
+                continue
+            try:
+                obj = json.loads(t)
+            except ValueError:
+                raise BundleError(f'{n} (scenes) 을 JSON 으로 읽지 못했다')
+            left = public_scenes(obj)[1] if isinstance(obj, dict) else ['(객체 아님)']
+            if left:
+                raise BundleError(f'공개판 장면 파일 ({n}) 이 공개 투영 꼴이 아니다 (제작 칸 {len(left)} 종) — avi_package_episode.py 로 다시 꾸린다')
+        #  판 대조 기록 (Q4 3 회차 N10) — 지금 판 · 다 잰 통과여야 (없음 = 옛 도구 · 손 꾸러미 · --no-probe = 공개판으로 등록하지 않는다)
+        if not build_record_ok(man.get('build_check')):
+            raise BundleError('공개판인데 꾸러미에 판 대조 기록 (build_check · 지금 판 · 다 잰 통과) 이 없다 — 같은 빌드의 편 폴더에서 '
+                              'avi_package_episode.py 로 다시 꾸린다 (옛 도구 · 손 꾸러미 · --no-probe 꾸러미는 공개판으로 등록하지 않는다)')
+    pc = public_check(texts + [('episode.json', _head_text(man))])
     if man['visibility'] == 'public' and not pc['ok']:
         raise BundleError(f'공개 안전 검사 걸림 {len(pc["hits"])} 건 — {_hits_text(pc)} (공개판으로 등록하지 않는다)')
     return man, sums
@@ -907,6 +1369,47 @@ def _peek_visibility(epdir):
         return None
 
 
+#: 공개 보류 판정 캐시 — (편 폴더, SHA256SUMS sha256) → (때, 까닭, 공개 검사).  재생 중 Range 요청마다 글을 다시 재지 않게 · 등록부
+#: 철회값 · 리포 커밋이 바뀌면 HELD_TTL_S 안에 따라간다 (편을 바꿔 등록하면 SHA256SUMS 가 바뀌어 바로 새로 잰다).
+_HELD_CACHE = {}
+HELD_TTL_S = 30.0
+#: 캐시 시계 (초 · 단조) — 시험이 바꿔 끼운다 (TTL 시험 · K10f).
+_clock = time.monotonic
+
+
+def public_problems(ep):
+    """등록된 편 → (공개 보류 까닭 [str], 지금 공개 안전 검사 dict).  까닭이 하나라도 있는 **공개판** = 공개 보류 (Q4 P1-2 · fail-closed):
+    다른 컴퓨터에는 등록 안 된 편과 같다 · 이 컴퓨터에는 빨간 배지 + 까닭.  까닭 = 지금 공개 안전 검사 걸림 (규칙 · 파일 · 줄만 — 값 없음) ·
+    공개판에 넣지 않는 역할 (제작 기록) · 공개 투영이 아닌 장면 파일 · 판 대조 기록이 없거나 다 재지 않음 (build_record_ok · 등록과 같은 함수).
+    내부판 = 까닭 없음 (검사는 화면 기록용으로만 잰다)."""
+    m = ep['man']
+    key = (str(ep['dir']), ep.get('sums_sha'))
+    t = _clock()
+    hit = _HELD_CACHE.get(key)
+    if hit and t - hit[0] < HELD_TTL_S:
+        return list(hit[1]), hit[2]
+    texts = [(f['name'], _text(ep, f['role']) or '') for f in m['files'] if ROLES[f['role']]['text']]
+    pc = public_check(texts + [('episode.json', _head_text(m))])
+    why = []
+    if m.get('visibility') == 'public':
+        if not pc['ok']:
+            why.append(f'공개 안전 검사 걸림 {len(pc["hits"])} 건 — {_hits_text(pc)}')
+        extra = sorted({f['role'] for f in m['files']} - set(PUBLIC_ROLES))
+        if extra:
+            why.append(f'공개판에 넣지 않는 역할 ({", ".join(extra)}) — 제작 기록')
+        for f in m['files']:
+            if f['role'] == 'scenes':
+                obj = _json(ep, 'scenes')
+                if not isinstance(obj, dict) or public_scenes(obj)[1]:
+                    why.append(f"장면 파일 ({f['name']}) 이 공개 투영 꼴이 아니다")
+        if not build_record_ok(m.get('build_check')):
+            why.append('판 대조 기록 (build_check) 이 없거나 다 재지 않았다 — 같은 빌드인지 확인 안 된 공개판')
+    if len(_HELD_CACHE) > 256:
+        _HELD_CACHE.clear()
+    _HELD_CACHE[key] = (t, why, pc)
+    return list(why), pc
+
+
 def library(folder):
     """영상 폴더 → dict(state ok|missing|unreadable, episodes=[편 dict], problems=[dict(ep, why, vis)]).  GET 은 폴더를 만들지 않는다.
 
@@ -983,8 +1486,8 @@ def resolve_file(folder, ep_id, role, mode, include_internal=True):
     ep, _why = load_episode(Path(folder) / ep_id)
     if ep is None:
         return None
-    if not include_internal and ep['man']['visibility'] != 'public':
-        return None
+    if not include_internal and (ep['man']['visibility'] != 'public' or public_problems(ep)[0]):
+        return None                    # 내부판 · 공개 보류 (Q4 P1-2) = 다른 컴퓨터에는 등록 안 된 편과 같다
     ent = _file(ep, role)
     if ent is None:
         return None
@@ -1093,11 +1596,12 @@ def _section(md, word):
     return body or None
 
 
-def _chapters(scenes, timeline):
+def _chapters(scenes, timeline, lead_s=None):
+    """챕터 = 장면 첫 문장 시각 − 앞당김 (scenes.json 의 voice_model.lead_in · 공개 투영이라 그 칸이 없으면 episode.json chapter_lead_s)."""
     if not isinstance(scenes, dict) or not isinstance(timeline, dict):
         return []
     vm = scenes.get('voice_model') if isinstance(scenes.get('voice_model'), dict) else {}
-    lead = vm.get('lead_in', 0.0)
+    lead = vm.get('lead_in', lead_s if lead_s is not None else 0.0)
     lead = float(lead) if _finite(lead) and 0 <= lead <= 30 else 0.0
     by_id, first = {}, {}
     for ln in timeline.get('lines') or []:
@@ -1181,11 +1685,11 @@ def _qc_model(rep, visibility, video_sha):
                 checks=checks, found=found, extra=extra)
 
 
-def _item(ep, current_id):
+def _item(ep, current_id, held=False):
     m = ep['man']
     thumb = _file(ep, 'thumbnail')
     return dict(id=m['id'], url=f"/videos/{m['id']}", title=_r(m['title']), visibility=m['visibility'],
-                duration_txt=fmt_clock(m.get('duration_s')), current=(m['id'] == current_id),
+                duration_txt=fmt_clock(m.get('duration_s')), current=(m['id'] == current_id), held=bool(held),
                 thumb_url=(f"/videos/{m['id']}/media/thumbnail" if thumb else None))
 
 
@@ -1196,7 +1700,9 @@ def page(folder, ep_id=None, include_internal=True):
     include_internal=False (이 컴퓨터가 아닌 요청 · 1저자 11-24 Q1) = 내부판 편을 목록 · 재생목록 · 다른 시리즈 · 첫 편 고르기에서 빼고,
     그 편을 물으면 등록 안 된 편과 같이 답한다 · 깨진 편 안내도 공개판으로 확인된 것만 (모름 · 내부판 = 안 보임)."""
     lib = library(folder)
-    eps = [e for e in lib['episodes'] if include_internal or e['man']['visibility'] == 'public']
+    held = {e['man']['id']: public_problems(e)[0] for e in lib['episodes'] if e['man']['visibility'] == 'public'}
+    eps = [e for e in lib['episodes']
+           if include_internal or (e['man']['visibility'] == 'public' and not held.get(e['man']['id']))]
     probs = [q for q in lib['problems'] if include_internal or q.get('vis') == 'public']
     out = dict(state=lib['state'], problems=probs, current=None, playlist=None, other_series=[],
                not_found=False, n_episodes=len(eps))
@@ -1219,7 +1725,7 @@ def page(folder, ep_id=None, include_internal=True):
         out['not_found'] = ep_id is not None
         return out
     m = cur['man']
-    items = [_item(e, m['id']) for e in eps if e['man']['series'] == m['series']]
+    items = [_item(e, m['id'], held.get(e['man']['id'])) for e in eps if e['man']['series'] == m['series']]
     pos = next((i for i, it in enumerate(items, 1) if it['current']), 1)
     groups = {}
     for e in eps:
@@ -1241,9 +1747,7 @@ def _episode_model(ep):
     script = _text(ep, 'script')
     refs = _section(script, '참고 문헌')
     qc_md, rubric, readme = _text(ep, 'qc'), _text(ep, 'rubric'), _text(ep, 'readme')
-    texts = [(f['name'], _text(ep, f['role']) or '') for f in m['files'] if ROLES[f['role']]['text']]
-    head = json.dumps({k: m.get(k) for k in ('id', 'title', 'subtitle', 'series')}, ensure_ascii=False)
-    now = public_check(texts + [('episode.json', head)])
+    why_held, now = public_problems(ep)
     pc_reg = m.get('public_check') if isinstance(m.get('public_check'), dict) else {}
     dl = pc_reg.get('deny_list') if isinstance(pc_reg.get('deny_list'), dict) else None
     reg = ep.get('reg') or {}
@@ -1255,7 +1759,9 @@ def _episode_model(ep):
     files = [dict(name=f['name'], role=f['role'], size_txt=fmt_size(f['size']), sha256=f['sha256'], verified=True)
              for f in m['files']]
     derived = [dict(name=_r(d.get('name', '')), src=_r(d.get('from', '')), src_sha=_r(d.get('from_sha256', '')),
-                    dropped=', '.join(map(_r, d.get('dropped_keys') or []))) for d in m.get('derived') or [] if isinstance(d, dict)]
+                    dropped=', '.join(map(_r, d.get('dropped_keys') or [])),
+                    how=_r(_DERIVED_HOW.get(d.get('method'), d.get('method') or '')))
+               for d in m.get('derived') or [] if isinstance(d, dict)]
     return dict(
         id=m['id'], title=_r(m['title']), subtitle=_r(m.get('subtitle', '')), series=_r(m['series']), number=m.get('episode'),
         visibility=m['visibility'], duration_txt=fmt_clock(m.get('duration_s')), updated=m['updated'],
@@ -1263,11 +1769,12 @@ def _episode_model(ep):
         video_url=f"/videos/{m['id']}/media/video", video_name=vid['name'], video_sha=vid['sha256'],
         poster_url=(f"/videos/{m['id']}/media/thumbnail" if thumb else None),
         vtt_url=(f"/videos/{m['id']}/subtitles.vtt" if srt else None),
-        downloads=downloads, chapters=_chapters(scenes, timeline), scenes=_scene_rows(scenes, timeline),
+        downloads=downloads, chapters=_chapters(scenes, timeline, m.get('chapter_lead_s')), scenes=_scene_rows(scenes, timeline),
         script_html=(md_html(script) if script else ''), refs_html=(md_html(refs) if refs else ''),
         qc=_qc_model(_json(ep, 'qc_report'), m['visibility'], vid['sha256']), qc_html=(md_html(qc_md) if qc_md else ''),
         rubric_html=(md_html(rubric) if rubric else ''), readme_html=(md_html(readme) if readme else ''),
-        public_ok=bool(now['ok'] and pc_reg.get('ok') is True), public_hits=len(now['hits']),
+        public_ok=bool(m['visibility'] == 'public' and not why_held and now['ok'] and pc_reg.get('ok') is True),
+        held=[_r(w) for w in why_held], public_hits=len(now['hits']),
         public_rules=len(now['rules']), public_files=now['files'], deny_n=(dl or {}).get('n'),
         files=files, sums_sha=ep.get('sums_sha', ''), derived=derived,
         reg=dict(at=_r(reg.get('registered_at', '')), via=_r(reg.get('via', '')), bundle_sha=_r(reg.get('bundle_sha256', '')),

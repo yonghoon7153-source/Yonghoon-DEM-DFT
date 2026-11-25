@@ -11,7 +11,9 @@ prep():  EP_DIR/audio_in/<ep>_<line id>.wav (one file per sentence, e.g. ep01_s0
          -> optional music bed at -28 LUFS (reference: voice ~13-14 LU above music, no ducking)
          -> EP_DIR/audio/narration.wav, mix.wav, timing.json
 qc():    per sentence rate, pauses, F0 range and final movement, clipping, loudness;
-         flags for 'mechanical' signatures measured on the reference video.
+         flags for 'mechanical' signatures measured on the reference video;
+         S7 강약 · 이어지는 말 · 숨 (avi_prosody · 대리 지표 · 듣기 확인 = 1저자);
+         stops when the audio was made from another script version (timing.json ids · ledger text vs scenes.json).
 selftest(): synthetic voiced-syllable signals with known boundaries.
 """
 import glob
@@ -261,6 +263,45 @@ def _find_line_inputs(ep, in_dir):
     return got
 
 
+def soften_breaths(seg, db, min_s=0.18, rel=18.0, margin=0.02, ramp=0.015):
+    """v3.1 (11-25 · 1저자 '숨소리에 약간 기계음'): the quiet stretches INSIDE a sentence — 10 ms level below the sentence's
+    speech median − rel dB for ≥ min_s, with speech on both sides (the padded file edges are never touched) — are the
+    TTS's breaths at commas.  Scale them by db (≤ 0) with raised-cosine ramps that stay `margin` away from the speech.
+    The pause length is unchanged (timing, captions and screen anchors do not move).  Returns (segment, [(t0, t1, peak_db)])."""
+    hop = int(0.01 * SR)
+    n = len(seg) // hop
+    if db >= 0 or n < 5:
+        return seg, []
+    lv = 20 * np.log10(np.sqrt(np.mean(seg[:n * hop].reshape(n, hop) ** 2, axis=1)) + 1e-12)
+    sp = lv > -60
+    if not sp.any():
+        return seg, []
+    med = float(np.median(lv[sp]))
+    low = lv < med - rel
+    out, found = seg.copy(), []
+    g = 10 ** (db / 20.0)
+    r = int(ramp * SR)
+    w = 0.5 - 0.5 * np.cos(np.linspace(0, np.pi, r))          # 0 -> 1
+    k = 0
+    while k < n:
+        if not low[k]:
+            k += 1
+            continue
+        j = k
+        while j < n and low[j]:
+            j += 1
+        if k > 0 and j < n and (j - k) * 0.01 >= min_s:
+            s0, s1 = k * hop + int(margin * SR), j * hop - int(margin * SR)
+            if s1 - s0 > 2 * r:
+                env = np.full(s1 - s0, g)
+                env[:r] = 1 - (1 - g) * w
+                env[-r:] = g + (1 - g) * w
+                out[s0:s1] *= env
+                found.append((round(k * 0.01, 2), round(j * 0.01, 2), round(float(lv[k:j].max()), 1)))
+        k = j
+    return out, found
+
+
 def prep(ep, ep_dir, in_dir=None, bgm=None, bgm_lufs=-28.0, keep_pauses=False, target_lufs=-14.0, threads=1,
          fade_ms=8.0, pad_s=0.04):
     in_dir = in_dir or os.path.join(ep_dir, "audio_in")
@@ -287,18 +328,35 @@ def prep(ep, ep_dir, in_dir=None, bgm=None, bgm_lufs=-28.0, keep_pauses=False, t
             groups.append((per[sc["id"]], sc["lines"]))
     vm = ep.get("voice_model", {})
     lead = float(vm.get("lead_in", 0.7))
+    breath_db = float(vm.get("breath_db", 0.0) or 0.0)                 # v3.1: 0 = off (old behaviour)
+    breath_min = float(vm.get("breath_min_s", 0.18))
+    gains, gp = {}, os.path.join(in_dir, "line_gain.json")              # v3.1: per-sentence gain, tied to the take (sha256)
+    if os.path.exists(gp):
+        gains = json.load(open(gp, encoding="utf-8"))
     out = [np.zeros(int(lead * SR))]
     t = lead
     timing, report = [], []
     fade = int(fade_ms * 1e-3 * SR)
     for path, lines in groups:
         x = decode(path, threads=threads)
+        g_db, g_note = 0.0, None
+        if len(lines) == 1 and lines[0]["id"] in gains:
+            import hashlib
+            gi = gains[lines[0]["id"]]
+            if gi.get("sha256") == hashlib.sha256(open(path, "rb").read()).hexdigest():
+                g_db = float(gi.get("db", 0.0))
+                x = x * 10 ** (g_db / 20.0)
+            else:
+                g_note = "sha"                                              # another take now: the gain was not for it
         syl = [max(1, syllables(ln["say"])) for ln in lines]
         spans, info = align(x, syl)
         report.append(dict(file=os.path.basename(path), dur=round(len(x) / SR, 2), lines=len(lines), **info))
         for k, (ln, (a, b)) in enumerate(zip(lines, spans)):
             a2, b2 = max(0.0, a - pad_s), min(len(x) / SR, b + pad_s)
             seg = x[int(a2 * SR):int(b2 * SR)].copy()
+            soft = []
+            if breath_db < 0:
+                seg, soft = soften_breaths(seg, breath_db, min_s=breath_min)
             if len(seg) > 2 * fade:
                 ramp = np.linspace(0, 1, fade)
                 seg[:fade] *= ramp
@@ -311,7 +369,8 @@ def prep(ep, ep_dir, in_dir=None, bgm=None, bgm_lufs=-28.0, keep_pauses=False, t
                 gap = float(ln.get("pause_after", 0.45))
             timing.append(dict(id=ln["id"], t0=round(t + (a - a2), 4), t1=round(t + (b - a2), 4),
                                pause_after=round(gap, 4), src=os.path.basename(path),
-                               src_t0=round(a, 3), src_t1=round(b, 3)))
+                               src_t0=round(a, 3), src_t1=round(b, 3), gain_db=round(g_db, 2), breaths_softened=len(soft),
+                               **({"gain_skipped": g_note} if g_note else {})))
             out.append(seg)
             t += len(seg) / SR
             sil_n = max(0, int(round((gap - 2 * pad_s) * SR)))  # padding already carries 2 x pad of quiet
@@ -397,7 +456,45 @@ def joins(rows, lid, ledger=None, t_end=None):
     return out
 
 
-def qc(ep, ep_dir, wav=None, text_lines=None):
+def _norm_say(t):
+    return re.sub(r"\s+", " ", (t or "").strip())
+
+
+def _same_version(ep, ep_dir, tj):
+    """대본 ↔ 음성 판 대조 (S7 · 11-25): timing.json 의 문장 차례가 대본과 다르거나, 원장에 적힌 글이 지금 대본의 읽는 꼴과
+    다르면 멈춘다 — 다른 판의 음성을 지금 대본의 낱말 자리 · 강조 낱말로 재면 숫자가 조용히 틀린다 (예: v3 대본 + v2 음성)."""
+    want = [ln["id"] for sc in ep["scenes"] for ln in sc["lines"]]
+    got = [d["id"] for d in tj.get("lines", [])]
+    if want != got:
+        k = next((i for i, (u, v) in enumerate(zip(want, got)) if u != v), min(len(want), len(got)))
+        raise SystemExit(f"대본 ↔ 음성 판 불일치: 대본 문장 {len(want)} · timing.json {len(got)} · 처음 다른 자리 {k + 1} 번째 "
+                         f"(대본 {want[k] if k < len(want) else '없음'} ↔ 음성 {got[k] if k < len(got) else '없음'}) — "
+                         "음성을 이 대본으로 다시 만들거나, 이 음성의 대본 (예: 백업 scenes.json) 으로 잰다")
+    led_path = os.path.join(ep_dir, "audio_in", "typecast_ledger.json")
+    try:
+        led = json.load(open(led_path, encoding="utf-8")).get("lines", {}) if os.path.exists(led_path) else {}
+    except (OSError, ValueError):
+        led = {}
+    src = {d["id"]: d.get("src") for d in tj["lines"]}
+    bad = []
+    import hashlib
+    for sc in ep["scenes"]:
+        for ln in sc["lines"]:
+            e = led.get(ln["id"])
+            f_ = os.path.join(ep_dir, "audio_in", src.get(ln["id"]) or "")
+            if not (e and e.get("status") == "ok" and e.get("text") is not None and e.get("sha256") and os.path.isfile(f_)):
+                continue                                  # no ledger line for this file (hand-made / per-scene input)
+            with open(f_, "rb") as fh:
+                if hashlib.sha256(fh.read()).hexdigest() != e["sha256"]:
+                    continue                              # the file is not the ledger's take -> the ledger text says nothing
+            if _norm_say(e["text"]) != _norm_say(ln.get("say") or ln.get("text")):
+                bad.append(ln["id"])
+    if bad:
+        raise SystemExit(f"대본 ↔ 음성 판 불일치: 원장의 글 ≠ 지금 대본의 읽는 꼴 {len(bad)} 문장 ({', '.join(bad[:6])}"
+                         f"{' …' if len(bad) > 6 else ''}) — 그 문장 파일은 다른 글로 만든 판이다")
+
+
+def qc(ep, ep_dir, wav=None, text_lines=None, report=None):
     out_dir = os.path.join(ep_dir, "audio")
     path = wav or os.path.join(out_dir, "narration.wav")
     x = decode(path)
@@ -414,6 +511,8 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
             nxt = spans[k + 1][0] if k + 1 < len(spans) else b
             lines.append(dict(id=f"a{k + 1:02d}", t0=a, t1=b, pause_after=max(0.0, nxt - b)))
         tj = dict(lines=lines)
+    if tj is not None and wav is None:
+        _same_version(ep, ep_dir, tj)
     if tj is None:
         # stand-alone file (e.g. a voice audition): treat each detected speech run as a 'line'
         sil, _ = silences(x, min_dur=0.25)
@@ -461,6 +560,15 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
         led = {}
     js = joins(rows, lid, led, {d["id"]: d["t1"] for d in lines})
     jumps = [j for j in js if j["jump"]]
+    # S7 강약 · 이어지는 말 · 숨 (11-25 · 대리 지표 · 듣기 확인 = 1저자) — avi_prosody
+    import avi_prosody as P
+    thr_q, _, _ = _quiet_threshold(lev)
+    lv_all = np.interp(tf, np.arange(len(lev)) * hop + 0.015, lev)
+    voiced = (ap < 0.2) & (lv_all > ref - 25) & (f0 > 60) & (f0 < 420)
+    lid_p = {ln["id"]: dict(ln, _scene=sc["id"]) for sc in ep["scenes"] for ln in sc["lines"]}
+    for k_, v_ in lid.items():
+        lid_p.setdefault(k_, v_)
+    pro = P.analyze(lines, lid_p, rows, tf, f0, voiced, lev, hop, thr_q)
     dsts = np.array([abs(j["d_st"]) for j in js if j["d_st"] is not None])
     # summary + flags
     rates = np.array([r["rate"] for r in rows if r["rate"]])
@@ -480,9 +588,7 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
         flags.append("문장 끝 억양이 거의 같다 (표준편차 < 1.5 반음)")
     if len(qf) and len(sf) and (qf.mean() - sf.mean()) < 1.0:
         flags.append(f"물음 끝 억양이 평서와 비슷하다 (물음 {qf.mean():.1f} vs 평서 {sf.mean():.1f} 반음)")
-    longs = [r["id"] for r in rows if r["syl"] and r["syl"] > 40 and r["internal_pauses"] == 0]
-    if longs:
-        flags.append(f"40 음절 넘는 문장에 숨 (쉼) 이 없다: {', '.join(longs)}")
+    flags += P.flags(pro)                                   # 강조 낱말 · 이어지는 말 쉼 · 긴 문장 숨 (옛 '40 음절' 알림 대신)
     if jumps:
         flags.append(f"이웃 문장보다 목소리 높이가 {JOIN_JUMP_ST} 반음 넘게 뛴 이음매 {len(jumps)} 곳 (최대 {dsts.max():.1f}) — "
                      "'## 이음매' 시각을 귀로 확인 · 그 문장을 앞뒤 문맥 (smart) 으로 다시 만든다")
@@ -501,7 +607,8 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
                 final_st_sd=round(float(fins.std()), 2) if len(fins) else None,
                 clipping=clip, join_n=len(js), join_jumps=len(jumps),
                 join_max_st=round(float(dsts.max()), 2) if len(dsts) else None,
-                join_p95_st=round(float(np.percentile(dsts, 95)), 2) if len(dsts) else None, flags=flags)
+                join_p95_st=round(float(np.percentile(dsts, 95)), 2) if len(dsts) else None, flags=flags,
+                **pro["summary"])
     md = [f"# 음성 QC — {summ['file']}", "",
           f"- 음량 {summ['lufs']} LUFS (스테레오 L=R 기준) · 참 최고점 {summ['true_peak_dbtp']} dBTP · 클리핑 {clip}",
           f"- 빠르기 중앙 {summ['rate_median']} 음절/s (변동계수 {summ['rate_cv']}) · 레퍼런스 8.37 (0.15)",
@@ -517,17 +624,18 @@ def qc(ep, ep_dir, wav=None, text_lines=None):
         tt = j["t"]
         md.append(f"| {int(tt // 60)}:{tt % 60:04.1f} | {j['a']} → {j['b']} | {j['d_st']} | {' · '.join(j['why']) or '—'} |"
                   if tt is not None else f"| — | {j['a']} → {j['b']} | {j['d_st']} | {' · '.join(j['why']) or '—'} |")
+    md += P.md(pro)
     md += ["", "## 문장별", "", "| 문장 | 음절 | 길이 s | 음절/s | 뒤 쉼 s | F0 중앙 Hz | 범위 반음 | 끝 반음 | 안 쉼 | 물음 |",
           "|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         md.append(f"| {r['id']} | {r['syl']} | {r['dur']} | {r['rate']} | {r['pause_after']} | {r['f0_med']} | "
                   f"{r['range_st']} | {r['final_st']} | {r['internal_pauses']} | {'예' if r['question'] else ''} |")
-    rep_md = os.path.join(out_dir, "audio_qc.md" if wav is None else f"audio_qc_{os.path.splitext(os.path.basename(wav))[0]}.md")
-    os.makedirs(out_dir, exist_ok=True)
+    rep_md = report or os.path.join(out_dir, "audio_qc.md" if wav is None else f"audio_qc_{os.path.splitext(os.path.basename(wav))[0]}.md")
+    os.makedirs(os.path.dirname(os.path.abspath(rep_md)), exist_ok=True)
     with open(rep_md, "w", encoding="utf-8") as f:
         f.write("\n".join(md) + "\n")
     with open(rep_md[:-3] + ".json", "w", encoding="utf-8") as f:
-        json.dump(dict(summary=summ, rows=rows, joins=js), f, ensure_ascii=False, indent=1)
+        json.dump(dict(summary=summ, rows=rows, joins=js, prosody=pro), f, ensure_ascii=False, indent=1)
     return rep_md
 
 
@@ -558,6 +666,48 @@ def synth_line(text_say, rate=7.0, speed=1.0, question=False, f0=130.0, seed=0, 
         if pi < len(parts) - 1:
             out.append(rng.normal(0, 0.0005, int(comma_pause * SR)))
     return np.concatenate(out)
+
+
+def synth_marked(text_say, boost_word=None, boost_st=4.0, boost_db=5.0, rate=7.0, f0=130.0, seed=0, comma_pause=0.2,
+                 chunk_rates=None, pause_noise=0.0005):
+    """synth_line + the true time span of every word (and an optional emphasised word: higher F0 · louder).
+    For the S7 강약 · 숨 tests only.  Returns (signal, {word_index: (t0, t1)}, words)."""
+    rng = np.random.default_rng(seed)
+    words = text_say.replace("?", "").replace(".", "").split()
+    n_tot = max(1, syllables(text_say))
+    out, spans, t, k_glob = [], {}, 0.0, 0
+    chunk = 0
+    for wi, w in enumerate(words):
+        comma = w.endswith(",")
+        n = max(1, syllables(w))
+        boost = boost_word is not None and w.rstrip(",") == boost_word
+        w0 = t
+        r_ = chunk_rates[min(chunk, len(chunk_rates) - 1)] if chunk_rates else rate
+        for k in range(n):
+            dur = 1.0 / r_ * rng.uniform(0.9, 1.1)
+            ns = int(dur * SR)
+            tt = np.arange(ns) / SR
+            u = k_glob / max(1, n_tot - 1)
+            f = f0 * 2 ** ((2.0 - 5.0 * u + (boost_st if boost else 0.0)) / 12)
+            ph = 2 * np.pi * f * tt
+            sig = sum((0.6 / h) * np.sin(h * ph) for h in range(1, 6))
+            env = np.clip(np.minimum(1, tt / 0.015) * np.minimum(1, (dur - tt) / 0.03), 0, 1)
+            amp = 0.3 * (10 ** (boost_db / 20) if boost else 1.0)
+            out.append(sig * env * amp)
+            gap = int(0.012 * SR)
+            out.append(rng.normal(0, 0.002, gap))
+            t += (ns + gap) / SR
+            k_glob += 1
+        spans[wi] = (w0, t)
+        if comma:
+            chunk += 1
+            out.append(rng.normal(0, pause_noise, int(comma_pause * SR)))
+            t += int(comma_pause * SR) / SR
+        elif wi < len(words) - 1:
+            sp = int(0.03 * SR)                       # a short word gap (no pause)
+            out.append(rng.normal(0, 0.002, sp))
+            t += sp / SR
+    return np.concatenate(out), spans, words
 
 
 def selftest(work):
@@ -652,6 +802,176 @@ def selftest(work):
                        and "## 이음매" in open(rep, encoding="utf-8").read()))
     except Exception as ex:                                   # noqa: BLE001 — a crash is a FAIL
         checks.append((f"★ 이음매 점검 [{type(ex).__name__}: {ex}]", False))
+    # S7 강약 · 이어지는 말 · 숨 (1저자 11-25 "보이스 강약이나 이음 등이 아직 부족" · 대리 지표 · 듣기 확인 = 1저자)
+    try:
+        import avi_prosody as P
+        w3 = os.path.join(work, "prosody")
+        in3 = os.path.join(w3, "audio_in")
+        if os.path.isdir(w3):
+            shutil.rmtree(w3)
+        os.makedirs(in3)
+        long_a = "이 문장은 쉼표 없이 아주 길게 이어지는 문장으로서 숨을 쉴 자리가 하나도 없이 끝까지 한 번에 말하는 문장입니다."
+        long_b = "이 문장도 아주 길게 이어지지만 가운데에 쉼표가 하나 있어서, 그 자리에서 잠깐 숨을 쉬고 다시 이어 말하는 문장입니다."
+        long_c = "이 문장도 아주 길게 이어지고 가운데에 쉼표가 하나 있지만, 그 자리의 쉼이 아주 짧아서 숨을 쉬었다고 듣기 어려운 문장입니다."
+        spec = [  # (say, emphasis, boost word, pause_after, joins_prev (True) / new_thought ("new"), comma pause)
+            ("오늘은 정말 중요한 낱말을 강조해서 말해 봅니다.", ["중요한"], "중요한", 0.45, False, 0.2),
+            ("이번에는 같은 낱말을 그냥 평평하게 말해 봅니다.", ["낱말을"], None, 0.45, False, 0.2),
+            ("없는 낱말 시험입니다.", ["바나나"], None, 0.45, False, 0.2),
+            ("같은 비율로 섞어도요.", [], None, 0.6, False, 0.2),
+            ("결과는 달라집니다.", [], None, 0.45, False, 0.2),
+            ("짧게 이어지는 앞 문장입니다.", [], None, 0.2, False, 0.2),
+            ("그래서 이 문장은 바로 이어집니다.", [], None, 0.5, True, 0.2),
+            ("이 문장도 이어지지만 앞에서 오래 쉬었어요.", [], None, 0.6, True, 0.2),
+            ("새 생각은 따로 시작합니다.", [], None, 0.45, False, 0.2),
+            (long_a, [], None, 0.45, False, 0.2),
+            (long_b, [], None, 0.45, False, 0.25),
+            (long_c, [], None, 0.45, False, 0.10),
+            ("짧은 끝 문장입니다.", [], None, 1.0, False, 0.2),
+            ("첫 마디는 짧게, 둘째 마디에 있는 강조 낱말을 크게 말합니다.", ["강조"], "강조", 1.0, False, 0.6),
+            ("이 문장도 길게 이어지고 쉼표 자리의 쉼에 잡음이 조금 섞여 있지만, 그래도 분명히 숨을 쉬는 자리가 있는 긴 문장입니다.",
+             [], None, 1.0, False, 0.3),
+            ("그래야 같은 출발에서 비교할 수 있거든요.", [], None, 0.6, False, 0.2),
+            ("또 하나, 이 문장은 새 생각을 시작합니다.", [], None, 1.0, "new", 0.2),
+        ]
+        ep3 = dict(episode="ep98_prosody", voice_model=dict(lead_in=0.5), end_card_s=1.0,
+                   scenes=[dict(id="s01", title="s01", lines=[], shots=[])])
+        marks = {}
+        for k, (say, emph, bw, pz, jp, cp) in enumerate(spec):
+            lid3 = f"s01_l{k + 1:02d}"
+            d = dict(id=lid3, text=say, say=say, pause_after=pz, speed=1.0, emphasis=emph)
+            if jp is True:
+                d["joins_prev"] = True
+            elif jp == "new":
+                d["new_thought"] = True
+            ep3["scenes"][0]["lines"].append(d)
+            y, spans, words = synth_marked(say, boost_word=bw, seed=40 + k, comma_pause=cp,
+                                           chunk_rates=[4.0, 9.0] if k == 13 else None,
+                                           pause_noise=0.006 if k == 14 else 0.0005)   # l15: comma pause ≈ 28 dB under speech
+            lead = 0.2
+            marks[lid3] = (lead, spans, words)
+            write_wav(os.path.join(in3, f"ep98_{lid3}.wav"),
+                      np.concatenate([rng.normal(0, 0.0003, int(lead * SR)), y, rng.normal(0, 0.0003, int(0.3 * SR))]), stereo=False)
+        res3 = prep(ep3, w3, in_dir=in3)
+        rep3 = qc(ep3, w3)
+        q3 = json.load(open(rep3[:-3] + ".json", encoding="utf-8"))
+        md3 = open(rep3, encoding="utf-8").read()
+        pr = q3.get("prosody") or {}
+        em = {(e["id"], e["word"]): e for e in pr.get("emphasis", [])}
+        jn = {(j["a"], j["b"]): j for j in pr.get("joins", [])}
+        br = {b["id"]: b for b in pr.get("breath", [])}
+        checks += [("★ 강약: 올려 말한 강조 낱말 = 힘 받음 (+4 반음 · +5 dB 합성)", em.get(("s01_l01", "중요한"), {}).get("got") is True),
+                   ("★ 강약: 평평하게 말한 강조 낱말 = 힘 못 받음", em.get(("s01_l02", "낱말을"), {}).get("got") is False),
+                   ("★ 강약: 글에 없는 강조 낱말 = 판정 못 함 (None · 까닭)", ("s01_l03", "바나나") in em
+                    and em[("s01_l03", "바나나")].get("got") is None and bool(em[("s01_l03", "바나나")].get("why")))]
+        tj3 = json.load(open(res3["timing"], encoding="utf-8"))
+        t0_1 = {d["id"]: d for d in tj3["lines"]}["s01_l01"]
+        lead, spans1, words1 = marks["s01_l01"]
+        wi = words1.index("중요한")
+        true_c = t0_1["t0"] - (t0_1["src_t0"] - lead) + (spans1[wi][0] + spans1[wi][1]) / 2
+        e1 = em.get(("s01_l01", "중요한"), {})
+        est_c = (e1.get("t0", -9) + e1.get("t1", -9)) / 2
+        checks.append((f"★ 강약: 낱말 자리 어림 (음절 비례) ≤ 0.3 s 안 (어긋남 {abs(est_c - true_c):.2f} s)", abs(est_c - true_c) <= 0.3))
+        t14 = {d["id"]: d for d in tj3["lines"]}["s01_l14"]
+        lead14, spans14, words14 = marks["s01_l14"]
+        w14 = words14.index("강조")
+        true14 = t14["t0"] - (t14["src_t0"] - lead14) + (spans14[w14][0] + spans14[w14][1]) / 2
+        e14 = em.get(("s01_l14", "강조"), {})
+        est14 = (e14.get("t0", -9) + e14.get("t1", -9)) / 2
+        checks.append((f"★ 강약: 쉼표 뒤 낱말 자리 = 쉼표 자리의 쉼에 맞춰 어림 (마디 빠르기 4 ↔ 9 음절/s · 어긋남 {abs(est14 - true14):.2f} s ≤ 0.15)",
+                       abs(est14 - true14) <= 0.15 and e14.get("got") is True))
+        checks += [("★ 숨: '…요.' 로 이어지는 쌍의 0.6 s 쉼 = 김", jn.get(("s01_l04", "s01_l05"), {}).get("long") is True),
+                   ("★ 숨: 대본 이음 표지 + 0.2 s 쉼 = 걸림 없음", jn.get(("s01_l06", "s01_l07"), {}).get("long") is False),
+                   ("★ 숨: 대본 이음 표지 + 0.5 s 쉼 = 김", jn.get(("s01_l07", "s01_l08"), {}).get("long") is True),
+                   ("★ 숨: 이어지지 않는 쌍 (표지 없음 · 끝 '~어요') = 이음 쌍 아님 (이음 쌍 목록은 있음)", len(jn) >= 3 and ("s01_l08", "s01_l09") not in jn),
+                   ("★ 숨: '…거든요.' 뒤라도 대본 표지 '새 생각' (new_thought) 이면 이음 쌍 아님 (0.6 s 쉼 = 걸림 아님)",
+                    len(jn) >= 3 and ("s01_l16", "s01_l17") not in jn)]
+        checks += [(f"★ 숨: {syllables(long_a)} 음절 · 쉼표 없음 = 숨 없음", syllables(long_a) >= 40 and br.get("s01_l10", {}).get("no_breath") is True),
+                   ("★ 숨: 쉼표 자리 0.25 s 쉼 = 숨 있음", syllables(long_b) >= 40 and br.get("s01_l11", {}).get("no_breath") is False),
+                   ("★ 숨: 쉼표 자리 0.10 s 쉼 (< 0.15) = 숨 없음", syllables(long_c) >= 40 and br.get("s01_l12", {}).get("no_breath") is True),
+                   ("★ 숨: 40 음절 아래 문장은 보지 않는다 (긴 문장 목록은 있음)", len(br) == 4 and "s01_l01" not in br),
+                   ("★ 숨: 쉼표 자리의 쉼이 디지털 무음이 아니어도 (말보다 ≈ 28 dB 낮은 잡음 · Typecast 꼴) = 숨 있음 "
+                    "(문장마다의 쉼 문턱)", br.get("s01_l15", {}).get("no_breath") is False)]
+        checks.append(("★ qc 보고 (md) 에 '## 강약' · '## 숨' 절 · 대리 지표 표지 · json 요약 수",
+                       "## 강약" in md3 and "## 숨" in md3 and "대리 지표" in md3 and "듣기 확인 = 1저자" in md3
+                       and all(k in q3.get("summary", {}) for k in ("emph_n", "emph_missed", "join_cont_n", "join_cont_long",
+                                                                     "breath_n", "breath_missing"))))
+        alt = qc(ep3, w3, report=os.path.join(w3, "other", "qc_alt.md"))
+        checks.append(("★ qc report= (avi.py audio-qc --out) = 그 자리에 md · json", alt.endswith("qc_alt.md") and os.path.exists(alt)
+                       and json.load(open(alt[:-3] + ".json", encoding="utf-8"))["prosody"]["summary"] == pr.get("summary")))
+        # 대본 ↔ 음성 판 불일치 = 멈춤 (v3 대본 + v2 음성 같은 상황)
+        ep_bad = json.loads(json.dumps(ep3))
+        ep_bad["scenes"][0]["lines"].insert(3, dict(id="s01_l99", text="끼워 넣은 문장.", say="끼워 넣은 문장.", pause_after=0.4))
+        try:
+            qc(ep_bad, w3)
+            checks.append(("★ 판 불일치 (대본 문장 ≠ timing.json) = 멈춤", False))
+        except SystemExit as ex:
+            checks.append(("★ 판 불일치 (대본 문장 ≠ timing.json) = 멈춤", "불일치" in str(ex)))
+    except Exception as ex:                                   # noqa: BLE001 — a crash is a FAIL
+        checks.append((f"★ 강약 · 숨 점검 [{type(ex).__name__}: {ex}]", False))
+    # v3.1 (11-25 · 1저자 듣기 피드백): 문장 안 숨 줄이기 (voice_model.breath_db) · 문장별 음량 (audio_in/line_gain.json ·
+    # 그 판의 sha256 이 맞을 때만) — 시험 먼저 (기능 전에는 실패해야 한다)
+    try:
+        import hashlib
+
+        def _run4(name, breath_db, gain):
+            w4 = os.path.join(work, name)
+            in4 = os.path.join(w4, "audio_in")
+            if os.path.isdir(w4):
+                shutil.rmtree(w4)
+            os.makedirs(in4)
+            vm4 = dict(lead_in=0.5)
+            if breath_db:
+                vm4["breath_db"] = breath_db
+            ep4 = dict(episode="ep97_breath", voice_model=vm4, end_card_s=0.5,
+                       scenes=[dict(id="s01", title="s01", lines=[], shots=[])])
+            r4 = np.random.default_rng(11)
+            tt = np.arange(int(0.8 * SR)) / SR
+
+            def tone(f):
+                return 0.3 * np.sin(2 * np.pi * f * tt) * (0.6 + 0.4 * np.sin(2 * np.pi * 3 * tt)) ** 2
+
+            sents = {"s01_l01": np.concatenate([tone(150), r4.normal(0, 0.006, int(0.3 * SR)), tone(160)]),   # 0.3 s 숨
+                     "s01_l02": np.concatenate([tone(140), r4.normal(0, 0.006, int(0.12 * SR)), tone(150)]),  # 0.12 s (닫힘)
+                     "s01_l03": np.concatenate([tone(150), tone(150)])}
+            for lid4, y in sents.items():
+                ep4["scenes"][0]["lines"].append(dict(id=lid4, text="문장", say="문장 하나 둘 셋", pause_after=0.5, speed=1.0))
+                write_wav(os.path.join(in4, f"ep97_{lid4}.wav"),
+                          np.concatenate([np.zeros(int(0.2 * SR)), y, np.zeros(int(0.2 * SR))]), stereo=False)
+            if gain is not None:
+                sha3 = hashlib.sha256(open(os.path.join(in4, "ep97_s01_l03.wav"), "rb").read()).hexdigest()
+                json.dump({"s01_l03": dict(db=-6.0, sha256=sha3 if gain == "ok" else "0" * 64, why="selftest")},
+                          open(os.path.join(in4, "line_gain.json"), "w", encoding="utf-8"))
+            prep(ep4, w4, in_dir=in4)
+            tj4 = json.load(open(os.path.join(w4, "audio", "timing.json"), encoding="utf-8"))
+            x4 = decode(os.path.join(w4, "audio", "narration.wav"))
+            L4 = {d["id"]: d for d in tj4["lines"]}
+
+            def db(lid, t0, t1):
+                a0 = L4[lid]["t0"]
+                seg4 = x4[int((a0 + t0) * SR):int((a0 + t1) * SR)]
+                return 20 * np.log10(np.sqrt(np.mean(seg4 ** 2)) + 1e-12)
+            return dict(tone1=db("s01_l01", 0.1, 0.7), breath=db("s01_l01", 0.86, 1.04), tone2=db("s01_l01", 1.2, 1.9),
+                        clos=db("s01_l02", 0.82, 0.9), tone_l2=db("s01_l02", 0.1, 0.7), l3=db("s01_l03", 0.1, 1.5), L=L4)
+
+        b0 = _run4("breath0", 0.0, None)
+        b1 = _run4("breath1", -10.0, "ok")
+        b2 = _run4("breath2", -10.0, "bad")
+        d_breath = (b1["breath"] - b1["tone1"]) - (b0["breath"] - b0["tone1"])
+        checks += [(f"★ 숨 줄이기: 문장 안 0.3 s 숨 = −10 dB (잰 값 {d_breath:+.1f} dB · ± 1.5)", abs(d_breath + 10.0) <= 1.5),
+                   ("★ 숨 줄이기: 숨 앞뒤 말 = 그대로 (± 0.3 dB)",
+                    abs((b1["tone2"] - b1["tone1"]) - (b0["tone2"] - b0["tone1"])) <= 0.3),
+                   ("★ 숨 줄이기: 0.18 s 아래 닫힘 (0.12 s) = 건드리지 않음 (± 0.5 dB)",
+                    abs((b1["clos"] - b1["tone_l2"]) - (b0["clos"] - b0["tone_l2"])) <= 0.5),
+                   ("★ 숨 줄이기: timing.json 에 줄인 숨 수", b1["L"]["s01_l01"].get("breaths_softened") == 1
+                    and b0["L"]["s01_l01"].get("breaths_softened", 0) == 0)]
+        d_gain = (b1["l3"] - b1["tone1"]) - (b0["l3"] - b0["tone1"])
+        d_bad = (b2["l3"] - b2["tone1"]) - (b0["l3"] - b0["tone1"])
+        checks += [(f"★ 문장 음량: line_gain.json −6 dB (sha 맞음) = 그 문장만 −6 dB (잰 값 {d_gain:+.2f} · ± 0.3)",
+                    abs(d_gain + 6.0) <= 0.3 and b1["L"]["s01_l03"].get("gain_db") == -6.0),
+                   (f"★ 문장 음량: sha 가 다른 판 = 안 씀 + 표지 (잰 값 {d_bad:+.2f})",
+                    abs(d_bad) <= 0.3 and b2["L"]["s01_l03"].get("gain_skipped") == "sha")]
+    except Exception as ex:
+        checks.append((f"★ 숨 줄이기 · 문장 음량 [{type(ex).__name__}: {ex}]", False))
     for name, good in checks:
         print(("PASS " if good else "FAIL ") + name)
     print(json.dumps(ok, ensure_ascii=False))

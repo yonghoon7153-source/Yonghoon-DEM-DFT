@@ -8,7 +8,8 @@
 
 등록 자리 = --folder · 없으면 환경 변수 WEBAPP_VIDEO_FOLDER · 없으면 webapp/videos/ (git 밖 · 웹앱 app.py 와 같은 규칙).
 폴더를 주면 avi_package_episode.py 와 같은 함수로 임시 꾸러미를 만들어 **같은 등록 함수** (webapp/video_library.register_bundle) 로 넣는다 —
-웹앱 화면의 올리기와도 같은 함수 · 같은 검사 (zip-slip · 심볼릭 링크 · 크기 · SHA256SUMS · INTERNAL 표지 · 공개 안전 검사).
+웹앱 화면의 올리기와도 같은 함수 · 같은 검사 (zip-slip · 심볼릭 링크 · 크기 · SHA256SUMS · INTERNAL 표지 · 공개 안전 검사 ·
+공개판 = 판 대조 기록 (지금 판 · 다 잰 통과) 필수 — 기록을 본다 · 영상을 다시 재지 않는다).
 rc 0 = 등록 · 1 = 거부 (사유 · 이미 있음 포함) · 2 = 사용법.  화면 = 웹앱 /videos/<id>.
 """
 from __future__ import annotations
@@ -36,7 +37,7 @@ def main(argv=None):
     g.add_argument('--number', type=int, help='편 번호')
     g.add_argument('--updated', help='갱신 날짜 YYYY-MM-DD')
     g.add_argument('--deny-list', help='내부 숫자 목록 파일 (리포 · 꾸러미 밖)')
-    g.add_argument('--no-probe', action='store_true', help='ffprobe 로 길이를 재지 않는다')
+    g.add_argument('--no-probe', action='store_true', help='ffprobe 로 길이를 재지 않는다 — --internal (검토 후보) 만 · 공개판은 거부')
     a = ap.parse_args(argv)
     folder = a.folder or V.default_folder()
     src = Path(a.source)
