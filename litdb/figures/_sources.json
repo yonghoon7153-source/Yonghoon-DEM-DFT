@@ -1432,6 +1432,13 @@
    "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf"
   ]
  },
+ "huang2017_mpfem_2d_binary_al_sic_hard_soft_compaction": {
+  "figures": 16,
+  "generated": "2026-11-25",
+  "pdfs": [
+   "huang2017.pdf"
+  ]
+ },
  "huang2022_li2sis3_anomalous_conductivity_bvse": {
   "figures": 11,
   "generated": "2026-08-05",
@@ -2369,6 +2376,13 @@
   "generated": "2026-11-03",
   "pdfs": [
    "4._Dominant_role_of_tunneling_resistance_in_the_electrical_conductivity_of_carbon_nanotube_based_composites.pdf"
+  ]
+ },
+ "li2022_mpfem_3d_soft_hard_composite_compaction_vibration_unloading": {
+  "figures": 12,
+  "generated": "2026-11-25",
+  "pdfs": [
+   "li2022.pdf"
   ]
  },
  "li2024_inf3_argyrodite_ultrathin_film": {
@@ -3739,6 +3753,13 @@
    "ba72a247-71._Granular_flow_down_an_inclined_plane_Bagnold_scaling_and_rheology.pdf"
   ]
  },
+ "singer2022_partitioned_mpm_dem_coupling_kratos": {
+  "figures": 14,
+  "generated": "2026-11-25",
+  "pdfs": [
+   "singer2022.pdf"
+  ]
+ },
  "siroma2015_transmission_line_model_porous_electrode_impedance": {
   "figures": 16,
   "generated": "2026-10-03",
@@ -4733,6 +4754,13 @@
   "pdfs": [
    "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
    "e0f1efc4-106._Sup_Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.docx"
+  ]
+ },
+ "zhou2019_mpfem_2d_copper_powder_die_compaction_release": {
+  "figures": 16,
+  "generated": "2026-11-25",
+  "pdfs": [
+   "zhou2019.pdf"
   ]
  },
  "zhou2019_solvent_engineered_argyrodite_li6ps5x_conductivity": {

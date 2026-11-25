@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 387편 · 생성 2026-11-24
+> digest 392편 · 생성 2026-11-25
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -41,7 +41,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (25편)
+## MPM · 연속체 (27편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -64,8 +64,10 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `nguyen2017_mpm_bpm_deformable_particle_compaction` | 변형 입자 압밀을 두 방식으로 — 암시적 MPM+CD (탄성 연속체 입자) vs BPM (강체 1차입자 응집체 · 소성) · 2D 300 입자 · 마찰 0/0.5 · Z−Z0 ∝ (Φ−Φ0)^0.5 ★ Nezamabadi 2022 의 전신 — Nguyen (EPJ Web Conf. 2017) | MPM+CD vs BPM (2D; implicit MPM + contact dynamics vs bonded | 2026-11-09 | 🖼 6 |
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | MPM 이 큰 인장에서 끊기는 문제 (extension instability) 를 입자 영역을 변형 경사 F 로 실어 나르는 평행사변형 (CPDI) + 그 모서리 값의 Q4 보간 기저로 푼 원전 — 2D 평면 변형률 · 탄성 neo-Hookean · 동적 시험 다섯 (MMS 수렴 두 건 · 자중 막대 평균 신장 ×2.8  | MPM (명시적 GIMP 계열 · USL · 입자 영역 = 평행사변형을 전체 변형 경사 F 로 실어 나름 ( | 2026-11-12 | 🖼 87 |
+| `sandoval2023_alloy_interlayers_structural_electrochemical_evolution_anode_free` | Structural and electrochemical evolution of alloy interfacial layers in anode-free solid-state batteries — Sandoval et al. (Joule 2023, 7, 2054–2073) | exp 주 (정전류 반쪽 · 완전 셀 · in situ 정전위 EIS · PFIB / cryo-FIB-SEM | 2026-11-24 | 🖼 17 |
 | `sandoval2025_electro_chemo_mechanics_anode_free_ssb` | 무음극 (anode-free) 전고체전지의 전기-화학-역학 — 첫 석출 (접촉 · 핵생성 · 적층압 · 온도 · 집전체 두께 · Cu/Li₂O 화학 불균일 · SE 미세구조) → 사이클 (CE > 99.95 % · 방전 끝 국부 Li 고갈 공극 → 다음 충전 필라멘트) → 인터레이어 (탄소 · Au/Ag · Li₂Te · | review (Perspective · 자체 계산 0 · 자체 실험 0 · SI = 에너지밀도 산정 1 건) | 2026-11-24 | 🖼 9 |
 | `sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free` | 무음극 Li \\| Li₆PS₅Cl \\| (Au · Ag 100 nm 입힌) Cu 반쪽 셀 셋의 operando X 선 μCT — 굵은 분말 · 고분극 셀은 집전체 계면 전체에서 Li 로 찬 균열 (원래 기공을 채우지 않고 그 옆에서 자라 기공을 닫음 · 박리로 줄지만 ≈ 20 % 남음) · 고운 분말 · 저분극 셀은 평평 | exp (operando 싱크로트론 X 선 μCT + 정전류 전기화학 + 영상 분할 · 원자단위 계산 0) | 2026-11-24 | 🖼 14 |
+| `singer2022_partitioned_mpm_dem_coupling_kratos` | MPM (연속체) 과 DEM (구 · 구 다발) 을 블랙박스 두 개로 나눠 공유 경계에서만 주고받는 분할 결합 (KRATOS) — DEM 이 먼저 접촉력을 내고 (벽 조건 = MPM 외곽) → 그 힘을 MPM 경계 입자에 점하중으로 (보존 사상 Hᵀ) → MPM (암시 Newmark) 이 움직인 경계를 다시 DEM 벽으로 | MPM–DEM 분할 결합 (KRATOS · MPM = 암시 Newmark 갱신 라그랑주 + 경계 입자 점하중 | 2026-11-25 | 🖼 14 |
 | `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` | MPM 구현 선택 (기저 함수 · 매끈함 길이 · 경계 처리) 이 오차 · 안정에 주는 영향 — 선형 · 2차 B-spline (+ 경계 수정 B-spline · 열린 균일 매듭) · uGIMP · cpGIMP 를 '조각 상수 함수의 합성곱' 하나로 묶고 (식 31) · 노드 적분 오차 = 합성 중점 O(Δx²) + 도약 | MPM (수치 해석 · 검증 — Uintah Computational Framework (UCF) 의 명시적 | 2026-11-12 | 🖼 74 |
 | `steffen2010_mpm_space_time_error_balance_moving_mesh` | MPM 의 공간 · 시간 오차를 떼어 내 균형 맞추기 — moving-mesh MPM (참조 배치 고정 · 격자 넘김 없음) 으로 시간 오차를 드러내고, 격자 넘김의 시간 도약 오차 O(Δt²) · 노드 적분 (quadrature) 오차의 누적 (전역 ∝ α^k · α = 1/셀당 물질점 · 선형 기저 k = 1 · 2차 | MPM numerical error analysis (1D · explicit Forward-Euler /  | 2026-11-12 | 🖼 179 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
@@ -239,7 +241,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (86편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (89편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -270,6 +272,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct` | 상용 NMC811 양극 시트는 사이클 전에 이미 입자 약 ⅓ 이 결함 (Material 1 30.2 % · 상용 LG MJ1 34.2 % · 분리막 (= 캘린더 롤) 쪽 > 50 %) — 저자 해석 = 원분말이 아니라 시트 인쇄 · 캘린더링 유래 (압력 미상) · 흑연 상대 4.5 V 5 사이클 뒤 2차입자 안 1차입자  | exp (multi-resolution lab X-ray CT of calendered commercial  | 2026-11-12 | 🖼 39 |
 | `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` | 용매 없는 건식 막 (dry-film, DF) 으로 황화물 복합양극 시트를 PTFE 0.1 wt% 까지 줄여 만든다 — NCM90 (LZO 코팅) : VG-CNF : Li₆PS₅Cl = 85:2:13 + PTFE 0.1–1 wt% · 가열 막자 1 min → 박편 → 열판 압연 (막 기공 ≈50 %) → 300 MPa 뒤 | exp (건식 막 공정 · PTFE 함량 0–1 wt% · 기계 인장 · TGA/DSC · XRD · 라만  | 2026-10-13 | 🖼 19 |
 | `hong2026_sulfide_cathode_binder_digitaltwin` | Hong 2026 (Energy Storage Materials 86, 104930) — 황화물 복합양극 열화 메커니즘 (디지털트윈): Dry(PTFE) vs Wet(NBR) 바인더 ★우리 소재계(LPSCl+NCM) | FEM·digital-twin | 2026-07-28 | — |
+| `huang2017_mpfem_2d_binary_al_sic_hard_soft_compaction` | 무른 Al + 단단한 SiC 원판 이원 혼합을 입자마다 FE 메시로 (2D MPFEM · MSC.Marc) 단동 다이 압축 — 정렬 (SC · HCP) ↔ 무작위 충전 · SiC 10–50 % · 크기비 1.5 · 2 · 3 · 입자 간 µ 0 ↔ 0.2 ★★ 힘 사슬은 맞닿은 단단한 입자 (SiC) 가 정하고 큰 응력이 | MPFEM 2D (MSC.Marc · 입자마다 요소 1200 · 절점 1241 · 갱신 라그랑주 · 완전 N | 2026-11-25 | 🖼 16 |
 | `jadidi2023_dem_batch_solid_mixers_review` | 배치(batch) 고체 믹서의 DEM 적용 종합 리뷰 — 믹서 분류 · 혼합/분리 기전 · 혼합지수(mixing index) 8종 전수 · 접촉·점착모델 표준 · 보정 · coarse-graining · 미해결 목록 — Jadidi, Ebrahimi, Ein-Mozaffari, Lohi (Reviews in Chemica | DEM (REVIEW — 배치 고체 믹싱; 7개 믹서족 문헌표 + 혼합지수 카탈로그) | 2026-09-19 | 🖼 3 |
 | `jeong2025_tough_adhesive_binder_shield_ncm811` | A Tough, Adhesive, and Protective Binder Shield for Stabilizing High-Nickel Cathodes in Lithium-Ion Batteries — Jeong et al. (Adv. Energy Mater. 2025, 15, e02765) | exp 주도 + 보조 DFT 9점(Gaussian 16 분자계산 — 고체 DFT 아님) | 2026-09-22 | 🖼 19 |
 | `jun2026_ppma_econductive_binder_si_lowpressure_assb` | Electron-conductive binder for silicon negative electrode enabling low-pressure all-solid-state batteries — Jun & Jeong et al. (Nat. Commun. 2026) | exp (계산 0) | 2026-07-15 | 🖼 5 |
@@ -292,6 +295,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lee2025_dual_fibrous_ptfe_dry_electrode` | Dual-fibrous PTFE (fibre + rope) 로 균일·후막 건식전극 — Kwon-Hyung Lee / Tae-Hee Kim / Gyujin Song (Energy Environ. Sci. 2025) | exp | 2026-09-04 | 🖼 33 |
 | `lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode` | PTFE 건식 후막 흑연 음극에 PVP 0.5 wt% 를 더한 이원 바인더 (96 : 1 : 3 + PVP · 막자 반죽 · 압연 · 93 µm · 1.5 g/cc) — 반쪽 셀 ICE 85.1 → 92.4 % · 1 사이클 뒤 두께 93 → 112 (DG) / 98 µm (DG-P) · 전극 국소 탄성률 75.00 /  | experiment (PTFE dry process + PVP 이원 binder · planetary 예비  | 2026-11-22 | 🖼 77 |
 | `lee2026_li_underlayer_primer_free_dry_prelithiated_thick_anode` | PTFE 건식 후막 Si/흑연 음극 (96 : 1 : 3 · 2.1 g cm⁻³ · ≈63 µm · 13.5 mg cm⁻²) 을 SBR 프라이머 Cu 대신 Li 6.5 µm 를 입힌 Cu 박 (Li/Cu) 위에 라미네이트하면 박리는 비슷하게 남고 (≈3.45 vs ≈3.85 gf/mm [판독]) 계면 저항은 절반 (≈0. | exp (PTFE binder dry process 건식 후막 Si/흑연 음극 · Li/Cu 밑층 = 프라이 | 2026-10-13 | 🖼 35 |
+| `li2022_mpfem_3d_soft_hard_composite_compaction_vibration_unloading` | 같은 크기 (지름 1 mm) 의 무른 + 단단한 금속 구를 입자마다 FE 메시로 (3D MPFEM · MSC.Marc) 원통 다이 압축 → 하중 유지 → 탈압 — 진동 충전 ↔ 자연 충전 · 상대밀도 ≈0.48 → ≈0.84 (200 MPa) · 단단한 구에 응력이 모이고 무른 구는 단단한 구에 눌려 안으로 오목 해져 옆 | MPFEM 3D (MSC.Marc · 입자마다 요소 1014 · 절점 872 · 갱신 라그랑주 · node- | 2026-11-25 | 🖼 12 |
 | `lippke2023_dem_drying_structure_formation_lib` | 습식 슬러리 건조(drying) 중의 전극 구조형성을 DEM으로 — CFD 없이 유체를 4개 대리모델(부력·Stokes·윤활·모세관)로 갈음하고, 하강하는 가상 액면(fluid level)의 모세관력이 입자를 끌어내려 자립 골격을 만든다 · 공정스케일 1D 건조기 모델과 반복 양방향 커플링 · 4개 areal loadin | DEM (유체-대리 건조; Hertz–Mindlin + Hamaker vdW + Kroupa 윤활 + Bre | 2026-09-19 | 🖼 9 |
 | `lischka2025_dem_eirich_intensive_mixer_dry_mixing` | Eirich 집약형 실험실 믹서(EL1.0 / EL0.1) 안의 Li-ion 양극 건식 혼합을 DEM 으로 — coarse-graining(CGF 200) + JKR 점착 + cohesion-number 로 γ 를 입경에 맞춰 재계산 + 믹싱툴 소비전력 실험 검증, 그리고 "전단이 아니라 툴과의 충돌이 카본블랙 분쇄의 지 | DEM (EDEM 2022.3, coarse-grained CGF 200 + JKR cohesion, coh | 2026-09-19 | 🖼 21 |
 | `liu2025_dry_processing_high_energy_li_batteries_review` | 건식공정(DPT)으로 고에너지밀도 Li 전지 전극·SE막 만들기 — DPC / 분무 / 압출 / 바인더 섬유화(PTFE) 4대 기법 총설, LIB→ASSB 적용 — Liu et al. (Small 2025, 리뷰) | REVIEW (건식공정 총설; 실험·시뮬 *원저 아님* — 문헌 종합) | 2026-06-26 | 🖼 12 |
@@ -329,6 +333,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane` | 건식 PTFE 0.2 wt% · 80 °C 열 캘린더링 (hot calendering) 황화물 SE 막 30 µm — Li₅.₄PS₄.₄Cl₁.₆ (= 우리 DFT modelc 조성) 분말 펠릿 10.8 → 막 8.4 mS cm⁻¹ (25 °C · 시험 중 360 MPa 로 누른 채 · 막만 도선 · 접촉 1.04 Ω 를 | experiment (dry process · PTFE binder 0.2 wt% fibrillation b | 2026-11-22 | 🖼 52 |
 | `zhang2026_mixing_sequence_shear_speed_ptfe_fibrillation_dry_graphite_anode` | 건식 PTFE 흑연 음극 (인조 흑연 : Super P : PTFE = 95 : 3 : 2 · 15.4 mg/cm² · 90 µm) 에서 PTFE 를 넣는 순서 (TSM = 흑연 + Super P 먼저 → PTFE · OSM = 셋 한꺼번에) 와 고속 전단 rpm (2000 rpm 10 min 예비 혼합 뒤 5000 /  | experiment (dry process 건식 전극 · PTFE binder 섬유화 · 고속 mixer 투 | 2026-11-23 | 🖼 50 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 62 |
+| `zhou2019_mpfem_2d_copper_powder_die_compaction_release` | 2D 구리 원판 ≈200 개를 입자마다 FE 메시로 (MPFEM · MSC.Marc) 단동 다이 압축 → 탈압 0 MPa 까지 — 상대밀도 0.740 → 0.984 (723 MPa) · 탈압 뒤 입자 평균 von Mises ≈260 MPa 가 남고 압분체 아래쪽이 갈라진다 ★★ [DEM 우선 (수영)] 2D 49 원판 S | MPFEM 2D (MSC.Marc · 입자마다 요소 132 · 절점 169 · 갱신 라그랑주 · node-t | 2026-11-25 | 🖼 16 |
 
 ## 화학-기계 열화 · 계면 (31편)
 
