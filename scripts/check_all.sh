@@ -275,6 +275,7 @@ run '반입 ㊲ 믹서 사다리 두 팔 발사 · 반환 단위 시험' python3
 run '반입 ㊳ 7:3 탈압 NP6 병렬 단위 시험' python3 -I -X utf8 -B docs/reviews/ps73_parallel_20261124/test_parallel.py
 # ★ 2026-11-24 (반입 ㊴ · codex/mixer-b2-seeds-1124 · 83837f2b2 → d784a7fec) — B2 양 끝점 독립 시드 짝 반복 · 산술 단위 시험 (임시 폴더 · 현장 0 · test_package · test_receipts = 1저자 실행 꾸러미 (사다리 · B2 tar) 를 인자로 받아 게이트 밖).
 run '반입 ㊴ B2 독립 시드 짝 반복 산술 단위 시험' python3 -I -X utf8 -B docs/reviews/mixer_b2_seed_pairs_20261124/test_repeat.py
+run '반입 ㊸ 수영 Q13 S36·F36 블록 시험' python3 -I -X utf8 -B docs/reviews/suyoung_q13_setting2_20261125/test_q13.py
 #  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의
 #    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`
 #    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`

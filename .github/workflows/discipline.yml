@@ -220,6 +220,9 @@ jobs:
       # ★ 2026-11-24 (반입 ㊴) — B2 독립 시드 짝 반복 산술 단위 시험 (check_all.sh 단계 78 에도 같이)
       - name: 반입 ㊴ B2 독립 시드 짝 반복 산술 단위 시험 (regression)
         run: python -B docs/reviews/mixer_b2_seed_pairs_20261124/test_repeat.py
+      # ★ 2026-11-25 (반입 ㊸) — 수영 Q13 S36·F36 블록 · 판독 단위 시험 열하나 (check_all.sh 에도 같이)
+      - name: 반입 ㊸ 수영 Q13 S36·F36 블록 시험 (regression)
+        run: python -B docs/reviews/suyoung_q13_setting2_20261125/test_q13.py
       # ★ 2026-11-24 (반입 ㉕) — 수영 설정 ② 접촉 후보 시험 셋 (check_all.sh 단계 71 에도 같이)
       - name: 반입 ㉕ 수영 설정 ② 접촉 후보 시험 셋 (regression)
         run: |
