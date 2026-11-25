@@ -1,0 +1,564 @@
+{
+ "slug": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-25",
+ "sources": [
+  "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+  "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Structural characterizations of the electrolytes: (a) the ionic conductivity of CPME and CPME/THF electrolytes; (b) the Raman spectra of the S−N−S band for CPME and CPME/THF electrolytes; (c) the 7Li NMR spectra illustrating the Li+ coordination environments in the CPME and CPME/THF electrolytes. The coordination number and Li−O RDF for 1 M LiTFSI in (d) CPME and (e) CPME/THF solvents; (f) coordination number of the CPME and CPME/THF electrolytes. The MD simulation snapshots of Li+-solvation clusters and the locally enlarged solvation structure for (g) CPME electrolyte and (h) CPME/THF electrolyte. (i) 1H NMR spectra illustrating the H coordination environments in the CPME, THF, and CPME/THF solvents. CPME/THF binary solvent (22:3, v/v). For comparison, we also studied an electrolyte using a CPME/THF electrolyte with a high volume fraction of THF (1:1, v/v). We performed ab ini",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    453.5
+   ],
+   "w": 2151,
+   "h": 1664,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The effects of electrolyte microstructure on the electrochemical performances of Li−S cells. (a−c) GITT voltage profiles of Li−S cells using (a) CPME, (b) CPME/THF, and (c) CPME/THF 1:1 electrolytes (current pulse: 0.05 C for 20 min; relaxation: 2 h). The inset shows the digital picture of Li2S6 electrolyte and the corresponding Li2S6 powder solubility in the electrolyte. (d) Shuttle current densities measured at different potentiostatic charging voltages. (e) Voltage profiles of sulfur electrodes in CPME and CPME/THF electrolytes, showing the THF- induced kinetic enhancement. (DN: 20 vs 10 kcal mol−1).33 However, the THF solvating ability is yet weaker than that of conventional ether solvents such as DME, because THF coordinates Li+ in a monodentate manner, whereas DME can chelate Li+ through bidentate coordination. Importantly, we further analyzed the AIMD trajectories for TH",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    311.7
+   ],
+   "w": 2151,
+   "h": 1073,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The Li2S/S8 deposition behavior: (a) the discharge of PITT curves for the S8@CP|Li cell in CPME and CPME/THF electrolyte; (b) the corresponding Li2S deposition peak fitting with the theoretical 2D and 3D nucleation and growth models. (c) PITT charge curves for the S8@CP− Li cell in CPME and CPME/THF electrolyte; (d) the corresponding S8 deposition peak fitting with the theoretical 2D and 3D nucleation and growth models; (e−h) SEM images of Li2S and S8 deposition on the CP current collector for the S8@CP−Li cell in CPME/THF electrolyte. Scale bars, 1 μm. (i, j) Schematic of the Li2S and S8 electrodeposition behaviors in CPME and CPME/THF electrolytes. nucleation and growth behavior at 25 °C, potentiostatic intermittent titration (PITT) was performed with over- potential increments of 20 mV, and the resulting current− time transients were analyzed.34−37 While preserving the therm",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    323.2
+   ],
+   "w": 2151,
+   "h": 1121,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "blank": 0.636
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Operando XRD and XAFS investigations of the sulfur reaction pathways: (a, b) contour plots of operando XRD patterns for a Li−S cell with CPME/THF electrolyte and corresponding voltage profiles: (a) discharge and (b) charge. (c) The quantitative evaluation of solid-state sulfur species (S8 and Li2S) as a function of DOD and SOC. (d) XRD patterns showing the varied crystalline sulfur phases reformed upon charge in different electrolytes. (e) Density functional theory (DFT) calculations further reveal the adsorption energies of THF molecules on the β-S8 (−221), (300), and (130) planes. (f, g) The in situ S K-edge spectra of the KB/S cathode at various discharge/charge steps: (f) CPME/THF, (g) CPME. The Li2S and S8 growth behavior revealed by PITT measurement is further supported by a microscopic study. The S8@CP|Li cells were disassembled at full discharge or charge, and we examin",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    461.5
+   ],
+   "w": 2151,
+   "h": 1697,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "blank": 0.74
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The electrochemical performance of Li−S cells with various electrolytes at 25 °C: (a) Cycling performance of Li−S coin cells with CPME and CPME/THF electrolytes at a discharge/charge of 0.2 C/0.1 C. (b) The discharge/charge curves of the CPME/THF cell and (c) the CPME cell. (d) The capacity retention of the CPME/THF and CPME cells at a discharge/charge of 0.5 C/0.2 C. (e) The cycling performance of Li−S cells with an S loading of 3.6 mg cm−2 and 5.5 μL mg−1 at a discharge/charge of 0.3 C/0.2 C. The comparison of voltage profiles of cells in (f) CPME/THF and (g) CPME electrolyte with an S loading of 5 mg cm−2 and 3 μL mg−1 at a discharge/charge rate of 0.1 C−2 C. (h) Electrochemical performance of Li−S pouch cells at a discharge/charge of 0.1 C. indicating that a fraction of sulfur proceeds through non- crystalline intermediates before Li2S crystallization. The fast S8 consumpti",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    390.2
+   ],
+   "w": 2151,
+   "h": 1400,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a, b) Typical chronoamperometry curves and corresponding EIS plots of Li|Li symmetric cells using CPME/THF and CPME electrolytes, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.9,
+    514.1,
+    242.8
+   ],
+   "w": 1793,
+   "h": 709,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The peak area ratio of different Li+-coordinating complexes in the CPME and CPME/THF electrolytes as calculated from Raman spectra. In Figure S2, the TFSI⁻ anion exhibits three characteristic vibrational bands corresponding to solvent-separated ion pairs (SSIP, ~736 cm−1), contact ion pairs (CIP, ~742 cm−1), and higher aggregates (AGG, ~748 cm−1). The CPME based electrolytes are dominated by CIP/AGG species, which favor the formation of anion-derived interfacial films. Relative to pure CPME, the CPME/THF electrolyte exhibits a lower AGG fraction and a higher CIP fraction, giving smaller Li⁺–salt clusters with higher mobility under an electric field.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    129.9,
+    514.4,
+    333.1
+   ],
+   "w": 1794,
+   "h": 847,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) 23Na NMR spectra of CPME, CPME/THF, and CPME/THF 1:1 solvent containing 10 mmol L−1 NaTFSI. (b) The fitted linear relationship between the 23Na chemical shift of NaTFSI in various solvents and the known DN of these solvents (FEC, DN=9.0 kcal mol−1; ACN, DN=14.1 kcal mol−1; DME, DN=20 kcal mol−1; DMSO, DN=29.8 kcal mol−1). The donor numbers of CPME, CPME/THF and CPME/THF 1:1 solvent were then calculated based on the measured 23Na chemical shift. (c) Determined DN value of CPME, CPME/THF, and CPME/THF 1:1 solvent.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.4,
+    514.4,
+    409.7
+   ],
+   "w": 1794,
+   "h": 1415,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a) The dipole-dipole interactions of the CPME and THF molecule. (b) Representative AIMD snapshot showing the local environment of a THF molecule outside the first Li⁺ solvation shell.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.4,
+    517.9,
+    305.5
+   ],
+   "w": 1808,
+   "h": 973,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Raman spectra revealing the O coordination environments in the CPME, THF, and CPME/THF solvents.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    102.2,
+    514.1,
+    369.3
+   ],
+   "w": 1793,
+   "h": 1113,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. DFT calculations showing the complexes of Li2S6-CPME, Li2S6-THF, Li2S6-2THF, Li2S6-THF-CPME, Li2S6-2CPME with the binding energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    93.0,
+    514.4,
+    329.0
+   ],
+   "w": 1794,
+   "h": 984,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. The differences of CPME and CPME/THF electrolytes. The Li+ diffusion coefficient in the sulfur cathode as a function of different depths of discharge and states of charge for Li-S cells using CPME and CPME/THF electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    95.0,
+    514.4,
+    247.3
+   ],
+   "w": 1794,
+   "h": 636,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.693
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. In-situ EIS measurements and corresponding GITT curves (a) equivalent circuit, (b, e) CPME, (c, f) CPME/THF, and (d, g) CPME/THF 1:1 electrolyte. In-situ EIS was conducted to evaluate the interfacial charge-transfer behavior of Li–S cells with different electrolytes during cycling. The Nyquist plots exhibit two main semicircles at high frequency, representing the interphase contact resistance (R2) of the surface of sulfur cathodes, and the charge transfer resistance (R3). Additionally, a short sloping tail at low frequency corresponds to the Warburg impedance (Q4). The CPME/THF electrolyte exhibited relatively low and stable impedance throughout both the discharge and charge processes, indicating efficient Li⁺ transport and fast interfacial charge transfer. In contrast, the CPME electrolyte showed a much higher interfacial resistance, suggesting sluggish reaction kinetics. Mo",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.9,
+    514.4,
+    371.1
+   ],
+   "w": 1794,
+   "h": 1248,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. The CV curves of Li-S cells with (a) CPME/THF and (b) CPME",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    149.5,
+    514.4,
+    232.0
+   ],
+   "w": 1794,
+   "h": 345,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. The SEM images and EDS mapping of Li2S deposition on the CP current collector for the S8@CP−Li cell in (a, b) CPME, (c, d) CPME/THF electrolyte. In Figure S12, the discharged cathode from the CPME/THF electrolyte exhibits a more uniform distribution of sulfur-containing discharge products, while the CPME electrode shows a less homogeneous deposition feature. The corresponding sulfur elemental mapping further reveals a more evenly distributed sulfur signal across the cathode surface in CPME/THF, suggesting a more uniform redistribution of sulfur-containing discharge products during discharge. These results provide evidence that the CPME/THF electrolyte promotes a more homogeneous Li2S deposition process, which is consistent with the improved sulfur utilization observed in electrochemical measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.1,
+    514.4,
+    320.0
+   ],
+   "w": 1794,
+   "h": 1030,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.336
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. The contour plot of the operando XRD patterns for a Li-S cell using CPME electrolyte and its corresponding voltage profiles: (a) discharge process and (b) charge",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    75.1,
+    514.3,
+    194.1
+   ],
+   "w": 1794,
+   "h": 497,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.594
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 17,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. (a) The XRD patterns show the crystalline phases of Li2S reformed upon",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.9,
+    514.3,
+    208.8
+   ],
+   "w": 1794,
+   "h": 572,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 18,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Density functional theory (DFT) calculations further reveal that the adsorption energies of CPME molecules on the β-S8 (130), (300), and (–221) planes. The (130) plane exhibits the lowest adsorption energy, indicating that CPME preferentially adsorbs on this surface, slowing its growth rate and promoting its exposure. This facet-selective interaction suggests that CPME facilitates nucleation and growth along the (130) plane of β-S8, ultimately regulating sulfur crystallographic orientation during charge recovery.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    78.7,
+    514.2,
+    273.8
+   ],
+   "w": 1793,
+   "h": 813,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 19,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. SEM images showing the plated Li of Li||Cu cells with in CPME and",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    84.0,
+    514.1,
+    216.0
+   ],
+   "w": 1792,
+   "h": 550,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.316
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 20,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. The high-resolution XPS spectra of S 2p of the LMA surface after 20 cycles in (a) CPME, (b) CPME/THF, and (c) CPME/THF 1:1 electrolyte. The ex-situ S 2p XPS analysis was performed on cycled Li electrodes to examine whether dissolved LiPS species participate in SEI formation. The detection of Li2S2/Li2S-related sulfur species confirms that a fraction of LiPS-derived intermediates can reach the lithium surface. However, their lower abundance in CPME/THF compared with THF-rich CPME/THF (1:1) suggests a limited contribution of dissolved LiPS species to SEI formation under the optimized electrolyte condition",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    89.3,
+    514.4,
+    366.7
+   ],
+   "w": 1794,
+   "h": 1156,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 21,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. The rate performance of Li–S cells using (a) CPME/THF and (b) CPME",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    77.5,
+    514.2,
+    215.8
+   ],
+   "w": 1793,
+   "h": 578,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 23,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. The cycling performance of the Li−S cell using CPME/THF electrolyte with an E/S of 3.2 μL mg−1 and a sulfur loading of 4.7 mg cm−2 at a discharge/charge of 0.2 C/0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    87.1,
+    514.4,
+    271.2
+   ],
+   "w": 1794,
+   "h": 767,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "s1",
+   "kind": "scheme",
+   "label": "1",
+   "page": 2,
+   "file": "sch_1.png",
+   "caption": "Scheme 1. Dipole-Interacting Binary Solvents Balance the Bulk Weak-Solvation Thermodynamics and Interfacial Sulfur- Conversion Kinetics in Lean-Electrolyte Li−S Cells",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    83.7,
+    559.4,
+    394.9
+   ],
+   "w": 2142,
+   "h": 1298,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Comparison of the conductivity at room temperature with different electrolytes. Electrolyte Conductivity (mS cm−1) CPME-0.5M 0.2 CPME-1M 0.3 CPME-2.5M 0.83 CPME/THF (24:1)-1M 0.85 CPME/THF (23:2)-1M 1.02 CPME/THF (22:3)-1M",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    95.8,
+    513.1,
+    281.5
+   ],
+   "w": 1785,
+   "h": 775,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 24,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The parameters of a Li-S pouch cell. Parameters Values Areal S loading 4 mg cm−2 (one side) Number of cathodes 4 Cathode size 68 mm×96 mm Cell capacity 2.44 Ah Thickness of Li 125 μm Anode size 71 mm×99 mm",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    68.5,
+    432.1,
+    362.1
+   ],
+   "w": 1447,
+   "h": 1224,
+   "dpi": 300,
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "blank": 0.954
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p8 그래픽 없음(img0/draw4)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p4",
+    "p8"
+   ]
+  },
+  {
+   "key": "fS7",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p10 그래픽 없음(img0/draw5)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p4",
+    "p10"
+   ]
+  },
+  {
+   "key": "fS19",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p22 그래픽 없음(img0/draw3)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p8",
+    "p22"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}
