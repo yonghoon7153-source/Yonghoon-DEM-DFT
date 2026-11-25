@@ -265,6 +265,9 @@ def _run(webapp, V, c, tpl, app_src, lib_src, td):
     h = r.get_data(as_text=True)
     chk('① 편 0 개 — GET /videos = 200 · 안내 "등록된 편이 없습니다" · <video> 없음 · 올리기 칸 있음',
         r.status_code == 200 and '등록된 편이 없습니다' in h and '<video' not in h and 'name="bundle"' in h)
+    chk('①b 올리기 블록 = 맨 위 (머리 바로 뒤 · 안내보다 앞) · 안내 문장 = 위 "꾸러미 올리기" (1저자 11-25)',
+        0 <= h.find('class="vd-top"') < h.find('class="vd-upload"') < h.find('class="vd-empty"')
+        and '위 "꾸러미 올리기"' in h and '아래 "꾸러미 올리기"' not in h)
     nofolder = td / 'lib_none'
     cfg['VIDEO_FOLDER'] = str(nofolder)
     r = c.get('/videos')
@@ -344,6 +347,9 @@ def _run(webapp, V, c, tpl, app_src, lib_src, td):
     chk(f'⑬ 재생목록 판 — 시리즈 이름 · 1 / 1 · 지금 편 강조 (is-current) · 판이 본문 뒤 (폰 폭에서 아래)',
         'class="vd-list"' in h2 and _esc(T_SERIES) in h2 and '1 / 1' in h2 and 'class="vd-item is-current"' in h2
         and h2.find('class="vd-main"') < h2.find('class="vd-list"'))
+    chk('⑬b 올리기 블록 = 맨 위 — 편 화면에서도 머리 바로 뒤 · 재생기 · 재생목록보다 앞 (1저자 11-25) · 편이 있으면 닫힌 채',
+        0 <= h2.find('class="vd-top"') < h2.find('class="vd-upload"') < h2.find('class="vd-grid"')
+        and '<details class="vd-upload">' in h2)
     dd = _details(h2)
     chk(f'⑭ 토글 일곱 (details) — 챕터 · 대본 · 장면 · 참고 문헌 · QC · 기준표 · 해시 (화면 {dd})',
         dd == ['chapters', 'script', 'scenes', 'refs', 'qc', 'rubric', 'hashes'])
@@ -737,6 +743,8 @@ def _run(webapp, V, c, tpl, app_src, lib_src, td):
         if (up_lib / 'ep99_test' / 'registration.json').is_file() else False)
     r = _post(bun)
     chk('55 이미 있는 편 = 409 + 안내 (바꾸기 표시 없이)', r.status_code == 409 and '이미' in r.get_data(as_text=True))
+    chk('55b 올리기 오류 화면 = 올리기 블록이 열린 채 (안내 바로 위 · 다시 고르기)',
+        '<details class="vd-upload" open>' in r.get_data(as_text=True))
     r = _post(bun, form={'replace': '1'})
     chk('56 바꾸기 표시 (replace=1) = 303 · 옛 판 보관', r.status_code in (302, 303) and len(list((up_lib / '.replaced').glob('ep99_test__*'))) == 1)
     snap = _snapshot(up_lib)
