@@ -18,6 +18,7 @@
 
 > elements: Li, S, Fe, Co, Ni, Cu, V, Mn, Cr, Zn, Sc, Ti
 > methods: DFT, NEB, Bader, DOS, XPS, Raman
+> 🔗 **관련 (2026-11-25)**: `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` — 같은 *ACS Nano* 2026 ASAP Li–S · PITT/GITT/in situ EIS · 흡착 DFT 보고 규약 대비 (이쪽은 슬랩 방법 전무).
 
 > **저자**: **Jianshuang Wei**#, **Xin Guo**#, **Jingkun Wu**# (# 공동 1저자), Xia Li, Miaoyu Lu, Yunfeng Zhang, Yao Tang, Yiming Shi, Yixiong Feng, **Zixiong Shi\*** (KAUST), **Yingze Song\*** (西南科技大 Mianyang), **Xiuju Song\*** (浙江大 기계공학원 유체동력·메카트로닉스 국가중점실험실), **Jingyu Sun\*** (苏州大 College of Energy · SIEMIS) · 접수 2026-09-17 · 수정 2026-10-23 · 수락 2026-10-26 · NSFC 52572251 / 92472110 / 22173066 · 이해충돌 없음 선언 · **구조 파일·원자료 공개 문장 없음** (DFT 구조는 SI 그림뿐).
 >

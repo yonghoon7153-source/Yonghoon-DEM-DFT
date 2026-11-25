@@ -12,6 +12,7 @@
 > ⚠ **파일명·저자 정정 (2026-09-11)**: inbox #104 의 파일명 `Bai2026_…` 은 **오기**다. 1저자는 **Ashley Cronk** 이고 **Shuang Bai 는 5저자**(Author contributions: *"S.B. contributed cryo-TEM characterization and investigation"*). 이 Shuang Bai(UCSD MSE)는 litdb 의 `bai2020_argyrodite_review_progress`(**Xiangtao Bai**, 中国汽车动力电池研究院, Beijing)와 **다른 사람**이다. 또한 이 PDF 는 **inbox #64 와 같은 논문**(DOI 동일)이다.
 >
 > 🔗 **같은 논문의 첫 digest** = `cronk2026_lis_positive_electrode_geometry_fem.md` (2026-09-03, DEM/FEM 축: 확률적 voxel 기하·TauFactor τ·COMSOL 응력·입경·부피변화·고로딩·파우치). **이 카드는 그 카드가 30줄로 요약하고 지나간 §6.1–6.2(계면상)를 1저자의 가설 검증 목적으로 전부 다시 판다.** 두 카드가 어긋나면 계면상·공정·복합체 σ 에 관해서는 **이 카드가 이긴다** (Source Data 원시값까지 대조했다). 기하·FEM·응력·에너지밀도는 그쪽이 정본.
+> 🔗 **관련 (2026-11-25)**: `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` — 액체 SSE (CPME/THF) Li–S · '반응하는 전해질' 이 없는 액체 쪽 끝점 (이 카드의 S 표면 Li₃PS₄₊ₙ · LPSCl 분해와 대조) · 준고체 반응 정의 · Li₂S 2D/3D 성장 판독 감사.
 >
 > 🎤 **관련 발표**: 없음 — `litdb/talks/*.md` 의 "논문 에이전트 인입 대기열" 에 이 논문 행 없음 (2026-09-11 grep).
 >

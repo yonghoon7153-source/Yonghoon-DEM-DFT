@@ -10,6 +10,7 @@
 > elements: Li, P, S, Ti, Mo, Fe, F
 > methods: DFT, AIMD, ICOHP, LOBSTER, DOS, PDOS, XPS, Raman, ESW, NMR
 > 🔗 **관련 (2026-10-06)**: `lee2025_halide_segregation_uhs_mixing_li_chalcogen_assb` — 같은 Li–S 양극 계면 축 · 할로겐 아지로다이트 + 원심혼합 편석(LiX) 경로.
+> 🔗 **관련 (2026-11-25)**: `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` — 액체 SSE 쪽 '표면 국소 용매화' (전고체에선 불가능 → MIEC 가 대신) · VASP AIMD 보고 항목 비교 (이쪽 액체 50 ps · Li⁺ 2 개).
 
 > **저자**: **Daiwei Wang**¹, Bharat Gwalani², Dominik Wierzbicki³, **Vijay Singh**⁴⁵, Li-Ji Jhang⁶, **Tomas Rojas**⁴⁵, Rong Kou¹, Meng Liao¹, Lei Ye¹, Heng Jiang¹, Shuhua Shan¹, Alexander Silver⁷, **Anh T. Ngo**⁴⁵, Yonghua Du³, Xiaolin Li², **Donghai Wang\***¹⁸ — ¹Penn State ME · ²PNNL · ³NSLS-II BNL · ⁴UIC ChemE · ⁵Argonne MSD · ⁶Penn State ChemE · ⁷Penn State MSE · ⁸SMU ME. 교신 donghaiwang@smu.edu. 접수 2023-11-13 · 수리 2024-10-21 · 온라인 2025-01-06. DOE EERE BMR DE-EE0008862 + Battery500. 심사위원 Yan Yao 외 익명.
 > **계산 담당 = V. Singh · T. Rojas · A. T. Ngo (UIC/ANL, 저자기여 문장)** · 계산자원 Argonne LCRC **Bebop** · 계산 데이터 figshare `10.6084/m9.figshare.27257931`.

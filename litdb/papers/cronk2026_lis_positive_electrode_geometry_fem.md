@@ -8,6 +8,7 @@
 > ★ **우리 축에서의 자리**: 이 논문은 **DEM 도 MPM 도 없다.**  기하를 *확률적으로 생성*하고 **porosity 를 10 vol% 로 입력 고정**한 뒤 그 위에서 τ(TauFactor)·표면적(voxel)·응력(FEM)을 읽는다.  우리는 **압밀에서 porosity 를 산출**한다 → frame[3]/[5] 의 정면 대비.  동시에 **소재계가 정확히 우리 것**(Li₆PS₅Cl 촉매전해질)이고 **FEM 이 E_SE=22 GPa 를 쓴다** — 우리 DFT(E_VRH 22.06) 와 0.3 % 일치.  ⇒ 경쟁자가 아니라 **"압밀 물리를 빼면 무엇을 물을 수 없게 되는가"의 대조군**이자 **LPSCl 탄성·부피변화·스택압 앵커 공급원**.
 >
 > 🔗 **같은 논문의 두 번째 읽기축 (2026-09-11)** — 계면상 화학(S 양극 Li₃PS₄₊ₙ · **Li₂S 양극의 LPSCl→LPS-like 분해**)·공정 조건(500 rpm·1 h·1:30)·복합체 σ(Fig S4c/f·S10c)·Source Data 대조는 `cronk2026_lis_cathode_interphase_chemistry.md` 가 **정본**. 이 카드 §6.1–6.2 의 계면상 요약과 어긋나면 그쪽이 이긴다 (예: Source Data 상 탄소 없는 milled S/LPSCl 의 Raman 152 cm⁻¹ 은 **이동이 없다**).
+> 🔗 **관련 (2026-11-25)**: `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` — 액체 Li–S 의 Li₂S 2D 막 (부동태) ↔ 3D 섬 (표면 유지) 판독 (PITT · SEM) — 이 카드 '활성 표면' 개념의 액체판 · ⛔ 기하 · 응력 수치 비교 없음.
 
 >
 > ✅ **원고 사용 기록 (2026-09-26, 사용자 결정 — 작업 브랜치 `docs/reviews/si_table_response_20260925.md` §9-1 #6)**: SDCP 원고 SI 표 S2 *LPSCl Poisson's ratio (DEM contact) 0.3* 의 출처 칸 = `Ref. [S(Cronk)]` — 근거는 이 카드 §4.2 Table S6 *"Poisson ratio of LPSCl · ν_SE · 0.3"*.

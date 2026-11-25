@@ -21,6 +21,7 @@
 
 > elements: Li, S, P, C, N, O, B, Co, Fe, Ni, Mo, W, Ru, Ti, Ce, In, Mn, Nb, Se, Te, Zr, V, Cu
 > methods: DFT, DOS, PDOS, Bader, XPS, Raman
+> 🔗 **관련 (2026-11-25)**: `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` — 이 리뷰 범위 밖의 전해질 쪽 전략 (약용매화 SSE + 공용매) 1차 논문 · 흡착 · 결합에너지 보고 규약 반례 (슬랩 방법 미기재) 가 같은 결.
 
 > **저자**: **Ruixin Lin**† · **Fan Zhang**† (공동 1저자) · **Nanping Deng\*** · **Shaoju Li\*** · Yun Luo · **Weimin Kang\*** — Tiangong University (天津工业大学) School of Textile Science and Engineering · MoE Key Lab for Advanced Textile Composite Materials (Tianjin) + Quanzhou Vocational and Technical University (School of Arts & Media · Fujian — Li) · 접수 2026-08-05 → 수락 2026-10-29 → 게재 2026-11-19 (Advance Article · 권/쪽 미배정 — 인용은 DOI) · 자금 NSFC 52573089 · 52403046 · 61904123 외 · Data availability *"No primary research results, software or code have been included and no new data were generated or analysed"* · 이해상충 없음.
 >

@@ -14,6 +14,7 @@
 
 > elements: Li, S, C, N, O, Ti, Mo, Co, Fe, Ni, Zn, Ce, V, Se, P
 > methods: DFT, phonon, elastic, DOS, PDOS, XPS, Raman
+> 🔗 **관련 (2026-11-25)**: `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` — '작동 상태 ≠ 초기 상태' 의 구체 사례 (초기 α-S₈ → 재충전 β-S₈) · 방법 미기재 면 흡착 (0.02–0.27 eV) 의 보고 규약 반례.
 
 > **저자**: **Yun Luo** (1저자) · Fan Zhang · **Nanping Deng\*** · **Jingge Ju\*** · Yuzhu Li · Penghui Su · Ying Wang · Qichen Shi · **Weimin Kang\*** — 전원 **Tiangong University** (天津工业大学) School of Textile Science and Engineering · MoE Key Lab for Advanced Textile Composite Materials (Tianjin) · 교신 3 인 · 투고 2026-07-10 → 수정 2026-09-14 → 수락 2026-10-02 · © Wiley-VCH (OA 아님 · Hanyang Univ. Library 경유 2026-10-25 다운로드) · 자금 NSFC 52573089 · 52403046 · 61904123 외 · Data availability *"no datasets were generated or analysed"* · 이해상충 없음.
 > 저자 기여 표기: 5 인 *"writing – review and editing"* · 4 인 *"supervision"* — *conceptualization* · *writing – original draft* 항목이 **아무에게도 없다** (서지 관찰일 뿐 · 판단 근거로 쓰지 않음).

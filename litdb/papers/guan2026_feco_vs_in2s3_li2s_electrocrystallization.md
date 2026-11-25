@@ -12,6 +12,7 @@
 
 > elements: In, S, Fe, Co, Li
 > methods: DFT, XPS, Raman
+> 🔗 **관련 (2026-11-25)**: `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` — 같은 Scharifker–Hills 네 식 · 이론 곡선 축은 바르게 그렸지만 피크 전 무판별 · 유한 반응물 고갈 대안은 같다 (S–H 감사 짝).
 
 > **저자**: Zefeng Guan, Tianle Wang, Tao Tao, Fengzhi Jiang, Yaxuan Meng, Lintong Gao, **Jiliang Zhu\*** — 전원 **쓰촨대 (Sichuan Univ., Chengdu) 재료과학공학원** 단일 기관 · 접수 2026-07-20 · 수정 2026-09-09 · 수락 2026-09-23 · *Journal of Energy Chemistry* **Journal Pre-proof** (JECHEM 6029 · PII S2095-4956(26)00798-9 — 권·쪽 미확정) · NSFC 52072250 + 중앙대학 기본연구비 20826041E4245 · TEM 은 쓰촨대 분석센터 · **데이터 공개 문장 없음** (구조 파일·원자료 비공개).
 > ⚠ SI PDF 메타데이터의 제목은 *"Defect-Coupled Fe/Co–Sulfur-Vacancy Interfaces Direct Li₂S Electrocrystallization in Practical Lithium–Sulfur Pouch Cells"*, 주제란은 *"Supporting Information for **ACS Nano** submission"* 이다 — SI 문서가 이전 투고본에서 넘어온 흔적이다 (메타데이터만의 일이고, SI 본문의 그림·표 번호와 내용은 이 본문과 맞는다).
