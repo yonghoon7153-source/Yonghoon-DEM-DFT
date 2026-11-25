@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 389편 · 생성 2026-11-25
+> digest 390편 · 생성 2026-11-25
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -240,7 +240,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (87편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (88편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -271,6 +271,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct` | 상용 NMC811 양극 시트는 사이클 전에 이미 입자 약 ⅓ 이 결함 (Material 1 30.2 % · 상용 LG MJ1 34.2 % · 분리막 (= 캘린더 롤) 쪽 > 50 %) — 저자 해석 = 원분말이 아니라 시트 인쇄 · 캘린더링 유래 (압력 미상) · 흑연 상대 4.5 V 5 사이클 뒤 2차입자 안 1차입자  | exp (multi-resolution lab X-ray CT of calendered commercial  | 2026-11-12 | 🖼 39 |
 | `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` | 용매 없는 건식 막 (dry-film, DF) 으로 황화물 복합양극 시트를 PTFE 0.1 wt% 까지 줄여 만든다 — NCM90 (LZO 코팅) : VG-CNF : Li₆PS₅Cl = 85:2:13 + PTFE 0.1–1 wt% · 가열 막자 1 min → 박편 → 열판 압연 (막 기공 ≈50 %) → 300 MPa 뒤 | exp (건식 막 공정 · PTFE 함량 0–1 wt% · 기계 인장 · TGA/DSC · XRD · 라만  | 2026-10-13 | 🖼 19 |
 | `hong2026_sulfide_cathode_binder_digitaltwin` | Hong 2026 (Energy Storage Materials 86, 104930) — 황화물 복합양극 열화 메커니즘 (디지털트윈): Dry(PTFE) vs Wet(NBR) 바인더 ★우리 소재계(LPSCl+NCM) | FEM·digital-twin | 2026-07-28 | — |
+| `huang2017_mpfem_2d_binary_al_sic_hard_soft_compaction` | 무른 Al + 단단한 SiC 원판 이원 혼합을 입자마다 FE 메시로 (2D MPFEM · MSC.Marc) 단동 다이 압축 — 정렬 (SC · HCP) ↔ 무작위 충전 · SiC 10–50 % · 크기비 1.5 · 2 · 3 · 입자 간 µ 0 ↔ 0.2 ★★ 힘 사슬은 맞닿은 단단한 입자 (SiC) 가 정하고 큰 응력이 | MPFEM 2D (MSC.Marc · 입자마다 요소 1200 · 절점 1241 · 갱신 라그랑주 · 완전 N | 2026-11-25 | 🖼 16 |
 | `jadidi2023_dem_batch_solid_mixers_review` | 배치(batch) 고체 믹서의 DEM 적용 종합 리뷰 — 믹서 분류 · 혼합/분리 기전 · 혼합지수(mixing index) 8종 전수 · 접촉·점착모델 표준 · 보정 · coarse-graining · 미해결 목록 — Jadidi, Ebrahimi, Ein-Mozaffari, Lohi (Reviews in Chemica | DEM (REVIEW — 배치 고체 믹싱; 7개 믹서족 문헌표 + 혼합지수 카탈로그) | 2026-09-19 | 🖼 3 |
 | `jeong2025_tough_adhesive_binder_shield_ncm811` | A Tough, Adhesive, and Protective Binder Shield for Stabilizing High-Nickel Cathodes in Lithium-Ion Batteries — Jeong et al. (Adv. Energy Mater. 2025, 15, e02765) | exp 주도 + 보조 DFT 9점(Gaussian 16 분자계산 — 고체 DFT 아님) | 2026-09-22 | 🖼 19 |
 | `jun2026_ppma_econductive_binder_si_lowpressure_assb` | Electron-conductive binder for silicon negative electrode enabling low-pressure all-solid-state batteries — Jun & Jeong et al. (Nat. Commun. 2026) | exp (계산 0) | 2026-07-15 | 🖼 5 |

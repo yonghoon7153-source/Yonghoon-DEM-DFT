@@ -335,7 +335,7 @@
    "label": "EQ3",
    "page": 2,
    "file": "eq_03_equivalent_strain_rate.png",
-   "caption": "Equation (3), PDF p.2 right column: 'equivalent strain rate' ε̇ = [2/3 (ε_ij ε_ij)]^(1/2) — printed with the strain tensor ε_ij, not its rate.",
+   "caption": "Equation (3), PDF p.2 right column: 'equivalent strain rate' printed as ε̇ = [2 / (3(ε_ij ε_ij))]^(1/2) — the strain tensor ε_ij (not its rate) appears in the denominator; the usual form is [(2/3) ε̇_ij ε̇_ij]^(1/2).",
    "rotated_deg": 0,
    "bbox": [
     392.0,
