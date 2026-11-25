@@ -1,4 +1,4 @@
-# Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer
+# Yoo 2026 (Energy Storage Materials 90, 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer
 
 > slug `yoo2026_porosity_gradient_dry_electrode` · DOI `10.1016/j.ensm.2026.105331` · type `MPM` · digested `2026-07-28` · status ✅
 >
@@ -13,8 +13,8 @@
 
 **인용:** Hyundong Yoo†, Jaejin Lim†, Jun Ho Hwang, Seungeun Oh, Yong Min Lee\*, Hansu Kim\*,
 "Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting
-Fast-Charging Capability of Lithium-ion Batteries", *Energy Storage Materials* (2026),
-DOI 10.1016/j.ensm.2026.105331 (PII S2405-8297(26)00463-0, ENSM 105331).
+Fast-Charging Capability of Lithium-ion Batteries", *Energy Storage Materials* **90** (2026) 105331,
+DOI 10.1016/j.ensm.2026.105331 (PII S2405-8297(26)00463-0, ENSM 105331).  권 90 · 2026-08 = 1저자 11-25 ScienceDirect 화면 (카드 첫 판에는 권이 없었다).
 Journal Pre-proof. 접수 2026-05-04, 수정 2026-06-17, 게재확정 2026-06-23. Published by Elsevier B.V.
 
 **소속:** Hanyang University (Dept. of Energy Engineering + Dept. of Battery Engineering, 김한수)
