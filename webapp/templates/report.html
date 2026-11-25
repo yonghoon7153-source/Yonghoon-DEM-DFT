@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ it.title }} — 공유 보고서{% endblock %}
+{% block content %}
+{#  공유 보고서 보기 (1저자 11-25 · 트랙 묶음) — 보고서는 자기 CSS 를 가진 완결 HTML 이라 같은 출처 iframe 으로만 띄운다
+    (웹앱 CSS 와 변수 이름이 겹친다).  여백 메모 · 형광펜 = docnote.js (참고 = DFT 웹앱 보고서 보기 화면의 꼴) ·
+    저장 = 보는 사람 브라우저 (localStorage · 열쇠 = 보고서 파일 경로).  표 = webapp/track_pages.py · 회귀 webapp/test_track_reports.py.
+    ⛔ 이 화면이 못 하는 것: 보고서 값이 원장과 맞는지 다시 재지 않는다 · 메모 · 형광펜은 **이 브라우저의 이 화면에서만** 보인다
+      (새 탭 · 내려받기 · 원본 경로는 파일 바이트 그대로) · 보고서가 새 날짜 판으로 바뀌면 메모는 옛 파일 이름에 남는다 ·
+      창 폭 1280px 이하에서는 메모가 보고서 **아래**에 쌓인다. #}
+<div class="rp-wrap">
+<div class="page-header">
+  <h2>&#x1F4D1; {{ it.title }}</h2>
+  <p class="rp-sub">{{ it.track_label }} · {{ it.date }}{% if it.note %} · {{ it.note }}{% endif %} · <a href="/reports">공유 보고서 목록</a></p>
+  {% if it.ok %}
+  <div class="rp-actions">
+    <a class="btn btn-secondary btn-sm" href="{{ it.raw }}" target="_blank" rel="noopener">↗ 새 탭에서 보기</a>
+    <a class="btn btn-secondary btn-sm" href="{{ it.download }}">⬇ 내려받기 (HTML 한 파일)</a>
+  </div>
+  {% endif %}
+</div>
+
+{% if not it.ok %}
+<div class="rp-callout" role="alert"><b>⛔ 보고서 파일 없음</b> — <span class="rp-mono">{{ it.rel }}</span> 을 못 찾았다.
+  빈 화면이 아니라 파일이 없는 것이다 (표 webapp/track_pages.py 의 rel 을 확인한다).</div>
+{% else %}
+<p class="rp-sub" style="margin:0 0 10px">원본 <span class="rp-mono">{{ it.rel }}</span> · {{ it.kb }} KB · sha256 <span class="rp-mono">{{ it.sha16 }}</span></p>
+<div class="dn-host" id="rp-host">
+  <div class="rp-col" style="min-width:0">
+    <div class="rp-bar">
+      <span id="pnotebadge" class="rp-hint"></span>
+      <button type="button" class="btn btn-secondary btn-sm" id="docpen" onclick="window.docnotePenToggle&&docnotePenToggle()"
+              title="형광펜을 켜요 — 켜면 드래그로 칠할 수 있어요">&#x1F58D;&#xFE0F; 형광</button>
+      <span class="rp-hint">메모 · 형광펜은 이 브라우저에만 저장된다 — 다른 기기 · 다른 사람과 나누지 않는다 · 보고서 파일 · 내려받기는 원본 그대로</span>
+      <span id="rp-dnerr" role="alert" class="dn-warn" hidden></span>
+    </div>
+    <iframe id="rp-frame" class="rp-frame" src="{{ it.raw }}" title="{{ it.title }}"></iframe>
+  </div>
+</div>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if it.ok %}
+<script src="/static/js/docnote.js?v={{ asset_version }}"></script>
+<script>
+/* 참고 판과 같은 장치 — iframe 높이를 보고서 길이에 맞추고 (같은 출처 · html 상자 높이), 그 본문 (<main>) 에 여백 메모 · 형광펜을 단다.
+   못 하는 것: 본문을 못 찾거나 docnote.js 가 안 실리면 메모를 안 단다 — 조용히 넘기지 않고 머리줄에 적는다. */
+(function(){
+  var f = document.getElementById('rp-frame');
+  var host = document.getElementById('rp-host');
+  var err = document.getElementById('rp-dnerr');
+  var REL = {{ it.rel|tojson }};
+  var RAW = {{ it.raw|tojson }};
+  if (!f || !host) return;
+  var mounted = null;
+  function doc(){ try { return f.contentDocument; } catch (e) { return null; } }
+  function fit(){
+    var d = doc(); if (!d || !d.documentElement) return;
+    var h = Math.ceil(d.documentElement.getBoundingClientRect().height);
+    if (h > 0) f.style.height = (h + 24) + 'px';
+  }
+  function say(m){ if (err) { err.textContent = m; err.hidden = !m; } }
+  function mount(){
+    var d = doc();
+    if (!d || d === mounted) return;
+    var body = d.querySelector('main') || d.querySelector('body > .wrap') || d.body;   // 본문 칸: <main> → .wrap → <body>
+    if (!body) { say('⚠ 메모를 못 단다 — 보고서 본문을 못 찾았다'); return; }
+    if (!window.mountDocNotes) { say('⚠ 메모를 못 단다 — docnote.js 가 안 실렸다'); return; }
+    mounted = d; say('');
+    mountDocNotes(body, REL, host);
+    var RO = d.defaultView && d.defaultView.ResizeObserver;
+    if (RO) new RO(function(){ fit(); }).observe(d.documentElement);
+  }
+  function ready(){
+    var d = doc();
+    if (!d || String(d.URL).indexOf(RAW) < 0) {         // 처음의 빈 about:blank · 보고서 밖으로 간 링크 (다른 출처면 문서를 못 읽는다)
+      if (mounted && window.unmountDocNotes) {          // 다른 문서 위에 이 보고서 메모를 남겨 두지 않는다 (뒤로 가면 다시 단다)
+        unmountDocNotes(); mounted = null;
+        say('⚠ iframe 이 이 보고서 밖으로 갔다 — 메모 · 형광펜은 이 보고서에만 붙는다 (뒤로 가면 다시 보인다)');
+      }
+      fit(); return;
+    }
+    fit(); mount(); setTimeout(fit, 400);
+  }
+  host.addEventListener('dnote:toggle', fit);
+  window.addEventListener('resize', fit);
+  f.addEventListener('load', ready);
+  var d0 = doc();
+  if (d0 && d0.readyState === 'complete') ready();
+})();
+</script>
+{% endif %}
+{% endblock %}

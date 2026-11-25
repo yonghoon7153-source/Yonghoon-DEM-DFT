@@ -1261,14 +1261,28 @@ def main():
     chk('(b) 머리에서 (a) 로: 링크 글 "자세한 계획서"',
         bool(re.search(r'<a class="sib" href="%s">자세한 계획서</a>' % re.escape(URL_PLAN), src_b)))
     base = _read(BASE)
-    li = re.search(r'<li><a href="%s"\s+title="([^"]+)">\s*<span class="icon">[^<]+</span> DEM 재설계 계획서 \(수영\)\s*</a></li>' % re.escape(URL_PLAN), base)
-    chk('base.html 사이드바에 <li> 하나: 링크 = 페이지 (a) · 글 "DEM 재설계 계획서 (수영)" · 짧은 한국어 title',
-        bool(li) and base.count(URL_PLAN) == 1 and bool(re.search(r'[가-힣]', li.group(1))) and len(li.group(1)) <= 90)
-    chk('  그 <li> 는 "Rint 설명" 바로 뒤 · "DEM 방법 그림" 앞 · 이웃과 같은 꼴의 Jinja 주석 (이 시험 이름)',
-        lambda: base.index('/static/explain/rint_overview_20261021.html') < base.index(URL_PLAN) < base.index('/static/dem_method_figs/index.html')
-        and bool(re.search(r'Rint 설명\s*</a></li>\s*\{#[^#]*webapp/test_dem_redesign_plan_page\.py[^#]*#\}\s*<li><a href="%s"' % re.escape(URL_PLAN), base)))
-    mine = re.search(r'\{# 11-10: DEM 재설계[^#]*#\}\s*<li><a href="%s".*?</a></li>' % re.escape(URL_PLAN), base, re.S)
-    chk('  base.html 의 새 줄 (주석 + <li>) 에 em dash · 모델 이름 · 절대 경로 없음',
+    #  11-25: 사이드바 줄의 집이 base.html → 트랙 표 (webapp/track_pages.py · base.html 이 TRACK_NAV 로 그린다 · 시험 webapp/test_track_reports.py).
+    #  아래 세 단언은 같은 것을 새 자리에서 본다: 표의 항목 하나 (글 · 짧은 한국어 title) + 렌더된 사이드바에 그 줄 하나 ·
+    #  표 순서 (Rint 설명 뒤 · DEM 방법 그림 앞) · 바로 앞 출처 주석 (이 시험 이름) · 그 주석 + 항목에 em dash · 모델 이름 · 절대 경로 없음.
+    TP_SRC = _read('webapp/track_pages.py')
+
+    def _side_count(url):
+        try:
+            import app as _w
+            h = _w.app.test_client().get('/seminar').get_data(as_text=True)
+        except Exception:      # noqa: BLE001
+            return -1
+        m_ = re.search(r'<nav class="sidebar"[^>]*>(.*?)</nav>', h, re.S)
+        return m_.group(1).count(f'href="{url}"') if m_ else -1
+    ent = re.search(r"dict\(label='DEM 재설계 계획서 \(수영\)', url='%s', icon='[^']+',\s+title='([^']+)'\)" % re.escape(URL_PLAN), TP_SRC)
+    chk('사이드바 (트랙 표) 에 항목 하나: 링크 = 페이지 (a) · 글 "DEM 재설계 계획서 (수영)" · 짧은 한국어 title · 렌더된 사이드바에 줄 하나',
+        bool(ent) and TP_SRC.count("url='%s'" % URL_PLAN) == 1 and bool(re.search(r'[가-힣]', ent.group(1))) and len(ent.group(1)) <= 90
+        and 'TRACK_NAV' in base and _side_count(URL_PLAN) == 1)
+    chk('  그 항목은 트랙 표에서 "Rint 설명" 뒤 · "DEM 방법 그림" 앞 · 바로 앞 출처 주석 (이 시험 이름)',
+        lambda: TP_SRC.index("url='/static/explain/rint_overview_20261021.html'") < TP_SRC.index("url='%s'" % URL_PLAN) < TP_SRC.index("url='/static/dem_method_figs/index.html'")
+        and bool(re.search(r"#[^\n]*webapp/test_dem_redesign_plan_page\.py[^\n]*\n\s*dict\(label='DEM 재설계 계획서 \(수영\)', url='%s'" % re.escape(URL_PLAN), TP_SRC)))
+    mine = re.search(r"# 11-10: DEM 재설계[^\n]*\n(?:[ \t]*#[^\n]*\n)*[ \t]*dict\(label='DEM 재설계 계획서 \(수영\)'.*?\),\n", TP_SRC, re.S)
+    chk('  트랙 표의 그 줄 (주석 + 항목) 에 em dash · 모델 이름 · 절대 경로 없음',
         bool(mine) and EM_DASH not in mine.group(0) and not RE_MODEL.search(mine.group(0)) and not RE_ABS.search(mine.group(0)))
     try:
         import app as webapp

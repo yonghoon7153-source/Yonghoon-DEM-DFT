@@ -490,6 +490,9 @@ def main():
         and 'docs/reviews/mixer_problem_gap_novelty_20261124.md' in html)
     r2 = c.get('/mixer')
     h2 = r2.get_data(as_text=True)
+    #  11-25 — 사이드바 트랙 묶음 (webapp/track_pages.py) 에도 /mixer/lit · /mixer/story 줄이 생겼다 → 이 검사는 /mixer **본문** (<main>) 안에서 본다
+    #  (지키는 것은 같다: 믹서 화면의 '문헌 지도' 단추 옆에 '문제 · 공백' 단추).
+    h2 = h2[h2.find('<main class="content">'):] if '<main class="content">' in h2 else h2
     a = re.search(r'<a href="/mixer/story"([^>]*)>([^<]*)</a>', h2)
     chk('㊺ /mixer 에 /mixer/story 링크 (글 "문제 · 공백" · title 속성) · 문헌 지도 링크 옆',
         r2.status_code == 200 and bool(a) and a.group(2).strip() == '문제 · 공백' and 'title="' in a.group(1)

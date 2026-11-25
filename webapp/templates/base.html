@@ -33,8 +33,6 @@
       <li><a href="/eis" class="{% if active == 'eis' %}active{% endif %}">
         <span class="icon">&#x1F300;</span> EIS / DRT
       </a></li>
-      <li><a href="/hetero" class="{% if active == 'hetero' %}active{% endif %}">
-        🧪 <span>이종기술</span></a></li>
       <li><a href="/emod" class="{% if active == 'emod' %}active{% endif %}">
         📐 <span>유효 영률 · 응력</span></a></li>
       <li><a href="/predictor" class="{% if active == 'predictor' %}active{% endif %}">
@@ -52,36 +50,44 @@
              title="주 단위 진행 정리 — docs/worklog/weekly_*.md 를 최신순으로 (새 주간보고는 파일만 더하면 뜬다)">
         <span class="icon">&#x1F4D3;</span> 작업일지 · 주간보고
       </a></li>
-      <li><a href="/mixer" class="{% if active == 'mixer' %}active{% endif %}">
-        <span class="icon">&#x1F300;</span> 믹서 (이력 · 침대)
-      </a></li>
       {# 11-24: 영상 (AVI 편 · 재생 · 받기 · 세부 토글 · 재생목록) — 1저자 *"webapp에 영상 섹션을 추가해서 거기에 저장을 해서 실행하고
          다운도 가능하게"* · app.py `/videos` (자료 = 등록된 꾸러미 · git 밖) · 시험 webapp/test_video_page.py #}
       <li><a href="/videos" class="{% if active == 'videos' %}active{% endif %}"
              title="AVI 편 — 재생 · mp4 · 자막 · 대본 받기 · 챕터 · 장면 · 참고 문헌 · QC · 기준표 · 파일 해시 (공개판 · 내부판 표지)">
         <span class="icon">&#x1F3AC;</span> 영상 (AVI)
       </a></li>
-      {# 10-21: Rint 설명 (1저자 *"이것도 dem webapp에 추가해줭"*).  app.py 는 봉인 32 라 라우트를 못 만든다 →
-         정적 페이지 (webapp/static/explain/) 를 링크한다 · 시험 webapp/test_rint_explainer_page.py #}
-      <li><a href="/static/explain/rint_overview_20261021.html"
-             title="Rint (접촉 · 계면 저항) 을 시뮬레이션에 넣는 일 — 무엇을 넣나 · 어디서 막히나 · 그림 6 장 (10-21)">
-        <span class="icon">&#x1F517;</span> Rint 설명
+      {# 11-25: 트랙 묶음 (1저자 *"이렇게 독립적인 우리 분야들 있잖아 이렇게 토글로 묶고 이렇게 안에서 html 나 웹페이지 등 킬 수 있게 해줘"*) —
+         늘 보이는 첫 줄 '공유 보고서' (/reports) + 그 밑 접힘 토글 '트랙 페이지 N' (<details> · JS 없음 · 지금 화면이 그 안이면 열린 채로).
+         ⛔ 트랙 · 화면 줄을 여기 손으로 적지 않는다 — 표는 webapp/track_pages.py 하나 (app.py context processor 의 TRACK_NAV 가 그때 읽는다).
+         옛 트랙 전용 줄 (이종기술 · 믹서 · Rint 설명 · DEM 재설계 계획서 (수영) · MPM 설명 · Q&A) 은 토글 안으로 옮겼다 (주소 그대로 · 출처 주석은 표로) ·
+         배지 = 표에 등록된 화면 · 보고서 수만 · 시험 webapp/test_track_reports.py #}
+      {%- set _tn = TRACK_NAV(active|default('')) %}
+      <li class="nav-group-head"><a href="/reports" class="{% if active == 'reports' %}active{% endif %}"
+             title="트랙 페이지와 리포에 있는 HTML 보고서를 한 화면에 — 보기 화면에서 여백 메모 · 형광펜 (이 브라우저에만)">
+        <span class="icon">&#x1F4D1;</span> 공유 보고서
       </a></li>
-      {# 11-10: DEM 재설계 (수영) 계획서 (1저자 *"좀더 계획서 같은 느낌으로 마감성있게 웹앱에 별도 페이지"*).  app.py 는 봉인 32 라
-         라우트 없이 정적 페이지 (webapp/static/explain/) 를 링크한다 · 글 = 생성기 scripts/build_dem_redesign_plan.py 가 원문에서
-         (--check = 바이트 같음) · 그 페이지 머리에서 "처음 보는 분을 위한 설명" 으로 간다 · 시험 webapp/test_dem_redesign_plan_page.py #}
-      <li><a href="/static/explain/dem_redesign_plan_20261110.html"
-             title="DEM 재설계 (수영) 계획서: 2D 시험으로 먼저 가르기 · 단계 0-7 · 1저자 결정 · Codex 판정 (11-10)">
-        <span class="icon">&#x1F4CB;</span> DEM 재설계 계획서 (수영)
-      </a></li>
-      {# 11-16: MPM 쉬운 설명 + 우리 MPM Q&A (1저자 *"이 내용 MPM으로 웹앱에 넣어줘용 잘 크롭해서"* ·
-         *"우리 누적되어 있던 Q 관련해서도 Q&A 형식으로 쌓아놓으면 좋을듯"*).  app.py 는 봉인 32 라 라우트 없이
-         정적 페이지 (webapp/static/explain/) 를 링크한다 · 그림 = webapp/static/explain/mpm_basics_figs/ ·
-         시험 webapp/test_mpm_basics_page.py #}
-      <li><a href="/static/explain/mpm_basics_20261116.html"
-             title="MPM (물질점법) 쉬운 설명 — 물질점 · 격자 · 점→격자→점 · DEM 과 다른 점 + 우리 MPM 에서 쌓인 질문 Q&amp;A (11-16)">
-        <span class="icon">&#x1F535;</span> MPM 설명 · Q&amp;A
-      </a></li>
+      <li class="nav-fold-li">
+        {%- if _tn.ok %}
+        <details class="nav-subfold" id="nav-tracks"{% if _tn.open %} open{% endif %}>
+          <summary class="nav-subsum">트랙 페이지 {{ _tn.n }}</summary>
+          <ul class="nav-tracks" aria-label="트랙 페이지">
+          {%- for t in _tn.tracks %}
+            {%- if t.group_head %}
+            <li class="nav-tgroup" aria-hidden="true">{{ t.group_head }}</li>
+            {%- endif %}
+            <li class="nav-track"><a href="{{ t.href }}" title="{{ t.what }}"><span class="nav-tname">{{ t.name }}</span>{% if t.badge %}<span class="nav-badge">{{ t.badge }}</span>{% endif %}</a></li>
+            {%- for p in t.pages %}
+            <li class="nav-sub"><a href="{{ p.url }}"{% if p.on %} class="active" aria-current="page"{% endif %}{% if p.title %} title="{{ p.title }}"{% endif %}><span class="icon">{{ p.icon }}</span> {{ p.label }}</a></li>
+            {%- else %}
+            <li class="nav-none">화면 없음</li>
+            {%- endfor %}
+          {%- endfor %}
+          </ul>
+        </details>
+        {%- else %}
+        <div class="nav-err" role="alert">⚠ 트랙 목록을 못 읽었다 ({{ _tn.error }}) — 표 webapp/track_pages.py</div>
+        {%- endif %}
+      </li>
       {# 11-02: 2D DEM 방법 그림 (50kg 4차년도 보고 0쪽 · 1저자 11-01 *"2d로 지금 그림 넣은것들 webapp에 넣고 뽑을거야"*).
          app.py 는 봉인 32 라 라우트 없이 정적 페이지 (webapp/static/dem_method_figs/) 를 링크한다 ·
          그림 사본 = scripts/sync_dem_method_figs_to_webapp.py (--check = docs 원본과 바이트 같음) · 시험 webapp/test_dem_method_figs_page.py #}

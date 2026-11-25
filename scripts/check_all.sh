@@ -335,6 +335,14 @@ run 'webapp: emod'                python3 webapp/test_emod_page.py   # 11-06 유
 run 'webapp: mixer_lit'           python3 webapp/test_mixer_lit_page.py   # 11-23 믹서 문헌 지도 (1저자 Q4) — 공백 카드 4 · 행 수 = 자료 · 카드 전 표지 · 자료 없으면 안내 (1저자 11-23 게이트 단계 추가)
 run 'webapp: mixer_story'         python3 webapp/test_mixer_story_page.py   # 11-24 믹서 문제 · 공백 (/mixer/story) — 정본 docs/reviews/mixer_problem_gap_novelty_20261124.md 에서 읽음 · 갱신 표지 하나 · fail-closed · redact 먼저 · B1-U ↔ B2-U 접촉 지표 = 자료 그대로 (개발 자료 · 한 시드) · 그림 둘 등록부 밖 404 · 자료 없으면 안내
 run 'webapp: video_page'          python3 webapp/test_video_page.py   # 11-24 영상 섹션 (/videos · 1저자 "webapp에 영상 섹션 · 저장 · 실행 · 다운") — AVI 꾸러미 만들기 · 등록 (zip-slip · 심볼릭 링크 · 크기 · SHA256SUMS · INTERNAL 이름 · 공개 안전 검사) · 재생 Range 206 · 받기 attachment · srt → vtt · 토글 일곱 · 챕터 · 내부 배지 · 등록부 깨짐 fail-closed · 올리기 = 같은 함수 · 로컬 · 같은 출처 · 템플릿에 자료 값 없음
+run 'webapp: track_reports'       python3 webapp/test_track_reports.py   # 11-25 트랙 묶음 (1저자 "토글로 묶고 안에서 html 나 웹페이지 등 킬 수 있게") — 사이드바 '공유 보고서' 줄 + <details> '트랙 페이지 N' (JS 없음 · 지금 화면이면 열림 · 옮긴 줄 주소 그대로 · 일반 줄 제자리) · 표 webapp/track_pages.py 하나 · /reports · 보기 (iframe + 여백 메모 · 형광펜 = 이 브라우저에만) · 원본 바이트 · 내려받기 · 자산 (html · 폴더 밖 · 숨은 이름 404) · git 이 아는 HTML 전부 등록 또는 사유 있는 제외 · 194 지연 import 분류
+#  ★ 11-25 — 같은 묶음의 브라우저 시험 (보기 화면 여백 메모 · 형광펜 · 저장 = 이 브라우저 localStorage · iframe · 실제 앱 빈 포트) —
+#    playwright · chromium 이 없으면 SKIP (rc 0 · 세지 않은 시험).  CI 는 playwright 를 안 깔아 여기 (게이트) 에만 둔다.
+if command -v node >/dev/null 2>&1; then
+  run 'webapp: docnote_local (브라우저)'  node webapp/test_docnote_local.mjs
+else
+  echo '  — docnote_local  건너뜀 (node 없음)'
+fi
 run 'webapp: rint_explainer (Rint 설명 정적 페이지 + 사이드바 링크 · 봉인 app.py 무변경 · 10-21)'   python3 webapp/test_rint_explainer_page.py
 run 'webapp: dem_redesign_plan (DEM 재설계 계획서 정적 페이지 둘 · 생성기 --check 바이트 같음 · 낯선 구성 rc 2 · docx 정본 sha256 · 원문 줄 전수 포함 · 수식 · 그림 고정물 (MathML · OMML · data URI) · 사이드바 · 라우트 없이 정적 (app.py 는 봉인) · 11-10)'   python3 webapp/test_dem_redesign_plan_page.py
 run 'webapp: dem_method_figs (2D DEM 방법 그림 정적 페이지 · 사이드바 · 내려받기 = docs 원본 바이트 · ../ 404 · 봉인 app.py 무변경 · 11-02)'   python3 webapp/test_dem_method_figs_page.py

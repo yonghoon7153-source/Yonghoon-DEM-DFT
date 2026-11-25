@@ -400,7 +400,11 @@ def main():
 
     print('── ⑥ 사이드바 링크 · 실제 서빙')
     base = open(BASE, encoding='utf-8').read()
-    chk('base.html 사이드바에 링크', f'href="{PAGE_URL}"' in base)
+    #  11-25 — 사이드바 줄의 집이 base.html → 트랙 표 (webapp/track_pages.py · base.html 이 TRACK_NAV 로 그린다 · 시험 webapp/test_track_reports.py).
+    #  지키는 것은 같다: 사이드바에 이 페이지 줄이 있다 (아래 렌더된 화면 검사가 실제 화면을 본다).
+    import track_pages as _tp
+    chk('사이드바 (트랙 표 · base.html 이 그린다) 에 링크',
+        'TRACK_NAV' in base and any(p['url'] == PAGE_URL for t in _tp.TRACKS for p in t['pages']))
     import app as webapp
     c = webapp.app.test_client()
     r = c.get(PAGE_URL)

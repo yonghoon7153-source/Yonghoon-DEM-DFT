@@ -190,8 +190,13 @@ def main():
 
     print('── ⑪ 사이드바 링크 · 실제 서빙')
     base = open(BASE, encoding='utf-8').read()
-    chk('base.html 사이드바에 링크', f'href="{PAGE_URL}"' in base)
-    chk('base.html 주석에 이 시험 이름', 'webapp/test_mpm_basics_page.py' in base)
+    #  11-25 — 사이드바 줄의 집이 base.html → 트랙 표 (webapp/track_pages.py · base.html 이 TRACK_NAV 로 그린다 · 시험 webapp/test_track_reports.py).
+    #  지키는 것은 같다: 사이드바에 이 페이지 줄이 있다 · 그 줄의 출처 주석이 이 시험을 가리킨다 (주석도 표로 옮겼다).
+    import track_pages as _tp
+    tp_src = open(os.path.join(HERE, 'track_pages.py'), encoding='utf-8').read()
+    chk('사이드바 (트랙 표 · base.html 이 그린다) 에 링크',
+        'TRACK_NAV' in base and any(p['url'] == PAGE_URL for t in _tp.TRACKS for p in t['pages']))
+    chk('사이드바 줄 주석 (트랙 표) 에 이 시험 이름', 'webapp/test_mpm_basics_page.py' in tp_src)
     import app as webapp
     c = webapp.app.test_client()
     r = c.get(PAGE_URL)

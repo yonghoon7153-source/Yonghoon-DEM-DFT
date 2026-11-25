@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}공유 보고서 — DEM/MPM Analyzer{% endblock %}
+{% block content %}
+{#  공유 보고서 목록 (1저자 11-25 · 트랙 묶음).  표 = webapp/track_pages.py (TRACKS · REPORTS) — app.py /reports 가 reports_page() 로 넘긴다.
+    ⛔ 이 화면이 못 하는 것: 보고서 내용 · 값을 판정하지 않는다 · 파일이 없으면 줄을 빼지 않고 '파일 없음' 을 적는다 ·
+      배지 = 표에 등록된 화면 · 보고서 수만 (지위 판정 아님) · 여기에 트랙 · 보고서를 손으로 적지 않는다 (표를 고치면 화면이 바뀐다).
+    회귀 webapp/test_track_reports.py #}
+<div class="rp-wrap">
+<div class="page-header">
+  <h2>&#x1F4D1; 공유 보고서</h2>
+  <p class="rp-sub">트랙 페이지와, 리포에 있는 단독 HTML 보고서를 한 화면에 — 보기 화면에서 여백 메모 · 형광펜을 달 수 있다
+    (이 브라우저에만 저장 · 원본 · 내려받기는 파일 그대로).</p>
+</div>
+
+<section class="card" id="track-card" aria-labelledby="track-h">
+  <h3 id="track-h">&#x1F5C2;&#xFE0F; 트랙 페이지 <span class="rp-sub" style="font-weight:400">— 사이드바 '트랙 페이지' 토글과 같은 표 · 배지 = 등록된 화면 · 보고서 수</span></h3>
+  <div class="rp-scroll">
+  <table class="rp-tbl" id="track-list">
+    <thead><tr><th>트랙</th><th>배지</th><th>무엇</th><th>화면</th><th>딸린 공유 보고서</th></tr></thead>
+    <tbody>
+      {% for t in tracks %}
+      <tr id="track-{{ t.slug }}">
+        <td class="rp-name">{{ t.label }}</td>
+        <td>{% if t.badge %}<span class="rp-badge">{{ t.badge }}</span>{% endif %}</td>
+        <td class="rp-sub rp-what">{{ t.what }}</td>
+        <td class="rp-pages">{% for p in t.pages %}<div><a href="{{ p.url }}"{% if p.title %} title="{{ p.title }}"{% endif %}><span aria-hidden="true">{{ p.icon }}</span> {{ p.label }}</a></div>{% else %}<span class="rp-none">화면 없음</span>{% endfor %}</td>
+        <td>{% for r in t.reports %}<div>&#x1F4D1; <a href="/reports/{{ r.slug }}">{{ r.title }}</a> <span class="rp-sub">· {{ r.date }}</span></div>{% else %}<span class="rp-none">—</span>{% endfor %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="card" id="reports-card" aria-labelledby="reports-h">
+  <h3 id="reports-h">&#x1F4D1; 공유 보고서 (HTML) <span class="rp-sub" style="font-weight:400">— 제목 · 날짜 = 파일에서 · 보기 화면에서 여백 메모 · 형광펜</span></h3>
+  <div class="rp-scroll">
+  <table class="rp-tbl" id="report-list">
+    <thead><tr><th>날짜</th><th>트랙</th><th>보고서</th><th>원본</th></tr></thead>
+    <tbody>
+      {% for r in reports %}
+      <tr id="row-{{ r.slug }}">
+        <td class="rp-mono rp-nowrap">{{ r.date }}</td>
+        <td class="rp-nowrap">{{ r.track_label }}</td>
+        <td>{% if r.ok %}<a href="/reports/{{ r.slug }}">{{ r.title }}</a>{% else %}{{ r.title }}
+            <div class="rp-miss">⛔ 파일 없음 — <span class="rp-mono">{{ r.rel }}</span></div>{% endif %}
+          {% if r.note %}<div class="rp-note">{{ r.note }}</div>{% endif %}
+          {% for e in r.earlier %}<div class="rp-note">앞 판: {% if e.ok %}{{ e.label }}{% else %}{{ e.label }} (파일 없음){% endif %}</div>{% endfor %}</td>
+        <td>{% if r.ok %}<span class="rp-mono">{{ r.kb }} KB · {{ r.sha16 }}</span><br>
+          <a href="{{ r.raw }}" target="_blank" rel="noopener">새 탭</a> · <a href="{{ r.download }}">내려받기</a>{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="rp-note" style="margin-top:10px">원본 칸 = 파일 크기 · sha256 앞 16 자리 · 새 탭 (파일 그대로) · 내려받기.  리포의 다른 HTML (증거 폴더의 화면 사본 · 도구 틀 등) 은 보고서로 올리지 않는다 — 규칙과 사유는 표 (webapp/track_pages.py) 에 있다.</p>
+</section>
+</div>
+{% endblock %}

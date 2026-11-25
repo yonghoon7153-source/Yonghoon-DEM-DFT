@@ -94,6 +94,26 @@ def _inject_asset_version():
             'sigma_grain_note': lambda m=None: _sigma_grain_context(m)[1]}
 
 
+@app.context_processor
+def _inject_track_nav():
+    """사이드바 트랙 묶음 (11-25 · '공유 보고서' 줄 + 접힘 토글 '트랙 페이지 N') — 표 = webapp/track_pages.py 하나.
+    ★ 함수로 준다 — base.html 이 그릴 때 `TRACK_NAV(active)` 를 부르고, 그때 처음 track_pages 를 import 한다
+      (모듈 수준 import 없음 → 194 워커의 망 정지 경로 밖 · scripts/run_network_194_parallel.py DEP_LAZY_OFFPATH).
+    ⚠ 표를 못 읽으면 ok=False + 사유 이름 — 사이드바가 '트랙 목록을 못 읽었다' 를 적는다 (빈 묶음으로 숨기지 않는다)."""
+    try:
+        path = request.path
+    except RuntimeError:                    # 요청 밖에서 그릴 때 (보고서 생성 등) — 주소 켜짐만 없다
+        path = ''
+
+    def track_nav(active=''):
+        try:
+            import track_pages as _tp
+            return _tp.sidebar(path, active if isinstance(active, str) else '')
+        except Exception as e:              # noqa: BLE001 — 못 읽음을 화면에 그대로 (없음과 구분)
+            return dict(ok=False, error=type(e).__name__, n=0, open=False, tracks=[])
+    return {'TRACK_NAV': track_nav}
+
+
 # ── Trust-card self-report (validation_flags → 5 LED dots) ────────────
 # `validation_flags` is written into full_metrics.json by Stage E
 # (`run_network_full_corrections._compute_validation_flags`).
@@ -6226,6 +6246,51 @@ def videos_upload():
     except video_library.BundleError as e:
         return _videos_render(None, e.status, f'등록하지 않았다 — {e}')
     return redirect(f"/videos/{res['id']}", code=303)
+
+
+# ─────────────────────────  공유 보고서 (/reports)  ─────────────────────────
+#  1저자 11-25 — 트랙 묶음 (사이드바 '공유 보고서' 줄 + 접힘 토글 '트랙 페이지 N') 과 그 목록 · 보고서 보기 (iframe + 여백 메모 · 형광펜).
+#  표 = webapp/track_pages.py 하나 (TRACKS · REPORTS · NOT_REPORTS) — 여기는 얇은 라우트뿐이고, 그 모듈은 **라우트 안에서만** import 한다
+#  (모듈 수준 import 없음 → 망 정지 경로 밖 · 194 실행기 DEP_LAZY_OFFPATH 에 분류).  그래서 보고서마다 라우트를 따로 달지 못하고
+#  `/reports/<slug>` 하나에 표 대조 (없는 slug = 404) 로 한다.  원본 = 파일 바이트 그대로 (iframe · 새 탭 · ?download=1 = 받기) ·
+#  자산 = 보고서 폴더의 그림 · 스타일 · 표 데이터만 (HTML · 폴더 밖 · 숨은 이름 = 404).  메모 · 형광펜 = 보는 사람 브라우저에만 (docnote.js).
+#  회귀 webapp/test_track_reports.py.
+@app.route('/reports')
+def reports_index():
+    """공유 보고서 — 트랙 페이지 표 (배지 · 화면 · 딸린 보고서) + 보고서 표.  파일이 없으면 그 줄에 '파일 없음' (빼지 않는다)."""
+    import track_pages as _tp
+    return render_template('reports.html', active='reports', **_tp.reports_page())
+
+
+@app.route('/reports/<slug>')
+def reports_view(slug):
+    """보고서 보기 — 원본을 iframe 으로 띄우고 여백 메모 · 형광펜을 단다.  표에 없는 slug = 404."""
+    import track_pages as _tp
+    r = _tp.REPORTS_BY_SLUG.get(slug)
+    if r is None:
+        abort(404)
+    return render_template('report.html', active='reports', it=_tp.report_info(r))
+
+
+@app.route('/reports/<slug>/raw')
+def reports_raw(slug):
+    """보고서 원본 — 파일 바이트 그대로 (text/html · iframe · 새 탭).  `?download=1` = 받기 (attachment · 파일 이름)."""
+    import track_pages as _tp
+    p = _tp.report_file(slug)
+    if p is None:
+        abort(404)
+    dl = (request.args.get('download') or '') == '1'
+    return send_file(p, mimetype='text/html', as_attachment=dl, download_name=p.name, conditional=True, max_age=0)
+
+
+@app.route('/reports/<slug>/<path:name>')
+def reports_asset(slug, name):
+    """보고서 폴더의 그림 · 스타일 · 표 데이터 — 보기 화면 iframe 이 상대 경로로 받는다.  그 밖 (HTML · 폴더 밖 · 숨은 이름 · 허용 밖) = 404."""
+    import track_pages as _tp
+    p = _tp.asset_file(slug, name)
+    if p is None:
+        abort(404)
+    return send_file(p, conditional=True, max_age=0)
 
 
 #  "침대 보기" 탭 (1저자 비준 2026-09-30) — 보기 전용 · 판정은 3D 칸 M 으로만.  경로 · 맹검 잠금 · 덤프 관문은
