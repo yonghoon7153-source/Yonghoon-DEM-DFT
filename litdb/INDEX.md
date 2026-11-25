@@ -776,12 +776,12 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 
 ## 🌱 Li 금속 음극 — 공극 · 점착 · 핵생성 · 적층압 · Ag/C 인터레이어 (2026-11-24 · 18 편 + 11-24b 12 편 + 11-25 3 편)
 
-> W_ad (DEM-DFT) 보고서 §7 (Li 친화성) 과 Ag/C 층의 문헌 근거로 먹인 30 편이다 — 2026-11-24 18 편 (목록 `litdb/_curation/batch_2026_11_24/batch.json`) + 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`).
+> W_ad (DEM-DFT) 보고서 §7 (Li 친화성) 과 Ag/C 층의 문헌 근거로 먹인 33 편이다 — 2026-11-24 18 편 (목록 `litdb/_curation/batch_2026_11_24/batch.json`) + 같은 날 둘째 묶음 12 편 (`litdb/_curation/batch_2026_11_24b/batch.json`) + 11-25 셋째 묶음 3 편 (`litdb/_curation/batch_2026_11_25/batch.json` · Kotakadi 2025 · Sandoval 2023 · Park 2025).
 > 🧲 절 (LPSCl 이 한쪽 면인 실측 앵커) 과 따로 둔다 — 이 묶음에는 LLZO · Na 금속 · 강체 SE MD · DFT 가 섞여 있다.
 > ⛔ **계를 섞지 않는다** — LLZO (가넷 · Li 와 안정 · SEI 없음) · Na 금속 / Na-β″-alumina · 강체 SE MD 의 숫자를 LPSCl 값으로 옮기지 않는다 (11-24b 의 chu2026 · haslam2025 · ko2025 도 LLZO 계). 기전 · 순서 · 판정식만 옮긴다.
 > ⛔ **W 의 부류를 가른다** — DFT · MD 의 W_ad / W_sep (seymour2021 · yang2021 두 편 · sharafi2017 · lu2026 · cicvaric2026) 는 실측 박리 G_c (wang2020) 와 같은 줄에 두지 않는다. 계면 에너지 (lepley2015 변형 외삽 · baer2026 반응 포함 γ_inter) 와 점착 세기 (xie2024 · MPa) 는 W 가 아니다. 우리 DFT W 와도 방법 (범함수 · vdW · 고정/이완 기하 · 같은 Li 면) 이 다르면 같은 줄에 두지 않는다.
 > ⛔ 우리 W 값은 이 절에 싣지 않는다 (위치만 — W_ad 보고서 §2 · §7 · `db/properties/adhesion.json`).
-> 🏷 = Jeff Sakamoto 공저 (10 편 — 11-24b 의 haslam2025 포함). 대조 서술은 `comparison_vs_ours.md` §E · §I · §J-88–J-95 와 `comparison_vs_ours_DEM.md` §I-11–I-33 (+ 2026-11-24 추가 줄).
+> 🏷 = Jeff Sakamoto 공저 (10 편 — 11-24b 의 haslam2025 포함). 대조 서술은 `comparison_vs_ours.md` §E · §I · §J-88–J-95 와 `comparison_vs_ours_DEM.md` §I-11–I-36 (+ 2026-11-24 · 11-25 추가 줄).
 > 행 순서: 판정 기준 · 계면 원자 모형 (DFT · MD) → Li 금속 역학 → 공극 · 적층압 실험 → 무음극 핵생성 · 성장 · 금속 층 → Ag/C 인터레이어 → 연속체 모델 (11-24b 행은 그 묶음 자리에 끼웠다).
 
 | slug | 논문 | 축 |

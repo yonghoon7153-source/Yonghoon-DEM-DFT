@@ -364,6 +364,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
   .doc :not(pre)>code,.sem-doc :not(pre)>code,.doc a,.sem-doc a{overflow-wrap:anywhere}
   .doc blockquote,.sem-doc blockquote{margin-left:12px;margin-right:0}   /* 브라우저 기본 좌우 40px 이 폰 폭의 1/4 을 먹었다 */
   .v3-chip{max-width:100%;overflow-wrap:anywhere;text-align:left}   /* /literature 새 논문 칩의 긴 slug (실측 scrollWidth 576) */
+  .sub .mono{overflow-wrap:anywhere}   /* 부제 줄의 파일 경로 (/reports/<slug> 원본 줄 · 실측 scrollWidth 530) — 표 칸의 .mono 는 안 건드린다 */
 }
 
 /* ============================================================
